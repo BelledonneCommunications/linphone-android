@@ -20,35 +20,36 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
-public class LinphoneCoreImpl implements LinphoneCore {
+
+class LinphoneCoreImpl implements LinphoneCore {
 
 	private final  LinphoneCoreListener mListener;
 	private final long nativePtr;
 	private native long newLinphoneCore(LinphoneCoreListener listener,String userConfig,String factoryConfig,Object  userdata);
 	private native void iterate(long nativePtr);
+	private native void setDefaultProxyConfig(long nativePtr,long proxyCfgNativePtr);
+	private native int addProxyConfig(long nativePtr,long proxyCfgNativePtr);
+	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
 	}
 	
 	public void addAuthInfo(LinphoneAuthInfo info) {
-		// TODO Auto-generated method stub
-
+		addAuthInfo(nativePtr,((LinphoneAuthInfoImpl)info).nativePtr);
 	}
 
-	public LinphoneProxyConfig createProxyConfig(URI identity, URI proxy,URI route) {
+	public LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route) throws LinphoneCoreException {
 		return new LinphoneProxyConfigImpl(identity, proxy, route);
 	}
 
 	public LinphoneProxyConfig getDefaultProxyConfig() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("not implemenetd yet");
 	}
 
 	public void invite(String url) {
-		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemenetd yet");
 	}
 
 	public void iterate() {
@@ -56,8 +57,13 @@ public class LinphoneCoreImpl implements LinphoneCore {
 	}
 
 	public void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg) {
-		// TODO Auto-generated method stub
-
+		setDefaultProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr);
 	}
-
+	public void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException{
+		if (addProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr) !=0) {
+			throw new LinphoneCoreException("bad proxy config");
+		}
+	}
+	
+	
 }

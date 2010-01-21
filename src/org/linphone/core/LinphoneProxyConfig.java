@@ -22,4 +22,5 @@ public interface LinphoneProxyConfig {
 	
 	void enableRegister(boolean value);
 
+
 }

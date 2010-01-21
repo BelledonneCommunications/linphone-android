@@ -18,37 +18,38 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-import java.net.URI;
 
 
-public class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 
-	final long nativePtr;
-	protected LinphoneProxyConfigImpl(URI identity,URI proxy,URI route) {
-		nativePtr = createAndAdd();
-		edit(nativePtr);
-		setIdentity(nativePtr,identity.getScheme()+":"+identity.getHost());
-		done(nativePtr);
+class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
+
+	protected final long nativePtr;
+	protected LinphoneProxyConfigImpl(String identity,String proxy,String route) throws LinphoneCoreException {
+		nativePtr = newLinphoneProxyConfig();
+		setIdentity(nativePtr,identity);
+		if (setProxy(nativePtr,proxy)!=0) {
+			throw new LinphoneCoreException("Bad proxy address ["+proxy+"]");
+		}
 	}
 	
 	protected void finalize() throws Throwable {
-		deleteNative(nativePtr);
+		delete(nativePtr);
 	}
-	private native long createAndAdd();
-	private native long  deleteNative(long ptr);
+	private native long newLinphoneProxyConfig();
+	private native void  delete(long ptr);
 
-	private native void edit(long ptr);
-	private native void done(long ptr);
+	//private native void edit(long ptr);
+	//private native void done(long ptr);
 	
 	private native void setIdentity(long ptr,String identity);
-	/*private native void setProxy(long ptr,String identity);*/
+	private native int setProxy(long ptr,String proxy);
 
 	private native void enableRegister(long ptr,boolean value);
 	
 	public void enableRegister(boolean value) {
-		edit(nativePtr);
+		//edit(nativePtr);
 		enableRegister(nativePtr,value);
-		done(nativePtr);
+		//done(nativePtr);
 	}
 
 }

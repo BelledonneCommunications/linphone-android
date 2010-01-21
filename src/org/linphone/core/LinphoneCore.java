@@ -18,8 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-import java.io.File;
-import java.net.URI;
+
 	
 public interface LinphoneCore {
 	/*
@@ -51,8 +50,16 @@ public interface LinphoneCore {
 }
 
 	
-	public LinphoneProxyConfig createProxyConfig(URI identity,URI proxy,URI route);
+	/**
+	 * @param identity sip uri sip:jehan@linphone.org
+	 * @param proxy  sip uri (sip:linphone.org)
+	 * @param route optionnal sip usi (sip:linphone.org)
+	 * @return
+	 */
+	public LinphoneProxyConfig createProxyConfig(String identity,String proxy,String route) throws LinphoneCoreException;
 	
+	public void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException;
+
 	public void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg);
 	
 	/**

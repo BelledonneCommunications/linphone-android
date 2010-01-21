@@ -14,13 +14,6 @@ use_ipv6=0
 register_only_when_network_is_up=0
 default_proxy=0
 
-[proxy_0]
-reg_proxy=sip:mty11.axtel.net
-reg_identity=sip:???@mty11.axtel.net
-reg_expires=3600
-reg_sendregister=1
-publish=0
-
 [rtp]
 audio_rtp_port=7076
 video_rtp_port=9078

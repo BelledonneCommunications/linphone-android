@@ -19,10 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.core;
 
 import java.io.File;
+import java.io.IOException;
 
 public class LinphoneCoreFactory {
 	static {
-		System.loadLibrary("liblinphone");
+		System.loadLibrary("linphone");
 	}
 	static LinphoneCoreFactory theLinphoneCoreFactory = new LinphoneCoreFactory();
 	
@@ -31,11 +32,11 @@ public class LinphoneCoreFactory {
 		return theLinphoneCoreFactory;
 	}
 	public LinphoneAuthInfo createAuthInfo(String username,String password) {
-		throw new RuntimeException("Not Implemented yet");
+		return new LinphoneAuthInfoImpl(username,password) ;
 	}
 	
-	public LinphoneCore createLinphoneCore(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) {
-		throw new RuntimeException("Not Implemented yet");
+	public LinphoneCore createLinphoneCore(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
+		return new LinphoneCoreImpl(listener,userConfig,factoryConfig,userdata);
 	}
 	
 
