@@ -36,14 +36,16 @@ public interface LinphoneCoreListener {
 		public void authInfoRequested(LinphoneCore lc,String realm,String username); 
 		/**< Callback that notifies various events with human readable text.
 		 * @return */
-		public void displayStatus(LinphoneCore lc,String message);; 
+		public void displayStatus(LinphoneCore lc,String message);
 		/**< Callback to display a message to the user 
 		 * @return */
 		public void displayMessage(LinphoneCore lc,String message);
 		/** Callback to display a warning to the user 
 		 * @return */
 		public void displayWarning(LinphoneCore lc,String message);
-		/**< State notification callback 
-		 * @return */		
+		/** State notification callback 
+		 * @param state LinphoneCore.GeneralState
+		 * @return 
+		 * */		
 		public void generalState(LinphoneCore lc,LinphoneCore.GeneralState state); 
 }

@@ -24,30 +24,37 @@ public interface LinphoneCore {
 	/*
 	 * linphone core states
 	 */
-	interface 	GeneralState {
+	public enum 	GeneralState {
 		  /* states for GSTATE_GROUP_POWER */
-	static int GSTATE_POWER_OFF =0;        /* initial state */
-	static int 	  GSTATE_POWER_STARTUP=1;
-	static int 	  GSTATE_POWER_ON=2;
-	static int 	  GSTATE_POWER_SHUTDOWN=3;
+	GSTATE_POWER_OFF(0),        /* initial state */
+	GSTATE_POWER_STARTUP(1),
+	GSTATE_POWER_ON(2),
+	GSTATE_POWER_SHUTDOWN(3),
 		  /* states for GSTATE_GROUP_REG */
-	static int 	  GSTATE_REG_NONE=10;       /* initial state */
-	static int 	  GSTATE_REG_OK=11;
-	static int 	  GSTATE_REG_FAILED=12;
+	GSTATE_REG_NONE(10),       /* initial state */
+	GSTATE_REG_OK(11),
+	GSTATE_REG_FAILED(12),
 		  /* states for GSTATE_GROUP_CALL */
-	static int 	  GSTATE_CALL_IDLE=20;      /* initial state */
-	static int 	  GSTATE_CALL_OUT_INVITE=21;
-	static int 	  GSTATE_CALL_OUT_CONNECTED=22;
-	static int 	  GSTATE_CALL_IN_INVITE=23;
-	static int 	  GSTATE_CALL_IN_CONNECTED=24;
-	static int 	  GSTATE_CALL_END=25;
-	static int 	  GSTATE_CALL_ERROR=26;
-	static int 	  GSTATE_INVALID=27;
-	/**
-	 * get new state {@link:  }
-	 */
-	public int getNewState();
-}
+	GSTATE_CALL_IDLE(20),      /* initial state */
+	GSTATE_CALL_OUT_INVITE(21),
+	GSTATE_CALL_OUT_CONNECTED(22),
+	GSTATE_CALL_IN_INVITE(23),
+	GSTATE_CALL_IN_CONNECTED(24),
+	GSTATE_CALL_END(25),
+	GSTATE_CALL_ERROR(26),
+	GSTATE_INVALID(27);
+	private final int mValue;
+	
+	GeneralState(int value) {
+		mValue = value;
+	}
+	public static GeneralState fromInt(int value) {
+		for (GeneralState state: GeneralState.values()) {
+			if (state.mValue == value) return state;
+		}
+		throw new RuntimeException("sate not found ["+value+"]");
+	}
+	}
 
 	
 	/**
@@ -69,7 +76,7 @@ public interface LinphoneCore {
 	
 	void addAuthInfo(LinphoneAuthInfo info);
 	
-	public void invite(String url);
+	public void invite(String uri);
 	
 	public void iterate();
 }

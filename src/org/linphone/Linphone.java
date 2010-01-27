@@ -26,10 +26,11 @@ public class Linphone extends Activity implements LinphoneCoreListener {
     /** Called when the activity is first created. */
 	private static String LINPHONE_FACTORY_RC = "/data/data/org.linphone/files/linphonerc";
 	private static String LINPHONE_RC = "/data/data/org.linphone/files/.linphonerc";
-	private static String RINGBACK_SND = "/data/data/org.linphone/files/oldphone_mono.wav";
+	private static String RING_SND = "/data/data/org.linphone/files/oldphone_mono.wav"; 
+	private static String RINGBACK_SND = "/data/data/org.linphone/files/ringback.wav";
 
 	private LinphoneCore mLinphoneCore;
-	private LinphoneProxyConfig mProxyConfig;
+	private LinphoneProxyConfig mProxyConfig; 
 	private LinphoneAuthInfo mAuthInfo;
 	Timer mTimer = new Timer("Linphone scheduler");
 	
@@ -62,19 +63,23 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 			
 		};
 		mTimer.scheduleAtFixedRate(lTask, 0, 100);
+		
+		
+		
 		} catch (Exception e) {
 			Log.e(TAG,"Cannot start linphone",e);
 		}
 		
     }
     public void copyAssetsFromPackage() throws IOException {
-    	copyIfNotExist(R.raw.oldphone_mono,RINGBACK_SND);
+    	copyIfNotExist(R.raw.oldphone_mono,RING_SND);
+    	copyIfNotExist(R.raw.ringback,RINGBACK_SND);
     	copyIfNotExist(R.raw.linphonerc,LINPHONE_FACTORY_RC);
     }
     private  void copyIfNotExist(int ressourceId,String target) throws IOException {
   		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {		
-			FileOutputStream lOutputStream = openFileOutput (lFileToCopy.getName(), 0);
+			FileOutputStream lOutputStream = openFileOutput (lFileToCopy.getName(), 0); 
 			InputStream lInputStream = getResources().openRawResource(ressourceId);
 			int readByte;
 			byte[] buff = new byte[8048];
@@ -100,16 +105,22 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 		
 	}
 	public void displayStatus(LinphoneCore lc, String message) {
-		// TODO Auto-generated method stub
+		Log.i(TAG, message); 
 		
 	}
 	public void displayWarning(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
 		
 	}
-	public void generalState(LinphoneCore lc, GeneralState state) {
-		// TODO Auto-generated method stub
-		
+	public void generalState(LinphoneCore lc, LinphoneCore.GeneralState state) {
+		Log.i(TAG, "new state ["+state+"]");
+
+		switch(state) {
+		case GSTATE_REG_OK: {
+			mLinphoneCore.invite("simon.morlat");
+		}
+		}
+
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
 		// TODO Auto-generated method stub

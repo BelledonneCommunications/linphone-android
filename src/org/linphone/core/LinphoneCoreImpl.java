@@ -31,6 +31,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setDefaultProxyConfig(long nativePtr,long proxyCfgNativePtr);
 	private native int addProxyConfig(long nativePtr,long proxyCfgNativePtr);
 	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
+	private native void invite(long nativePtr,String uri);
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -48,8 +49,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 		throw new RuntimeException("not implemenetd yet");
 	}
 
-	public void invite(String url) {
-		throw new RuntimeException("not implemenetd yet");
+	public void invite(String uri) {
+		invite(nativePtr,uri);
 	}
 
 	public void iterate() {

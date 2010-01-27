@@ -22,9 +22,11 @@ video_jitt_comp=60
 nortp_timeout=30
 
 [sound]
-playback_dev_id=AU: Audio Unit
-ringer_dev_id=AU: Audio Unit
-capture_dev_id=AU: Audio Unit
+playback_dev_id=ANDROID SND: Android Sound card
+ringer_dev_id=ANDROID SND: Android Sound card
+capture_dev_id=ANDROID SND: Android Sound card
+remote_ring=/data/data/org.linphone/files/ringback.wav
+local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 
 [audio_codec_0]
 mime=speex
@@ -39,7 +41,7 @@ enabled=0
 [audio_codec_2]
 mime=speex
 rate=8000
-enabled=0
+enabled=1
 
 [audio_codec_3]
 mime=GSM
@@ -54,7 +56,7 @@ enabled=0
 [audio_codec_5]
 mime=GSM
 rate=8000
-enabled=0
+enabled=1
 
 [audio_codec_6]
 mime=PCMU
