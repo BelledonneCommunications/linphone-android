@@ -28,8 +28,13 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private final long nativePtr;
 	private native long newLinphoneCore(LinphoneCoreListener listener,String userConfig,String factoryConfig,Object  userdata);
 	private native void iterate(long nativePtr);
+	private native long getDefaultProxyConfig(long nativePtr);
+
 	private native void setDefaultProxyConfig(long nativePtr,long proxyCfgNativePtr);
 	private native int addProxyConfig(long nativePtr,long proxyCfgNativePtr);
+	private native void clearAuthInfos(long nativePtr);
+	
+	private native void clearProxyConfigs(long nativePtr);
 	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
 	private native void invite(long nativePtr,String uri);
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -41,12 +46,17 @@ class LinphoneCoreImpl implements LinphoneCore {
 		addAuthInfo(nativePtr,((LinphoneAuthInfoImpl)info).nativePtr);
 	}
 
-	public LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route) throws LinphoneCoreException {
-		return new LinphoneProxyConfigImpl(identity, proxy, route);
+	public LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route,boolean enableRegister) throws LinphoneCoreException {
+		return new LinphoneProxyConfigImpl(identity, proxy, route,enableRegister);
 	}
 
 	public LinphoneProxyConfig getDefaultProxyConfig() {
-		throw new RuntimeException("not implemenetd yet");
+		long lNativePtr = getDefaultProxyConfig(nativePtr);
+		if (lNativePtr!=0) {
+			return new LinphoneProxyConfigImpl(lNativePtr); 
+		} else {
+			return null;
+		}
 	}
 
 	public void invite(String uri) {
@@ -64,6 +74,13 @@ class LinphoneCoreImpl implements LinphoneCore {
 		if (addProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr) !=0) {
 			throw new LinphoneCoreException("bad proxy config");
 		}
+	}
+	public void clearAuthInfos() {
+		clearAuthInfos(nativePtr);
+		
+	}
+	public void clearProxyConfigs() {
+		clearProxyConfigs(nativePtr);
 	}
 	
 	

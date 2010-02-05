@@ -20,7 +20,31 @@ package org.linphone.core;
 
 public interface LinphoneProxyConfig {
 	
-	void enableRegister(boolean value);
+	/**
+	 * Unregister proxy config a enable edition 
+	 */
+	public void edit();
+	/**
+	 * Validate proxy config changes. Start registration in case
+	 */
+	public void done();
+	/**
+	 * sip user made by sip:username@domain
+	 */
+	public void setIdentity(String identity) throws LinphoneCoreException;
+	/**
+	 * Set proxy uri, like sip:linphone.org:5060
+	 * @param proxyUri
+	 * @throws LinphoneCoreException
+	 */
+	public void setProxy(String proxyUri) throws LinphoneCoreException;
+	/**
+	 * Enable register for this proxy config.
+	 * Register message is issued after call to {@link #done()}
+	 * @param value
+	 * @throws LinphoneCoreException
+	 */
+	public void enableRegister(boolean value) throws LinphoneCoreException;
 
 
 }

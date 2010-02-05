@@ -18,28 +18,37 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
+import org.linphone.Linphone;
+
+import android.util.Log;
+
 
 
 
 class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 
 	protected final long nativePtr;
-	protected LinphoneProxyConfigImpl(String identity,String proxy,String route) throws LinphoneCoreException {
+	boolean ownPtr = false;
+	protected LinphoneProxyConfigImpl(String identity,String proxy,String route, boolean enableRegister) throws LinphoneCoreException {
 		nativePtr = newLinphoneProxyConfig();
-		setIdentity(nativePtr,identity);
-		if (setProxy(nativePtr,proxy)!=0) {
-			throw new LinphoneCoreException("Bad proxy address ["+proxy+"]");
-		}
+		setIdentity(identity);
+		setProxy(proxy);
+		enableRegister(enableRegister);
+		ownPtr=true;
+		Log.w(Linphone.TAG, "route ["+route+"] not used yet");
 	}
-	
+	protected LinphoneProxyConfigImpl(long aNativePtr)  {
+		nativePtr = aNativePtr;
+		ownPtr=false;
+	}
 	protected void finalize() throws Throwable {
-		delete(nativePtr);
+		if (ownPtr) delete(nativePtr);
 	}
 	private native long newLinphoneProxyConfig();
 	private native void  delete(long ptr);
 
-	//private native void edit(long ptr);
-	//private native void done(long ptr);
+	private native void edit(long ptr);
+	private native void done(long ptr);
 	
 	private native void setIdentity(long ptr,String identity);
 	private native int setProxy(long ptr,String proxy);
@@ -47,9 +56,24 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	private native void enableRegister(long ptr,boolean value);
 	
 	public void enableRegister(boolean value) {
-		//edit(nativePtr);
 		enableRegister(nativePtr,value);
-		//done(nativePtr);
 	}
 
+	public void done() {
+		done(nativePtr);
+	}
+
+	public void edit() {
+		edit(nativePtr);
+	}
+
+	public void setIdentity(String identity) throws LinphoneCoreException {
+		setIdentity(nativePtr,identity);
+	}
+
+	public void setProxy(String proxyUri) throws LinphoneCoreException {
+		if (setProxy(nativePtr,proxyUri)!=0) {
+			throw new LinphoneCoreException("Bad proxy address ["+proxyUri+"]");
+		}
+	}
 }

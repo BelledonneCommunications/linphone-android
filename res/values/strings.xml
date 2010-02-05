@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_settings">Settings</string>
+    <string name="pref_proxy">Proxy</string>
+    <string name="pref_domain">Domain*</string>
+    <string name="pref_passwd">Password*</string>
+    <string name="pref_username">Username*</string>
     <string name="hello">Hello World, Linphone!</string>
     <string name="app_name">Linphone</string>
+	<string name="pref_sipaccount">SIP Account</string>
+	<string name="enter_username">Enter a user name</string>
+<string name="enter_passwd">Enter a password</string>
+<string name="enter_domain">Enter a domain</string>
 </resources>

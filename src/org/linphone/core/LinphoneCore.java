@@ -61,18 +61,28 @@ public interface LinphoneCore {
 	 * @param identity sip uri sip:jehan@linphone.org
 	 * @param proxy  sip uri (sip:linphone.org)
 	 * @param route optionnal sip usi (sip:linphone.org)
+	 * @param register should be initiated
 	 * @return
 	 */
-	public LinphoneProxyConfig createProxyConfig(String identity,String proxy,String route) throws LinphoneCoreException;
+	public LinphoneProxyConfig createProxyConfig(String identity,String proxy,String route,boolean enableRegister) throws LinphoneCoreException;
+	/**
+	 * clear all added proxy config
+	 */
+	public void clearProxyConfigs();
 	
 	public void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException;
 
 	public void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg);
 	
 	/**
-	 * @return null if no default proxyconfig 
+	 * @return null if no default proxy config 
 	 */
-	public LinphoneProxyConfig getDefaultProxyConfig();
+	public LinphoneProxyConfig getDefaultProxyConfig() ;
+	
+	/**
+	 * clear all the added auth info
+	 */
+	void clearAuthInfos();
 	
 	void addAuthInfo(LinphoneAuthInfo info);
 	
