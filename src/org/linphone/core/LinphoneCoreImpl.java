@@ -37,6 +37,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void clearProxyConfigs(long nativePtr);
 	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
 	private native void invite(long nativePtr,String uri);
+	private native void terminateCall(long nativePtr);
+	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -81,6 +83,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void clearProxyConfigs() {
 		clearProxyConfigs(nativePtr);
+	}
+	public void terminateCall() {
+		terminateCall(nativePtr);
 	}
 	
 	

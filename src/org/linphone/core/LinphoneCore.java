@@ -88,5 +88,7 @@ public interface LinphoneCore {
 	
 	public void invite(String uri);
 	
+	public void terminateCall();
+
 	public void iterate();
 }
