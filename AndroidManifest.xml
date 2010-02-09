@@ -16,9 +16,20 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-    </application>
+        <activity android:name=".DialerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+        <activity android:name=".ContactPickerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+	</application>
 
 <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+<uses-permission android:name="android.permission.READ_CONTACTS"/>
 
 </manifest> 

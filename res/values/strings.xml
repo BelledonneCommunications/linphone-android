@@ -11,4 +11,6 @@
 	<string name="enter_username">Enter a user name</string>
 <string name="enter_passwd">Enter a password</string>
 <string name="enter_domain">Enter a domain</string>
+<string name="tab_dialer">Dialer</string>
+<string name="tab_contact">Contact</string>
 </resources>

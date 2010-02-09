@@ -34,10 +34,13 @@ import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
 
 import android.app.Activity;
+import android.app.TabActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Contacts.People;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,10 +49,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Linphone extends Activity implements LinphoneCoreListener {
+public class Linphone extends TabActivity implements LinphoneCoreListener {
 	static final public String TAG="Linphone";
 	/** Called when the activity is first created. */
 	private static String LINPHONE_FACTORY_RC = "/data/data/org.linphone/files/linphonerc";
@@ -61,22 +65,8 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 	private LinphoneCore mLinphoneCore;
 	private SharedPreferences mPref;
 	Timer mTimer = new Timer("Linphone scheduler");
-	
-	private TextView mAddress;
-	private ImageButton mCall;
-	private ImageButton mHangup;
-	private Button mZero;
-	private Button mOne;
-	private Button mTwo;
-	private Button mThree ;
-	private Button mFour;
-	private Button mFive;
-	private Button mSix;
-	private Button mSeven;
-	private Button mEight;
-	private Button mNine;
-	private Button mStar;
-	private Button mHash;
+	public static String DIALER_TAB = "dialer";
+
 
 	static Linphone getLinphone()  {
 		if (theLinphone == null) {
@@ -95,12 +85,12 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 			copyAssetsFromPackage();
 
 			mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(	this
-					, new File(LINPHONE_RC) 
+			, new File(LINPHONE_RC) 
 			, new File(LINPHONE_FACTORY_RC)
 			, null);
 
 			initFromConf();
-			
+
 			TimerTask lTask = new TimerTask() {
 
 				@Override
@@ -110,66 +100,37 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 				}
 
 			};
-			mTimer.scheduleAtFixedRate(lTask, 0, 100);
+			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
 
-		
-			mAddress = (TextView) findViewById(R.id.SipUri);
 
-			mCall = (ImageButton) findViewById(R.id.Call);
-			mCall.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mLinphoneCore.invite(mAddress.getText().toString());
-				}
-				
-			}); 
-			mHangup = (ImageButton) findViewById(R.id.HangUp);
-			mHangup.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mLinphoneCore.terminateCall();
-				}
-				
-			});
-			
-			class DialKeyListener implements  OnClickListener {
-				final String mKeyCode;
-				final TextView mAddressView;
-				DialKeyListener(TextView anAddress, char aKeyCode) {
-					mKeyCode = String.valueOf(aKeyCode);
-					mAddressView = anAddress;
-				}
-				public void onClick(View v) {
-					mAddressView.append(mKeyCode);
-				}
-				
-			};
+		    TabHost lTabHost = getTabHost();  // The activity TabHost
+		    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
+		   
 
-			mZero = (Button) findViewById(R.id.Button00) ;
-			mZero.setOnClickListener(new DialKeyListener(mAddress,'0'));
-			mOne = (Button) findViewById(R.id.Button01) ;
-			mOne.setOnClickListener(new DialKeyListener(mAddress,'1'));
-			mTwo = (Button) findViewById(R.id.Button02);
-			mTwo.setOnClickListener(new DialKeyListener(mAddress,'2'));
-			mThree = (Button) findViewById(R.id.Button03);
-			mThree.setOnClickListener(new DialKeyListener(mAddress,'3'));
-			mFour = (Button) findViewById(R.id.Button04);
-			mFour.setOnClickListener(new DialKeyListener(mAddress,'4'));
-			mFive = (Button) findViewById(R.id.Button05);
-			mFive.setOnClickListener(new DialKeyListener(mAddress,'5'));
-			mSix = (Button) findViewById(R.id.Button06);
-			mSix.setOnClickListener(new DialKeyListener(mAddress,'6'));
-			mSeven = (Button) findViewById(R.id.Button07);
-			mSeven.setOnClickListener(new DialKeyListener(mAddress,'7'));
-			mEight = (Button) findViewById(R.id.Button08);
-			mEight.setOnClickListener(new DialKeyListener(mAddress,'8'));
-			mNine = (Button) findViewById(R.id.Button09);
-			mNine.setOnClickListener(new DialKeyListener(mAddress,'9'));
-			mStar = (Button) findViewById(R.id.ButtonStar);
-			mStar.setOnClickListener(new DialKeyListener(mAddress,'*'));
-			mHash = (Button) findViewById(R.id.ButtonHash);
-			mHash.setOnClickListener(new DialKeyListener(mAddress,'#'));
-			
-			
-		
+		    // Create an Intent to launch an Activity for the tab (to be reused)
+		    Intent lDialerIntent = new Intent().setClass(this, DialerActivity.class);
+
+		    // Initialize a TabSpec for each tab and add it to the TabHost
+		    spec = lTabHost.newTabSpec("dialer").setIndicator(getString(R.string.tab_dialer),
+		                      getResources().getDrawable(android.R.drawable.ic_menu_call))
+		                  .setContent(lDialerIntent);
+		    lTabHost.addTab(spec);
+		    
+		 
+		    
+		    // Do the same for the other tabs
+		    Intent lContactItent =  new Intent().setClass(this, ContactPickerActivity.class);
+		    
+		    spec = lTabHost.newTabSpec("contact").setIndicator(getString(R.string.tab_contact),
+		                      null)
+		                  .setContent(lContactItent);
+		    lTabHost.addTab(spec);
+
+		    lTabHost.setCurrentTabByTag("dialer");
+		    
+
+
+
 		} catch (Exception e) {
 			Log.e(TAG,"Cannot start linphone",e);
 		}
@@ -272,7 +233,7 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
 		if (lUserName == null) {
-			Toast toast = Toast.makeText(this, this.getString(R.string.enter_username), Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(this, getString(R.string.enter_username), Toast.LENGTH_LONG);
 			toast.show();
 			startprefActivity();
 			return;
@@ -327,6 +288,9 @@ public class Linphone extends Activity implements LinphoneCoreListener {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClass(Linphone.this, LinphonePreferencesActivity.class);
 		startActivity(intent);
+	}
+	protected LinphoneCore getLinphoneCore() {
+		return mLinphoneCore;
 	}
 
 }
