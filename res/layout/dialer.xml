@@ -7,7 +7,7 @@
 
 <EditText android:id="@+id/SipUri" android:layout_height="wrap_content" android:hint="sip:" android:layout_width="fill_parent" android:singleLine="true"></EditText>
 
-<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer" android:layout_height="300dip">
+<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer" android:layout_height="280dip">
 <TableRow android:layout_height="fill_parent" android:layout_weight="1" android:id="@+id/DialerRow01" android:layout_width="fill_parent">
 <Button android:id="@+id/Button01" android:text="1" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
 <Button android:id="@+id/Button02" android:text="2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
@@ -35,4 +35,5 @@
 
 </TableLayout>
 
+<EditText android:layout_width="fill_parent" android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content"></EditText>
 </LinearLayout>

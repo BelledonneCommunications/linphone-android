@@ -45,6 +45,10 @@ public interface LinphoneProxyConfig {
 	 * @throws LinphoneCoreException
 	 */
 	public void enableRegister(boolean value) throws LinphoneCoreException;
-
-
+	/**
+	 * normalize a human readable phone number into a basic string. 888-444-222 becomes 888444222
+	 * @param number
+	 * @return
+	 */
+	public String normalizePhoneNumber(String number);
 }

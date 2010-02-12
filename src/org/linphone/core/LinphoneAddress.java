@@ -1,5 +1,5 @@
 /*
-LinphoneAuthInfoImpl.java
+LinphoneAddress.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -18,14 +18,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-class LinphoneAuthInfoImpl implements LinphoneAuthInfo {
-	protected final long nativePtr;
-	private native long newLinphoneAuthInfo(String username, String userid, String passwd, String ha1,String realm);
-	private native void  delete(long ptr);
-	protected LinphoneAuthInfoImpl(String username,String password)  {
-		nativePtr = newLinphoneAuthInfo(username,null,password,null,null);
-	}
-	protected void finalize() throws Throwable {
-		delete(nativePtr);
-	}
+public interface LinphoneAddress {
+	/**
+	 * Human display name
+	 * @return null if not set
+	 */
+	public String getDisplayName();
+	/**
+	 * userinfo 
+	 * @return null if not set
+	 */
+	public String getUserName();
+	/**
+	 * 
+	 * @return null if not set
+	 */
+	public String getDomain();
 }

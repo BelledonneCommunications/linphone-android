@@ -36,7 +36,7 @@ enabled=0
 [audio_codec_1]
 mime=speex
 rate=16000
-enabled=0
+enabled=1
 
 [audio_codec_2]
 mime=speex
@@ -61,10 +61,10 @@ enabled=1
 [audio_codec_6]
 mime=PCMU
 rate=8000
-enabled=0
+enabled=1
 
 [audio_codec_7]
 mime=PCMA
 rate=8000
-enabled=0
+enabled=1
 

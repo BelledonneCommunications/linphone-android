@@ -33,24 +33,21 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
 
-import android.app.Activity;
+
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
-import android.provider.Contacts.People;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class Linphone extends TabActivity implements LinphoneCoreListener {
@@ -67,7 +64,7 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	Timer mTimer = new Timer("Linphone scheduler");
 	public static String DIALER_TAB = "dialer";
 
-
+	private Handler mIteratehandler;
 	static Linphone getLinphone()  {
 		if (theLinphone == null) {
 			throw new RuntimeException("LinphoneActivity not instanciated yet");
@@ -90,16 +87,21 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 			, null);
 
 			initFromConf();
+			mIteratehandler = new Handler() {
+			      public void handleMessage(Message msg) {  
+			          //iterate is called inside an Android handler to allow UI interaction within LinphoneCoreListener
+			    	  mLinphoneCore.iterate();
+			      }
+			  }; 
 
 			TimerTask lTask = new TimerTask() {
-
 				@Override
 				public void run() {
-					mLinphoneCore.iterate();
-
+					mIteratehandler.sendEmptyMessage(0);
 				}
 
 			};
+			
 			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
 
 
@@ -149,23 +151,27 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	private void copyAssetsFromPackage() throws IOException {
 		copyIfNotExist(R.raw.oldphone_mono,RING_SND);
 		copyIfNotExist(R.raw.ringback,RINGBACK_SND);
-		copyIfNotExist(R.raw.linphonerc,LINPHONE_FACTORY_RC);
+		copyFromPackage(R.raw.linphonerc, new File(LINPHONE_FACTORY_RC).getName());
 	}
 	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {		
-			FileOutputStream lOutputStream = openFileOutput (lFileToCopy.getName(), 0); 
-			InputStream lInputStream = getResources().openRawResource(ressourceId);
-			int readByte;
-			byte[] buff = new byte[8048];
-			while (( readByte = lInputStream.read(buff))!=-1) {
-				lOutputStream.write(buff,0, readByte);
-			}
-			lOutputStream.flush();
-			lOutputStream.close();
-			lInputStream.close();
-		}    	
+		   copyFromPackage(ressourceId,lFileToCopy.getName());
+		}
 
+	}
+	private void copyFromPackage(int ressourceId,String target) throws IOException{
+		FileOutputStream lOutputStream = openFileOutput (target, 0); 
+		InputStream lInputStream = getResources().openRawResource(ressourceId);
+		int readByte;
+		byte[] buff = new byte[8048];
+		while (( readByte = lInputStream.read(buff))!=-1) {
+			lOutputStream.write(buff,0, readByte);
+		}
+		lOutputStream.flush();
+		lOutputStream.close();
+		lInputStream.close();
+		
 	}
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) {
 		// TODO Auto-generated method stub
@@ -181,7 +187,7 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	}
 	public void displayStatus(LinphoneCore lc, String message) {
 		Log.i(TAG, message); 
-
+		if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().displayStatus(message);
 	}
 	public void displayWarning(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
@@ -191,9 +197,14 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 		Log.i(TAG, "new state ["+state+"]");
 
 		switch(state) {
-		case GSTATE_REG_OK: {
-			//mLinphoneCore.invite("simon.morlat");
+		case GSTATE_CALL_ERROR: {
+			 
+			Toast toast = Toast.makeText(this
+										,String.format(getString(R.string.call_error),mLinphoneCore.getRemoteAddress())
+										, Toast.LENGTH_LONG);
+			toast.show();
 		}
+		case GSTATE_REG_OK:
 		}
 
 	}
@@ -229,30 +240,26 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 		return false;
 	}
 
+	
 	public void initFromConf() throws LinphoneCoreException {
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
 		if (lUserName == null) {
-			Toast toast = Toast.makeText(this, getString(R.string.enter_username), Toast.LENGTH_LONG);
-			toast.show();
-			startprefActivity();
+			handleBadConfig(getString(R.string.wrong_username));
 			return;
 		}
 
 		String lPasswd = mPref.getString(getString(R.string.pref_passwd_key), null);
 		if (lPasswd == null) {
-			Toast toast = Toast.makeText(this, this.getString(R.string.enter_passwd), Toast.LENGTH_LONG);
-			toast.show();
-			startprefActivity();
+			handleBadConfig(getString(R.string.wrong_passwd));
 			return;
+
 		}
 		
 		String lDomain = mPref.getString(getString(R.string.pref_domain_key), null);
 		if (lDomain == null) {
-			Toast toast = Toast.makeText(this, this.getString(R.string.enter_domain), Toast.LENGTH_LONG);
-			toast.show();
-			startprefActivity();
-			return;
+			handleBadConfig(getString(R.string.wrong_domain));
+			return; 
 		}
 
 
@@ -284,6 +291,22 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 		
 	}
 	
+	private void handleBadConfig(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(String.format(getString(R.string.config_error),message))
+		       .setCancelable(false)
+		       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   startprefActivity();
+		           }
+		       })
+		       .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		           }
+		       });
+		builder.create().show();
+	}
 	private void startprefActivity() {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClass(Linphone.this, LinphonePreferencesActivity.class);

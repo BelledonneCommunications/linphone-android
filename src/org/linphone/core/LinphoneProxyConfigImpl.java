@@ -55,6 +55,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 
 	private native void enableRegister(long ptr,boolean value);
 	
+	private native String normalizePhoneNumber(long ptr,String number);
+	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
 	}
@@ -75,5 +77,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		if (setProxy(nativePtr,proxyUri)!=0) {
 			throw new LinphoneCoreException("Bad proxy address ["+proxyUri+"]");
 		}
+	}
+	public String normalizePhoneNumber(String number) {
+		return normalizePhoneNumber(nativePtr,number);
 	}
 }

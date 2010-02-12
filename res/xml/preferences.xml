@@ -6,4 +6,6 @@
 <EditTextPreference android:title="@string/pref_domain" android:key="@string/pref_domain_key"></EditTextPreference>
 <EditTextPreference android:title="@string/pref_proxy" android:key="@string/pref_proxy_key"></EditTextPreference>
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/pref_advanced"><EditTextPreference android:title="@string/pref_prefix" android:key="@string/pref_prefix_key"></EditTextPreference>
+</PreferenceCategory>
 </PreferenceScreen>

@@ -89,6 +89,11 @@ public interface LinphoneCore {
 	public void invite(String uri);
 	
 	public void terminateCall();
+	/**
+	 * get the remote address in case of in/out call
+	 * @return null if no call engaged yet
+	 */
+	public LinphoneAddress getRemoteAddress();
 
 	public void iterate();
 }

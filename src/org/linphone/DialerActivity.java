@@ -1,6 +1,8 @@
 package org.linphone;
 
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 public class DialerActivity extends Activity {
 	private LinphoneCore mLinphoneCore; 
 	private TextView mAddress;
+	private TextView mStatus;
 	private ImageButton mCall;
 	private ImageButton mHangup;
 	private Button mZero;
@@ -30,9 +33,13 @@ public class DialerActivity extends Activity {
 	private static DialerActivity theDialer;
 	
 	private String mDisplayName;
+	/**
+	 * 
+	 * @return nul if not ready yet
+	 */
 	public static DialerActivity getDialer() {
 		if (theDialer == null) {
-			throw new RuntimeException("DialerActivity not instanciated yet");
+			return null;
 		} else {
 			return theDialer;
 		}
@@ -40,6 +47,9 @@ public class DialerActivity extends Activity {
 	public void setContactAddress(String aContact,String aDisplayName) {
 		mAddress.setText(aContact);
 		mDisplayName = aDisplayName;
+	}
+	public void displayStatus(String status) {
+		mStatus.setText(status);
 	}
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,7 +62,12 @@ public class DialerActivity extends Activity {
 			mCall = (ImageButton) findViewById(R.id.Call);
 			mCall.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					mLinphoneCore.invite(mAddress.getText().toString());
+					LinphoneProxyConfig lProxy = mLinphoneCore.getDefaultProxyConfig();
+					String lNormalizedNumber = mAddress.getText().toString(); 
+					if (lProxy!=null) {
+						lNormalizedNumber = lProxy.normalizePhoneNumber(lNormalizedNumber);
+					}
+					mLinphoneCore.invite(lNormalizedNumber);
 				}
 				
 			}); 
@@ -102,7 +117,7 @@ public class DialerActivity extends Activity {
 			mHash = (Button) findViewById(R.id.ButtonHash);
 			mHash.setOnClickListener(new DialKeyListener(mAddress,'#'));
 			
-			
+			mStatus =  (TextView) findViewById(R.id.status_label);
 		
 		} catch (Exception e) {
 			Log.e(Linphone.TAG,"Cannot start linphone",e);

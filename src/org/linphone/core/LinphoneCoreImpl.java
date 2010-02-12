@@ -38,6 +38,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
 	private native void invite(long nativePtr,String uri);
 	private native void terminateCall(long nativePtr);
+	private native long getRemoteAddress(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -86,6 +87,14 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void terminateCall() {
 		terminateCall(nativePtr);
+	}
+	public LinphoneAddress getRemoteAddress() {
+		long ptr = getRemoteAddress(nativePtr);
+		if (ptr==0) {
+			return null;
+		} else {
+			return new LinphoneAddressImpl(ptr);
+		}
 	}
 	
 	
