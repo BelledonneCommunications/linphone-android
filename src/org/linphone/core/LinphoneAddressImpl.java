@@ -28,7 +28,7 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	private native String getDisplayName(long ptr);
 	private native String getUserName(long ptr);
 	private native String getDomain(long ptr);
-	
+	private native String toUri(long ptr);
 	
 	protected LinphoneAddressImpl(String username,String domain,String displayName)  {
 		nativePtr = newLinphoneAddressImpl("sip:"+username+"@"+domain, displayName);
@@ -51,11 +51,10 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	}
 	
 	public String toString() {
-		String tmp="";
-		if (getDisplayName()!=null) {
-			tmp="<"+getDisplayName()+">";
-		}
-		return tmp+"sip:"+getUserName()+"@"+getDomain();
+		return toUri();
+	}
+	public String toUri() {
+		return toUri(nativePtr);	
 	}
  
 }

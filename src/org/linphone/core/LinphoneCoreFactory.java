@@ -39,6 +39,9 @@ public class LinphoneCoreFactory {
 		return new LinphoneCoreImpl(listener,userConfig,factoryConfig,userdata);
 	}
 	
+	public LinphoneAddress createLinphoneAddress(String username,String domain,String displayName) {
+		return new LinphoneAddressImpl(username,domain,displayName);
+	}
 
 
 }

@@ -65,6 +65,7 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	public static String DIALER_TAB = "dialer";
 
 	private Handler mIteratehandler;
+	
 	static Linphone getLinphone()  {
 		if (theLinphone == null) {
 			throw new RuntimeException("LinphoneActivity not instanciated yet");
@@ -174,7 +175,6 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 		
 	}
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) {
-		// TODO Auto-generated method stub
 
 	}
 	public void byeReceived(LinphoneCore lc, String from) {
@@ -187,7 +187,7 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	}
 	public void displayStatus(LinphoneCore lc, String message) {
 		Log.i(TAG, message); 
-		if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().displayStatus(message);
+		if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().displayStatus(lc,message);
 	}
 	public void displayWarning(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
@@ -195,18 +195,7 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	}
 	public void generalState(LinphoneCore lc, LinphoneCore.GeneralState state) {
 		Log.i(TAG, "new state ["+state+"]");
-
-		switch(state) {
-		case GSTATE_CALL_ERROR: {
-			 
-			Toast toast = Toast.makeText(this
-										,String.format(getString(R.string.call_error),mLinphoneCore.getRemoteAddress())
-										, Toast.LENGTH_LONG);
-			toast.show();
-		}
-		case GSTATE_REG_OK:
-		}
-
+		if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().generalState(lc,state);
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
 		// TODO Auto-generated method stub
@@ -287,7 +276,13 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 			lDefaultProxyConfig.enableRegister(true);
 			lDefaultProxyConfig.done();
 		}
+		lDefaultProxyConfig = mLinphoneCore.getDefaultProxyConfig();
 		
+		//prefix
+		String lPrefix = mPref.getString(getString(R.string.pref_prefix_key), null);
+		if (lPrefix != null && lDefaultProxyConfig !=null) {
+			lDefaultProxyConfig.setDialPrefix(lPrefix);
+		}
 		
 	}
 	

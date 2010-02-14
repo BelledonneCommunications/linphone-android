@@ -51,4 +51,15 @@ public interface LinphoneProxyConfig {
 	 * @return
 	 */
 	public String normalizePhoneNumber(String number);
+	/**
+	 * usefull function to automatically add internationnal prefix to e164 phone numbers
+	 * @param prefix
+	 */
+	public void setDialPrefix(String prefix);
+	
+	/**
+	 * rget domain host name or ip
+	 * @return may be null
+	 */
+	public String getDomain();
 }

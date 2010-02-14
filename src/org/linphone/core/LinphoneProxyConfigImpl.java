@@ -55,7 +55,11 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 
 	private native void enableRegister(long ptr,boolean value);
 	
+	private native void setDialPrefix(long ptr, String prefix);
+	
 	private native String normalizePhoneNumber(long ptr,String number);
+	
+	private native String getDomain(long ptr);
 	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
@@ -80,5 +84,11 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	}
 	public String normalizePhoneNumber(String number) {
 		return normalizePhoneNumber(nativePtr,number);
+	}
+	public void setDialPrefix(String prefix) {
+		setDialPrefix(nativePtr, prefix);
+	}
+	public String getDomain() {
+		return getDomain(nativePtr);
 	}
 }

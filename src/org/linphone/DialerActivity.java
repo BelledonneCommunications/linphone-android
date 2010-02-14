@@ -1,7 +1,11 @@
 package org.linphone;
 
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LinphoneCore.GeneralState;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,8 +15,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class DialerActivity extends Activity {
+public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private LinphoneCore mLinphoneCore; 
 	private TextView mAddress;
 	private TextView mStatus;
@@ -48,9 +53,6 @@ public class DialerActivity extends Activity {
 		mAddress.setText(aContact);
 		mDisplayName = aDisplayName;
 	}
-	public void displayStatus(String status) {
-		mStatus.setText(status);
-	}
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
@@ -62,12 +64,24 @@ public class DialerActivity extends Activity {
 			mCall = (ImageButton) findViewById(R.id.Call);
 			mCall.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					String lRawAddress = mAddress.getText().toString();
+					String lCallingUri=null;
+					if (lRawAddress.startsWith("sip:")) {
+						lCallingUri=lRawAddress;
+					} else {
 					LinphoneProxyConfig lProxy = mLinphoneCore.getDefaultProxyConfig();
-					String lNormalizedNumber = mAddress.getText().toString(); 
-					if (lProxy!=null) {
-						lNormalizedNumber = lProxy.normalizePhoneNumber(lNormalizedNumber);
+					String lDomain=null;
+					String lNormalizedNumber=null;
+						if (lProxy!=null) {
+							lNormalizedNumber = lProxy.normalizePhoneNumber(lNormalizedNumber);
+							lDomain = lProxy.getDomain();
+						}
+					LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(lNormalizedNumber 
+																									, lDomain
+																									, mDisplayName);	
+					lCallingUri = lAddress.toUri();
 					}
-					mLinphoneCore.invite(lNormalizedNumber);
+					mLinphoneCore.invite(lCallingUri);
 				}
 				
 			}); 
@@ -123,6 +137,45 @@ public class DialerActivity extends Activity {
 			Log.e(Linphone.TAG,"Cannot start linphone",e);
 		}
 
+	}
+	public void authInfoRequested(LinphoneCore lc, String realm, String username) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void byeReceived(LinphoneCore lc, String from) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void displayMessage(LinphoneCore lc, String message) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void displayStatus(LinphoneCore lc, String message) {
+		mStatus.setText(message);
+	}
+	public void displayWarning(LinphoneCore lc, String message) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void generalState(LinphoneCore lc, GeneralState state) {
+		switch(state) {
+		case GSTATE_CALL_ERROR: {
+			 
+			Toast toast = Toast.makeText(this
+										,String.format(getString(R.string.call_error),lc.getRemoteAddress())
+										, Toast.LENGTH_LONG);
+			toast.show();
+		}
+		case GSTATE_REG_OK:
+		}
+	}
+	public void inviteReceived(LinphoneCore lc, String from) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void show(LinphoneCore lc) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
