@@ -39,21 +39,24 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void invite(long nativePtr,String uri);
 	private native void terminateCall(long nativePtr);
 	private native long getRemoteAddress(long nativePtr);
+	private native boolean  isInCall(long nativePtr);
+	private native boolean isInComingInvitePending(long nativePtr);
+	private native void acceptCall(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
 	}
 	
-	public void addAuthInfo(LinphoneAuthInfo info) {
+	public synchronized void addAuthInfo(LinphoneAuthInfo info) {
 		addAuthInfo(nativePtr,((LinphoneAuthInfoImpl)info).nativePtr);
 	}
 
-	public LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route,boolean enableRegister) throws LinphoneCoreException {
+	public synchronized LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route,boolean enableRegister) throws LinphoneCoreException {
 		return new LinphoneProxyConfigImpl(identity, proxy, route,enableRegister);
 	}
 
-	public LinphoneProxyConfig getDefaultProxyConfig() {
+	public synchronized LinphoneProxyConfig getDefaultProxyConfig() {
 		long lNativePtr = getDefaultProxyConfig(nativePtr);
 		if (lNativePtr!=0) {
 			return new LinphoneProxyConfigImpl(lNativePtr); 
@@ -62,33 +65,33 @@ class LinphoneCoreImpl implements LinphoneCore {
 		}
 	}
 
-	public void invite(String uri) {
+	public synchronized void invite(String uri) {
 		invite(nativePtr,uri);
 	}
 
-	public void iterate() {
+	public synchronized void iterate() {
 		iterate(nativePtr);
 	}
 
-	public void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg) {
+	public synchronized void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg) {
 		setDefaultProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr);
 	}
-	public void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException{
+	public synchronized void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException{
 		if (addProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr) !=0) {
 			throw new LinphoneCoreException("bad proxy config");
 		}
 	}
-	public void clearAuthInfos() {
+	public synchronized void clearAuthInfos() {
 		clearAuthInfos(nativePtr);
 		
 	}
-	public void clearProxyConfigs() {
+	public synchronized void clearProxyConfigs() {
 		clearProxyConfigs(nativePtr);
 	}
-	public void terminateCall() {
+	public synchronized void terminateCall() {
 		terminateCall(nativePtr);
 	}
-	public LinphoneAddress getRemoteAddress() {
+	public synchronized LinphoneAddress getRemoteAddress() {
 		long ptr = getRemoteAddress(nativePtr);
 		if (ptr==0) {
 			return null;
@@ -96,6 +99,14 @@ class LinphoneCoreImpl implements LinphoneCore {
 			return new LinphoneAddressImpl(ptr);
 		}
 	}
-	
-	
+	public synchronized  boolean isIncall() {
+		return isInCall(nativePtr);
+	}
+	public synchronized boolean isInComingInvitePending() {
+		return isInComingInvitePending(nativePtr);
+	}
+	public synchronized void acceptCall() {
+		acceptCall(nativePtr);
+		
+	}
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_exit">Exit</string>
     <string name="pref_prefix">Prefix</string>
     <string name="pref_advanced">Advanced</string>
     <string name="menu_settings">Settings</string>
@@ -19,4 +20,5 @@
 <string name="yes">Yes</string>
 <string name="no">No</string>
 <string name="config_error">%s, do you want to return to the settings page ?</string>
+<string name="warning_already_incall">Cannot initiate a new call because a call is already engaged</string>
 </resources>

@@ -94,6 +94,26 @@ public interface LinphoneCore {
 	 * @return null if no call engaged yet
 	 */
 	public LinphoneAddress getRemoteAddress();
-
+	/**
+	 *  
+	 * @return  TRUE if there is a call running or pending.
+	 */
+	public boolean isIncall();
+	/**
+	 * 
+	 * @return Returns true if in incoming call is pending, ie waiting for being answered or declined.
+	 */
+	public boolean isInComingInvitePending();
 	public void iterate();
+	/**
+	 * Accept an incoming call.
+	 *
+	 * Basically the application is notified of incoming calls within the
+	 * {@link LinphoneCoreListener#inviteReceived(LinphoneCore, String)} listener.
+	 * The application can later respond positively to the call using
+	 * this method.
+	 */
+	public void acceptCall();
+	
+	
 }

@@ -42,7 +42,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		ownPtr=false;
 	}
 	protected void finalize() throws Throwable {
-		if (ownPtr) delete(nativePtr);
+		Log.e(Linphone.TAG,"fixme, should release underlying proxy config");
+		// FIXME if (ownPtr) delete(nativePtr);
 	}
 	private native long newLinphoneProxyConfig();
 	private native void  delete(long ptr);
@@ -60,6 +61,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	private native String normalizePhoneNumber(long ptr,String number);
 	
 	private native String getDomain(long ptr);
+	
+	private native void setDialEscapePlus(long ptr, boolean value);
 	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
@@ -90,5 +93,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	}
 	public String getDomain() {
 		return getDomain(nativePtr);
+	}
+	public void setDialEscapePlus(boolean value) {
+		 setDialEscapePlus(nativePtr,value);
 	}
 }

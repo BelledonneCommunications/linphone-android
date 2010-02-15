@@ -142,10 +142,9 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 
 
 	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		//finish();
+	protected void onDestroy() {
+		super.onDestroy();
+		if  (isFinishing()) System.exit(0); // FIXME to destroy liblinphone 
 	}
 
 
@@ -157,7 +156,7 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {		
-		   copyFromPackage(ressourceId,lFileToCopy.getName());
+		   copyFromPackage(ressourceId,lFileToCopy.getName()); 
 		}
 
 	}
@@ -221,6 +220,9 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 		case R.id.menu_settings:
 			startprefActivity();
 			return true;
+		case R.id.menu_exit:
+			finish();
+			break;
 		default:
 			Log.e(TAG, "Unknown menu item ["+item+"]");
 			break;
@@ -278,10 +280,14 @@ public class Linphone extends TabActivity implements LinphoneCoreListener {
 		}
 		lDefaultProxyConfig = mLinphoneCore.getDefaultProxyConfig();
 		
-		//prefix
-		String lPrefix = mPref.getString(getString(R.string.pref_prefix_key), null);
-		if (lPrefix != null && lDefaultProxyConfig !=null) {
-			lDefaultProxyConfig.setDialPrefix(lPrefix);
+		if (lDefaultProxyConfig !=null) {
+			//prefix 
+			String lPrefix = mPref.getString(getString(R.string.pref_prefix_key), null);
+			if (lPrefix != null ) {
+				lDefaultProxyConfig.setDialPrefix(lPrefix);
+			}
+			//escape +
+			lDefaultProxyConfig.setDialEscapePlus(true);
 		}
 		
 	}

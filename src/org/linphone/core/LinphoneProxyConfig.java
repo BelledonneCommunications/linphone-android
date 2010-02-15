@@ -56,6 +56,12 @@ public interface LinphoneProxyConfig {
 	 * @param prefix
 	 */
 	public void setDialPrefix(String prefix);
+	/**
+	 * * Sets whether liblinphone should replace "+" by "00" in dialed numbers (passed to
+	 * {@link LinphoneCore#invite(String)}).
+	 * @param value default value is false
+	 */
+	public void setDialEscapePlus(boolean value);
 	
 	/**
 	 * rget domain host name or ip

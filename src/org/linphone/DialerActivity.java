@@ -8,6 +8,8 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 import android.app.Activity;
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +40,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private static DialerActivity theDialer;
 	
 	private String mDisplayName;
+	private AudioManager mAudioManager;
+	
 	/**
 	 * 
 	 * @return nul if not ready yet
@@ -56,6 +60,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
+		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		try {
 			theDialer = this;
 			mLinphoneCore = Linphone.getLinphone().getLinphoneCore();
@@ -64,6 +69,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mCall = (ImageButton) findViewById(R.id.Call);
 			mCall.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					if (mLinphoneCore.isInComingInvitePending()) {
+						mLinphoneCore.acceptCall();
+						return;
+					}
+					if (mLinphoneCore.isIncall()) {
+						Toast toast = Toast.makeText(DialerActivity.this, getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
+						toast.show();
+						return;
+					}
 					String lRawAddress = mAddress.getText().toString();
 					String lCallingUri=null;
 					if (lRawAddress.startsWith("sip:")) {
@@ -71,7 +85,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					} else {
 					LinphoneProxyConfig lProxy = mLinphoneCore.getDefaultProxyConfig();
 					String lDomain=null;
-					String lNormalizedNumber=null;
+					String lNormalizedNumber=lRawAddress;
 						if (lProxy!=null) {
 							lNormalizedNumber = lProxy.normalizePhoneNumber(lNormalizedNumber);
 							lDomain = lProxy.getDomain();
@@ -79,13 +93,14 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(lNormalizedNumber 
 																									, lDomain
 																									, mDisplayName);	
-					lCallingUri = lAddress.toUri();
+					lCallingUri = lAddress.toUri(); 
 					}
 					mLinphoneCore.invite(lCallingUri);
 				}
 				
 			}); 
-			mHangup = (ImageButton) findViewById(R.id.HangUp);
+			mHangup = (ImageButton) findViewById(R.id.HangUp); 
+			mHangup.setEnabled(false);  
 			mHangup.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					mLinphoneCore.terminateCall();
@@ -160,13 +175,42 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	public void generalState(LinphoneCore lc, GeneralState state) {
 		switch(state) {
 		case GSTATE_CALL_ERROR: {
-			 
+
 			Toast toast = Toast.makeText(this
-										,String.format(getString(R.string.call_error),lc.getRemoteAddress())
-										, Toast.LENGTH_LONG);
+					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
+					, Toast.LENGTH_LONG);
 			toast.show();
+			break;
 		}
-		case GSTATE_REG_OK:
+		case GSTATE_REG_OK: {
+			break; 
+		}
+		case GSTATE_CALL_OUT_INVITE: {
+			//de-activate green button
+			mCall.setEnabled(false);
+		}
+		case GSTATE_CALL_IN_INVITE: { 
+			// activate red button 
+			mHangup.setEnabled(true);
+			mAudioManager.setSpeakerphoneOn(true); 
+			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
+			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
+			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
+			break;
+		}
+		case GSTATE_CALL_IN_CONNECTED:
+		case GSTATE_CALL_OUT_CONNECTED: {
+			mAudioManager.setSpeakerphoneOn(false); 
+			mAudioManager.setMode(AudioManager.MODE_IN_CALL); 
+			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
+			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
+			break;
+		}
+		case GSTATE_CALL_END: {
+			mCall.setEnabled(true);
+			mHangup.setEnabled(false);
+			break;
+		}
 		}
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
