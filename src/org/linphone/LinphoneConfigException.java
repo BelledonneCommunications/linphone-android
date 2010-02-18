@@ -1,5 +1,5 @@
 /*
-LinphonePreferencesActivity.java
+LinphoneCoreException.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,30 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
 package org.linphone;
-import org.linphone.core.LinphoneCoreException;
 
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.util.Log;
+@SuppressWarnings("serial")
+public class LinphoneConfigException extends LinphoneException {
 
-public class LinphonePreferencesActivity extends PreferenceActivity {
-	   @Override
-	    protected void onCreate(Bundle savedInstanceState) {
-	        super.onCreate(savedInstanceState);
-	        // Load the preferences from an XML resource
-	        addPreferencesFromResource(R.xml.preferences);
-	    }
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		try {
-			LinphoneActivity.instance().initFromConf();
-		} catch (LinphoneException e) {
-			Log.e(LinphoneService.TAG, "cannot update config",e);
-		}
+	public LinphoneConfigException() {
+		super();
 	}
-	   
+
+	public LinphoneConfigException(String detailMessage, Throwable throwable) {
+		super(detailMessage, throwable);
+	}
+
+	public LinphoneConfigException(String detailMessage) {
+		super(detailMessage);
+	}
+
+	public LinphoneConfigException(Throwable throwable) {
+		super(throwable);
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
-LinphonePreferencesActivity.java
+LinPhoneCallLogImpl.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,30 +16,31 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+package org.linphone.core;
 
-package org.linphone;
-import org.linphone.core.LinphoneCoreException;
 
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.util.Log;
+class LinphoneCallLogImpl implements LinphoneCallLog {
 
-public class LinphonePreferencesActivity extends PreferenceActivity {
-	   @Override
-	    protected void onCreate(Bundle savedInstanceState) {
-	        super.onCreate(savedInstanceState);
-	        // Load the preferences from an XML resource
-	        addPreferencesFromResource(R.xml.preferences);
-	    }
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		try {
-			LinphoneActivity.instance().initFromConf();
-		} catch (LinphoneException e) {
-			Log.e(LinphoneService.TAG, "cannot update config",e);
-		}
+	protected final long nativePtr;
+	
+	private native long getFrom(long nativePtr);
+	private native long getTo(long nativePtr);
+	private native boolean isIncoming(long nativePtr);
+	LinphoneCallLogImpl(long aNativePtr)  {
+		nativePtr = aNativePtr;
 	}
-	   
+	
+	
+	public CallDirection getDirection() {
+		return isIncoming(nativePtr)?CallDirection.Callincoming:CallDirection.CallOutgoing;
+	}
+
+	public LinphoneAddress getFrom() {
+		return new LinphoneAddressImpl(getFrom(nativePtr));
+	}
+
+	public LinphoneAddress getTo() {
+		return new LinphoneAddressImpl(getTo(nativePtr));
+	}
+
 }

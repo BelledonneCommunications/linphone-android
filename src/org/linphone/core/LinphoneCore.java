@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
+import java.util.List;
+
 
 	
 public interface LinphoneCore {
@@ -115,5 +117,10 @@ public interface LinphoneCore {
 	 */
 	public void acceptCall();
 	
+	
+	/**
+	 * @return a list of LinphoneCallLog 
+	 */
+	public List<LinphoneCallLog> getCallLogs();
 	
 }

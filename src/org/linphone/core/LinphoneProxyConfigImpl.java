@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-import org.linphone.Linphone;
+import org.linphone.LinphoneService;
 
 import android.util.Log;
 
@@ -35,14 +35,14 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		setProxy(proxy);
 		enableRegister(enableRegister);
 		ownPtr=true;
-		Log.w(Linphone.TAG, "route ["+route+"] not used yet");
+		Log.w(LinphoneService.TAG, "route ["+route+"] not used yet");
 	}
 	protected LinphoneProxyConfigImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
 		ownPtr=false;
 	}
 	protected void finalize() throws Throwable {
-		Log.e(Linphone.TAG,"fixme, should release underlying proxy config");
+		Log.e(LinphoneService.TAG,"fixme, should release underlying proxy config");
 		// FIXME if (ownPtr) delete(nativePtr);
 	}
 	private native long newLinphoneProxyConfig();

@@ -1,39 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-<EditText android:id="@+id/SipUri" android:layout_height="wrap_content" android:hint="sip:" android:layout_width="fill_parent" android:singleLine="true"></EditText>
+	<EditText android:id="@+id/SipUri" android:layout_height="wrap_content"
+		android:hint="sip:" android:layout_width="fill_parent"
+		android:singleLine="true"></EditText>
 
-<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer" android:layout_height="280dip">
-<TableRow android:layout_height="fill_parent" android:layout_weight="1" android:id="@+id/DialerRow01" android:layout_width="fill_parent">
-<Button android:id="@+id/Button01" android:text="1" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
-<Button android:id="@+id/Button02" android:text="2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
-<Button android:id="@+id/Button03" android:text="3" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.5"></Button>
-</TableRow><TableRow android:layout_height="fill_parent" android:layout_weight="1" android:id="@+id/DialerRow02" android:layout_width="fill_parent"><Button android:id="@+id/Button04" android:text="4" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
-<Button android:text="5" android:id="@+id/Button05" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
-<Button android:id="@+id/Button06" android:text="6" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.5"></Button>
-</TableRow><TableRow android:layout_weight="1" android:layout_height="fill_parent" android:id="@+id/DialerRow03" android:layout_width="fill_parent"><Button android:text="7" android:id="@+id/Button07" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
-<Button android:id="@+id/Button08" android:text="8" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.25"></Button>
-<Button android:text="9" android:id="@+id/Button09" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="0.5"></Button>
-</TableRow><TableRow android:layout_weight="1" android:layout_height="fill_parent" android:id="@+id/DialerRow04" android:layout_width="fill_parent"><Button android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="*" android:layout_weight="0.25" android:id="@+id/ButtonStar"></Button>
-<Button android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="0+" android:id="@+id/Button00" android:layout_weight="0.25"></Button>
-<Button android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/ButtonHash" android:text="#" android:layout_weight="0.5"></Button>
-</TableRow><TableRow android:layout_height="fill_parent" android:id="@+id/DialerRow00" android:layout_width="fill_parent" android:layout_weight="1">
+	<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer"
+		android:layout_height="fill_parent">
+		<TableRow android:layout_height="fill_parent"
+			android:layout_weight="1" android:id="@+id/DialerRow01"
+			android:layout_width="fill_parent">
+			<Button android:id="@+id/Button01" android:text="1"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.25"></Button>
+			<Button android:id="@+id/Button02" android:text="2"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.25"></Button>
+			<Button android:id="@+id/Button03" android:text="3"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.5"></Button>
+		</TableRow>
+		<TableRow android:layout_height="fill_parent"
+			android:layout_weight="1" android:id="@+id/DialerRow02"
+			android:layout_width="fill_parent">
+			<Button android:id="@+id/Button04" android:text="4"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.25"></Button>
+			<Button android:text="5" android:id="@+id/Button05"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.25"></Button>
+			<Button android:id="@+id/Button06" android:text="6"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.5"></Button>
+		</TableRow>
+		<TableRow android:layout_weight="1" android:layout_height="fill_parent"
+			android:id="@+id/DialerRow03" android:layout_width="fill_parent">
+			<Button android:text="7" android:id="@+id/Button07"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.25"></Button>
+			<Button android:id="@+id/Button08" android:text="8"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.25"></Button>
+			<Button android:text="9" android:id="@+id/Button09"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_weight="0.5"></Button>
+		</TableRow>
+		<TableRow android:layout_weight="1" android:layout_height="fill_parent"
+			android:id="@+id/DialerRow04" android:layout_width="fill_parent">
+			<Button android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:text="*"
+				android:layout_weight="0.25" android:id="@+id/ButtonStar"></Button>
+			<Button android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:text="0+" android:id="@+id/Button00"
+				android:layout_weight="0.25"></Button>
+			<Button android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:id="@+id/ButtonHash"
+				android:text="#" android:layout_weight="0.5"></Button>
+		</TableRow>
+		<TableRow android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:layout_weight="1"
+			android:id="@+id/DialerRow05">
 
-<ImageButton android:id="@+id/Call" android:layout_height="fill_parent" android:src="@drawable/green" android:layout_width="fill_parent" android:layout_weight="0.25">
-</ImageButton>
+			<ImageButton android:id="@+id/Call"
+				android:layout_height="fill_parent" android:src="@drawable/green"
+				android:layout_width="fill_parent" android:layout_weight="0.25">
+			</ImageButton>
 
 
-<ImageButton android:id="@+id/HangUp" android:src="@drawable/red" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25"></ImageButton>
+			<ImageButton android:id="@+id/HangUp" android:src="@drawable/red"
+				android:layout_height="fill_parent" android:layout_width="fill_parent"
+				android:layout_weight="0.25"></ImageButton>
 
 
 
+		
 </TableRow>
+		
 
-</TableLayout>
+		<EditText android:layout_width="fill_parent" android:id="@+id/status_label"
+			android:clickable="false" android:focusable="false"
+			android:cursorVisible="false" android:textSize="12sp" android:height="15sp"
+			android:layout_height="wrap_content"></EditText>
+	</TableLayout>
 
-<EditText android:layout_width="fill_parent" android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content"></EditText>
+	
 </LinearLayout>

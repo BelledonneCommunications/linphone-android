@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<EditText android:id="@+id/SipUri" android:layout_height="wrap_content"
+		android:hint="sip:" android:layout_width="fill_parent"
+		android:singleLine="true"></EditText>
+
+	<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer" android:layout_height="fill_parent">
+		
+		
+		
+		
+		<TableRow android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:id="@+id/DialerRow05">
+
+			<ImageButton android:id="@+id/Call"
+				android:layout_height="fill_parent" android:src="@drawable/green"
+				android:layout_width="fill_parent" android:layout_weight="0.25">
+			</ImageButton>
+
+
+			<ImageButton android:id="@+id/HangUp" android:src="@drawable/red"
+				android:layout_height="fill_parent" android:layout_width="fill_parent"
+				android:layout_weight="0.25"></ImageButton>
+
+
+
+		
+</TableRow><TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/DialerRow06"></TableRow>
+
+	<EditText android:layout_width="fill_parent" android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content"></EditText></TableLayout>
+
+	
+</LinearLayout>
+

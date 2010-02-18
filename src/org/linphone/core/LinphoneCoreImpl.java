@@ -20,6 +20,8 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 class LinphoneCoreImpl implements LinphoneCore {
@@ -42,6 +44,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native boolean  isInCall(long nativePtr);
 	private native boolean isInComingInvitePending(long nativePtr);
 	private native void acceptCall(long nativePtr);
+	private native long getCallLog(long nativePtr,int position);
+	private native int getNumberOfCallLogs(long nativePtr);
+	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -108,5 +113,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public synchronized void acceptCall() {
 		acceptCall(nativePtr);
 		
+	}
+	public List<LinphoneCallLog> getCallLogs() {
+		List<LinphoneCallLog> logs = new ArrayList<LinphoneCallLog>(); 
+		for (int i=0;i < getNumberOfCallLogs(nativePtr);i++) {
+			logs.add(new LinphoneCallLogImpl(getCallLog(nativePtr, i)));
+		}
+		return logs;
 	}
 }

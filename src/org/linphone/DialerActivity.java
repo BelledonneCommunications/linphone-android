@@ -1,3 +1,21 @@
+/*
+DialerActivity.java
+Copyright (C) 2010  Belledonne Communications, Grenoble, France
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
@@ -9,6 +27,7 @@ import org.linphone.core.LinphoneCore.GeneralState;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DialerActivity extends Activity implements LinphoneCoreListener {
-	private LinphoneCore mLinphoneCore; 
+	
 	private TextView mAddress;
 	private TextView mStatus;
 	private ImageButton mCall;
@@ -62,18 +81,19 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		setContentView(R.layout.dialer);
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		try {
-			theDialer = this;
-			mLinphoneCore = Linphone.getLinphone().getLinphoneCore();
+			
+			
 			mAddress = (TextView) findViewById(R.id.SipUri);
 
 			mCall = (ImageButton) findViewById(R.id.Call);
 			mCall.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					if (mLinphoneCore.isInComingInvitePending()) {
-						mLinphoneCore.acceptCall();
+					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
+					if (lLinphoneCore.isInComingInvitePending()) {
+						lLinphoneCore.acceptCall();
 						return;
 					}
-					if (mLinphoneCore.isIncall()) {
+					if (lLinphoneCore.isIncall()) {
 						Toast toast = Toast.makeText(DialerActivity.this, getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
 						toast.show();
 						return;
@@ -83,7 +103,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					if (lRawAddress.startsWith("sip:")) {
 						lCallingUri=lRawAddress;
 					} else {
-					LinphoneProxyConfig lProxy = mLinphoneCore.getDefaultProxyConfig();
+					LinphoneProxyConfig lProxy = lLinphoneCore.getDefaultProxyConfig();
 					String lDomain=null;
 					String lNormalizedNumber=lRawAddress;
 						if (lProxy!=null) {
@@ -95,15 +115,17 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 																									, mDisplayName);	
 					lCallingUri = lAddress.toUri(); 
 					}
-					mLinphoneCore.invite(lCallingUri);
+					lLinphoneCore.invite(lCallingUri);
 				}
 				
 			}); 
 			mHangup = (ImageButton) findViewById(R.id.HangUp); 
 			mHangup.setEnabled(false);  
 			mHangup.setOnClickListener(new OnClickListener() {
+				
 				public void onClick(View v) {
-					mLinphoneCore.terminateCall();
+					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
+					lLinphoneCore.terminateCall();
 				}
 				
 			});
@@ -116,40 +138,44 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					mAddressView = anAddress;
 				}
 				public void onClick(View v) {
-					mAddressView.append(mKeyCode);
+					mAddressView.append(mKeyCode); 
 				}
 				
 			};
 
+				
 			mZero = (Button) findViewById(R.id.Button00) ;
-			mZero.setOnClickListener(new DialKeyListener(mAddress,'0'));
-			mOne = (Button) findViewById(R.id.Button01) ;
-			mOne.setOnClickListener(new DialKeyListener(mAddress,'1'));
-			mTwo = (Button) findViewById(R.id.Button02);
-			mTwo.setOnClickListener(new DialKeyListener(mAddress,'2'));
-			mThree = (Button) findViewById(R.id.Button03);
-			mThree.setOnClickListener(new DialKeyListener(mAddress,'3'));
-			mFour = (Button) findViewById(R.id.Button04);
-			mFour.setOnClickListener(new DialKeyListener(mAddress,'4'));
-			mFive = (Button) findViewById(R.id.Button05);
-			mFive.setOnClickListener(new DialKeyListener(mAddress,'5'));
-			mSix = (Button) findViewById(R.id.Button06);
-			mSix.setOnClickListener(new DialKeyListener(mAddress,'6'));
-			mSeven = (Button) findViewById(R.id.Button07);
-			mSeven.setOnClickListener(new DialKeyListener(mAddress,'7'));
-			mEight = (Button) findViewById(R.id.Button08);
-			mEight.setOnClickListener(new DialKeyListener(mAddress,'8'));
-			mNine = (Button) findViewById(R.id.Button09);
-			mNine.setOnClickListener(new DialKeyListener(mAddress,'9'));
-			mStar = (Button) findViewById(R.id.ButtonStar);
-			mStar.setOnClickListener(new DialKeyListener(mAddress,'*'));
-			mHash = (Button) findViewById(R.id.ButtonHash);
-			mHash.setOnClickListener(new DialKeyListener(mAddress,'#'));
-			
+			if (mZero != null) {
+				
+				mZero.setOnClickListener(new DialKeyListener(mAddress,'0'));
+				mOne = (Button) findViewById(R.id.Button01) ;
+				mOne.setOnClickListener(new DialKeyListener(mAddress,'1'));
+				mTwo = (Button) findViewById(R.id.Button02);
+				mTwo.setOnClickListener(new DialKeyListener(mAddress,'2'));
+				mThree = (Button) findViewById(R.id.Button03);
+				mThree.setOnClickListener(new DialKeyListener(mAddress,'3'));
+				mFour = (Button) findViewById(R.id.Button04);
+				mFour.setOnClickListener(new DialKeyListener(mAddress,'4'));
+				mFive = (Button) findViewById(R.id.Button05);
+				mFive.setOnClickListener(new DialKeyListener(mAddress,'5'));
+				mSix = (Button) findViewById(R.id.Button06);
+				mSix.setOnClickListener(new DialKeyListener(mAddress,'6'));
+				mSeven = (Button) findViewById(R.id.Button07);
+				mSeven.setOnClickListener(new DialKeyListener(mAddress,'7'));
+				mEight = (Button) findViewById(R.id.Button08);
+				mEight.setOnClickListener(new DialKeyListener(mAddress,'8'));
+				mNine = (Button) findViewById(R.id.Button09);
+				mNine.setOnClickListener(new DialKeyListener(mAddress,'9'));
+				mStar = (Button) findViewById(R.id.ButtonStar);
+				mStar.setOnClickListener(new DialKeyListener(mAddress,'*'));
+				mHash = (Button) findViewById(R.id.ButtonHash);
+				mHash.setOnClickListener(new DialKeyListener(mAddress,'#'));
+			}
 			mStatus =  (TextView) findViewById(R.id.status_label);
+			theDialer = this;
 		
 		} catch (Exception e) {
-			Log.e(Linphone.TAG,"Cannot start linphone",e);
+			Log.e(LinphoneService.TAG,"Cannot start linphone",e);
 		}
 
 	}
