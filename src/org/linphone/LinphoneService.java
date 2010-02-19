@@ -1,5 +1,5 @@
 /*
-Linphone.java
+LinphoneService.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LinphoneCore.GeneralState;
 
 
 import android.app.AlertDialog;
@@ -67,7 +68,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	private SharedPreferences mPref;
 	Timer mTimer = new Timer("Linphone scheduler");
 
-	private Handler mIteratehandler;
+	private Handler mHandler =  new Handler() ;
 	
 	static LinphoneService instance()  {
 		if (theLinphone == null) {
@@ -92,17 +93,11 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			, null);
 
 			initFromConf();
-			mIteratehandler = new Handler() {
-			      public void handleMessage(Message msg) {  
-			          //iterate is called inside an Android handler to allow UI interaction within LinphoneCoreListener
-			    	  mLinphoneCore.iterate();
-			      }
-			  }; 
 
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
-					mIteratehandler.sendEmptyMessage(0);
+					  mLinphoneCore.iterate();
 				}
 
 			};
@@ -159,17 +154,35 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 
 	}
-	public void displayStatus(LinphoneCore lc, String message) {
+	public void displayStatus(final LinphoneCore lc, final String message) {
 		Log.i(TAG, message); 
-		if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().displayStatus(lc,message);
+		if (DialerActivity.getDialer()!=null)  {
+			mHandler.post(new Runnable() {
+				public void run() {
+					DialerActivity.getDialer().displayStatus(lc,message);					
+				}
+				
+			});
+			
+		}
 	}
 	public void displayWarning(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
 
 	}
-	public void generalState(LinphoneCore lc, LinphoneCore.GeneralState state) {
+	public void generalState(final LinphoneCore lc, final LinphoneCore.GeneralState state) {
 		Log.i(TAG, "new state ["+state+"]");
-		if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().generalState(lc,state);
+		if (state == GeneralState.GSTATE_POWER_OFF) {
+			//just exist
+			System.exit(0);
+		}
+		if (DialerActivity.getDialer()!=null) {
+			mHandler.post(new Runnable() {
+				public void run() {
+					DialerActivity.getDialer().generalState(lc,state);
+				}
+			});
+		}
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
 		// TODO Auto-generated method stub
@@ -256,7 +269,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		System.exit(0); // FIXME to destroy liblinphone 
+		mTimer.cancel();
+		mLinphoneCore.destroy();
 	}
 
 }

@@ -123,4 +123,9 @@ public interface LinphoneCore {
 	 */
 	public List<LinphoneCallLog> getCallLogs();
 	
+	/**
+	 * destroy linphone core and free all underlying resources
+	 */
+	public void destroy();
+	
 }

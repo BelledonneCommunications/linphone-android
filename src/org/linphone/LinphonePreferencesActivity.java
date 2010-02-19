@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 package org.linphone;
-import org.linphone.core.LinphoneCoreException;
+
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

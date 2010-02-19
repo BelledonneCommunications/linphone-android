@@ -23,11 +23,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.LinphoneService;
+
+import android.util.Log;
+
 
 class LinphoneCoreImpl implements LinphoneCore {
 
 	private final  LinphoneCoreListener mListener;
-	private final long nativePtr;
+	private long nativePtr = 0;
 	private native long newLinphoneCore(LinphoneCoreListener listener,String userConfig,String factoryConfig,Object  userdata);
 	private native void iterate(long nativePtr);
 	private native long getDefaultProxyConfig(long nativePtr);
@@ -46,22 +50,29 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void acceptCall(long nativePtr);
 	private native long getCallLog(long nativePtr,int position);
 	private native int getNumberOfCallLogs(long nativePtr);
+	private native void delete(long nativePtr);
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
 	}
+	protected void finalize() throws Throwable {
+		
+	}
 	
 	public synchronized void addAuthInfo(LinphoneAuthInfo info) {
+		isValid();
 		addAuthInfo(nativePtr,((LinphoneAuthInfoImpl)info).nativePtr);
 	}
 
 	public synchronized LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route,boolean enableRegister) throws LinphoneCoreException {
+		isValid();
 		return new LinphoneProxyConfigImpl(identity, proxy, route,enableRegister);
 	}
 
 	public synchronized LinphoneProxyConfig getDefaultProxyConfig() {
+		isValid();
 		long lNativePtr = getDefaultProxyConfig(nativePtr);
 		if (lNativePtr!=0) {
 			return new LinphoneProxyConfigImpl(lNativePtr); 
@@ -71,32 +82,40 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 
 	public synchronized void invite(String uri) {
+		isValid();
 		invite(nativePtr,uri);
 	}
 
 	public synchronized void iterate() {
+		isValid();
 		iterate(nativePtr);
 	}
 
 	public synchronized void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg) {
+		isValid();
 		setDefaultProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr);
 	}
 	public synchronized void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException{
+		isValid();
 		if (addProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr) !=0) {
 			throw new LinphoneCoreException("bad proxy config");
 		}
 	}
 	public synchronized void clearAuthInfos() {
+		isValid();
 		clearAuthInfos(nativePtr);
 		
 	}
 	public synchronized void clearProxyConfigs() {
+		isValid();
 		clearProxyConfigs(nativePtr);
 	}
 	public synchronized void terminateCall() {
+		isValid();
 		terminateCall(nativePtr);
 	}
 	public synchronized LinphoneAddress getRemoteAddress() {
+		isValid();
 		long ptr = getRemoteAddress(nativePtr);
 		if (ptr==0) {
 			return null;
@@ -105,20 +124,35 @@ class LinphoneCoreImpl implements LinphoneCore {
 		}
 	}
 	public synchronized  boolean isIncall() {
+		isValid();
 		return isInCall(nativePtr);
 	}
 	public synchronized boolean isInComingInvitePending() {
+		isValid();
 		return isInComingInvitePending(nativePtr);
 	}
 	public synchronized void acceptCall() {
+		isValid();
 		acceptCall(nativePtr);
 		
 	}
-	public List<LinphoneCallLog> getCallLogs() {
+	public synchronized List<LinphoneCallLog> getCallLogs() {
+		isValid();
 		List<LinphoneCallLog> logs = new ArrayList<LinphoneCallLog>(); 
 		for (int i=0;i < getNumberOfCallLogs(nativePtr);i++) {
 			logs.add(new LinphoneCallLogImpl(getCallLog(nativePtr, i)));
 		}
 		return logs;
+	}
+	public synchronized void destroy() {
+		isValid();
+		delete(nativePtr);
+		nativePtr = 0;
+	}
+	
+	private void isValid() {
+		if (nativePtr == 0) {
+			throw new RuntimeException("object already destroyed");
+		}
 	}
 }

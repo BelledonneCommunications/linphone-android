@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class HistoryActivity extends ListActivity {
@@ -46,6 +47,22 @@ public class HistoryActivity extends ListActivity {
 	
 	  
 	  @Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		TextView lFirstLineView = (TextView) v.findViewById(R.id.history_cell_first_line);
+		TextView lSecondLineView = (TextView) v.findViewById(R.id.history_cell_second_line);
+		if (lSecondLineView.getVisibility() == View.GONE) {
+			// no display name
+			DialerActivity.getDialer().setContactAddress(lFirstLineView.getText().toString(), null);
+		} else {
+			DialerActivity.getDialer().setContactAddress(lSecondLineView.getText().toString()
+														,lFirstLineView.getText().toString());
+		}
+		LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);	
+	}
+
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		 setListAdapter(new CallHistoryAdapter(this));
@@ -73,21 +90,29 @@ public class HistoryActivity extends ListActivity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LinphoneCallLog lLog = mLogs.get(position);
 			View lView=null;
+			if (convertView !=null) {
+				lView = convertView;
+			} else {
+				lView = mInflater.inflate(R.layout.history_cell, parent,false);
+				
+			}
+			LinphoneCallLog lLog = mLogs.get(mLogs.size()-position-1);
 			LinphoneAddress lAddress;
-			lView = mInflater.inflate(R.layout.history_cell, null);
 			TextView lFirstLineView = (TextView) lView.findViewById(R.id.history_cell_first_line);
 			TextView lSecondLineView = (TextView) lView.findViewById(R.id.history_cell_second_line);
-			ImageView lDirectionImage = (ImageView) lView.findViewById(R.id.history_cell_icon);
+			ImageView lDirectionImageIn = (ImageView) lView.findViewById(R.id.history_cell_icon_in);
+			ImageView lDirectionImageOut = (ImageView) lView.findViewById(R.id.history_cell_icon_out);
 			
 			if (lLog.getDirection() == CallDirection.Callincoming) {
 				lAddress = lLog.getFrom();
-				lDirectionImage.setImageResource(R.drawable.in_call);
+				lDirectionImageIn.setVisibility(View.VISIBLE);
+				lDirectionImageOut.setVisibility(View.GONE);
 				
 			} else {
 				lAddress = lLog.getTo();
-				lDirectionImage.setImageResource(R.drawable.out_call);
+				lDirectionImageIn.setVisibility(View.GONE);
+				lDirectionImageOut.setVisibility(View.VISIBLE);
 			}
 
 			if (lAddress.getDisplayName() == null) {
@@ -96,6 +121,7 @@ public class HistoryActivity extends ListActivity {
 			} else {
 				lFirstLineView.setText(lAddress.getDisplayName());
 				lSecondLineView.setText(lAddress.getUserName());
+				lSecondLineView.setVisibility(View.VISIBLE);
 			}
 			
 			return lView;
