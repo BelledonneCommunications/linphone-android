@@ -51,6 +51,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long getCallLog(long nativePtr,int position);
 	private native int getNumberOfCallLogs(long nativePtr);
 	private native void delete(long nativePtr);
+	private native void setNetworkStateReachable(long nativePtr,boolean isReachable); 
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -154,5 +155,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 		if (nativePtr == 0) {
 			throw new RuntimeException("object already destroyed");
 		}
+	}
+	public void setNetworkStateReachable(boolean isReachable) {
+		setNetworkStateReachable(nativePtr,isReachable);
 	}
 }

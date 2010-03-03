@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -95,11 +96,13 @@ public class LinphoneActivity extends TabActivity {
 		super.onDestroy();
 		if  (isFinishing())  {
 			//restaure audio settings
-			mAudioManager.setSpeakerphoneOn(true); 
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {
 			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
-			
+			} else {
+				mAudioManager.setSpeakerphoneOn(false); 
+			}
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.setClass(this, LinphoneService.class);
 			stopService(intent);

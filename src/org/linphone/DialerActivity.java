@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -200,14 +201,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	public void generalState(LinphoneCore lc, GeneralState state) {
 		switch(state) {
-		case GSTATE_CALL_ERROR: {
 
-			Toast toast = Toast.makeText(this
-					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
-					, Toast.LENGTH_LONG);
-			toast.show();
-			break;
-		}
 		case GSTATE_REG_OK: {
 			break; 
 		}
@@ -218,23 +212,35 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		case GSTATE_CALL_IN_INVITE: { 
 			// activate red button 
 			mHangup.setEnabled(true);
-			mAudioManager.setSpeakerphoneOn(true); 
-			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
-			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {
+				mAudioManager.setMode(AudioManager.MODE_NORMAL); 
+				mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
+				AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
+			} else {
+				mAudioManager.setSpeakerphoneOn(true); 
+			}
 			break;
 		}
 		case GSTATE_CALL_IN_CONNECTED:
 		case GSTATE_CALL_OUT_CONNECTED: {
-			mAudioManager.setSpeakerphoneOn(false); 
-			mAudioManager.setMode(AudioManager.MODE_IN_CALL); 
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
-			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {
+				mAudioManager.setMode(AudioManager.MODE_IN_CALL); 
+				mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
+				AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
+			} else {
+				mAudioManager.setSpeakerphoneOn(false); 
+			}
 			break;
 		}
+		case GSTATE_CALL_ERROR: {
+
+			Toast toast = Toast.makeText(this
+					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
+					, Toast.LENGTH_LONG);
+			toast.show();
+		}
 		case GSTATE_CALL_END: {
-			mCall.setEnabled(true);
-			mHangup.setEnabled(false);
+			exitCallMode();
 			break;
 		}
 		}
@@ -246,6 +252,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	public void show(LinphoneCore lc) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void exitCallMode() {
+		mCall.setEnabled(true);
+		mHangup.setEnabled(false);		
 	}
 	
 }

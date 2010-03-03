@@ -124,6 +124,15 @@ public interface LinphoneCore {
 	public List<LinphoneCallLog> getCallLogs();
 	
 	/**
+	 * This method is called by the application to notify the Linphone core library when network is reachable.
+	 * Calling this method with true trigger Linphone to initiate a registration process for all proxy
+	 * configuration with parameter register set to enable.
+	 * This method disable the automatic registration mode. It means you must call this method after each network state changes
+	 * @param network state  
+	 *
+	 */
+	public void setNetworkStateReachable(boolean isReachable);
+	/**
 	 * destroy linphone core and free all underlying resources
 	 */
 	public void destroy();

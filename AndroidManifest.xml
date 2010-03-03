@@ -6,7 +6,8 @@
     <application android:icon="@drawable/linphone2" android:label="@string/app_name" android:debuggable = "true">
         <activity android:name=".LinphoneActivity"
                   android:label="@string/app_name"
-                  android:theme="@android:style/Theme.NoTitleBar">
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,6 +22,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+              <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tel" />
+            </intent-filter>
          </activity>
         <activity android:name=".ContactPickerActivity">
             <intent-filter>
@@ -34,7 +40,10 @@
          </activity>         
          <service android:name=".LinphoneService">
         </service>
-	</application>
+	<receiver android:name="NetworkManager"><intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
+</intent-filter>
+</receiver>
+</application>
 
 <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>

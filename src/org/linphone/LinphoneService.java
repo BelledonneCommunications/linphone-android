@@ -35,25 +35,16 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 
-import android.app.AlertDialog;
 import android.app.Service;
-import android.app.TabActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.os.Bundle;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.TabHost;
-import android.widget.Toast;
 
 public class LinphoneService extends Service implements LinphoneCoreListener {
 	static final public String TAG="Linphone";
@@ -91,7 +82,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			, new File(LINPHONE_RC) 
 			, new File(LINPHONE_FACTORY_RC)
 			, null);
-
+			
 			initFromConf();
 
 			TimerTask lTask = new TimerTask() {
@@ -249,6 +240,10 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 				//escape +
 				lDefaultProxyConfig.setDialEscapePlus(true);
 			}
+			//init netwaork state
+			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			mLinphoneCore.setNetworkStateReachable(lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED); 
+			
 		}catch (LinphoneCoreException e) {
 			throw new LinphoneException(e);
 		}
