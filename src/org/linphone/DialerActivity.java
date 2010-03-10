@@ -230,6 +230,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			} else {
 				mAudioManager.setSpeakerphoneOn(false); 
 			}
+			setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 			break;
 		}
 		case GSTATE_CALL_ERROR: {
@@ -256,7 +257,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	private void exitCallMode() {
 		mCall.setEnabled(true);
-		mHangup.setEnabled(false);		
+		mHangup.setEnabled(false);
+		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 	}
 	
 }

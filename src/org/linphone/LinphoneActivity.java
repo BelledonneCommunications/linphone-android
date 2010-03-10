@@ -19,11 +19,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,13 +37,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TabHost;
 
-public class LinphoneActivity extends TabActivity {
+public class LinphoneActivity extends TabActivity implements SensorEventListener {
 	public static String DIALER_TAB = "dialer";
 	private AudioManager mAudioManager;
 	private static LinphoneActivity theLinphoneActivity;
-
+	private SensorManager mSensorManager;
+	private FrameLayout mMainFrame;
 	protected static LinphoneActivity instance()
 	  {
 		if (theLinphoneActivity == null) {
@@ -51,11 +61,16 @@ public class LinphoneActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		theLinphoneActivity = this;
-
+		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
 		
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
+		if (lSensorList.size() >0) {
+			mSensorManager.registerListener(this,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
+		}
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		
-		TabHost lTabHost = getTabHost();  // The activity TabHost
+		TabHost lTabHost = getTabHost();  // The activity TabHost 
 	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
 	   
 
@@ -164,6 +179,22 @@ public class LinphoneActivity extends TabActivity {
 		           }
 		       });
 		builder.create().show();
+	}
+
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			//nop 		
+	}
+
+	public void onSensorChanged(SensorEvent event) {
+		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
+		if (event.values[0] == 0) {
+			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
+			mMainFrame.setVisibility(View.INVISIBLE);
+		} else if (event.values[0] == 1) {
+			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
+			mMainFrame.setVisibility(View.VISIBLE);
+		}
+		getWindow().setAttributes(lAttrs);
 	}
 	
 }
