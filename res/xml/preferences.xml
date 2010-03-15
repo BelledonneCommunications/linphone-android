@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
-<PreferenceCategory android:title="@string/pref_sipaccount"><EditTextPreference android:title="@string/pref_username" android:key="@string/pref_username_key"></EditTextPreference>
-<EditTextPreference android:title="@string/pref_passwd" android:key="@string/pref_passwd_key"></EditTextPreference>
-<EditTextPreference android:title="@string/pref_domain" android:key="@string/pref_domain_key"></EditTextPreference>
-<EditTextPreference android:title="@string/pref_proxy" android:key="@string/pref_proxy_key"></EditTextPreference>
-</PreferenceCategory>
-<PreferenceCategory android:title="@string/pref_advanced"><EditTextPreference android:title="@string/pref_prefix" android:key="@string/pref_prefix_key"></EditTextPreference>
-</PreferenceCategory>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/pref_sipaccount">
+		<EditTextPreference android:title="@string/pref_username"
+			android:key="@string/pref_username_key"></EditTextPreference>
+		<EditTextPreference android:title="@string/pref_passwd"
+			android:key="@string/pref_passwd_key"></EditTextPreference>
+		<EditTextPreference android:title="@string/pref_domain"
+			android:key="@string/pref_domain_key"></EditTextPreference>
+		<EditTextPreference android:title="@string/pref_proxy"
+			android:key="@string/pref_proxy_key"></EditTextPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_advanced">
+		<EditTextPreference android:title="@string/pref_prefix"
+			android:key="@string/pref_prefix_key"></EditTextPreference>
+	</PreferenceCategory>
+
 </PreferenceScreen>

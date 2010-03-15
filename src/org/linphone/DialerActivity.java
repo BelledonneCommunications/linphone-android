@@ -36,6 +36,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private TextView mAddress;
 	private TextView mStatus;
 	private ImageButton mCall;
+	private ImageButton mDecline;
 	private ImageButton mHangup;
 	private Button mZero;
 	private Button mOne;
@@ -57,6 +60,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private Button mNine;
 	private Button mStar;
 	private Button mHash;
+	
+	private LinearLayout mCallControlRow;
+	private LinearLayout mInCallControlRow;
+	
 	private static DialerActivity theDialer;
 	
 	private String mDisplayName;
@@ -120,16 +127,19 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				}
 				
 			}); 
+			mDecline= (ImageButton) findViewById(R.id.Decline);
 			mHangup = (ImageButton) findViewById(R.id.HangUp); 
-			mHangup.setEnabled(false);  
-			mHangup.setOnClickListener(new OnClickListener() {
+			
+			OnClickListener lHangupListener = new OnClickListener() {
 				
 				public void onClick(View v) {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
 					lLinphoneCore.terminateCall();
 				}
 				
-			});
+			};
+			mHangup.setOnClickListener(lHangupListener); 
+			mDecline.setOnClickListener(lHangupListener);
 			
 			class DialKeyListener implements  OnClickListener {
 				final String mKeyCode;
@@ -143,7 +153,18 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				}
 				
 			};
-
+			mCallControlRow = (LinearLayout) findViewById(R.id.CallControlRow);
+			mInCallControlRow = (LinearLayout) findViewById(R.id.IncallControlRow);
+			mInCallControlRow.setVisibility(View.GONE);
+			
+			if (LinphoneService.isready()) {
+				if (LinphoneService.instance().getLinphoneCore().isIncall()) {
+					mCall.setEnabled(false);
+					mHangup.setEnabled(!mCall.isEnabled());
+					mCallControlRow.setVisibility(View.GONE);
+					mInCallControlRow.setVisibility(View.VISIBLE);
+				}
+			}
 				
 			mZero = (Button) findViewById(R.id.Button00) ;
 			if (mZero != null) {
@@ -172,6 +193,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				mHash = (Button) findViewById(R.id.ButtonHash);
 				mHash.setOnClickListener(new DialKeyListener(mAddress,'#'));
 			}
+
 			mStatus =  (TextView) findViewById(R.id.status_label);
 			theDialer = this;
 		
@@ -179,6 +201,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			Log.e(LinphoneService.TAG,"Cannot start linphone",e);
 		}
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) {
 		// TODO Auto-generated method stub
@@ -202,12 +229,18 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	public void generalState(LinphoneCore lc, GeneralState state) {
 		switch(state) {
 
+		case GSTATE_POWER_ON:
+			mCall.setEnabled(!LinphoneService.instance().getLinphoneCore().isIncall());
+			mHangup.setEnabled(!mCall.isEnabled());  
+			break;
 		case GSTATE_REG_OK: {
 			break; 
 		}
 		case GSTATE_CALL_OUT_INVITE: {
 			//de-activate green button
 			mCall.setEnabled(false);
+			mCallControlRow.setVisibility(View.GONE);
+			mInCallControlRow.setVisibility(View.VISIBLE);
 		}
 		case GSTATE_CALL_IN_INVITE: { 
 			// activate red button 
@@ -256,6 +289,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	
 	private void exitCallMode() {
+		mCallControlRow.setVisibility(View.VISIBLE);
+		mInCallControlRow.setVisibility(View.GONE);
 		mCall.setEnabled(true);
 		mHangup.setEnabled(false);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);

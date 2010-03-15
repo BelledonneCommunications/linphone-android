@@ -60,7 +60,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	Timer mTimer = new Timer("Linphone scheduler");
 
 	private Handler mHandler =  new Handler() ;
-	
+	static boolean isready() {
+		return (theLinphone!=null);
+	}
 	static LinphoneService instance()  {
 		if (theLinphone == null) {
 			throw new RuntimeException("LinphoneActivity not instanciated yet");
@@ -83,6 +85,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			, new File(LINPHONE_FACTORY_RC)
 			, null);
 			
+			mLinphoneCore.setSoftPlayLevel(3);  
 			initFromConf();
 
 			TimerTask lTask = new TimerTask() {

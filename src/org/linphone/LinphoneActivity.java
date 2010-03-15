@@ -61,6 +61,11 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		theLinphoneActivity = this;
+		// start linphone as background      
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.setClass(this, LinphoneService.class);
+		startService(intent);
+		
 		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -70,7 +75,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		}
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		
-		TabHost lTabHost = getTabHost();  // The activity TabHost 
+		TabHost lTabHost = getTabHost();  // The activity TabHost  
 	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
 	   
 
@@ -100,17 +105,16 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    lTabHost.addTab(spec);
 
 	    lTabHost.setCurrentTabByTag("dialer");
-		// start linphone as background
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.setClass(this, LinphoneService.class);
-		startService(intent);
+
 	    
 	}
+	
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
 		if  (isFinishing())  {
-			//restaure audio settings
+			//restaure audio settings   
 			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {
 			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
@@ -121,8 +125,21 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.setClass(this, LinphoneService.class);
 			stopService(intent);
+			theLinphoneActivity = null;
 		}
-		theLinphoneActivity = null;
+		
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,15 +199,15 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			//nop 		
+			//nop 	 	
 	}
 
 	public void onSensorChanged(SensorEvent event) {
 		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
-		if (event.values[0] == 0) {
+		if (LinphoneService.instance().getLinphoneCore().isIncall() && event.values[0] == 0) {
 			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
 			mMainFrame.setVisibility(View.INVISIBLE);
-		} else if (event.values[0] == 1) {
+		} else if (mMainFrame.getVisibility() != View.VISIBLE && event.values[0] == 1) {
 			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
 			mMainFrame.setVisibility(View.VISIBLE);
 		}

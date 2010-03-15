@@ -51,7 +51,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long getCallLog(long nativePtr,int position);
 	private native int getNumberOfCallLogs(long nativePtr);
 	private native void delete(long nativePtr);
-	private native void setNetworkStateReachable(long nativePtr,boolean isReachable); 
+	private native void setNetworkStateReachable(long nativePtr,boolean isReachable);
+	private native void setSoftPlayLevel(long nativeptr, float gain);
+	private native float getSoftPlayLevel(long nativeptr);
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -158,5 +160,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void setNetworkStateReachable(boolean isReachable) {
 		setNetworkStateReachable(nativePtr,isReachable);
+	}
+	public void setSoftPlayLevel(float gain) {
+		setSoftPlayLevel(nativePtr,gain);
+		
+	}
+	public float getSoftPlayLevel() {
+		return getSoftPlayLevel(nativePtr);
 	}
 }

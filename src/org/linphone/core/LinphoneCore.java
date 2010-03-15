@@ -136,5 +136,15 @@ public interface LinphoneCore {
 	 * destroy linphone core and free all underlying resources
 	 */
 	public void destroy();
+	/**
+	 * Allow to control play level before entering  sound card:  
+	 * @param level in db
+	 */
+	public void setSoftPlayLevel(float gain);
+	/**
+	 * get play level before entering  sound card:  
+	 * @return level in db
+	 */
+	public float getSoftPlayLevel();
 	
 }

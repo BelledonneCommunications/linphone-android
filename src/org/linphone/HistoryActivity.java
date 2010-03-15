@@ -97,7 +97,7 @@ public class HistoryActivity extends ListActivity {
 				lView = mInflater.inflate(R.layout.history_cell, parent,false);
 				
 			}
-			LinphoneCallLog lLog = mLogs.get(mLogs.size()-position-1);
+			LinphoneCallLog lLog = mLogs.get(position);
 			LinphoneAddress lAddress;
 			TextView lFirstLineView = (TextView) lView.findViewById(R.id.history_cell_first_line);
 			TextView lSecondLineView = (TextView) lView.findViewById(R.id.history_cell_second_line);
