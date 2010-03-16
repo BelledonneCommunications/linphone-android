@@ -41,6 +41,11 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>         
+		 <activity android:name=".AboutActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>         
          <service android:name=".LinphoneService">
         </service>
 	<receiver android:name="NetworkManager"><intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>

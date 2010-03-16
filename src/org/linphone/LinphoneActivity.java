@@ -160,6 +160,10 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		case R.id.menu_exit:
 			finish();
 			break;
+		case R.id.menu_about:
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.setClass(this, AboutActivity.class);
+			startActivity(intent);
 		default:
 			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
 			break;

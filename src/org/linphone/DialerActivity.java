@@ -20,6 +20,7 @@ package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
@@ -107,7 +108,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			
 			mErase.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					mAddress.getEditableText().delete(mAddress.getEditableText().length()-1, mAddress.getEditableText().length());
+					if (mAddress.length() >0) {
+						int lBegin = mAddress.getSelectionStart();
+						if (lBegin == -1) {
+							lBegin = mAddress.getEditableText().length()-1;
+						}
+						if (lBegin >0) {
+							mAddress.getEditableText().delete(lBegin-1,lBegin);
+						}
+					}
 				}
 			});
 			
@@ -124,24 +133,18 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						toast.show();
 						return;
 					}
-					String lRawAddress = mAddress.getText().toString();
-					String lCallingUri=null;
-					if (lRawAddress.startsWith("sip:")) {
-						lCallingUri=lRawAddress;
-					} else {
-					LinphoneProxyConfig lProxy = lLinphoneCore.getDefaultProxyConfig();
-					String lDomain=null;
-					String lNormalizedNumber=lRawAddress;
-						if (lProxy!=null) {
-							lNormalizedNumber = lProxy.normalizePhoneNumber(lNormalizedNumber);
-							lDomain = lProxy.getDomain();
-						}
-					LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(lNormalizedNumber 
-																									, lDomain
-																									, mDisplayName);	
-					lCallingUri = lAddress.toUri(); 
+					LinphoneAddress lAddress;
+					try {
+						lAddress = lLinphoneCore.interpretUrl( mAddress.getText().toString());
+					} catch (LinphoneCoreException e) {
+						Toast toast = Toast.makeText(DialerActivity.this
+													,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
+													, Toast.LENGTH_LONG);
+						toast.show();
+						return;
 					}
-					lLinphoneCore.invite(lCallingUri);
+					lAddress.setDisplayName(mDisplayName);
+					lLinphoneCore.invite(lAddress);
 				}
 				
 			}); 
@@ -303,7 +306,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 		case GSTATE_CALL_IN_CONNECTED:
 		case GSTATE_CALL_OUT_CONNECTED: {
-			routeAudioToReceiver();
+			 if (mSpeaker.isChecked()) {
+				 routeAudioToSpeaker();
+			 } else {
+				 routeAudioToReceiver();
+			 }
 			setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 			break;
 		}
@@ -321,7 +328,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		
 	}
 	public void show(LinphoneCore lc) {

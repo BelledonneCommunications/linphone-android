@@ -52,6 +52,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setSoftPlayLevel(long nativeptr, float gain);
 	private native float getSoftPlayLevel(long nativeptr);
 	private native void muteMic(long nativePtr,boolean isMuted);
+	private native long interpretUrl(long nativePtr,String destination);
+	private native void inviteAddress(long nativePtr,long to);
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -168,5 +170,16 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void muteMic(boolean isMuted) {
 		muteMic(nativePtr,isMuted);
+	}
+	public LinphoneAddress interpretUrl(String destination) throws LinphoneCoreException {
+		long lAddress = interpretUrl(nativePtr,destination);
+		if (lAddress != 0) {
+			return new LinphoneAddressImpl(lAddress);
+		} else {
+			throw new LinphoneCoreException("Cannot interpret ["+destination+"]");
+		}
+	}
+	public void invite(LinphoneAddress to) { 
+		inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
 	}
 }

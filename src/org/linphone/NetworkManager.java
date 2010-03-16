@@ -35,8 +35,11 @@ public class NetworkManager extends BroadcastReceiver {
 		 NetworkInfo lNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 		Log.i(LinphoneService.TAG, "Network info ["+lNetworkInfo+"]");
 		Boolean lNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,false);
-		//Boolean lIsFailOver = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER,false);
-		 if (lNoConnectivity| ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
+		if (!LinphoneService.isready()) {
+			Log.i(LinphoneService.TAG, "Linphone service not ready");
+			return;
+		}
+		if (lNoConnectivity| ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
 			 LinphoneService.instance().getLinphoneCore().setNetworkStateReachable(false);
 		 } else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
 			 LinphoneService.instance().getLinphoneCore().setNetworkStateReachable(true);

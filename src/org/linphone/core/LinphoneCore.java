@@ -90,6 +90,8 @@ public interface LinphoneCore {
 	
 	public void invite(String uri);
 	
+	public void invite(LinphoneAddress to);
+	
 	public void terminateCall();
 	/**
 	 * get the remote address in case of in/out call
@@ -151,6 +153,13 @@ public interface LinphoneCore {
 	 * @param isMuted
 	 */
 	public void muteMic(boolean isMuted);
+	/**
+	 * Build an address according to the current proxy config. In case destination is not a sip uri, the default proxy domain is automatically appended
+	 * @param destination
+	 * @return
+	 * @throws If no LinphonrAddress can be built from destination
+	 */
+	public LinphoneAddress interpretUrl(String destination) throws LinphoneCoreException;
 	
 	
 }

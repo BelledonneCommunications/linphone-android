@@ -34,7 +34,11 @@ public interface LinphoneAddress {
 	 * @return null if not set
 	 */
 	public String getDomain();
-	
+	/**
+	 * set display name 
+	 * @param name
+	 */
+	public void setDisplayName(String name);
 	/**
 	 * @return an URI version of the address that can be used to place a call using {@link LinphoneCore#invite(String)}
 	 */
