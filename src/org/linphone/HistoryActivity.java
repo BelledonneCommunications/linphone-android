@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCallLog.CallDirection;
 
 import android.app.ListActivity;
@@ -70,10 +72,8 @@ public class HistoryActivity extends ListActivity {
 
 
 	class CallHistoryAdapter extends  BaseAdapter {
-		private final Context mContext;
 		final List<LinphoneCallLog> mLogs; 
 		CallHistoryAdapter(Context aContext) {
-			mContext = aContext;
 			mLogs = LinphoneService.instance().getLinphoneCore().getCallLogs();
 		}
 		public int getCount() {
@@ -114,13 +114,22 @@ public class HistoryActivity extends ListActivity {
 				lDirectionImageIn.setVisibility(View.GONE);
 				lDirectionImageOut.setVisibility(View.VISIBLE);
 			}
-
-			if (lAddress.getDisplayName() == null) {
-				lFirstLineView.setText(lAddress.getUserName());
+			LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+			LinphoneProxyConfig lProxyConfig = lc.getDefaultProxyConfig();
+			String lDetailedName=null;
+			String lDisplayName = lAddress.getDisplayName(); 
+			
+			if (lProxyConfig != null && lProxyConfig.getDomain().equals(lAddress.getDomain())) {
+				lDetailedName = lAddress.getUserName();
+			} else {
+				lDetailedName = lAddress.toUri();
+			}
+			if (lDisplayName == null) {
+				lFirstLineView.setText(lDetailedName);
 				lSecondLineView.setVisibility(View.GONE);
 			} else {
-				lFirstLineView.setText(lAddress.getDisplayName());
-				lSecondLineView.setText(lAddress.getUserName());
+				lFirstLineView.setText(lDisplayName);
+				lSecondLineView.setText(lDetailedName);
 				lSecondLineView.setVisibility(View.VISIBLE);
 			}
 			

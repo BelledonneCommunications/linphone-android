@@ -146,5 +146,11 @@ public interface LinphoneCore {
 	 * @return level in db
 	 */
 	public float getSoftPlayLevel();
+	/**
+	 *  Mutes or unmutes the local microphone.
+	 * @param isMuted
+	 */
+	public void muteMic(boolean isMuted);
+	
 	
 }

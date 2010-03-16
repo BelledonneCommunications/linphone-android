@@ -3,8 +3,20 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<LinearLayout android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="fill_parent"><EditText android:id="@+id/SipUri" android:layout_height="wrap_content" android:hint="sip:" android:layout_width="fill_parent" android:lines="1" android:layout_weight="0.8"></EditText>
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/Erase" android:text=" &lt;- "></Button>
+	<LinearLayout android:id="@+id/LinearLayout02"
+		android:layout_height="wrap_content" android:layout_width="fill_parent">
+		<LinearLayout android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/Addresslayout">
+			<EditText android:id="@+id/SipUri" android:layout_height="wrap_content"
+				android:hint="sip:" android:layout_width="fill_parent"
+				android:lines="1" android:layout_weight="0.2"></EditText>
+			<Button android:layout_height="wrap_content" android:id="@+id/Erase"
+				android:layout_width="fill_parent" android:text="&lt;-" android:layout_weight="0.8"></Button>
+		</LinearLayout>
+
+
+<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/IncallAddressLayout"><EditText android:text="@+id/EditText01" android:layout_height="wrap_content" android:lines="1" android:id="@+id/DisplayNameView" android:clickable="false" android:cursorVisible="false" android:gravity="center" android:layout_width="fill_parent"></EditText>
+	</LinearLayout>
 </LinearLayout>
 
 	<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer"

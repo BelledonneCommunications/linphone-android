@@ -23,14 +23,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.LinphoneService;
-
-import android.util.Log;
-
 
 class LinphoneCoreImpl implements LinphoneCore {
 
-	private final  LinphoneCoreListener mListener;
+	@SuppressWarnings("unused")
+	private final  LinphoneCoreListener mListener; //to make sure to keep a reference on this object
 	private long nativePtr = 0;
 	private native long newLinphoneCore(LinphoneCoreListener listener,String userConfig,String factoryConfig,Object  userdata);
 	private native void iterate(long nativePtr);
@@ -54,6 +51,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setNetworkStateReachable(long nativePtr,boolean isReachable);
 	private native void setSoftPlayLevel(long nativeptr, float gain);
 	private native float getSoftPlayLevel(long nativeptr);
+	private native void muteMic(long nativePtr,boolean isMuted);
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -167,5 +165,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public float getSoftPlayLevel() {
 		return getSoftPlayLevel(nativePtr);
+	}
+	public void muteMic(boolean isMuted) {
+		muteMic(nativePtr,isMuted);
 	}
 }

@@ -4,4 +4,5 @@
 <item android:title="@string/menu_settings" android:id="@+id/menu_settings">
 </item>
 <item android:title="@string/menu_exit" android:id="@+id/menu_exit"></item>
+<item android:id="@+id/menu_about" android:title="@string/menu_about"></item>
 </menu>

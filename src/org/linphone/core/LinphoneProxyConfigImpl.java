@@ -42,8 +42,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		ownPtr=false;
 	}
 	protected void finalize() throws Throwable {
-		Log.e(LinphoneService.TAG,"fixme, should release underlying proxy config");
-		// FIXME if (ownPtr) delete(nativePtr);
+		//Log.e(LinphoneService.TAG,"fixme, should release underlying proxy config");
+		if (ownPtr) delete(nativePtr);
 	}
 	private native long newLinphoneProxyConfig();
 	private native void  delete(long ptr);

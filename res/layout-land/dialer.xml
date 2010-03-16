@@ -3,34 +3,66 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<EditText android:id="@+id/SipUri" android:layout_height="wrap_content"
-		android:hint="sip:" android:layout_width="fill_parent"
-		android:singleLine="true"></EditText>
+	<LinearLayout android:id="@+id/LinearLayout02"
+		android:layout_height="wrap_content" android:layout_width="fill_parent">
+		<LinearLayout android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/Addresslayout">
+			<EditText android:id="@+id/SipUri" android:layout_height="wrap_content"
+				android:hint="sip:" android:layout_width="fill_parent"
+				android:lines="1" android:layout_weight="0.2"></EditText>
+			<Button android:layout_height="wrap_content" android:id="@+id/Erase"
+				android:layout_width="fill_parent" android:text="&lt;-"
+				android:layout_weight="0.8"></Button>
+		</LinearLayout>
 
-	<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer" android:layout_height="fill_parent">
-		
-		
-		
-		
-		<TableRow android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:id="@+id/DialerRow05">
 
+		<LinearLayout android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/IncallAddressLayout">
+			<EditText android:text="@+id/EditText01"
+				android:layout_height="wrap_content" android:lines="1"
+				android:id="@+id/DisplayNameView" android:clickable="false"
+				android:cursorVisible="false" android:gravity="center"
+				android:layout_width="fill_parent"></EditText>
+		</LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:orientation="vertical" android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<LinearLayout android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:id="@+id/IncallControlRow">
+			<ToggleButton android:id="@+id/mic_mute_button"
+				android:textOn="" android:textOff="" android:layout_weight="0.25"
+				android:layout_height="fill_parent" android:layout_width="fill_parent"
+				android:drawableTop="@drawable/mic_active" android:checked="true"></ToggleButton>
+			<ImageButton android:src="@drawable/red"
+				android:layout_height="fill_parent" android:layout_width="fill_parent"
+				android:layout_weight="0.25" android:id="@+id/HangUp"></ImageButton>
+			<ToggleButton android:id="@+id/speaker_button"
+				android:textOn="" android:textOff="" android:layout_weight="0.25"
+				android:layout_height="fill_parent" android:layout_width="fill_parent"
+				android:drawableTop="@drawable/speaker_32_on"></ToggleButton>
+		</LinearLayout>
+		<LinearLayout android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:id="@+id/CallControlRow">
 			<ImageButton android:id="@+id/Call"
 				android:layout_height="fill_parent" android:src="@drawable/green"
 				android:layout_width="fill_parent" android:layout_weight="0.25">
 			</ImageButton>
-
-
-			<ImageButton android:id="@+id/HangUp" android:src="@drawable/red"
+			<ImageButton android:src="@drawable/red"
 				android:layout_height="fill_parent" android:layout_width="fill_parent"
-				android:layout_weight="0.25"></ImageButton>
+				android:layout_weight="0.25" android:id="@+id/Decline"></ImageButton>
+		</LinearLayout>
+		<EditText android:layout_width="fill_parent" android:id="@+id/status_label"
+			android:clickable="false" android:focusable="false"
+			android:cursorVisible="false" android:textSize="12sp" android:height="15sp"
+			android:background="@android:color/transparent" android:textColor="@android:color/white"
+			android:lines="1"  android:layout_height="wrap_content"></EditText>
+	</LinearLayout>
 
 
 
-		
-</TableRow><TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/DialerRow06"></TableRow>
 
-	<EditText android:layout_width="fill_parent" android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content"></EditText></TableLayout>
-
-	
 </LinearLayout>
+
 
