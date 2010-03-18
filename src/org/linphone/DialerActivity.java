@@ -31,13 +31,16 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -71,7 +74,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private ToggleButton mSpeaker;
 	
 	private LinearLayout mCallControlRow;
-	private LinearLayout mInCallControlRow;
+	private TableRow mInCallControlRow;
 	private LinearLayout mAddressLayout;
 	private LinearLayout mInCallAddressLayout;
 	
@@ -79,6 +82,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	private String mDisplayName;
 	private AudioManager mAudioManager;
+	private PowerManager.WakeLock mWakeLock;
 	
 	/**
 	 * 
@@ -99,6 +103,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
+		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"Linphone");
+
 		try {
 			
 			
@@ -118,6 +125,13 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						}
 					}
 				}
+			});
+			mErase.setOnLongClickListener(new OnLongClickListener() {
+				public boolean onLongClick(View arg0) {
+					mAddress.getEditableText().clear();
+					return true;
+				}
+				
 			});
 			
 			mCall = (ImageButton) findViewById(R.id.Call);
@@ -170,19 +184,30 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					mAddressView = anAddress;
 				}
 				public void onClick(View v) {
-					mAddressView.append(mKeyCode);
-					mDisplayName="";
+					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+					if (lc.isIncall()) {
+						lc.sendDtmf(mKeyCode.charAt(0));
+					} else {
+						int lBegin = mAddressView.getSelectionStart();
+						if (lBegin == -1) {
+							lBegin = mAddressView.getEditableText().length();
+						}
+						if (lBegin >=0) {
+							mAddressView.getEditableText().insert(lBegin,mKeyCode);
+						}
+						mDisplayName="";
+					}
 				}
 				
 			};
 			mCallControlRow = (LinearLayout) findViewById(R.id.CallControlRow);
-			mInCallControlRow = (LinearLayout) findViewById(R.id.IncallControlRow);
+			mInCallControlRow = (TableRow) findViewById(R.id.IncallControlRow);
 			mAddressLayout = (LinearLayout) findViewById(R.id.Addresslayout);
 			mInCallAddressLayout = (LinearLayout) findViewById(R.id.IncallAddressLayout);
 			
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
-			
+			mDecline.setEnabled(false);
 			if (LinphoneService.isready()) {
 				if (LinphoneService.instance().getLinphoneCore().isIncall()) {
 					mCall.setEnabled(false);
@@ -192,7 +217,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					mAddressLayout.setVisibility(View.GONE);
 					mInCallAddressLayout.setVisibility(View.VISIBLE);
 				}
-			}
+			}  
 			
 			
 			mMute = (ToggleButton)findViewById(R.id.mic_mute_button);
@@ -230,6 +255,19 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			if (mZero != null) {
 				
 				mZero.setOnClickListener(new DialKeyListener(mAddress,'0'));
+				mZero.setOnLongClickListener(new OnLongClickListener() {
+					public boolean onLongClick(View arg0) {
+						int lBegin = mAddress.getSelectionStart();
+						if (lBegin == -1) {
+							lBegin = mAddress.getEditableText().length();
+						}
+						if (lBegin >=0) {
+						mAddress.getEditableText().insert(lBegin,"+");
+						}
+						return true;
+					}
+					
+				});
 				mOne = (Button) findViewById(R.id.Button01) ;
 				mOne.setOnClickListener(new DialKeyListener(mAddress,'1'));
 				mTwo = (Button) findViewById(R.id.Button02);
@@ -298,20 +336,18 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			break; 
 		}
 		case GSTATE_CALL_OUT_INVITE: {
-		}
-		case GSTATE_CALL_IN_INVITE: { 
 			enterIncalMode(lc);
 			routeAudioToSpeaker();
 			break;
 		}
-		case GSTATE_CALL_IN_CONNECTED:
+		case GSTATE_CALL_IN_INVITE: { 
+			mDecline.setEnabled(true);
+			routeAudioToSpeaker();
+			break;			
+		}
+		case GSTATE_CALL_IN_CONNECTED: 
 		case GSTATE_CALL_OUT_CONNECTED: {
-			 if (mSpeaker.isChecked()) {
-				 routeAudioToSpeaker();
-			 } else {
-				 routeAudioToReceiver();
-			 }
-			setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+			enterIncalMode(lc);
 			break;
 		}
 		case GSTATE_CALL_ERROR: {
@@ -337,6 +373,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	
 	private void enterIncalMode(LinphoneCore lc) {
+		mWakeLock.acquire();
 		mCallControlRow.setVisibility(View.GONE);
 		mInCallControlRow.setVisibility(View.VISIBLE);
 		mAddressLayout.setVisibility(View.GONE);
@@ -349,6 +386,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else {
 			mDisplayNameView.setText(lc.getRemoteAddress().getUserName());
 		}
+		 if (mSpeaker.isChecked()) {
+			 routeAudioToSpeaker();
+		 } else {
+			 routeAudioToReceiver();
+		 }
+		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 	}
 	private void exitCallMode() {
 		mCallControlRow.setVisibility(View.VISIBLE);
@@ -358,6 +401,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mCall.setEnabled(true);
 		mHangup.setEnabled(false);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
+		mMute.setChecked(true);
+		mSpeaker.setChecked(false);
+		mDecline.setEnabled(false);
+		mWakeLock.release();
 	}
 	private void routeAudioToSpeaker() {
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {

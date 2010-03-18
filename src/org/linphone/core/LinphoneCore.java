@@ -160,6 +160,13 @@ public interface LinphoneCore {
 	 * @throws If no LinphonrAddress can be built from destination
 	 */
 	public LinphoneAddress interpretUrl(String destination) throws LinphoneCoreException;
-	
-	
+	/**
+	 * Initiate a dtmf signal if in call
+	 * @param number
+	 */
+	public void sendDtmf(char number);
+	/**
+	 * 
+	 */
+	public void clearCallLogs();
 }

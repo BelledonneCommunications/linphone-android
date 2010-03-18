@@ -30,8 +30,13 @@ import org.linphone.core.LinphoneCallLog.CallDirection;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -70,6 +75,30 @@ public class HistoryActivity extends ListActivity {
 		 setListAdapter(new CallHistoryAdapter(this));
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the currently selected menu XML resource.
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.history_activity_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_clear_history:
+			LinphoneService.instance().getLinphoneCore().clearCallLogs();
+			setListAdapter(new CallHistoryAdapter(this));
+			
+			break;
+		default:
+			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
+			break;
+		}
+
+		return false;
+	}
+	
 
 	class CallHistoryAdapter extends  BaseAdapter {
 		final List<LinphoneCallLog> mLogs; 

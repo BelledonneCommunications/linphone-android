@@ -54,6 +54,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void muteMic(long nativePtr,boolean isMuted);
 	private native long interpretUrl(long nativePtr,String destination);
 	private native void inviteAddress(long nativePtr,long to);
+	private native void sendDtmf(long nativePtr,char dtmf);
+	private native void clearCallLogs(long nativePtr);
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -181,5 +183,11 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void invite(LinphoneAddress to) { 
 		inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
+	}
+	public void sendDtmf(char number) {
+		sendDtmf(nativePtr,number);
+	}
+	public void clearCallLogs() {
+		clearCallLogs(nativePtr);
 	}
 }

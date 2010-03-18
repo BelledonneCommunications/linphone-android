@@ -30,6 +30,7 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	private native String getDomain(long ptr);
 	private native String toUri(long ptr);
 	private native String setDisplayName(long ptr,String name);
+	private native String toString(long ptr);
 	
 	
 	protected LinphoneAddressImpl(String username,String domain,String displayName)  {
@@ -53,7 +54,7 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	}
 	
 	public String toString() {
-		return toUri();
+		return toString(nativePtr);
 	}
 	public String toUri() {
 		return toUri(nativePtr);	
