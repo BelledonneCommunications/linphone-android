@@ -75,34 +75,33 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	public void onCreate() {
 		super.onCreate();
 		theLinphone = this;
-	
+
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		try {
 			copyAssetsFromPackage();
 
 			mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(	this
-			, new File(LINPHONE_RC) 
+					, new File(LINPHONE_RC) 
 			, new File(LINPHONE_FACTORY_RC)
 			, null);
-			
-			mLinphoneCore.setSoftPlayLevel(3);  
-			initFromConf();
 
+			mLinphoneCore.setSoftPlayLevel(3);  
+			try {
+				initFromConf();
+			} catch (LinphoneConfigException ec) {
+				Log.w(TAG,"no valid settings found",ec);
+			}
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
-					  mLinphoneCore.iterate();
+					mLinphoneCore.iterate();
 				}
 
 			};
-			
+
 			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
-
-
-
-
-
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Log.e(TAG,"Cannot start linphone",e);
 		}
 
@@ -168,7 +167,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		Log.i(TAG, "new state ["+state+"]");
 		if (state == GeneralState.GSTATE_POWER_OFF) {
 			//just exist
-			System.exit(0);
+			//System.exit(0); 
 		}
 		if (DialerActivity.getDialer()!=null) {
 			mHandler.post(new Runnable() {
@@ -192,17 +191,17 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	public void initFromConf() throws LinphoneConfigException, LinphoneException {
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
-		if (lUserName == null) {
+		if (lUserName == null || lUserName.length()==0) {
 			throw new LinphoneConfigException(getString(R.string.wrong_username));
 		}
 
 		String lPasswd = mPref.getString(getString(R.string.pref_passwd_key), null);
-		if (lPasswd == null) {
+		if (lPasswd == null || lPasswd.length()==0) {
 			throw new LinphoneConfigException(getString(R.string.wrong_passwd));
 		}
 
 		String lDomain = mPref.getString(getString(R.string.pref_domain_key), null);
-		if (lDomain == null) {
+		if (lDomain == null || lDomain.length()==0) {
 			throw new LinphoneConfigException(getString(R.string.wrong_domain));
 		}
 
@@ -243,7 +242,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 				//escape +
 				lDefaultProxyConfig.setDialEscapePlus(true);
 			}
-			//init netwaork state
+			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			mLinphoneCore.setNetworkStateReachable(lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED); 
 			
@@ -269,6 +268,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		super.onDestroy();
 		mTimer.cancel();
 		mLinphoneCore.destroy();
+		theLinphone=null;
 	}
 
 }

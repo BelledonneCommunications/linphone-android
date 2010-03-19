@@ -337,7 +337,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 		case GSTATE_CALL_OUT_INVITE: {
 			enterIncalMode(lc);
-			routeAudioToSpeaker();
+			routeAudioToReceiver();
 			break;
 		}
 		case GSTATE_CALL_IN_INVITE: { 
