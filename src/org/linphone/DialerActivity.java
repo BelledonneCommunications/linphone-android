@@ -21,9 +21,7 @@ package org.linphone;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
-import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 import android.app.Activity;
@@ -86,7 +84,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	/**
 	 * 
-	 * @return nul if not ready yet
+	 * @return null if not ready yet
 	 */
 	public static DialerActivity getDialer() {
 		if (theDialer == null) {
@@ -351,7 +349,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			break;
 		}
 		case GSTATE_CALL_ERROR: {
-
 			Toast toast = Toast.makeText(this
 					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
 					, Toast.LENGTH_LONG);

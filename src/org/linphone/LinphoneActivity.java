@@ -139,6 +139,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (isFinishing()) {
+			if (mSensorManager!=null) mSensorManager.unregisterListener(this);
+		}
 
 	}
 	@Override
@@ -146,8 +149,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		// Inflate the currently selected menu XML resource.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.linphone_activity_menu, menu);
-
-
 		return true;
 	}
 
@@ -207,6 +208,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void onSensorChanged(SensorEvent event) {
+		if (LinphoneService.isready() == false) return; //nop nothing to do 
+		
 		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
 		if (LinphoneService.instance().getLinphoneCore().isIncall() && event.values[0] == 0) {
 			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
