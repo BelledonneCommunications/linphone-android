@@ -13,6 +13,8 @@
 	<PreferenceCategory android:title="@string/pref_advanced">
 		<EditTextPreference android:title="@string/pref_prefix"
 			android:key="@string/pref_prefix_key"></EditTextPreference>
-	</PreferenceCategory>
+	
+<CheckBoxPreference android:key="@string/pref_debug_key" android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
+</PreferenceCategory>
 
 </PreferenceScreen>

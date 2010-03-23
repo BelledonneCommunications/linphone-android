@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class LinphoneCoreFactory {
+	
 	static {
 		System.loadLibrary("linphone");
 	}
@@ -42,6 +43,11 @@ public class LinphoneCoreFactory {
 	public LinphoneAddress createLinphoneAddress(String username,String domain,String displayName) {
 		return new LinphoneAddressImpl(username,domain,displayName);
 	}
-
+	
+	/**
+	 * Enable verbose traces
+	 * @param enable
+	 */
+	public  native void setDebugMode(boolean enable);
 
 }

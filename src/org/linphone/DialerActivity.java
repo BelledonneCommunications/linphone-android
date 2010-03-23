@@ -25,11 +25,15 @@ import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -81,7 +85,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private String mDisplayName;
 	private AudioManager mAudioManager;
 	private PowerManager.WakeLock mWakeLock;
+	private SharedPreferences mPref;
 	
+	String PREF_CHECK_CONFIG = "pref_check_config";
 	/**
 	 * 
 	 * @return null if not ready yet
@@ -103,7 +109,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"Linphone");
-
+		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		try {
 			
 			
@@ -329,6 +335,34 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		case GSTATE_POWER_ON:
 			mCall.setEnabled(!lc.isIncall());
 			mHangup.setEnabled(!mCall.isEnabled());  
+			try{
+			LinphoneService.instance().initFromConf();
+			} catch (LinphoneConfigException ec) {
+				Log.w(LinphoneService.TAG,"no valid settings found",ec);
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(getString(R.string.initial_config_error))
+				       .setCancelable(false)
+				       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				        	   LinphoneActivity.instance().startprefActivity();
+				           }
+				       }).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				                
+				           }
+				       }).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				        	    mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
+				                dialog.cancel();
+				           }
+				       });
+				if (mPref.getBoolean(PREF_CHECK_CONFIG, false) == false) {
+					builder.create().show();
+				}
+			} catch (Exception e ) {
+				Log.e(LinphoneService.TAG,"Cannot get initial config", e);
+			}
 			break;
 		case GSTATE_REG_OK: {
 			break; 

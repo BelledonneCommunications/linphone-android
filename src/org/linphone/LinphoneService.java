@@ -35,8 +35,10 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -86,11 +88,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			, null);
 
 			mLinphoneCore.setSoftPlayLevel(3);  
-			try {
-				initFromConf();
-			} catch (LinphoneConfigException ec) {
-				Log.w(TAG,"no valid settings found",ec);
-			}
+
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -189,6 +187,10 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 
 	
 	public void initFromConf() throws LinphoneConfigException, LinphoneException {
+		//traces
+		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
+		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
+		
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
 		if (lUserName == null || lUserName.length()==0) {
@@ -213,8 +215,10 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 
 
 		//proxy
-		String lProxy = mPref.getString(getString(R.string.pref_proxy_key), "sip:"+lDomain);
-
+		String lProxy = mPref.getString(getString(R.string.pref_proxy_key),null);
+		if (lProxy == null || lProxy.length() == 0) {
+			lProxy = "sip:"+lDomain;
+		}
 		//get Default proxy if any
 		LinphoneProxyConfig lDefaultProxyConfig = mLinphoneCore.getDefaultProxyConfig();
 		String lIdentity = "sip:"+lUserName+"@"+lDomain;
@@ -247,7 +251,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			mLinphoneCore.setNetworkStateReachable(lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED); 
 			
 		} catch (LinphoneCoreException e) {
-			throw new LinphoneConfigException(getString(R.string.wrong_settings));
+			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
 	}
 	

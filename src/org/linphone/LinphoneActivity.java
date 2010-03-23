@@ -172,7 +172,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 
 		return false;
 	}
-	private void startprefActivity() {
+	protected void startprefActivity() {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClass(this, LinphonePreferencesActivity.class);
 		startActivity(intent);
