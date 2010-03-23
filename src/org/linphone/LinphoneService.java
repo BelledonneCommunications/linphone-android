@@ -221,7 +221,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		try {
 			if (lDefaultProxyConfig == null) {
 				lDefaultProxyConfig = mLinphoneCore.createProxyConfig(lIdentity, lProxy, null,true);
-				mLinphoneCore.addtProxyConfig(lDefaultProxyConfig);
+				mLinphoneCore.addProxyConfig(lDefaultProxyConfig);
 				mLinphoneCore.setDefaultProxyConfig(lDefaultProxyConfig);
 
 			} else {
@@ -246,10 +246,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			mLinphoneCore.setNetworkStateReachable(lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED); 
 			
-		}catch (LinphoneCoreException e) {
-			throw new LinphoneException(e);
+		} catch (LinphoneCoreException e) {
+			throw new LinphoneConfigException(getString(R.string.wrong_settings));
 		}
-
 	}
 	
 

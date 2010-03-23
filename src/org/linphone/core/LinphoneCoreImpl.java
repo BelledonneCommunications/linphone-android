@@ -34,7 +34,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long getDefaultProxyConfig(long nativePtr);
 
 	private native void setDefaultProxyConfig(long nativePtr,long proxyCfgNativePtr);
-	private native int addProxyConfig(long nativePtr,long proxyCfgNativePtr);
+	private native int addProxyConfig(LinphoneProxyConfig jprtoxyCfg,long nativePtr,long proxyCfgNativePtr);
 	private native void clearAuthInfos(long nativePtr);
 	
 	private native void clearProxyConfigs(long nativePtr);
@@ -100,9 +100,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		isValid();
 		setDefaultProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr);
 	}
-	public synchronized void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException{
+	public synchronized void addProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException{
 		isValid();
-		if (addProxyConfig(nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr) !=0) {
+		if (addProxyConfig(proxyCfg,nativePtr,((LinphoneProxyConfigImpl)proxyCfg).nativePtr) !=0) {
 			throw new LinphoneCoreException("bad proxy config");
 		}
 	}

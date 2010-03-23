@@ -72,7 +72,7 @@ public interface LinphoneCore {
 	 */
 	public void clearProxyConfigs();
 	
-	public void addtProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException;
+	public void addProxyConfig(LinphoneProxyConfig proxyCfg) throws LinphoneCoreException;
 
 	public void setDefaultProxyConfig(LinphoneProxyConfig proxyCfg);
 	

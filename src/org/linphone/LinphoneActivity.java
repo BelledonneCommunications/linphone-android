@@ -115,7 +115,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		super.onPause();
 		if  (isFinishing())  {
 			//restaure audio settings   
-			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.DONUT) {
+			if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
 			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);

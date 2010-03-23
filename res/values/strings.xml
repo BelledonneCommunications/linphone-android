@@ -17,6 +17,7 @@
 	<string name="wrong_username">wrong user name</string>
 <string name="wrong_passwd">wrong password</string>
 <string name="wrong_domain">Wrong domain</string>
+<string name="wrong_settings">Wrong settings</string>
 <string name="tab_dialer">Dialer</string>
 <string name="tab_contact">Contact</string>
 <string name="call_error">Cannot call %s</string>
