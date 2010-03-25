@@ -1,0 +1,3 @@
+[submodule "msandroid"]
+	path = msandroid
+	url = gitosis@belledonne-communications.com:msandroid.git
