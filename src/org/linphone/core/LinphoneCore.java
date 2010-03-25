@@ -154,6 +154,11 @@ public interface LinphoneCore {
 	 */
 	public void muteMic(boolean isMuted);
 	/**
+	 * 
+	 * @return true is mic is muted
+	 */
+	public boolean isMicMuted();
+	/**
 	 * Build an address according to the current proxy config. In case destination is not a sip uri, the default proxy domain is automatically appended
 	 * @param destination
 	 * @return

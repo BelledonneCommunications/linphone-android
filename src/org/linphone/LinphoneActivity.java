@@ -48,6 +48,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	private static LinphoneActivity theLinphoneActivity;
 	private SensorManager mSensorManager;
 	private FrameLayout mMainFrame;
+	
+	private static String SCREEN_IS_HIDDEN ="screen_is_hidden";
 	protected static LinphoneActivity instance()
 	  {
 		if (theLinphoneActivity == null) {
@@ -56,10 +58,18 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			return theLinphoneActivity;
 		}
 	}
-	
+	protected void onSaveInstanceState (Bundle outState) {
+		if (mMainFrame.getVisibility() == View.INVISIBLE) {
+			outState.putBoolean(SCREEN_IS_HIDDEN, true);
+		} else {
+			outState.putBoolean(SCREEN_IS_HIDDEN, false);
+		}
+			
+	}
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
 		theLinphoneActivity = this;
 		// start linphone as background      
 		Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -105,7 +115,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    lTabHost.addTab(spec);
 
 	    lTabHost.setCurrentTabByTag("dialer");
-
+	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
+	    	hideScreen(true);
+	    }
 	    
 	}
 	
@@ -210,15 +222,21 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	public void onSensorChanged(SensorEvent event) {
 		if (LinphoneService.isready() == false) return; //nop nothing to do 
 		
-		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
 		if (LinphoneService.instance().getLinphoneCore().isIncall() && event.values[0] == 0) {
+			hideScreen(true);
+		} else if (mMainFrame.getVisibility() != View.VISIBLE && event.values[0] == 1) {
+			hideScreen(false);
+		}
+	}
+	private void hideScreen(boolean isHidden) {
+		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
+		if (isHidden) {
 			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
 			mMainFrame.setVisibility(View.INVISIBLE);
-		} else if (mMainFrame.getVisibility() != View.VISIBLE && event.values[0] == 1) {
+		} else  {
 			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
 			mMainFrame.setVisibility(View.VISIBLE);
 		}
 		getWindow().setAttributes(lAttrs);
 	}
-	
 }

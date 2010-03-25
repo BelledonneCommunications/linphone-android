@@ -88,6 +88,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private SharedPreferences mPref;
 	
 	String PREF_CHECK_CONFIG = "pref_check_config";
+
+	
 	/**
 	 * 
 	 * @return null if not ready yet
@@ -103,13 +105,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mAddress.setText(aContact);
 		mDisplayName = aDisplayName;
 	}
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"Linphone");
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 		try {
 			
 			
@@ -208,23 +212,42 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mInCallControlRow = (TableRow) findViewById(R.id.IncallControlRow);
 			mAddressLayout = (LinearLayout) findViewById(R.id.Addresslayout);
 			mInCallAddressLayout = (LinearLayout) findViewById(R.id.IncallAddressLayout);
+			mMute = (ToggleButton)findViewById(R.id.mic_mute_button);
+			mSpeaker = (ToggleButton)findViewById(R.id.speaker_button);
 			
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			mDecline.setEnabled(false);
 			if (LinphoneService.isready()) {
-				if (LinphoneService.instance().getLinphoneCore().isIncall()) {
+				LinphoneCore lLinphoenCore = LinphoneService.instance().getLinphoneCore();
+				if (lLinphoenCore.isIncall()) {
 					mCall.setEnabled(false);
 					mHangup.setEnabled(!mCall.isEnabled());
 					mCallControlRow.setVisibility(View.GONE);
 					mInCallControlRow.setVisibility(View.VISIBLE);
 					mAddressLayout.setVisibility(View.GONE);
 					mInCallAddressLayout.setVisibility(View.VISIBLE);
+					mMute.setChecked(!lLinphoenCore.isMicMuted()); 
+					mMute.setCompoundDrawablesWithIntrinsicBounds(0
+																	, mMute.isChecked()?R.drawable.mic_active:R.drawable.mic_muted
+																	, 0
+																	, 0);
+					String DisplayName = lLinphoenCore.getRemoteAddress().getDisplayName();
+					if (DisplayName!=null) {
+						mDisplayNameView.setText(DisplayName);
+					} else {
+						mDisplayNameView.setText(lLinphoenCore.getRemoteAddress().getUserName());
+					}
+					if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
+							|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
+						mSpeaker.setChecked(true);
+					}
+					mWakeLock.acquire();
 				}
 			}  
 			
 			
-			mMute = (ToggleButton)findViewById(R.id.mic_mute_button);
+
 			mMute.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) {
@@ -241,7 +264,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				
 			});
 			
-			mSpeaker = (ToggleButton)findViewById(R.id.speaker_button);
+			
 			mSpeaker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) {
@@ -307,6 +330,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	
 	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (mWakeLock.isHeld()) mWakeLock.release();
+	}
+	@Override
 	protected void onResume() {
 		super.onResume();
 	}
@@ -368,6 +397,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			break; 
 		}
 		case GSTATE_CALL_OUT_INVITE: {
+			mWakeLock.acquire();
 			enterIncalMode(lc);
 			routeAudioToReceiver();
 			break;
@@ -383,6 +413,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			break;
 		}
 		case GSTATE_CALL_ERROR: {
+			if (mWakeLock.isHeld()) mWakeLock.release();
 			Toast toast = Toast.makeText(this
 					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
 					, Toast.LENGTH_LONG);
@@ -404,7 +435,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	
 	private void enterIncalMode(LinphoneCore lc) {
-		mWakeLock.acquire();
+		
 		mCallControlRow.setVisibility(View.GONE);
 		mInCallControlRow.setVisibility(View.VISIBLE);
 		mAddressLayout.setVisibility(View.GONE);
@@ -435,7 +466,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mMute.setChecked(true);
 		mSpeaker.setChecked(false);
 		mDecline.setEnabled(false);
-		mWakeLock.release();
+		if (mWakeLock.isHeld())mWakeLock.release();
 	}
 	private void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
