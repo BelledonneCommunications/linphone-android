@@ -92,7 +92,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			try {
 				initFromConf();
 			} catch (LinphoneException e) {
-				Log.w(TAG, "no config ready yet"); 
+				Log.w(TAG, "no config ready yet");
 			}
 			TimerTask lTask = new TimerTask() {
 				@Override

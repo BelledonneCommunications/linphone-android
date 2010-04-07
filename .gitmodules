@@ -13,3 +13,6 @@
 [submodule "submodules/externals/gsm"]
 	path = submodules/externals/gsm
 	url = gitosis@belledonne-communications.com:gsm.git
+[submodule "submodules/externals/speex"]
+	path = submodules/externals/speex
+	url = http://git.xiph.org/speex.git
