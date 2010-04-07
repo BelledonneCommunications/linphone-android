@@ -3,7 +3,7 @@
 	url = ../msandroid.git
 [submodule "linphone"]
 	path = submodules/linphone
-	url = ../linphone-private.git
+	url = gitosis@belledonne-communications.com:linphone-private.git
 [submodule "submodules/externals/osip"]
 	path = submodules/externals/osip
 	url = git://git.savannah.gnu.org/osip.git
@@ -12,7 +12,7 @@
 	url = git://git.savannah.nongnu.org/exosip.git
 [submodule "submodules/externals/gsm"]
 	path = submodules/externals/gsm
-	url = ../gsm.git
+	url = gitosis@belledonne-communications.com:gsm.git
 [submodule "submodules/externals/speex"]
 	path = submodules/externals/speex
 	url = http://git.xiph.org/speex.git
