@@ -1,6 +1,6 @@
 [submodule "msandroid"]
 	path = submodules/msandroid
-	url = git://git.linphone.org:msandroid.git
+	url = git://git.linphone.org/msandroid.git
 [submodule "linphone"]
 	path = submodules/linphone
 	url = git://git.savannah.nongnu.org/linphone.git
@@ -12,7 +12,7 @@
 	url = git://git.savannah.nongnu.org/exosip.git
 [submodule "submodules/externals/gsm"]
 	path = submodules/externals/gsm
-	url = git://git.linphone.org:gsm.git
+	url = git://git.linphone.org/gsm.git
 [submodule "submodules/externals/speex"]
 	path = submodules/externals/speex
 	url = http://git.xiph.org/speex.git
