@@ -7,7 +7,7 @@ mtu=0
 [sip]
 sip_port=5060
 guess_hostname=1
-contact=sip:jehanmonnier@unknown-host
+contact=sip:unknown@unknown-host
 inc_timeout=15
 use_info=0
 use_ipv6=0

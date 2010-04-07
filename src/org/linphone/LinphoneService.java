@@ -89,6 +89,11 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 
 			mLinphoneCore.setSoftPlayLevel(3);  
 
+			try {
+				initFromConf();
+			} catch (LinphoneException e) {
+				Log.w(TAG, "no config ready yet"); 
+			}
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {

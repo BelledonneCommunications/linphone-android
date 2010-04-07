@@ -82,6 +82,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
 		if (lSensorList.size() >0) {
 			mSensorManager.registerListener(this,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
+			Log.i(LinphoneService.TAG, "Proximity sensor detected, registering");
 		}
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		
@@ -220,11 +221,16 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void onSensorChanged(SensorEvent event) {
+		Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
 		if (LinphoneService.isready() == false) return; //nop nothing to do 
 		
-		if (LinphoneService.instance().getLinphoneCore().isIncall() && event.values[0] == 0) {
+		if (LinphoneService.instance().getLinphoneCore().isIncall() 
+				&& event.values[0] != event.sensor.getMaximumRange()
+				&& event.values[0] < 3) {
 			hideScreen(true);
-		} else if (mMainFrame.getVisibility() != View.VISIBLE && event.values[0] == 1) {
+		} else if (mMainFrame.getVisibility() != View.VISIBLE 
+				&& (event.values[0] == event.sensor.getMaximumRange() 
+						|| event.values[0] >=3)) {
 			hideScreen(false);
 		}
 	}
