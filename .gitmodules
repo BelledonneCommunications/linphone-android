@@ -1,6 +1,6 @@
 [submodule "msandroid"]
 	path = submodules/msandroid
-	url = ../msandroid.git
+	url = gitosis@belledonne-communications.com:msandroid.git
 [submodule "linphone"]
 	path = submodules/linphone
 	url = gitosis@belledonne-communications.com:linphone-private.git
