@@ -29,12 +29,16 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	private native String getUserName(long ptr);
 	private native String getDomain(long ptr);
 	private native String toUri(long ptr);
-	private native String setDisplayName(long ptr,String name);
+	private native void setDisplayName(long ptr,String name);
 	private native String toString(long ptr);
 	
 	
 	protected LinphoneAddressImpl(String username,String domain,String displayName)  {
 		nativePtr = newLinphoneAddressImpl("sip:"+username+"@"+domain, displayName);
+	}
+	protected LinphoneAddressImpl(long aNativePtr,boolean javaOwnPtr)  {
+		nativePtr = aNativePtr;
+		ownPtr=javaOwnPtr;
 	}
 	protected LinphoneAddressImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;

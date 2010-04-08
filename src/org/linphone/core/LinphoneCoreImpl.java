@@ -177,7 +177,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public LinphoneAddress interpretUrl(String destination) throws LinphoneCoreException {
 		long lAddress = interpretUrl(nativePtr,destination);
 		if (lAddress != 0) {
-			return new LinphoneAddressImpl(lAddress);
+			return new LinphoneAddressImpl(lAddress,true);
 		} else {
 			throw new LinphoneCoreException("Cannot interpret ["+destination+"]");
 		}

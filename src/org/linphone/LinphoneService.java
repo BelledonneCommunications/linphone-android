@@ -35,10 +35,8 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -253,7 +251,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			}
 			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-			mLinphoneCore.setNetworkStateReachable(lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED); 
+			NetworkInfo lInfo = lConnectivityManager.getActiveNetworkInfo();
+			mLinphoneCore.setNetworkStateReachable( lInfo !=null? lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED:false); 
 			
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
