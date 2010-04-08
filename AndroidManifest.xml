@@ -4,7 +4,7 @@
       android:versionCode="108"
       android:versionName="1.08">
     <uses-sdk android:minSdkVersion="3" />
-    <application android:icon="@drawable/linphone2" android:label="@string/app_name" android:debuggable = "true">
+    <application android:label="@string/app_name" android:debuggable = "true" android:icon="@drawable/logo_linphone_57x57">
          
          
         <activity android:name=".LinphoneActivity"
