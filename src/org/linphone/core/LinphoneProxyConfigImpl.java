@@ -97,4 +97,19 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	public void setDialEscapePlus(boolean value) {
 		 setDialEscapePlus(nativePtr,value);
 	}
+	public String getIdentity() {
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public String getProxy() {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public boolean isRegistered() {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public boolean registerEnabled() {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
 }

@@ -28,4 +28,29 @@ class LinphoneAuthInfoImpl implements LinphoneAuthInfo {
 	protected void finalize() throws Throwable {
 		delete(nativePtr);
 	}
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public String getRealm() {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public void setPassword(String password) {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+		
+	}
+	public void setRealm(String realm) {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
+	public void setUsername(String username) {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemeneted yet");
+	}
 }

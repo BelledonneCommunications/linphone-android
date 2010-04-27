@@ -72,10 +72,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 		addAuthInfo(nativePtr,((LinphoneAuthInfoImpl)info).nativePtr);
 	}
 
-	public synchronized LinphoneProxyConfig createProxyConfig(String identity, String proxy,String route,boolean enableRegister) throws LinphoneCoreException {
-		isValid();
-		return new LinphoneProxyConfigImpl(identity, proxy, route,enableRegister);
-	}
+
 
 	public synchronized LinphoneProxyConfig getDefaultProxyConfig() {
 		isValid();
