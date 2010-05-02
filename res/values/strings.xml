@@ -31,5 +31,8 @@
 <string name="tab_history">History</string>
 <string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
 <string name="menu_clear_history">Clear</string>
-
+<string name="error_cannot_invite_address">Cannot invite destination address  [%s]</string>
+<string name="notification_registered">registered to %s </string> 
+<string name="notification_register_failure">fails to register to %s</string>
+<string name="notification_started">started</string>
 </resources>

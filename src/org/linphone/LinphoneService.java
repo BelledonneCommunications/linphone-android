@@ -35,6 +35,9 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +61,18 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	private LinphoneCore mLinphoneCore;
 	private SharedPreferences mPref;
 	Timer mTimer = new Timer("Linphone scheduler");
-
+	
+	NotificationManager mNotificationManager;
+	Notification mNotification;
+	PendingIntent mNofificationContentIntent;
+	final static int NOTIFICATION_ID=1;
+	final String NOTIFICATION_TITLE = "Linphone";
+	
+	final int IC_LEVEL_OFFLINE=3;
+	final int IC_LEVEL_ORANGE=0;
+	final int IC_LEVEL_GREEN=1;
+	final int IC_LEVEL_RED=2;
+	
 	private Handler mHandler =  new Handler() ;
 	static boolean isready() {
 		return (theLinphone!=null);
@@ -75,14 +89,24 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	public void onCreate() {
 		super.onCreate();
 		theLinphone = this;
-
+		
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotification = new Notification(R.drawable.status_level
+														, ""
+														, System.currentTimeMillis());
+		mNotification.iconLevel=IC_LEVEL_ORANGE;
+		mNotification.flags |= Notification.FLAG_ONGOING_EVENT;
+		Intent notificationIntent = new Intent(this, LinphoneActivity.class);
+		mNofificationContentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		mNotification.setLatestEventInfo(this, NOTIFICATION_TITLE,"", mNofificationContentIntent);
+		mNotificationManager.notify(NOTIFICATION_ID, mNotification);		
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		try {
 			copyAssetsFromPackage();
 
 			mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(	this
-					, new File(LINPHONE_RC) 
-			, new File(LINPHONE_FACTORY_RC)
+					, LINPHONE_RC 
+			, LINPHONE_FACTORY_RC
 			, null);
 
 			mLinphoneCore.setSoftPlayLevel(3);  
@@ -101,6 +125,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			};
 
 			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
+
+
 		}
 		catch (Exception e) {
 			Log.e(TAG,"Cannot start linphone",e);
@@ -166,20 +192,52 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	}
 	public void generalState(final LinphoneCore lc, final LinphoneCore.GeneralState state) {
 		Log.i(TAG, "new state ["+state+"]");
-		if (state == GeneralState.GSTATE_POWER_OFF) {
-			//just exist
-			//System.exit(0); 
+		if (state == GeneralState.GSTATE_POWER_ON) {
+			mNotification.iconLevel=IC_LEVEL_OFFLINE;
+			mNotification.when=System.currentTimeMillis();
+			mNotification.setLatestEventInfo(this
+					, NOTIFICATION_TITLE
+					,getString(R.string.notification_started)
+					, mNofificationContentIntent);
+			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+			
 		}
+		if (state == GeneralState.GSTATE_REG_OK && lc.getDefaultProxyConfig().isRegistered()) {
+			mNotification.iconLevel=IC_LEVEL_ORANGE;
+			mNotification.when=System.currentTimeMillis();
+			mNotification.setLatestEventInfo(this
+					, NOTIFICATION_TITLE
+					,String.format(getString(R.string.notification_registered),lc.getDefaultProxyConfig().getIdentity())
+					, mNofificationContentIntent);
+			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+		}
+		if (state == GeneralState.GSTATE_REG_FAILED ) {
+			mNotification.iconLevel=IC_LEVEL_OFFLINE;
+			mNotification.when=System.currentTimeMillis();
+			mNotification.setLatestEventInfo(this
+					, NOTIFICATION_TITLE
+					,String.format(getString(R.string.notification_register_failure),lc.getDefaultProxyConfig().getIdentity())
+					, mNofificationContentIntent);
+			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+		}
+
 		if (DialerActivity.getDialer()!=null) {
 			mHandler.post(new Runnable() {
 				public void run() {
 					DialerActivity.getDialer().generalState(lc,state);
 				}
 			});
+		} 
+		if (state == GeneralState.GSTATE_CALL_IN_INVITE) {
+			//wakeup linphone
+			Intent lIntent = new Intent();
+			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			lIntent.setClass(this, LinphoneActivity.class);
+			startActivity(lIntent);
 		}
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	public void show(LinphoneCore lc) {
@@ -213,7 +271,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 
 		//auth
 		mLinphoneCore.clearAuthInfos();
-		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd);
+		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd,null);
 		mLinphoneCore.addAuthInfo(lAuthInfo);
 
 
@@ -276,6 +334,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		mTimer.cancel();
 		mLinphoneCore.destroy();
 		theLinphone=null;
+		mNotificationManager.cancel(NOTIFICATION_ID);
 	}
 
 }

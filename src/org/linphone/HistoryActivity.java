@@ -26,7 +26,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.LinphoneCallLog.CallDirection;
+import org.linphone.core.CallDirection;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -132,7 +132,7 @@ public class HistoryActivity extends ListActivity {
 			ImageView lDirectionImageIn = (ImageView) lView.findViewById(R.id.history_cell_icon_in);
 			ImageView lDirectionImageOut = (ImageView) lView.findViewById(R.id.history_cell_icon_out);
 			
-			if (lLog.getDirection() == CallDirection.Callincoming) {
+			if (lLog.getDirection() == CallDirection.Incoming) {
 				lAddress = lLog.getFrom();
 				lDirectionImageIn.setVisibility(View.VISIBLE);
 				lDirectionImageOut.setVisibility(View.GONE);
@@ -150,7 +150,7 @@ public class HistoryActivity extends ListActivity {
 			if (lProxyConfig != null && lProxyConfig.getDomain().equals(lAddress.getDomain())) {
 				lDetailedName = lAddress.getUserName();
 			} else {
-				lDetailedName = lAddress.toUri();
+				lDetailedName = lAddress.asStringUriOnly();
 			}
 			if (lDisplayName == null) {
 				lFirstLineView.setText(lDetailedName);

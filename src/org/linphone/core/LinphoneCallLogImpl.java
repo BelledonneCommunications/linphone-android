@@ -32,7 +32,7 @@ class LinphoneCallLogImpl implements LinphoneCallLog {
 	
 	
 	public CallDirection getDirection() {
-		return isIncoming(nativePtr)?CallDirection.Callincoming:CallDirection.CallOutgoing;
+		return isIncoming(nativePtr)?CallDirection.Incoming:CallDirection.Outgoing;
 	}
 
 	public LinphoneAddress getFrom() {

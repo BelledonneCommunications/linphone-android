@@ -166,7 +166,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						return;
 					}
 					lAddress.setDisplayName(mDisplayName);
-					lLinphoneCore.invite(lAddress);
+					try {
+						lLinphoneCore.invite(lAddress);
+					} catch (LinphoneCoreException e) {
+						Toast toast = Toast.makeText(DialerActivity.this
+								,String.format(getString(R.string.error_cannot_invite_address),mAddress.getText().toString())
+								, Toast.LENGTH_LONG);
+						toast.show();
+						return;
+					}
 				}
 				
 			}); 
@@ -221,30 +229,35 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			if (LinphoneService.isready()) {
 				LinphoneCore lLinphoenCore = LinphoneService.instance().getLinphoneCore();
 				if (lLinphoenCore.isIncall()) {
-					mCall.setEnabled(false);
-					mHangup.setEnabled(!mCall.isEnabled());
-					mCallControlRow.setVisibility(View.GONE);
-					mInCallControlRow.setVisibility(View.VISIBLE);
-					mAddressLayout.setVisibility(View.GONE);
-					mInCallAddressLayout.setVisibility(View.VISIBLE);
-					mMute.setChecked(!lLinphoenCore.isMicMuted()); 
-					mMute.setCompoundDrawablesWithIntrinsicBounds(0
-																	, mMute.isChecked()?R.drawable.mic_active:R.drawable.mic_muted
-																	, 0
-																	, 0);
-					String DisplayName = lLinphoenCore.getRemoteAddress().getDisplayName();
-					if (DisplayName!=null) {
-						mDisplayNameView.setText(DisplayName);
+					if(lLinphoenCore.isInComingInvitePending()) {
+						callPending();
 					} else {
-						mDisplayNameView.setText(lLinphoenCore.getRemoteAddress().getUserName());
-					}
-					if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
-							|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
-						mSpeaker.setChecked(true);
-					}
-					mWakeLock.acquire();
+						mCall.setEnabled(false);
+						mHangup.setEnabled(!mCall.isEnabled());
+						mCallControlRow.setVisibility(View.GONE);
+						mInCallControlRow.setVisibility(View.VISIBLE);
+						mAddressLayout.setVisibility(View.GONE);
+						mInCallAddressLayout.setVisibility(View.VISIBLE);
+						mMute.setChecked(!lLinphoenCore.isMicMuted()); 
+						mMute.setCompoundDrawablesWithIntrinsicBounds(0
+								, mMute.isChecked()?R.drawable.mic_active:R.drawable.mic_muted
+										, 0
+										, 0);
+						
+						String DisplayName = lLinphoenCore.getRemoteAddress().getDisplayName();
+						if (DisplayName!=null) {
+							mDisplayNameView.setText(DisplayName);
+						} else {
+							mDisplayNameView.setText(lLinphoenCore.getRemoteAddress().getUserName());
+						}
+						if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
+								|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
+							mSpeaker.setChecked(true);
+						}
+						mWakeLock.acquire();
+					} 
 				}
-			}  
+			}
 			
 			
 
@@ -270,8 +283,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) {
 					if (isChecked) {
 						routeAudioToSpeaker();
+						mSpeaker.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.speaker_32_on, 0, 0);
 					} else {
 						routeAudioToReceiver();
+						mSpeaker.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.speaker_32_off, 0, 0);
 					}
 					
 				}
@@ -359,70 +374,57 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		
 	}
 	public void generalState(LinphoneCore lc, GeneralState state) {
-		switch(state) {
 
-		case GSTATE_POWER_ON:
+		if (state == GeneralState.GSTATE_POWER_ON) {
 			mCall.setEnabled(!lc.isIncall());
 			mHangup.setEnabled(!mCall.isEnabled());  
 			try{
-			LinphoneService.instance().initFromConf();
+				LinphoneService.instance().initFromConf();
 			} catch (LinphoneConfigException ec) {
 				Log.w(LinphoneService.TAG,"no valid settings found",ec);
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage(getString(R.string.initial_config_error))
-				       .setCancelable(false)
-				       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				        	   LinphoneActivity.instance().startprefActivity();
-				           }
-				       }).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				                
-				           }
-				       }).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				        	    mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
-				                dialog.cancel();
-				           }
-				       });
+				.setCancelable(false)
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						LinphoneActivity.instance().startprefActivity();
+					}
+				}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+
+					}
+				}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
+						dialog.cancel();
+					}
+				});
 				if (mPref.getBoolean(PREF_CHECK_CONFIG, false) == false) {
 					builder.create().show();
 				}
 			} catch (Exception e ) {
 				Log.e(LinphoneService.TAG,"Cannot get initial config", e);
 			}
-			break;
-		case GSTATE_REG_OK: {
-			break; 
-		}
-		case GSTATE_CALL_OUT_INVITE: {
+		} else if (state == GeneralState.GSTATE_REG_OK) {
+			//nop 
+		} else if (state == GeneralState.GSTATE_CALL_OUT_INVITE) {
 			mWakeLock.acquire();
 			enterIncalMode(lc);
 			routeAudioToReceiver();
-			break;
-		}
-		case GSTATE_CALL_IN_INVITE: { 
-			mDecline.setEnabled(true);
-			routeAudioToSpeaker();
-			break;			
-		}
-		case GSTATE_CALL_IN_CONNECTED: 
-		case GSTATE_CALL_OUT_CONNECTED: {
+		} else if (state == GeneralState.GSTATE_CALL_IN_INVITE) { 
+			callPending();
+		} else if (state == GeneralState.GSTATE_CALL_IN_CONNECTED 
+				|| state == GeneralState.GSTATE_CALL_OUT_CONNECTED) {
 			enterIncalMode(lc);
-			break;
-		}
-		case GSTATE_CALL_ERROR: {
+		} else if (state == GeneralState.GSTATE_CALL_ERROR) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
 			Toast toast = Toast.makeText(this
 					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
 					, Toast.LENGTH_LONG);
 			toast.show();
-		}
-		case GSTATE_CALL_END: {
+		} else if (state == GeneralState.GSTATE_CALL_END) {
 			exitCallMode();
-			break;
-		}
 		}
 	}
 	public void inviteReceived(LinphoneCore lc, String from) {
@@ -486,6 +488,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(false); 
 		}		
+	}
+	private void callPending() {
+		mDecline.setEnabled(true);
+		routeAudioToSpeaker();
 	}
 	
 }

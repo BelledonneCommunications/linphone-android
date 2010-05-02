@@ -52,10 +52,15 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	private native void done(long ptr);
 	
 	private native void setIdentity(long ptr,String identity);
+	private native String getIdentity(long ptr);
 	private native int setProxy(long ptr,String proxy);
+	private native String getProxy(long ptr);
+	
 
 	private native void enableRegister(long ptr,boolean value);
+	private native boolean isRegisterEnabled(long ptr);
 	
+	private native boolean isRegistered(long ptr);
 	private native void setDialPrefix(long ptr, String prefix);
 	
 	private native String normalizePhoneNumber(long ptr,String number);
@@ -98,18 +103,15 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		 setDialEscapePlus(nativePtr,value);
 	}
 	public String getIdentity() {
-		throw new RuntimeException("not implemeneted yet");
+		return getIdentity(nativePtr);
 	}
 	public String getProxy() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemeneted yet");
+		return getProxy(nativePtr);
 	}
 	public boolean isRegistered() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemeneted yet");
+		return isRegistered(nativePtr);
 	}
 	public boolean registerEnabled() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemeneted yet");
+		return isRegisterEnabled(nativePtr);
 	}
 }

@@ -20,8 +20,7 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 
 class LinphoneCoreImpl implements LinphoneCore {
@@ -139,9 +138,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		acceptCall(nativePtr);
 		
 	}
-	public synchronized List<LinphoneCallLog> getCallLogs() {
+	public synchronized Vector<LinphoneCallLog> getCallLogs() {
 		isValid();
-		List<LinphoneCallLog> logs = new ArrayList<LinphoneCallLog>(); 
+		Vector<LinphoneCallLog> logs = new Vector<LinphoneCallLog>(); 
 		for (int i=0;i < getNumberOfCallLogs(nativePtr);i++) {
 			logs.add(new LinphoneCallLogImpl(getCallLog(nativePtr, i)));
 		}

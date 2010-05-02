@@ -94,7 +94,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    Intent lHistoryItent =  new Intent().setClass(this, HistoryActivity.class);
 	    
 	    spec = lTabHost.newTabSpec("history").setIndicator(getString(R.string.tab_history),
-	                      null)
+	    		getResources().getDrawable(R.drawable.history_orange))
 	                  .setContent(lHistoryItent);
 	    lTabHost.addTab(spec);
 	    
@@ -103,7 +103,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 
 	    // Initialize a TabSpec for each tab and add it to the TabHost
 	    spec = lTabHost.newTabSpec("dialer").setIndicator(getString(R.string.tab_dialer),
-	                      getResources().getDrawable(android.R.drawable.ic_menu_call))
+	                      getResources().getDrawable(R.drawable.dialer_orange))
 	                  .setContent(lDialerIntent);
 	    lTabHost.addTab(spec);
 	    
@@ -111,7 +111,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    Intent lContactItent =  new Intent().setClass(this, ContactPickerActivity.class);
 	    
 	    spec = lTabHost.newTabSpec("contact").setIndicator(getString(R.string.tab_contact),
-	                      null)
+	    		getResources().getDrawable(R.drawable.history_orange))
 	                  .setContent(lContactItent);
 	    lTabHost.addTab(spec);
 
@@ -135,9 +135,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			} else {
 				mAudioManager.setSpeakerphoneOn(false); 
 			}
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.setClass(this, LinphoneService.class);
-			stopService(intent);
+
 			theLinphoneActivity = null;
 		}
 		
@@ -173,6 +171,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			return true;
 		case R.id.menu_exit:
 			finish();
+			Intent exitIntent = new Intent(Intent.ACTION_MAIN);
+			exitIntent.setClass(this, LinphoneService.class);
+			stopService(exitIntent);
 			break;
 		case R.id.menu_about:
 			Intent intent = new Intent(Intent.ACTION_MAIN);

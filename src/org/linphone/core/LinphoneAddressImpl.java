@@ -66,5 +66,32 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	public void setDisplayName(String name) {
 		setDisplayName(nativePtr,name);
 	}
+	public String asString() {
+		return toString();
+	}
+	public String asStringUriOnly() {
+		return toUri(nativePtr);
+	}
+	public void clean() {
+		throw new RuntimeException("Not implemented");
+	}
+	public String getPort() {
+		return String.valueOf(getPortInt());
+	}
+	public int getPortInt() {
+		return getPortInt();
+	}
+	public void setDomain(String domain) {
+		throw new RuntimeException("Not implemented");
+	}
+	public void setPort(String port) {
+		throw new RuntimeException("Not implemented");
+	}
+	public void setPortInt(int port) {
+		throw new RuntimeException("Not implemented");
+	}
+	public void setUserName(String username) {
+		throw new RuntimeException("Not implemented");
+	}
  
 }
