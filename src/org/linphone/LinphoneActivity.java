@@ -111,7 +111,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    Intent lContactItent =  new Intent().setClass(this, ContactPickerActivity.class);
 	    
 	    spec = lTabHost.newTabSpec("contact").setIndicator(getString(R.string.tab_contact),
-	    		getResources().getDrawable(R.drawable.history_orange))
+	    		getResources().getDrawable(R.drawable.contact_orange))
 	                  .setContent(lContactItent);
 	    lTabHost.addTab(spec);
 
