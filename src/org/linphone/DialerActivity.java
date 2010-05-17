@@ -147,7 +147,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				public void onClick(View v) {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
 					if (lLinphoneCore.isInComingInvitePending()) {
-						lLinphoneCore.acceptCall();
+						try {
+							lLinphoneCore.acceptCall();
+						} catch (LinphoneCoreException e) {
+							lLinphoneCore.terminateCall();
+							Toast toast = Toast.makeText(DialerActivity.this
+									,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
+									, Toast.LENGTH_LONG);
+							toast.show();
+						}
 						return;
 					}
 					if (lLinphoneCore.isIncall()) {

@@ -16,3 +16,9 @@
 [submodule "submodules/externals/speex"]
 	path = submodules/externals/speex
 	url = http://git.xiph.org/speex.git
+[submodule "submodules/msilbc"]
+	path = submodules/msilbc
+	url = git://git.linphone.org/msilbc.git
+[submodule "submodules/libilbc-rfc3951"]
+	path = submodules/libilbc-rfc3951
+	url = git://git.linphone.org/libilbc-rfc3951.git

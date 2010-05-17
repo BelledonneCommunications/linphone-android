@@ -8,7 +8,7 @@
 		<LinearLayout android:layout_height="wrap_content"
 			android:layout_width="fill_parent" android:id="@+id/Addresslayout">
 			<EditText android:id="@+id/SipUri" android:background="@drawable/clavier_bg_grey" android:hint="sip:" android:layout_width="fill_parent"
-				android:lines="1" android:layout_weight="0.2" android:layout_height="fill_parent"></EditText>
+				android:lines="1" android:layout_weight="0.2" android:layout_height="fill_parent" android:padding="10px"></EditText>
 			<Button android:layout_height="fill_parent" android:background="@drawable/clavier_bg" android:id="@+id/Erase"
 				android:layout_width="fill_parent" android:layout_weight="0.8" android:textSize="20sp"
 				android:textStyle="bold" android:text="&lt;" android:layout_gravity="top"></Button>

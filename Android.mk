@@ -14,6 +14,9 @@ include $(root-dir)/submodules/linphone/mediastreamer2/build/android/Android.mk
 
 include $(root-dir)/submodules/msandroid/Android.mk
 
+include $(root-dir)/submodules/msilbc/Android.mk
+
+
 include $(root-dir)/submodules/linphone/build/android/Android.mk
 
 

@@ -14,6 +14,7 @@ use_ipv6=0
 register_only_when_network_is_up=0
 default_proxy=0
 auto_net_state_mon=0
+keepalive_period=3600000
 
 [rtp]
 audio_rtp_port=7076
@@ -29,43 +30,4 @@ capture_dev_id=ANDROID SND: Android Sound card
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 
-[audio_codec_0]
-mime=speex
-rate=32000
-enabled=0
-
-[audio_codec_1]
-mime=speex
-rate=16000
-enabled=1
-
-[audio_codec_2]
-mime=speex
-rate=8000
-enabled=1
-
-[audio_codec_3]
-mime=GSM
-rate=22050
-enabled=0
-
-[audio_codec_4]
-mime=GSM
-rate=11025
-enabled=0
-
-[audio_codec_5]
-mime=GSM
-rate=8000
-enabled=1
-
-[audio_codec_6]
-mime=PCMU
-rate=8000
-enabled=1
-
-[audio_codec_7]
-mime=PCMA
-rate=8000
-enabled=1
 
