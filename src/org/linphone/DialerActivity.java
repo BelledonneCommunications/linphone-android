@@ -431,6 +431,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
 					, Toast.LENGTH_LONG);
 			toast.show();
+			exitCallMode();
 		} else if (state == GeneralState.GSTATE_CALL_END) {
 			exitCallMode();
 		}
