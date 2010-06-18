@@ -47,9 +47,14 @@
          </activity>         
          <service android:name=".LinphoneService">
         </service>
-	<receiver android:name="NetworkManager"><intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
-</intent-filter>
-</receiver>
+	<receiver android:name="NetworkManager">
+	<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
+	</intent-filter>
+	</receiver>
+	<receiver android:name="OutgoingCallReceiver" >
+		<intent-filter android:priority="0"><action android:name="android.intent.action.NEW_OUTGOING_CALL"></action>
+	</intent-filter>
+	</receiver>
 </application>
 
 <uses-permission android:name="android.permission.INTERNET"></uses-permission>
@@ -58,5 +63,6 @@
 <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 <uses-permission android:name="android.permission.WAKE_LOCK"/>
+<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
 
 </manifest> 

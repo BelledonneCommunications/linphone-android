@@ -1,6 +1,3 @@
-[submodule "msandroid"]
-	path = submodules/msandroid
-	url = git://git.linphone.org/msandroid.git
 [submodule "linphone"]
 	path = submodules/linphone
 	url = git://git.savannah.nongnu.org/linphone.git

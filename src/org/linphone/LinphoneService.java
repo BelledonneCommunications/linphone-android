@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.PayloadType;
 import org.linphone.core.LinphoneCore.GeneralState;
 
 
@@ -306,7 +307,40 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 				}
 				//escape +
 				lDefaultProxyConfig.setDialEscapePlus(true);
+				//outbound proxy
+				if (mPref.getBoolean(getString(R.string.pref_enable_outbound_proxy_key), false)) {
+					lDefaultProxyConfig.setRoute(lProxy);
+				}
+				
 			}
+			
+			//codec config
+			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 16000); 
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex16_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("speex", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex8_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("GSM", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_gsm_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("PCMU", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcmu_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("PCMA", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcma_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			
 			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo lInfo = lConnectivityManager.getActiveNetworkInfo();

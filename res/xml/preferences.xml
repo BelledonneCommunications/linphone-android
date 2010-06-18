@@ -9,12 +9,29 @@
 			android:key="@string/pref_domain_key"></EditTextPreference>
 		<EditTextPreference android:title="@string/pref_proxy"
 			android:key="@string/pref_proxy_key"></EditTextPreference>
-	</PreferenceCategory>
+	<CheckBoxPreference android:enabled="true" android:selectable="false" android:key="@string/pref_enable_outbound_proxy_key" android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>
+</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_advanced">
+		<PreferenceScreen android:title="@string/pref_codecs" android:key="@string/pref_codecs_key">
+			<CheckBoxPreference android:key="@string/pref_codec_speex16_key"
+				android:title="@string/pref_codec_speex16" android:defaultValue="true"></CheckBoxPreference>
+			<CheckBoxPreference android:key="@string/pref_codec_speex8_key"
+				android:title="@string/pref_codec_speex8" android:defaultValue="true"></CheckBoxPreference>
+			<!--  CheckBoxPreference android:key="@string/pref_codec_ilbc_key"
+				android:title="@string/pref_codec_ilbc" android:enabled="true"></CheckBoxPreference-->								
+			<CheckBoxPreference android:key="@string/pref_codec_gsm_key"
+				android:title="@string/pref_codec_gsm" android:defaultValue="true"></CheckBoxPreference>								
+			<CheckBoxPreference android:key="@string/pref_codec_pcmu_key"
+				android:title="@string/pref_codec_pcmu" android:defaultValue="true"></CheckBoxPreference>								
+			<CheckBoxPreference android:key="@string/pref_codec_pcma_key"
+				android:title="@string/pref_codec_pcma" android:defaultValue="true"></CheckBoxPreference>								
+		</PreferenceScreen>
 		<EditTextPreference android:title="@string/pref_prefix"
 			android:key="@string/pref_prefix_key"></EditTextPreference>
-	
-<CheckBoxPreference android:key="@string/pref_debug_key" android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
+
+		<CheckBoxPreference android:key="@string/pref_debug_key"
+			android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
+
 </PreferenceCategory>
 
 </PreferenceScreen>

@@ -62,4 +62,10 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 	@Override
 	public native void setDebugMode(boolean enable);
+
+	@Override
+	public void setLogHandler(LinphoneLogHandler handler) {
+		//not implemented on Android
+		
+	}
 }

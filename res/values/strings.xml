@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_enable_outbound_proxy">Outbound proxy</string>
+    <string name="pref_enable_outbound_proxy_key">Outbound proxy</string>
+    <string name="pref_codec_pcma">pcma</string>
+    <string name="pref_codec_pcma_key">pref_codec_pcma_key</string>
+    <string name="pref_codec_pcmu">pcmu</string>
+    <string name="pref_codec_pcmu_key">pref_codec_pcmu_key</string>
+    <string name="pref_codec_gsm">gsm</string>
+    <string name="pref_codec_gsm_key">pref_codec_gsm_key</string>
+    <string name="pref_codec_ilbc">ilbc</string>
+    <string name="pref_codec_ilbc_key">pref_codec_ilbc_key</string>
+    <string name="pref_codec_speex8">speex 8 Khz</string>
+    <string name="pref_codec_speex8_key">pref_codec_speex8_key</string>
+    <string name="pref_codec_speex16">speex 16 Khz</string>
+    <string name="pref_codec_speex16_key">pref_codec_speex16_key</string>
+    <string name="pref_codecs">Codecs</string>
+    <string name="pref_codecs_key">pref_codecs_key</string>
+    <string name="place_call_chooser">Place a call</string>
 <string name="pref_debug">Debug</string>
 <string name="about_text">Linphone  %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n© 2010 Belledonne Communications</string>
 <string name="menu_about">About</string>

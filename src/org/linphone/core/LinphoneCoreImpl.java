@@ -56,7 +56,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void sendDtmf(long nativePtr,char dtmf);
 	private native void clearCallLogs(long nativePtr);
 	private native boolean isMicMuted(long nativePtr);
-	
+	private native long findPayloadType(long nativePtr, String mime, int clockRate);
+	private native int enablePayloadType(long nativePtr, long payloadType,	boolean enable);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -189,5 +190,20 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public boolean isMicMuted() {
 		return isMicMuted(nativePtr);
+	}
+	public PayloadType findPayloadType(String mime, int clockRate) {
+		long playLoadType = findPayloadType(nativePtr, mime, clockRate);
+		if (playLoadType == 0) {
+			return null;
+		} else {
+			return new PayloadTypeImpl(playLoadType);
+		}
+	}
+	public void enablePayloadType(PayloadType pt, boolean enable)
+			throws LinphoneCoreException {
+		if (enablePayloadType(nativePtr,((PayloadTypeImpl)pt).nativePtr,enable) != 0) {
+			throw new LinphoneCoreException("cannot enable payload type ["+pt+"]");
+		}
+		
 	}
 }

@@ -6,6 +6,7 @@ mtu=0
 
 [sip]
 sip_port=5060
+sip_random_port=1
 guess_hostname=1
 contact=sip:unknown@unknown-host
 inc_timeout=15

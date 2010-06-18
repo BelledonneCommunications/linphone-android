@@ -69,6 +69,9 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	
 	private native void setDialEscapePlus(long ptr, boolean value);
 	
+	private native String getRoute(long ptr);
+	private native int setRoute(long ptr,String uri);
+	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
 	}
@@ -113,5 +116,13 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	}
 	public boolean registerEnabled() {
 		return isRegisterEnabled(nativePtr);
+	}
+	public String getRoute() {
+		return getRoute(nativePtr);
+	}
+	public void setRoute(String routeUri) throws LinphoneCoreException {
+		if (setRoute(nativePtr, routeUri) != 0) {
+			throw new LinphoneCoreException("cannot set route ["+routeUri+"]");
+		}
 	}
 }

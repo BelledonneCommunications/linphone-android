@@ -123,6 +123,26 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 	
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+	    if (intent.getData() != null) {
+	    	//incoming call requested
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(getString(R.string.place_call_chooser))
+			.setCancelable(false)
+			.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					;
+				}
+			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				}
+			});
+			builder.create().show();
+	    }
+		
+	}
+	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
