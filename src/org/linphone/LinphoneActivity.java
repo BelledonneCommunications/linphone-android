@@ -100,6 +100,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    
 	    // dialer
 	    Intent lDialerIntent = new Intent().setClass(this, DialerActivity.class);
+	    lDialerIntent.setData(getIntent().getData());
 
 	    // Initialize a TabSpec for each tab and add it to the TabHost
 	    spec = lTabHost.newTabSpec("dialer").setIndicator(getString(R.string.tab_dialer),
@@ -120,25 +121,15 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	    	hideScreen(true);
 	    }
 	    
+	    
 	}
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 	    if (intent.getData() != null) {
-	    	//incoming call requested
-	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getString(R.string.place_call_chooser))
-			.setCancelable(false)
-			.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					;
-				}
-			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-				}
-			});
-			builder.create().show();
+	    	DialerActivity.getDialer().newOutgoingCall(intent.getData().toString().substring("tel://".length()));
+	    	intent.setData(null);
 	    }
 		
 	}
@@ -266,4 +257,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		}
 		getWindow().setAttributes(lAttrs);
 	}
+	
+
 }

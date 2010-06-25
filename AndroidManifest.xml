@@ -14,6 +14,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+                <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tel" />
+            </intent-filter>
          </activity>
         <activity android:name=".LinphonePreferencesActivity">
             <intent-filter>
@@ -24,11 +29,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-              <intent-filter>
-                <action android:name="android.intent.action.CALL" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="tel" />
-            </intent-filter>
+  
          </activity>
         <activity android:name=".ContactPickerActivity">
             <intent-filter>
@@ -44,7 +45,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-         </activity>         
+         </activity>
          <service android:name=".LinphoneService">
         </service>
 	<receiver android:name="NetworkManager">
@@ -53,6 +54,10 @@
 	</receiver>
 	<receiver android:name="OutgoingCallReceiver" >
 		<intent-filter android:priority="0"><action android:name="android.intent.action.NEW_OUTGOING_CALL"></action>
+	</intent-filter>
+	</receiver>
+	<receiver android:name="BootReceiver" >
+		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action>
 	</intent-filter>
 	</receiver>
 </application>
@@ -64,5 +69,8 @@
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 <uses-permission android:name="android.permission.WAKE_LOCK"/>
 <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
+<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+<uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
+
 
 </manifest> 

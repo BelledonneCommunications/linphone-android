@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_handle_outcall_summarry">If set cellular call are redirected to voip when possible</string>
+    <string name="pref_handle_outcall">Redirect cellular calls</string>
+    <string name="pref_handle_outcall_key">pref_handle_outcall_key</string>
+    <string name="pref_autostart">Start at boot time</string>
+    <string name="pref_autostart_key">pref_autostart_key</string>
+    <string name="outcall_chooser_cellular">Cellular</string>
+    <string name="outcall_chooser_text">Choose application to call %s</string>
     <string name="pref_enable_outbound_proxy">Outbound proxy</string>
     <string name="pref_enable_outbound_proxy_key">Outbound proxy</string>
     <string name="pref_codec_pcma">pcma</string>

@@ -23,18 +23,36 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
 public class OutgoingCallReceiver extends BroadcastReceiver {
-
+	public static String TAG = ";0000000";
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String to = intent.getStringExtra("android.intent.extra.PHONE_NUMBER");
-		setResult(Activity.RESULT_OK,null, null);
-		Intent lIntent = new Intent();
-		lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		lIntent.setClass(context, LinphoneActivity.class);
-		lIntent.setData(Uri.parse("tel://"+to));
-		context.startActivity(lIntent);
+		if (!to.contains(TAG)) {
+			if (LinphoneService.isready() && LinphoneService.instance().getLinphoneCore().getDefaultProxyConfig()==null) {
+				//just return
+				return;
+			}
+			setResult(Activity.RESULT_OK,null, null);
+			Intent lIntent = new Intent();
+			// 1 check config 
+			if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_handle_outcall_key), false)) {
+				//start linphone directly
+				lIntent.setClass(context, LinphoneActivity.class);
+			} else {
+				//start activity chooser
+				lIntent.setAction(Intent.ACTION_CALL);
+			}
+				
+			lIntent.setData(Uri.parse("tel://"+to+TAG));
+			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(lIntent);
+
+		} else {
+			setResult(Activity.RESULT_OK,to.replace(TAG, ""),null);
+		}
 	}
 
 }

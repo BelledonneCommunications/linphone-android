@@ -115,7 +115,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 		try {
-			
+
 			
 			mAddress = (TextView) findViewById(R.id.SipUri);
 			mDisplayNameView = (TextView) findViewById(R.id.DisplayNameView);
@@ -158,31 +158,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						}
 						return;
 					}
-					if (lLinphoneCore.isIncall()) {
-						Toast toast = Toast.makeText(DialerActivity.this, getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
-						toast.show();
-						return;
-					}
-					LinphoneAddress lAddress;
-					try {
-						lAddress = lLinphoneCore.interpretUrl( mAddress.getText().toString());
-					} catch (LinphoneCoreException e) {
-						Toast toast = Toast.makeText(DialerActivity.this
-													,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
-													, Toast.LENGTH_LONG);
-						toast.show();
-						return;
-					}
-					lAddress.setDisplayName(mDisplayName);
-					try {
-						lLinphoneCore.invite(lAddress);
-					} catch (LinphoneCoreException e) {
-						Toast toast = Toast.makeText(DialerActivity.this
-								,String.format(getString(R.string.error_cannot_invite_address),mAddress.getText().toString())
-								, Toast.LENGTH_LONG);
-						toast.show();
-						return;
-					}
+					newOutgoingCall(mAddress.getText().toString(),mDisplayName);
 				}
 				
 			}); 
@@ -234,6 +210,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			mDecline.setEnabled(false);
+			if (LinphoneService.isready() && getIntent().getData() != null) {
+		    	newOutgoingCall(getIntent().getData().toString().substring("tel://".length()));
+		    	getIntent().setData(null);
+		    }
 			if (LinphoneService.isready()) {
 				LinphoneCore lLinphoenCore = LinphoneService.instance().getLinphoneCore();
 				if (lLinphoenCore.isIncall()) {
@@ -411,9 +391,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				if (mPref.getBoolean(PREF_CHECK_CONFIG, false) == false) {
 					builder.create().show();
 				}
+
 			} catch (Exception e ) {
 				Log.e(LinphoneService.TAG,"Cannot get initial config", e);
 			}
+			if (getIntent().getData() != null) {
+		    	newOutgoingCall(getIntent().getData().toString().substring("tel://".length()));
+		    	getIntent().setData(null);
+		    }
+
 		} else if (state == GeneralState.GSTATE_REG_OK) {
 			//nop 
 		} else if (state == GeneralState.GSTATE_CALL_OUT_INVITE) {
@@ -501,6 +487,43 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private void callPending() {
 		mDecline.setEnabled(true);
 		routeAudioToSpeaker();
+	}
+	public void newOutgoingCall(String aTo) {
+		newOutgoingCall(aTo,null);
+	}
+	public void newOutgoingCall(String aTo, String displayName) {
+		String lto = aTo;
+		if (aTo.contains(OutgoingCallReceiver.TAG)) {
+			lto = aTo.replace(OutgoingCallReceiver.TAG, "");
+		}
+		mAddress.setText(lto);
+		mDisplayName = displayName;
+		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
+		if (lLinphoneCore.isIncall()) {
+			Toast toast = Toast.makeText(DialerActivity.this, getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
+			toast.show();
+			return;
+		}
+		LinphoneAddress lAddress;
+		try {
+			lAddress = lLinphoneCore.interpretUrl(lto);
+		} catch (LinphoneCoreException e) {
+			Toast toast = Toast.makeText(DialerActivity.this
+										,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
+										, Toast.LENGTH_LONG);
+			toast.show();
+			return;
+		}
+		lAddress.setDisplayName(mDisplayName);
+		try {
+			lLinphoneCore.invite(lAddress);
+		} catch (LinphoneCoreException e) {
+			Toast toast = Toast.makeText(DialerActivity.this
+					,String.format(getString(R.string.error_cannot_invite_address),mAddress.getText().toString())
+					, Toast.LENGTH_LONG);
+			toast.show();
+			return;
+		}
 	}
 	
 }

@@ -25,12 +25,14 @@
 				android:title="@string/pref_codec_pcmu" android:defaultValue="true"></CheckBoxPreference>								
 			<CheckBoxPreference android:key="@string/pref_codec_pcma_key"
 				android:title="@string/pref_codec_pcma" android:defaultValue="true"></CheckBoxPreference>								
-		</PreferenceScreen>
-		<EditTextPreference android:title="@string/pref_prefix"
+		</PreferenceScreen><CheckBoxPreference android:title="@string/pref_autostart" android:defaultValue="true" android:key="@string/pref_autostart_key"></CheckBoxPreference>
+		<CheckBoxPreference android:title="@string/pref_handle_outcall" android:key="@string/pref_handle_outcall_key" android:summary="@string/pref_handle_outcall_summarry"></CheckBoxPreference><EditTextPreference android:title="@string/pref_prefix"
 			android:key="@string/pref_prefix_key"></EditTextPreference>
 
 		<CheckBoxPreference android:key="@string/pref_debug_key"
 			android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
+
+
 
 </PreferenceCategory>
 

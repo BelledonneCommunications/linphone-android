@@ -43,6 +43,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -252,6 +253,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		//traces
 		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
+		
 		
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
