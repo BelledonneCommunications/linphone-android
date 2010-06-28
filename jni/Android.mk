@@ -1,4 +1,4 @@
-root-dir:=$(call my-dir)
+root-dir:=$(APP_PROJECT_PATH)
 
 include $(root-dir)/submodules/externals/build/speex/Android.mk
 
@@ -12,7 +12,7 @@ include $(root-dir)/submodules/linphone/oRTP/build/android/Android.mk
 
 include $(root-dir)/submodules/linphone/mediastreamer2/build/android/Android.mk
 
-include $(root-dir)/submodules/msilbc/Android.mk
+#include $(root-dir)/submodules/msilbc/Android.mk
 
 include $(root-dir)/submodules/linphone/build/android/Android.mk
 
