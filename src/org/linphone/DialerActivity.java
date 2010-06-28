@@ -399,7 +399,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		    	newOutgoingCall(getIntent().getData().toString().substring("tel://".length()));
 		    	getIntent().setData(null);
 		    }
-
 		} else if (state == GeneralState.GSTATE_REG_OK) {
 			//nop 
 		} else if (state == GeneralState.GSTATE_CALL_OUT_INVITE) {

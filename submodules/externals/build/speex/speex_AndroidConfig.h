@@ -138,10 +138,10 @@
 /* #undef USE_INTEL_MKL */
 
 /* Use KISS Fast Fourier Transform */
-/* #undef USE_KISS_FFT */
+#define USE_KISS_FFT 
 
 /* Use FFT from OggVorbis */
-#define USE_SMALLFT
+/*#undefine USE_SMALLFT*/
 
 /* Use C99 variable-size arrays */
 #define VAR_ARRAYS

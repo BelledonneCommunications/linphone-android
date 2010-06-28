@@ -30,5 +30,6 @@ ringer_dev_id=ANDROID SND: Android Sound card
 capture_dev_id=ANDROID SND: Android Sound card
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
+ec_delay=200
 
 

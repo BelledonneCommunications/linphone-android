@@ -48,8 +48,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int getNumberOfCallLogs(long nativePtr);
 	private native void delete(long nativePtr);
 	private native void setNetworkStateReachable(long nativePtr,boolean isReachable);
-	private native void setSoftPlayLevel(long nativeptr, float gain);
-	private native float getSoftPlayLevel(long nativeptr);
+	private native void setPlaybackGain(long nativeptr, float gain);
+	private native float getPlaybackGain(long nativeptr);
 	private native void muteMic(long nativePtr,boolean isMuted);
 	private native long interpretUrl(long nativePtr,String destination);
 	private native void inviteAddress(long nativePtr,long to);
@@ -58,6 +58,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native boolean isMicMuted(long nativePtr);
 	private native long findPayloadType(long nativePtr, String mime, int clockRate);
 	private native int enablePayloadType(long nativePtr, long payloadType,	boolean enable);
+	private native void enableEchoCancellation(long nativePtr,boolean enable);
+	private native boolean isEchoCancellationEnabled(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -161,12 +163,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setNetworkStateReachable(boolean isReachable) {
 		setNetworkStateReachable(nativePtr,isReachable);
 	}
-	public void setSoftPlayLevel(float gain) {
-		setSoftPlayLevel(nativePtr,gain);
+	public void setPlaybackGain(float gain) {
+		setPlaybackGain(nativePtr,gain);
 		
 	}
-	public float getSoftPlayLevel() {
-		return getSoftPlayLevel(nativePtr);
+	public float getPlaybackGain() {
+		return getPlaybackGain(nativePtr);
 	}
 	public void muteMic(boolean isMuted) {
 		muteMic(nativePtr,isMuted);
@@ -192,6 +194,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return isMicMuted(nativePtr);
 	}
 	public PayloadType findPayloadType(String mime, int clockRate) {
+		isValid();
 		long playLoadType = findPayloadType(nativePtr, mime, clockRate);
 		if (playLoadType == 0) {
 			return null;
@@ -201,9 +204,19 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void enablePayloadType(PayloadType pt, boolean enable)
 			throws LinphoneCoreException {
+		isValid();
 		if (enablePayloadType(nativePtr,((PayloadTypeImpl)pt).nativePtr,enable) != 0) {
 			throw new LinphoneCoreException("cannot enable payload type ["+pt+"]");
 		}
+		
+	}
+	public void enableEchoCancellation(boolean enable) {
+		isValid();
+		enableEchoCancellation(nativePtr, enable);
+	}
+	public boolean isEchoCancellationEnabled() {
+		isValid();
+		return isEchoCancellationEnabled(nativePtr);
 		
 	}
 }

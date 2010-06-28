@@ -68,6 +68,7 @@ LOCAL_SRC_FILES := \
 	$(libspeex_SRC_FILES) \
 	$(libspeexdsp_SRC_FILES)
 
+#	-DARM4_ASM 
 ifeq ($(TARGET_ARCH),arm)
 LOCAL_CFLAGS +=\
 	-DARM5E_ASM \

@@ -43,9 +43,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -111,7 +111,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			, LINPHONE_FACTORY_RC
 			, null);
 
-			mLinphoneCore.setSoftPlayLevel(3);  
+			mLinphoneCore.setPlaybackGain(3);   
 
 			try {
 				initFromConf();
@@ -317,7 +317,12 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			}
 			
 			//codec config
-			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 16000); 
+			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 32000); 
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex32_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("speex", 16000);
 			if (lPt !=null) {
 				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex16_key),false);
 				mLinphoneCore.enablePayloadType(lPt, enable);
@@ -342,6 +347,12 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcma_key),false);
 				mLinphoneCore.enablePayloadType(lPt, enable);
 			}
+			
+	        if (!mPref.contains(getString(R.string.pref_echo_cancellation_key)) && Integer.parseInt(Build.VERSION.SDK) > 4 /*donuts*/) {
+	        	mPref.edit().putBoolean(getString(R.string.pref_echo_cancellation_key), true).commit();
+			}
+	           
+	        mLinphoneCore.enableEchoCancellation(mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false)); 
 			
 			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
