@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_ilbc_summary">ILBC codec not avalaible on old phone</string>
     <string name="pref_echo_cancellation">Echo cancellation</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_handle_outcall_summarry">If set cellular call are redirected to voip when possible</string>
@@ -52,7 +53,7 @@
 <string name="yes">Yes</string>
 <string name="no">No</string>
 <string name="never_remind">Never remind me</string>
-<string name="config_error">%s, do you want to return to the settings page ?</string>
+<string name="config_error">%s, do you want to go to the settings page ?</string>
 <string name="initial_config_error">No initial config found, do you want to return to the settings page ?</string>
 <string name="warning_already_incall">Cannot initiate a new call because a call is already engaged</string>
 <string name="tab_history">History</string>

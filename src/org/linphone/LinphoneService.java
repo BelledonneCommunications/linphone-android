@@ -92,7 +92,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		super.onCreate();
 		theLinphone = this;
 		
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); 
 		mNotification = new Notification(R.drawable.status_level
 														, ""
 														, System.currentTimeMillis());
@@ -254,7 +254,49 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
 		
-		
+		try {
+			//codec config
+			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 32000); 
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex32_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("speex", 16000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex16_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("speex", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex8_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("iLBC", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_ilbc_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("GSM", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_gsm_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("PCMU", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcmu_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			lPt = mLinphoneCore.findPayloadType("PCMA", 8000);
+			if (lPt !=null) {
+				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcma_key),false);
+				mLinphoneCore.enablePayloadType(lPt, enable);
+			}
+			
+	           
+	        mLinphoneCore.enableEchoCancellation(mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false)); 
+		} catch (LinphoneCoreException e) {
+			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
+		}
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
 		if (lUserName == null || lUserName.length()==0) {
@@ -316,43 +358,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 				
 			}
 			
-			//codec config
-			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 32000); 
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex32_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("speex", 16000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex16_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("speex", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex8_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("GSM", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_gsm_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("PCMU", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcmu_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("PCMA", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcma_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			
-	        if (!mPref.contains(getString(R.string.pref_echo_cancellation_key)) && Integer.parseInt(Build.VERSION.SDK) > 4 /*donuts*/) {
-	        	mPref.edit().putBoolean(getString(R.string.pref_echo_cancellation_key), true).commit();
-			}
-	           
-	        mLinphoneCore.enableEchoCancellation(mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false)); 
+
 			
 			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

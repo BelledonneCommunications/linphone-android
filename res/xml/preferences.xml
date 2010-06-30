@@ -16,7 +16,7 @@
 			<CheckBoxPreference android:key="@string/pref_codec_speex16_key"
 				android:title="@string/pref_codec_speex16" android:defaultValue="true"></CheckBoxPreference>
 			<CheckBoxPreference android:key="@string/pref_codec_speex8_key"
-				android:title="@string/pref_codec_speex8" android:defaultValue="true"></CheckBoxPreference>
+				android:title="@string/pref_codec_speex8" android:defaultValue="true"></CheckBoxPreference><CheckBoxPreference android:key="@string/pref_codec_ilbc_key" android:title="@string/pref_codec_ilbc" android:enabled="false" android:shouldDisableView="true" android:defaultValue="true"></CheckBoxPreference>
 			<!--  CheckBoxPreference android:key="@string/pref_codec_ilbc_key"
 				android:title="@string/pref_codec_ilbc" android:enabled="true"></CheckBoxPreference-->								
 			<CheckBoxPreference android:key="@string/pref_codec_gsm_key"
@@ -25,7 +25,7 @@
 				android:title="@string/pref_codec_pcmu" android:defaultValue="true"></CheckBoxPreference>								
 			<CheckBoxPreference android:key="@string/pref_codec_pcma_key"
 				android:title="@string/pref_codec_pcma" android:defaultValue="true"></CheckBoxPreference>								
-		</PreferenceScreen><CheckBoxPreference android:title="@string/pref_autostart" android:defaultValue="true" android:key="@string/pref_autostart_key"></CheckBoxPreference>
+		</PreferenceScreen><CheckBoxPreference android:title="@string/pref_autostart" android:key="@string/pref_autostart_key" android:defaultValue="false"></CheckBoxPreference>
 		<CheckBoxPreference android:title="@string/pref_handle_outcall" android:key="@string/pref_handle_outcall_key" android:summary="@string/pref_handle_outcall_summarry"></CheckBoxPreference><CheckBoxPreference android:key="@string/pref_echo_cancellation_key" android:title="@string/pref_echo_cancellation"></CheckBoxPreference><EditTextPreference android:title="@string/pref_prefix"
 			android:key="@string/pref_prefix_key"></EditTextPreference>
 

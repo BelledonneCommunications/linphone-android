@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 
-import android.os.Build;
+
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.Log;
@@ -29,8 +29,23 @@ public class LinphonePreferencesActivity extends PreferenceActivity {
 	   @Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
+	        boolean enableIlbc=false;
+	        if (LinphoneService.isready()) {
+	        	enableIlbc = LinphoneService.instance().getLinphoneCore().findPayloadType("iLBC", 8000)!=null?true:false;;
+				if (enableIlbc && !getPreferenceManager().getSharedPreferences().contains(getString(R.string.pref_echo_cancellation_key))) {
+					getPreferenceManager().getSharedPreferences().edit().putBoolean(getString(R.string.pref_echo_cancellation_key), true).commit();
+				}
+				if (!enableIlbc) {
+					getPreferenceManager().getSharedPreferences().edit().putBoolean(getString(R.string.pref_codec_ilbc_key), false).commit(); 
+				}
+				
+	        }  
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.preferences);
+	        if (enableIlbc) {
+		        getPreferenceScreen().findPreference(getString(R.string.pref_codec_ilbc_key)).setEnabled(enableIlbc);
+	        }
+	        
 	    }
 
 	@Override
