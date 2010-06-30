@@ -92,7 +92,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		super.onCreate();
 		theLinphone = this;
 		
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); 
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotification = new Notification(R.drawable.status_level
 														, ""
 														, System.currentTimeMillis());
