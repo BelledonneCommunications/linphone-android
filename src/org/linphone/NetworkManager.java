@@ -44,7 +44,7 @@ public class NetworkManager extends BroadcastReceiver {
 		 } else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
 			 LinphoneService.instance().getLinphoneCore().setNetworkStateReachable(true);
 		 } else {
-			 //unhandle event 
+			 //unhandled event 
 		 }
 			
 

@@ -39,3 +39,4 @@ public class AboutActivity extends Activity {
 		}
 	}
 }
+

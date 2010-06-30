@@ -260,3 +260,4 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	
 
 }
+
