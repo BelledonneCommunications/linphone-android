@@ -438,17 +438,20 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mInCallAddressLayout.setVisibility(View.VISIBLE);
 		mCall.setEnabled(false);
 		mHangup.setEnabled(true);
-		String DisplayName = lc.getRemoteAddress().getDisplayName();
-		if (DisplayName!=null) {
-			mDisplayNameView.setText(DisplayName);
-		} else {
-			mDisplayNameView.setText(lc.getRemoteAddress().getUserName());
+		LinphoneAddress remote=lc.getRemoteAddress();
+		if (remote!=null){
+			String DisplayName = remote.getDisplayName();
+			if (DisplayName!=null) {
+				mDisplayNameView.setText(DisplayName);
+			} else {
+				mDisplayNameView.setText(lc.getRemoteAddress().getUserName());
+			}
 		}
-		 if (mSpeaker.isChecked()) {
+		if (mSpeaker.isChecked()) {
 			 routeAudioToSpeaker();
-		 } else {
+		} else {
 			 routeAudioToReceiver();
-		 }
+		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 	}
 	private void exitCallMode() {
@@ -524,5 +527,4 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			return;
 		}
 	}
-	
 }

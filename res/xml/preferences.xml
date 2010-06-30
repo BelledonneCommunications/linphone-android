@@ -9,7 +9,7 @@
 			android:key="@string/pref_domain_key"></EditTextPreference>
 		<EditTextPreference android:title="@string/pref_proxy"
 			android:key="@string/pref_proxy_key"></EditTextPreference>
-	<CheckBoxPreference android:enabled="true" android:selectable="false" android:key="@string/pref_enable_outbound_proxy_key" android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>
+	<CheckBoxPreference android:enabled="true" android:selectable="true" android:key="@string/pref_enable_outbound_proxy_key" android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>
 </PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_advanced">
 		<PreferenceScreen android:title="@string/pref_codecs" android:key="@string/pref_codecs_key">
