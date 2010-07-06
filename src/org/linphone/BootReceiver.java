@@ -28,7 +28,7 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_autostart_key), true)) {
+		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_autostart_key), false)) {
 			Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
 			context.startService(lLinphoneServiceIntent);;
