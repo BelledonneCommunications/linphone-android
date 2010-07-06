@@ -39,5 +39,4 @@ public class LinphoneException extends Exception {
 		super(detailMessage, throwable);
 		// TODO Auto-generated constructor stub
 	}
-
 }

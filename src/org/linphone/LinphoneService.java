@@ -192,7 +192,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 
 	}
-	public void generalState(final LinphoneCore lc, final LinphoneCore.GeneralState state) {
+	public void generalState(final LinphoneCore lc, final LinphoneCore.GeneralState state, final String message) {
 		Log.i(TAG, "new state ["+state+"]");
 		if (state == GeneralState.GSTATE_POWER_ON) {
 			mNotification.iconLevel=IC_LEVEL_OFFLINE;
@@ -226,7 +226,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		if (DialerActivity.getDialer()!=null) {
 			mHandler.post(new Runnable() {
 				public void run() {
-					DialerActivity.getDialer().generalState(lc,state);
+					DialerActivity.getDialer().generalState(lc,state,message);
 				}
 			});
 		} 
@@ -389,5 +389,5 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		theLinphone=null;
 		mNotificationManager.cancel(NOTIFICATION_ID);
 	}
-
 }
+

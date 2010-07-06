@@ -361,7 +361,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
-	public void generalState(LinphoneCore lc, GeneralState state) {
+	public void generalState(LinphoneCore lc, GeneralState state, String message) {
 
 		if (state == GeneralState.GSTATE_POWER_ON) {
 			mCall.setEnabled(!lc.isIncall());
@@ -413,7 +413,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else if (state == GeneralState.GSTATE_CALL_ERROR) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
 			Toast toast = Toast.makeText(this
-					,String.format(getString(R.string.call_error),lc.getRemoteAddress())
+					,String.format(getString(R.string.call_error),message)
 					, Toast.LENGTH_LONG);
 			toast.show();
 			exitCallMode();
