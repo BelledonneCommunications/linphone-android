@@ -30,6 +30,9 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String to = intent.getStringExtra("android.intent.extra.PHONE_NUMBER");
+		//do not catch ussd codes
+		if (to.contains("#"))
+			return;
 		if (!to.contains(TAG)) {
 			if (LinphoneService.isready() && LinphoneService.instance().getLinphoneCore().getDefaultProxyConfig()==null) {
 				//just return
