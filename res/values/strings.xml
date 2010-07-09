@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_ilbc_summary">ILBC codec might be unavailable on some phone models.</string>
+    <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>
     <string name="pref_echo_cancellation">Echo cancellation</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_handle_outcall_summarry">If set cellular call are redirected to voip when possible</string>
@@ -63,4 +63,5 @@
 <string name="notification_registered">registered to %s </string> 
 <string name="notification_register_failure">fails to register to %s</string>
 <string name="notification_started">started</string>
+<string name="pref_echo_cancellation_summary">Removes the echo heared by the other end.</string>
 </resources>
