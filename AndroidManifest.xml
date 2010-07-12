@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
-      android:versionName="1.0.11" android:versionCode="1011"> 
+      android:versionName="1.0.13" android:versionCode="1013"> 
     <uses-sdk android:minSdkVersion="3" />
     <application android:label="@string/app_name" android:debuggable = "true" android:icon="@drawable/logo_linphone_57x57">
          
