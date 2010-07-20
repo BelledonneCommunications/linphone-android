@@ -59,6 +59,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		}
 	}
 	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
 		if (mMainFrame.getVisibility() == View.INVISIBLE) {
 			outState.putBoolean(SCREEN_IS_HIDDEN, true);
 		} else {
@@ -233,7 +234,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void onSensorChanged(SensorEvent event) {
-		Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
+		//Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
 		if (LinphoneService.isready() == false) return; //nop nothing to do 
 		
 		if (LinphoneService.instance().getLinphoneCore().isIncall() 

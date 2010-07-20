@@ -325,6 +325,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		if (lProxy == null || lProxy.length() == 0) {
 			lProxy = "sip:"+lDomain;
 		}
+		if (!lProxy.startsWith("sip:")) {
+			lProxy = "sip:"+lProxy;
+		}
 		//get Default proxy if any
 		LinphoneProxyConfig lDefaultProxyConfig = mLinphoneCore.getDefaultProxyConfig();
 		String lIdentity = "sip:"+lUserName+"@"+lDomain;

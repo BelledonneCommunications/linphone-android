@@ -1,0 +1,13 @@
+			   LINPHONE for ANDROID
+			****************************
+
+To build liblinphone for Android, you must first download the Android ndk R4 from google.
+Next step is to download libilbc code:
+	cd submodules/libilbc-rfc3951 && ./configure && make
+
+Finnaly from directory linphone-android, just execute command:
+	ndk-build
+
+
+
+

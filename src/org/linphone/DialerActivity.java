@@ -87,8 +87,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private PowerManager.WakeLock mWakeLock;
 	private SharedPreferences mPref;
 	
-	String PREF_CHECK_CONFIG = "pref_check_config";
-
+	static String PREF_CHECK_CONFIG = "pref_check_config";
+	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
+	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
 	
 	/**
 	 * 
@@ -331,7 +332,22 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 
 	}
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString(CURRENT_ADDRESS,  mAddress.getText().toString());
+		if (mDisplayName != null) savedInstanceState.putString(CURRENT_DISPLAYNAME,mDisplayName);
+	}
 	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		String lAddress = savedInstanceState.getString(CURRENT_ADDRESS);
+		if (lAddress != null && mAddress != null) {
+			mAddress.setText(lAddress); 
+		}
+		mDisplayName = savedInstanceState.getString(CURRENT_DISPLAYNAME);
+	}
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

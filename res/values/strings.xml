@@ -3,7 +3,7 @@
     <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>
     <string name="pref_echo_cancellation">Echo cancellation</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
-    <string name="pref_handle_outcall_summarry">If set cellular call are redirected to voip when possible</string>
+    <string name="pref_handle_outcall_summarry">If set cellular calls are redirected to voip when possible</string>
     <string name="pref_handle_outcall">Redirect cellular calls</string>
     <string name="pref_handle_outcall_key">pref_handle_outcall_key</string>
     <string name="pref_autostart">Start at boot time</string>
