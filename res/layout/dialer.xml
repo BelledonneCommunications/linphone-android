@@ -11,7 +11,7 @@
 				android:lines="1" android:layout_weight="0.2" android:layout_height="fill_parent" android:padding="10px"></EditText>
 			<Button android:layout_height="fill_parent" android:background="@drawable/clavier_bg" android:id="@+id/Erase"
 				android:layout_width="fill_parent" android:layout_weight="0.8" android:textSize="20sp"
-				android:textStyle="bold" android:text="&lt;" android:layout_gravity="top"></Button>
+				android:textStyle="bold" android:text="&lt;" android:layout_gravity="top" android:textColor="@android:color/black"></Button>
 		</LinearLayout>
 
 
@@ -33,15 +33,15 @@
 			<Button android:id="@+id/Button01" android:text="1"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:id="@+id/Button02" android:text="2"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:id="@+id/Button03" android:text="3"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 		</TableRow>
 		<TableRow android:layout_height="fill_parent"
 			android:layout_weight="1" android:id="@+id/DialerRow02"
@@ -49,45 +49,45 @@
 			<Button android:id="@+id/Button04" android:text="4"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:text="5" android:id="@+id/Button05"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:id="@+id/Button06" android:text="6"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 		</TableRow>
 		<TableRow android:layout_weight="1" android:layout_height="fill_parent"
 			android:id="@+id/DialerRow03" android:layout_width="fill_parent">
 			<Button android:text="7" android:id="@+id/Button07"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:id="@+id/Button08" android:text="8"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:text="9" android:id="@+id/Button09"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 		</TableRow>
 		<TableRow android:layout_weight="1" android:layout_height="fill_parent"
 			android:id="@+id/DialerRow04" android:layout_width="fill_parent">
 			<Button android:layout_width="fill_parent"
 				android:layout_height="fill_parent" android:text="*" android:id="@+id/ButtonStar"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:layout_width="fill_parent"
 				android:layout_height="fill_parent" android:text="0+" android:id="@+id/Button00"
 				android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 			<Button android:layout_width="fill_parent"
 				android:layout_height="fill_parent" android:id="@+id/ButtonHash"
 				android:text="#" android:textStyle="bold" android:textSize="20sp"
-				android:layout_weight="1" android:background="@drawable/clavier_bg"></Button>
+				android:layout_weight="1" android:background="@drawable/clavier_bg" android:textColor="@android:color/black"></Button>
 		</TableRow>
 
 

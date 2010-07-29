@@ -124,6 +124,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			
 			mErase.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					mDisplayName=null;
 					if (mAddress.length() >0) {
 						int lBegin = mAddress.getSelectionStart();
 						if (lBegin == -1) {
@@ -159,7 +160,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						}
 						return;
 					}
-					newOutgoingCall(mAddress.getText().toString(),mDisplayName);
+					if (mAddress.getText().length() >0) {
+						newOutgoingCall(mAddress.getText().toString(),mDisplayName);
+					}
 				}
 				
 			}); 

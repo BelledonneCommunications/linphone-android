@@ -72,7 +72,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		setContentView(R.layout.main);
 		
 		theLinphoneActivity = this;
-		// start linphone as background      
+		// start linphone as background       
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClass(this, LinphoneService.class);
 		startService(intent);
