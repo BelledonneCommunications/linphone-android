@@ -9,7 +9,7 @@ LOCAL_PRELINK_MODULE := false
 
 LOCAL_SRC_FILES = \
 	src/eXosip.c \
-	src/eXconf.c \         \
+	src/eXconf.c \
 	src/eXregister_api.c \
 	src/eXcall_api.c \
 	src/eXmessage_api.c \
@@ -24,9 +24,7 @@ LOCAL_SRC_FILES = \
 	src/eXutils.c \
 	src/jevents.c \
 	src/misc.c \
-	src/jauth.c \
-	src/eXtransport.h \
-	src/eXosip2.h
+	src/jauth.c 
 
 LOCAL_SRC_FILES += \
 	src/eXtl.c \
@@ -37,9 +35,7 @@ LOCAL_SRC_FILES += \
 
 LOCAL_SRC_FILES += \
 	src/milenage.c \
-	src/rijndael.c \
-	src/milenage.h \
-	src/rijndael.h
+	src/rijndael.c 
 
 # BUILD_MAXSIZE: -UMINISIZE
 LOCAL_SRC_FILES += \
@@ -50,9 +46,7 @@ LOCAL_SRC_FILES += \
 	src/jnotify.c \
 	src/jsubscribe.c \
 	src/inet_ntop.c \
-	src/inet_ntop.h \
 	src/jpipe.c \
-	src/jpipe.h \
 	src/eXrefer_api.c \
 	src/jpublish.c \
 	src/sdp_offans.c

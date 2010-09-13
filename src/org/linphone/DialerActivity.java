@@ -19,10 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListener;
-import org.linphone.core.LinphoneCore.GeneralState;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LinphoneCall.State;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,9 +38,11 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -95,7 +100,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	 * 
 	 * @return null if not ready yet
 	 */
-	public static DialerActivity getDialer() {
+	public static DialerActivity getDialer() { 
 		if (theDialer == null) {
 			return null;
 		} else {
@@ -118,7 +123,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		try {
 
 			
-			mAddress = (TextView) findViewById(R.id.SipUri);
+			mAddress = (TextView) findViewById(R.id.SipUri); 
 			mDisplayNameView = (TextView) findViewById(R.id.DisplayNameView);
 			mErase = (Button)findViewById(R.id.Erase); 
 			
@@ -145,14 +150,14 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			});
 			
 			mCall = (ImageButton) findViewById(R.id.Call);
-			mCall.setOnClickListener(new OnClickListener() {
+			mCall.setOnClickListener(new OnClickListener() { 
 				public void onClick(View v) {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
 					if (lLinphoneCore.isInComingInvitePending()) {
 						try {
-							lLinphoneCore.acceptCall();
+							lLinphoneCore.acceptCall(lLinphoneCore.getCurrentCall());
 						} catch (LinphoneCoreException e) {
-							lLinphoneCore.terminateCall();
+							lLinphoneCore.terminateCall(lLinphoneCore.getCurrentCall());
 							Toast toast = Toast.makeText(DialerActivity.this
 									,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
 									, Toast.LENGTH_LONG);
@@ -160,7 +165,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						}
 						return;
 					}
-					if (mAddress.getText().length() >0) {
+					if (mAddress.getText().length() >0) { 
 						newOutgoingCall(mAddress.getText().toString(),mDisplayName);
 					}
 				}
@@ -173,37 +178,14 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				
 				public void onClick(View v) {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
-					lLinphoneCore.terminateCall();
+					lLinphoneCore.terminateCall(lLinphoneCore.getCurrentCall());
 				}
 				
 			};
 			mHangup.setOnClickListener(lHangupListener); 
 			mDecline.setOnClickListener(lHangupListener);
 			
-			class DialKeyListener implements  OnClickListener {
-				final String mKeyCode;
-				final TextView mAddressView;
-				DialKeyListener(TextView anAddress, char aKeyCode) {
-					mKeyCode = String.valueOf(aKeyCode);
-					mAddressView = anAddress;
-				}
-				public void onClick(View v) {
-					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-					if (lc.isIncall()) {
-						lc.sendDtmf(mKeyCode.charAt(0));
-					} else {
-						int lBegin = mAddressView.getSelectionStart();
-						if (lBegin == -1) {
-							lBegin = mAddressView.getEditableText().length();
-						}
-						if (lBegin >=0) {
-							mAddressView.getEditableText().insert(lBegin,mKeyCode);
-						}
-						mDisplayName="";
-					}
-				}
-				
-			};
+
 			mCallControlRow = (LinearLayout) findViewById(R.id.CallControlRow);
 			mInCallControlRow = (TableRow) findViewById(R.id.IncallControlRow);
 			mAddressLayout = (LinearLayout) findViewById(R.id.Addresslayout);
@@ -287,10 +269,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			
 			mZero = (Button) findViewById(R.id.Button00) ;
 			if (mZero != null) {
-				
-				mZero.setOnClickListener(new DialKeyListener(mAddress,'0'));
+				setDigitListener(mZero,'0');
 				mZero.setOnLongClickListener(new OnLongClickListener() {
 					public boolean onLongClick(View arg0) {
+						LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+						lc.stopDtmf();
 						int lBegin = mAddress.getSelectionStart();
 						if (lBegin == -1) {
 							lBegin = mAddress.getEditableText().length();
@@ -303,27 +286,27 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					
 				});
 				mOne = (Button) findViewById(R.id.Button01) ;
-				mOne.setOnClickListener(new DialKeyListener(mAddress,'1'));
+				setDigitListener(mOne,'1');
 				mTwo = (Button) findViewById(R.id.Button02);
-				mTwo.setOnClickListener(new DialKeyListener(mAddress,'2'));
+				setDigitListener(mTwo,'2');
 				mThree = (Button) findViewById(R.id.Button03);
-				mThree.setOnClickListener(new DialKeyListener(mAddress,'3'));
+				setDigitListener(mThree,'3');
 				mFour = (Button) findViewById(R.id.Button04);
-				mFour.setOnClickListener(new DialKeyListener(mAddress,'4'));
+				setDigitListener(mFour,'4');
 				mFive = (Button) findViewById(R.id.Button05);
-				mFive.setOnClickListener(new DialKeyListener(mAddress,'5'));
+				setDigitListener(mFive,'5');
 				mSix = (Button) findViewById(R.id.Button06);
-				mSix.setOnClickListener(new DialKeyListener(mAddress,'6'));
+				setDigitListener(mSix,'6');
 				mSeven = (Button) findViewById(R.id.Button07);
-				mSeven.setOnClickListener(new DialKeyListener(mAddress,'7'));
+				setDigitListener(mSeven,'7');
 				mEight = (Button) findViewById(R.id.Button08);
-				mEight.setOnClickListener(new DialKeyListener(mAddress,'8'));
+				setDigitListener(mEight,'8');
 				mNine = (Button) findViewById(R.id.Button09);
-				mNine.setOnClickListener(new DialKeyListener(mAddress,'9'));
+				setDigitListener(mNine,'9');
 				mStar = (Button) findViewById(R.id.ButtonStar);
-				mStar.setOnClickListener(new DialKeyListener(mAddress,'*'));
+				setDigitListener(mStar,'*');
 				mHash = (Button) findViewById(R.id.ButtonHash);
-				mHash.setOnClickListener(new DialKeyListener(mAddress,'#'));
+				setDigitListener(mHash,'#');
 			}
 
 			mStatus =  (TextView) findViewById(R.id.status_label);
@@ -380,9 +363,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
-	public void generalState(LinphoneCore lc, GeneralState state, String message) {
+	public void globalState(LinphoneCore lc, LinphoneCore.GlobalState state, String message) {
 
-		if (state == GeneralState.GSTATE_POWER_ON) {
+		if (state == LinphoneCore.GlobalState.GlobalOn) {
 			mCall.setEnabled(!lc.isIncall());
 			mHangup.setEnabled(!mCall.isEnabled());  
 			try{
@@ -418,32 +401,30 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		    	newOutgoingCall(getIntent().getData().toString().substring("tel://".length()));
 		    	getIntent().setData(null);
 		    }
-		} else if (state == GeneralState.GSTATE_REG_OK) {
-			//nop 
-		} else if (state == GeneralState.GSTATE_CALL_OUT_INVITE) {
+		} 
+	}
+	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {/*nop*/};
+	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
+		if (state == LinphoneCall.State.OutgoingInit) {
 			mWakeLock.acquire();
 			enterIncalMode(lc);
 			routeAudioToReceiver();
-		} else if (state == GeneralState.GSTATE_CALL_IN_INVITE) { 
+		} else if (state == LinphoneCall.State.IncomingReceived) { 
 			callPending();
-		} else if (state == GeneralState.GSTATE_CALL_IN_CONNECTED 
-				|| state == GeneralState.GSTATE_CALL_OUT_CONNECTED) {
+		} else if (state == LinphoneCall.State.Connected) {
 			enterIncalMode(lc);
-		} else if (state == GeneralState.GSTATE_CALL_ERROR) {
+		} else if (state == LinphoneCall.State.Error) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
 			Toast toast = Toast.makeText(this
 					,String.format(getString(R.string.call_error),message)
 					, Toast.LENGTH_LONG);
 			toast.show();
 			exitCallMode();
-		} else if (state == GeneralState.GSTATE_CALL_END) {
+		} else if (state == LinphoneCall.State.CallEnd) {
 			exitCallMode();
 		}
 	}
-	public void inviteReceived(LinphoneCore lc, String from) {
-		// TODO Auto-generated method stub 
-		
-	}
+
 	public void show(LinphoneCore lc) {
 		// TODO Auto-generated method stub
 		
@@ -512,14 +493,14 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	public void newOutgoingCall(String aTo) {
 		newOutgoingCall(aTo,null);
 	}
-	public void newOutgoingCall(String aTo, String displayName) {
+	public synchronized void newOutgoingCall(String aTo, String displayName) {
 		String lto = aTo;
 		if (aTo.contains(OutgoingCallReceiver.TAG)) {
 			lto = aTo.replace(OutgoingCallReceiver.TAG, "");
 		}
 		mAddress.setText(lto);
 		mDisplayName = displayName;
-		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
+		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore(); 
 		if (lLinphoneCore.isIncall()) {
 			Toast toast = Toast.makeText(DialerActivity.this, getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
 			toast.show();
@@ -545,5 +526,45 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			toast.show();
 			return;
 		}
+	}
+	private void setDigitListener(Button aButton,char dtmf) {
+		class DialKeyListener implements  OnClickListener ,OnTouchListener{
+			final String mKeyCode;
+			final TextView mAddressView;
+			boolean mIsDtmfStarted=false;
+			DialKeyListener(TextView anAddress, char aKeyCode) {
+				mKeyCode = String.valueOf(aKeyCode);
+				mAddressView = anAddress;
+			}
+			public void onClick(View v) {
+				LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+				lc.stopDtmf();
+				mIsDtmfStarted=false;
+				if (lc.isIncall()) {
+					lc.sendDtmf(mKeyCode.charAt(0));
+				} else {
+					int lBegin = mAddressView.getSelectionStart();
+					if (lBegin == -1) {
+						lBegin = mAddressView.getEditableText().length();
+					}
+					if (lBegin >=0) {
+						mAddressView.getEditableText().insert(lBegin,mKeyCode);
+					}
+					mDisplayName="";
+				}
+			}
+			public boolean onTouch(View v, MotionEvent event) {
+				if (mIsDtmfStarted ==false) {
+					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+					lc.playDtmf(mKeyCode.charAt(0), -1);
+					mIsDtmfStarted=true;
+				}
+				return false;
+			}
+			
+		};
+		DialKeyListener lListener = new DialKeyListener(mAddress,dtmf);
+		aButton.setOnClickListener(lListener);
+		aButton.setOnTouchListener(lListener);	
 	}
 }

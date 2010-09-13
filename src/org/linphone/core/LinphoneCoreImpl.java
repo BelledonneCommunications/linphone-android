@@ -38,12 +38,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 	
 	private native void clearProxyConfigs(long nativePtr);
 	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
-	private native void invite(long nativePtr,String uri);
-	private native void terminateCall(long nativePtr);
+	private native long invite(long nativePtr,String uri);
+	private native void terminateCall(long nativePtr, long call);
 	private native long getRemoteAddress(long nativePtr);
 	private native boolean  isInCall(long nativePtr);
 	private native boolean isInComingInvitePending(long nativePtr);
-	private native void acceptCall(long nativePtr);
+	private native void acceptCall(long nativePtr, long call);
 	private native long getCallLog(long nativePtr,int position);
 	private native int getNumberOfCallLogs(long nativePtr);
 	private native void delete(long nativePtr);
@@ -52,7 +52,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native float getPlaybackGain(long nativeptr);
 	private native void muteMic(long nativePtr,boolean isMuted);
 	private native long interpretUrl(long nativePtr,String destination);
-	private native void inviteAddress(long nativePtr,long to);
+	private native long inviteAddress(long nativePtr,long to);
 	private native void sendDtmf(long nativePtr,char dtmf);
 	private native void clearCallLogs(long nativePtr);
 	private native boolean isMicMuted(long nativePtr);
@@ -60,6 +60,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int enablePayloadType(long nativePtr, long payloadType,	boolean enable);
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
 	private native boolean isEchoCancellationEnabled(long nativePtr);
+	private native long getCurrentCall(long nativePtr) ;
+	private native void playDtmf(long nativePtr,char dtmf,int duration);
+	private native void stopDtmf(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -86,9 +89,14 @@ class LinphoneCoreImpl implements LinphoneCore {
 		}
 	}
 
-	public synchronized void invite(String uri) {
+	public synchronized LinphoneCall invite(String uri) {
 		isValid();
-		invite(nativePtr,uri);
+		long lNativePtr = invite(nativePtr,uri);
+		if (lNativePtr!=0) {
+			return new LinphoneCallImpl(lNativePtr); 
+		} else {
+			return null;
+		}
 	}
 
 	public synchronized void iterate() {
@@ -115,9 +123,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		isValid();
 		clearProxyConfigs(nativePtr);
 	}
-	public synchronized void terminateCall() {
+	public synchronized void terminateCall(LinphoneCall aCall) {
 		isValid();
-		terminateCall(nativePtr);
+		if (aCall!=null)terminateCall(nativePtr,((LinphoneCallImpl)aCall).nativePtr);
 	}
 	public synchronized LinphoneAddress getRemoteAddress() {
 		isValid();
@@ -136,9 +144,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		isValid();
 		return isInComingInvitePending(nativePtr);
 	}
-	public synchronized void acceptCall() {
+	public synchronized void acceptCall(LinphoneCall aCall) {
 		isValid();
-		acceptCall(nativePtr);
+		acceptCall(nativePtr,((LinphoneCallImpl)aCall).nativePtr);
 		
 	}
 	public synchronized Vector<LinphoneCallLog> getCallLogs() {
@@ -181,8 +189,13 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new LinphoneCoreException("Cannot interpret ["+destination+"]");
 		}
 	}
-	public void invite(LinphoneAddress to) { 
-		inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
+	public LinphoneCall invite(LinphoneAddress to) { 
+		long lNativePtr = inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
+		if (lNativePtr!=0) {
+			return new LinphoneCallImpl(lNativePtr); 
+		} else {
+			return null;
+		}
 	}
 	public void sendDtmf(char number) {
 		sendDtmf(nativePtr,number);
@@ -219,4 +232,43 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return isEchoCancellationEnabled(nativePtr);
 		
 	}
+
+	public synchronized LinphoneCall getCurrentCall() {
+		isValid();
+		long lNativePtr = getCurrentCall(nativePtr);
+		if (lNativePtr!=0) {
+			return new LinphoneCallImpl(lNativePtr); 
+		} else {
+			return null;
+		}
+	}
+	
+	public int getPlayLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public void setPlayLevel(int level) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setSignalingTransport(Transport aTransport) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void enableSpeaker(boolean value) {
+		// TODO Auto-generated method stub
+		
+	}
+	public boolean isSpeakerEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void playDtmf(char number, int duration) {
+		playDtmf(nativePtr,number, duration);
+		
+	}
+	public void stopDtmf() {
+		stopDtmf(nativePtr);
+	}
+
 }

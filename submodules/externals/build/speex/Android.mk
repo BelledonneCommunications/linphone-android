@@ -48,10 +48,7 @@ fft_SRC_FILES += libspeex/smallft.c
 # Un-comment for KISS_FFT
 fft_SRC_FILES += \
 	libspeex/kiss_fft.c \
-	libspeex/_kiss_fft_guts.h \
-	libspeex/kiss_fft.h \
-	libspeex/kiss_fftr.c \
-	libspeex/kiss_fftr.h 
+	libspeex/kiss_fftr.c 
 
 libspeexdsp_SRC_FILES := \
 	libspeex/preprocess.c \

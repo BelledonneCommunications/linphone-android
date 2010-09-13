@@ -27,13 +27,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.core.LinphoneAuthInfo;
+import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
-import org.linphone.core.LinphoneCore.GeneralState;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore.GlobalState;
 
 
 import android.app.Notification;
@@ -45,7 +47,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -192,9 +193,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 
 	}
-	public void generalState(final LinphoneCore lc, final LinphoneCore.GeneralState state, final String message) {
+	public void globalState(final LinphoneCore lc, final LinphoneCore.GlobalState state, final String message) {
 		Log.i(TAG, "new state ["+state+"]");
-		if (state == GeneralState.GSTATE_POWER_ON) {
+		if (state == GlobalState.GlobalOn) {
 			mNotification.iconLevel=IC_LEVEL_OFFLINE;
 			mNotification.when=System.currentTimeMillis();
 			mNotification.setLatestEventInfo(this
@@ -202,9 +203,19 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 					,getString(R.string.notification_started)
 					, mNofificationContentIntent);
 			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+			if (DialerActivity.getDialer()!=null) {
+				mHandler.post(new Runnable() {
+					public void run() {
+						DialerActivity.getDialer().globalState(lc,state,message);
+					}
+				});
+			} 
 			
 		}
-		if (state == GeneralState.GSTATE_REG_OK && lc.getDefaultProxyConfig().isRegistered()) {
+	}
+	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {
+	Log.i(TAG, "new state ["+state+"]");
+		if (state == LinphoneCore.RegistrationState.RegistrationOk && lc.getDefaultProxyConfig().isRegistered()) {
 			mNotification.iconLevel=IC_LEVEL_ORANGE;
 			mNotification.when=System.currentTimeMillis();
 			mNotification.setLatestEventInfo(this
@@ -213,7 +224,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 					, mNofificationContentIntent);
 			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 		}
-		if (state == GeneralState.GSTATE_REG_FAILED ) {
+		if (state == LinphoneCore.RegistrationState.RegistrationFailed ) {
 			mNotification.iconLevel=IC_LEVEL_OFFLINE;
 			mNotification.when=System.currentTimeMillis();
 			mNotification.setLatestEventInfo(this
@@ -222,25 +233,29 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 					, mNofificationContentIntent);
 			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 		}
-
 		if (DialerActivity.getDialer()!=null) {
 			mHandler.post(new Runnable() {
 				public void run() {
-					DialerActivity.getDialer().generalState(lc,state,message);
+					DialerActivity.getDialer().registrationState(lc,cfg,state,smessage);
 				}
 			});
 		} 
-		if (state == GeneralState.GSTATE_CALL_IN_INVITE) {
+	}
+	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
+		if (DialerActivity.getDialer()!=null) { 
+			mHandler.post(new Runnable() {
+				public void run() {
+					DialerActivity.getDialer().callState(lc,call,state,message);
+				}
+			});
+		} 
+		if (state == LinphoneCall.State.IncomingReceived) {
 			//wakeup linphone
 			Intent lIntent = new Intent();
 			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			lIntent.setClass(this, LinphoneActivity.class);
 			startActivity(lIntent);
 		}
-	}
-	public void inviteReceived(LinphoneCore lc, String from) {
-		
-
 	}
 	public void show(LinphoneCore lc) {
 		// TODO Auto-generated method stub
@@ -353,7 +368,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 					lDefaultProxyConfig.setDialPrefix(lPrefix);
 				}
 				//escape +
-				lDefaultProxyConfig.setDialEscapePlus(true);
+				lDefaultProxyConfig.setDialEscapePlus(mPref.getBoolean(getString(R.string.pref_escape_plus_key),false));
 				//outbound proxy
 				if (mPref.getBoolean(getString(R.string.pref_enable_outbound_proxy_key), false)) {
 					lDefaultProxyConfig.setRoute(lProxy);
@@ -392,5 +407,6 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		theLinphone=null;
 		mNotificationManager.cancel(NOTIFICATION_ID);
 	}
+
 }
 

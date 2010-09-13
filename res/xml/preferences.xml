@@ -28,8 +28,9 @@
 		<CheckBoxPreference android:title="@string/pref_handle_outcall" android:key="@string/pref_handle_outcall_key" android:summary="@string/pref_handle_outcall_summarry"></CheckBoxPreference><CheckBoxPreference android:key="@string/pref_echo_cancellation_key" android:title="@string/pref_echo_cancellation" android:summary="@string/pref_echo_cancellation_summary"></CheckBoxPreference><EditTextPreference android:title="@string/pref_prefix"
 			android:key="@string/pref_prefix_key"></EditTextPreference>
 
-		<CheckBoxPreference android:key="@string/pref_debug_key"
+		<CheckBoxPreference android:key="@string/pref_escape_plus_key" android:title="@string/pref_escape_plus"></CheckBoxPreference><CheckBoxPreference android:key="@string/pref_debug_key"
 			android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
+
 
 
 
