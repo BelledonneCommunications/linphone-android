@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
@@ -469,7 +470,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	private void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
-			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
 		} else {
@@ -479,7 +479,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	private void routeAudioToReceiver() {
 		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
-			mAudioManager.setMode(AudioManager.MODE_IN_CALL); 
+			 
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
 		} else {
@@ -528,7 +528,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 	}
 	private void setDigitListener(Button aButton,char dtmf) {
-		class DialKeyListener implements  OnClickListener ,OnTouchListener{
+		class DialKeyListener implements  OnClickListener ,OnTouchListener {
 			final String mKeyCode;
 			final TextView mAddressView;
 			boolean mIsDtmfStarted=false;
@@ -538,8 +538,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			}
 			public void onClick(View v) {
 				LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-				lc.stopDtmf();
-				mIsDtmfStarted=false;
+				//stopDtmf();
 				if (lc.isIncall()) {
 					lc.sendDtmf(mKeyCode.charAt(0));
 				} else {
@@ -554,17 +553,27 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				}
 			}
 			public boolean onTouch(View v, MotionEvent event) {
-				if (mIsDtmfStarted ==false) {
+				if (v.isPressed() && mIsDtmfStarted ==false) {
 					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
 					lc.playDtmf(mKeyCode.charAt(0), -1);
 					mIsDtmfStarted=true;
+				} else {
+					if (!v.isPressed()) 
+						stopDtmf();
 				}
 				return false;
+			}
+
+			private void stopDtmf() {
+				LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+				lc.stopDtmf();
+				mIsDtmfStarted =false;
 			}
 			
 		};
 		DialKeyListener lListener = new DialKeyListener(mAddress,dtmf);
 		aButton.setOnClickListener(lListener);
-		aButton.setOnTouchListener(lListener);	
+		aButton.setOnTouchListener(lListener);
+		
 	}
 }
