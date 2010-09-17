@@ -374,7 +374,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			} catch (LinphoneConfigException ec) {
 				Log.w(LinphoneService.TAG,"no valid settings found",ec);
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(getString(R.string.initial_config_error))
+				//builder.setMessage(getString(R.string.initial_config_error))
+				TextView lDialogTextView = new TextView(this);
+				lDialogTextView.setAutoLinkMask(0x0f/*all*/);
+				lDialogTextView.setPadding(10, 10, 10, 10);
+				lDialogTextView.setText(getString(R.string.initial_config_error));
+				builder.setCustomTitle(lDialogTextView)
 				.setCancelable(false)
 				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -538,7 +543,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			}
 			public void onClick(View v) {
 				LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-				//stopDtmf();
+				stopDtmf(); 
 				if (lc.isIncall()) {
 					lc.sendDtmf(mKeyCode.charAt(0));
 				} else {

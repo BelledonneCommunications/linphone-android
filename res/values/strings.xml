@@ -56,7 +56,7 @@
 <string name="no">No</string>
 <string name="never_remind">Never remind me</string>
 <string name="config_error">%s, do you want to go to the settings page ?</string>
-<string name="initial_config_error">No SIP account has been configured yet, do you want to go to the settings page ?</string>
+<string name="initial_config_error">No SIP account has been configured yet, do you want to go to the settings page ?\n  Need help ?\n http://www.linphone.org</string>
 <string name="warning_already_incall">Cannot initiate a new call because a call is already engaged</string>
 <string name="tab_history">History</string>
 <string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
