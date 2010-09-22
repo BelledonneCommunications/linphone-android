@@ -37,6 +37,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -197,7 +198,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			mDecline.setEnabled(false);
-			if (LinphoneService.isready() && getIntent().getData() != null) {
+			if (LinphoneService.isready() && getIntent().getData() != null && !LinphoneService.instance().getLinphoneCore().isIncall()) {
 		    	newOutgoingCall(getIntent().getData().toString().substring("tel://".length()));
 		    	getIntent().setData(null);
 		    }
@@ -374,11 +375,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			} catch (LinphoneConfigException ec) {
 				Log.w(LinphoneService.TAG,"no valid settings found",ec);
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				//builder.setMessage(getString(R.string.initial_config_error))
 				TextView lDialogTextView = new TextView(this);
 				lDialogTextView.setAutoLinkMask(0x0f/*all*/);
 				lDialogTextView.setPadding(10, 10, 10, 10);
-				lDialogTextView.setText(getString(R.string.initial_config_error));
+				lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error) ));
 				builder.setCustomTitle(lDialogTextView)
 				.setCancelable(false)
 				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
