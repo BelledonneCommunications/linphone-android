@@ -558,12 +558,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				}
 			}
 			public boolean onTouch(View v, MotionEvent event) {
-				if (v.isPressed() && mIsDtmfStarted ==false) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN && mIsDtmfStarted ==false) {
 					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
 					lc.playDtmf(mKeyCode.charAt(0), -1);
 					mIsDtmfStarted=true;
 				} else {
-					if (!v.isPressed()) 
+					if (event.getAction() == MotionEvent.ACTION_UP) 
 						stopDtmf();
 				}
 				return false;

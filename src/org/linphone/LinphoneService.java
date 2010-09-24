@@ -364,7 +364,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			if (lDefaultProxyConfig !=null) {
 				//prefix      
 				String lPrefix = mPref.getString(getString(R.string.pref_prefix_key), null);
-				if (lPrefix != null  && lPrefix.length()>0) {
+				if (lPrefix != null) {
 					lDefaultProxyConfig.setDialPrefix(lPrefix);
 				}
 				//escape +
