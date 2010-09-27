@@ -372,12 +372,11 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 				//outbound proxy
 				if (mPref.getBoolean(getString(R.string.pref_enable_outbound_proxy_key), false)) {
 					lDefaultProxyConfig.setRoute(lProxy);
+				} else {
+					lDefaultProxyConfig.setRoute(null);
 				}
 				
 			}
-			
-
-			
 			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo lInfo = lConnectivityManager.getActiveNetworkInfo();

@@ -4,7 +4,7 @@
 		<EditTextPreference android:title="@string/pref_username"
 			android:key="@string/pref_username_key"></EditTextPreference>
 		<EditTextPreference android:title="@string/pref_passwd"
-			android:key="@string/pref_passwd_key"></EditTextPreference>
+			android:key="@string/pref_passwd_key" android:password="true"></EditTextPreference>
 		<EditTextPreference android:title="@string/pref_domain"
 			android:key="@string/pref_domain_key"></EditTextPreference>
 		<EditTextPreference android:title="@string/pref_proxy"
