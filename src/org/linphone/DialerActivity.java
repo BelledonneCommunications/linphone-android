@@ -449,8 +449,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			String DisplayName = remote.getDisplayName();
 			if (DisplayName!=null) {
 				mDisplayNameView.setText(DisplayName);
-			} else {
+			} else  if (lc.getRemoteAddress().getUserName() != null){
 				mDisplayNameView.setText(lc.getRemoteAddress().getUserName());
+			} else {
+				mDisplayNameView.setText(lc.getRemoteAddress().toString());
 			}
 		}
 		if (mSpeaker.isChecked()) {
