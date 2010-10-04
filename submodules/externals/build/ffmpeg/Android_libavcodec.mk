@@ -6,21 +6,21 @@ LOCAL_MODULE := libavcodec
 LOCAL_SRC_FILES = \
 	libavcodec/allcodecs.c \
 	libavcodec/aandcttab.c \
-	libavcodec/arm/dsputil_arm.s.arm \
-	libavcodec/arm/dsputil_armv6.s.arm \
+	libavcodec/arm/dsputil_arm.S.arm \
+	libavcodec/arm/dsputil_armv6.S.arm \
 	libavcodec/arm/dsputil_init_arm.c \
 	libavcodec/arm/dsputil_init_armv5te.c \
 	libavcodec/arm/dsputil_init_armv6.c \
 	libavcodec/arm/fft_init_arm.c \
 	libavcodec/arm/h264dsp_init_arm.c \
 	libavcodec/arm/h264pred_init_arm.c \
-	libavcodec/arm/jrevdct_arm.s \
-	libavcodec/arm/mpegvideo_arm.s \
+	libavcodec/arm/jrevdct_arm.S \
+	libavcodec/arm/mpegvideo_arm.c \
 	libavcodec/arm/mpegvideo_armv5te.c \
 	libavcodec/arm/mpegvideo_armv5te_s.S \
-	libavcodec/arm/simple_idct_arm.s \
-	libavcodec/arm/simple_idct_armv5te.s \
-	libavcodec/arm/simple_idct_armv6.s \
+	libavcodec/arm/simple_idct_arm.S \
+	libavcodec/arm/simple_idct_armv5te.S \
+	libavcodec/arm/simple_idct_armv6.S \
 	libavcodec/audioconvert.c.arm \
 	libavcodec/avpacket.c \
 	libavcodec/bitstream.c \
@@ -74,11 +74,13 @@ LOCAL_SRC_FILES = \
 	libavcodec/utils.c 
 
 
+#LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H -Wa,-I$(LOCAL_PATH)/libavcodec/arm
 LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H 
 
 #for including config.h:
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/../build/ffmpeg  \
+	$(LOCAL_PATH)/libavcodec/arm \
 	$(LOCAL_PATH)/ \
 	$(LOCAL_PATH)/libavutil 
 

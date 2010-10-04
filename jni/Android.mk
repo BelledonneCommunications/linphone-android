@@ -14,11 +14,11 @@ include $(root-dir)/submodules/linphone/mediastreamer2/build/android/Android.mk
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 include $(root-dir)/submodules/msilbc/Android.mk
+include $(root-dir)/submodules/externals/build/ffmpeg/Android.mk
 endif
 
-
-
 include $(root-dir)/submodules/linphone/build/android/Android.mk
+
 
 
 

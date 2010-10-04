@@ -1,19 +1,21 @@
 ##lib swcale###################
-LOCAL_PATH:= $(call my-dir)../../ffmpeg/
+LOCAL_PATH:= $(call my-dir)/../../libswscale/
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libswscale
 
 LOCAL_SRC_FILES = \
-	libswscale/options.c \
-	libswscale/rgb2rgb.c \
-	libswscale/swscale.c \
-	libswscale/utils.c \
-	libswscale/yuv2rgb.c 
+	options.c \
+	rgb2rgb.c \
+	swscale.c \
+	utils.c \
+	yuv2rgb.c 
 
 LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
 
 #for including config.h:
-LOCAL_C_INCLUDES += $(call my-dir)/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg  \
+					$(LOCAL_PATH)/../ffmpeg \
+					$(LOCAL_PATH)/ 
 include $(BUILD_STATIC_LIBRARY)
 
