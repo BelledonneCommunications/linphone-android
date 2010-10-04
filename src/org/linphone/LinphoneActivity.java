@@ -238,12 +238,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		if (LinphoneService.isready() == false) return; //nop nothing to do 
 		
 		if (LinphoneService.instance().getLinphoneCore().isIncall() 
-				&& event.values[0] != event.sensor.getMaximumRange()
-				&& event.values[0] < 3) {
+				&& event.values[0] != event.sensor.getMaximumRange() ) {
 			hideScreen(true);
-		} else if (mMainFrame.getVisibility() != View.VISIBLE 
-				&& (event.values[0] == event.sensor.getMaximumRange() 
-						|| event.values[0] >=3)) {
+		} else  {
 			hideScreen(false);
 		}
 	}
