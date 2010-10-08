@@ -109,7 +109,7 @@
 #define HAVE_MEMALIGN 1
 #define HAVE_MKSTEMP 1
 #define HAVE_PLD 1
-#define HAVE_POSIX_MEMALIGN 1
+#define HAVE_POSIX_MEMALIGN 0
 #define HAVE_ROUND 1
 #define HAVE_ROUNDF 1
 #define HAVE_SDL 0

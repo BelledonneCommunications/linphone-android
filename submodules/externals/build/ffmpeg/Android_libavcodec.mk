@@ -14,6 +14,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/arm/dsputil_init_neon.c \
 	libavcodec/arm/dsputil_init_vfp.c \
 	libavcodec/arm/dsputil_neon.S.neon \
+	libavcodec/arm/dsputil_vfp.S.neon \
 	libavcodec/arm/fft_init_arm.c \
 	libavcodec/arm/h264dsp_init_arm.c \
 	libavcodec/arm/h264dsp_neon.S.neon \
@@ -80,7 +81,8 @@ LOCAL_SRC_FILES = \
 	libavcodec/resample.c \
 	libavcodec/resample2.c \
 	libavcodec/simple_idct.c \
-	libavcodec/utils.c 
+	libavcodec/utils.c \
+	libavcodec/pthread.c
 
 
 #LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H -Wa,-I$(LOCAL_PATH)/libavcodec/arm

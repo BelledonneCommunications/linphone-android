@@ -1,5 +1,9 @@
 root-dir:=$(APP_PROJECT_PATH)
 
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+LINPHONE_VIDEO=1
+endif
+
 include $(root-dir)/submodules/externals/build/speex/Android.mk
 
 include $(root-dir)/submodules/externals/build/gsm/Android.mk
