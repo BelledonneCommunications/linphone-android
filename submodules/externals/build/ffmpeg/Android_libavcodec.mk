@@ -11,16 +11,25 @@ LOCAL_SRC_FILES = \
 	libavcodec/arm/dsputil_init_arm.c \
 	libavcodec/arm/dsputil_init_armv5te.c \
 	libavcodec/arm/dsputil_init_armv6.c \
+	libavcodec/arm/dsputil_init_neon.c \
+	libavcodec/arm/dsputil_init_vfp.c \
+	libavcodec/arm/dsputil_neon.S.neon \
 	libavcodec/arm/fft_init_arm.c \
 	libavcodec/arm/h264dsp_init_arm.c \
+	libavcodec/arm/h264dsp_neon.S.neon \
+	libavcodec/arm/h264idct_neon.S.neon \
 	libavcodec/arm/h264pred_init_arm.c \
+	libavcodec/arm/h264pred_neon.S.neon \
+	libavcodec/arm/int_neon.S.neon \
 	libavcodec/arm/jrevdct_arm.S \
 	libavcodec/arm/mpegvideo_arm.c \
 	libavcodec/arm/mpegvideo_armv5te.c \
 	libavcodec/arm/mpegvideo_armv5te_s.S \
+	libavcodec/arm/mpegvideo_neon.S.neon \
 	libavcodec/arm/simple_idct_arm.S \
 	libavcodec/arm/simple_idct_armv5te.S \
 	libavcodec/arm/simple_idct_armv6.S \
+	libavcodec/arm/simple_idct_neon.S.neon \
 	libavcodec/audioconvert.c.arm \
 	libavcodec/avpacket.c \
 	libavcodec/bitstream.c \
