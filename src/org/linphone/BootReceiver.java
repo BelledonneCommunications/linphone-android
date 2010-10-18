@@ -33,6 +33,6 @@ public class BootReceiver extends BroadcastReceiver {
 			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
 			context.startService(lLinphoneServiceIntent);;
 		}
-
 	}
+	
 }
