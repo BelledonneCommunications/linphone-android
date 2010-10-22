@@ -64,6 +64,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void playDtmf(long nativePtr,char dtmf,int duration);
 	private native void stopDtmf(long nativePtr);
 	
+	private native void addFriend(long nativePtr,long friend);
+	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
+	private native long createChatRoom(long nativePtr,String to);
+	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -269,6 +273,19 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void stopDtmf() {
 		stopDtmf(nativePtr);
+	}
+	
+	public void addFriend(LinphoneFriend lf) throws LinphoneCoreException {
+		addFriend(nativePtr,((LinphoneFriendImpl)lf).nativePtr);
+		
+	}
+	public void setPresenceInfo(int minute_away, String alternative_contact,
+			OnlineStatus status) {
+		setPresenceInfo(nativePtr,minute_away,alternative_contact,status.mValue);
+		
+	}
+	public LinphoneChatRoom createChatRoom(String to) {
+		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
 	}
 
 }

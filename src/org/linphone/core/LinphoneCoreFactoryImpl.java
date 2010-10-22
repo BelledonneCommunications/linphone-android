@@ -68,4 +68,14 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		//not implemented on Android
 		
 	}
+
+	@Override
+	LinphoneFriend createLinphoneFriend(String friendUri) {
+		return new LinphoneFriendImpl(friendUri);
+	}
+
+	@Override
+	LinphoneFriend createLinphoneFriend() {
+		return createLinphoneFriend(null);
+	}
 }

@@ -20,9 +20,11 @@ package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
 
@@ -581,6 +583,20 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		DialKeyListener lListener = new DialKeyListener(mAddress,dtmf);
 		aButton.setOnClickListener(lListener);
 		aButton.setOnTouchListener(lListener);
+		
+	}
+	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
+			String url) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
+			LinphoneAddress from, String message) {
+		// TODO Auto-generated method stub
 		
 	}
 }
