@@ -26,12 +26,15 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.core.LinphoneCall.State;
@@ -405,6 +408,20 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		mLinphoneCore.destroy();
 		theLinphone=null;
 		mNotificationManager.cancel(NOTIFICATION_ID);
+	}
+	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
+			String url) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
+			LinphoneAddress from, String message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

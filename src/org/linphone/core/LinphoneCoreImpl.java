@@ -270,5 +270,18 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void stopDtmf() {
 		stopDtmf(nativePtr);
 	}
+	public void addFriend(LinphoneFriend lf) throws LinphoneCoreException {
+		// TODO Auto-generated method stub
+		
+	}
+	public LinphoneChatRoom createChatRoom(String to) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setPresenceInfo(int minuteAway, String alternativeContact,
+			OnlineStatus status) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

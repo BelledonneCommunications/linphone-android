@@ -68,4 +68,16 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		//not implemented on Android
 		
 	}
+
+	@Override
+	LinphoneFriend createLinphoneFriend(String friendUri) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	LinphoneFriend createLinphoneFriend() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
