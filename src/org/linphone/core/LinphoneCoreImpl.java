@@ -63,6 +63,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long getCurrentCall(long nativePtr) ;
 	private native void playDtmf(long nativePtr,char dtmf,int duration);
 	private native void stopDtmf(long nativePtr);
+	private native void setVideoWindowId(long nativePtr, Object wid);
+	private native void setPreviewWindowId(long nativePtr, Object wid);
+	private AndroidVideoWindowImpl mVideoWindow;
+	private AndroidVideoWindowImpl mPreviewWindow;
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -282,6 +286,34 @@ class LinphoneCoreImpl implements LinphoneCore {
 			OnlineStatus status) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void setPreviewWindow(VideoWindow w) {
+		if (mPreviewWindow!=null)
+			mPreviewWindow.setListener(null);
+		mPreviewWindow=(AndroidVideoWindowImpl)w;
+		mPreviewWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
+			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				setPreviewWindowId(nativePtr,null);
+			}
+
+			public void onSurfaceReady(AndroidVideoWindowImpl vw) {
+				setPreviewWindowId(nativePtr,vw);
+			}
+		});
+	}
+	public void setVideoWindow(VideoWindow w) {
+		if (mVideoWindow!=null)
+			mVideoWindow.setListener(null);
+		mVideoWindow=(AndroidVideoWindowImpl)w;
+		mVideoWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
+			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				setVideoWindowId(nativePtr,null);
+			}
+
+			public void onSurfaceReady(AndroidVideoWindowImpl vw) {
+				setVideoWindowId(nativePtr,vw);
+			}
+		});
 	}
 
 }
