@@ -32,6 +32,9 @@ public class LinphoneAddressImpl implements LinphoneAddress {
 	private native void setDisplayName(long ptr,String name);
 	private native String toString(long ptr);
 	
+	protected LinphoneAddressImpl(String identity)  {
+		nativePtr = newLinphoneAddressImpl(identity, null);
+	}
 	
 	protected LinphoneAddressImpl(String username,String domain,String displayName)  {
 		nativePtr = newLinphoneAddressImpl("sip:"+username+"@"+domain, displayName);

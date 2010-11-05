@@ -39,8 +39,8 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 	}
 
 	@Override
-	public LinphoneAddress createLinphoneAddress(String address) {
-		throw new RuntimeException("Not implemeneted yet");
+	public LinphoneAddress createLinphoneAddress(String identity) {
+		return new LinphoneAddressImpl(identity);
 	}
 
 	@Override
@@ -49,6 +49,15 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 			throws LinphoneCoreException {
 		try {
 			return new LinphoneCoreImpl(listener,new File(userConfig),new File(factoryConfig),userdata);
+		} catch (IOException e) {
+			throw new LinphoneCoreException("Cannot create LinphoneCore",e);
+		}
+	}
+
+	@Override
+	public LinphoneCore createLinphoneCore(LinphoneCoreListener listener) throws LinphoneCoreException {
+		try {
+			return new LinphoneCoreImpl(listener);
 		} catch (IOException e) {
 			throw new LinphoneCoreException("Cannot create LinphoneCore",e);
 		}
@@ -70,12 +79,12 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 	}
 
 	@Override
-	LinphoneFriend createLinphoneFriend(String friendUri) {
+	public LinphoneFriend createLinphoneFriend(String friendUri) {
 		return new LinphoneFriendImpl(friendUri);
 	}
 
 	@Override
-	LinphoneFriend createLinphoneFriend() {
+	public LinphoneFriend createLinphoneFriend() {
 		return createLinphoneFriend(null);
 	}
 }

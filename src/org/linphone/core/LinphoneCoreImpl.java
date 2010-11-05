@@ -72,6 +72,11 @@ class LinphoneCoreImpl implements LinphoneCore {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
 	}
+	LinphoneCoreImpl(LinphoneCoreListener listener) throws IOException {
+		mListener=listener;
+		nativePtr = newLinphoneCore(listener,null,null,null);
+	}
+	
 	protected void finalize() throws Throwable {
 		
 	}
@@ -286,6 +291,15 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public LinphoneChatRoom createChatRoom(String to) {
 		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
+	}
+	public void setPreviewWindow(VideoWindow w) {
+		throw new RuntimeException("not implemented yet");
+		// TODO Auto-generated method stub
+		
+	}
+	public void setVideoWindow(VideoWindow w) {
+		throw new RuntimeException("not implemented yet");
+		// TODO Auto-generated method stub
 	}
 
 }
