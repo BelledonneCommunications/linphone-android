@@ -20,6 +20,37 @@
                 <data android:scheme="tel" />
             </intent-filter>
          </activity>
+         <activity android:name=".core.tutorials.TutorialHelloWorldActivity"
+                  android:label="Hello World" android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
+         <activity android:name=".core.tutorials.TutorialRegistrationActivity"
+                  android:label="Registration"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
+         <activity android:name=".core.tutorials.TutorialBuddyStatusActivity"
+                  android:label="Buddy status"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
+         <activity android:name=".core.tutorials.TutorialChatRoomActivity"
+                  android:label="Chat Room"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
         <activity android:name=".LinphonePreferencesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

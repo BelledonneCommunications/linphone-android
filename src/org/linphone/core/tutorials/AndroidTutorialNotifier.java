@@ -1,5 +1,5 @@
 /*
-BootReceiver.java
+AndroidTutorialNotifier.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,23 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone;
+package org.linphone.core.tutorials;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.preference.PreferenceManager;
+import android.os.Handler;
+import android.widget.TextView;
 
-public class BootReceiver extends BroadcastReceiver {
+/**
+ * Write notifications to a TextView widget.
+ * 
+ * @author Guillaume Beraudo
+ *
+ */
+public class AndroidTutorialNotifier extends TutorialNotifier {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_autostart_key), false)) {
-			Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
-			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-			context.startService(lLinphoneServiceIntent);;
-		}
+	private Handler mHandler;
+	private TextView outputTextView;
+	
+	public AndroidTutorialNotifier(Handler mHandler, final TextView outputTextView) {
+		this.mHandler = mHandler;
+		this.outputTextView = outputTextView;
 	}
 	
+	
+	@Override
+	public void notify(final String s) {
+		mHandler.post(new Runnable() {
+			public void run() {
+				outputTextView.setText(s + "\n" + outputTextView.getText());
+			}
+		});
+	}
 }

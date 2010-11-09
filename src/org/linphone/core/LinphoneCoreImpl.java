@@ -68,10 +68,19 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private AndroidVideoWindowImpl mVideoWindow;
 	private AndroidVideoWindowImpl mPreviewWindow;
 	
+	private native void addFriend(long nativePtr,long friend);
+	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
+	private native long createChatRoom(long nativePtr,String to);
+	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
 	}
+	LinphoneCoreImpl(LinphoneCoreListener listener) throws IOException {
+		mListener=listener;
+		nativePtr = newLinphoneCore(listener,null,null,null);
+	}
+	
 	protected void finalize() throws Throwable {
 		
 	}
@@ -274,18 +283,18 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void stopDtmf() {
 		stopDtmf(nativePtr);
 	}
+	
 	public void addFriend(LinphoneFriend lf) throws LinphoneCoreException {
-		// TODO Auto-generated method stub
+		addFriend(nativePtr,((LinphoneFriendImpl)lf).nativePtr);
+		
+	}
+	public void setPresenceInfo(int minute_away, String alternative_contact,
+			OnlineStatus status) {
+		setPresenceInfo(nativePtr,minute_away,alternative_contact,status.mValue);
 		
 	}
 	public LinphoneChatRoom createChatRoom(String to) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public void setPresenceInfo(int minuteAway, String alternativeContact,
-			OnlineStatus status) {
-		// TODO Auto-generated method stub
-		
+		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
 	}
 	public void setPreviewWindow(VideoWindow w) {
 		if (mPreviewWindow!=null)

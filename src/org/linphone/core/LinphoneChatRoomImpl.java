@@ -1,5 +1,5 @@
 /*
-BootReceiver.java
+LinphoneChatRoomImpl.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,23 +16,22 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone;
+package org.linphone.core;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.preference.PreferenceManager;
+class LinphoneChatRoomImpl implements LinphoneChatRoom {
+	protected final long nativePtr;
+	private native long getPeerAddress(long ptr);
+	private native void sendMessage(long ptr, String message);
 
-public class BootReceiver extends BroadcastReceiver {
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_autostart_key), false)) {
-			Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
-			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-			context.startService(lLinphoneServiceIntent);;
-		}
+	protected LinphoneChatRoomImpl(long aNativePtr)  {
+		nativePtr = aNativePtr;
 	}
-	
+
+	public LinphoneAddress getPeerAddress() {
+		return new LinphoneAddressImpl(getPeerAddress(nativePtr));
+	}
+
+	public void sendMessage(String message) {
+		sendMessage(nativePtr,message);
+	}
 }

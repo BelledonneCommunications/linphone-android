@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="submodules/linphone/java/j2se"/>
 	<classpathentry kind="src" path="submodules/linphone/java/common"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="submodules/linphone/coreapi/help/java"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
