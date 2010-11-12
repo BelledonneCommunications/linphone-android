@@ -9,7 +9,7 @@ import android.view.SurfaceView;
 import android.view.Surface.OutOfResourcesException;
 import android.view.SurfaceHolder.Callback;
 
-public class AndroidVideoWindowImpl implements VideoWindow {
+public class AndroidVideoWindowImpl implements Object {
 	private Bitmap mBitmap;
 	private SurfaceView mView;
 	private Surface mSurface;

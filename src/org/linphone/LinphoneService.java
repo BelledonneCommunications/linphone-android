@@ -315,6 +315,15 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
+		boolean isVideoEnabled = mPref.getBoolean(getString(R.string.pref_video_enable_key),false);
+		if (isVideoEnabled) {
+			try {
+			System.loadLibrary("msandroiddisplay");
+			} catch (Throwable e) {
+				Log.e(TAG, "cannot load video plugin", e);
+			}
+		}
+		mLinphoneCore.enableVideo(isVideoEnabled, isVideoEnabled);
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
 		if (lUserName == null || lUserName.length()==0) {

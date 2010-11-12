@@ -35,6 +35,7 @@
 
 
 
+<CheckBoxPreference android:key="@string/pref_video_enable_key" android:title="@string/pref_video_enable"></CheckBoxPreference>
 </PreferenceCategory>
 
 </PreferenceScreen>

@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
@@ -99,7 +100,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	static String PREF_CHECK_CONFIG = "pref_check_config";
 	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
-	
+	static int VIDEO_VIEW_ACTIVITY = 100;
 	/**
 	 * 
 	 * @return null if not ready yet
@@ -463,6 +464,13 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			 routeAudioToReceiver();
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+		if (LinphoneService.instance().getLinphoneCore().isVideoEnabled()) {
+			//start video view
+			Intent lIntent = new Intent();
+			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			lIntent.setClass(this, VideoCallActivity.class);
+			startActivityForResult(lIntent,VIDEO_VIEW_ACTIVITY);
+		}
 	}
 	private void exitCallMode() {
 		mCallControlRow.setVisibility(View.VISIBLE);
@@ -475,6 +483,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mMute.setChecked(true);
 		mSpeaker.setChecked(false);
 		mDecline.setEnabled(false);
+		if (LinphoneService.instance().getLinphoneCore().isVideoEnabled()) {
+			finishActivity(VIDEO_VIEW_ACTIVITY); 
+		}
 		if (mWakeLock.isHeld())mWakeLock.release();
 	}
 	private void routeAudioToSpeaker() {

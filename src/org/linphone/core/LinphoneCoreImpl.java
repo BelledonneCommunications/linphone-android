@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
+import android.view.SurfaceView;
+
 
 class LinphoneCoreImpl implements LinphoneCore {
 
@@ -71,6 +73,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void addFriend(long nativePtr,long friend);
 	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
 	private native long createChatRoom(long nativePtr,String to);
+	private native void enableVideo(long nativePtr,boolean vcap_enabled,boolean display_enabled);
+	private native boolean isVideoEnabled(long nativePtr);
+	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -296,10 +301,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public LinphoneChatRoom createChatRoom(String to) {
 		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
 	}
-	public void setPreviewWindow(VideoWindow w) {
+	public void setPreviewWindow(Object w) {
 		if (mPreviewWindow!=null)
 			mPreviewWindow.setListener(null);
-		mPreviewWindow=(AndroidVideoWindowImpl)w;
+		mPreviewWindow=new AndroidVideoWindowImpl((SurfaceView)w);
 		mPreviewWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
 			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
 				setPreviewWindowId(nativePtr,null);
@@ -310,7 +315,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 			}
 		});
 	}
-	public void setVideoWindow(VideoWindow w) {
+	public void setVideoWindow(Object w) {
 		if (mVideoWindow!=null)
 			mVideoWindow.setListener(null);
 		mVideoWindow=(AndroidVideoWindowImpl)w;
@@ -323,6 +328,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 				setVideoWindowId(nativePtr,vw);
 			}
 		});
+	}
+	public void enableVideo(boolean vcap_enabled, boolean display_enabled) {
+		enableVideo(nativePtr,vcap_enabled, display_enabled);
+	}
+	public boolean isVideoEnabled() {
+		return isVideoEnabled(nativePtr);
 	}
 
 }
