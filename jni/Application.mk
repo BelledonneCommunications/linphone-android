@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2  liblinphone msandroiddisplay
+APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2  liblinphone
 
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
