@@ -318,7 +318,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setVideoWindow(Object w) {
 		if (mVideoWindow!=null)
 			mVideoWindow.setListener(null);
-		mVideoWindow=(AndroidVideoWindowImpl)w;
+		mVideoWindow=new AndroidVideoWindowImpl((SurfaceView) w);
 		mVideoWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
 			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
 				setVideoWindowId(nativePtr,null);
