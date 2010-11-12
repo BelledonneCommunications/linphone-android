@@ -28,6 +28,7 @@ public class VideoCallActivity extends Activity {
 	SurfaceView mVideoView;
 	
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface);
 		LinphoneService.instance().getLinphoneCore().setVideoWindow((Object) mVideoView) ;
