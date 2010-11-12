@@ -20,6 +20,13 @@
                 <data android:scheme="tel" />
             </intent-filter>
          </activity>
+         <activity android:name=".core.tutorials.TestVideoActivity"
+                  android:label="Video test" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
          <activity android:name=".core.tutorials.TutorialHelloWorldActivity"
                   android:label="Hello World" android:enabled="false">
             <intent-filter>
@@ -60,7 +67,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-  
+         </activity>
+         <activity android:name=".VideoCallActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
          </activity>
         <activity android:name=".ContactPickerActivity">
             <intent-filter>
@@ -103,5 +114,8 @@
 <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 <uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
 
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-feature android:name="android.hardware.camera" />
+<uses-feature android:name="android.hardware.camera.autofocus" />
 
 </manifest> 
