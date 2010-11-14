@@ -37,7 +37,7 @@ LOCAL_SRC_FILES = \
 
 LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
 
-
+LOCAL_ARM_MODE := arm
 
 #for including config.h:
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg  $(LOCAL_PATH)/

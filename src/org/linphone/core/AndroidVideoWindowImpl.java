@@ -28,8 +28,9 @@ public class AndroidVideoWindowImpl  {
 					int width, int height) {
 				synchronized(AndroidVideoWindowImpl.this){
 					mBitmap=Bitmap.createBitmap(width,height,Config.RGB_565);
-					if (mListener!=null) mListener.onSurfaceReady(AndroidVideoWindowImpl.this);
 					mSurface=holder.getSurface();
+					if (mListener!=null) mListener.onSurfaceReady(AndroidVideoWindowImpl.this);
+					
 				}
 			}
 
@@ -38,10 +39,10 @@ public class AndroidVideoWindowImpl  {
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
 				synchronized(AndroidVideoWindowImpl.this){
-					mBitmap=null;
 					if (mListener!=null)
 						mListener.onSurfaceDestroyed(AndroidVideoWindowImpl.this);
 					mSurface=null;
+					mBitmap=null;
 				}
 			}
 		});

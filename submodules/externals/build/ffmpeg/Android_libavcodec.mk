@@ -87,6 +87,8 @@ LOCAL_SRC_FILES = \
 	libavcodec/pthread.c
 
 
+LOCAL_ARM_MODE := arm
+
 #LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H -Wa,-I$(LOCAL_PATH)/libavcodec/arm
 LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H 
 
