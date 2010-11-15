@@ -422,6 +422,13 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			callPending();
 		} else if (state == LinphoneCall.State.Connected) {
 			enterIncalMode(lc);
+			if (LinphoneService.instance().getLinphoneCore().isVideoEnabled()) {
+				//start video view
+				Intent lIntent = new Intent();
+				lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				lIntent.setClass(this, VideoCallActivity.class);
+				startActivityForResult(lIntent,VIDEO_VIEW_ACTIVITY);
+			}
 		} else if (state == LinphoneCall.State.Error) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
 			Toast toast = Toast.makeText(this
@@ -464,13 +471,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			 routeAudioToReceiver();
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
-		if (LinphoneService.instance().getLinphoneCore().isVideoEnabled()) {
-			//start video view
-			Intent lIntent = new Intent();
-			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			lIntent.setClass(this, VideoCallActivity.class);
-			startActivityForResult(lIntent,VIDEO_VIEW_ACTIVITY);
-		}
 	}
 	private void exitCallMode() {
 		mCallControlRow.setVisibility(View.VISIBLE);
@@ -611,3 +611,4 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		
 	}
 }
+

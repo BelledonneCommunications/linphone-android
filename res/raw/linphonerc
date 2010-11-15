@@ -1,5 +1,5 @@
 [net]
-download_bw=128
+download_bw=384
 upload_bw=128
 firewall_policy=0
 mtu=0

@@ -75,7 +75,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long createChatRoom(long nativePtr,String to);
 	private native void enableVideo(long nativePtr,boolean vcap_enabled,boolean display_enabled);
 	private native boolean isVideoEnabled(long nativePtr);
-	
+	private static String TAG = "LinphoneCore"; 
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;

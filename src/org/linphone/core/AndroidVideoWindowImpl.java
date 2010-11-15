@@ -3,6 +3,7 @@ package org.linphone.core;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Bitmap.Config;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,6 +15,7 @@ public class AndroidVideoWindowImpl  {
 	private SurfaceView mView;
 	private Surface mSurface;
 	private VideoWindowListener mListener;
+	static private String TAG = "Linphone"; 
 	public static interface VideoWindowListener{
 		void onSurfaceReady(AndroidVideoWindowImpl vw);
 		void onSurfaceDestroyed(AndroidVideoWindowImpl vw);
@@ -26,12 +28,12 @@ public class AndroidVideoWindowImpl  {
 		view.getHolder().addCallback(new Callback(){
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
+				Log.i(TAG,"Surface is being changed.");
 				synchronized(AndroidVideoWindowImpl.this){
 					mBitmap=Bitmap.createBitmap(width,height,Config.RGB_565);
 					mSurface=holder.getSurface();
-					if (mListener!=null) mListener.onSurfaceReady(AndroidVideoWindowImpl.this);
-					
 				}
+				if (mListener!=null) mListener.onSurfaceReady(AndroidVideoWindowImpl.this);
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {				
@@ -39,11 +41,11 @@ public class AndroidVideoWindowImpl  {
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
 				synchronized(AndroidVideoWindowImpl.this){
-					if (mListener!=null)
-						mListener.onSurfaceDestroyed(AndroidVideoWindowImpl.this);
 					mSurface=null;
 					mBitmap=null;
 				}
+				if (mListener!=null)
+					mListener.onSurfaceDestroyed(AndroidVideoWindowImpl.this);
 			}
 		});
 	}
@@ -74,3 +76,4 @@ public class AndroidVideoWindowImpl  {
 		}
 	}
 }
+
