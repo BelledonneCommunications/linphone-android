@@ -30,21 +30,16 @@ public class JavaCameraRecordImpl extends AndroidCameraRecord implements Preview
 	private TextView debug;
 	private long count = 0;
 	private float averageCalledRate;
-	private int averageWindowSize = 2 * rate;
 
 	private long startTime;
 	private long endTime;
 
 	
-	public JavaCameraRecordImpl(int rate) {
-		super(rate);
-		setPreviewCallBack(this);
+	public JavaCameraRecordImpl() {
+		super();
+		setOrStorePreviewCallBack(this);
 	}
 
-	public JavaCameraRecordImpl(int rate, int visilibity) {
-		super(rate, visilibity);
-		setPreviewCallBack(this);
-	}
 
 	public void setDebug(TextView debug) {
 		this.debug = debug;
@@ -52,9 +47,9 @@ public class JavaCameraRecordImpl extends AndroidCameraRecord implements Preview
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
 
-		if ((count % averageWindowSize) == 0) {
+		if ((count % 2 * fps) == 0) {
 			endTime = System.currentTimeMillis();
-			averageCalledRate = (100000 * averageWindowSize) / (endTime - startTime);
+			averageCalledRate = (100000 * 2 * fps) / (endTime - startTime);
 			averageCalledRate /= 100f;
 			startTime = endTime;
 		}

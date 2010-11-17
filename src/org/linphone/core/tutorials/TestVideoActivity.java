@@ -23,7 +23,7 @@ import org.linphone.core.AndroidCameraRecord;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
+import android.os.Handler;
 import android.view.SurfaceView;
 import android.widget.TextView;
 
@@ -36,11 +36,8 @@ import android.widget.TextView;
 public class TestVideoActivity extends Activity {
 
 	private SurfaceView surfaceView;
-	private static final int rate = 15;
+	private static final int rate = 7;
 
-	
-	
-	
 	
 	
 	
@@ -51,14 +48,14 @@ public class TestVideoActivity extends Activity {
 
 		surfaceView=(SurfaceView)findViewById(R.id.videotest_surfaceView);
 		
-	    SurfaceHolder holder=surfaceView.getHolder();
-	    holder.setFixedSize(320, 240);
-	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//	    SurfaceHolder holder=surfaceView.getHolder();
+//	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	    
-	    AndroidCameraRecord.setSurfaceView(surfaceView);
+	    AndroidCameraRecord.setSurfaceView(surfaceView, new Handler());
 
-	    JavaCameraRecordImpl manager = new JavaCameraRecordImpl(rate, SurfaceView.VISIBLE);
-	    manager.setDebug((TextView) findViewById(R.id.videotest_debug));
+	    JavaCameraRecordImpl recorder = new JavaCameraRecordImpl();
+	    recorder.setDebug((TextView) findViewById(R.id.videotest_debug));
+	    recorder.setParameters(288, 352, rate, false);
 	    
 	}
 	

@@ -20,6 +20,7 @@ package org.linphone.core;
 
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.util.Log;
 
 /**
@@ -31,19 +32,63 @@ import android.util.Log;
 public class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
 
 	private long filterCtxPtr;
+	private double timeElapsedBetweenFrames = 0;
+	private long lastFrameTime = 0;
 
-	public AndroidCameraRecordImpl(long filterCtxPtr, int rate) {
-		super(rate);
-		this.filterCtxPtr = filterCtxPtr;
-		setPreviewCallBack(this);
+	public AndroidCameraRecordImpl(long filterCtxPtr) {
+		super();
+
+		try {
+			this.filterCtxPtr = filterCtxPtr;
+			setOrStorePreviewCallBack(this);
+		} catch (Throwable e) {
+			Log.e("Linphone", "Error");
+		}
+		
 	}
 
 	
 	private native void putImage(long filterCtxPtr, byte[] buffer);
 
+
 	public void onPreviewFrame(byte[] data, Camera camera) {
-		Log.d("onPreviewFrame: ", Integer.toString(data.length));
+		if (data == null) {
+			Log.e("Linphone", "onPreviewFrame Called with null buffer");
+			return;
+		}
+		
+		Size s = camera.getParameters().getPreviewSize();
+		int expectedBuffLength = s.width * s.height * 3 /2;
+		if (expectedBuffLength != data.length) {
+			badBufferLengthReceived(data, expectedBuffLength);
+			return;
+		}
+		
+		long curTime = System.currentTimeMillis();
+		if (lastFrameTime == 0) {
+			lastFrameTime = curTime;
+			putImage(filterCtxPtr, data);
+			return;
+		}
+
+		double currentTimeElapsed = 0.8 * (curTime - lastFrameTime) / 1000 + 0.2 * timeElapsedBetweenFrames;
+		if (1 / currentTimeElapsed > fps) {
+//			Log.d("Linphone", "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
+			addBackCaptureBuffer(data);
+			return;
+		}
+		lastFrameTime = curTime;
+		timeElapsedBetweenFrames = currentTimeElapsed;
+
+		//		Log.d("onPreviewFrame: ", Integer.toString(data.length));
 		putImage(filterCtxPtr, data);
+	}
+
+
+	// Hook
+	protected void badBufferLengthReceived(byte[] data, int expectedBuffLength) {
+		Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
+				+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
 	}
 
 }
