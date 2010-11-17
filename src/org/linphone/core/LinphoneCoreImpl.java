@@ -292,14 +292,22 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public LinphoneChatRoom createChatRoom(String to) {
 		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
 	}
-	public void setPreviewWindow(VideoWindow w) {
+	public void setPreviewWindow(Object w) {
 		throw new RuntimeException("not implemented yet");
 		// TODO Auto-generated method stub
 		
 	}
-	public void setVideoWindow(VideoWindow w) {
+	public void setVideoWindow(Object w) {
 		throw new RuntimeException("not implemented yet");
 		// TODO Auto-generated method stub
+	}
+	public void enableVideo(boolean vcap_enabled, boolean display_enabled) {
+		// TODO Auto-generated method stub
+		
+	}
+	public boolean isVideoEnabled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
