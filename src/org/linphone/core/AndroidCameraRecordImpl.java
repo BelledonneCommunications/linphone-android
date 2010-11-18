@@ -60,7 +60,8 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		Size s = camera.getParameters().getPreviewSize();
 		int expectedBuffLength = s.width * s.height * 3 /2;
 		if (expectedBuffLength != data.length) {
-			badBufferLengthReceived(data, expectedBuffLength);
+			Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
+					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
 			return;
 		}
 		
@@ -74,7 +75,6 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		double currentTimeElapsed = 0.8 * (curTime - lastFrameTime) / 1000 + 0.2 * timeElapsedBetweenFrames;
 		if (1 / currentTimeElapsed > fps) {
 //			Log.d("Linphone", "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
-			addBackCaptureBuffer(data);
 			return;
 		}
 		lastFrameTime = curTime;
@@ -85,10 +85,5 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	}
 
 
-	// Hook
-	protected void badBufferLengthReceived(byte[] data, int expectedBuffLength) {
-		Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
-				+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
-	}
 
 }

@@ -192,14 +192,6 @@ public abstract class AndroidCameraRecord {
 	}
 	
 	
-	/**
-	 * Hook to add back a buffer for reuse in capture.
-	 * Override in a version supporting addPreviewCallBackWithBuffer()
-	 * @param buffer buffer to reuse
-	 */
-	public void addBackCaptureBuffer(byte[] buffer) {}
-
-
 
 	private void updateVisibility() {
 		if (!visibilityChangeable) {

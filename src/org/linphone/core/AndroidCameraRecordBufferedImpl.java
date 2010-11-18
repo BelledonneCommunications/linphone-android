@@ -42,11 +42,6 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
 	}
 	
 	@Override
-	public void addBackCaptureBuffer(byte[] buffer) {
-		camera.addCallbackBuffer(buffer);
-	}
-	
-	@Override
 	public void onCameraStarted(Camera camera) {
 		super.onCameraStarted(camera);
 
@@ -62,8 +57,8 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
 	}
 	
 	@Override
-	protected void badBufferLengthReceived(byte[] buffer, int expectedBufferLength) {
-		super.badBufferLengthReceived(buffer, expectedBufferLength);
-		addBackCaptureBuffer(buffer);
+	public void onPreviewFrame(byte[] data, Camera camera) {
+		super.onPreviewFrame(data, camera);
+		camera.addCallbackBuffer(data);
 	}
 }
