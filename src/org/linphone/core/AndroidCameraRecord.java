@@ -19,109 +19,211 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.core;
 
 import android.hardware.Camera;
+import android.hardware.Camera.ErrorCallback;
 import android.hardware.Camera.PreviewCallback;
+import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.SurfaceHolder.Callback;
 
 
-public abstract class AndroidCameraRecord implements SurfaceHolder.Callback {
+public abstract class AndroidCameraRecord {
 
-	protected Camera camera;
-	private static SurfaceView surfaceView; // should be initialized first...
-	protected int rate;
-	private int visibility = SurfaceView.GONE; // Automatically hidden
+	public static final int ANDROID_VERSION = Integer.parseInt(Build.VERSION.SDK);
+	protected static Camera camera;
+	private static SurfaceView surfaceView;
+
+	protected int fps;
+	protected int height;
+	protected int width;
+	private int longTermVisibility;
+
 	private boolean visibilityChangeable = false;
+	private PreviewCallback storedPreviewCallback;
 
-	protected final SurfaceView getSurfaceView() {
-		return surfaceView;
+	private static AndroidCameraRecord instance;
+	private static Handler handler;
+	private static boolean previewStarted;
+	
+	public AndroidCameraRecord() {
+		// TODO check if another instance is loaded and kill it.
+		instance = this;
 	}
 	
-	/**
-	 * AndroidCameraRecord.setSurfaceView() should be called first.
-	 * @param rate
+	public void setParameters(int height, int width, float fps, boolean hide) {
+		this.fps = Math.round(fps);
+		this.height = height;
+		this.width = width;
+		this.longTermVisibility = hide ? SurfaceView.GONE : SurfaceView.VISIBLE;
+		
+		if (surfaceView != null) {
+			Log.d("Linphone", "Surfaceview defined and ready; starting video capture");
+			instance.startPreview();
+		} else {
+			Log.w("Linphone", "Surfaceview not defined; postponning video capture");
+		}
+	}
+	
+	/*
+	 * AndroidCameraRecord.setSurfaceView() should be called first, from the Activity code.
+	 * It will start automatically
 	 */
-	public AndroidCameraRecord(int rate) {
+	private void startPreview() {
+		assert surfaceView != null;
+
+		if (previewStarted) {
+			Log.w("Linphone", "Already started");
+			return;
+		}
+		
+		if (surfaceView.getVisibility() != SurfaceView.VISIBLE) {
+			// Illegal state
+			Log.e("Linphone", "Illegal state: video capture surface view is not visible");
+			return;
+		}
+		
+
 		camera=Camera.open();
+		camera.setErrorCallback(new ErrorCallback() {
+			public void onError(int error, Camera camera) {
+				Log.e("Linphone", "Camera error : " + error);
+			}
+		});
+		
+		
+		Camera.Parameters parameters=camera.getParameters();
+
+		parameters.setPreviewSize(width, height);
+		parameters.setPreviewFrameRate(fps);
+		camera.setParameters(parameters);
+
+
 		SurfaceHolder holder = surfaceView.getHolder();
-		holder.addCallback(this);
-
-		this.rate = rate;
-	}
-
-	
-	/**
-	 * AndroidCameraRecord.setSurfaceView() should be called first.
-	 * @param rate
-	 * @param visilibity
-	 */
-	public AndroidCameraRecord(int rate, int visilibity) {
-		this(rate);
-		this.visibility = visilibity;
-	}
-
-
-	public void surfaceCreated(SurfaceHolder holder) {
 		try {
 			camera.setPreviewDisplay(holder);
 		}
 		catch (Throwable t) {
-			Log.e("PictureDemo-surfaceCallback", "Exception in setPreviewDisplay()", t);
+			Log.e("Linphone", "Exception in Video capture setPreviewDisplay()", t);
 		}
 
 
-	}
+		try {
+			camera.startPreview();
+			previewStarted = true;
+		} catch (Throwable e) {
+			Log.e("Linphone", "Can't start camera preview");
+		}
 
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		Camera.Parameters parameters=camera.getParameters();
+		previewStarted = true;
 
-		parameters.setPreviewSize(width, height);
-		parameters.setPreviewFrameRate(rate);
-		camera.setParameters(parameters);
-
-		camera.startPreview();
+		
+		
+		// Register callback to get capture buffer
+		if (storedPreviewCallback != null) {
+			reallySetPreviewCallback(camera, storedPreviewCallback);
+		}
+		
 
 		visibilityChangeable = true;
-		if (surfaceView.getVisibility() != visibility) {
+		if (surfaceView.getVisibility() != longTermVisibility) {
 			updateVisibility();
 		}
+		
+		onCameraStarted(camera);
+	}
+	
 
+
+
+	/**
+	 * Hook.
+	 * @param camera
+	 */
+	public void onCameraStarted(Camera camera) {}
+
+	public void setOrStorePreviewCallBack(PreviewCallback cb) {
+		if (camera == null) {
+			Log.w("Linphone", "Capture camera not ready, storing callback");
+			this.storedPreviewCallback = cb;
+			return;
+		}
+		
+		reallySetPreviewCallback(camera, cb);
 	}
 
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		camera.stopPreview();
-		camera.release();
-		camera=null;
-	}
 
-	public void setPreviewCallBack(PreviewCallback cb) {
-		camera.setPreviewCallback(cb);
+	
+	public static final void setSurfaceView(final SurfaceView sv, Handler mHandler) {
+		AndroidCameraRecord.handler = mHandler;
+		SurfaceHolder holder = sv.getHolder();
+	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+		holder.addCallback(new Callback() {
+			public void surfaceDestroyed(SurfaceHolder holder) {
+				AndroidCameraRecord.surfaceView = null;
+				
+				if (camera == null) {
+					Log.e("AndroidCameraRecord.surfaceDestroyed", "illegal state");
+					return;
+				}
+				camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
+				camera.stopPreview();
+				camera.release();
+				camera=null;
+				previewStarted = false;
+				Log.w("Linphone", "The video capture Surface view has been destroyed");
+			}
+
+			public void surfaceCreated(SurfaceHolder holder) {
+				AndroidCameraRecord.surfaceView = sv;
+				
+				if (instance != null) {
+					instance.startPreview();
+				}
+			}
+			
+			public void surfaceChanged(SurfaceHolder holder, int format, int width,
+					int height) {
+				// Do nothing
+			}
+		});
 	}
+	
+	
 
 	private void updateVisibility() {
 		if (!visibilityChangeable) {
 			throw new IllegalStateException("Visilibity not changeable now");
 		}
 
-		surfaceView.setVisibility(visibility);
+		handler.post(new Runnable() {
+			public void run() {
+				Log.d("Linphone", "Changing video capture surface view visibility :" + longTermVisibility);
+				surfaceView.setVisibility(longTermVisibility);
+			}
+		});
 	}
 
 	public void setVisibility(int visibility) {
-		if (visibility == this.visibility) return;
+		if (visibility == this.longTermVisibility) return;
 
-		this.visibility = visibility;
+		this.longTermVisibility = visibility;
 		updateVisibility();
 	}
 
-	public static final void setSurfaceView(SurfaceView sv) {
-		AndroidCameraRecord.surfaceView = sv;
+	
+	public void stopCaptureCallback() {
+		if (camera != null) {
+			reallySetPreviewCallback(camera, null);
+		}
 	}
 	
+	protected void reallySetPreviewCallback(Camera camera, PreviewCallback cb) {
+		camera.setPreviewCallback(cb);
+	}
 	
-	/**
-	 * Hook to add back a buffer for reuse in capture.
-	 * Override in a version supporting addPreviewCallBackWithBuffer()
-	 * @param buffer buffer to reuse
-	 */
-	public void addBackCaptureBuffer(byte[] buffer) {}
 }
+
+

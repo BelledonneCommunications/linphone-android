@@ -20,17 +20,27 @@ package org.linphone;
 
 
 
+import org.linphone.core.AndroidCameraRecord;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.SurfaceView;
 
 public class VideoCallActivity extends Activity {
 	SurfaceView mVideoView;
+	SurfaceView mVideoCaptureView;
+	private Handler mHandler = new Handler() ;
+
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface);
-		LinphoneService.instance().getLinphoneCore().setVideoWindow((Object) mVideoView) ;
+		LinphoneService.instance().getLinphoneCore().setVideoWindow((Object) mVideoView);
+		
+//		mVideoCaptureView = new SurfaceView(getApplicationContext());
+		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
+		AndroidCameraRecord.setSurfaceView(mVideoCaptureView, mHandler);
 	}
 }
