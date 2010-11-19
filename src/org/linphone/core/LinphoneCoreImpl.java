@@ -69,12 +69,16 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setPreviewWindowId(long nativePtr, Object wid);
 	private AndroidVideoWindowImpl mVideoWindow;
 	private AndroidVideoWindowImpl mPreviewWindow;
-	
 	private native void addFriend(long nativePtr,long friend);
 	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
 	private native long createChatRoom(long nativePtr,String to);
 	private native void enableVideo(long nativePtr,boolean vcap_enabled,boolean display_enabled);
 	private native boolean isVideoEnabled(long nativePtr);
+	private native void setFirewallPolicy(long nativePtr, int enum_value);
+	private native int getFirewallPolicy(long nativePtr);
+	private native void setStunServer(long nativePtr, String stun_server);
+	private native String getStunServer(long nativePtr);
+	
 	private static String TAG = "LinphoneCore"; 
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -334,5 +338,17 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public boolean isVideoEnabled() {
 		return isVideoEnabled(nativePtr);
+	}
+	public FirewallPolicy getFirewallPolicy() {
+		return FirewallPolicy.fromInt(getFirewallPolicy(nativePtr));
+	}
+	public String getStunServer() {
+		return getStunServer(nativePtr);
+	}
+	public void setFirewallPolicy(FirewallPolicy pol) {
+		setFirewallPolicy(nativePtr,pol.value());
+	}
+	public void setStunServer(String stunServer) {
+		setStunServer(nativePtr,stunServer);
 	}
 }

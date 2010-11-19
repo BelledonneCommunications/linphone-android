@@ -12,6 +12,7 @@
 	<CheckBoxPreference android:enabled="true" android:selectable="true" android:key="@string/pref_enable_outbound_proxy_key" android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>
 </PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_advanced">
+		<EditTextPreference android:title="@string/pref_stun_server" android:key="@string/pref_stun_server_key"></EditTextPreference>
 		<PreferenceScreen android:title="@string/pref_codecs" android:key="@string/pref_codecs_key">
 			<CheckBoxPreference android:key="@string/pref_codec_speex16_key"
 				android:title="@string/pref_codec_speex16" android:defaultValue="true"></CheckBoxPreference>

@@ -38,6 +38,7 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
 
 
@@ -333,7 +334,12 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			throw new LinphoneConfigException(getString(R.string.wrong_domain));
 		}
 
+		String lStun = mPref.getString(getString(R.string.pref_stun_server_key), null);
 
+		//stun server
+		mLinphoneCore.setStunServer(lStun);
+		mLinphoneCore.setFirewallPolicy(lStun!=null ? FirewallPolicy.UseStun : FirewallPolicy.NoFirewall);
+		
 		//auth
 		mLinphoneCore.clearAuthInfos();
 		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd,null);

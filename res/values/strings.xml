@@ -68,4 +68,6 @@
 <string name="notification_register_failure">fails to register to %s</string>
 <string name="notification_started">started</string>
 <string name="pref_echo_cancellation_summary">Removes the echo heared by the other end.</string>
+<string name="pref_stun_server">Stun server</string>
+<string name="pref_stun_server_key">pref_stun_server_key</string>
 </resources>
