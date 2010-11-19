@@ -335,5 +335,4 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean isVideoEnabled() {
 		return isVideoEnabled(nativePtr);
 	}
-
 }
