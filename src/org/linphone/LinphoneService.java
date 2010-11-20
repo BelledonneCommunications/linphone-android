@@ -338,7 +338,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 
 		//stun server
 		mLinphoneCore.setStunServer(lStun);
-		mLinphoneCore.setFirewallPolicy(lStun!=null ? FirewallPolicy.UseStun : FirewallPolicy.NoFirewall);
+		mLinphoneCore.setFirewallPolicy((lStun!=null && lStun.length()>0) ? FirewallPolicy.UseStun : FirewallPolicy.NoFirewall);
 		
 		//auth
 		mLinphoneCore.clearAuthInfos();
