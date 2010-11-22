@@ -20,6 +20,7 @@ package org.linphone.core;
 
 import android.hardware.Camera;
 import android.hardware.Camera.ErrorCallback;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.os.Build;
 import android.os.Handler;
@@ -46,7 +47,7 @@ public abstract class AndroidCameraRecord {
 	private static AndroidCameraRecord instance;
 	private static Handler handler;
 	private static boolean previewStarted;
-	private static int orientationCode;
+	protected static int orientationCode;
 	
 	public AndroidCameraRecord() {
 		// TODO check if another instance is loaded and kill it.
@@ -99,11 +100,21 @@ public abstract class AndroidCameraRecord {
 
 		parameters.setPreviewSize(width, height);
 		parameters.setPreviewFrameRate(fps);
-//		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_EDOF);
-		camera.setParameters(parameters);
-		camera.setDisplayOrientation(90 * orientationCode);
-//		parameters.setRotation()
+		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+			Log.w("Linphone", "Auto Focus supported by camera device");
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		} else {
+			Log.w("Linphone", "Auto Focus not supported by camera device");
+			if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
+				Log.w("Linphone", "Infinity Focus supported by camera device");
+				parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
+			} else {
+				Log.w("Linphone", "Infinity Focus not supported by camera device");
+			}
+		}
 
+		onSettingParameters(parameters);
+		camera.setParameters(parameters);
 
 		
 
@@ -143,6 +154,10 @@ public abstract class AndroidCameraRecord {
 	
 
 
+
+	protected void onSettingParameters(Parameters parameters) {
+		
+	}
 
 	/**
 	 * Hook.

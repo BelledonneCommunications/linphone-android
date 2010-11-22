@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.core;
 
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.util.Log;
@@ -61,4 +62,13 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
 		super.onPreviewFrame(data, camera);
 		camera.addCallbackBuffer(data);
 	}
+
+	@Override
+	protected void onSettingParameters(Parameters parameters) {
+		super.onSettingParameters(parameters);
+		// Only on v8 hardware
+		camera.setDisplayOrientation(90 * orientationCode);
+	}
+	
+	
 }
