@@ -46,6 +46,7 @@ public abstract class AndroidCameraRecord {
 	private static AndroidCameraRecord instance;
 	private static Handler handler;
 	private static boolean previewStarted;
+	private static int orientationCode;
 	
 	public AndroidCameraRecord() {
 		// TODO check if another instance is loaded and kill it.
@@ -65,6 +66,7 @@ public abstract class AndroidCameraRecord {
 			Log.w("Linphone", "Surfaceview not defined; postponning video capture");
 		}
 	}
+	
 	
 	/*
 	 * AndroidCameraRecord.setSurfaceView() should be called first, from the Activity code.
@@ -97,8 +99,13 @@ public abstract class AndroidCameraRecord {
 
 		parameters.setPreviewSize(width, height);
 		parameters.setPreviewFrameRate(fps);
+//		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_EDOF);
 		camera.setParameters(parameters);
+		camera.setDisplayOrientation(90 * orientationCode);
+//		parameters.setRotation()
 
+
+		
 
 		SurfaceHolder holder = surfaceView.getHolder();
 		try {
@@ -165,7 +172,7 @@ public abstract class AndroidCameraRecord {
 				AndroidCameraRecord.surfaceView = null;
 				
 				if (camera == null) {
-					Log.e("AndroidCameraRecord.surfaceDestroyed", "illegal state");
+					Log.e("Linphone", "Video capture: illegal state: surface destroyed but camera is already null");
 					return;
 				}
 				camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
@@ -173,20 +180,23 @@ public abstract class AndroidCameraRecord {
 				camera.release();
 				camera=null;
 				previewStarted = false;
-				Log.w("Linphone", "The video capture Surface view has been destroyed");
+				Log.w("Linphone", "Video capture Surface destroyed");
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {
 				AndroidCameraRecord.surfaceView = sv;
+				Log.w("Linphone", "Video capture surface created");
 				
 				if (instance != null) {
 					instance.startPreview();
 				}
+				
+				holder.isCreating();
 			}
 			
 			public void surfaceChanged(SurfaceHolder holder, int format, int width,
 					int height) {
-				// Do nothing
+				Log.w("Linphone", "Video capture surface changed");
 			}
 		});
 	}
@@ -223,7 +233,14 @@ public abstract class AndroidCameraRecord {
 	protected void reallySetPreviewCallback(Camera camera, PreviewCallback cb) {
 		camera.setPreviewCallback(cb);
 	}
+
+	public static void setOrientationCode(int orientation) {
+		AndroidCameraRecord.orientationCode = (4 + 1 - orientation) % 4;
+	}
 	
+	protected int getOrientationCode() {
+		return orientationCode;
+	}
 }
 
 

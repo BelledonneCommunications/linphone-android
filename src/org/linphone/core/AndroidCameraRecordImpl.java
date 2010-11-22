@@ -48,7 +48,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	}
 
 	
-	private native void putImage(long filterCtxPtr, byte[] buffer);
+	private native void putImage(long filterCtxPtr, byte[] buffer, int orientation);
 
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
@@ -68,7 +68,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		long curTime = System.currentTimeMillis();
 		if (lastFrameTime == 0) {
 			lastFrameTime = curTime;
-			putImage(filterCtxPtr, data);
+			putImage(filterCtxPtr, data, getOrientationCode());
 			return;
 		}
 
@@ -81,7 +81,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		timeElapsedBetweenFrames = currentTimeElapsed;
 
 		//		Log.d("onPreviewFrame: ", Integer.toString(data.length));
-		putImage(filterCtxPtr, data);
+		putImage(filterCtxPtr, data, getOrientationCode());
 	}
 
 
