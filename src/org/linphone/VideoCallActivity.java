@@ -40,14 +40,15 @@ public class VideoCallActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 
-		mVideoView = (SurfaceView) findViewById(R.id.video_surface);
+		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
 		LinphoneService.instance().getLinphoneCore().setVideoWindow((Object) mVideoView);
 		
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
 		
 		final int rotation = getWindowManager().getDefaultDisplay().getRotation();
 		AndroidCameraRecord.setOrientationCode(rotation);
-		hack(rotation);
+		
+		if (!firstLaunch) workaroundCapturePreviewHiddenOnSubsequentRotations();
 		
 		AndroidCameraRecord.setSurfaceView(mVideoCaptureView, mHandler);
 		firstLaunch = false;
@@ -55,19 +56,17 @@ public class VideoCallActivity extends Activity {
 	
 
 	
-	private void hack(int rotation) {
-		if (rotation != 0 && !firstLaunch) {
-			View view = findViewById(R.id.video_frame);
-			if (view == null) {
-				Log.e("Linphone", "Android BUG: video frame not found; mix with landscape???");
-				return;
-			}
-
-			FrameLayout frame = (FrameLayout) view;
-			frame.removeAllViews();
-			frame.addView(mVideoCaptureView);
-			frame.addView(mVideoView);
+	private void workaroundCapturePreviewHiddenOnSubsequentRotations() {
+		View view = findViewById(R.id.video_frame);
+		if (view == null) {
+			Log.e("Linphone", "Android BUG: video frame not found; mix with landscape???");
+			return;
 		}
+
+		FrameLayout frame = (FrameLayout) view;
+		frame.removeAllViews();
+		frame.addView(mVideoCaptureView);
+		frame.addView(mVideoView);
 	}
 	
 }
