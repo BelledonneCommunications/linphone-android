@@ -42,5 +42,8 @@ class LinphoneCallLogImpl implements LinphoneCallLog {
 	public LinphoneAddress getTo() {
 		return new LinphoneAddressImpl(getTo(nativePtr));
 	}
+	public CallStatus getStatus() {
+		throw new RuntimeException("not implemented yet");
+	}
 
 }
