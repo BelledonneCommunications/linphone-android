@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.component.ToggleImageButton;
+import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneChatRoom;
@@ -27,7 +29,6 @@ import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
-
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,18 +46,14 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
@@ -82,13 +79,13 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private Button mStar;
 	private Button mHash;
 	
-	private ToggleButton mMute;
-	private ToggleButton mSpeaker;
+	private ToggleImageButton mMute;
+	private ToggleImageButton mSpeaker;
 	
 	private LinearLayout mCallControlRow;
 	private TableRow mInCallControlRow;
-	private LinearLayout mAddressLayout;
-	private LinearLayout mInCallAddressLayout;
+	private View mAddressLayout;
+	private View mInCallAddressLayout;
 	
 	private static DialerActivity theDialer;
 	
@@ -193,10 +190,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 			mCallControlRow = (LinearLayout) findViewById(R.id.CallControlRow);
 			mInCallControlRow = (TableRow) findViewById(R.id.IncallControlRow);
-			mAddressLayout = (LinearLayout) findViewById(R.id.Addresslayout);
-			mInCallAddressLayout = (LinearLayout) findViewById(R.id.IncallAddressLayout);
-			mMute = (ToggleButton)findViewById(R.id.mic_mute_button);
-			mSpeaker = (ToggleButton)findViewById(R.id.speaker_button);
+			mAddressLayout = (View) findViewById(R.id.Addresslayout);
+			mInCallAddressLayout = (View) findViewById(R.id.IncallAddressLayout);
+			mMute = (ToggleImageButton)findViewById(R.id.mic_mute_button);
+			mSpeaker = (ToggleImageButton)findViewById(R.id.speaker_button);
 			
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
@@ -218,11 +215,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						mAddressLayout.setVisibility(View.GONE);
 						mInCallAddressLayout.setVisibility(View.VISIBLE);
 						mMute.setChecked(!lLinphoenCore.isMicMuted()); 
-						mMute.setCompoundDrawablesWithIntrinsicBounds(0
-								, mMute.isChecked()?R.drawable.mic_active:R.drawable.mic_muted
-										, 0
-										, 0);
-						
 						String DisplayName = lLinphoenCore.getRemoteAddress().getDisplayName();
 						if (DisplayName!=null) {
 							mDisplayNameView.setText(DisplayName);
@@ -241,35 +233,25 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			
 
 			mMute.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) {
+				public void onCheckedChanged(ToggleImageButton button, boolean isChecked) {
 					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
 					if (isChecked) {
 						lc.muteMic(false);
-						mMute.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.mic_active, 0, 0);
 					} else {
 						lc.muteMic(true);
-						mMute.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.mic_muted, 0, 0);
 					}
-					
 				}
-				
 			});
 			
 			
 			mSpeaker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) {
+				public void onCheckedChanged(ToggleImageButton buttonView,	boolean isChecked) {
 					if (isChecked) {
 						routeAudioToSpeaker();
-						mSpeaker.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.speaker_32_on, 0, 0);
 					} else {
 						routeAudioToReceiver();
-						mSpeaker.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.speaker_32_off, 0, 0);
 					}
-					
 				}
-				
 			});
 			
 			mZero = (Button) findViewById(R.id.Button00) ;
