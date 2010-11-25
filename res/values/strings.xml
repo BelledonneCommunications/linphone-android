@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_video_enable">Enable video</string>
-    <string name="pref_video_enable_key">pref_escape_plus_key</string>
+    <string name="pref_video_settings_title">Video settings</string>
+    <string name="pref_video_automatically_share_my_video_title">Share my camera</string>
+    <string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>
+    <string name="pref_video_enable_title">Enable Video</string>
+    <string name="pref_video_automatically_share_my_video">Automatically send videos from my camera</string>
+    <string name="pref_video_automatically_share_my_video_key">pref_video_automatically_share_my_video_key</string>
+    <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
+    <string name="pref_video_initiate_call_with_video">Initiate outgoing calls with video</string>
+    <string name="pref_video_enable_key">pref_video_enable_key</string>
     <string name="pref_escape_plus">Replace + by 00</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>
@@ -63,6 +70,8 @@
 <string name="tab_history">History</string>
 <string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
 <string name="menu_clear_history">Clear</string>
+<string name="error_cannot_get_call_parameters">Cannot get call parameters</string>
+<string name="error_cannot_create_default_parameters">Cannot create default call parameters</string>
 <string name="error_cannot_invite_address">Cannot invite destination address  [%s]</string>
 <string name="notification_registered">registered to %s </string> 
 <string name="notification_register_failure">fails to register to %s</string>

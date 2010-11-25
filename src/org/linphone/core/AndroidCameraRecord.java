@@ -23,7 +23,6 @@ import android.hardware.Camera.ErrorCallback;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -39,33 +38,26 @@ public abstract class AndroidCameraRecord {
 	protected int fps;
 	protected int height;
 	protected int width;
-	private int longTermVisibility;
-
-	private boolean visibilityChangeable = false;
 	private PreviewCallback storedPreviewCallback;
 
 	private static AndroidCameraRecord instance;
-	private static Handler handler;
 	private static boolean previewStarted;
+	private static boolean parametersSet;
 	protected static int orientationCode;
+	private static boolean mute;
+	private static final String tag="Linphone";
 	
 	public AndroidCameraRecord() {
 		// TODO check if another instance is loaded and kill it.
 		instance = this;
 	}
 	
-	public void setParameters(int height, int width, float fps, boolean hide) {
+	public void setParameters(int height, int width, float fps) {
 		this.fps = Math.round(fps);
 		this.height = height;
 		this.width = width;
-		this.longTermVisibility = hide ? SurfaceView.GONE : SurfaceView.VISIBLE;
-		
-		if (surfaceView != null) {
-			Log.d("Linphone", "Surfaceview defined and ready; starting video capture");
-			instance.startPreview();
-		} else {
-			Log.w("Linphone", "Surfaceview not defined; postponning video capture");
-		}
+		parametersSet = true;
+		startPreview();
 	}
 	
 	
@@ -74,16 +66,27 @@ public abstract class AndroidCameraRecord {
 	 * It will start automatically
 	 */
 	private void startPreview() {
-		assert surfaceView != null;
+		if (mute) {
+			Log.d(tag, "Not starting preview as camera has been muted");
+			return;
+		}
+		if (surfaceView == null) {
+			Log.w(tag, "Surfaceview not defined; postponning video capture");
+			return;
+		}
+		if (!parametersSet) {
+			Log.w(tag, "Parameters not set; postponning video capture");
+			return;
+		}
 
 		if (previewStarted) {
-			Log.w("Linphone", "Already started");
+			Log.w(tag, "Already started");
 			return;
 		}
 		
 		if (surfaceView.getVisibility() != SurfaceView.VISIBLE) {
 			// Illegal state
-			Log.e("Linphone", "Illegal state: video capture surface view is not visible");
+			Log.e(tag, "Illegal state: video capture surface view is not visible");
 			return;
 		}
 		
@@ -91,7 +94,7 @@ public abstract class AndroidCameraRecord {
 		camera=Camera.open();
 		camera.setErrorCallback(new ErrorCallback() {
 			public void onError(int error, Camera camera) {
-				Log.e("Linphone", "Camera error : " + error);
+				Log.e(tag, "Camera error : " + error);
 			}
 		});
 		
@@ -101,15 +104,15 @@ public abstract class AndroidCameraRecord {
 		parameters.setPreviewSize(width, height);
 		parameters.setPreviewFrameRate(fps);
 		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-			Log.w("Linphone", "Auto Focus supported by camera device");
+			Log.w(tag, "Auto Focus supported by camera device");
 			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 		} else {
-			Log.w("Linphone", "Auto Focus not supported by camera device");
+			Log.w(tag, "Auto Focus not supported by camera device");
 			if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
-				Log.w("Linphone", "Infinity Focus supported by camera device");
+				Log.w(tag, "Infinity Focus supported by camera device");
 				parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
 			} else {
-				Log.w("Linphone", "Infinity Focus not supported by camera device");
+				Log.w(tag, "Infinity Focus not supported by camera device");
 			}
 		}
 
@@ -123,7 +126,7 @@ public abstract class AndroidCameraRecord {
 			camera.setPreviewDisplay(holder);
 		}
 		catch (Throwable t) {
-			Log.e("Linphone", "Exception in Video capture setPreviewDisplay()", t);
+			Log.e(tag, "Exception in Video capture setPreviewDisplay()", t);
 		}
 
 
@@ -131,7 +134,7 @@ public abstract class AndroidCameraRecord {
 			camera.startPreview();
 			previewStarted = true;
 		} catch (Throwable e) {
-			Log.e("Linphone", "Can't start camera preview");
+			Log.e(tag, "Can't start camera preview");
 		}
 
 		previewStarted = true;
@@ -143,11 +146,6 @@ public abstract class AndroidCameraRecord {
 			reallySetPreviewCallback(camera, storedPreviewCallback);
 		}
 		
-
-		visibilityChangeable = true;
-		if (surfaceView.getVisibility() != longTermVisibility) {
-			updateVisibility();
-		}
 		
 		onCameraStarted(camera);
 	}
@@ -167,7 +165,7 @@ public abstract class AndroidCameraRecord {
 
 	public void setOrStorePreviewCallBack(PreviewCallback cb) {
 		if (camera == null) {
-			Log.w("Linphone", "Capture camera not ready, storing callback");
+			Log.w(tag, "Capture camera not ready, storing callback");
 			this.storedPreviewCallback = cb;
 			return;
 		}
@@ -177,8 +175,7 @@ public abstract class AndroidCameraRecord {
 
 
 	
-	public static final void setSurfaceView(final SurfaceView sv, Handler mHandler) {
-		AndroidCameraRecord.handler = mHandler;
+	public static final void setSurfaceView(final SurfaceView sv) {
 		SurfaceHolder holder = sv.getHolder();
 	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
@@ -187,7 +184,7 @@ public abstract class AndroidCameraRecord {
 				AndroidCameraRecord.surfaceView = null;
 				
 				if (camera == null) {
-					Log.e("Linphone", "Video capture: illegal state: surface destroyed but camera is already null");
+					Log.e(tag, "Video capture: illegal state: surface destroyed but camera is already null");
 					return;
 				}
 				camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
@@ -195,12 +192,12 @@ public abstract class AndroidCameraRecord {
 				camera.release();
 				camera=null;
 				previewStarted = false;
-				Log.w("Linphone", "Video capture Surface destroyed");
+				Log.w(tag, "Video capture Surface destroyed");
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {
 				AndroidCameraRecord.surfaceView = sv;
-				Log.w("Linphone", "Video capture surface created");
+				Log.w(tag, "Video capture surface created");
 				
 				if (instance != null) {
 					instance.startPreview();
@@ -211,32 +208,12 @@ public abstract class AndroidCameraRecord {
 			
 			public void surfaceChanged(SurfaceHolder holder, int format, int width,
 					int height) {
-				Log.w("Linphone", "Video capture surface changed");
+				Log.w(tag, "Video capture surface changed");
 			}
 		});
 	}
 	
 	
-
-	private void updateVisibility() {
-		if (!visibilityChangeable) {
-			throw new IllegalStateException("Visilibity not changeable now");
-		}
-
-		handler.post(new Runnable() {
-			public void run() {
-				Log.d("Linphone", "Changing video capture surface view visibility :" + longTermVisibility);
-				surfaceView.setVisibility(longTermVisibility);
-			}
-		});
-	}
-
-	public void setVisibility(int visibility) {
-		if (visibility == this.longTermVisibility) return;
-
-		this.longTermVisibility = visibility;
-		updateVisibility();
-	}
 
 	
 	public void stopCaptureCallback() {
@@ -255,6 +232,21 @@ public abstract class AndroidCameraRecord {
 	
 	protected int getOrientationCode() {
 		return orientationCode;
+	}
+
+	public static void setMuteCamera(boolean m) {
+		if (m == mute) return;
+
+		mute = m;
+		if (mute && previewStarted) {
+			camera.stopPreview();
+			return;
+		}
+		
+		if (!mute) {
+			instance.startPreview();
+		}
+		
 	}
 }
 

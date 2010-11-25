@@ -24,7 +24,6 @@ import org.linphone.core.AndroidCameraRecord;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -33,9 +32,8 @@ import android.widget.FrameLayout;
 public class VideoCallActivity extends Activity {
 	SurfaceView mVideoView;
 	SurfaceView mVideoCaptureView;
-	private Handler mHandler = new Handler() ;
 	private static boolean firstLaunch = true;
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
@@ -49,8 +47,8 @@ public class VideoCallActivity extends Activity {
 		AndroidCameraRecord.setOrientationCode(rotation);
 		
 		if (!firstLaunch) workaroundCapturePreviewHiddenOnSubsequentRotations();
-		
-		AndroidCameraRecord.setSurfaceView(mVideoCaptureView, mHandler);
+
+		AndroidCameraRecord.setSurfaceView(mVideoCaptureView);
 		firstLaunch = false;
 	}
 	

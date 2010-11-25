@@ -105,16 +105,15 @@
 
 	
 	
-	<TableRow android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/IncallControlRow">
-			
+		<TableRow android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/IncallControlRow">
+			<ImageButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/AddVideo" android:layout_weight="1" android:src="@drawable/startvideo_green" android:background="@drawable/clavier_bg"></ImageButton>
 			<ImageButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/HangUp" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"></ImageButton>
 		</TableRow>
-		</TableLayout>
-		<LinearLayout android:id="@+id/LinearLayout01" android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
-		
+	</TableLayout>
+	
+	<LinearLayout android:id="@+id/LinearLayout01" android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
 		<LinearLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/CallControlRow">
-			<ImageButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg">
-			</ImageButton>
+			<ImageButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"></ImageButton>
 			<ImageButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:id="@+id/Decline" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"></ImageButton>
 		</LinearLayout><EditText android:layout_width="fill_parent" android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content" android:background="@android:color/transparent" android:textColor="@android:color/white"></EditText>
 	</LinearLayout>

@@ -55,6 +55,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void muteMic(long nativePtr,boolean isMuted);
 	private native long interpretUrl(long nativePtr,String destination);
 	private native long inviteAddress(long nativePtr,long to);
+	private native long inviteAddressWithParams(long nativePtrLc,long to, long nativePtrParam);
 	private native void sendDtmf(long nativePtr,char dtmf);
 	private native void clearCallLogs(long nativePtr);
 	private native boolean isMicMuted(long nativePtr);
@@ -78,6 +79,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int getFirewallPolicy(long nativePtr);
 	private native void setStunServer(long nativePtr, String stun_server);
 	private native String getStunServer(long nativePtr);
+	private native long createDefaultCallParams(long nativePtr);
+	private native int updateCall(long ptrLc, long ptrCall, long ptrParams);
+
 	
 	private static String TAG = "LinphoneCore"; 
 	
@@ -211,14 +215,15 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new LinphoneCoreException("Cannot interpret ["+destination+"]");
 		}
 	}
-	public LinphoneCall invite(LinphoneAddress to) { 
+	public LinphoneCall invite(LinphoneAddress to) throws LinphoneCoreException { 
 		long lNativePtr = inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
 		if (lNativePtr!=0) {
 			return new LinphoneCallImpl(lNativePtr); 
 		} else {
-			return null;
+			throw new LinphoneCoreException("Unable to invite address " + to.asString());
 		}
 	}
+
 	public void sendDtmf(char number) {
 		sendDtmf(nativePtr,number);
 	}
@@ -350,5 +355,28 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void setStunServer(String stunServer) {
 		setStunServer(nativePtr,stunServer);
+	}
+	
+	public LinphoneCallParams createDefaultCallParameters() {
+		return new LinphoneCallParamsImpl(createDefaultCallParams(nativePtr));
+	}
+	
+	public LinphoneCall inviteAddressWithParams(LinphoneAddress to, LinphoneCallParams params) throws LinphoneCoreException {
+		long ptrDestination = ((LinphoneAddressImpl)to).nativePtr;
+		long ptrParams =((LinphoneCallParamsImpl)params).nativePtr;
+		
+		long lcNativePtr = inviteAddressWithParams(nativePtr, ptrDestination, ptrParams);
+		if (lcNativePtr!=0) {
+			return new LinphoneCallImpl(lcNativePtr); 
+		} else {
+			throw new LinphoneCoreException("Unable to invite with params " + to.asString());
+		}
+	}
+
+	public int updateCall(LinphoneCall call, LinphoneCallParams params) {
+		long ptrCall = ((LinphoneCallImpl) call).nativePtr;
+		long ptrParams = ((LinphoneCallParamsImpl)params).nativePtr;
+
+		return updateCall(nativePtr, ptrCall, ptrParams);
 	}
 }

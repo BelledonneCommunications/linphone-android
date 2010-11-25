@@ -29,6 +29,8 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native boolean isIncoming(long nativePtr);
 	native private long getRemoteAddress(long nativePtr);
 	native private int getState(long nativePtr);
+	private native long getCurrentParams(long nativePtr);
+
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
 		ref(nativePtr);
@@ -57,6 +59,12 @@ class LinphoneCallImpl implements LinphoneCall {
 	}
 	public State getState() {
 		return LinphoneCall.State.fromInt(getState(nativePtr));
+	}
+	public LinphoneCallParams getCurrentParamsReadOnly() {
+		return new LinphoneCallParamsImpl(getCurrentParams(nativePtr));
+	}
+	public LinphoneCallParams getCurrentParamsReadWrite() {
+		return getCurrentParamsReadOnly().copy();
 	}
 	
 	
