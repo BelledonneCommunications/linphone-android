@@ -67,6 +67,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void addFriend(long nativePtr,long friend);
 	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
 	private native long createChatRoom(long nativePtr,String to);
+	private native void setRing(long nativePtr, String path);
+	private native String getRing(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -309,5 +311,39 @@ class LinphoneCoreImpl implements LinphoneCore {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	public void setStunServer(String stun_server) {
+		// TODO Auto-generated method stub
+		
+	}
+	public String getStunServer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setFirewallPolicy(FirewallPolicy pol) {
+		// TODO Auto-generated method stub
+		
+	}
+	public FirewallPolicy getFirewallPolicy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setRing(String path) {
+		setRing(nativePtr,path);
+		
+	}
+	public String getRing() {
+		return getRing(nativePtr);
+	}
+	public LinphoneCall inviteAddressWithParams(LinphoneAddress destination,
+			LinphoneCallParams params) throws LinphoneCoreException {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public int updateCall(LinphoneCall call, LinphoneCallParams params) {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public LinphoneCallParams createDefaultCallParameters() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	
 
 }

@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.io.IOException;
+
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneChatRoom;
@@ -35,10 +37,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -100,6 +107,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
 	
+	Settings.System mSystemSettings = new Settings.System();
+	MediaPlayer mRingerPlayer;
+	LinphoneCall.State mCurrentCallState;
+	Vibrator mVibrator;
 	/**
 	 * 
 	 * @return null if not ready yet
@@ -121,6 +132,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		setContentView(R.layout.dialer);
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -205,9 +217,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		    	getIntent().setData(null);
 		    }
 			if (LinphoneService.isready()) {
-				LinphoneCore lLinphoenCore = LinphoneService.instance().getLinphoneCore();
-				if (lLinphoenCore.isIncall()) {
-					if(lLinphoenCore.isInComingInvitePending()) {
+				LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
+				if (lLinphoneCore.isIncall()) {
+					mCurrentCallState = lLinphoneCore.getCurrentCall().getState();
+					if(lLinphoneCore.isInComingInvitePending()) {
 						callPending();
 					} else {
 						mCall.setEnabled(false);
@@ -216,17 +229,17 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						mInCallControlRow.setVisibility(View.VISIBLE);
 						mAddressLayout.setVisibility(View.GONE);
 						mInCallAddressLayout.setVisibility(View.VISIBLE);
-						mMute.setChecked(!lLinphoenCore.isMicMuted()); 
+						mMute.setChecked(!lLinphoneCore.isMicMuted()); 
 						mMute.setCompoundDrawablesWithIntrinsicBounds(0
 								, mMute.isChecked()?R.drawable.mic_active:R.drawable.mic_muted
 										, 0
 										, 0);
 						
-						String DisplayName = lLinphoenCore.getRemoteAddress().getDisplayName();
+						String DisplayName = lLinphoneCore.getRemoteAddress().getDisplayName();
 						if (DisplayName!=null) {
 							mDisplayNameView.setText(DisplayName);
 						} else {
-							mDisplayNameView.setText(lLinphoenCore.getRemoteAddress().getUserName());
+							mDisplayNameView.setText(lLinphoneCore.getRemoteAddress().getUserName());
 						}
 						if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
 								|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
@@ -343,6 +356,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		if (mWakeLock.isHeld()) mWakeLock.release();
+		theDialer=null;
 	}
 	@Override
 	protected void onResume() {
@@ -413,6 +427,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {/*nop*/};
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
+		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
+			//previous state was ringing, so stop ringing
+			stoptRinging();
+		}
 		if (state == LinphoneCall.State.OutgoingInit) {
 			mWakeLock.acquire();
 			enterIncalMode(lc);
@@ -431,6 +449,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else if (state == LinphoneCall.State.CallEnd) {
 			exitCallMode();
 		}
+		mCurrentCallState = state;
 	}
 
 	public void show(LinphoneCore lc) {
@@ -498,6 +517,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private void callPending() {
 		mDecline.setEnabled(true);
 		routeAudioToSpeaker();
+		startRinging();
 	}
 	public void newOutgoingCall(String aTo) {
 		newOutgoingCall(aTo,null);
@@ -599,4 +619,38 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
+	private synchronized void startRinging()  {
+		try {
+			if (mAudioManager.shouldVibrate(AudioManager.VIBRATE_TYPE_RINGER) && mVibrator !=null) {
+				long[] patern = {0,1000,1000};
+				mVibrator.vibrate(patern, 1);
+			}
+			if (mRingerPlayer == null) {
+				//mRingerPlayer = MediaPlayer.create(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+				mRingerPlayer = new MediaPlayer();
+				mRingerPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+				mRingerPlayer.setDataSource(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+				mRingerPlayer.prepare();
+				//mRingerPlayer.setVolume(mAudioManager.getStreamVolume(AudioManager.STREAM_RING),mAudioManager.getStreamVolume(AudioManager.STREAM_RING));
+				mRingerPlayer.setLooping(true);
+				mRingerPlayer.start();
+			} else {
+				Log.w(LinphoneService.TAG,"already ringing");
+			}
+		} catch (Exception e) {
+			Log.e(LinphoneService.TAG, "cannot handle incoming call",e);
+		}
+
+	}
+	private synchronized void stoptRinging() {
+		if (mRingerPlayer !=null) {
+			mRingerPlayer.stop();
+			mRingerPlayer.release();
+			mRingerPlayer=null;
+		}
+		if (mVibrator!=null) {
+			mVibrator.cancel();
+		}
+	}
+
 }
