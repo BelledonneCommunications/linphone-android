@@ -82,6 +82,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long createDefaultCallParams(long nativePtr);
 	private native int updateCall(long ptrLc, long ptrCall, long ptrParams);
 
+	private native void setRing(long nativePtr, String path);
+	private native String getRing(long nativePtr);
 	
 	private static String TAG = "LinphoneCore"; 
 	
@@ -378,5 +380,11 @@ class LinphoneCoreImpl implements LinphoneCore {
 		long ptrParams = ((LinphoneCallParamsImpl)params).nativePtr;
 
 		return updateCall(nativePtr, ptrCall, ptrParams);
+	}
+	public void setRing(String path) {
+		setRing(nativePtr, path);
+	}
+	public String getRing() {
+		return getRing(nativePtr);
 	}
 }

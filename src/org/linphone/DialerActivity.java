@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.io.IOException;
+
 import org.linphone.component.ToggleImageButton;
 import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
 import org.linphone.core.AndroidCameraRecord;
@@ -39,10 +41,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -101,6 +108,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
 	static int VIDEO_VIEW_ACTIVITY = 100;
+	
+	Settings.System mSystemSettings = new Settings.System();
+	MediaPlayer mRingerPlayer;
+	LinphoneCall.State mCurrentCallState;
+	Vibrator mVibrator;
 	/**
 	 * 
 	 * @return null if not ready yet
@@ -122,6 +134,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		setContentView(R.layout.dialer);
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -223,6 +236,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			if (LinphoneService.isready()) {
 				LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
 				if (lLinphoneCore.isIncall()) {
+					mCurrentCallState = lLinphoneCore.getCurrentCall().getState();
 					if(lLinphoneCore.isInComingInvitePending()) {
 						callPending();
 					} else {
@@ -348,6 +362,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		if (mWakeLock.isHeld()) mWakeLock.release();
+		theDialer=null;
 	}
 	@Override
 	protected void onResume() {
@@ -426,6 +441,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {/*nop*/};
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
+		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
+			//previous state was ringing, so stop ringing
+			stoptRinging();
+		}
 		if (state == LinphoneCall.State.OutgoingInit) {
 			mWakeLock.acquire();
 			enterIncalMode(lc);
@@ -448,6 +467,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				startVideoView();
 			}
 		}
+		mCurrentCallState = state;
 	}
 
 	public void show(LinphoneCore lc) {
@@ -523,6 +543,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		boolean prefVideoEnable = getPref(getApplicationContext().getString(R.string.pref_video_enable_key));
 		boolean prefAutomaticallyShareMyCamera = getPref(getApplicationContext().getString(R.string.pref_video_automatically_share_my_video_key));
 		AndroidCameraRecord.setMuteCamera(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
+		startRinging();
 	}
 	public void newOutgoingCall(String aTo) {
 		newOutgoingCall(aTo,null);
@@ -640,5 +661,39 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
+	private synchronized void startRinging()  {
+		try {
+			if (mAudioManager.shouldVibrate(AudioManager.VIBRATE_TYPE_RINGER) && mVibrator !=null) {
+				long[] patern = {0,1000,1000};
+				mVibrator.vibrate(patern, 1);
+			}
+			if (mRingerPlayer == null) {
+				//mRingerPlayer = MediaPlayer.create(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+				mRingerPlayer = new MediaPlayer();
+				mRingerPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+				mRingerPlayer.setDataSource(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+				mRingerPlayer.prepare();
+				//mRingerPlayer.setVolume(mAudioManager.getStreamVolume(AudioManager.STREAM_RING),mAudioManager.getStreamVolume(AudioManager.STREAM_RING));
+				mRingerPlayer.setLooping(true);
+				mRingerPlayer.start();
+			} else {
+				Log.w(LinphoneService.TAG,"already ringing");
+			}
+		} catch (Exception e) {
+			Log.e(LinphoneService.TAG, "cannot handle incoming call",e);
+		}
+
+	}
+	private synchronized void stoptRinging() {
+		if (mRingerPlayer !=null) {
+			mRingerPlayer.stop();
+			mRingerPlayer.release();
+			mRingerPlayer=null;
+		}
+		if (mVibrator!=null) {
+			mVibrator.cancel();
+		}
+	}
+
 }
 
