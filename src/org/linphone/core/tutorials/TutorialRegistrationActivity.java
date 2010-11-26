@@ -35,8 +35,8 @@ import android.widget.TextView;
  */
 public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 
-	private static final String defaultSipAddress = "sip:8182449901ip@mty11.axtel.net";
-	private static final String defaultSipPassword = "49901";
+	private static final String defaultSipAddress = "sip:";
+	private static final String defaultSipPassword = "";
 	private TextView sipAddressWidget;
 	private TextView sipPasswordWidget;
 	private TutorialRegistration tutorial;

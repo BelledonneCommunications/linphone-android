@@ -36,7 +36,7 @@ import android.widget.TextView;
  */
 public class TutorialHelloWorldActivity extends Activity {
 
-	private static final String defaultSipAddress = "sip:tested@10.0.2.6:5059";
+	private static final String defaultSipAddress = "sip:";
 	private TextView sipAddressWidget;
 	private TutorialHelloWorld tutorial;
 	private Handler mHandler =  new Handler() ;
