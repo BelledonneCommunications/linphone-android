@@ -66,6 +66,4 @@ class LinphoneCallImpl implements LinphoneCall {
 	public LinphoneCallParams getCurrentParamsReadWrite() {
 		return getCurrentParamsReadOnly().copy();
 	}
-	
-	
 }

@@ -21,18 +21,20 @@ package org.linphone;
 
 
 import org.linphone.core.AndroidCameraRecord;
+import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.FrameLayout;
 
 public class VideoCallActivity extends Activity {
 	SurfaceView mVideoView;
 	SurfaceView mVideoCaptureView;
-	private static boolean firstLaunch = true;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,25 +48,97 @@ public class VideoCallActivity extends Activity {
 		final int rotation = getWindowManager().getDefaultDisplay().getRotation();
 		AndroidCameraRecord.setOrientationCode(rotation);
 		
-		if (!firstLaunch) workaroundCapturePreviewHiddenOnSubsequentRotations();
-
 		AndroidCameraRecord.setSurfaceView(mVideoCaptureView);
-		firstLaunch = false;
+		mVideoCaptureView.setZOrderOnTop(true);
 	}
 	
 
+	private void rewriteToggleCameraItem(MenuItem item) {
+		if (AndroidCameraRecord.getCameraMuted()) {
+			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
+		} else {
+			item.setTitle(getString(R.string.menu_videocall_toggle_camera_disable));
+		}
+	}
+
+	private void rewriteChangeResolutionItem(MenuItem item) {
+		switch (BandwidthManager.getInstance().getCurrentProfile()) {
+		case BandwidthManager.HIGH_RESOLUTION:
+			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_high_resolution));
+			break;
+		case BandwidthManager.LOW_RESOLUTION:
+			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_low_resolution));
+			break;
+		default:
+			throw new RuntimeException("Current profile is unknown " + BandwidthManager.getInstance().getCurrentProfile());
+		}
+	}
+
 	
-	private void workaroundCapturePreviewHiddenOnSubsequentRotations() {
-		View view = findViewById(R.id.video_frame);
-		if (view == null) {
-			Log.e("Linphone", "Android BUG: video frame not found; mix with landscape???");
-			return;
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the currently selected menu XML resource.
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.videocall_activity_menu, menu);
+		
+		rewriteToggleCameraItem(menu.findItem(R.id.videocall_menu_toggle_camera));
+		rewriteChangeResolutionItem(menu.findItem(R.id.videocall_menu_change_resolution));
+		
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.videocall_menu_back_to_dialer:
+			finish();
+			break;
+		case R.id.videocall_menu_change_resolution:
+			BandwidthManager manager = BandwidthManager.getInstance();
+			switch (manager.getCurrentProfile()) {
+			case BandwidthManager.HIGH_RESOLUTION:
+				manager.changeTo(BandwidthManager.LOW_RESOLUTION);
+				break;
+			case BandwidthManager.LOW_RESOLUTION:
+				manager.changeTo(BandwidthManager.HIGH_RESOLUTION);
+				break;
+			default:
+				throw new RuntimeException("Current profile is unknown " + manager.getCurrentProfile());
+			}
+			
+			rewriteChangeResolutionItem(item);
+			break;
+		case R.id.videocall_menu_terminate_call:
+			LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
+			if (lLinphoneCore.isIncall()) {
+				lLinphoneCore.terminateCall(lLinphoneCore.getCurrentCall());
+			}
+			finish();
+			break;
+		case R.id.videocall_menu_toggle_camera:
+			AndroidCameraRecord.toggleMute();
+			rewriteToggleCameraItem(item);
+			break;
+		default:
+			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
+			break;
 		}
 
-		FrameLayout frame = (FrameLayout) view;
-		frame.removeAllViews();
-		frame.addView(mVideoCaptureView);
-		frame.addView(mVideoView);
+		return false;
+	}
+	protected void startprefActivity() {
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.setClass(this, LinphonePreferencesActivity.class);
+		startActivity(intent);
 	}
 	
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+	
+
 }

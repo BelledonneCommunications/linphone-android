@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="menu_videocall_back_to_dialer_title">Display dialer</string>
+	<string name="menu_videocall_change_resolution_when_low_resolution">High resolution</string>
+	<string name="menu_videocall_change_resolution_when_high_resolution">Low resolution</string>
+	<string name="menu_videocall_change_resolution_title">Change resolution</string>
+    <string name="menu_videocall_toggle_camera_title">Mute/Unmute camera</string>
+	<string name="menu_videocall_toggle_camera_disable">Disable camera</string>
+	<string name="menu_videocall_toggle_camera_enable">Enable camera</string>
+	<string name="menu_videocall_terminate_call_title">Terminate call</string>
     <string name="pref_video_settings_title">Video settings</string>
     <string name="pref_video_automatically_share_my_video_title">Share my camera</string>
     <string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>

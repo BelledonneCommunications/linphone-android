@@ -18,10 +18,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.hardware.Camera;
 import android.hardware.Camera.ErrorCallback;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -44,8 +48,9 @@ public abstract class AndroidCameraRecord {
 	private static boolean previewStarted;
 	private static boolean parametersSet;
 	protected static int orientationCode;
-	private static boolean mute;
+	private static boolean muted;
 	private static final String tag="Linphone";
+	private static List <Size> supportedVideoSizes;
 	
 	public AndroidCameraRecord() {
 		// TODO check if another instance is loaded and kill it.
@@ -66,7 +71,7 @@ public abstract class AndroidCameraRecord {
 	 * It will start automatically
 	 */
 	private void startPreview() {
-		if (mute) {
+		if (muted) {
 			Log.d(tag, "Not starting preview as camera has been muted");
 			return;
 		}
@@ -100,6 +105,9 @@ public abstract class AndroidCameraRecord {
 		
 		
 		Camera.Parameters parameters=camera.getParameters();
+		if (supportedVideoSizes == null) {
+			supportedVideoSizes = camera.getParameters().getSupportedPreviewSizes();
+		}
 
 		parameters.setPreviewSize(width, height);
 		parameters.setPreviewFrameRate(fps);
@@ -174,6 +182,13 @@ public abstract class AndroidCameraRecord {
 	}
 
 
+	private static void stopPreview() {
+		camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
+		camera.stopPreview();
+		camera.release();
+		camera=null;
+		previewStarted = false;
+	}
 	
 	public static final void setSurfaceView(final SurfaceView sv) {
 		SurfaceHolder holder = sv.getHolder();
@@ -187,11 +202,7 @@ public abstract class AndroidCameraRecord {
 					Log.e(tag, "Video capture: illegal state: surface destroyed but camera is already null");
 					return;
 				}
-				camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
-				camera.stopPreview();
-				camera.release();
-				camera=null;
-				previewStarted = false;
+				stopPreview();
 				Log.w(tag, "Video capture Surface destroyed");
 			}
 
@@ -235,19 +246,45 @@ public abstract class AndroidCameraRecord {
 	}
 
 	public static void setMuteCamera(boolean m) {
-		if (m == mute) return;
+		if (m == muted) return;
 
-		mute = m;
-		if (mute && previewStarted) {
-			camera.stopPreview();
+		muted = m;
+		if (muted && previewStarted) {
+			stopPreview();
 			return;
 		}
 		
-		if (!mute) {
+		if (!muted) {
 			instance.startPreview();
 		}
 		
 	}
+
+	public static void toggleMute() {
+		setMuteCamera(!muted);
+	}
+
+	public static List<Size> supportedVideoSizes() {
+		if (supportedVideoSizes != null) {
+			return new ArrayList<Size>(supportedVideoSizes);
+		}
+
+		if (camera == null) {
+			camera = Camera.open();
+			supportedVideoSizes = camera.getParameters().getSupportedPreviewSizes();
+			camera.release();
+			return supportedVideoSizes;
+		}
+		
+		throw new RuntimeException("Should not be there");
+	}
+
+	public static boolean getCameraMuted() {
+		return muted;
+	}
+
+	public static void invalidateParameters() {
+		parametersSet = false;
+		stopPreview();
+	}
 }
-
-

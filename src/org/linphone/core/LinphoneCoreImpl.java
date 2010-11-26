@@ -81,7 +81,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native String getStunServer(long nativePtr);
 	private native long createDefaultCallParams(long nativePtr);
 	private native int updateCall(long ptrLc, long ptrCall, long ptrParams);
-
+	private native void setUploadBandwidth(long nativePtr, int bw);
+	private native void setDownloadBandwidth(long nativePtr, int bw);
+	private native void setPreferredVideoSize(long nativePtr, int width, int heigth);
+	private native int[] getPreferredVideoSize(long nativePtr);
 	
 	private static String TAG = "LinphoneCore"; 
 	
@@ -378,5 +381,28 @@ class LinphoneCoreImpl implements LinphoneCore {
 		long ptrParams = ((LinphoneCallParamsImpl)params).nativePtr;
 
 		return updateCall(nativePtr, ptrCall, ptrParams);
+	}
+	
+	
+	public void setUploadBandwidth(int bw) {
+		setUploadBandwidth(nativePtr, bw);
+	}
+
+	public void setDownloadBandwidth(int bw) {
+		setDownloadBandwidth(nativePtr, bw);
+	}
+
+	public void setPreferredVideoSize(VideoSize vSize) {
+		setPreferredVideoSize(nativePtr, vSize.getWidth(), vSize.getHeight());
+	}
+
+	public VideoSize getPreferredVideoSize() {
+		int[] nativeSize = getPreferredVideoSize(nativePtr);
+
+		VideoSize vSize = new VideoSize();
+		vSize.setWidth(nativeSize[0]);
+		vSize.setHeight(nativeSize[1]);
+
+		return vSize;
 	}
 }

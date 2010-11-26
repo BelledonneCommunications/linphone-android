@@ -34,7 +34,7 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 		return getVideoEnabled(nativePtr);
 	}
 
-	public void setVideoEnalbled(boolean b) {
+	public void setVideoEnabled(boolean b) {
 		enableVideo(nativePtr, b);
 	}
 

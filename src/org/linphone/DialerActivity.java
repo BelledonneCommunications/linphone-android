@@ -152,18 +152,22 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					return true;
 				}
 			});
-			
+
 			mAddVideo = (ImageButton) findViewById(R.id.AddVideo);
 			mAddVideo.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
-					LinphoneCallParams params = lLinphoneCore.getCurrentCall().getCurrentParamsReadOnly();
+					LinphoneCall lCall = lLinphoneCore.getCurrentCall();
+					LinphoneCallParams params = lCall.getCurrentParamsReadOnly();
 					String msg;
 					if (params.getVideoEnabled()) {
 						msg = "In video call; going back to video call activity";
-						startVideoView();
+						startVideoView(VIDEO_VIEW_ACTIVITY);
 					} else {
 						msg = "Not in video call; should go try to reinvite with video";
+						params.setVideoEnabled(true);
+						AndroidCameraRecord.setMuteCamera(false);
+						lLinphoneCore.updateCall(lCall, params);
 					}
 					Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 				}
@@ -228,7 +232,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					} else {
 						mCall.setEnabled(false);
 						mHangup.setEnabled(!mCall.isEnabled());
-						boolean prefVideoEnabled = getPref(getApplicationContext().getString(R.string.pref_video_enable_key));
+						boolean prefVideoEnabled = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 						if (!prefVideoEnabled && !mCall.isEnabled()) {
 							mAddVideo.setEnabled(true);
 						}
@@ -416,12 +420,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		    }
 		} 
 	}
-	private void startVideoView() {
-		//start video view
+	private void startVideoView(int requestCode) {
 		Intent lIntent = new Intent();
-		lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		lIntent.setClass(this, VideoCallActivity.class);
-		startActivityForResult(lIntent,VIDEO_VIEW_ACTIVITY);
+		startActivityForResult(lIntent,requestCode);
 	}
 	
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {/*nop*/};
@@ -445,7 +447,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			exitCallMode();
 		} else if (state == LinphoneCall.State.StreamsRunning) {
 			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
-				startVideoView();
+				startVideoView(VIDEO_VIEW_ACTIVITY);
+			}
+		} else if (state == LinphoneCall.State.CallUpdated) {
+			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
+				AndroidCameraRecord.invalidateParameters();
+				finishActivity(VIDEO_VIEW_ACTIVITY);
 			}
 		}
 	}
@@ -520,17 +527,14 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		routeAudioToSpeaker();
 		
 		// Privacy setting to not share the user camera by default
-		boolean prefVideoEnable = getPref(getApplicationContext().getString(R.string.pref_video_enable_key));
-		boolean prefAutomaticallyShareMyCamera = getPref(getApplicationContext().getString(R.string.pref_video_automatically_share_my_video_key));
+		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
+		boolean prefAutomaticallyShareMyCamera = mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
 		AndroidCameraRecord.setMuteCamera(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
 	}
 	public void newOutgoingCall(String aTo) {
 		newOutgoingCall(aTo,null);
 	}
 	
-	private boolean getPref(String key) {
-		return PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(key, false);
-	}
 
 	public synchronized void newOutgoingCall(String aTo, String displayName) {
 		String lto = aTo;
@@ -559,20 +563,21 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 	try {
 		LinphoneCallParams lParams = lLinphoneCore.createDefaultCallParameters().copy();
-		boolean prefVideoEnable = getPref(getApplicationContext().getString(R.string.pref_video_enable_key));
-		boolean prefInitiateWithVideo = getPref(getApplicationContext().getString(R.string.pref_video_initiate_call_with_video_key));
+		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
+		boolean prefInitiateWithVideo = mPref.getBoolean(getString(R.string.pref_video_initiate_call_with_video_key), false);
 
 		if (prefVideoEnable && prefInitiateWithVideo && lParams.getVideoEnabled()) {
-			lParams.setVideoEnalbled(true);
+			AndroidCameraRecord.setMuteCamera(false);
+			lParams.setVideoEnabled(true);
 			lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
 		} else {
-			lParams.setVideoEnalbled(false);
+			lParams.setVideoEnabled(false);
 			lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
 		}
 	} catch (LinphoneCoreException e) {
 		Toast toast = Toast.makeText(DialerActivity.this
 				,String.format(getString(R.string.error_cannot_get_call_parameters),mAddress.getText().toString())
-				, Toast.LENGTH_LONG);
+				,Toast.LENGTH_LONG);
 		toast.show();
 		return;
 	}
