@@ -200,7 +200,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new RuntimeException("object already destroyed");
 		}
 	}
-	public void setNetworkStateReachable(boolean isReachable) {
+	public void setNetworkReachable(boolean isReachable) {
 		setNetworkStateReachable(nativePtr,isReachable);
 	}
 	public void setPlaybackGain(float gain) {
@@ -414,9 +414,5 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean isNetworkReachable() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	public void setNetworkReachable(boolean isReachable) {
-		// TODO Auto-generated method stub
-		
 	}
 }

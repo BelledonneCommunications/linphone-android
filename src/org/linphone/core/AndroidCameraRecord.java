@@ -183,9 +183,11 @@ public abstract class AndroidCameraRecord {
 
 
 	private static void stopPreview() {
-		camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
-		camera.stopPreview();
-		camera.release();
+		if (camera!=null){
+			camera.setPreviewCallback(null); // TODO check if used whatever the SDK version
+			camera.stopPreview();
+			camera.release();
+		}
 		camera=null;
 		previewStarted = false;
 	}
