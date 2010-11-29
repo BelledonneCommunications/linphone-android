@@ -48,9 +48,15 @@ public class AndroidVideoWindowImpl  {
 				}
 				if (mListener!=null)
 					mListener.onSurfaceDestroyed(AndroidVideoWindowImpl.this);
-				Log.w("Linphone", "Video display surface destroyed"); 
+				Log.d("Linphone", "Video display surface destroyed"); 
 			}
 		});
+	}
+	static final int LANDSCAPE=0;
+	static final int PORTRAIT=1;
+	public void requestOrientation(int orientation){
+		//Surface.setOrientation(0, orientation==LANDSCAPE ? 1 : 0);
+		//Log.d("Linphone", "Orientation changed.");
 	}
 	public void setListener(VideoWindowListener l){
 		mListener=l;

@@ -115,8 +115,8 @@
 <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 <uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
-
 <uses-permission android:name="android.permission.CAMERA" />
+
 <uses-feature android:name="android.hardware.camera" />
 <uses-feature android:name="android.hardware.camera.autofocus" />
 
