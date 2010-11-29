@@ -200,7 +200,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new RuntimeException("object already destroyed");
 		}
 	}
-	public void setNetworkStateReachable(boolean isReachable) {
+	public void setNetworkReachable(boolean isReachable) {
 		setNetworkStateReachable(nativePtr,isReachable);
 	}
 	public void setPlaybackGain(float gain) {
@@ -385,9 +385,6 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 		return updateCall(nativePtr, ptrCall, ptrParams);
 	}
-<<<<<<< HEAD
-	
-	
 	public void setUploadBandwidth(int bw) {
 		setUploadBandwidth(nativePtr, bw);
 	}
@@ -406,14 +403,16 @@ class LinphoneCoreImpl implements LinphoneCore {
 		VideoSize vSize = new VideoSize();
 		vSize.setWidth(nativeSize[0]);
 		vSize.setHeight(nativeSize[1]);
-
 		return vSize;
-=======
+	}
 	public void setRing(String path) {
 		setRing(nativePtr, path);
 	}
 	public String getRing() {
 		return getRing(nativePtr);
->>>>>>> c95431295dc09c5558d38c6de49fa071c957d926
+	}
+	public boolean isNetworkReachable() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -40,9 +40,9 @@ public class NetworkManager extends BroadcastReceiver {
 			return;
 		}
 		if (lNoConnectivity| ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
-			 LinphoneService.instance().getLinphoneCore().setNetworkStateReachable(false);
+			 LinphoneService.instance().getLinphoneCore().setNetworkReachable(false);
 		 } else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
-			 LinphoneService.instance().getLinphoneCore().setNetworkStateReachable(true);
+			 LinphoneService.instance().getLinphoneCore().setNetworkReachable(true);
 		 } else {
 			 //unhandled event 
 		 }
