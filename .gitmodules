@@ -28,3 +28,6 @@
 [submodule "submodules/externals/x264"]
 	path = submodules/externals/x264
 	url = git://git.videolan.org/x264.git
+[submodule "submodules/msx264"]
+	path = submodules/msx264
+	url = git://git.linphone.org/msx264.git

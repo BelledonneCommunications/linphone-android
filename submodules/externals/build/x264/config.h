@@ -4,7 +4,7 @@
 #define HAVE_NEON 1
 #define ARCH_ARM 1
 #define SYS_LINUX 1
-#define HAVE_LOG2F 1
+#define HAVE_LOG2F 0
 #define fseek fseeko
 #define ftell ftello
 #define BIT_DEPTH 8
