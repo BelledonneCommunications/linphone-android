@@ -55,9 +55,9 @@ public class VideoCallActivity extends Activity {
 
 	private void rewriteToggleCameraItem(MenuItem item) {
 		if (recordManager.isRecording()) {
-			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
-		} else {
 			item.setTitle(getString(R.string.menu_videocall_toggle_camera_disable));
+		} else {
+			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
 		}
 	}
 
