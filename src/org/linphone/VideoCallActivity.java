@@ -20,7 +20,7 @@ package org.linphone;
 
 
 
-import org.linphone.core.AndroidCameraRecord;
+import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
@@ -35,6 +35,7 @@ import android.view.SurfaceView;
 public class VideoCallActivity extends Activity {
 	SurfaceView mVideoView;
 	SurfaceView mVideoCaptureView;
+	AndroidCameraRecordManager recordManager;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,15 +47,14 @@ public class VideoCallActivity extends Activity {
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
 		
 		final int rotation = getWindowManager().getDefaultDisplay().getRotation();
-		AndroidCameraRecord.setOrientationCode(rotation);
-		
-		AndroidCameraRecord.setSurfaceView(mVideoCaptureView);
+		recordManager = AndroidCameraRecordManager.getInstance(AndroidCameraRecordManager.CAMERA_ID_FIXME_USE_PREFERENCE);
+		recordManager.setSurfaceView(mVideoCaptureView, rotation);
 		mVideoCaptureView.setZOrderOnTop(true);
 	}
 	
 
 	private void rewriteToggleCameraItem(MenuItem item) {
-		if (AndroidCameraRecord.getCameraMuted()) {
+		if (recordManager.isRecording()) {
 			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
 		} else {
 			item.setTitle(getString(R.string.menu_videocall_toggle_camera_disable));
@@ -117,7 +117,7 @@ public class VideoCallActivity extends Activity {
 			finish();
 			break;
 		case R.id.videocall_menu_toggle_camera:
-			AndroidCameraRecord.toggleMute();
+			recordManager.toggleMute();
 			rewriteToggleCameraItem(item);
 			break;
 		default:

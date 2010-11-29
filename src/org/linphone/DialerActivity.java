@@ -18,11 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import java.io.IOException;
-
 import org.linphone.component.ToggleImageButton;
 import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
-import org.linphone.core.AndroidCameraRecord;
+import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
@@ -42,7 +40,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -172,17 +169,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
 					LinphoneCall lCall = lLinphoneCore.getCurrentCall();
 					LinphoneCallParams params = lCall.getCurrentParamsReadOnly();
-					String msg;
 					if (params.getVideoEnabled()) {
-						msg = "In video call; going back to video call activity";
+						// In video call; going back to video call activity
 						startVideoView(VIDEO_VIEW_ACTIVITY);
 					} else {
-						msg = "Not in video call; should go try to reinvite with video";
+						// Not in video call; should go try to reinvite with video
 						params.setVideoEnabled(true);
-						AndroidCameraRecord.setMuteCamera(false);
+						getVideoManager().setMuted(false);
 						lLinphoneCore.updateCall(lCall, params);
 					}
-					Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 				}
 			});
 
@@ -470,7 +465,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			}
 		} else if (state == LinphoneCall.State.CallUpdated) {
 			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
-				AndroidCameraRecord.invalidateParameters();
+//				getVideoManager().invalidateParameters(); // no, when addinv video to audio call the filters are created before callupdated event is received
+				// so the parameters are invalidated and the record is never launched
 				finishActivity(VIDEO_VIEW_ACTIVITY);
 			}
 		}
@@ -549,7 +545,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// Privacy setting to not share the user camera by default
 		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 		boolean prefAutomaticallyShareMyCamera = mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
-		AndroidCameraRecord.setMuteCamera(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
+		getVideoManager().setMuted(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
 		startRinging();
 	}
 	public void newOutgoingCall(String aTo) {
@@ -588,7 +584,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		boolean prefInitiateWithVideo = mPref.getBoolean(getString(R.string.pref_video_initiate_call_with_video_key), false);
 
 		if (prefVideoEnable && prefInitiateWithVideo && lParams.getVideoEnabled()) {
-			AndroidCameraRecord.setMuteCamera(false);
+			getVideoManager().setMuted(false);
 			lParams.setVideoEnabled(true);
 			lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
 		} else {
@@ -700,5 +696,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 	}
 
+	private AndroidCameraRecordManager getVideoManager() {
+		return AndroidCameraRecordManager.getInstance(AndroidCameraRecordManager.CAMERA_ID_FIXME_USE_PREFERENCE);
+	}
 }
 

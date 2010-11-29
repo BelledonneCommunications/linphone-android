@@ -32,13 +32,16 @@ import android.util.Log;
  */
 public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
 
-	public AndroidCameraRecordBufferedImpl(long filterCtxPtr) {
-		super(filterCtxPtr);
+
+	public AndroidCameraRecordBufferedImpl(RecorderParams parameters) {
+		super(parameters);
 	}
 
 	@Override
-	protected void reallySetPreviewCallback(Camera camera, PreviewCallback cb) {
-		Log.d("Linphone", "Setting optimized callback with buffer (Android >= 8). Remember to manage the pool of buffers!!!");
+	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {
+		if (cb != null) {
+			Log.d("Linphone", "Setting optimized callback with buffer (Android >= 8). Remember to manage the pool of buffers!!!");
+		}
 		camera.setPreviewCallbackWithBuffer(cb);
 	}
 	

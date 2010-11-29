@@ -50,11 +50,14 @@ public class TestVideoActivity extends Activity {
 //	    SurfaceHolder holder=surfaceView.getHolder();
 //	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	    
-	    AndroidCameraRecord.setSurfaceView(surfaceView);
+		AndroidCameraRecord.RecorderParams params = new AndroidCameraRecord.RecorderParams(0);
+		params.surfaceView = surfaceView;
+		params.width = 352;
+		params.height = 288;
+		params.fps = rate;
 
-	    JavaCameraRecordImpl recorder = new JavaCameraRecordImpl();
+	    JavaCameraRecordImpl recorder = new JavaCameraRecordImpl(params);
 	    recorder.setDebug((TextView) findViewById(R.id.videotest_debug));
-	    recorder.setParameters(288, 352, rate);
 	    
 	}
 	

@@ -34,17 +34,14 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	private long filterCtxPtr;
 	private double timeElapsedBetweenFrames = 0;
 	private long lastFrameTime = 0;
+	private final long expectedTimeBetweenFrames;
 
-	public AndroidCameraRecordImpl(long filterCtxPtr) {
-		super();
+	public AndroidCameraRecordImpl(RecorderParams parameters) {
+		super(parameters);
+		expectedTimeBetweenFrames = 1l / Math.round(parameters.fps);
+		filterCtxPtr = parameters.filterDataNativePtr;
 
-		try {
-			this.filterCtxPtr = filterCtxPtr;
-			setOrStorePreviewCallBack(this);
-		} catch (Throwable e) {
-			Log.e("Linphone", "Error");
-		}
-		
+		storePreviewCallBack(this);
 	}
 
 	
@@ -54,6 +51,10 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	public void onPreviewFrame(byte[] data, Camera camera) {
 		if (data == null) {
 			Log.e("Linphone", "onPreviewFrame Called with null buffer");
+			return;
+		}
+		if (filterCtxPtr == 0l) {
+			Log.e("Linphone", "onPreviewFrame Called with no filterCtxPtr set");
 			return;
 		}
 		
@@ -73,7 +74,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		}
 
 		double currentTimeElapsed = 0.8 * (curTime - lastFrameTime) / 1000 + 0.2 * timeElapsedBetweenFrames;
-		if (1 / currentTimeElapsed > fps) {
+		if (currentTimeElapsed < expectedTimeBetweenFrames) {
 //			Log.d("Linphone", "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
 			return;
 		}
@@ -82,6 +83,12 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 
 		//		Log.d("onPreviewFrame: ", Integer.toString(data.length));
 		putImage(filterCtxPtr, data, getOrientationCode());
+	}
+
+
+	@Override
+	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {
+		camera.setPreviewCallback(cb);
 	}
 
 

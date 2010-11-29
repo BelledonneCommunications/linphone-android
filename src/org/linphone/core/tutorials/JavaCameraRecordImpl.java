@@ -33,11 +33,13 @@ public class JavaCameraRecordImpl extends AndroidCameraRecord implements Preview
 
 	private long startTime;
 	private long endTime;
+	private int fps;
 
-	
-	public JavaCameraRecordImpl() {
-		super();
-		setOrStorePreviewCallBack(this);
+
+	public JavaCameraRecordImpl(AndroidCameraRecord.RecorderParams parameters) {
+		super(parameters);
+		storePreviewCallBack(this);
+		fps = Math.round(parameters.fps);
 	}
 
 
@@ -59,6 +61,12 @@ public class JavaCameraRecordImpl extends AndroidCameraRecord implements Preview
 		String msg =  "Frame " + count + ": " + data.length + "bytes (avg="+averageCalledRate+"frames/s)";
 		if (debug != null) debug.setText(msg);
 		Log.d("onPreviewFrame:", msg);
+	}
+
+
+	@Override
+	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {
+		camera.setPreviewCallback(cb);
 	}
 
 }
