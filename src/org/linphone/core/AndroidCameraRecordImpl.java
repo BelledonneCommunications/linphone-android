@@ -34,11 +34,11 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	private long filterCtxPtr;
 	private double timeElapsedBetweenFrames = 0;
 	private long lastFrameTime = 0;
-	private final long expectedTimeBetweenFrames;
+	private final double expectedTimeBetweenFrames;
 
 	public AndroidCameraRecordImpl(RecorderParams parameters) {
 		super(parameters);
-		expectedTimeBetweenFrames = 1l / Math.round(parameters.fps);
+		expectedTimeBetweenFrames = 1d / Math.round(parameters.fps);
 		filterCtxPtr = parameters.filterDataNativePtr;
 
 		storePreviewCallBack(this);

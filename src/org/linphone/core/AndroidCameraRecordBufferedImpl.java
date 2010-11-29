@@ -46,18 +46,14 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
 	}
 	
 	@Override
-	public void onCameraStarted(Camera camera) {
-		super.onCameraStarted(camera);
+	public void onPreviewStarted(Camera camera) {
+		super.onPreviewStarted(camera);
 
 		Size s = camera.getParameters().getPreviewSize();
 		int wishedBufferSize = s.height * s.width * 3 / 2;
 
 		camera.addCallbackBuffer(new byte[wishedBufferSize]);
 		camera.addCallbackBuffer(new byte[wishedBufferSize]);
-/*
-		for (int i=1; i < 30; i++) {
-			camera.addCallbackBuffer(new byte[wishedBufferSize]);
-		}*/
 	}
 	
 	@Override
@@ -67,8 +63,8 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
 	}
 
 	@Override
-	protected void onSettingParameters(Parameters parameters) {
-		super.onSettingParameters(parameters);
+	protected void onSettingCameraParameters(Parameters parameters) {
+		super.onSettingCameraParameters(parameters);
 		// Only on v8 hardware
 		camera.setDisplayOrientation(90 * orientationCode);
 	}

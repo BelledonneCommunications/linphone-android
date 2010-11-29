@@ -52,7 +52,8 @@ public abstract class AndroidCameraRecord {
 	public void startPreview() { // FIXME throws exception?
 		if (previewStarted) {
 			Log.w(tag, "Already started");
-			return;
+			throw new RuntimeException("Video recorder already started");
+			// return
 		}
 		
 		if (params.surfaceView.getVisibility() != SurfaceView.VISIBLE) {
@@ -91,7 +92,7 @@ public abstract class AndroidCameraRecord {
 			}
 		}
 
-		onSettingParameters(parameters);
+		onSettingCameraParameters(parameters);
 		camera.setParameters(parameters);
 
 
@@ -114,33 +115,28 @@ public abstract class AndroidCameraRecord {
 		previewStarted = true;
 
 		
-		
 		// Register callback to get capture buffer
-		if (storedPreviewCallback != null) {
-			lowLevelSetPreviewCallback(camera, storedPreviewCallback);
-		}
+		lowLevelSetPreviewCallback(camera, storedPreviewCallback);
 		
 		
-		onCameraStarted(camera);
+		onPreviewStarted(camera);
 	}
 	
 
 
 
-	protected void onSettingParameters(Parameters parameters) {
-		
-	}
+	protected void onSettingCameraParameters(Parameters parameters) {}
 
 	/**
 	 * Hook.
 	 * @param camera
 	 */
-	public void onCameraStarted(Camera camera) {}
+	public void onPreviewStarted(Camera camera) {}
 
 	public void storePreviewCallBack(PreviewCallback cb) {
+		this.storedPreviewCallback = cb;
 		if (camera == null) {
 			Log.w(tag, "Capture camera not ready, storing callback");
-			this.storedPreviewCallback = cb;
 			return;
 		}
 		

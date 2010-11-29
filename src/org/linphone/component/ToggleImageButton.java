@@ -29,8 +29,8 @@ import android.widget.ImageButton;
 
 /**
  * Image button storing a checked state to display alternating drawables.
- * The "toggled" drawable is displayed when button is down / checked.
- * The "untoggled" drawable is displayed when button is up / unchecked.
+ * The "checked" drawable is displayed when button is down / checked.
+ * The "unchecked" drawable is displayed when button is up / unchecked.
  *
  * @author Guillaume Beraudo
  *
@@ -38,14 +38,14 @@ import android.widget.ImageButton;
 public class ToggleImageButton extends ImageButton implements OnClickListener {
 	private static final String namespace = null;
 	private boolean checked;
-	private Drawable on;
-	private Drawable off;
+	private Drawable stateChecked;
+	private Drawable stateUnChecked;
 	private OnCheckedChangeListener onCheckedChangeListener;
 
 	public ToggleImageButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		on = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "toggled", -1));
-		off = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "untoggled", -1));
+		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "checked", -1));
+		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "unchecked", -1));
 		setBackgroundColor(Color.TRANSPARENT);
 
 		setOnClickListener(this);
@@ -65,7 +65,7 @@ public class ToggleImageButton extends ImageButton implements OnClickListener {
 
 
 	private void handleCheckChanged() {
-		setImageDrawable(checked?on:off);
+		setImageDrawable(checked?stateChecked:stateUnChecked);
 		requestLayout();
 		invalidate();
 		if (onCheckedChangeListener != null) onCheckedChangeListener.onCheckedChanged(this, checked);

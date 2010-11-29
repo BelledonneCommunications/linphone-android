@@ -249,17 +249,14 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						mInCallControlRow.setVisibility(View.VISIBLE);
 						mAddressLayout.setVisibility(View.GONE);
 						mInCallAddressLayout.setVisibility(View.VISIBLE);
-						mMute.setChecked(!lLinphoneCore.isMicMuted()); 
+						
 						String DisplayName = lLinphoneCore.getRemoteAddress().getDisplayName();
 						if (DisplayName!=null) {
 							mDisplayNameView.setText(DisplayName);
 						} else {
 							mDisplayNameView.setText(lLinphoneCore.getRemoteAddress().getUserName());
 						}
-						if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
-								|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
-							mSpeaker.setChecked(true);
-						}
+						configureMuteButtons();
 						mWakeLock.acquire();
 					} 
 				}
@@ -271,9 +268,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				public void onCheckedChanged(ToggleImageButton button, boolean isChecked) {
 					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
 					if (isChecked) {
-						lc.muteMic(false);
-					} else {
 						lc.muteMic(true);
+					} else {
+						lc.muteMic(false);
 					}
 				}
 			});
@@ -497,12 +494,23 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				mDisplayNameView.setText(lc.getRemoteAddress().toString());
 			}
 		}
+		configureMuteButtons();
+		
 		if (mSpeaker.isChecked()) {
 			 routeAudioToSpeaker();
 		} else {
 			 routeAudioToReceiver();
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+	}
+	private void configureMuteButtons() {
+		mMute.setChecked(LinphoneService.instance().getLinphoneCore().isMicMuted());
+		if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
+				|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
+			mSpeaker.setChecked(true);
+		} else {
+			mSpeaker.setChecked(false);
+		}
 	}
 	private void exitCallMode() {
 		mCallControlRow.setVisibility(View.VISIBLE);
@@ -512,13 +520,13 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mCall.setEnabled(true);
 		mHangup.setEnabled(false);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
-		mMute.setChecked(true);
-		mSpeaker.setChecked(false);
 		mDecline.setEnabled(false);
 		if (LinphoneService.instance().getLinphoneCore().isVideoEnabled()) {
 			finishActivity(VIDEO_VIEW_ACTIVITY); 
 		}
 		if (mWakeLock.isHeld())mWakeLock.release();
+		mSpeaker.setChecked(false);
+		routeAudioToReceiver();
 	}
 	private void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
