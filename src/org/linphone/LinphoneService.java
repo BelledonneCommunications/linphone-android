@@ -393,7 +393,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			//init network state
 			ConnectivityManager lConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo lInfo = lConnectivityManager.getActiveNetworkInfo();
-			mLinphoneCore.setNetworkStateReachable( lInfo !=null? lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED:false); 
+			mLinphoneCore.setNetworkReachable( lInfo !=null? lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED:false); 
 			
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
