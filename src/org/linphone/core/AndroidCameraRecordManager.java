@@ -138,7 +138,7 @@ public class AndroidCameraRecordManager {
 		
 		parameters.rotation = rotation;
 		parameters.surfaceView = surfaceView;
-		if (version > 8) {
+		if (version >= 8) {
 			recorder = new AndroidCameraRecordBufferedImpl(parameters);
 		} else {
 			recorder = new AndroidCameraRecordImpl(parameters);
