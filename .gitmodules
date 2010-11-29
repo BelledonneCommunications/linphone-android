@@ -25,3 +25,6 @@
 [submodule "submodules/externals/libswscale"]
 	path = submodules/externals/libswscale
 	url = git://git.ffmpeg.org/libswscale
+[submodule "submodules/externals/x264"]
+	path = submodules/externals/x264
+	url = git://git.videolan.org/x264.git
