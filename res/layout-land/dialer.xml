@@ -25,13 +25,13 @@
 			android:layout_width="fill_parent"></EditText>
 		<org.linphone.component.ToggleImageButton
 			android:id="@+id/mic_mute_button" android:layout_height="wrap_content"
-			android:layout_width="wrap_content" toggled="@drawable/mic_muted"
-			untoggled="@drawable/mic_active" android:layout_weight="0.5"
+			android:layout_width="wrap_content" android:layout_weight="0.5"
+			checked="@drawable/mic_muted" unchecked="@drawable/mic_active" 
 			android:layout_gravity="left|center_vertical" />
 		<org.linphone.component.ToggleImageButton
 			android:id="@+id/speaker_button" android:layout_height="wrap_content"
-			android:layout_width="wrap_content" toggled="@drawable/speaker_32_on"
-			untoggled="@drawable/speaker_32_off" android:layout_weight="0.5"
+			android:layout_width="wrap_content" android:layout_weight="0.5"
+			checked="@drawable/speaker_32_on"	unchecked="@drawable/speaker_32_off" 
 			android:layout_gravity="right|center_vertical" />
 	</FrameLayout>
 	</LinearLayout>
