@@ -62,15 +62,10 @@ public class VideoCallActivity extends Activity {
 	}
 
 	private void rewriteChangeResolutionItem(MenuItem item) {
-		switch (BandwidthManager.getInstance().getCurrentProfile()) {
-		case BandwidthManager.HIGH_RESOLUTION:
+		if (BandwidthManager.getInstance().isUserRestriction()) {
 			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_high_resolution));
-			break;
-		case BandwidthManager.LOW_RESOLUTION:
+		} else {
 			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_low_resolution));
-			break;
-		default:
-			throw new RuntimeException("Current profile is unknown " + BandwidthManager.getInstance().getCurrentProfile());
 		}
 	}
 
@@ -96,17 +91,7 @@ public class VideoCallActivity extends Activity {
 			break;
 		case R.id.videocall_menu_change_resolution:
 			BandwidthManager manager = BandwidthManager.getInstance();
-			switch (manager.getCurrentProfile()) {
-			case BandwidthManager.HIGH_RESOLUTION:
-				manager.changeTo(BandwidthManager.LOW_RESOLUTION);
-				break;
-			case BandwidthManager.LOW_RESOLUTION:
-				manager.changeTo(BandwidthManager.HIGH_RESOLUTION);
-				break;
-			default:
-				throw new RuntimeException("Current profile is unknown " + manager.getCurrentProfile());
-			}
-			
+			manager.setUserRestriction(!manager.isUserRestriction());
 			rewriteChangeResolutionItem(item);
 			break;
 		case R.id.videocall_menu_terminate_call:

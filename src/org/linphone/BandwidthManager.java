@@ -18,10 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.VideoSize;
+
+import android.hardware.Camera.Size;
 
 public class BandwidthManager {
 
@@ -29,10 +32,10 @@ public class BandwidthManager {
 	public static final int LOW_RESOLUTION = 1;
 	public static final int LOW_BANDWIDTH = 2;
 
-	private static final int[][] bandwidthes = {{512,512}, {128,128}, {80,80}};
+	private static final int[][] bandwidthes = {{256,256}, {128,128}, {80,80}};
 	private static BandwidthManager instance;
 	
-	private int currentProfile = LOW_RESOLUTION; // FIXME first profile never defined in C part
+	private int currentProfile = HIGH_RESOLUTION;
 	public int getCurrentProfile() {return currentProfile;}
 
 	public static final synchronized BandwidthManager getInstance() {
@@ -40,29 +43,40 @@ public class BandwidthManager {
 		return instance;
 	}
 
-	private BandwidthManager() {}
 
-	public void changeTo(int profile) {
+	private BandwidthManager() {
+		// FIXME register a listener on NetworkManager to get notified of network state
+		// FIXME register a listener on Preference to get notified of change in video enable value
+		
+		// FIXME initially get those values
+	}
+
+	private boolean userRestriction;
+	public boolean isUserRestriction() {return userRestriction;}
+	public void setUserRestriction(boolean limit) {
+		userRestriction = limit;
+		computeNewProfile();
+	}
+	private boolean videoEnabledInSettings = true;
+	
+	
+	private void computeNewProfile() {
+		int newProfile = userRestriction ? LOW_RESOLUTION : HIGH_RESOLUTION;
+		if (newProfile != currentProfile) {
+			currentProfile = newProfile;
+			onProfileChanged(currentProfile);
+		}
+	}
+
+	private void onProfileChanged(int newProfile) {
+		//
 		LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-		LinphoneCall lCall = lc.getCurrentCall();
-		LinphoneCallParams params = lCall.getCurrentParamsReadOnly().copy();
+		lc.setUploadBandwidth(bandwidthes[newProfile][0]);
+		lc.setDownloadBandwidth(bandwidthes[newProfile][1]);
 
-		if (profile == LOW_BANDWIDTH) { // OR video disabled by settings?
-//			lc.enableVideo(false, false);
-			params.setVideoEnabled(false);
-		} else {
-			params.setVideoEnabled(true);
-			VideoSize targetVideoSize;
-			switch (profile) {
-			case LOW_RESOLUTION:
-				targetVideoSize = VideoSize.createStandard(VideoSize.HVGA);
-				break;
-			case HIGH_RESOLUTION:
-				targetVideoSize = VideoSize.createStandard(VideoSize.CIF);
-				break;
-			default:
-				throw new RuntimeException("profile not managed : " + profile);
-			}
+		// Setting Linphone Core Preferred Video Size
+		if (newProfile != LOW_BANDWIDTH) {
+			VideoSize targetVideoSize = getProfileVideoSize(newProfile);
 			
 			lc.setPreferredVideoSize(targetVideoSize);
 			VideoSize actualVideoSize = lc.getPreferredVideoSize();
@@ -71,11 +85,41 @@ public class BandwidthManager {
 			}
 		}
 
-		
-		lc.setUploadBandwidth(bandwidthes[profile][0]);
-		lc.setDownloadBandwidth(bandwidthes[profile][1]);
-		
-		lc.updateCall(lCall, params);
-		currentProfile = profile;
+		if (lc.isIncall()) {
+			LinphoneCall lCall = lc.getCurrentCall();
+			LinphoneCallParams params = lCall.getCurrentParamsReadOnly().copy();
+			
+			// Update video parm if
+			if (newProfile == LOW_BANDWIDTH) {
+				params.setVideoEnabled(false);
+			} else {
+				params.setVideoEnabled(true);
+				
+			}
+			
+			lc.updateCall(lCall, params);
+		}
+	}
+	
+
+	private VideoSize getProfileVideoSize(int profile) {
+		switch (profile) {
+		case LOW_RESOLUTION:
+			return closestVideoSize(VideoSize.createStandard(VideoSize.QCIF));
+		case HIGH_RESOLUTION:
+			return closestVideoSize(VideoSize.createStandard(VideoSize.QVGA));
+		default:
+			throw new RuntimeException("profile not managed : " + profile);
+		}
+	}
+
+	private VideoSize closestVideoSize(VideoSize vSize) {
+		for (Size s : AndroidCameraRecordManager.getInstance().supportedVideoSizes()) {
+			if (s.height == vSize.getHeight() && s.width == vSize.getWidth()) {
+				return vSize;
+			}
+		}
+
+		return VideoSize.createStandard(VideoSize.QCIF);
 	}
 }

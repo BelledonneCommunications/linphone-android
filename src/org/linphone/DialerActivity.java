@@ -594,11 +594,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		if (prefVideoEnable && prefInitiateWithVideo && lParams.getVideoEnabled()) {
 			getVideoManager().setMuted(false);
 			lParams.setVideoEnabled(true);
-			lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
 		} else {
 			lParams.setVideoEnabled(false);
-			lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
 		}
+		lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
+
 	} catch (LinphoneCoreException e) {
 		Toast toast = Toast.makeText(DialerActivity.this
 				,String.format(getString(R.string.error_cannot_get_call_parameters),mAddress.getText().toString())

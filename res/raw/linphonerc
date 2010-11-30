@@ -1,6 +1,6 @@
 [net]
-download_bw=384
-upload_bw=128
+download_bw=256
+upload_bw=256
 firewall_policy=0
 mtu=1300
 
@@ -32,4 +32,6 @@ remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 ec_tail_len=100
 
+[video]
+size=qvga-portrait
 
