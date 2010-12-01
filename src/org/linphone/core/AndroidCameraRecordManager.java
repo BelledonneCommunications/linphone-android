@@ -95,6 +95,7 @@ public class AndroidCameraRecordManager {
 		p.cameraId = cameraId;
 		p.videoDimensionsInverted = width < height;
 		parameters = p;
+		tryToStartVideoRecording();
 	} 
 	
 	
