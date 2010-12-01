@@ -457,14 +457,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else if (state == LinphoneCall.State.CallEnd) {
 			exitCallMode();
 		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
+			if (!VideoCallActivity.launched && LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
 				startVideoView(VIDEO_VIEW_ACTIVITY);
-			}
-		} else if (state == LinphoneCall.State.CallUpdated) {
-			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
-//				getVideoManager().invalidateParameters(); // no, when addinv video to audio call the filters are created before callupdated event is received
-				// so the parameters are invalidated and the record is never launched
-				finishActivity(VIDEO_VIEW_ACTIVITY);
 			}
 		}
 		mCurrentCallState = state;

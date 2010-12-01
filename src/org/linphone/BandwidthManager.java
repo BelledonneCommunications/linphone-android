@@ -114,8 +114,12 @@ public class BandwidthManager {
 	}
 
 	private VideoSize closestVideoSize(VideoSize vSize) {
+		boolean invert = vSize.getHeight() > vSize.getWidth();
+		int testHeight = invert?vSize.getWidth():vSize.getHeight();
+		int testWidth = invert?vSize.getHeight():vSize.getWidth();
+
 		for (Size s : AndroidCameraRecordManager.getInstance().supportedVideoSizes()) {
-			if (s.height == vSize.getHeight() && s.width == vSize.getWidth()) {
+			if (s.height == testHeight && s.width == testWidth) {
 				return vSize;
 			}
 		}

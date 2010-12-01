@@ -36,8 +36,12 @@ public class VideoCallActivity extends Activity {
 	SurfaceView mVideoView;
 	SurfaceView mVideoCaptureView;
 	AndroidCameraRecordManager recordManager;
+	private static final String tag = "Linphone";
+	public static boolean launched = false;
 
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d(tag, "onCreate VideoCallActivity");
+		launched = true;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 
@@ -51,7 +55,7 @@ public class VideoCallActivity extends Activity {
 		recordManager.setSurfaceView(mVideoCaptureView, rotation);
 		mVideoCaptureView.setZOrderOnTop(true);
 	}
-	
+
 
 	private void rewriteToggleCameraItem(MenuItem item) {
 		if (recordManager.isRecording()) {
@@ -63,13 +67,13 @@ public class VideoCallActivity extends Activity {
 
 	private void rewriteChangeResolutionItem(MenuItem item) {
 		if (BandwidthManager.getInstance().isUserRestriction()) {
-			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_high_resolution));
-		} else {
 			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_low_resolution));
+		} else {
+			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_high_resolution));
 		}
 	}
 
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the currently selected menu XML resource.
@@ -103,6 +107,10 @@ public class VideoCallActivity extends Activity {
 			break;
 		case R.id.videocall_menu_toggle_camera:
 			recordManager.toggleMute();
+			LinphoneCore lc =  LinphoneService.instance().getLinphoneCore();
+			if (lc.isIncall()) {
+				lc.getCurrentCall().enableCamera(!recordManager.isMuted());
+			}
 			rewriteToggleCameraItem(item);
 			break;
 		default:
@@ -121,9 +129,16 @@ public class VideoCallActivity extends Activity {
 	
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
+		Log.d(tag, "onDestroy VideoCallActivity");
+		launched = false;
 		super.onDestroy();
 	}
 	
 
+	@Override
+	protected void onPause() {
+		Log.d(tag, "onPause VideoCallActivity");
+		super.onPause();
+	}
+	
 }

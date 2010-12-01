@@ -77,7 +77,11 @@ public abstract class AndroidCameraRecord {
 		}
 
 		parameters.set("camera-id", params.cameraId);
-		parameters.setPreviewSize(params.width, params.height);
+		if (!params.videoDimensionsInverted) {
+			parameters.setPreviewSize(params.width, params.height);
+		} else {
+			parameters.setPreviewSize(params.height, params.width);
+		}
 		parameters.setPreviewFrameRate(Math.round(params.fps));
 		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
 			Log.w(tag, "Auto Focus supported by camera device");
@@ -182,6 +186,7 @@ public abstract class AndroidCameraRecord {
 		int cameraId;
 		int rotation;
 		public SurfaceView surfaceView;
+		boolean videoDimensionsInverted;
 		
 		public RecorderParams(long ptr) {
 			filterDataNativePtr = ptr;

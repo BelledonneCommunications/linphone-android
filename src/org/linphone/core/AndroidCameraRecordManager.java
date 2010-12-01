@@ -44,7 +44,7 @@ public class AndroidCameraRecordManager {
 	public static final int CAMERA_ID_FIXME_USE_PREFERENCE = 0;
 	private static final int version = Integer.parseInt(Build.VERSION.SDK);
 	private static Map<Integer, AndroidCameraRecordManager> instances = new HashMap<Integer, AndroidCameraRecordManager>();
-	
+
 
 	// singleton
 	private AndroidCameraRecordManager(int cameraId) {
@@ -83,16 +83,19 @@ public class AndroidCameraRecordManager {
 
 	private List<Size> supportedVideoSizes;
 	private int rotation;
+	private static final String tag = "Linphone";
 
 	
 	public void setParametersFromFilter(long filterDataPtr, int height, int width, float fps) {
+		stopVideoRecording();
 		RecorderParams p = new RecorderParams(filterDataPtr);
 		p.fps = fps;
 		p.width = width;
 		p.height = height;
 		p.cameraId = cameraId;
+		p.videoDimensionsInverted = width < height;
 		parameters = p;
-	}
+	} 
 	
 	
 	public final void setSurfaceView(final SurfaceView sv, final int rotation) {
@@ -103,16 +106,20 @@ public class AndroidCameraRecordManager {
 		holder.addCallback(new Callback() {
 			public void surfaceDestroyed(SurfaceHolder holder) {
 				surfaceView = null;
+				Log.d(tag , "Video capture surface destroyed");
 				stopVideoRecording();
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {
 				surfaceView = sv;
+				Log.d(tag , "Video capture surface created");
 				tryToStartVideoRecording();
 			}
 
 			public void surfaceChanged(SurfaceHolder holder, int format, int width,
-					int height) {}
+					int height) {
+				Log.d(tag , "Video capture surface changed");
+			}
 		});
 	}
 	
