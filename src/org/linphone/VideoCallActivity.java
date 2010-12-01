@@ -24,7 +24,6 @@ import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -119,11 +118,6 @@ public class VideoCallActivity extends Activity {
 		}
 
 		return false;
-	}
-	protected void startprefActivity() {
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.setClass(this, LinphonePreferencesActivity.class);
-		startActivity(intent);
 	}
 	
 	

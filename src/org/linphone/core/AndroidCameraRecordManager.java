@@ -189,10 +189,10 @@ public class AndroidCameraRecordManager {
 		return false;
 	}
 
+	
 	public void invalidateParameters() {
-		if (isRecording()) stopVideoRecording();
+		stopVideoRecording();
 		parameters = null;
-		
 	}
 
 }
