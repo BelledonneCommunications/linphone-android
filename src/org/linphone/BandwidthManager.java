@@ -31,6 +31,7 @@ public class BandwidthManager {
 	public static final int HIGH_RESOLUTION = 0;
 	public static final int LOW_RESOLUTION = 1;
 	public static final int LOW_BANDWIDTH = 2;
+	private static final boolean portraitMode = true; // FIXME: preference?
 
 	private static final int[][] bandwidthes = {{256,256}, {128,128}, {80,80}};
 	private static BandwidthManager instance;
@@ -81,7 +82,7 @@ public class BandwidthManager {
 			lc.setPreferredVideoSize(targetVideoSize);
 			VideoSize actualVideoSize = lc.getPreferredVideoSize();
 			if (!targetVideoSize.equals(actualVideoSize)) {
-				lc.setPreferredVideoSize(VideoSize.createStandard(VideoSize.QCIF));
+				lc.setPreferredVideoSize(VideoSize.createStandard(VideoSize.QCIF, portraitMode));
 			}
 		}
 
@@ -105,9 +106,9 @@ public class BandwidthManager {
 	private VideoSize getProfileVideoSize(int profile) {
 		switch (profile) {
 		case LOW_RESOLUTION:
-			return closestVideoSize(VideoSize.createStandard(VideoSize.QCIF));
+			return closestVideoSize(VideoSize.createStandard(VideoSize.QCIF, portraitMode));
 		case HIGH_RESOLUTION:
-			return closestVideoSize(VideoSize.createStandard(VideoSize.QVGA));
+			return closestVideoSize(VideoSize.createStandard(VideoSize.QVGA, portraitMode));
 		default:
 			throw new RuntimeException("profile not managed : " + profile);
 		}
@@ -124,6 +125,6 @@ public class BandwidthManager {
 			}
 		}
 
-		return VideoSize.createStandard(VideoSize.QCIF);
+		return VideoSize.createStandard(VideoSize.QCIF, portraitMode);
 	}
 }

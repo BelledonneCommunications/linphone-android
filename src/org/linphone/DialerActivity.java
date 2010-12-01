@@ -521,6 +521,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		if (mWakeLock.isHeld())mWakeLock.release();
 		mSpeaker.setChecked(false);
 		routeAudioToReceiver();
+		BandwidthManager.getInstance().setUserRestriction(false);
 	}
 	private void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
