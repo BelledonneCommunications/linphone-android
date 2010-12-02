@@ -242,10 +242,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 					} else {
 						mCall.setEnabled(false);
 						mHangup.setEnabled(!mCall.isEnabled());
-						boolean prefVideoEnabled = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
-						if (!prefVideoEnabled && !mCall.isEnabled()) {
-							mAddVideo.setEnabled(true);
-						}
+						updateIncallVideoCallButton();
 						mCallControlRow.setVisibility(View.GONE);
 						mInCallControlRow.setVisibility(View.VISIBLE);
 						mAddressLayout.setVisibility(View.GONE);
@@ -338,6 +335,15 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 
 	}
+	private void updateIncallVideoCallButton() {
+		boolean prefVideoEnabled = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
+		if (prefVideoEnabled && !mCall.isEnabled()) {
+			mAddVideo.setVisibility(View.VISIBLE);
+			mAddVideo.setEnabled(true);
+		} else {
+			mAddVideo.setVisibility(View.GONE);
+		}
+	}
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
@@ -389,6 +395,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		if (state == LinphoneCore.GlobalState.GlobalOn) {
 			mCall.setEnabled(!lc.isIncall());
 			mHangup.setEnabled(!mCall.isEnabled());  
+			updateIncallVideoCallButton();
 			try{
 				LinphoneService.instance().initFromConf();
 			} catch (LinphoneConfigException ec) {
@@ -484,6 +491,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mAddressLayout.setVisibility(View.GONE);
 		mInCallAddressLayout.setVisibility(View.VISIBLE);
 		mCall.setEnabled(false);
+		updateIncallVideoCallButton();
 		mHangup.setEnabled(true);
 		LinphoneAddress remote=lc.getRemoteAddress();
 		if (remote!=null){
@@ -520,6 +528,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mAddressLayout.setVisibility(View.VISIBLE);
 		mInCallAddressLayout.setVisibility(View.GONE);
 		mCall.setEnabled(true);
+		updateIncallVideoCallButton();
 		mHangup.setEnabled(false);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 		mDecline.setEnabled(false);
