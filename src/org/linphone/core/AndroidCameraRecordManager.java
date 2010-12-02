@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.linphone.core.AndroidCameraRecord.RecorderParams;
 
-import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.util.Log;
@@ -41,7 +40,6 @@ import android.view.SurfaceHolder.Callback;
  *
  */
 public class AndroidCameraRecordManager {
-	public static final int CAMERA_ID_FIXME_USE_PREFERENCE = 0;
 	private static final int version = Integer.parseInt(Build.VERSION.SDK);
 	private static Map<Integer, AndroidCameraRecordManager> instances = new HashMap<Integer, AndroidCameraRecordManager>();
 
@@ -52,7 +50,8 @@ public class AndroidCameraRecordManager {
 	}
 
 	/**
-	 * @param cameraId : see max_camera_id
+	 * Instance for a given camera
+	 * @param cameraId : starting from 0
 	 * @return
 	 */
 	public static final synchronized AndroidCameraRecordManager getInstance(int cameraId) {
@@ -69,6 +68,9 @@ public class AndroidCameraRecordManager {
 		return m;
 	}
 	
+	/**
+	 * @return instance for the default camera
+	 */
 	public static final synchronized AndroidCameraRecordManager getInstance() {
 		return getInstance(0);
 	}
@@ -148,6 +150,8 @@ public class AndroidCameraRecordManager {
 		parameters.surfaceView = surfaceView;
 		if (version >= 8) {
 			recorder = new AndroidCameraRecordBufferedImpl(parameters);
+		} else if (version >= 5) {
+			recorder = new AndroidCameraRecordImplAPI5(parameters);
 		} else {
 			recorder = new AndroidCameraRecordImpl(parameters);
 		}
@@ -164,6 +168,10 @@ public class AndroidCameraRecordManager {
 
 	
 	// FIXME select right camera
+	/**
+	 * Eventually null if API < 5.
+	 * 
+	 */
 	public List<Size> supportedVideoSizes() {
 		if (supportedVideoSizes != null) {
 			return supportedVideoSizes;
@@ -174,9 +182,12 @@ public class AndroidCameraRecordManager {
 			if (supportedVideoSizes != null) return supportedVideoSizes;
 		}
 
-		Camera camera = Camera.open();
-		supportedVideoSizes = camera.getParameters().getSupportedPreviewSizes();
-		camera.release();
+		if (version >= 5) {
+			supportedVideoSizes = AndroidCameraRecordImplAPI5.oneShotSupportedVideoSizes();
+		}
+		
+		// eventually null
+		
 		return supportedVideoSizes;
 	}
 

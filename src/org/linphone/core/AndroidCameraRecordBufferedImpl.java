@@ -30,7 +30,7 @@ import android.util.Log;
  * @author Guillaume Beraudo
  *
  */
-public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImpl {
+public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImplAPI5 {
 
 
 	public AndroidCameraRecordBufferedImpl(RecorderParams parameters) {

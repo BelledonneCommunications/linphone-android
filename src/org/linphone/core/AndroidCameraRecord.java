@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.hardware.Camera;
@@ -39,7 +40,7 @@ public abstract class AndroidCameraRecord {
 	private PreviewCallback storedPreviewCallback;
 	private boolean previewStarted;
 	protected int orientationCode;
-	private static final String tag="Linphone";
+	protected static final String tag="Linphone";
 	private List <Size> supportedVideoSizes;
 	
 	public AndroidCameraRecord(RecorderParams parameters) {
@@ -47,7 +48,9 @@ public abstract class AndroidCameraRecord {
 		setRotation(parameters.rotation);
 	}
 	
-	
+	protected List<Size> getSupportedPreviewSizes(Camera.Parameters parameters) {
+		return Collections.emptyList();
+	}
 	
 	public void startPreview() { // FIXME throws exception?
 		if (previewStarted) {
@@ -73,7 +76,7 @@ public abstract class AndroidCameraRecord {
 		
 		Camera.Parameters parameters=camera.getParameters();
 		if (supportedVideoSizes == null) {
-			supportedVideoSizes = camera.getParameters().getSupportedPreviewSizes();
+			supportedVideoSizes = getSupportedPreviewSizes(camera.getParameters());
 		}
 
 		parameters.set("camera-id", params.cameraId);
@@ -83,18 +86,7 @@ public abstract class AndroidCameraRecord {
 			parameters.setPreviewSize(params.height, params.width);
 		}
 		parameters.setPreviewFrameRate(Math.round(params.fps));
-		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-			Log.w(tag, "Auto Focus supported by camera device");
-			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-		} else {
-			Log.w(tag, "Auto Focus not supported by camera device");
-			if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
-				Log.w(tag, "Infinity Focus supported by camera device");
-				parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
-			} else {
-				Log.w(tag, "Infinity Focus not supported by camera device");
-			}
-		}
+
 
 		onSettingCameraParameters(parameters);
 		camera.setParameters(parameters);

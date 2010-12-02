@@ -45,12 +45,12 @@ public class VideoCallActivity extends Activity {
 		setContentView(R.layout.videocall);
 
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
-		LinphoneService.instance().getLinphoneCore().setVideoWindow((Object) mVideoView);
+		LinphoneService.instance().getLinphoneCore().setVideoWindow(mVideoView);
 		
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
 		
 		final int rotation = getWindowManager().getDefaultDisplay().getRotation();
-		recordManager = AndroidCameraRecordManager.getInstance(AndroidCameraRecordManager.CAMERA_ID_FIXME_USE_PREFERENCE);
+		recordManager = AndroidCameraRecordManager.getInstance();
 		recordManager.setSurfaceView(mVideoCaptureView, rotation);
 		mVideoCaptureView.setZOrderOnTop(true);
 	}

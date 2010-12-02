@@ -101,7 +101,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private SharedPreferences mPref;
 	private ImageButton mAddVideo;
 	
-	static String PREF_CHECK_CONFIG = "pref_check_config";
+	private static final String PREF_CHECK_CONFIG = "pref_check_config";
+	private static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
 	static int VIDEO_VIEW_ACTIVITY = 100;
@@ -256,7 +257,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 						} else {
 							mDisplayNameView.setText(lLinphoneCore.getRemoteAddress().getUserName());
 						}
-						configureMuteButtons();
+						configureMuteAndSpeakerButtons();
 						mWakeLock.acquire();
 					} 
 				}
@@ -391,33 +392,38 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			try{
 				LinphoneService.instance().initFromConf();
 			} catch (LinphoneConfigException ec) {
-				Log.w(LinphoneService.TAG,"no valid settings found",ec);
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				TextView lDialogTextView = new TextView(this);
-				lDialogTextView.setAutoLinkMask(0x0f/*all*/);
-				lDialogTextView.setPadding(10, 10, 10, 10);
-				lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error) ));
-				builder.setCustomTitle(lDialogTextView)
-				.setCancelable(false)
-				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						LinphoneActivity.instance().startprefActivity();
-					}
-				}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
+				if (mPref.getBoolean(PREF_FIRST_LAUNCH, true)) {
+					Log.w(LinphoneService.TAG,"no valid settings found - first launch",ec);
+					LinphoneActivity.instance().startprefActivity();
+					mPref.edit().putBoolean(PREF_FIRST_LAUNCH, false).commit();
+				} else {
+					Log.w(LinphoneService.TAG,"no valid settings found", ec);
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					TextView lDialogTextView = new TextView(this);
+					lDialogTextView.setAutoLinkMask(0x0f/*all*/);
+					lDialogTextView.setPadding(10, 10, 10, 10);
+					lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error)));
+					builder.setCustomTitle(lDialogTextView)
+					.setCancelable(false)
+					.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							LinphoneActivity.instance().startprefActivity();
+						}
+					}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
 
+						}
+					}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
+							dialog.cancel();
+						}
+					});
+					if (mPref.getBoolean(PREF_CHECK_CONFIG, false) == false) {
+						builder.create().show();
 					}
-				}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
-						dialog.cancel();
-					}
-				});
-				if (mPref.getBoolean(PREF_CHECK_CONFIG, false) == false) {
-					builder.create().show();
 				}
-
 			} catch (Exception e ) {
 				Log.e(LinphoneService.TAG,"Cannot get initial config", e);
 			}
@@ -457,8 +463,10 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else if (state == LinphoneCall.State.CallEnd) {
 			exitCallMode();
 		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (!VideoCallActivity.launched && LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
-				startVideoView(VIDEO_VIEW_ACTIVITY);
+			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
+				if (!VideoCallActivity.launched) {
+					startVideoView(VIDEO_VIEW_ACTIVITY);
+				}
 			}
 		}
 		mCurrentCallState = state;
@@ -488,7 +496,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				mDisplayNameView.setText(lc.getRemoteAddress().toString());
 			}
 		}
-		configureMuteButtons();
+		configureMuteAndSpeakerButtons();
 		
 		if (mSpeaker.isChecked()) {
 			 routeAudioToSpeaker();
@@ -497,9 +505,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 	}
-	private void configureMuteButtons() {
+	private void configureMuteAndSpeakerButtons() {
 		mMute.setChecked(LinphoneService.instance().getLinphoneCore().isMicMuted());
-		if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getMode() == AudioManager.MODE_NORMAL) 
+		if ((Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getRouting(AudioManager.MODE_NORMAL) == AudioManager.ROUTE_SPEAKER) 
 				|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn()) {
 			mSpeaker.setChecked(true);
 		} else {
@@ -534,7 +542,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	private void routeAudioToReceiver() {
 		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
-			 
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
 		} else {
@@ -700,7 +707,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 
 	private AndroidCameraRecordManager getVideoManager() {
-		return AndroidCameraRecordManager.getInstance(AndroidCameraRecordManager.CAMERA_ID_FIXME_USE_PREFERENCE);
+		return AndroidCameraRecordManager.getInstance();
 	}
 }
 
