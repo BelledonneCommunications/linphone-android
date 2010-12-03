@@ -264,7 +264,34 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	}
 
 
-	
+	private void enableDisableAudioCodec(String codec, int rate, int key) throws LinphoneCoreException {
+		PayloadType pt = mLinphoneCore.findPayloadType(codec, rate);
+		if (pt !=null) {
+			boolean enable= mPref.getBoolean(getString(key),false);
+			mLinphoneCore.enablePayloadType(pt, enable);
+		}
+	}
+
+	private void enableDisableVideoCodecs(PayloadType videoCodec) throws LinphoneCoreException {
+		String mime = videoCodec.getMime();
+		int key;
+		
+		if ("MP4V-ES".equals(mime)) {
+			key = R.string.pref_video_codec_mpeg4_key;
+		} else if ("H264".equals(mime)) {
+			key = R.string.pref_video_codec_h264_key;
+		} else if ("H263-1998".equals(mime)) {
+			key = R.string.pref_video_codec_h263_key;
+		} else {
+			Log.e(TAG, "Unhandled video codec " + mime);
+			mLinphoneCore.enablePayloadType(videoCodec, false);
+			return;
+		}
+
+		boolean enable= mPref.getBoolean(getString(key),false);
+		mLinphoneCore.enablePayloadType(videoCodec, enable);
+	}
+
 	public void initFromConf() throws LinphoneConfigException, LinphoneException {
 		//traces
 		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
@@ -272,40 +299,16 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		
 		try {
 			//codec config
-			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 32000); 
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex32_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("speex", 16000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex16_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("speex", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex8_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("iLBC", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_ilbc_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("GSM", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_gsm_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("PCMU", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcmu_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("PCMA", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcma_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
+			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
+			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex8_key);
+			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
+			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
+			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
+			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
+			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
+			
+			for (PayloadType videoCodec : mLinphoneCore.listVideoCodecs()) {
+				enableDisableVideoCodecs(videoCodec);
 			}
 			
 	           
@@ -396,6 +399,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		}
 	}
 	
+
 
 
 	protected LinphoneCore getLinphoneCore() {

@@ -85,9 +85,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setDownloadBandwidth(long nativePtr, int bw);
 	private native void setPreferredVideoSize(long nativePtr, int width, int heigth);
 	private native int[] getPreferredVideoSize(long nativePtr);
-
 	private native void setRing(long nativePtr, String path);
 	private native String getRing(long nativePtr);
+	private native long[] listVideoPayloadTypes(long nativePtr);
+	
 	
 	private static String TAG = "LinphoneCore"; 
 	
@@ -414,5 +415,18 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean isNetworkReachable() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public PayloadType[] listVideoCodecs() {
+		long[] typesPtr = listVideoPayloadTypes(nativePtr);
+		if (typesPtr == null) return null;
+		
+		PayloadType[] codecs = new PayloadType[typesPtr.length];
+
+		for (int i=0; i < codecs.length; i++) {
+			codecs[i] = new PayloadTypeImpl(typesPtr[i]);
+		}
+
+		return codecs;
 	}
 }

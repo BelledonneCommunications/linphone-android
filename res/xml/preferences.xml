@@ -39,6 +39,11 @@
 <CheckBoxPreference android:defaultValue="true" android:title="@string/pref_video_enable_title" android:key="@string/pref_video_enable_key" />
 <PreferenceScreen android:title="@string/pref_video_settings_title" android:dependency="@string/pref_video_enable_key" android:shouldDisableView="true"><CheckBoxPreference android:key="@string/pref_video_initiate_call_with_video_key" android:defaultValue="false" android:title="@string/pref_video_initiate_call_with_video_title" android:summary="@string/pref_video_initiate_call_with_video" android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
 <CheckBoxPreference android:key="@string/pref_video_automatically_share_my_video_key" android:title="@string/pref_video_automatically_share_my_video_title" android:defaultValue="false" android:summary="@string/pref_video_automatically_share_my_video" android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
+
+</PreferenceScreen>
+<PreferenceScreen android:dependency="@string/pref_video_enable_key" android:shouldDisableView="true" android:key="@string/pref_video_codecs_key" android:title="@string/pref_video_codecs_title"><CheckBoxPreference android:key="@string/pref_video_codec_h264_key" android:title="@string/pref_video_codec_h264_title" android:defaultValue="true"></CheckBoxPreference>
+<CheckBoxPreference android:key="@string/pref_video_codec_mpeg4_key" android:title="@string/pref_video_codec_mpeg4_title" android:defaultValue="true"></CheckBoxPreference>
+<CheckBoxPreference android:key="@string/pref_video_codec_h263_key" android:title="@string/pref_video_codec_h263_title" android:enabled="false" android:defaultValue="false" android:selectable="false"></CheckBoxPreference>
 </PreferenceScreen>
 </PreferenceCategory>
 

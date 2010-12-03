@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_video_codec_h263_title">H263</string>
+    <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
+    <string name="pref_video_codec_mpeg4_title">MPEG4</string>
+    <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
+    <string name="pref_video_codec_h264_title">H264</string>
+    <string name="pref_video_codec_h264_key">pref_video_codec_h264_key</string>
+    <string name="pref_video_codecs_title">Video codecs</string>
+    <string name="pref_video_codecs_key">pref_video_codecs_key</string>
 	<string name="menu_videocall_back_to_dialer_title">Display dialer</string>
 	<string name="menu_videocall_change_resolution_when_low_resolution">Try High resolution</string>
 	<string name="menu_videocall_change_resolution_when_high_resolution">Low resolution</string>
@@ -44,7 +52,7 @@
     <string name="pref_codec_speex16">speex 16 Khz</string>
     <string name="pref_codec_speex16_key">pref_codec_speex16_key</string>
     <string name="pref_codec_speex32_key">pref_codec_speex32_key</string>
-    <string name="pref_codecs">Codecs</string>
+    <string name="pref_codecs">Audio Codecs</string>
     <string name="pref_codecs_key">pref_codecs_key</string>
     <string name="place_call_chooser">Place a call</string>
 <string name="pref_debug">Debug</string>
