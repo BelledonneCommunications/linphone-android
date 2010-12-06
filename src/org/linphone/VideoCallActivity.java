@@ -24,7 +24,10 @@ import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +40,7 @@ public class VideoCallActivity extends Activity {
 	AndroidCameraRecordManager recordManager;
 	private static final String tag = "Linphone";
 	public static boolean launched = false;
+	private WakeLock mWakeLock;
 
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(tag, "onCreate VideoCallActivity");
@@ -55,6 +59,9 @@ public class VideoCallActivity extends Activity {
 		mVideoCaptureView.setZOrderOnTop(true);
 		
 		if (!recordManager.isMuted()) sendStaticImage(false);
+		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
+		mWakeLock.acquire();
 	}
 
 
@@ -126,7 +133,7 @@ public class VideoCallActivity extends Activity {
 
 		return false;
 	}
-	
+
 	
 	@Override
 	protected void onDestroy() {
@@ -139,6 +146,7 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onPause() {
 		Log.d(tag, "onPause VideoCallActivity");
+		mWakeLock.release();
 		super.onPause();
 	}
 	

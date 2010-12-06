@@ -121,4 +121,10 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 			throw new LinphoneCoreException("cannot set route ["+routeUri+"]");
 		}
 	}
+	public void enablePublish(boolean enable) {
+		throw new RuntimeException("not implemented");
+	}
+	public boolean publishEnabled() {
+		throw new RuntimeException("not implemented");
+	}
 }
