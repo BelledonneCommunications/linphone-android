@@ -359,6 +359,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public VideoSize getPreferredVideoSize() {
 		throw new RuntimeException("Not Implemenetd yet");
 	}
+	public PayloadType[] listVideoCodecs() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
 	
 
 }

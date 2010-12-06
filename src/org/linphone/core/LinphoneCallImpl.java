@@ -61,6 +61,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	public LinphoneCallParams getCurrentParamsReadOnly() {
 		throw new RuntimeException("Not Implemenetd yet");
 	}
+	public void enableCamera(boolean enabled) {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
 	
 	
 }
