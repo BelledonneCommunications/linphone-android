@@ -67,6 +67,9 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	
 	private native String getRoute(long ptr);
 	private native int setRoute(long ptr,String uri);
+	private native void enablePublish(long ptr,boolean enable);
+	private native boolean publishEnabled(long ptr);
+	
 	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
@@ -120,5 +123,12 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		if (setRoute(nativePtr, routeUri) != 0) {
 			throw new LinphoneCoreException("cannot set route ["+routeUri+"]");
 		}
+	}
+	public void enablePublish(boolean enable) {
+		enablePublish(nativePtr,enable);
+		
+	}
+	public boolean publishEnabled() {
+		return publishEnabled(nativePtr); 
 	}
 }
