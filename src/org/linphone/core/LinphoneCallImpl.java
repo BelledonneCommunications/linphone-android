@@ -29,7 +29,7 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native boolean isIncoming(long nativePtr);
 	native private long getRemoteAddress(long nativePtr);
 	native private int getState(long nativePtr);
-	private native long getCurrentParams(long nativePtr);
+	private native long getCurrentParamsCopy(long nativePtr);
 	private native void enableCamera(long nativePtr, boolean enabled);
 
 	protected LinphoneCallImpl(long aNativePtr)  {
@@ -61,11 +61,8 @@ class LinphoneCallImpl implements LinphoneCall {
 	public State getState() {
 		return LinphoneCall.State.fromInt(getState(nativePtr));
 	}
-	public LinphoneCallParams getCurrentParamsReadOnly() {
-		return new LinphoneCallParamsImpl(getCurrentParams(nativePtr));
-	}
-	public LinphoneCallParams getCurrentParamsReadWrite() {
-		return getCurrentParamsReadOnly().copy();
+	public LinphoneCallParams getCurrentParamsCopy() {
+		return new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
 	}
 
 	public void enableCamera(boolean enabled) {

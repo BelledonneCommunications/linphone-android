@@ -53,6 +53,8 @@ public class VideoCallActivity extends Activity {
 		recordManager = AndroidCameraRecordManager.getInstance();
 		recordManager.setSurfaceView(mVideoCaptureView, rotation);
 		mVideoCaptureView.setZOrderOnTop(true);
+		
+		if (!recordManager.isMuted()) sendStaticImage(false);
 	}
 
 
@@ -85,16 +87,24 @@ public class VideoCallActivity extends Activity {
 		return true;
 	}
 
+	private void sendStaticImage(boolean send) {
+		LinphoneCore lc =  LinphoneService.instance().getLinphoneCore();
+		if (lc.isIncall()) {
+			lc.getCurrentCall().enableCamera(!send);
+		}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.videocall_menu_back_to_dialer:
+			if (!recordManager.isMuted()) sendStaticImage(true);
 			finish();
 			break;
 		case R.id.videocall_menu_change_resolution:
 			BandwidthManager manager = BandwidthManager.getInstance();
 			manager.setUserRestriction(!manager.isUserRestriction());
+			sendStaticImage(recordManager.isMuted());
 			rewriteChangeResolutionItem(item);
 			break;
 		case R.id.videocall_menu_terminate_call:
@@ -106,10 +116,7 @@ public class VideoCallActivity extends Activity {
 			break;
 		case R.id.videocall_menu_toggle_camera:
 			recordManager.toggleMute();
-			LinphoneCore lc =  LinphoneService.instance().getLinphoneCore();
-			if (lc.isIncall()) {
-				lc.getCurrentCall().enableCamera(!recordManager.isMuted());
-			}
+			sendStaticImage(recordManager.isMuted());
 			rewriteToggleCameraItem(item);
 			break;
 		default:

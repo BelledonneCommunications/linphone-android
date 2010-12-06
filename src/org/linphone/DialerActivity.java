@@ -169,7 +169,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				public void onClick(View v) {
 					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
 					LinphoneCall lCall = lLinphoneCore.getCurrentCall();
-					LinphoneCallParams params = lCall.getCurrentParamsReadOnly();
+					LinphoneCallParams params = lCall.getCurrentParamsCopy();
 					if (params.getVideoEnabled()) {
 						// In video call; going back to video call activity
 						startVideoView(VIDEO_VIEW_ACTIVITY);
@@ -470,7 +470,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else if (state == LinphoneCall.State.CallEnd) {
 			exitCallMode();
 		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsReadOnly().getVideoEnabled()) {
+			if (LinphoneService.instance().getLinphoneCore().getCurrentCall().getCurrentParamsCopy().getVideoEnabled()) {
 				if (!VideoCallActivity.launched) {
 					startVideoView(VIDEO_VIEW_ACTIVITY);
 				}
@@ -598,7 +598,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		lAddress.setDisplayName(mDisplayName);
 
 	try {
-		LinphoneCallParams lParams = lLinphoneCore.createDefaultCallParameters().copy();
+		LinphoneCallParams lParams = lLinphoneCore.createDefaultCallParameters();
 		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 		boolean prefInitiateWithVideo = mPref.getBoolean(getString(R.string.pref_video_initiate_call_with_video_key), false);
 

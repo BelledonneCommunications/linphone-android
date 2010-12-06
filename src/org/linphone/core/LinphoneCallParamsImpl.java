@@ -27,7 +27,7 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 
 	private native void enableVideo(long nativePtr, boolean b);
 	private native boolean getVideoEnabled(long nativePtr);
-	private native long copy(long nativePtr);
+	private native void destroy(long nativePtr);
 	
 	
 	public boolean getVideoEnabled() {
@@ -37,9 +37,10 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	public void setVideoEnabled(boolean b) {
 		enableVideo(nativePtr, b);
 	}
-
-	public LinphoneCallParams copy() {
-		return new LinphoneCallParamsImpl(copy(nativePtr));
+	
+	@Override
+	protected void finalize() throws Throwable {
+		destroy(nativePtr);
+		super.finalize();
 	}
-
 }

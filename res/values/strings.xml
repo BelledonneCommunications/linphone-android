@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="pref_video">Video</string>
+	<string name="pref_preferences">Preferences</string>
     <string name="pref_video_codec_h263_title">H263</string>
     <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
     <string name="pref_video_codec_mpeg4_title">MPEG4</string>

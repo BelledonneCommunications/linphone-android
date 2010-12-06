@@ -88,7 +88,7 @@ public class BandwidthManager {
 
 		if (lc.isIncall()) {
 			LinphoneCall lCall = lc.getCurrentCall();
-			LinphoneCallParams params = lCall.getCurrentParamsReadOnly().copy();
+			LinphoneCallParams params = lCall.getCurrentParamsCopy();
 			
 			// Update video parm if
 			if (newProfile == LOW_BANDWIDTH) {
