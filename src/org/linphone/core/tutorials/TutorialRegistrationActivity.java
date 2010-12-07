@@ -42,6 +42,7 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 	private TutorialRegistration tutorial;
 	private Button buttonCall;
 	private Handler mHandler =  new Handler();
+	private TextView outputText;
 
 
 	@Override
@@ -55,7 +56,7 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 		sipPasswordWidget.setText(defaultSipPassword);
 
 		// Output text to the outputText widget
-		final TextView outputText = (TextView) findViewById(R.id.OutputText);
+		outputText = (TextView) findViewById(R.id.OutputText);
 		final TutorialNotifier notifier = new AndroidTutorialNotifier(mHandler, outputText);
 
 		
@@ -66,6 +67,7 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 		
 		// Assign call action to call button
 		buttonCall = (Button) findViewById(R.id.CallButton);
+		buttonCall.setText("Register");
 		buttonCall.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				TutorialLaunchingThread thread = new TutorialLaunchingThread();
@@ -74,13 +76,9 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 			}
 		});
 
-		// Assign stop action to stop button
+		// Hide stop button
 		Button buttonStop = (Button) findViewById(R.id.ButtonStop);
-		buttonStop.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				tutorial.stopMainLoop();
-			}
-		});
+		buttonStop.setVisibility(View.GONE);
 	}
 	
 	
@@ -92,13 +90,9 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 				tutorial.launchTutorial(
 						sipAddressWidget.getText().toString(),
 						sipPasswordWidget.getText().toString());
-				mHandler.post(new Runnable() {
-					public void run() {
-						buttonCall.setEnabled(true);
-					}
-				});
 			} catch (LinphoneCoreException e) {
 				e.printStackTrace();
+				outputText.setText(e.getMessage() +"\n"+outputText.getText());
 			}
 		}
 	}
