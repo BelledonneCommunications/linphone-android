@@ -300,7 +300,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		try {
 			//codec config
 			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
-			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex8_key);
+			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex16_key);
 			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
 			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
 			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
