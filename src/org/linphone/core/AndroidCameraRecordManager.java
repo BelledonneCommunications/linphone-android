@@ -32,7 +32,7 @@ import android.view.SurfaceHolder.Callback;
 
 
 /**
- * Manage the video capture; one instance per camera.
+ * Manage the video capture, only on for all cameras.
  *
  * @author Guillaume Beraudo
  *
@@ -81,6 +81,10 @@ public class AndroidCameraRecordManager {
 		}
 	}
 	public boolean isUseFrontCamera() {return useFrontCamera;}
+	public boolean toggleUseFrontCamera() {
+		setUseFrontCamera(!useFrontCamera);
+		return useFrontCamera;
+	}
 
 
 	
@@ -132,13 +136,18 @@ public class AndroidCameraRecordManager {
 			tryToStartVideoRecording();
 		}
 	}
-	public void toggleMute() {
+	public boolean toggleMute() {
 		setMuted(!muted);
+		return muted;
 	}
 	public boolean isMuted() {
 		return muted;
 	}
 
+	public void tryResumingVideoRecording() {
+		if (isRecording()) return;
+		tryToStartVideoRecording();
+	}
 	
 	private void tryToStartVideoRecording() {
 		if (muted || surfaceView == null || parameters == null) return;

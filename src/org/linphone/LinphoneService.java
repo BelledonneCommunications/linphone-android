@@ -434,6 +434,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		
 	}
 
+	public static LinphoneCore getLc() {
+		return instance().getLinphoneCore();
+	}
 
 }
 

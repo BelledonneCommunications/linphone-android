@@ -90,7 +90,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long[] listVideoPayloadTypes(long nativePtr);
 	
 	
-	private static String TAG = "LinphoneCore"; 
+	private static final String TAG = "LinphoneCore"; 
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;

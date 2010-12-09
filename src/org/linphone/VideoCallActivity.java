@@ -22,9 +22,12 @@ package org.linphone;
 
 import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.VideoSize;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -33,23 +36,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.view.ViewGroup.LayoutParams;
 
 public class VideoCallActivity extends Activity {
-	SurfaceView mVideoView;
-	SurfaceView mVideoCaptureView;
-	AndroidCameraRecordManager recordManager;
+	private SurfaceView mVideoView;
+	private SurfaceView mVideoCaptureView;
+	private AndroidCameraRecordManager recordManager;
 	private static final String tag = "Linphone";
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
+	private static final int capturePreviewLargestDimension = 100;
+	private static final float similarRatio = 0.1f;
 
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(tag, "onCreate VideoCallActivity");
 		launched = true;
+		Log.d(tag, "onCreate VideoCallActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
-		LinphoneService.instance().getLinphoneCore().setVideoWindow(mVideoView);
+		LinphoneCore lc = LinphoneService.getLc();
+		lc.setVideoWindow(mVideoView);
 		
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
 
@@ -62,6 +69,16 @@ public class VideoCallActivity extends Activity {
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mWakeLock.acquire();
+		
+		if (Integer.parseInt(Build.VERSION.SDK) < 8) {
+			// Force to display in portrait orientation for old devices
+			// as they do not support surfaceView rotation
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+
+		// Handle the fact that the preferred size may have a ratio /an orientation different from the one
+		// in the videocall.xml as the front camera on Samsung captures in landscape.
+		updateSvLayoutParamsFromVideoSize(mVideoCaptureView, lc.getPreferredVideoSize());
 	}
 
 
@@ -95,12 +112,30 @@ public class VideoCallActivity extends Activity {
 	}
 
 	private void sendStaticImage(boolean send) {
-		LinphoneCore lc =  LinphoneService.instance().getLinphoneCore();
+		LinphoneCore lc =  LinphoneService.getLc();
 		if (lc.isIncall()) {
 			lc.getCurrentCall().enableCamera(!send);
 		}
 	}
 
+	private void updateSvLayoutParamsFromVideoSize(SurfaceView sv, VideoSize vs) {
+		LayoutParams lp = sv.getLayoutParams();
+		float newRatio = ratioWidthHeight(vs);
+		float previewRatio = (float) lp.width / lp.height;
+		
+		if (Math.abs((newRatio-previewRatio)/newRatio) < similarRatio) return;
+
+		if (vs.isPortrait()) {
+			lp.height = capturePreviewLargestDimension;
+			lp.width = Math.round(lp.height * newRatio);
+		} else {
+			lp.width = capturePreviewLargestDimension;
+			lp.height = Math.round(lp.width / newRatio);
+		}
+
+		sv.setLayoutParams(lp);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -113,25 +148,29 @@ public class VideoCallActivity extends Activity {
 			manager.setUserRestriction(!manager.isUserRestriction());
 			sendStaticImage(recordManager.isMuted());
 			rewriteChangeResolutionItem(item);
+			
+			// Resize preview frame
+			VideoSize newVideoSize = LinphoneService.getLc().getPreferredVideoSize();
+			updateSvLayoutParamsFromVideoSize(mVideoCaptureView, newVideoSize);
 			break;
 		case R.id.videocall_menu_terminate_call:
-			LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
-			if (lLinphoneCore.isIncall()) {
-				lLinphoneCore.terminateCall(lLinphoneCore.getCurrentCall());
+			LinphoneCore lc =  LinphoneService.getLc();
+			if (lc.isIncall()) {
+				lc.terminateCall(lc.getCurrentCall());
 			}
 			finish();
 			break;
 		case R.id.videocall_menu_toggle_camera:
-			recordManager.toggleMute();
-			sendStaticImage(recordManager.isMuted());
+			sendStaticImage(recordManager.toggleMute());
 			rewriteToggleCameraItem(item);
 			break;
-		case R.id.videocall_menu_switch_camera:
+/*		case R.id.videocall_menu_switch_camera:
 			recordManager.stopVideoRecording();
-			recordManager.setUseFrontCamera(!recordManager.isUseFrontCamera());
+			recordManager.toggleUseFrontCamera();
 			InviteManager.getInstance().reinvite();
+			// camera will be restarted when mediastreamer chain is recreated and setParameters is called
 			break;
-		default:
+*/		default:
 			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
 			break;
 		}
@@ -139,14 +178,12 @@ public class VideoCallActivity extends Activity {
 		return false;
 	}
 
-	
+
 	@Override
 	protected void onDestroy() {
-		Log.d(tag, "onDestroy VideoCallActivity");
 		launched = false;
 		super.onDestroy();
 	}
-	
 
 	@Override
 	protected void onPause() {
@@ -155,4 +192,9 @@ public class VideoCallActivity extends Activity {
 		super.onPause();
 	}
 	
+	
+	public float ratioWidthHeight(VideoSize vs) {
+		return (float) vs.getWidth() / vs.getHeight();
+	}
+
 }
