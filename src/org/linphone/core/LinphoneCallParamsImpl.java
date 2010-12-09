@@ -27,6 +27,7 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 
 	private native void enableVideo(long nativePtr, boolean b);
 	private native boolean getVideoEnabled(long nativePtr);
+	private native void audioBandwidth(long nativePtr, int bw);
 	private native void destroy(long nativePtr);
 	
 	
@@ -42,5 +43,9 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	protected void finalize() throws Throwable {
 		destroy(nativePtr);
 		super.finalize();
+	}
+
+	public void setAudioBandwidth(int value) {
+		audioBandwidth(nativePtr, value);
 	}
 }

@@ -91,10 +91,12 @@ public class BandwidthManager {
 			LinphoneCallParams params = lCall.getCurrentParamsCopy();
 			
 			// Update video parm if
-			if (newProfile == LOW_BANDWIDTH) {
+			if (newProfile == LOW_BANDWIDTH) { // NO VIDEO
 				params.setVideoEnabled(false);
+				params.setAudioBandwidth(40);
 			} else {
 				params.setVideoEnabled(true);
+				params.setAudioBandwidth(0); // disable limitation
 				
 			}
 			

@@ -485,7 +485,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	
 	private void enterIncalMode(LinphoneCore lc) {
-		
+		resetCameraFromPreferences();
 		mCallControlRow.setVisibility(View.GONE);
 		mInCallControlRow.setVisibility(View.VISIBLE);
 		mAddressLayout.setVisibility(View.GONE);
@@ -522,6 +522,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mSpeaker.setChecked(false);
 		}
 	}
+	
+	private void resetCameraFromPreferences() {
+		boolean useFrontCam = mPref.getBoolean(getString(R.string.pref_video_use_front_camera_key), false);
+		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
+	}
+	
 	private void exitCallMode() {
 		mCallControlRow.setVisibility(View.VISIBLE);
 		mInCallControlRow.setVisibility(View.GONE);
@@ -539,6 +545,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mSpeaker.setChecked(false);
 		routeAudioToReceiver();
 		BandwidthManager.getInstance().setUserRestriction(false);
+		resetCameraFromPreferences();
 	}
 	private void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {

@@ -20,7 +20,6 @@ package org.linphone.core;
 
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
-import android.hardware.Camera.Size;
 import android.util.Log;
 
 /**
@@ -35,19 +34,19 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	private double timeElapsedBetweenFrames = 0;
 	private long lastFrameTime = 0;
 	private final double expectedTimeBetweenFrames;
-	private boolean videoDimensionsInverted;
+	private boolean sizesInverted;
 
 	public AndroidCameraRecordImpl(RecorderParams parameters) {
 		super(parameters);
 		expectedTimeBetweenFrames = 1d / Math.round(parameters.fps);
 		filterCtxPtr = parameters.filterDataNativePtr;
-		videoDimensionsInverted = parameters.videoDimensionsInverted;
+		sizesInverted = parameters.videoDimensionsInverted;
 
 		storePreviewCallBack(this);
 	}
 
 	
-	private native void putImage(long filterCtxPtr, byte[] buffer, int orientation, boolean videoDimensionsInverted);
+	private native void putImage(long filterCtxPtr, byte[] buffer, int rotate, boolean sizesInverted);
 
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
@@ -60,8 +59,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 			return;
 		}
 		
-		Size s = camera.getParameters().getPreviewSize();
-		int expectedBuffLength = s.width * s.height * 3 /2;
+		int expectedBuffLength = getExpectedBufferLength();
 		if (expectedBuffLength != data.length) {
 			Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
 					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
@@ -71,7 +69,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		long curTime = System.currentTimeMillis();
 		if (lastFrameTime == 0) {
 			lastFrameTime = curTime;
-			putImage(filterCtxPtr, data, getOrientationCode(), videoDimensionsInverted);
+			putImage(filterCtxPtr, data, rotateCapturedFrame(), sizesInverted);
 			return;
 		}
 
@@ -84,8 +82,9 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		timeElapsedBetweenFrames = currentTimeElapsed;
 
 		//		Log.d("onPreviewFrame: ", Integer.toString(data.length));
-		putImage(filterCtxPtr, data, getOrientationCode(), videoDimensionsInverted);
+		putImage(filterCtxPtr, data, rotateCapturedFrame(), sizesInverted);
 	}
+
 
 
 	@Override

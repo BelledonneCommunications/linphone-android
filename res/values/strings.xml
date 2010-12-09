@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_video_use_front_camera_title">Use front camera (if any)</string>
+    <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
 	<string name="pref_video">Video</string>
 	<string name="pref_preferences">Preferences</string>
     <string name="pref_video_codec_h263_title">H263</string>
@@ -11,6 +13,7 @@
     <string name="pref_video_codecs_title">Video codecs</string>
     <string name="pref_video_codecs_key">pref_video_codecs_key</string>
 	<string name="menu_videocall_back_to_dialer_title">Display dialer</string>
+	<string name="menu_videocall_switch_camera_title">Front/Rear Camera</string>
 	<string name="menu_videocall_change_resolution_when_low_resolution">Try High resolution</string>
 	<string name="menu_videocall_change_resolution_when_high_resolution">Low resolution</string>
 	<string name="menu_videocall_change_resolution_title">Change resolution</string>

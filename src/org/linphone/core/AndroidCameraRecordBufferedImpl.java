@@ -66,7 +66,7 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImplAPI5
 	protected void onSettingCameraParameters(Parameters parameters) {
 		super.onSettingCameraParameters(parameters);
 		// Only on v8 hardware
-		camera.setDisplayOrientation(90 * orientationCode);
+		camera.setDisplayOrientation(90 * displayOrientation);
 	}
 	
 	

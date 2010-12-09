@@ -18,9 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.linphone.core.AndroidCameraRecord.RecorderParams;
 
@@ -41,38 +39,21 @@ import android.view.SurfaceHolder.Callback;
  */
 public class AndroidCameraRecordManager {
 	private static final int version = Integer.parseInt(Build.VERSION.SDK);
-	private static Map<Integer, AndroidCameraRecordManager> instances = new HashMap<Integer, AndroidCameraRecordManager>();
-
+	private static final String tag = "Linphone";
+	private static AndroidCameraRecordManager instance;
 
 	// singleton
-	private AndroidCameraRecordManager(int cameraId) {
-		this.cameraId = cameraId;
-	}
+	private AndroidCameraRecordManager() {}
 
-	/**
-	 * Instance for a given camera
-	 * @param cameraId : starting from 0
-	 * @return
-	 */
-	public static final synchronized AndroidCameraRecordManager getInstance(int cameraId) {
-		if (cameraId < 0) {
-			Log.e("Linphone", "Asking unmanageable camera " + cameraId);
-			return null;
-		}
-
-		AndroidCameraRecordManager m = instances.get(cameraId);
-		if (m == null) {
-			m = new AndroidCameraRecordManager(cameraId);
-			instances.put(cameraId, m);
-		}
-		return m;
-	}
 	
 	/**
-	 * @return instance for the default camera
+	 * @return instance
 	 */
 	public static final synchronized AndroidCameraRecordManager getInstance() {
-		return getInstance(0);
+		if (instance == null) {
+			instance = new AndroidCameraRecordManager();
+		}
+		return instance;
 	}
 
 	private AndroidCameraRecord.RecorderParams parameters;
@@ -81,11 +62,26 @@ public class AndroidCameraRecordManager {
 	
 
 	private AndroidCameraRecord recorder;
-	private final Integer cameraId;
+	
 
 	private List<Size> supportedVideoSizes;
 	private int rotation;
-	private static final String tag = "Linphone";
+
+	private boolean useFrontCamera;
+	public void setUseFrontCamera(boolean value) {
+		if (useFrontCamera == value) return;
+		this.useFrontCamera = value;
+		
+		if (parameters != null) {
+			parameters.cameraId = cameraId();
+			if (isRecording()) {
+				stopVideoRecording();
+				tryToStartVideoRecording();
+			}
+		}
+	}
+	public boolean isUseFrontCamera() {return useFrontCamera;}
+
 
 	
 	public void setParametersFromFilter(long filterDataPtr, int height, int width, float fps) {
@@ -94,15 +90,16 @@ public class AndroidCameraRecordManager {
 		p.fps = fps;
 		p.width = width;
 		p.height = height;
-		p.cameraId = cameraId;
+		p.cameraId = cameraId();
 		p.videoDimensionsInverted = width < height;
+		// width and height will be inverted in Recorder on startPreview
 		parameters = p;
 		tryToStartVideoRecording();
 	} 
 	
 	
 	public final void setSurfaceView(final SurfaceView sv, final int rotation) {
-		this.rotation = rotation;
+		this.rotation = useFrontCamera ? 1 : rotation;
 		SurfaceHolder holder = sv.getHolder();
 	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
@@ -206,4 +203,22 @@ public class AndroidCameraRecordManager {
 		parameters = null;
 	}
 
+	public int[] doYouSupportThisVideoSize(int[] askedSize) {
+		final int askedW = askedSize[0];
+		final int askedH = askedSize[1];
+		Log.d(tag, "w"+askedW);
+		Log.d(tag, "h"+askedH);
+		if (useFrontCamera && isPortraitSize(askedW, askedH)) {
+			return new int[] {askedH, askedW}; // only landscape supported
+		} else {
+			return askedSize;
+		}
+	}
+	private boolean isPortraitSize(int width, int height) {
+		return width < height;
+	}
+
+	private static final int rearCamId() {return 1;}
+	private static final int frontCamId() {return 2;}
+	private final int cameraId() {return useFrontCamera? frontCamId() : rearCamId(); }
 }

@@ -21,6 +21,8 @@ package org.linphone;
 
 
 import org.linphone.core.AndroidCameraRecordManager;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
@@ -52,8 +54,8 @@ public class VideoCallActivity extends Activity {
 		LinphoneService.instance().getLinphoneCore().setVideoWindow(mVideoView);
 		
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
-		
-		final int rotation = getWindowManager().getDefaultDisplay().getRotation();
+
+		final int rotation = getWindowManager().getDefaultDisplay().getOrientation();
 		recordManager = AndroidCameraRecordManager.getInstance();
 		recordManager.setSurfaceView(mVideoCaptureView, rotation);
 		mVideoCaptureView.setZOrderOnTop(true);
@@ -125,6 +127,14 @@ public class VideoCallActivity extends Activity {
 			recordManager.toggleMute();
 			sendStaticImage(recordManager.isMuted());
 			rewriteToggleCameraItem(item);
+			break;
+		case R.id.videocall_menu_switch_camera:
+			recordManager.stopVideoRecording();
+			recordManager.setUseFrontCamera(!recordManager.isUseFrontCamera());
+			LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+			LinphoneCall lCall = lc.getCurrentCall();
+			LinphoneCallParams params = lCall.getCurrentParamsCopy();
+			lc.updateCall(lCall, params);
 			break;
 		default:
 			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
