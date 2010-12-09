@@ -21,8 +21,6 @@ package org.linphone;
 
 
 import org.linphone.core.AndroidCameraRecordManager;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
@@ -131,10 +129,7 @@ public class VideoCallActivity extends Activity {
 		case R.id.videocall_menu_switch_camera:
 			recordManager.stopVideoRecording();
 			recordManager.setUseFrontCamera(!recordManager.isUseFrontCamera());
-			LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-			LinphoneCall lCall = lc.getCurrentCall();
-			LinphoneCallParams params = lCall.getCurrentParamsCopy();
-			lc.updateCall(lCall, params);
+			InviteManager.getInstance().reinvite();
 			break;
 		default:
 			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");

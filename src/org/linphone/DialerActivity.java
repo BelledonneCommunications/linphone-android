@@ -167,17 +167,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mAddVideo = (ImageButton) findViewById(R.id.AddVideo);
 			mAddVideo.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					LinphoneCore lLinphoneCore =  LinphoneService.instance().getLinphoneCore();
-					LinphoneCall lCall = lLinphoneCore.getCurrentCall();
-					LinphoneCallParams params = lCall.getCurrentParamsCopy();
-					if (params.getVideoEnabled()) {
+					// If no in video call; try to reinvite with video
+					boolean alreadyInVideoCall = InviteManager.getInstance().reinviteWithVideo();
+					if (alreadyInVideoCall) {
 						// In video call; going back to video call activity
 						startVideoView(VIDEO_VIEW_ACTIVITY);
-					} else {
-						// Not in video call; should go try to reinvite with video
-						params.setVideoEnabled(true);
-						getVideoManager().setMuted(false);
-						lLinphoneCore.updateCall(lCall, params);
 					}
 				}
 			});
@@ -457,6 +451,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			enterIncalMode(lc);
 			routeAudioToReceiver();
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
+			resetCameraFromPreferences();
 			callPending();
 		} else if (state == LinphoneCall.State.Connected) {
 			enterIncalMode(lc);
@@ -485,7 +480,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	
 	private void enterIncalMode(LinphoneCore lc) {
-		resetCameraFromPreferences();
 		mCallControlRow.setVisibility(View.GONE);
 		mInCallControlRow.setVisibility(View.VISIBLE);
 		mAddressLayout.setVisibility(View.GONE);
@@ -597,33 +591,26 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			lAddress = lLinphoneCore.interpretUrl(lto);
 		} catch (LinphoneCoreException e) {
 			Toast toast = Toast.makeText(DialerActivity.this
-										,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
-										, Toast.LENGTH_LONG);
+					,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
+					, Toast.LENGTH_LONG);
 			toast.show();
 			return;
 		}
 		lAddress.setDisplayName(mDisplayName);
 
-	try {
-		LinphoneCallParams lParams = lLinphoneCore.createDefaultCallParameters();
-		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
-		boolean prefInitiateWithVideo = mPref.getBoolean(getString(R.string.pref_video_initiate_call_with_video_key), false);
+		try {
+			boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
+			boolean prefInitiateWithVideo = mPref.getBoolean(getString(R.string.pref_video_initiate_call_with_video_key), false);
+			resetCameraFromPreferences();
+			InviteManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
 
-		if (prefVideoEnable && prefInitiateWithVideo && lParams.getVideoEnabled()) {
-			getVideoManager().setMuted(false);
-			lParams.setVideoEnabled(true);
-		} else {
-			lParams.setVideoEnabled(false);
+		} catch (LinphoneCoreException e) {
+			Toast toast = Toast.makeText(DialerActivity.this
+					,String.format(getString(R.string.error_cannot_get_call_parameters),mAddress.getText().toString())
+					,Toast.LENGTH_LONG);
+			toast.show();
+			return;
 		}
-		lLinphoneCore.inviteAddressWithParams(lAddress, lParams);
-
-	} catch (LinphoneCoreException e) {
-		Toast toast = Toast.makeText(DialerActivity.this
-				,String.format(getString(R.string.error_cannot_get_call_parameters),mAddress.getText().toString())
-				,Toast.LENGTH_LONG);
-		toast.show();
-		return;
-	}
 	}
 	private void setDigitListener(Button aButton,char dtmf) {
 		class DialKeyListener implements  OnClickListener ,OnTouchListener {

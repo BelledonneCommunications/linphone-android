@@ -184,7 +184,7 @@ public class AndroidCameraRecordManager {
 		}
 		
 		// eventually null
-		
+
 		return supportedVideoSizes;
 	}
 
@@ -203,21 +203,33 @@ public class AndroidCameraRecordManager {
 		parameters = null;
 	}
 
-	public int[] doYouSupportThisVideoSize(int[] askedSize) {
-		final int askedW = askedSize[0];
-		final int askedH = askedSize[1];
-		Log.d(tag, "w"+askedW);
-		Log.d(tag, "h"+askedH);
-		if (useFrontCamera && isPortraitSize(askedW, askedH)) {
-			return new int[] {askedH, askedW}; // only landscape supported
+	/**
+	 * Naive simple version.
+	 * @param askedSize
+	 * @return
+	 */
+	public VideoSize doYouSupportThisVideoSize(VideoSize askedSize) {
+		Log.d(tag, "Asking camera if it supports size "+askedSize);
+		if (useFrontCamera && askedSize.isPortrait()) {
+			return askedSize.createInverted(); // only landscape supported
 		} else {
 			return askedSize;
 		}
 	}
-	private boolean isPortraitSize(int width, int height) {
-		return width < height;
-	}
 
+	
+	private VideoSize closestVideoSize(VideoSize vSize, int defaultSizeCode, boolean defaultIsPortrait) {
+		VideoSize testSize = vSize.isPortrait() ? vSize.createInverted() : vSize;
+
+		for (Size s : AndroidCameraRecordManager.getInstance().supportedVideoSizes()) {
+			if (s.height == testSize.getHeight() && s.width == testSize.getWidth()) {
+				return vSize;
+			}
+		}
+
+		return VideoSize.createStandard(defaultSizeCode, defaultIsPortrait);
+	}
+	
 	private static final int rearCamId() {return 1;}
 	private static final int frontCamId() {return 2;}
 	private final int cameraId() {return useFrontCamera? frontCamId() : rearCamId(); }
