@@ -106,9 +106,5 @@ public class InviteManager {
 		bm().updateWithProfileSettings(lc, params);
 		lc.updateCall(lCall, params);
 	}
-	
-	
-
-
 
 }

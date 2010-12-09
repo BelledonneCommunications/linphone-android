@@ -23,7 +23,6 @@ import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
 import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
@@ -168,7 +167,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mAddVideo.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// If no in video call; try to reinvite with video
-					boolean alreadyInVideoCall = InviteManager.getInstance().reinviteWithVideo();
+					boolean alreadyInVideoCall = !InviteManager.getInstance().reinviteWithVideo();
 					if (alreadyInVideoCall) {
 						// In video call; going back to video call activity
 						startVideoView(VIDEO_VIEW_ACTIVITY);
