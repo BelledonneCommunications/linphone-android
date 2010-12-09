@@ -22,6 +22,7 @@ import org.linphone.core.AndroidCameraRecord;
 
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -48,6 +49,14 @@ public class JavaCameraRecordImpl extends AndroidCameraRecord implements Preview
 	}
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
+
+		Size s = camera.getParameters().getPreviewSize();
+		int expectedBuffLength = s.width * s.height * 3 /2;
+		if (expectedBuffLength != data.length) {
+			Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
+					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
+			return;
+		}
 
 		if ((count % 2 * fps) == 0) {
 			endTime = System.currentTimeMillis();

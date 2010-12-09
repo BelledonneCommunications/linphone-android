@@ -21,7 +21,9 @@
             </intent-filter>
          </activity>
          <activity android:name=".core.tutorials.TestVideoActivity"
-                  android:label="Video test" android:enabled="true">
+                  android:label="Video test" android:enabled="true"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
