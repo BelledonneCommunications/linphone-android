@@ -188,7 +188,7 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onPause() {
 		Log.d(tag, "onPause VideoCallActivity");
-		mWakeLock.release();
+		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
 	}
 	
