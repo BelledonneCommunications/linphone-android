@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
+import org.linphone.core.LinphoneCore.RegistrationState;
+
 
 
 
@@ -25,6 +27,10 @@ package org.linphone.core;
 class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 
 	protected final long nativePtr;
+	
+	private native int getState(long nativePtr);
+	private native void setExpires(long nativePtr, int delay);
+
 	boolean ownPtr = false;
 	protected LinphoneProxyConfigImpl(String identity,String proxy,String route, boolean enableRegister) throws LinphoneCoreException {
 		nativePtr = newLinphoneProxyConfig();
@@ -120,5 +126,12 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 		if (setRoute(nativePtr, routeUri) != 0) {
 			throw new LinphoneCoreException("cannot set route ["+routeUri+"]");
 		}
+	}
+	public RegistrationState getState() {
+		return RegistrationState.fromInt(getState(nativePtr));
+	}
+
+	public void setExpires(int delay) {
+		setExpires(nativePtr, delay);
 	}
 }
