@@ -48,11 +48,13 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 
 public class LinphoneService extends Service implements LinphoneCoreListener {
@@ -78,6 +80,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	final int IC_LEVEL_ORANGE=0;
 	final int IC_LEVEL_GREEN=1;
 	final int IC_LEVEL_RED=2;
+
 	
 	private Handler mHandler =  new Handler() ;
 	static boolean isready() {
@@ -116,6 +119,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			, null);
 
 			mLinphoneCore.setPlaybackGain(3);   
+			mLinphoneCore.setRing(null);
 
 			try {
 				initFromConf();
@@ -236,22 +240,19 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 					, mNofificationContentIntent);
 			mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 		}
-		if (DialerActivity.getDialer()!=null) {
-			mHandler.post(new Runnable() {
-				public void run() {
-					DialerActivity.getDialer().registrationState(lc,cfg,state,smessage);
-				}
-			});
-		} 
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().registrationState(lc,cfg,state,smessage);
+			}
+		});
 	}
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
-		if (DialerActivity.getDialer()!=null) { 
-			mHandler.post(new Runnable() {
-				public void run() {
-					DialerActivity.getDialer().callState(lc,call,state,message);
-				}
-			});
-		} 
+		Log.i(TAG, "new state ["+state+"]");
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().callState(lc,call,state,message);
+			}
+		});
 		if (state == LinphoneCall.State.IncomingReceived) {
 			//wakeup linphone
 			Intent lIntent = new Intent();
@@ -339,6 +340,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 
 
 		//proxy
+		mLinphoneCore.clearProxyConfigs();
 		String lProxy = mPref.getString(getString(R.string.pref_proxy_key),null);
 		if (lProxy == null || lProxy.length() == 0) {
 			lProxy = "sip:"+lDomain;
@@ -423,6 +425,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
 

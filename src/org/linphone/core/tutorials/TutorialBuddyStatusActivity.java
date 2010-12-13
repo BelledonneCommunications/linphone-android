@@ -38,6 +38,9 @@ public class TutorialBuddyStatusActivity extends Activity {
 
 	private static final String defaultSipAddress = "sip:";
 	private TextView sipAddressWidget;
+	private TextView mySipAddressWidget;
+	private TextView mySipPasswordWidget;
+	
 	private TutorialBuddyStatus tutorial;
 	private Handler mHandler =  new Handler() ;
 	private Button buttonCall;
@@ -49,6 +52,12 @@ public class TutorialBuddyStatusActivity extends Activity {
 		sipAddressWidget = (TextView) findViewById(R.id.AddressId);
 		sipAddressWidget.setText(defaultSipAddress);
 
+		mySipAddressWidget = (TextView) findViewById(R.id.MyAddressId);
+		mySipAddressWidget.setVisibility(View.VISIBLE);
+		mySipPasswordWidget = (TextView) findViewById(R.id.Password);
+		mySipPasswordWidget.setVisibility(TextView.VISIBLE);
+		
+		
 		// Output text to the outputText widget
 		final TextView outputText = (TextView) findViewById(R.id.OutputText);
 		final TutorialNotifier notifier = new AndroidTutorialNotifier(mHandler, outputText);
@@ -84,7 +93,9 @@ public class TutorialBuddyStatusActivity extends Activity {
 		public void run() {
 			super.run();
 			try {
-				tutorial.launchTutorial(sipAddressWidget.getText().toString());
+				String myIdentity = mySipAddressWidget.getText().length()>0?mySipAddressWidget.getText().toString():null;
+				String myPassword = mySipPasswordWidget.getText().length()>0?mySipPasswordWidget.getText().toString():null;
+				tutorial.launchTutorial(sipAddressWidget.getText().toString(), myIdentity, myPassword);
 				mHandler.post(new Runnable() {
 					public void run() {
 						buttonCall.setEnabled(true);

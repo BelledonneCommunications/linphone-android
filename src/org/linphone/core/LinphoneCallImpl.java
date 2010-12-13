@@ -58,6 +58,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	public State getState() {
 		return LinphoneCall.State.fromInt(getState(nativePtr));
 	}
+	public LinphoneCallParams getCurrentParamsReadOnly() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
 	
 	
 }
