@@ -21,6 +21,7 @@ package org.linphone;
 
 
 
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -58,13 +59,27 @@ public class LinphonePreferencesActivity extends PreferenceActivity {
 
 		// Force disable video
 		if (version < 5 || !enableIlbc) {
-			getPreferenceManager().getSharedPreferences().edit().putBoolean(getString(R.string.pref_video_enable_key), false).commit();
-			CheckBoxPreference videoPref = (CheckBoxPreference) getPreferenceScreen().findPreference(getString(R.string.pref_video_enable_key));
-			videoPref.setEnabled(false);
-			videoPref.setChecked(false);
+			disableCheckbox(R.string.pref_video_enable_key);
 		}
+		
+		// The number of available cameras is exposed since v9
+//		if (version >= 9) handleMultiCamera();
 	}
 
+	private void disableCheckbox(int key) {
+		getPreferenceManager().getSharedPreferences().edit().putBoolean(getString(key), false).commit();
+		CheckBoxPreference box = (CheckBoxPreference) getPreferenceScreen().findPreference(getString(key));
+		box.setEnabled(false);
+		box.setChecked(false);
+	}
+	
+	// Naive version
+	private void handleMultiCamera() { // disabled until migration of build system to v9
+		if (Camera.getNumberOfCameras() < 2) {
+			disableCheckbox(R.string.pref_video_use_front_camera_key);
+		}
+	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
