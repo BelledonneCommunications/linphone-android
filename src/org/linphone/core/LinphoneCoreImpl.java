@@ -179,7 +179,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new RuntimeException("object already destroyed");
 		}
 	}
-	public void setNetworkStateReachable(boolean isReachable) {
+	public void setNetworkReachable(boolean isReachable) {
 		setNetworkStateReachable(nativePtr,isReachable);
 	}
 	public void setPlaybackGain(float gain) {
@@ -342,6 +342,24 @@ class LinphoneCoreImpl implements LinphoneCore {
 		throw new RuntimeException("Not Implemenetd yet");
 	}
 	public LinphoneCallParams createDefaultCallParameters() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public boolean isNetworkReachable() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public void setUploadBandwidth(int bw) {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public void setDownloadBandwidth(int bw) {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public void setPreferredVideoSize(VideoSize vSize) {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public VideoSize getPreferredVideoSize() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
+	public PayloadType[] listVideoCodecs() {
 		throw new RuntimeException("Not Implemenetd yet");
 	}
 	

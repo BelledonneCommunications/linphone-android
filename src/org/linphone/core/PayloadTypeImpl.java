@@ -31,4 +31,8 @@ class PayloadTypeImpl implements PayloadType {
 	public String toString() {
 		return toString(nativePtr);
 	}
+
+	public String getMime() {
+		throw new RuntimeException("Not Implemenetd yet");
+	}
 }
