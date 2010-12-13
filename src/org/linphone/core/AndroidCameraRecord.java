@@ -169,7 +169,9 @@ public abstract class AndroidCameraRecord {
 	}
 	
 	protected int rotateCapturedFrame() {
-		if (params.cameraId == 2) {
+		if (params.videoDimensionsInverted) {
+			return 1; // always rotate 90°
+		} else if (params.cameraId == 2) {
 			return 0;
 		} else {
 			return (4 + 1 - displayOrientation) % 4;
