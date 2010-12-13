@@ -45,8 +45,8 @@ public class VideoCallActivity extends Activity {
 	private static final String tag = "Linphone";
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
-	private static final int capturePreviewLargestDimension = 100;
-	private static final float similarRatio = 0.1f;
+	private static final int capturePreviewLargestDimension = 150;
+//	private static final float similarRatio = 0.1f;
 
 	public void onCreate(Bundle savedInstanceState) {
 		launched = true;
@@ -121,9 +121,9 @@ public class VideoCallActivity extends Activity {
 	private void updateSvLayoutParamsFromVideoSize(SurfaceView sv, VideoSize vs) {
 		LayoutParams lp = sv.getLayoutParams();
 		float newRatio = ratioWidthHeight(vs);
-		float previewRatio = (float) lp.width / lp.height;
-		
-		if (Math.abs((newRatio-previewRatio)/newRatio) < similarRatio) return;
+
+		//		float previewRatio = (float) lp.width / lp.height;
+//		if (Math.abs((newRatio-previewRatio)/newRatio) < similarRatio) return;
 
 		if (vs.isPortrait()) {
 			lp.height = capturePreviewLargestDimension;
