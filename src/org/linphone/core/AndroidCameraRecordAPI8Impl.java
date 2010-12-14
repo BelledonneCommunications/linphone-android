@@ -30,10 +30,10 @@ import android.util.Log;
  * @author Guillaume Beraudo
  *
  */
-public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImplAPI5 {
+public class AndroidCameraRecordAPI8Impl extends AndroidCameraRecordImplAPI5 {
 
 
-	public AndroidCameraRecordBufferedImpl(RecorderParams parameters) {
+	public AndroidCameraRecordAPI8Impl(RecorderParams parameters) {
 		super(parameters);
 	}
 
@@ -66,8 +66,10 @@ public class AndroidCameraRecordBufferedImpl extends AndroidCameraRecordImplAPI5
 	protected void onSettingCameraParameters(Parameters parameters) {
 		super.onSettingCameraParameters(parameters);
 		// Only on v8 hardware
-		camera.setDisplayOrientation(90 * rotateCapturedFrame());
+		camera.setDisplayOrientation(90 * getPreviewCaptureRotation());
 	}
 	
-	
+	private int getPreviewCaptureRotation() {
+		return (4 + 1 - displayOrientation) % 4;
+	}
 }

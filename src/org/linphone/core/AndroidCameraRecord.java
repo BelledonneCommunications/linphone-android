@@ -167,7 +167,8 @@ public abstract class AndroidCameraRecord {
 	public void setDisplayOrientation(int rotation) {
 		displayOrientation = rotation;
 	}
-	
+	protected int getDisplayOrientation() {return displayOrientation;}
+
 	protected int rotateCapturedFrame() {
 		if (params.videoDimensionsInverted) {
 			return 1; // always rotate 90°
