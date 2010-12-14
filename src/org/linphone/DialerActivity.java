@@ -231,7 +231,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				if (lLinphoneCore.isIncall()) {
 					mCurrentCallState = lLinphoneCore.getCurrentCall().getState();
 					if(lLinphoneCore.isInComingInvitePending()) {
-						callPending();
+						callPending(lLinphoneCore.getCurrentCall());
 					} else {
 						mCall.setEnabled(false);
 						mHangup.setEnabled(!mCall.isEnabled());
@@ -444,6 +444,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
 			//previous state was ringing, so stop ringing
 			stoptRinging();
+			routeAudioToReceiver();
 		}
 		if (state == LinphoneCall.State.OutgoingInit) {
 			mWakeLock.acquire();
@@ -451,7 +452,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			routeAudioToReceiver();
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
 			resetCameraFromPreferences();
-			callPending();
+			callPending(call);
 		} else if (state == LinphoneCall.State.Connected) {
 			enterIncalMode(lc);
 		} else if (state == LinphoneCall.State.Error) {
@@ -557,7 +558,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mAudioManager.setSpeakerphoneOn(false); 
 		}		
 	}
-	private void callPending() {
+	private void callPending(LinphoneCall call) {
 		mDecline.setEnabled(true);
 		routeAudioToSpeaker();
 		
@@ -565,6 +566,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 		boolean prefAutomaticallyShareMyCamera = mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
 		getVideoManager().setMuted(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
+		call.enableCamera(prefAutomaticallyShareMyCamera);
 		startRinging();
 	}
 	public void newOutgoingCall(String aTo) {
@@ -712,4 +714,3 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		return AndroidCameraRecordManager.getInstance();
 	}
 }
-
