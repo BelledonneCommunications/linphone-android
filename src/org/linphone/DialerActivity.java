@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.util.List;
+
 import org.linphone.component.ToggleImageButton;
 import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
 import org.linphone.core.AndroidCameraRecordManager;
@@ -37,6 +39,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -110,6 +116,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	MediaPlayer mRingerPlayer;
 	LinphoneCall.State mCurrentCallState;
 	Vibrator mVibrator;
+
 	/**
 	 * 
 	 * @return null if not ready yet
@@ -134,6 +141,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 
 		try {
 
@@ -444,6 +452,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
 			//previous state was ringing, so stop ringing
 			stoptRinging();
+			//routeAudioToReceiver();
 		}
 		if (state == LinphoneCall.State.OutgoingInit) {
 			mWakeLock.acquire();
@@ -505,6 +514,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			 routeAudioToReceiver();
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+		LinphoneActivity.instance().startProxymitySensor();
+
 	}
 	private void configureMuteAndSpeakerButtons() {
 		mMute.setChecked(LinphoneService.instance().getLinphoneCore().isMicMuted());
@@ -539,6 +550,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		routeAudioToReceiver();
 		BandwidthManager.getInstance().setUserRestriction(false);
 		resetCameraFromPreferences();
+		LinphoneActivity.instance().stopProxymitySensor();
 	}
 	private void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
@@ -559,7 +571,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	private void callPending() {
 		mDecline.setEnabled(true);
-		routeAudioToSpeaker();
+		//routeAudioToSpeaker();
 		
 		// Privacy setting to not share the user camera by default
 		boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
@@ -711,5 +723,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private AndroidCameraRecordManager getVideoManager() {
 		return AndroidCameraRecordManager.getInstance();
 	}
+
+	
+
 }
 
