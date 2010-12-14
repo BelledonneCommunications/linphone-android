@@ -18,8 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import java.util.List;
-
 import org.linphone.component.ToggleImageButton;
 import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
 import org.linphone.core.AndroidCameraRecordManager;
@@ -39,10 +37,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -226,6 +220,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mInCallAddressLayout = (View) findViewById(R.id.IncallAddressLayout);
 			mMute = (ToggleImageButton)findViewById(R.id.mic_mute_button);
 			mSpeaker = (ToggleImageButton)findViewById(R.id.speaker_button);
+			if (Build.DEVICE.startsWith("GT-I9000")) {
+				// Galaxy S doesn't handle audio routing properly
+				// so disabling it totally
+				mSpeaker.setVisibility(View.GONE);
+			}
 			
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
@@ -559,7 +558,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(true); 
 		}
-		
 	}
 	private void routeAudioToReceiver() {
 		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
@@ -724,7 +722,4 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private AndroidCameraRecordManager getVideoManager() {
 		return AndroidCameraRecordManager.getInstance();
 	}
-
-	
-
 }
