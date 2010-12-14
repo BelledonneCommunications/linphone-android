@@ -186,7 +186,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		if (DialerActivity.getDialer()!=null)  {
 			mHandler.post(new Runnable() {
 				public void run() {
-					DialerActivity.getDialer().displayStatus(lc,message);					
+					if (DialerActivity.getDialer()!=null)
+						DialerActivity.getDialer().displayStatus(lc,message);					
 				}
 				
 			});
