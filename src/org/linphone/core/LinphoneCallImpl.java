@@ -31,6 +31,7 @@ class LinphoneCallImpl implements LinphoneCall {
 	native private int getState(long nativePtr);
 	private native long getCurrentParamsCopy(long nativePtr);
 	private native void enableCamera(long nativePtr, boolean enabled);
+	
 
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -67,5 +68,8 @@ class LinphoneCallImpl implements LinphoneCall {
 
 	public void enableCamera(boolean enabled) {
 		enableCamera(nativePtr, enabled);
+	}
+	public boolean equals(Object call) {
+		return nativePtr == ((LinphoneCallImpl)call).nativePtr;
 	}
 }

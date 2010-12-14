@@ -145,7 +145,7 @@ public class LinphoneActivity extends TabActivity  {
 			} else {
 				mAudioManager.setSpeakerphoneOn(false); 
 			}
-
+			stopProxymitySensor();//just in case
 			theLinphoneActivity = null;
 		}
 		
@@ -249,9 +249,9 @@ public class LinphoneActivity extends TabActivity  {
 				//Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
 				
 				if (event.values[0] != event.sensor.getMaximumRange() ) {
-					LinphoneActivity.instance().hideScreen(true);
+					hideScreen(true);
 				} else  {
-					LinphoneActivity.instance().hideScreen(false);
+					hideScreen(false);
 				}
 			}
 
