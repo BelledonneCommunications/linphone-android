@@ -19,3 +19,15 @@
 [submodule "submodules/libilbc-rfc3951"]
 	path = submodules/libilbc-rfc3951
 	url = git://git.linphone.org/libilbc-rfc3951.git
+[submodule "submodules/externals/ffmpeg"]
+	path = submodules/externals/ffmpeg
+	url = git://git.ffmpeg.org/ffmpeg
+[submodule "submodules/externals/libswscale"]
+	path = submodules/externals/libswscale
+	url = git://git.ffmpeg.org/libswscale
+[submodule "submodules/externals/x264"]
+	path = submodules/externals/x264
+	url = git://git.videolan.org/x264.git
+[submodule "submodules/msx264"]
+	path = submodules/msx264
+	url = git://git.linphone.org/msx264.git

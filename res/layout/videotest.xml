@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<!--
+		<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+	-->
+	<!--
+		<Button android:text="TEST" android:id="@+id/videotest_test"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"></Button>
+	-->
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		<Button android:text="Start" android:id="@+id/test_video_size"
+			android:layout_width="fill_parent" android:layout_height="wrap_content" />
+		<Button android:text="Change camera" android:id="@+id/test_video_camera"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+		<Button android:text="Change to portrait" android:id="@+id/test_video_orientation"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+		<TextView android:id="@+id/videotest_debug"
+			android:layout_weight="1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
+
+
+	<SurfaceView android:id="@+id/videotest_surfaceView"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"></SurfaceView>
+
+
+
+</LinearLayout>

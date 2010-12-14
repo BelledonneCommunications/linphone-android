@@ -76,6 +76,7 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 			}
 		});
 
+
 		Button buttonStop = (Button) findViewById(R.id.ButtonStop);
 		buttonStop.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

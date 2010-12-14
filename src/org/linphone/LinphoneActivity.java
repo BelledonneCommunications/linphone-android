@@ -255,7 +255,5 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		}
 		getWindow().setAttributes(lAttrs);
 	}
-	
-
 }
 

@@ -66,11 +66,33 @@ LOCAL_SRC_FILES := \
 	$(libspeexdsp_SRC_FILES)
 
 #	-DARM4_ASM 
-ifeq ($(TARGET_ARCH),arm)
-LOCAL_CFLAGS +=\
-	-DARM5E_ASM \
+
+
+USE_FLOAT=0
+
+FIXED_POINT_FLAGS=\
+	-DARM5E_ASM\
 	-DDISABLE_FLOAT_API \
 	-DFIXED_POINT=1
+
+ifeq ($(TARGET_ARCH),arm)
+	ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+		ifeq ($(USE_FLOAT),1)
+			LOCAL_CFLAGS += -DFLOATING_POINT=1 
+			LOCAL_CFLAGS += -DOVERRIDE_INTERPOLATE_PRODUCT_SINGLE
+			ifeq ($(LINPHONE_VIDEO),1)
+				LOCAL_CFLAGS += -DOVERRIDE_INNER_PRODUCT_SINGLE -Dinner_product_single=ff_scalarproduct_float_neon
+			endif	
+		else 
+			LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)
+			LOCAL_CFLAGS += -DOVERRIDE_INTERPOLATE_PRODUCT_SINGLE -Dinterpolate_product_single=interpolate_product_single_int
+			ifeq ($(LINPHONE_VIDEO),1)
+				LOCAL_CFLAGS += -DOVERRIDE_INNER_PRODUCT_SINGLE -Dinner_product_single=ff_scalarproduct_int16_neon
+			endif
+		endif
+	else
+		LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)
+	endif 
 else
 LOCAL_CFLAGS += \
 	-DFLOATING_POINT=1

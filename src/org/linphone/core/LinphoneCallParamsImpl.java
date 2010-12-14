@@ -1,5 +1,5 @@
 /*
-LinPhoneCallLogImpl.java
+LinphoneCallParamsImpl.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -18,32 +18,34 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-
-class LinphoneCallLogImpl implements LinphoneCallLog {
-
+public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	protected final long nativePtr;
 	
-	private native long getFrom(long nativePtr);
-	private native long getTo(long nativePtr);
-	private native boolean isIncoming(long nativePtr);
-	LinphoneCallLogImpl(long aNativePtr)  {
-		nativePtr = aNativePtr;
+	public LinphoneCallParamsImpl(long nativePtr) {
+		this.nativePtr = nativePtr;
 	}
+
+	private native void enableVideo(long nativePtr, boolean b);
+	private native boolean getVideoEnabled(long nativePtr);
+	private native void audioBandwidth(long nativePtr, int bw);
+	private native void destroy(long nativePtr);
 	
 	
-	public CallDirection getDirection() {
-		return isIncoming(nativePtr)?CallDirection.Incoming:CallDirection.Outgoing;
+	public boolean getVideoEnabled() {
+		return getVideoEnabled(nativePtr);
 	}
 
-	public LinphoneAddress getFrom() {
-		return new LinphoneAddressImpl(getFrom(nativePtr));
+	public void setVideoEnabled(boolean b) {
+		enableVideo(nativePtr, b);
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		destroy(nativePtr);
+		super.finalize();
 	}
 
-	public LinphoneAddress getTo() {
-		return new LinphoneAddressImpl(getTo(nativePtr));
+	public void setAudioBandwidth(int value) {
+		audioBandwidth(nativePtr, value);
 	}
-	public CallStatus getStatus() {
-		throw new RuntimeException("not implemented yet");
-	}
-
 }

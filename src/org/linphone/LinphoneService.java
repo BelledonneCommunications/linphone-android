@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import java.io.File;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,8 +37,8 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
-
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -48,13 +47,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 
 public class LinphoneService extends Service implements LinphoneCoreListener {
@@ -267,7 +264,34 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	}
 
 
-	
+	private void enableDisableAudioCodec(String codec, int rate, int key) throws LinphoneCoreException {
+		PayloadType pt = mLinphoneCore.findPayloadType(codec, rate);
+		if (pt !=null) {
+			boolean enable= mPref.getBoolean(getString(key),false);
+			mLinphoneCore.enablePayloadType(pt, enable);
+		}
+	}
+
+	private void enableDisableVideoCodecs(PayloadType videoCodec) throws LinphoneCoreException {
+		String mime = videoCodec.getMime();
+		int key;
+		
+		if ("MP4V-ES".equals(mime)) {
+			key = R.string.pref_video_codec_mpeg4_key;
+		} else if ("H264".equals(mime)) {
+			key = R.string.pref_video_codec_h264_key;
+		} else if ("H263-1998".equals(mime)) {
+			key = R.string.pref_video_codec_h263_key;
+		} else {
+			Log.e(TAG, "Unhandled video codec " + mime);
+			mLinphoneCore.enablePayloadType(videoCodec, false);
+			return;
+		}
+
+		boolean enable= mPref.getBoolean(getString(key),false);
+		mLinphoneCore.enablePayloadType(videoCodec, enable);
+	}
+
 	public void initFromConf() throws LinphoneConfigException, LinphoneException {
 		//traces
 		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
@@ -275,40 +299,16 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		
 		try {
 			//codec config
-			PayloadType lPt = mLinphoneCore.findPayloadType("speex", 32000); 
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex32_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("speex", 16000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex16_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("speex", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_speex8_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("iLBC", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_ilbc_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("GSM", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_gsm_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("PCMU", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcmu_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
-			}
-			lPt = mLinphoneCore.findPayloadType("PCMA", 8000);
-			if (lPt !=null) {
-				boolean enable= mPref.getBoolean(getString(R.string.pref_codec_pcma_key),false);
-				mLinphoneCore.enablePayloadType(lPt, enable);
+			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
+			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex16_key);
+			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
+			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
+			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
+			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
+			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
+			
+			for (PayloadType videoCodec : mLinphoneCore.listVideoCodecs()) {
+				enableDisableVideoCodecs(videoCodec);
 			}
 			
 	           
@@ -316,6 +316,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
+		boolean isVideoEnabled = mPref.getBoolean(getString(R.string.pref_video_enable_key),false);
+		mLinphoneCore.enableVideo(isVideoEnabled, isVideoEnabled);
 		//1 read proxy config from preferences
 		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
 		if (lUserName == null || lUserName.length()==0) {
@@ -332,7 +334,12 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			throw new LinphoneConfigException(getString(R.string.wrong_domain));
 		}
 
+		String lStun = mPref.getString(getString(R.string.pref_stun_server_key), null);
 
+		//stun server
+		mLinphoneCore.setStunServer(lStun);
+		mLinphoneCore.setFirewallPolicy((lStun!=null && lStun.length()>0) ? FirewallPolicy.UseStun : FirewallPolicy.NoFirewall);
+		
 		//auth
 		mLinphoneCore.clearAuthInfos();
 		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd,null);
@@ -394,6 +401,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	
 
 
+
 	protected LinphoneCore getLinphoneCore() {
 		return mLinphoneCore;
 	}
@@ -426,6 +434,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		
 	}
 
+	public static LinphoneCore getLc() {
+		return instance().getLinphoneCore();
+	}
 
 }
 

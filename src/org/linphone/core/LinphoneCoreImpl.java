@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
+import android.view.SurfaceView;
+
 
 class LinphoneCoreImpl implements LinphoneCore {
 
@@ -53,6 +55,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void muteMic(long nativePtr,boolean isMuted);
 	private native long interpretUrl(long nativePtr,String destination);
 	private native long inviteAddress(long nativePtr,long to);
+	private native long inviteAddressWithParams(long nativePtrLc,long to, long nativePtrParam);
 	private native void sendDtmf(long nativePtr,char dtmf);
 	private native void clearCallLogs(long nativePtr);
 	private native boolean isMicMuted(long nativePtr);
@@ -63,12 +66,31 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long getCurrentCall(long nativePtr) ;
 	private native void playDtmf(long nativePtr,char dtmf,int duration);
 	private native void stopDtmf(long nativePtr);
-	
+	private native void setVideoWindowId(long nativePtr, Object wid);
+	private native void setPreviewWindowId(long nativePtr, Object wid);
+	private AndroidVideoWindowImpl mVideoWindow;
+	private AndroidVideoWindowImpl mPreviewWindow;
 	private native void addFriend(long nativePtr,long friend);
 	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
 	private native long createChatRoom(long nativePtr,String to);
+	private native void enableVideo(long nativePtr,boolean vcap_enabled,boolean display_enabled);
+	private native boolean isVideoEnabled(long nativePtr);
+	private native void setFirewallPolicy(long nativePtr, int enum_value);
+	private native int getFirewallPolicy(long nativePtr);
+	private native void setStunServer(long nativePtr, String stun_server);
+	private native String getStunServer(long nativePtr);
+	private native long createDefaultCallParams(long nativePtr);
+	private native int updateCall(long ptrLc, long ptrCall, long ptrParams);
+	private native void setUploadBandwidth(long nativePtr, int bw);
+	private native void setDownloadBandwidth(long nativePtr, int bw);
+	private native void setPreferredVideoSize(long nativePtr, int width, int heigth);
+	private native int[] getPreferredVideoSize(long nativePtr);
 	private native void setRing(long nativePtr, String path);
 	private native String getRing(long nativePtr);
+	private native long[] listVideoPayloadTypes(long nativePtr);
+	
+	
+	private static final String TAG = "LinphoneCore"; 
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -200,14 +222,15 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new LinphoneCoreException("Cannot interpret ["+destination+"]");
 		}
 	}
-	public LinphoneCall invite(LinphoneAddress to) { 
+	public LinphoneCall invite(LinphoneAddress to) throws LinphoneCoreException { 
 		long lNativePtr = inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
 		if (lNativePtr!=0) {
 			return new LinphoneCallImpl(lNativePtr); 
 		} else {
-			return null;
+			throw new LinphoneCoreException("Unable to invite address " + to.asString());
 		}
 	}
+
 	public void sendDtmf(char number) {
 		sendDtmf(nativePtr,number);
 	}
@@ -295,73 +318,114 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
 	}
 	public void setPreviewWindow(Object w) {
-		throw new RuntimeException("not implemented yet");
-		// TODO Auto-generated method stub
-		
+		if (mPreviewWindow!=null)
+			mPreviewWindow.setListener(null);
+		mPreviewWindow=new AndroidVideoWindowImpl((SurfaceView)w);
+		mPreviewWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
+			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				setPreviewWindowId(nativePtr,null);
+			}
+
+			public void onSurfaceReady(AndroidVideoWindowImpl vw) {
+				setPreviewWindowId(nativePtr,vw);
+			}
+		});
 	}
 	public void setVideoWindow(Object w) {
-		throw new RuntimeException("not implemented yet");
-		// TODO Auto-generated method stub
+		if (mVideoWindow!=null)
+			mVideoWindow.setListener(null);
+		mVideoWindow=new AndroidVideoWindowImpl((SurfaceView) w);
+		mVideoWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
+			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				setVideoWindowId(nativePtr,null);
+			}
+
+			public void onSurfaceReady(AndroidVideoWindowImpl vw) {
+				setVideoWindowId(nativePtr,vw);
+			}
+		});
 	}
 	public void enableVideo(boolean vcap_enabled, boolean display_enabled) {
-		// TODO Auto-generated method stub
-		
+		enableVideo(nativePtr,vcap_enabled, display_enabled);
 	}
 	public boolean isVideoEnabled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	public void setStunServer(String stun_server) {
-		// TODO Auto-generated method stub
-		
-	}
-	public String getStunServer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public void setFirewallPolicy(FirewallPolicy pol) {
-		// TODO Auto-generated method stub
-		
+		return isVideoEnabled(nativePtr);
 	}
 	public FirewallPolicy getFirewallPolicy() {
-		// TODO Auto-generated method stub
-		return null;
+		return FirewallPolicy.fromInt(getFirewallPolicy(nativePtr));
+	}
+	public String getStunServer() {
+		return getStunServer(nativePtr);
+	}
+	public void setFirewallPolicy(FirewallPolicy pol) {
+		setFirewallPolicy(nativePtr,pol.value());
+	}
+	public void setStunServer(String stunServer) {
+		setStunServer(nativePtr,stunServer);
+	}
+	
+	public LinphoneCallParams createDefaultCallParameters() {
+		return new LinphoneCallParamsImpl(createDefaultCallParams(nativePtr));
+	}
+	
+	public LinphoneCall inviteAddressWithParams(LinphoneAddress to, LinphoneCallParams params) throws LinphoneCoreException {
+		long ptrDestination = ((LinphoneAddressImpl)to).nativePtr;
+		long ptrParams =((LinphoneCallParamsImpl)params).nativePtr;
+		
+		long lcNativePtr = inviteAddressWithParams(nativePtr, ptrDestination, ptrParams);
+		if (lcNativePtr!=0) {
+			return new LinphoneCallImpl(lcNativePtr); 
+		} else {
+			throw new LinphoneCoreException("Unable to invite with params " + to.asString());
+		}
+	}
+
+	public int updateCall(LinphoneCall call, LinphoneCallParams params) {
+		long ptrCall = ((LinphoneCallImpl) call).nativePtr;
+		long ptrParams = ((LinphoneCallParamsImpl)params).nativePtr;
+
+		return updateCall(nativePtr, ptrCall, ptrParams);
+	}
+	public void setUploadBandwidth(int bw) {
+		setUploadBandwidth(nativePtr, bw);
+	}
+
+	public void setDownloadBandwidth(int bw) {
+		setDownloadBandwidth(nativePtr, bw);
+	}
+
+	public void setPreferredVideoSize(VideoSize vSize) {
+		setPreferredVideoSize(nativePtr, vSize.getWidth(), vSize.getHeight());
+	}
+
+	public VideoSize getPreferredVideoSize() {
+		int[] nativeSize = getPreferredVideoSize(nativePtr);
+
+		VideoSize vSize = new VideoSize();
+		vSize.setWidth(nativeSize[0]);
+		vSize.setHeight(nativeSize[1]);
+		return vSize;
 	}
 	public void setRing(String path) {
-		setRing(nativePtr,path);
-		
+		setRing(nativePtr, path);
 	}
 	public String getRing() {
 		return getRing(nativePtr);
 	}
-	public LinphoneCall inviteAddressWithParams(LinphoneAddress destination,
-			LinphoneCallParams params) throws LinphoneCoreException {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	public int updateCall(LinphoneCall call, LinphoneCallParams params) {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	public LinphoneCallParams createDefaultCallParameters() {
-		throw new RuntimeException("Not Implemenetd yet");
+	
+	public PayloadType[] listVideoCodecs() {
+		long[] typesPtr = listVideoPayloadTypes(nativePtr);
+		if (typesPtr == null) return null;
+		
+		PayloadType[] codecs = new PayloadType[typesPtr.length];
+
+		for (int i=0; i < codecs.length; i++) {
+			codecs[i] = new PayloadTypeImpl(typesPtr[i]);
+		}
+
+		return codecs;
 	}
 	public boolean isNetworkReachable() {
-		throw new RuntimeException("Not Implemenetd yet");
+		throw new RuntimeException("Not implemented");
 	}
-	public void setUploadBandwidth(int bw) {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	public void setDownloadBandwidth(int bw) {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	public void setPreferredVideoSize(VideoSize vSize) {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	public VideoSize getPreferredVideoSize() {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	public PayloadType[] listVideoCodecs() {
-		throw new RuntimeException("Not Implemenetd yet");
-	}
-	
-
 }

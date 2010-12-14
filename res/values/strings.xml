@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_video_use_front_camera_title">Use front camera</string>
+    <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
+	<string name="pref_video">Video</string>
+	<string name="pref_preferences">Preferences</string>
+    <string name="pref_video_codec_h263_title">H263</string>
+    <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
+    <string name="pref_video_codec_mpeg4_title">MPEG4</string>
+    <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
+    <string name="pref_video_codec_h264_title">H264</string>
+    <string name="pref_video_codec_h264_key">pref_video_codec_h264_key</string>
+    <string name="pref_video_codecs_title">Codecs</string>
+    <string name="pref_video_codecs_key">pref_video_codecs_key</string>
+	<string name="menu_videocall_back_to_dialer_title">Display dialer</string>
+	<string name="menu_videocall_switch_camera_title">Front/Rear Camera</string>
+	<string name="menu_videocall_change_resolution_when_low_resolution">Try High resolution</string>
+	<string name="menu_videocall_change_resolution_when_high_resolution">Low resolution</string>
+	<string name="menu_videocall_change_resolution_title">Change resolution</string>
+    <string name="menu_videocall_toggle_camera_title">Mute/Unmute camera</string>
+	<string name="menu_videocall_toggle_camera_disable">Disable camera</string>
+	<string name="menu_videocall_toggle_camera_enable">Enable camera</string>
+	<string name="menu_videocall_terminate_call_title">Terminate call</string>
+    <string name="pref_video_settings_title">Video settings</string>
+    <string name="pref_video_automatically_share_my_video_key">pref_video_automatically_share_my_video_key</string>
+    <string name="pref_video_automatically_share_my_video_title">Share my camera</string>
+    <string name="pref_video_automatically_share_my_video">Automatically send my camera on incoming calls</string>
+    <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
+    <string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>
+    <string name="pref_video_initiate_call_with_video">Always send my camera on outgoing calls</string>
+    <string name="pref_video_enable_key">pref_video_enable_key</string>
+    <string name="pref_video_enable_title">Enable Video</string>
     <string name="pref_escape_plus">Replace + by 00</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>
@@ -61,9 +91,13 @@
 <string name="tab_history">History</string>
 <string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
 <string name="menu_clear_history">Clear</string>
+<string name="error_cannot_get_call_parameters">Cannot get call parameters</string>
+<string name="error_cannot_create_default_parameters">Cannot create default call parameters</string>
 <string name="error_cannot_invite_address">Cannot invite destination address  [%s]</string>
 <string name="notification_registered">registered to %s </string> 
 <string name="notification_register_failure">fails to register to %s</string>
 <string name="notification_started">started</string>
-<string name="pref_echo_cancellation_summary">Removes the echo heared by the other end.</string>
+<string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
+<string name="pref_stun_server">Stun server</string>
+<string name="pref_stun_server_key">pref_stun_server_key</string>
 </resources>

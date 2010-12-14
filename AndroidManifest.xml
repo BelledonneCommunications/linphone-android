@@ -20,8 +20,19 @@
                 <data android:scheme="tel" />
             </intent-filter>
          </activity>
+         <activity android:name=".core.tutorials.TestVideoActivity"
+                  android:label="Video test"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:launchMode="singleTask"
+                   android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
          <activity android:name=".core.tutorials.TutorialHelloWorldActivity"
-                  android:label="Hello World" android:enabled="false">
+                  android:label="Hello World"
+                  android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -60,7 +71,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-  
+         </activity>
+         <activity android:name=".VideoCallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
          </activity>
         <activity android:name=".ContactPickerActivity">
             <intent-filter>
@@ -103,6 +118,10 @@
 <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 <uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+<uses-permission android:name="android.permission.CAMERA" />
 
+<uses-feature android:name="android.hardware.camera" />
+<uses-feature android:name="android.hardware.camera.autofocus" />
 
+<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 </manifest> 

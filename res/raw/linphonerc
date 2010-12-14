@@ -1,8 +1,8 @@
 [net]
-download_bw=128
-upload_bw=128
+download_bw=256
+upload_bw=256
 firewall_policy=0
-mtu=0
+mtu=1300
 
 [sip]
 sip_port=5060
@@ -12,7 +12,7 @@ contact=sip:unknown@unknown-host
 inc_timeout=15
 use_info=0
 use_ipv6=0
-register_only_when_network_is_up=0
+register_only_when_network_is_up=1
 default_proxy=0
 auto_net_state_mon=0
 keepalive_period=3600000
@@ -30,6 +30,8 @@ ringer_dev_id=ANDROID SND: Android Sound card
 capture_dev_id=ANDROID SND: Android Sound card
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
-ec_tail_len=200
+ec_tail_len=100
 
+[video]
+size=qvga-portrait
 
