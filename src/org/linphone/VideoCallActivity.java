@@ -47,6 +47,7 @@ public class VideoCallActivity extends Activity {
 	private WakeLock mWakeLock;
 	private static final int capturePreviewLargestDimension = 150;
 //	private static final float similarRatio = 0.1f;
+	private static final int version = Integer.parseInt(Build.VERSION.SDK);
 
 	public void onCreate(Bundle savedInstanceState) {
 		launched = true;
@@ -70,7 +71,7 @@ public class VideoCallActivity extends Activity {
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mWakeLock.acquire();
 		
-		if (Integer.parseInt(Build.VERSION.SDK) < 8) {
+		if (version < 8) {
 			// Force to display in portrait orientation for old devices
 			// as they do not support surfaceView rotation
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -78,7 +79,7 @@ public class VideoCallActivity extends Activity {
 
 		// Handle the fact that the preferred size may have a ratio /an orientation different from the one
 		// in the videocall.xml as the front camera on Samsung captures in landscape.
-		updateSvLayoutParamsFromVideoSize(mVideoCaptureView, lc.getPreferredVideoSize());
+		resizeCapturePreviewForOldPhones(mVideoCaptureView, lc.getPreferredVideoSize());
 	}
 
 
@@ -118,7 +119,13 @@ public class VideoCallActivity extends Activity {
 		}
 	}
 
-	private void updateSvLayoutParamsFromVideoSize(SurfaceView sv, VideoSize vs) {
+	/**
+	 * @param sv capture surface view to resize the layout
+	 * @param vs video size from which to calculate the dimensions
+	 */
+	private void resizeCapturePreviewForOldPhones(SurfaceView sv, VideoSize vs) {
+		if (version >= 8) return;
+
 		LayoutParams lp = sv.getLayoutParams();
 		float newRatio = ratioWidthHeight(vs);
 
@@ -151,7 +158,7 @@ public class VideoCallActivity extends Activity {
 			
 			// Resize preview frame
 			VideoSize newVideoSize = LinphoneService.getLc().getPreferredVideoSize();
-			updateSvLayoutParamsFromVideoSize(mVideoCaptureView, newVideoSize);
+			resizeCapturePreviewForOldPhones(mVideoCaptureView, newVideoSize);
 			break;
 		case R.id.videocall_menu_terminate_call:
 			LinphoneCore lc =  LinphoneService.getLc();
