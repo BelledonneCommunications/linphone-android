@@ -42,14 +42,17 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TabHost;
 
-public class LinphoneActivity extends TabActivity implements SensorEventListener {
+public class LinphoneActivity extends TabActivity  {
 	public static String DIALER_TAB = "dialer";
 	private AudioManager mAudioManager;
 	private static LinphoneActivity theLinphoneActivity;
-	private SensorManager mSensorManager;
+	
 	private FrameLayout mMainFrame;
+	private SensorManager mSensorManager;
+	private SensorEventListener mSensorEventListener;
 	
 	private static String SCREEN_IS_HIDDEN ="screen_is_hidden";
+	
 	protected static LinphoneActivity instance()
 	  {
 		if (theLinphoneActivity == null) {
@@ -70,6 +73,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		
 		theLinphoneActivity = this;
 		// start linphone as background       
@@ -79,12 +83,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		
 		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
 		
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
-		if (lSensorList.size() >0) {
-			mSensorManager.registerListener(this,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
-			Log.i(LinphoneService.TAG, "Proximity sensor detected, registering");
-		}
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		
 		TabHost lTabHost = getTabHost();  // The activity TabHost  
@@ -162,9 +160,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (isFinishing()) {
-			if (mSensorManager!=null) mSensorManager.unregisterListener(this);
-		}
+
 
 	}
 	@Override
@@ -233,18 +229,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			//nop 	 	
 	}
 
-	public void onSensorChanged(SensorEvent event) {
-		//Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
-		if (LinphoneService.isready() == false) return; //nop nothing to do 
-		
-		if (LinphoneService.instance().getLinphoneCore().isIncall() 
-				&& event.values[0] != event.sensor.getMaximumRange() ) {
-			hideScreen(true);
-		} else  {
-			hideScreen(false);
-		}
-	}
-	private void hideScreen(boolean isHidden) {
+
+	protected void hideScreen(boolean isHidden) {
 		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
 		if (isHidden) {
 			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
@@ -255,5 +241,30 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		}
 		getWindow().setAttributes(lAttrs);
 	}
+	protected void startProxymitySensor() {
+		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
+		mSensorEventListener = new SensorEventListener() {
+			public void onSensorChanged(SensorEvent event) {
+				if (event.timestamp == 0) return; //just ignoring for nexus 1
+				//Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
+				
+				if (event.values[0] != event.sensor.getMaximumRange() ) {
+					LinphoneActivity.instance().hideScreen(true);
+				} else  {
+					LinphoneActivity.instance().hideScreen(false);
+				}
+			}
+
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {}	
+		};
+		if (lSensorList.size() >0) {
+			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
+			Log.i(LinphoneService.TAG, "Proximity sensor detected, registering");
+		}		
+	}
+	protected void stopProxymitySensor() {
+		if (mSensorManager!=null) mSensorManager.unregisterListener(mSensorEventListener);
+		hideScreen(false);
+	}	
 }
 
