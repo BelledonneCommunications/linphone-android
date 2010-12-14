@@ -47,10 +47,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -78,6 +83,10 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	final int IC_LEVEL_GREEN=1;
 	final int IC_LEVEL_RED=2;
 
+	MediaPlayer mRingerPlayer;
+	LinphoneCall.State mCurrentCallState;
+	Vibrator mVibrator;
+	private AudioManager mAudioManager;
 	
 	private Handler mHandler =  new Handler() ;
 	static boolean isready() {
@@ -107,6 +116,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		mNotification.setLatestEventInfo(this, NOTIFICATION_TITLE,"", mNofificationContentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mNotification);		
 		mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
+		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		try {
 			copyAssetsFromPackage();
 
@@ -246,6 +257,11 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	}
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i(TAG, "new state ["+state+"]");
+		if (state == LinphoneCall.State.IncomingReceived && !call.equals(mLinphoneCore.getCurrentCall())) {
+			//no multicall support, just decline
+			mLinphoneCore.terminateCall(call);
+			return;
+		}
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (DialerActivity.getDialer()!=null) DialerActivity.getDialer().callState(lc,call,state,message);
@@ -257,7 +273,14 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			lIntent.setClass(this, LinphoneActivity.class);
 			startActivity(lIntent);
+			startRinging();
 		}
+		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
+			//previous state was ringing, so stop ringing
+			stopRinging();
+			//routeAudioToReceiver();
+		}
+		mCurrentCallState=state;
 	}
 	public void show(LinphoneCore lc) {
 		// TODO Auto-generated method stub
@@ -439,5 +462,36 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		return instance().getLinphoneCore();
 	}
 
+	private synchronized void startRinging()  {
+		try {
+			if (mAudioManager.shouldVibrate(AudioManager.VIBRATE_TYPE_RINGER) && mVibrator !=null) {
+				long[] patern = {0,1000,1000};
+				mVibrator.vibrate(patern, 1);
+			}
+			if (mRingerPlayer == null) {
+				mRingerPlayer = new MediaPlayer();
+				mRingerPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+				mRingerPlayer.setDataSource(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+				mRingerPlayer.prepare();
+				mRingerPlayer.setLooping(true);
+				mRingerPlayer.start();
+			} else {
+				Log.w(LinphoneService.TAG,"already ringing");
+			}
+		} catch (Exception e) {
+			Log.e(LinphoneService.TAG, "cannot handle incoming call",e);
+		}
+
+	}
+	private synchronized void stopRinging() {
+		if (mRingerPlayer !=null) {
+			mRingerPlayer.stop();
+			mRingerPlayer.release();
+			mRingerPlayer=null;
+		}
+		if (mVibrator!=null) {
+			mVibrator.cancel();
+		}
+	}
 }
 

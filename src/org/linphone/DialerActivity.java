@@ -108,7 +108,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	Settings.System mSystemSettings = new Settings.System();
 	MediaPlayer mRingerPlayer;
-	LinphoneCall.State mCurrentCallState;
+
 	Vibrator mVibrator;
 
 	/**
@@ -236,7 +236,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			if (LinphoneService.isready()) {
 				LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
 				if (lLinphoneCore.isIncall()) {
-					mCurrentCallState = lLinphoneCore.getCurrentCall().getState();
 					if(lLinphoneCore.isInComingInvitePending()) {
 						callPending(lLinphoneCore.getCurrentCall());
 					} else {
@@ -448,11 +447,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {/*nop*/};
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
-		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
-			//previous state was ringing, so stop ringing
-			stoptRinging();
-			//routeAudioToReceiver();
-		}
+
 		if (state == LinphoneCall.State.OutgoingInit) {
 			mWakeLock.acquire();
 			enterIncalMode(lc);
@@ -478,7 +473,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				}
 			}
 		}
-		mCurrentCallState = state;
+
 	}
 
 	public void show(LinphoneCore lc) {
@@ -576,7 +571,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		boolean prefAutomaticallyShareMyCamera = mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
 		getVideoManager().setMuted(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
 		call.enableCamera(prefAutomaticallyShareMyCamera);
-		startRinging();
 	}
 	public void newOutgoingCall(String aTo) {
 		newOutgoingCall(aTo,null);
@@ -685,39 +679,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
-	private synchronized void startRinging()  {
-		try {
-			if (mAudioManager.shouldVibrate(AudioManager.VIBRATE_TYPE_RINGER) && mVibrator !=null) {
-				long[] patern = {0,1000,1000};
-				mVibrator.vibrate(patern, 1);
-			}
-			if (mRingerPlayer == null) {
-				//mRingerPlayer = MediaPlayer.create(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-				mRingerPlayer = new MediaPlayer();
-				mRingerPlayer.setAudioStreamType(AudioManager.STREAM_RING);
-				mRingerPlayer.setDataSource(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-				mRingerPlayer.prepare();
-				//mRingerPlayer.setVolume(mAudioManager.getStreamVolume(AudioManager.STREAM_RING),mAudioManager.getStreamVolume(AudioManager.STREAM_RING));
-				mRingerPlayer.setLooping(true);
-				mRingerPlayer.start();
-			} else {
-				Log.w(LinphoneService.TAG,"already ringing");
-			}
-		} catch (Exception e) {
-			Log.e(LinphoneService.TAG, "cannot handle incoming call",e);
-		}
 
-	}
-	private synchronized void stoptRinging() {
-		if (mRingerPlayer !=null) {
-			mRingerPlayer.stop();
-			mRingerPlayer.release();
-			mRingerPlayer=null;
-		}
-		if (mVibrator!=null) {
-			mVibrator.cancel();
-		}
-	}
 
 	private AndroidCameraRecordManager getVideoManager() {
 		return AndroidCameraRecordManager.getInstance();
