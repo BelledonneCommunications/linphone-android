@@ -686,7 +686,5 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private AndroidCameraRecordManager getVideoManager() {
 		return AndroidCameraRecordManager.getInstance();
 	}
-
 	
-
 }
