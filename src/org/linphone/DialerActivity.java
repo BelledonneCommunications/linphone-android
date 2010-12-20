@@ -39,7 +39,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -225,7 +224,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 				// so disabling it totally
 				mSpeaker.setVisibility(View.GONE);
 			}
-			
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			mDecline.setEnabled(false);
@@ -553,6 +551,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(true); 
 		}
+		
 	}
 	private void routeAudioToReceiver() {
 		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
