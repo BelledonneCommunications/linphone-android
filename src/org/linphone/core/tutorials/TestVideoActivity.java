@@ -139,7 +139,7 @@ public class TestVideoActivity extends Activity implements Callback, OnClickList
 		}
 
 		VideoSize size = videoSizes.pop();
-		changeSurfaceViewLayout(size.getWidth(), size.getHeight());
+		changeSurfaceViewLayout(size.width, size.height);
 
 		// on surface changed the recorder will be restarted with new values
 		// and the surface will be resized

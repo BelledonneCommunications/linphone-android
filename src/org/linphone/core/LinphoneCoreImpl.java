@@ -395,15 +395,15 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 
 	public void setPreferredVideoSize(VideoSize vSize) {
-		setPreferredVideoSize(nativePtr, vSize.getWidth(), vSize.getHeight());
+		setPreferredVideoSize(nativePtr, vSize.width, vSize.height);
 	}
 
 	public VideoSize getPreferredVideoSize() {
 		int[] nativeSize = getPreferredVideoSize(nativePtr);
 
 		VideoSize vSize = new VideoSize();
-		vSize.setWidth(nativeSize[0]);
-		vSize.setHeight(nativeSize[1]);
+		vSize.width = nativeSize[0];
+		vSize.height = nativeSize[1];
 		return vSize;
 	}
 	public void setRing(String path) {

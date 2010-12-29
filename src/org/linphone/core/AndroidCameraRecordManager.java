@@ -32,7 +32,7 @@ import android.view.SurfaceHolder.Callback;
 
 
 /**
- * Manage the video capture, only on for all cameras.
+ * Manage the video capture, only one for all cameras.
  *
  * @author Guillaume Beraudo
  *
@@ -231,7 +231,7 @@ public class AndroidCameraRecordManager {
 		VideoSize testSize = vSize.isPortrait() ? vSize.createInverted() : vSize;
 
 		for (Size s : AndroidCameraRecordManager.getInstance().supportedVideoSizes()) {
-			if (s.height == testSize.getHeight() && s.width == testSize.getWidth()) {
+			if (s.height == testSize.height && s.width == testSize.width) {
 				return vSize;
 			}
 		}

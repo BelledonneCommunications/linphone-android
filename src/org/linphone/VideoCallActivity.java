@@ -201,7 +201,7 @@ public class VideoCallActivity extends Activity {
 	
 	
 	public float ratioWidthHeight(VideoSize vs) {
-		return (float) vs.getWidth() / vs.getHeight();
+		return (float) vs.width / vs.height;
 	}
 
 }
