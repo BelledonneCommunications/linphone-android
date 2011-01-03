@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.linphone.core.AndroidCameraRecord.RecorderParams;
 
+import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.util.Log;
@@ -38,14 +39,9 @@ import android.view.SurfaceHolder.Callback;
  *
  */
 public class AndroidCameraRecordManager {
-	private static final int version = Integer.parseInt(Build.VERSION.SDK);
 	private static final String tag = "Linphone";
 	private static AndroidCameraRecordManager instance;
 
-	// singleton
-	private AndroidCameraRecordManager() {}
-
-	
 	/**
 	 * @return instance
 	 */
@@ -59,31 +55,76 @@ public class AndroidCameraRecordManager {
 	private AndroidCameraRecord.RecorderParams parameters;
 	private SurfaceView surfaceView;
 	private boolean muted;
-	
+	private int cameraId;
 
 	private AndroidCameraRecord recorder;
-	
-
 	private List<Size> supportedVideoSizes;
-	private int rotation;
+	private int phoneOrientation;
+	public int getPhoneOrientation() {return phoneOrientation;}
+	public void setPhoneOrientation(int degrees) {this.phoneOrientation = degrees;}
 
-	private boolean useFrontCamera;
+	private int frontCameraId;
+	private int rearCameraId;
+
+	// singleton
+	private AndroidCameraRecordManager() {
+		findFrontAndRearCameraIds();
+	}
+
+	
+	private void findFrontAndRearCameraIds() {
+		if (Version.sdkAbove(9)) {
+			findFrontAndRearCameraIds9();
+			return;
+		}
+
+		if (Build.DEVICE.startsWith("GT-I9000")) {
+			// Galaxy S has 2 cameras
+			frontCameraId = 2;
+			rearCameraId = 1;
+			cameraId = rearCameraId;
+			return;
+		}
+
+		// default to 0/0
+	}
+
+	private void findFrontAndRearCameraIds9() {
+		for (int id=0; id < getNumberOfCameras9(); id++) {
+			if (isFrontCamera9(id)) {
+				frontCameraId = id;
+			} else {
+				rearCameraId = id;
+			}
+		}
+	}
+
+	public boolean hasSeveralCameras() {
+		return frontCameraId != rearCameraId;
+	}
+
+	
 	public void setUseFrontCamera(boolean value) {
-		if (useFrontCamera == value) return;
-		this.useFrontCamera = value;
-		
+		if (isFrontCamera() == value) return; // already OK
+
+		toggleUseFrontCamera();
+	}
+
+	public boolean isUseFrontCamera() {return isFrontCamera();}
+	public boolean toggleUseFrontCamera() {
+		boolean previousUseFront = isFrontCamera();
+
+		cameraId = previousUseFront ? rearCameraId : frontCameraId;
+
 		if (parameters != null) {
-			parameters.cameraId = cameraId();
+			parameters.cameraId = cameraId;
 			if (isRecording()) {
 				stopVideoRecording();
 				tryToStartVideoRecording();
 			}
 		}
-	}
-	public boolean isUseFrontCamera() {return useFrontCamera;}
-	public boolean toggleUseFrontCamera() {
-		setUseFrontCamera(!useFrontCamera);
-		return useFrontCamera;
+
+		return !previousUseFront;
 	}
 
 
@@ -94,16 +135,14 @@ public class AndroidCameraRecordManager {
 		p.fps = fps;
 		p.width = width;
 		p.height = height;
-		p.cameraId = cameraId();
-		p.videoDimensionsInverted = width < height;
-		// width and height will be inverted in Recorder on startPreview
+		p.cameraId = cameraId;
 		parameters = p;
 		tryToStartVideoRecording();
 	} 
 	
 	
-	public final void setSurfaceView(final SurfaceView sv, final int rotation) {
-		this.rotation = useFrontCamera ? 1 : rotation;
+	public final void setSurfaceView(final SurfaceView sv, final int phoneOrientation) {
+		this.phoneOrientation = phoneOrientation;
 		SurfaceHolder holder = sv.getHolder();
 	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
@@ -152,12 +191,15 @@ public class AndroidCameraRecordManager {
 	private void tryToStartVideoRecording() {
 		if (muted || surfaceView == null || parameters == null) return;
 		
-		parameters.rotation = rotation;
+		parameters.rotation = bufferRotationForCorrectImageOrientation();
+
 		parameters.surfaceView = surfaceView;
-		if (version >= 8) {
-			recorder = new AndroidCameraRecordAPI8Impl(parameters);
-		} else if (version >= 5) {
-			recorder = new AndroidCameraRecordImplAPI5(parameters);
+		if (Version.sdkAbove(9)) {
+			recorder = new AndroidCameraRecord9Impl(parameters);
+		} else if (Version.sdkAbove(8)) {
+			recorder = new AndroidCameraRecord8Impl(parameters);
+		} else if (Version.sdkAbove(5)) {
+			recorder = new AndroidCameraRecord5Impl(parameters);
 		} else {
 			recorder = new AndroidCameraRecordImpl(parameters);
 		}
@@ -188,8 +230,8 @@ public class AndroidCameraRecordManager {
 			if (supportedVideoSizes != null) return supportedVideoSizes;
 		}
 
-		if (version >= 5) {
-			supportedVideoSizes = AndroidCameraRecordImplAPI5.oneShotSupportedVideoSizes();
+		if (Version.sdkAbove(5)) {
+			supportedVideoSizes = AndroidCameraRecord5Impl.oneShotSupportedVideoSizes();
 		}
 		
 		// eventually null
@@ -212,34 +254,86 @@ public class AndroidCameraRecordManager {
 		parameters = null;
 	}
 
-	/**
-	 * Naive simple version.
-	 * @param askedSize
-	 * @return
-	 */
-	public VideoSize doYouSupportThisVideoSize(VideoSize askedSize) {
-		Log.d(tag, "Asking camera if it supports size "+askedSize);
-		if (useFrontCamera && askedSize.isPortrait()) {
-			return askedSize.createInverted(); // only landscape supported
-		} else {
-			return askedSize;
-		}
+	public boolean outputIsPortrait() {
+		final int rotation = bufferRotationForCorrectImageOrientation();
+		final boolean isPortrait = (rotation % 180) == 90;
+		
+		Log.d(tag, "Camera sensor in portrait orientation ?" + isPortrait);
+		return isPortrait;
 	}
 
 	
-	private VideoSize closestVideoSize(VideoSize vSize, int defaultSizeCode, boolean defaultIsPortrait) {
-		VideoSize testSize = vSize.isPortrait() ? vSize.createInverted() : vSize;
-
-		for (Size s : AndroidCameraRecordManager.getInstance().supportedVideoSizes()) {
-			if (s.height == testSize.height && s.width == testSize.width) {
-				return vSize;
-			}
-		}
-
-		return VideoSize.createStandard(defaultSizeCode, defaultIsPortrait);
+	
+	
+	public static int getNumberOfCameras() {
+		if (Version.sdkAbove(9)) return getNumberOfCameras9();
+		
+		// Use hacks to guess the number of cameras
+		if (Build.DEVICE.startsWith("GT-I9000")) {
+			// Galaxy S has 2 cameras
+			return 2;
+		} else
+			return 1;
 	}
 	
-	private static final int rearCamId() {return 1;}
-	private static final int frontCamId() {return 2;}
-	private final int cameraId() {return useFrontCamera? frontCamId() : rearCamId(); }
+	private static int getNumberOfCameras9() {
+		return Camera.getNumberOfCameras();
+	}
+
+	public boolean isCameraOrientationPortrait() {
+		return (getCameraOrientation() % 180) == 90;
+	}
+
+	public int getCameraOrientation() {
+		if (Version.sdkAbove(9)) return getCameraOrientation9();
+		
+		// Use hacks to guess orientation of the camera
+		if (cameraId == 2 && Build.DEVICE.startsWith("GT-I9000")) {
+			// Galaxy S rear camera
+			// mounted in landscape for a portrait phone orientation
+			return 90;
+		}
+		return 0;
+	}
+
+
+	private int getCameraOrientation9() {
+		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+		Camera.getCameraInfo(cameraId, info);
+		return info.orientation;
+	}
+
+	public boolean isFrontCamera() {
+		if (Version.sdkAbove(9)) return isFrontCamera9();
+
+		// Use hacks to guess facing of the camera
+		
+		if (cameraId == 2 && Build.DEVICE.startsWith("GT-I9000")) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	private boolean isFrontCamera9() {
+		return isFrontCamera9(cameraId);
+	}
+
+	
+	private boolean isFrontCamera9(int cameraId) {
+		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+		Camera.getCameraInfo(cameraId, info);
+		return info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT ? true : false;
+	}
+
+	private int bufferRotationForCorrectImageOrientation() {
+		final int cameraOrientation = getCameraOrientation();
+		final int rotation = Version.sdkAbove(8) ?
+				(360 - cameraOrientation + 90 - phoneOrientation) % 360
+				: 0;
+		Log.d(tag, "Capture video buffer will need a rotation of " + rotation
+				+ " degrees : camera " + cameraOrientation
+				+ ", phone " + phoneOrientation);
+		return rotation;
+	}
 }

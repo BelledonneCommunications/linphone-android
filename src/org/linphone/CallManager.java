@@ -1,5 +1,5 @@
 /*
-InviteManager.java
+CallManager.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -25,13 +25,19 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 
-public class InviteManager {
+/**
+ * Handle call updating, reinvites.
+ * 
+ * @author Guillaume Beraudo
+ *
+ */
+public class CallManager {
 
-	private static InviteManager instance;
+	private static CallManager instance;
 	
-	private InviteManager() {}
-	public static final synchronized InviteManager getInstance() {
-		if (instance == null) instance = new InviteManager();
+	private CallManager() {}
+	public static final synchronized CallManager getInstance() {
+		if (instance == null) instance = new CallManager();
 		return instance;
 	}
 	
@@ -107,4 +113,14 @@ public class InviteManager {
 		lc.updateCall(lCall, params);
 	}
 
+	/**
+	 * Update current call, without reinvite.
+	 */
+	public void updateCall() {
+		LinphoneCore lc = lc();
+		LinphoneCall lCall = lc.getCurrentCall();
+		LinphoneCallParams params = lCall.getCurrentParamsCopy();
+		bm().updateWithProfileSettings(lc, params);
+	}
+	
 }

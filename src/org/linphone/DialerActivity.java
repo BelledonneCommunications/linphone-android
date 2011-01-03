@@ -168,7 +168,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mAddVideo.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// If no in video call; try to reinvite with video
-					boolean alreadyInVideoCall = !InviteManager.getInstance().reinviteWithVideo();
+					boolean alreadyInVideoCall = !CallManager.getInstance().reinviteWithVideo();
 					if (alreadyInVideoCall) {
 						// In video call; going back to video call activity
 						startVideoView(VIDEO_VIEW_ACTIVITY);
@@ -364,6 +364,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		if (mWakeLock.isHeld()) mWakeLock.release();
 		theDialer=null;
 	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -522,6 +523,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private void resetCameraFromPreferences() {
 		boolean useFrontCam = mPref.getBoolean(getString(R.string.pref_video_use_front_camera_key), false);
 		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
+		final int phoneOrientation = 90 * getWindowManager().getDefaultDisplay().getOrientation();
+		AndroidCameraRecordManager.getInstance().setPhoneOrientation(phoneOrientation);
 	}
 	
 	private void exitCallMode() {
@@ -605,7 +608,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			boolean prefVideoEnable = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 			boolean prefInitiateWithVideo = mPref.getBoolean(getString(R.string.pref_video_initiate_call_with_video_key), false);
 			resetCameraFromPreferences();
-			InviteManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+			CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
 
 		} catch (LinphoneCoreException e) {
 			Toast toast = Toast.makeText(DialerActivity.this

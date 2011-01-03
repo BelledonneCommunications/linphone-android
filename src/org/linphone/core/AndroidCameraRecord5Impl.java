@@ -26,9 +26,9 @@ import android.hardware.Camera.Size;
 import android.util.Log;
 
 
-public class AndroidCameraRecordImplAPI5 extends AndroidCameraRecordImpl {
+public class AndroidCameraRecord5Impl extends AndroidCameraRecordImpl {
 
-	public AndroidCameraRecordImplAPI5(RecorderParams parameters) {
+	public AndroidCameraRecord5Impl(RecorderParams parameters) {
 		super(parameters);
 	}
 

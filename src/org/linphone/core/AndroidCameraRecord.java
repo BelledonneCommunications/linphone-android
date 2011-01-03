@@ -39,14 +39,12 @@ public abstract class AndroidCameraRecord {
 
 	private PreviewCallback storedPreviewCallback;
 	private boolean previewStarted;
-	protected int displayOrientation;
 	protected static final String tag="Linphone";
 	private List <Size> supportedVideoSizes;
 	private Size currentPreviewSize;
 	
 	public AndroidCameraRecord(RecorderParams parameters) {
 		this.params = parameters;
-		setDisplayOrientation(parameters.rotation);
 	}
 	
 	protected List<Size> getSupportedPreviewSizes(Camera.Parameters parameters) {
@@ -67,7 +65,7 @@ public abstract class AndroidCameraRecord {
 		}
 		
 
-		camera=Camera.open();
+		camera = openCamera(params.cameraId);
 		camera.setErrorCallback(new ErrorCallback() {
 			public void onError(int error, Camera camera) {
 				Log.e(tag, "Camera error : " + error);
@@ -84,9 +82,10 @@ public abstract class AndroidCameraRecord {
 		}
 
 
-		if (!params.videoDimensionsInverted) {
+		if (params.width >= params.height) {
 			parameters.setPreviewSize(params.width, params.height);
 		} else {
+			// invert height and width
 			parameters.setPreviewSize(params.height, params.width);
 		}
 		parameters.setPreviewFrameRate(Math.round(params.fps));
@@ -126,6 +125,10 @@ public abstract class AndroidCameraRecord {
 
 
 
+	protected Camera openCamera(int cameraId) {
+		return Camera.open();
+	}
+
 	protected void onSettingCameraParameters(Parameters parameters) {}
 
 	/**
@@ -164,24 +167,8 @@ public abstract class AndroidCameraRecord {
 	
 	protected abstract void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb);
 
-	public void setDisplayOrientation(int rotation) {
-		displayOrientation = rotation;
-	}
-	protected int getDisplayOrientation() {return displayOrientation;}
-
-	protected int rotateCapturedFrame() {
-		if (params.videoDimensionsInverted) {
-			return 1; // always rotate 90°
-		} else if (params.cameraId == 2) {
-			return 0;
-		} else {
-			return (4 + 1 - displayOrientation) % 4;
-		}
-	}
 
 
-
-	
 	public static class RecorderParams {
 		public float fps;
 		public int height;
@@ -191,13 +178,11 @@ public abstract class AndroidCameraRecord {
 		public int cameraId;
 		public int rotation;
 		public SurfaceView surfaceView;
-		public boolean videoDimensionsInverted;
 		
 		public RecorderParams(long ptr) {
 			filterDataNativePtr = ptr;
 		}
 	}
-
 
 
 
@@ -215,4 +200,5 @@ public abstract class AndroidCameraRecord {
 
 		return currentPreviewSize.width * currentPreviewSize.height * 3 /2;
 	}
+	
 }

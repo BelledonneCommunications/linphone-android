@@ -28,7 +28,6 @@ public class BandwidthManager {
 	public static final int HIGH_RESOLUTION = 0;
 	public static final int LOW_RESOLUTION = 1;
 	public static final int LOW_BANDWIDTH = 2;
-	private static final boolean portraitMode = true; // FIXME: preference?
 
 	private static final int[][] bandwidthes = {{256,256}, {128,128}, {80,80}};
 	private static BandwidthManager instance;
@@ -71,7 +70,7 @@ public class BandwidthManager {
 		lc.setDownloadBandwidth(bandwidthes[newProfile][1]);
 
 		if (lc.isIncall()) {
-			InviteManager.getInstance().reinvite();
+			CallManager.getInstance().reinvite();
 		} else {
 			updateWithProfileSettings(lc, null);
 		}
@@ -80,11 +79,9 @@ public class BandwidthManager {
 
 	public void updateWithProfileSettings(LinphoneCore lc, LinphoneCallParams callParams) {
 		// Setting Linphone Core Preferred Video Size
-		AndroidCameraRecordManager cameraManager = AndroidCameraRecordManager.getInstance();
-
 		boolean bandwidthOKForVideo = isVideoPossible();
 		if (bandwidthOKForVideo) {
-			VideoSize targetVideoSize = cameraManager.doYouSupportThisVideoSize(getMaximumVideoSize());
+			VideoSize targetVideoSize = getMaximumVideoSize();
 			
 			lc.setPreferredVideoSize(targetVideoSize);
 			VideoSize actualVideoSize = lc.getPreferredVideoSize();
@@ -106,12 +103,12 @@ public class BandwidthManager {
 	}
 
 
-	private VideoSize maximumVideoSize(int profile) {
+	private VideoSize maximumVideoSize(int profile, boolean cameraIsPortrait) {
 		switch (profile) {
 		case LOW_RESOLUTION:
-			return VideoSize.createStandard(VideoSize.QCIF, portraitMode);
+			return VideoSize.createStandard(VideoSize.QCIF, cameraIsPortrait);
 		case HIGH_RESOLUTION:
-			return VideoSize.createStandard(VideoSize.QVGA, portraitMode);
+			return VideoSize.createStandard(VideoSize.QVGA, cameraIsPortrait);
 		default:
 			throw new RuntimeException("profile not managed : " + profile);
 		}
@@ -123,6 +120,6 @@ public class BandwidthManager {
 	}
 
 	public VideoSize getMaximumVideoSize() {
-		return maximumVideoSize(currentProfile);
+		return maximumVideoSize(currentProfile, AndroidCameraRecordManager.getInstance().outputIsPortrait());
 	}
 }

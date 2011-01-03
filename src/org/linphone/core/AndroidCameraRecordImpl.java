@@ -34,19 +34,19 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	private double timeElapsedBetweenFrames = 0;
 	private long lastFrameTime = 0;
 	private final double expectedTimeBetweenFrames;
-	private boolean sizesInverted;
+	protected final int rotation;
 
 	public AndroidCameraRecordImpl(RecorderParams parameters) {
 		super(parameters);
 		expectedTimeBetweenFrames = 1d / Math.round(parameters.fps);
 		filterCtxPtr = parameters.filterDataNativePtr;
-		sizesInverted = parameters.videoDimensionsInverted;
+		rotation = parameters.rotation;
 
 		storePreviewCallBack(this);
 	}
 
 	
-	private native void putImage(long filterCtxPtr, byte[] buffer, int rotate, boolean sizesInverted);
+	private native void putImage(long filterCtxPtr, byte[] buffer, int rotate);
 
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
@@ -69,7 +69,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		long curTime = System.currentTimeMillis();
 		if (lastFrameTime == 0) {
 			lastFrameTime = curTime;
-			putImage(filterCtxPtr, data, rotateCapturedFrame(), sizesInverted);
+			putImage(filterCtxPtr, data, rotation);
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		timeElapsedBetweenFrames = currentTimeElapsed;
 
 		//		Log.d("onPreviewFrame: ", Integer.toString(data.length));
-		putImage(filterCtxPtr, data, rotateCapturedFrame(), sizesInverted);
+		putImage(filterCtxPtr, data, rotation);
 	}
 
 
@@ -91,7 +91,5 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {
 		camera.setPreviewCallback(cb);
 	}
-
-
 
 }
