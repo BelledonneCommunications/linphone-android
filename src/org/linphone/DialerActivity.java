@@ -252,6 +252,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 							mDisplayNameView.setText(lLinphoneCore.getRemoteAddress().getUserName());
 						}
 						configureMuteAndSpeakerButtons();
+						LinphoneActivity.instance().startProxymitySensor();
 						mWakeLock.acquire();
 					} 
 				}
