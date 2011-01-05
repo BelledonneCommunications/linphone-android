@@ -49,7 +49,7 @@ public class LinphoneActivity extends TabActivity  {
 	
 	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
-	private SensorEventListener mSensorEventListener;
+	static private SensorEventListener mSensorEventListener;
 	
 	private static String SCREEN_IS_HIDDEN ="screen_is_hidden";
 	
@@ -160,7 +160,7 @@ public class LinphoneActivity extends TabActivity  {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+		
 
 	}
 	@Override
@@ -241,17 +241,21 @@ public class LinphoneActivity extends TabActivity  {
 		}
 		getWindow().setAttributes(lAttrs);
 	}
-	protected void startProxymitySensor() {
+	protected synchronized void startProxymitySensor() {
+		if (mSensorEventListener != null) {
+			Log.i(LinphoneService.TAG, "proximity sensor already active");
+			return;
+		}
 		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
 		mSensorEventListener = new SensorEventListener() {
 			public void onSensorChanged(SensorEvent event) {
 				if (event.timestamp == 0) return; //just ignoring for nexus 1
-				//Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
+				Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
 				
 				if (event.values[0] != event.sensor.getMaximumRange() ) {
-					hideScreen(true);
+					instance().hideScreen(true);
 				} else  {
-					hideScreen(false);
+					instance().hideScreen(false);
 				}
 			}
 
@@ -262,8 +266,11 @@ public class LinphoneActivity extends TabActivity  {
 			Log.i(LinphoneService.TAG, "Proximity sensor detected, registering");
 		}		
 	}
-	protected void stopProxymitySensor() {
-		if (mSensorManager!=null) mSensorManager.unregisterListener(mSensorEventListener);
+	protected synchronized void stopProxymitySensor() {
+		if (mSensorManager!=null) {
+			mSensorManager.unregisterListener(mSensorEventListener);
+			mSensorEventListener=null; 
+		}
 		hideScreen(false);
 	}	
 }
