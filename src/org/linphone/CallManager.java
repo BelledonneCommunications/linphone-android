@@ -121,6 +121,8 @@ public class CallManager {
 		LinphoneCall lCall = lc.getCurrentCall();
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
 		bm().updateWithProfileSettings(lc, params);
+		lc.updateCall(lCall, null);
+		
 	}
 	
 }

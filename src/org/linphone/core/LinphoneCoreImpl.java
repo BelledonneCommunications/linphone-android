@@ -382,7 +382,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 	public int updateCall(LinphoneCall call, LinphoneCallParams params) {
 		long ptrCall = ((LinphoneCallImpl) call).nativePtr;
-		long ptrParams = ((LinphoneCallParamsImpl)params).nativePtr;
+		long ptrParams = params!=null ? ((LinphoneCallParamsImpl)params).nativePtr : 0;
 
 		return updateCall(nativePtr, ptrCall, ptrParams);
 	}

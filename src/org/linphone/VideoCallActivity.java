@@ -193,7 +193,6 @@ public class VideoCallActivity extends Activity {
 			break;
 		case R.id.videocall_menu_switch_camera:
 			recordManager.stopVideoRecording();
-			sendStaticImage(true);
 			recordManager.toggleUseFrontCamera();
 			CallManager.getInstance().updateCall();
 			// camera will be restarted when mediastreamer chain is recreated and setParameters is called
