@@ -31,7 +31,10 @@ class LinphoneCallImpl implements LinphoneCall {
 	native private int getState(long nativePtr);
 	private native long getCurrentParamsCopy(long nativePtr);
 	private native void enableCamera(long nativePtr, boolean enabled);
-	
+	private native void enableEchoCancellation(long nativePtr,boolean enable);
+	private native boolean isEchoCancellationEnabled(long nativePtr) ;
+	private native void enableEchoLimiter(long nativePtr,boolean enable);
+	private native boolean isEchoLimiterEnabled(long nativePtr) ;
 
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -71,5 +74,18 @@ class LinphoneCallImpl implements LinphoneCall {
 	}
 	public boolean equals(Object call) {
 		return nativePtr == ((LinphoneCallImpl)call).nativePtr;
+	}
+	public void enableEchoCancellation(boolean enable) {
+		enableEchoCancellation(nativePtr,enable);
+		
+	}
+	public boolean isEchoCancellationEnabled() {
+		return isEchoCancellationEnabled(nativePtr);
+	}
+	public void enableEchoLimiter(boolean enable) {
+		enableEchoLimiter(nativePtr,enable);
+	}
+	public boolean isEchoLimiterEnabled() {
+		return isEchoLimiterEnabled(nativePtr);
 	}
 }

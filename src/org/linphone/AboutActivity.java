@@ -37,6 +37,6 @@ public class AboutActivity extends Activity {
 		} catch (NameNotFoundException e) {
 			Log.e(LinphoneService.TAG, "cannot get version name", e);
 		}
-	}
+	}     
 	
 }
