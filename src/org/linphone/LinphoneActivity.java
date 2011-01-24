@@ -160,7 +160,7 @@ public class LinphoneActivity extends TabActivity  {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+		 
 
 	}
 	@Override

@@ -596,6 +596,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(true); 
 		}
+		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
+		if (lLinphoneCore.isIncall()) {
+			/*disable EC*/  
+			lLinphoneCore.getCurrentCall().enableEchoCancellation(false);
+			lLinphoneCore.getCurrentCall().enableEchoLimiter(true);
+		}
 		
 	}
 	private void routeAudioToReceiver() {
@@ -604,7 +610,13 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
 		} else {
 			mAudioManager.setSpeakerphoneOn(false); 
-		}		
+		}	
+		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
+		if (lLinphoneCore.isIncall()) {
+			//Restore default value
+			lLinphoneCore.getCurrentCall().enableEchoCancellation(lLinphoneCore.isEchoCancellationEnabled());
+			lLinphoneCore.getCurrentCall().enableEchoLimiter(false);
+		}
 	}
 	private void callPending(LinphoneCall call) {
 		mDecline.setEnabled(true);
