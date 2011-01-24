@@ -109,6 +109,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	MediaPlayer mRingerPlayer;
 
 	Vibrator mVibrator;
+	private static boolean accountCheckingDone;
 
 	/**
 	 * 
@@ -332,7 +333,80 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			finish();
 		}
 
+
+		if (!accountCheckingDone) checkAccountsSettings();
 	}
+
+	private boolean checkDefined(int ... keys) {
+		for (int key : keys) {
+			String conf = mPref.getString(getString(key), null);
+			if (conf == null || "".equals(conf))
+				return false;
+		}
+		return true;
+	}
+
+
+	private void checkAccountsSettings() {
+		if (mPref.getBoolean(PREF_FIRST_LAUNCH, true)) {
+			// First launch
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			TextView lDialogTextView = new TextView(this);
+			lDialogTextView.setAutoLinkMask(0x0f/*all*/);
+			lDialogTextView.setPadding(10, 10, 10, 10);
+
+			lDialogTextView.setText(Html.fromHtml(getString(R.string.first_launch_message)));
+
+			builder.setCustomTitle(lDialogTextView)
+			.setCancelable(false)
+			.setPositiveButton(getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					LinphoneActivity.instance().startprefActivity();
+					mPref.edit().putBoolean(PREF_FIRST_LAUNCH, false).commit();
+					accountCheckingDone = true;
+				}
+			});
+
+			builder.create().show();
+
+
+		} else if (!mPref.getBoolean(PREF_CHECK_CONFIG, false)
+				&& !checkDefined(R.string.pref_username_key, R.string.pref_passwd_key, R.string.pref_domain_key)) {
+			// Account not set
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			TextView lDialogTextView = new TextView(this);
+			lDialogTextView.setAutoLinkMask(0x0f/*all*/);
+			lDialogTextView.setPadding(10, 10, 10, 10);
+
+			lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error)));
+
+			builder.setCustomTitle(lDialogTextView)
+			.setCancelable(false)
+			.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					LinphoneActivity.instance().startprefActivity();
+					accountCheckingDone = true;
+				}
+			}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					accountCheckingDone = true;
+				}
+			}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
+					dialog.cancel();
+					accountCheckingDone = true;
+				}
+			});
+
+			builder.create().show();
+		} else {
+			accountCheckingDone = true;
+		}
+	}
+
 	private void updateIncallVideoCallButton() {
 		boolean prefVideoEnabled = mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 		if (prefVideoEnabled && !mCall.isEnabled()) {
@@ -397,40 +471,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			updateIncallVideoCallButton();
 			try{
 				LinphoneService.instance().initFromConf();
-			} catch (LinphoneConfigException ec) {
-				if (mPref.getBoolean(PREF_FIRST_LAUNCH, true)) {
-					Log.w(LinphoneService.TAG,"no valid settings found - first launch",ec);
-					LinphoneActivity.instance().startprefActivity();
-					mPref.edit().putBoolean(PREF_FIRST_LAUNCH, false).commit();
-				} else {
-					Log.w(LinphoneService.TAG,"no valid settings found", ec);
-					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					TextView lDialogTextView = new TextView(this);
-					lDialogTextView.setAutoLinkMask(0x0f/*all*/);
-					lDialogTextView.setPadding(10, 10, 10, 10);
-					lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error)));
-					builder.setCustomTitle(lDialogTextView)
-					.setCancelable(false)
-					.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							LinphoneActivity.instance().startprefActivity();
-						}
-					}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-
-						}
-					}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
-							dialog.cancel();
-						}
-					});
-					if (mPref.getBoolean(PREF_CHECK_CONFIG, false) == false) {
-						builder.create().show();
-					}
-				}
-			} catch (Exception e ) {
+			} catch (Exception e) {
 				Log.e(LinphoneService.TAG,"Cannot get initial config", e);
 			}
 			if (getIntent().getData() != null) {

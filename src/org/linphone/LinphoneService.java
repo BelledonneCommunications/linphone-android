@@ -321,7 +321,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
 		
 		try {
-			//codec config
+			// Configure audio codecs
 			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
 			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex16_key);
 			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
@@ -330,6 +330,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
 			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
 			
+			// Configure video codecs
 			for (PayloadType videoCodec : mLinphoneCore.listVideoCodecs()) {
 				enableDisableVideoCodecs(videoCodec);
 			}
