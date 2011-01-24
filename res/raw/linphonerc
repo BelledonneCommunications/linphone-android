@@ -31,6 +31,14 @@ capture_dev_id=ANDROID SND: Android Sound card
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 ec_tail_len=100
+el_type=mic
+el_thres=0.05
+el_force=100000
+el_sustain=200
+el_transmit_thres=1.7
+ng_floorgain=0.01
+
+
 
 [video]
 size=qvga-portrait
