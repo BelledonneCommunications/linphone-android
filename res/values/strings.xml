@@ -61,7 +61,7 @@
     <string name="pref_codecs_key">pref_codecs_key</string>
     <string name="place_call_chooser">Place a call</string>
 <string name="pref_debug">Debug</string>
-<string name="about_text">Linphone  %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n© 2010 Belledonne Communications</string>
+<string name="about_text">Linphone  %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
 <string name="menu_about">About</string>
 <string name="pref_audio">Audio</string>
 <string name="menu_exit">Exit</string>
@@ -84,9 +84,11 @@
 <string name="call_error">Cannot call %s</string>
 <string name="yes">Yes</string>
 <string name="no">No</string>
+<string name="dismiss">Dismiss</string>
 <string name="never_remind">Never remind me</string>
 <string name="config_error">%s, do you want to go to the settings page ?</string>
 <string name="initial_config_error">&lt;P ALIGN=CENTER&gt;No SIP account has been configured yet, do you want to go to the settings page ?&lt;br/&gt;&lt;br/&gt; Need help ?&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
+<string name="first_launch_message">&lt;P ALIGN=CENTER&gt;Welcome to Linphone SIP phone&lt;br/&gt;&lt;br/&gt; If you are new to SIP, have a look at&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
 <string name="warning_already_incall">Cannot initiate a new call because a call is already engaged</string>
 <string name="tab_history">History</string>
 <string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
