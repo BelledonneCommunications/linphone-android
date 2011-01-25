@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -44,8 +45,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -55,6 +58,8 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -86,6 +91,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	LinphoneCall.State mCurrentCallState;
 	Vibrator mVibrator;
 	private AudioManager mAudioManager;
+	private  BroadcastReceiver mReceiver = new KeepAliveManager();
 	
 	private Handler mHandler =  new Handler() ;
 	static boolean isready() {
@@ -142,12 +148,17 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			};
 
 			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
-
-
+	        IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
+			registerReceiver(mReceiver, lFilter);
+			
+			
+		
 		}
 		catch (Exception e) {
 			Log.e(TAG,"Cannot start linphone",e);
 		}
+		
 
 	}
 
@@ -442,6 +453,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		mLinphoneCore.destroy();
 		theLinphone=null;
 		mNotificationManager.cancel(NOTIFICATION_ID);
+		unregisterReceiver(mReceiver);
 	}
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
 			String url) {
@@ -492,6 +504,22 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		if (mVibrator!=null) {
 			mVibrator.cancel();
 		}
+	}
+	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delay_ms,
+			final Object data) {
+		final CheckBoxPreference pref = (CheckBoxPreference) data;
+		mHandler.post(new Runnable() {
+			public void run() {
+				 if (status == EcCalibratorStatus.Done) {
+					pref.setSummary(String.format(getString(R.string.ec_calibrated), delay_ms));
+					pref.setChecked(true);
+					
+				} else if (status == EcCalibratorStatus.Failed) {
+					pref.setSummary(R.string.failed);
+					pref.setChecked(false);
+				}
+			}
+		});
 	}
 }
 

@@ -25,6 +25,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
@@ -100,7 +101,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private ImageButton mAddVideo;
 	
 	private static final String PREF_CHECK_CONFIG = "pref_check_config";
-	private static final String PREF_FIRST_LAUNCH = "pref_first_launch";
+	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
 	static int VIDEO_VIEW_ACTIVITY = 100;
@@ -359,10 +360,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 			builder.setCustomTitle(lDialogTextView)
 			.setCancelable(false)
-			.setPositiveButton(getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+			.setPositiveButton(getString(R.string.cont), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					LinphoneActivity.instance().startprefActivity();
-					mPref.edit().putBoolean(PREF_FIRST_LAUNCH, false).commit();
 					accountCheckingDone = true;
 				}
 			});
@@ -490,7 +490,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 
 		if (state == LinphoneCall.State.OutgoingInit) {
-			mWakeLock.acquire();
 			enterIncalMode(lc);
 			routeAudioToReceiver();
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
@@ -550,6 +549,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 		LinphoneActivity.instance().startProxymitySensor();
+		if (!mWakeLock.isHeld()) mWakeLock.acquire(); 
 
 	}
 	private void configureMuteAndSpeakerButtons() {
@@ -739,5 +739,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 	private AndroidCameraRecordManager getVideoManager() {
 		return AndroidCameraRecordManager.getInstance();
+	}
+	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
+			int delay_ms, Object data) {
+		
 	}
 }
