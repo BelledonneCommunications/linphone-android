@@ -15,7 +15,7 @@ use_ipv6=0
 register_only_when_network_is_up=1
 default_proxy=0
 auto_net_state_mon=0
-keepalive_period=3600000
+keepalive_period=30000
 
 [rtp]
 audio_rtp_port=7076
@@ -30,7 +30,7 @@ ringer_dev_id=ANDROID SND: Android Sound card
 capture_dev_id=ANDROID SND: Android Sound card
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
-ec_tail_len=100
+ec_tail_len=120
 el_type=mic
 el_thres=0.05
 el_force=100000

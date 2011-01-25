@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_echo_canceller_calibration_key">pref_echo_canceller_calibration_key</string>
+    <string name="pref_echo_canceller_calibration">Echo calibration</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>
     <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
 	<string name="pref_video">Video</string>
@@ -85,10 +87,12 @@
 <string name="yes">Yes</string>
 <string name="no">No</string>
 <string name="dismiss">Dismiss</string>
+<string name="cont">Continue</string>
 <string name="never_remind">Never remind me</string>
 <string name="config_error">%s, do you want to go to the settings page ?</string>
 <string name="initial_config_error">&lt;P ALIGN=CENTER&gt;No SIP account has been configured yet, do you want to go to the settings page ?&lt;br/&gt;&lt;br/&gt; Need help ?&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
-<string name="first_launch_message">&lt;P ALIGN=CENTER&gt;Welcome to Linphone SIP phone&lt;br/&gt;&lt;br/&gt; If you are new to SIP, have a look at&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
+<string name="first_launch_message">&lt;P ALIGN=CENTER&gt;Welcome to Linphone SIP phone&lt;br/&gt;&lt;br/&gt; If you are new to SIP, have a look at&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt; </string>
+<string name="ec_calibration_launch_message">Starting echo cancelation audio calibration </string>
 <string name="warning_already_incall">Cannot initiate a new call because a call is already engaged</string>
 <string name="tab_history">History</string>
 <string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
@@ -102,4 +106,7 @@
 <string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 <string name="pref_stun_server">Stun server</string>
 <string name="pref_stun_server_key">pref_stun_server_key</string>
+<string name="ec_calibrating">Calibrating...</string>
+<string name="ec_calibrated">Calibrated [%s ms]</string>
+<string name="failed">failed</string>
 </resources>

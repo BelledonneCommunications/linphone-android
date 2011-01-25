@@ -88,6 +88,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setRing(long nativePtr, String path);
 	private native String getRing(long nativePtr);
 	private native long[] listVideoPayloadTypes(long nativePtr);
+	private native void enableKeepAlive(long nativePtr,boolean enable);
+	private native boolean isKeepAliveEnabled(long nativePtr);
+	private native int startEchoCalibration(long nativePtr,Object data);
 	
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
@@ -425,5 +428,15 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public boolean isNetworkReachable() {
 		throw new RuntimeException("Not implemented");
+	}
+	public void enableKeepAlive(boolean enable) {
+		enableKeepAlive(nativePtr,enable);
+		
+	}
+	public boolean isKeepAliveEnabled() {
+		return isKeepAliveEnabled(nativePtr);
+	}
+	public void startEchoCalibration(Object data) throws LinphoneCoreException {
+		startEchoCalibration(nativePtr, data);
 	}
 }
