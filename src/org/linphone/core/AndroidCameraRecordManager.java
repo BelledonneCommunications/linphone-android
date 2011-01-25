@@ -22,9 +22,7 @@ import java.util.List;
 
 import org.linphone.core.AndroidCameraRecord.RecorderParams;
 
-import android.hardware.Camera;
 import android.hardware.Camera.Size;
-import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -53,6 +51,7 @@ public class AndroidCameraRecordManager {
 	}
 
 	private AndroidCameraRecord.RecorderParams parameters;
+	private final AndroidCameraConf cc;
 	private SurfaceView surfaceView;
 	private boolean muted;
 	private int cameraId;
@@ -68,36 +67,15 @@ public class AndroidCameraRecordManager {
 
 	// singleton
 	private AndroidCameraRecordManager() {
-		findFrontAndRearCameraIds();
+		cc = Version.sdkAbove(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
+
+		Integer fId = -1;Integer rId = -1;Integer cId = -1;
+		cc.findFrontAndRearCameraIds(fId, rId, cId);
+		frontCameraId=fId;rearCameraId=rId;cameraId=cId;
 	}
 
 	
-	private void findFrontAndRearCameraIds() {
-		if (Version.sdkAbove(9)) {
-			findFrontAndRearCameraIds9();
-			return;
-		}
 
-		if (Build.DEVICE.startsWith("GT-I9000")) {
-			// Galaxy S has 2 cameras
-			frontCameraId = 2;
-			rearCameraId = 1;
-			cameraId = rearCameraId;
-			return;
-		}
-
-		// default to 0/0
-	}
-
-	private void findFrontAndRearCameraIds9() {
-		for (int id=0; id < getNumberOfCameras9(); id++) {
-			if (isFrontCamera9(id)) {
-				frontCameraId = id;
-			} else {
-				rearCameraId = id;
-			}
-		}
-	}
 
 	public boolean hasSeveralCameras() {
 		return frontCameraId != rearCameraId;
@@ -105,14 +83,14 @@ public class AndroidCameraRecordManager {
 
 	
 	public void setUseFrontCamera(boolean value) {
-		if (isFrontCamera() == value) return; // already OK
+		if (cc.isFrontCamera(cameraId) == value) return; // already OK
 
 		toggleUseFrontCamera();
 	}
 
-	public boolean isUseFrontCamera() {return isFrontCamera();}
+	public boolean isUseFrontCamera() {return cc.isFrontCamera(cameraId);}
 	public boolean toggleUseFrontCamera() {
-		boolean previousUseFront = isFrontCamera();
+		boolean previousUseFront = cc.isFrontCamera(cameraId);
 
 		cameraId = previousUseFront ? rearCameraId : frontCameraId;
 
@@ -265,69 +243,16 @@ public class AndroidCameraRecordManager {
 	
 	
 	
-	public static int getNumberOfCameras() {
-		if (Version.sdkAbove(9)) return getNumberOfCameras9();
-		
-		// Use hacks to guess the number of cameras
-		if (Build.DEVICE.startsWith("GT-I9000")) {
-			// Galaxy S has 2 cameras
-			return 2;
-		} else
-			return 1;
-	}
-	
-	private static int getNumberOfCameras9() {
-		return Camera.getNumberOfCameras();
-	}
+
 
 	public boolean isCameraOrientationPortrait() {
-		return (getCameraOrientation() % 180) == 90;
-	}
-
-	public int getCameraOrientation() {
-		if (Version.sdkAbove(9)) return getCameraOrientation9();
-		
-		// Use hacks to guess orientation of the camera
-		if (cameraId == 2 && Build.DEVICE.startsWith("GT-I9000")) {
-			// Galaxy S rear camera
-			// mounted in landscape for a portrait phone orientation
-			return 90;
-		}
-		return 0;
+		return (cc.getCameraOrientation(cameraId) % 180) == 90;
 	}
 
 
-	private int getCameraOrientation9() {
-		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-		Camera.getCameraInfo(cameraId, info);
-		return info.orientation;
-	}
-
-	public boolean isFrontCamera() {
-		if (Version.sdkAbove(9)) return isFrontCamera9();
-
-		// Use hacks to guess facing of the camera
-		
-		if (cameraId == 2 && Build.DEVICE.startsWith("GT-I9000")) {
-			return true;
-		}
-
-		return false;
-	}
-	
-	private boolean isFrontCamera9() {
-		return isFrontCamera9(cameraId);
-	}
-
-	
-	private boolean isFrontCamera9(int cameraId) {
-		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-		Camera.getCameraInfo(cameraId, info);
-		return info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT ? true : false;
-	}
 
 	private int bufferRotationForCorrectImageOrientation() {
-		final int cameraOrientation = getCameraOrientation();
+		final int cameraOrientation = cc.getCameraOrientation(cameraId);
 		final int rotation = Version.sdkAbove(8) ?
 				(360 - cameraOrientation + 90 - phoneOrientation) % 360
 				: 0;

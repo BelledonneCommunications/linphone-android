@@ -188,7 +188,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 							lLinphoneCore.terminateCall(lLinphoneCore.getCurrentCall());
 							Toast toast = Toast.makeText(DialerActivity.this
 									,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
-									, Toast.LENGTH_LONG);
+									,Toast.LENGTH_LONG);
 							toast.show();
 						}
 						return;
@@ -220,11 +220,11 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mInCallAddressLayout = (View) findViewById(R.id.IncallAddressLayout);
 			mMute = (ToggleImageButton)findViewById(R.id.mic_mute_button);
 			mSpeaker = (ToggleImageButton)findViewById(R.id.speaker_button);
-			if (Build.DEVICE.startsWith("GT-I9000")) {
+/*			if (Hacks.isGalaxyS()) {
 				// Galaxy S doesn't handle audio routing properly
 				// so disabling it totally
 				mSpeaker.setVisibility(View.GONE);
-			}
+			}*/
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			mDecline.setEnabled(false);
@@ -564,9 +564,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	
 	private void resetCameraFromPreferences() {
 		boolean useFrontCam = mPref.getBoolean(getString(R.string.pref_video_use_front_camera_key), false);
-		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
+		getVideoManager().setUseFrontCamera(useFrontCam);
 		final int phoneOrientation = 90 * getWindowManager().getDefaultDisplay().getOrientation();
-		AndroidCameraRecordManager.getInstance().setPhoneOrientation(phoneOrientation);
+		getVideoManager().setPhoneOrientation(phoneOrientation);
 	}
 	
 	private void exitCallMode() {
@@ -610,7 +610,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
 		} else {
 			mAudioManager.setSpeakerphoneOn(false); 
-		}	
+		}
+		
 		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
 		if (lLinphoneCore.isIncall()) {
 			//Restore default value

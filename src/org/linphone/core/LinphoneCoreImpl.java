@@ -90,8 +90,6 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native long[] listVideoPayloadTypes(long nativePtr);
 	
 	
-	private static final String TAG = "LinphoneCore"; 
-	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);

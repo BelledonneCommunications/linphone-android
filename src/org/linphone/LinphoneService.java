@@ -104,6 +104,9 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		super.onCreate();
 		theLinphone = this;
 		
+		// Dump some debugging information to the logs
+		Hacks.dumpDeviceInformation();
+
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotification = new Notification(R.drawable.status_level
 														, ""
