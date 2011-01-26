@@ -69,9 +69,9 @@ public class AndroidCameraRecordManager {
 	private AndroidCameraRecordManager() {
 		cc = Version.sdkAbove(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
 
-		Integer fId = -1;Integer rId = -1;Integer cId = -1;
+		int[] fId = {-1};int[] rId = {-1};int[] cId = {-1};
 		cc.findFrontAndRearCameraIds(fId, rId, cId);
-		frontCameraId=fId;rearCameraId=rId;cameraId=cId;
+		frontCameraId=fId[0];rearCameraId=rId[0];cameraId=cId[0];
 	}
 
 	

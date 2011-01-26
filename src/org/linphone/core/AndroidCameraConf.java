@@ -25,13 +25,13 @@ import android.util.Log;
 public class AndroidCameraConf {
 	private static final String tag = "Linphone";
 
-	public void findFrontAndRearCameraIds(Integer frontCameraId, Integer rearCameraId, Integer cameraId) {
-
+	public void findFrontAndRearCameraIds(int[] frontCameraId, int[] rearCameraId, int[] cameraId) {
+		Log.i(tag, "Detecting cameras");
 		if (Hacks.isGalaxyS()) {
 			Log.d(tag, "Hack Galaxy S : has 2 cameras front=2; rear=1");
-			frontCameraId = 2;
-			rearCameraId = 1;
-			cameraId = rearCameraId;
+			frontCameraId[0] = 2;
+			rearCameraId[0] = 1;
+			cameraId[0] = rearCameraId[0];
 			return;
 		}
 
