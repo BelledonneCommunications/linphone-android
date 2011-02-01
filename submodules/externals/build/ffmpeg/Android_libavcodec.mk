@@ -84,7 +84,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/resample2.c \
 	libavcodec/simple_idct.c \
 	libavcodec/utils.c \
-	libavcodec/pthread.c
+	libavcodec/pthread.c 
 
 
 LOCAL_ARM_MODE := arm

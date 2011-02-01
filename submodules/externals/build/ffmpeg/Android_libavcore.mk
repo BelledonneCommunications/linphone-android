@@ -8,7 +8,10 @@ LOCAL_MODULE := libavcore
 LOCAL_SRC_FILES := \
 	libavcore/imgutils.c \
 	libavcore/parseutils.c \
-	libavcore/utils.c
+	libavcore/utils.c 
+
+#	libavcore/samplefmt.c \
+#	libavcore/audioconvert.c
 
 
 LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
