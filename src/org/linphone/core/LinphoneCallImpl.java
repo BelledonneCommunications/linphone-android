@@ -34,7 +34,8 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
 	private native boolean isEchoCancellationEnabled(long nativePtr) ;
 	private native void enableEchoLimiter(long nativePtr,boolean enable);
-	private native boolean isEchoLimiterEnabled(long nativePtr) ;
+	private native boolean isEchoLimiterEnabled(long nativePtr);
+	private native long getReplacedCall(long nativePtr);
 
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -88,4 +89,12 @@ class LinphoneCallImpl implements LinphoneCall {
 	public boolean isEchoLimiterEnabled() {
 		return isEchoLimiterEnabled(nativePtr);
 	}
+	public LinphoneCall getReplacedCall(){
+		long callptr=getReplacedCall(nativePtr);
+		if (callptr!=0){
+			return new LinphoneCallImpl(callptr);
+		}
+		return null;
+	}
+	
 }

@@ -271,8 +271,11 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i(TAG, "new state ["+state+"]");
 		if (state == LinphoneCall.State.IncomingReceived && !call.equals(mLinphoneCore.getCurrentCall())) {
-			//no multicall support, just decline
-			mLinphoneCore.terminateCall(call);
+			if (call.getReplacedCall()==null){
+				//no multicall support, just decline
+				mLinphoneCore.terminateCall(call);
+			}//otherwise it will be accepted automatically.
+			
 			return;
 		}
 		mHandler.post(new Runnable() {
