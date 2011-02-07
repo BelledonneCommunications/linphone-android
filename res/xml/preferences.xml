@@ -31,12 +31,12 @@
 		<CheckBoxPreference android:defaultValue="true"
 			android:title="@string/pref_video_enable_title" android:key="@string/pref_video_enable_key" />
 
-		<CheckBoxPreference android:title="@string/pref_handle_outcall"
-			android:key="@string/pref_handle_outcall_key" android:summary="@string/pref_handle_outcall_summarry"></CheckBoxPreference>
+		
 
 		<EditTextPreference android:title="@string/pref_stun_server"
 			android:key="@string/pref_stun_server_key"></EditTextPreference>
-	</PreferenceCategory>
+	<ListPreference android:key="@string/pref_handle_outcall_key" android:title="@string/pref_handle_outcall" android:summary="@string/pref_handle_outcall_summarry" android:entryValues="@array/pref_handle_outcall_keys" android:entries="@array/pref_handle_outcall_values" android:defaultValue="ask_for_outcall_interception"></ListPreference>
+</PreferenceCategory>
 
 
 

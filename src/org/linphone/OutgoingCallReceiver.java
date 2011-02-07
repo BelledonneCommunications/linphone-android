@@ -27,6 +27,9 @@ import android.preference.PreferenceManager;
 
 public class OutgoingCallReceiver extends BroadcastReceiver {
 	public static String TAG = ";0000000";
+	public static String key_off="off";
+	public static String key_on_demand="ask_for_outcall_interception";
+	public static String key_always="alway_intercept_out_call";
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String to = intent.getStringExtra("android.intent.extra.PHONE_NUMBER");
@@ -41,7 +44,7 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 			setResult(Activity.RESULT_OK,null, null);
 			Intent lIntent = new Intent();
 			// 1 check config 
-			if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_handle_outcall_key), false)) {
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_handle_outcall_key),key_on_demand).equals(key_always)) {
 				//start linphone directly
 				lIntent.setClass(context, LinphoneActivity.class);
 			} else {

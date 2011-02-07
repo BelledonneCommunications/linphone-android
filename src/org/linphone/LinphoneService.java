@@ -91,7 +91,8 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	LinphoneCall.State mCurrentCallState;
 	Vibrator mVibrator;
 	private AudioManager mAudioManager;
-	private  BroadcastReceiver mReceiver = new KeepAliveManager();
+	private  BroadcastReceiver mKeepAliveMgrReceiver = new KeepAliveManager();
+	private  BroadcastReceiver mOutgoingCallReceiver = new OutgoingCallReceiver();
 	
 	private Handler mHandler =  new Handler() ;
 	static boolean isready() {
@@ -153,8 +154,13 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
 	        IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
-			registerReceiver(mReceiver, lFilter);
-			
+			registerReceiver(mKeepAliveMgrReceiver, lFilter);
+			if (!mPref.getString(getString(R.string.pref_handle_outcall_key), OutgoingCallReceiver.key_on_demand).equalsIgnoreCase(OutgoingCallReceiver.key_off)){
+				lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+				lFilter.setPriority(0);
+				lFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+				registerReceiver(mOutgoingCallReceiver,lFilter);
+			}
 			
 		
 		}
@@ -459,7 +465,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		mLinphoneCore.destroy();
 		theLinphone=null;
 		mNotificationManager.cancel(NOTIFICATION_ID);
-		unregisterReceiver(mReceiver);
+		unregisterReceiver(mKeepAliveMgrReceiver);
 	}
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
 			String url) {

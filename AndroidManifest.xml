@@ -106,10 +106,10 @@
 	<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
 	</intent-filter>
 	</receiver>
-	<receiver android:name="OutgoingCallReceiver" >
+	<!--  receiver android:name="OutgoingCallReceiver" >
 		<intent-filter android:priority="0"><action android:name="android.intent.action.NEW_OUTGOING_CALL"></action>
 	</intent-filter>
-	</receiver>
+	</receiver-->
 	<receiver android:name="BootReceiver" >
 		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action>
 	</intent-filter>
