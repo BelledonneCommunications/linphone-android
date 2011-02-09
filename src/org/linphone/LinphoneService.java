@@ -466,6 +466,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 		theLinphone=null;
 		mNotificationManager.cancel(NOTIFICATION_ID);
 		unregisterReceiver(mKeepAliveMgrReceiver);
+		unregisterReceiver(mOutgoingCallReceiver);
 	}
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
 			String url) {
