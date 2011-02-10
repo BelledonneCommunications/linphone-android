@@ -746,3 +746,4 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		
 	}
 }
+
