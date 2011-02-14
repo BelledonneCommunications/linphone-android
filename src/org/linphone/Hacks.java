@@ -64,7 +64,8 @@ public class Hacks {
 		StringBuilder sb = new StringBuilder(" ==== Phone information dump ====\n");
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");
 		sb.append("MODEL=").append(Build.MODEL).append("\n");
-		sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
+		//MANUFACTURER doesn't exist in android 1.5.
+		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK);
 		
 		Log.d("Linphone", sb.toString());
