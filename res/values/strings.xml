@@ -39,7 +39,7 @@
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_handle_outcall_summarry">Configure how cellular calls are redirected to voip when possible</string>
     <string name="pref_handle_outcall">Redirect cellular calls</string>
-    <string name="pref_handle_outcall_key">pref_handle_outcall_key</string>
+    <string name="pref_handle_outcall_key">pref_handle_outcall_key_v2</string>
     <string name="pref_autostart">Start at boot time</string>
     <string name="pref_autostart_key">pref_autostart_key</string>
     <string name="outcall_chooser_cellular">Cellular</string>
