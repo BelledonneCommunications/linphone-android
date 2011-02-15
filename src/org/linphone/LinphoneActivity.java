@@ -134,7 +134,6 @@ public class LinphoneActivity extends TabActivity  {
 	}
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		if  (isFinishing())  {
 			//restaure audio settings   
@@ -151,18 +150,6 @@ public class LinphoneActivity extends TabActivity  {
 		
 	}
 
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		 
-
-	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the currently selected menu XML resource.

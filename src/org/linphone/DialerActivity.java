@@ -25,12 +25,13 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.ui.Digit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,11 +49,9 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Html;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -70,19 +69,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private ImageButton mDecline;
 	private ImageButton mHangup;
 	private Button mErase;
-	
-	private Button mZero;
-	private Button mOne;
-	private Button mTwo;
-	private Button mThree ;
-	private Button mFour;
-	private Button mFive;
-	private Button mSix;
-	private Button mSeven;
-	private Button mEight;
-	private Button mNine;
-	private Button mStar;
-	private Button mHash;
 	
 	private ToggleImageButton mMute;
 	private ToggleImageButton mSpeaker;
@@ -113,16 +99,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	private static boolean accountCheckingDone;
 
 	/**
-	 * 
 	 * @return null if not ready yet
 	 */
 	public static DialerActivity getDialer() { 
-		if (theDialer == null) {
-			return null;
-		} else {
-			return theDialer;
-		}
+		return theDialer;
 	}
+
 	public void setContactAddress(String aContact,String aDisplayName) {
 		mAddress.setText(aContact);
 		mDisplayName = aDisplayName;
@@ -139,8 +121,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 
 		try {
-
-			
 			mAddress = (TextView) findViewById(R.id.SipUri); 
 			mDisplayNameView = (TextView) findViewById(R.id.DisplayNameView);
 			mErase = (Button)findViewById(R.id.Erase); 
@@ -277,55 +257,17 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			mSpeaker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				public void onCheckedChanged(ToggleImageButton buttonView,	boolean isChecked) {
 					if (isChecked) {
-						routeAudioToSpeaker();
+						LinphoneManager.routeAudioToSpeaker(mAudioManager);
 					} else {
-						routeAudioToReceiver();
+						LinphoneManager.routeAudioToReceiver(mAudioManager);
 					}
 				}
 			});
 			
-			mZero = (Button) findViewById(R.id.Button00) ;
-			if (mZero != null) {
-				setDigitListener(mZero,'0');
-				mZero.setOnLongClickListener(new OnLongClickListener() {
-					public boolean onLongClick(View arg0) {
-						LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-						lc.stopDtmf();
-						int lBegin = mAddress.getSelectionStart();
-						if (lBegin == -1) {
-							lBegin = mAddress.getEditableText().length();
-						}
-						if (lBegin >=0) {
-						mAddress.getEditableText().insert(lBegin,"+");
-						}
-						return true;
-					}
-					
-				});
-				mOne = (Button) findViewById(R.id.Button01) ;
-				setDigitListener(mOne,'1');
-				mTwo = (Button) findViewById(R.id.Button02);
-				setDigitListener(mTwo,'2');
-				mThree = (Button) findViewById(R.id.Button03);
-				setDigitListener(mThree,'3');
-				mFour = (Button) findViewById(R.id.Button04);
-				setDigitListener(mFour,'4');
-				mFive = (Button) findViewById(R.id.Button05);
-				setDigitListener(mFive,'5');
-				mSix = (Button) findViewById(R.id.Button06);
-				setDigitListener(mSix,'6');
-				mSeven = (Button) findViewById(R.id.Button07);
-				setDigitListener(mSeven,'7');
-				mEight = (Button) findViewById(R.id.Button08);
-				setDigitListener(mEight,'8');
-				mNine = (Button) findViewById(R.id.Button09);
-				setDigitListener(mNine,'9');
-				mStar = (Button) findViewById(R.id.ButtonStar);
-				setDigitListener(mStar,'*');
-				mHash = (Button) findViewById(R.id.ButtonHash);
-				setDigitListener(mHash,'#');
-			}
 
+			initializeDigits();
+			
+			
 			mStatus =  (TextView) findViewById(R.id.status_label);
 			theDialer = this;
 		
@@ -336,6 +278,21 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 
 		if (!accountCheckingDone) checkAccountsSettings();
+	}
+
+	private void initializeDigits() {
+		((Digit) findViewById(R.id.Button00)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button01)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button02)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button03)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button04)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button05)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button06)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button07)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button08)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.Button09)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.ButtonStar)).setWidgets(mAddress, mDisplayName);
+		((Digit) findViewById(R.id.ButtonHash)).setWidgets(mAddress, mDisplayName);
 	}
 
 	private boolean checkDefined(int ... keys) {
@@ -434,7 +391,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		if (mWakeLock.isHeld()) mWakeLock.release();
 		theDialer=null;
@@ -491,7 +447,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 
 		if (state == LinphoneCall.State.OutgoingInit) {
 			enterIncalMode(lc);
-			routeAudioToReceiver();
+			LinphoneManager.routeAudioToReceiver(mAudioManager);
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
 			resetCameraFromPreferences();
 			callPending(call);
@@ -543,9 +499,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		configureMuteAndSpeakerButtons();
 		
 		if (mSpeaker.isChecked()) {
-			 routeAudioToSpeaker();
+			LinphoneManager.routeAudioToSpeaker(mAudioManager);
 		} else {
-			 routeAudioToReceiver();
+			LinphoneManager.routeAudioToReceiver(mAudioManager);
 		}
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 		LinphoneActivity.instance().startProxymitySensor();
@@ -584,41 +540,12 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 		}
 		if (mWakeLock.isHeld())mWakeLock.release();
 		mSpeaker.setChecked(false);
-		routeAudioToReceiver();
+		LinphoneManager.routeAudioToReceiver(mAudioManager);
 		BandwidthManager.getInstance().setUserRestriction(false);
 		resetCameraFromPreferences();
 		LinphoneActivity.instance().stopProxymitySensor();
 	}
-	private void routeAudioToSpeaker() {
-		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
-			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
-		} else {
-			mAudioManager.setSpeakerphoneOn(true); 
-		}
-		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
-		if (lLinphoneCore.isIncall()) {
-			/*disable EC*/  
-			lLinphoneCore.getCurrentCall().enableEchoCancellation(false);
-			lLinphoneCore.getCurrentCall().enableEchoLimiter(true);
-		}
-		
-	}
-	private void routeAudioToReceiver() {
-		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
-			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
-		} else {
-			mAudioManager.setSpeakerphoneOn(false); 
-		}
-		
-		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
-		if (lLinphoneCore.isIncall()) {
-			//Restore default value
-			lLinphoneCore.getCurrentCall().enableEchoCancellation(lLinphoneCore.isEchoCancellationEnabled());
-			lLinphoneCore.getCurrentCall().enableEchoLimiter(false);
-		}
-	}
+
 	private void callPending(LinphoneCall call) {
 		mDecline.setEnabled(true);
 		//routeAudioToSpeaker();
@@ -673,55 +600,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener {
 			return;
 		}
 	}
-	private void setDigitListener(Button aButton,char dtmf) {
-		class DialKeyListener implements  OnClickListener ,OnTouchListener {
-			final String mKeyCode;
-			final TextView mAddressView;
-			boolean mIsDtmfStarted=false;
-			DialKeyListener(TextView anAddress, char aKeyCode) {
-				mKeyCode = String.valueOf(aKeyCode);
-				mAddressView = anAddress;
-			}
-			public void onClick(View v) {
-				LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-				stopDtmf(); 
-				if (lc.isIncall()) {
-					lc.sendDtmf(mKeyCode.charAt(0));
-				} else {
-					int lBegin = mAddressView.getSelectionStart();
-					if (lBegin == -1) {
-						lBegin = mAddressView.getEditableText().length();
-					}
-					if (lBegin >=0) {
-						mAddressView.getEditableText().insert(lBegin,mKeyCode);
-					}
-					mDisplayName="";
-				}
-			}
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN && mIsDtmfStarted ==false) {
-					LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-					lc.playDtmf(mKeyCode.charAt(0), -1);
-					mIsDtmfStarted=true;
-				} else {
-					if (event.getAction() == MotionEvent.ACTION_UP) 
-						stopDtmf();
-				}
-				return false;
-			}
-
-			private void stopDtmf() {
-				LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
-				lc.stopDtmf();
-				mIsDtmfStarted =false;
-			}
-			
-		};
-		DialKeyListener lListener = new DialKeyListener(mAddress,dtmf);
-		aButton.setOnClickListener(lListener);
-		aButton.setOnTouchListener(lListener);
-		
-	}
+	
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
 			String url) {
 		// TODO Auto-generated method stub
