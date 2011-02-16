@@ -36,7 +36,8 @@ import android.widget.ImageButton;
  *
  */
 public class ToggleImageButton extends ImageButton implements OnClickListener {
-	private static final String namespace = null;
+//	private static final String ns = "http://schemas.android.com/apk/res/linphone";
+	private static final String ns = null;
 	private boolean checked;
 	private Drawable stateChecked;
 	private Drawable stateUnChecked;
@@ -44,8 +45,8 @@ public class ToggleImageButton extends ImageButton implements OnClickListener {
 
 	public ToggleImageButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "checked", -1));
-		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "unchecked", -1));
+		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "checked", -1));
+		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "unchecked", -1));
 		setBackgroundColor(Color.TRANSPARENT);
 
 		setOnClickListener(this);

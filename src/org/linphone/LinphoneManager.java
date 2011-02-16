@@ -1,5 +1,5 @@
 /*
-BigManager.java
+LinphoneManager.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -20,30 +20,33 @@ package org.linphone;
 
 import org.linphone.core.LinphoneCore;
 
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
 
 public class LinphoneManager {
 
 	private static LinphoneManager instance;
+	private AudioManager mAudioManager;
 
-	public static void routeAudioToSpeaker(AudioManager mAudioManager) {
+
+	public void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
 		} else {
 			mAudioManager.setSpeakerphoneOn(true); 
 		}
-		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
-		if (lLinphoneCore.isIncall()) {
+		LinphoneCore lc = LinphoneService.getLc();
+		if (lc.isIncall()) {
 			/*disable EC*/  
-			lLinphoneCore.getCurrentCall().enableEchoCancellation(false);
-			lLinphoneCore.getCurrentCall().enableEchoLimiter(true);
+			lc.getCurrentCall().enableEchoCancellation(false);
+			lc.getCurrentCall().enableEchoLimiter(true);
 		}
 		
 	}
 
-	public static void routeAudioToReceiver(AudioManager mAudioManager) {
+	public void routeAudioToReceiver() {
 		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
 			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
 			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
@@ -51,11 +54,11 @@ public class LinphoneManager {
 			mAudioManager.setSpeakerphoneOn(false); 
 		}
 		
-		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore();
-		if (lLinphoneCore.isIncall()) {
+		LinphoneCore lc = LinphoneService.getLc();
+		if (lc.isIncall()) {
 			//Restore default value
-			lLinphoneCore.getCurrentCall().enableEchoCancellation(lLinphoneCore.isEchoCancellationEnabled());
-			lLinphoneCore.getCurrentCall().enableEchoLimiter(false);
+			lc.getCurrentCall().enableEchoCancellation(lc.isEchoCancellationEnabled());
+			lc.getCurrentCall().enableEchoLimiter(false);
 		}
 	}
 	
@@ -71,4 +74,17 @@ public class LinphoneManager {
 	public static void startLinphone() {
 		
 	}
+
+	public void setAudioManager(AudioManager manager) {
+		mAudioManager = manager;
+		
+	}
+
+	public boolean isSpeakerOn() {
+		return (Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getRouting(AudioManager.MODE_NORMAL) == AudioManager.ROUTE_SPEAKER) 
+		|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn();
+	}
+
+
+
 }

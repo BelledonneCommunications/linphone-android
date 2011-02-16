@@ -26,12 +26,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class Digit extends Button {
 
-	private TextView mAddress;
-	private String mDisplayName; // FIXME not linked with dialeractivity
+	private AddressText mAddress;
 
 	private final void createWidget(Context context, AttributeSet attrs) {
 		String ns = "http://schemas.android.com/apk/res/android";
@@ -89,7 +87,7 @@ public class Digit extends Button {
 				if (lBegin >=0) {
 					mAddress.getEditableText().insert(lBegin,mKeyCode);
 				}
-				mDisplayName="";
+				mAddress.clearDisplayedName();
 			}
 		}
 		public boolean onTouch(View v, MotionEvent event) {
@@ -112,8 +110,7 @@ public class Digit extends Button {
 		
 	};
 	
-	public void setWidgets(TextView address, String displayName) {
+	public void setAddressWidget(AddressText address) {
 		mAddress = address;
-		mDisplayName = displayName;
 	}
 }
