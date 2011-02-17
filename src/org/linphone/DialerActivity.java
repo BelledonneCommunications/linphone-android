@@ -46,12 +46,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -90,11 +87,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
 	static int VIDEO_VIEW_ACTIVITY = 100;
 	
-	Settings.System mSystemSettings = new Settings.System();
-	MediaPlayer mRingerPlayer;
-
-	Vibrator mVibrator;
 	private static boolean accountCheckingDone;
+
+
 
 	/**
 	 * @return null if not ready yet
@@ -111,7 +106,6 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 		AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		LinphoneManager.getInstance().setUsefullStuff(am, mPref, getWindowManager(), getResources());
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 
 
@@ -292,6 +286,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 			mAddVideo.setVisibility(View.GONE);
 		}
 	}
+
+
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
@@ -309,6 +306,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 		}
 		mAddress.setDisplayedName(savedInstanceState.getString(CURRENT_DISPLAYNAME));
 	}
+
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -320,6 +319,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 	protected void onResume() {
 		super.onResume();
 	}
+
 
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) /*nop*/{}
 	public void byeReceived(LinphoneCore lc, String from) {/*nop*/}
@@ -355,8 +355,9 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 	}
 	
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String smessage) {/*nop*/};
-	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 
+
+	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		if (state == LinphoneCall.State.OutgoingInit) {
 			enterIncallMode(lc);
 			LinphoneManager.getInstance().routeAudioToReceiver();
@@ -416,6 +417,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 		if (!mWakeLock.isHeld()) mWakeLock.acquire(); 
 
 	}
+
 	private void loadMicAndSpeakerUiStateFromLibrary() {
 		mMute.setChecked(LinphoneService.getLc().isMicMuted());
 		mSpeaker.setSpeakerOn(LinphoneManager.getInstance().isSpeakerOn());
@@ -432,7 +434,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 		mHangup.setEnabled(false);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 		mDecline.setEnabled(false);
-		if (LinphoneService.instance().getLinphoneCore().isVideoEnabled()) {
+		if (LinphoneService.getLc().isVideoEnabled()) {
 			finishActivity(VIDEO_VIEW_ACTIVITY); 
 		}
 		if (mWakeLock.isHeld())mWakeLock.release();
@@ -453,6 +455,7 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 		AndroidCameraRecordManager.getInstance().setMuted(!(prefVideoEnable && prefAutomaticallyShareMyCamera));
 		call.enableCamera(prefAutomaticallyShareMyCamera);
 	}
+
 	public void newOutgoingCall(String aTo) {
 		mAddress.setText(aTo);
 		mAddress.clearDisplayedName();
@@ -491,7 +494,8 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 
 
 	public void onAlreadyInCall() {
-		Toast toast = Toast.makeText(DialerActivity.this, getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(DialerActivity.this,
+				getString(R.string.warning_already_incall), Toast.LENGTH_LONG);
 		toast.show();
 	}
 
@@ -501,8 +505,5 @@ public class DialerActivity extends Activity implements LinphoneCoreListener, Al
 				,String.format(getString(R.string.error_cannot_get_call_parameters),mAddress.getText().toString())
 				,Toast.LENGTH_LONG);
 		toast.show();
-		
 	}
 }
-
-
