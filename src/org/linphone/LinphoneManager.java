@@ -18,17 +18,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.AndroidCameraRecordManager;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Build;
+import android.view.WindowManager;
 
 public class LinphoneManager {
 
 	private static LinphoneManager instance;
 	private AudioManager mAudioManager;
+	private NewOutgoingCallUiListener newOutgoingCallUiListener;
+	private SharedPreferences mPref;
+	private Resources mR;
+	private WindowManager mWindowManager;
 
+	private LinphoneManager() {}
 
 	public void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
@@ -71,13 +81,12 @@ public class LinphoneManager {
 		return LinphoneService.getLc();
 	}
 
-	public static void startLinphone() {
-		
-	}
 
-	public void setAudioManager(AudioManager manager) {
-		mAudioManager = manager;
-		
+	public void setUsefullStuff(AudioManager audioManager, SharedPreferences pref, WindowManager windowManager, Resources r) {
+		mAudioManager = audioManager;
+		mPref = pref;
+		mR = r;
+		mWindowManager = windowManager;
 	}
 
 	public boolean isSpeakerOn() {
@@ -85,6 +94,73 @@ public class LinphoneManager {
 		|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn();
 	}
 
+	
+	public void newOutgoingCall(AddressType address) {
+		String to = address.getText().toString();
+		if (to.contains(OutgoingCallReceiver.TAG)) {
+			to = to.replace(OutgoingCallReceiver.TAG, "");
+			address.setText(to);
+		}
 
+		LinphoneCore lLinphoneCore = LinphoneService.instance().getLinphoneCore(); 
+		if (lLinphoneCore.isIncall()) {
+			newOutgoingCallUiListener.onAlreadyInCall();
+			return;
+		}
+		LinphoneAddress lAddress;
+		try {
+			lAddress = lLinphoneCore.interpretUrl(to);
+		} catch (LinphoneCoreException e) {
+			newOutgoingCallUiListener.onWrongDestinationAddress();
+			return;
+		}
+		lAddress.setDisplayName(address.getDisplayedName());
+
+		try {
+			
+			boolean prefVideoEnable = mPref.getBoolean(mR.getString(R.string.pref_video_enable_key), false);
+			boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(R.string.pref_video_initiate_call_with_video_key), false);
+			resetCameraFromPreferences();
+			CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+
+		} catch (LinphoneCoreException e) {
+			newOutgoingCallUiListener.onCannotGetCallParameters();
+			return;
+		}
+	}
+
+	
+	public void resetCameraFromPreferences() {
+		boolean useFrontCam = mPref.getBoolean(mR.getString(R.string.pref_video_use_front_camera_key), false);
+		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
+		final int phoneOrientation = 90 * mWindowManager.getDefaultDisplay().getOrientation();
+		AndroidCameraRecordManager.getInstance().setPhoneOrientation(phoneOrientation);
+	}
+
+	public void setNewOutgoingCallUiListener(NewOutgoingCallUiListener l) {
+		this.newOutgoingCallUiListener = l;
+	}
+
+	public static interface AddressType {
+		void setText(CharSequence s);
+		CharSequence getText();
+		void setDisplayedName(String s);
+		String getDisplayedName();
+	}
+
+
+	public static interface NewOutgoingCallUiListener {
+		public void onWrongDestinationAddress();
+		public void onCannotGetCallParameters();
+		public void onAlreadyInCall();
+	}
+
+
+	public void sendStaticImage(boolean send) {
+		LinphoneCore lc =  LinphoneService.getLc();
+		if (lc.isIncall()) {
+			lc.getCurrentCall().enableCamera(!send);
+		}
+	}
 
 }

@@ -18,11 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.ui;
 
+import org.linphone.LinphoneManager.AddressType;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
-public class AddressText extends EditText {
+public class AddressText extends EditText implements AddressType {
 
 	private String displayedName;
 

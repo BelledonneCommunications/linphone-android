@@ -1,5 +1,5 @@
 /*
-ContactPickerActivity.java
+KeepAliveReceiver.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ import android.util.Log;
 
 
 
-public class KeepAliveManager extends BroadcastReceiver {
+public class KeepAliveReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

@@ -1,5 +1,5 @@
 /*
-HangCallButton.java
+CallButton.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -27,15 +28,45 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-public class HangCallButton extends ImageButton implements OnClickListener {
+public class CallButton extends ImageButton implements OnClickListener, AddressAwareWidget {
 
-	public HangCallButton(Context context, AttributeSet attrs) {
+	private CallButtonListener callButtonListener;
+	private AddressText mAddress;
+
+	public CallButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setOnClickListener(this);
 	}
 
 	public void onClick(View v) {
 		LinphoneCore lc =  LinphoneManager.getLc();
-		lc.terminateCall(lc.getCurrentCall());
+		if (lc.isInComingInvitePending()) {
+			try {
+				lc.acceptCall(lc.getCurrentCall());
+			} catch (LinphoneCoreException e) {
+				lc.terminateCall(lc.getCurrentCall());
+				callButtonListener.onWrongDestinationAddress();
+			}
+			return;
+		}
+		if (mAddress.getText().length() >0) { 
+			LinphoneManager.getInstance().newOutgoingCall(mAddress);
+		}
 	}
+
+	
+
+	public static interface CallButtonListener {
+		void onWrongDestinationAddress();
+	}
+
+
+	public void setCallButtonListerner(CallButtonListener listener) {
+		callButtonListener = listener;
+	}
+
+	public void setAddressWidget(AddressText address) {
+		mAddress = address;
+	}
+
 }

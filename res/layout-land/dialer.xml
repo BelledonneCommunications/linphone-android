@@ -38,15 +38,14 @@
 	<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer"
 		android:layout_height="fill_parent" android:layout_weight="1">
 		<TableRow android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/IncallControlRow"  >
-			<ImageButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/AddVideo" android:layout_weight="1" android:src="@drawable/startvideo_green" android:background="@drawable/clavier_bg"></ImageButton>
+			<org.linphone.ui.AddVideoButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/AddVideo" android:layout_weight="1" android:src="@drawable/startvideo_green" android:background="@drawable/clavier_bg"/>
 			<org.linphone.ui.HangCallButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/HangUp" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 </TableRow>
 		</TableLayout>
 		<LinearLayout android:layout_height="fill_parent"
 			android:layout_width="fill_parent" android:id="@+id/CallControlRow" android:layout_weight="1">
-			<ImageButton android:id="@+id/Call"
-				android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:background="@drawable/clavier_bg" android:src="@drawable/startcall_green">
-			</ImageButton>
+			<org.linphone.ui.CallButton android:id="@+id/Call"
+				android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:background="@drawable/clavier_bg" android:src="@drawable/startcall_green"/>
 			<org.linphone.ui.HangCallButton android:layout_height="fill_parent" android:layout_width="fill_parent"
 				android:layout_weight="0.25" android:id="@+id/Decline" android:background="@drawable/clavier_bg" android:src="@drawable/stopcall_red"/>
 		</LinearLayout>

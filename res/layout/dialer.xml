@@ -40,56 +40,43 @@
 	<TableLayout android:layout_width="fill_parent" android:id="@+id/Dialer"
 		android:layout_height="fill_parent" android:layout_weight="1">
 		<TableRow android:layout_height="fill_parent"
-			android:layout_weight="1" android:id="@+id/DialerRow01"
-			android:layout_width="fill_parent">
-			<org.linphone.ui.Digit android:id="@+id/Digit1"
-				android:text="1" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit2"
-				android:text="2" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit3"
-				android:text="3" style="@style/DialerDigit" />
-		</TableRow>
-		<TableRow android:layout_height="fill_parent"
-			android:layout_weight="1" android:id="@+id/DialerRow02"
-			android:layout_width="fill_parent">
-			<org.linphone.ui.Digit android:id="@+id/Digit4"
-				android:text="4" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit5"
-				android:text="5" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit6"
-				android:text="6" style="@style/DialerDigit" />
-		</TableRow>
-		<TableRow android:layout_weight="1" android:layout_height="fill_parent"
-			android:id="@+id/DialerRow03" android:layout_width="fill_parent">
-			<org.linphone.ui.Digit android:id="@+id/Digit7"
-				android:text="7" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit8"
-				android:text="8" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit9"
-				android:text="9" style="@style/DialerDigit" />
-		</TableRow>
-		<TableRow android:layout_weight="1" android:layout_height="fill_parent"
-			android:id="@+id/DialerRow04" android:layout_width="fill_parent">
-			<org.linphone.ui.Digit android:id="@+id/DigitStar"
-				android:text="*" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/Digit00"
-				android:text="0+" style="@style/DialerDigit" />
-			<org.linphone.ui.Digit android:id="@+id/DigitHash"
-				android:text="#" style="@style/DialerDigit" />
-		</TableRow>
-
-
+		android:layout_weight="1" android:id="@+id/DialerRow01"
+		android:layout_width="fill_parent">
+		<org.linphone.ui.Digit android:id="@+id/Digit1"	android:text="1" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit2"	android:text="2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit3"	android:text="3" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+	</TableRow>
 	
+	<TableRow android:layout_height="fill_parent"
+		android:layout_weight="1" android:id="@+id/DialerRow02"
+		android:layout_width="fill_parent">
+		<org.linphone.ui.Digit android:id="@+id/Digit4"	android:text="4" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit5"	android:text="5" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit6"	android:text="6" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+	</TableRow>
 	
+	<TableRow android:layout_weight="1" android:layout_height="fill_parent"
+		android:id="@+id/DialerRow03" android:layout_width="fill_parent">
+		<org.linphone.ui.Digit android:id="@+id/Digit7"	android:text="7" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit8"	android:text="8" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit9"	android:text="9" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+	</TableRow>
+	
+	<TableRow android:layout_weight="1" android:layout_height="fill_parent"
+		android:id="@+id/DialerRow04" android:layout_width="fill_parent">
+		<org.linphone.ui.Digit android:id="@+id/DigitStar" android:text="*" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/Digit00" android:text="0+" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+		<org.linphone.ui.Digit android:id="@+id/DigitHash" android:text="#" android:layout_width="fill_parent" android:layout_height="fill_parent" android:textColor="@android:color/black" android:background="@drawable/clavier_bg" android:textStyle="bold" android:textSize="20sp" android:layout_weight="1" />
+	</TableRow>
 		<TableRow android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/IncallControlRow">
-			<ImageButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/AddVideo" android:layout_weight="1" android:src="@drawable/startvideo_green" android:background="@drawable/clavier_bg"></ImageButton>
+			<org.linphone.ui.AddVideoButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/AddVideo" android:layout_weight="1" android:src="@drawable/startvideo_green" android:background="@drawable/clavier_bg"/>
 			<org.linphone.ui.HangCallButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/HangUp" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 		</TableRow>
 	</TableLayout>
 	
 	<LinearLayout android:id="@+id/LinearLayout01" android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
 		<LinearLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/CallControlRow">
-			<ImageButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"></ImageButton>
+			<org.linphone.ui.CallButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
 			<org.linphone.ui.HangCallButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:id="@+id/Decline" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 		</LinearLayout><EditText android:layout_width="fill_parent" android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content" android:background="@android:color/transparent" android:textColor="@android:color/white"></EditText>
 	</LinearLayout>

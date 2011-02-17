@@ -68,7 +68,7 @@ public class VideoCallActivity extends Activity {
 		recordManager.setSurfaceView(mVideoCaptureView, phoneOrientation);
 		mVideoCaptureView.setZOrderOnTop(true);
 		
-		if (!recordManager.isMuted()) sendStaticImage(false);
+		if (!recordManager.isMuted()) LinphoneManager.getInstance().sendStaticImage(false);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mWakeLock.acquire();
@@ -134,12 +134,7 @@ public class VideoCallActivity extends Activity {
 		return true;
 	}
 
-	private void sendStaticImage(boolean send) {
-		LinphoneCore lc =  LinphoneService.getLc();
-		if (lc.isIncall()) {
-			lc.getCurrentCall().enableCamera(!send);
-		}
-	}
+
 
 	/**
 	 * @param sv capture surface view to resize the layout
@@ -167,13 +162,13 @@ public class VideoCallActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.videocall_menu_back_to_dialer:
-			if (!recordManager.isMuted()) sendStaticImage(true);
+			if (!recordManager.isMuted()) LinphoneManager.getInstance().sendStaticImage(true);
 			finish();
 			break;
 		case R.id.videocall_menu_change_resolution:
 			BandwidthManager manager = BandwidthManager.getInstance();
 			manager.setUserRestriction(!manager.isUserRestriction());
-			sendStaticImage(recordManager.isMuted());
+			LinphoneManager.getInstance().sendStaticImage(recordManager.isMuted());
 			rewriteChangeResolutionItem(item);
 			
 			// Resize preview frame
@@ -188,7 +183,7 @@ public class VideoCallActivity extends Activity {
 			finish();
 			break;
 		case R.id.videocall_menu_toggle_camera:
-			sendStaticImage(recordManager.toggleMute());
+			LinphoneManager.getInstance().sendStaticImage(recordManager.toggleMute());
 			rewriteToggleCameraItem(item);
 			break;
 		case R.id.videocall_menu_switch_camera:

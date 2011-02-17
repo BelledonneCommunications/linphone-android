@@ -24,6 +24,8 @@ import android.util.Log;
 
 public class Hacks {
 
+	private Hacks() {}
+
 	public static boolean isGalaxyS() {
 		return Build.DEVICE.startsWith("GT-I9000") || Build.DEVICE.startsWith("GT-P1000");
 	}

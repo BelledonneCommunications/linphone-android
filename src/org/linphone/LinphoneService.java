@@ -90,7 +90,7 @@ public class LinphoneService extends Service implements LinphoneCoreListener {
 	LinphoneCall.State mCurrentCallState;
 	Vibrator mVibrator;
 	private AudioManager mAudioManager;
-	private  BroadcastReceiver mKeepAliveMgrReceiver = new KeepAliveManager();
+	private  BroadcastReceiver mKeepAliveMgrReceiver = new KeepAliveReceiver();
 	private  BroadcastReceiver mOutgoingCallReceiver = null;
 	
 	private Handler mHandler =  new Handler() ;

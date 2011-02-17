@@ -25,54 +25,64 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
 
-public class Digit extends Button {
+public class Digit extends Button implements OnLongClickListener, AddressAwareWidget {
 
 	private AddressText mAddress;
 
-	private final void createWidget(Context context, AttributeSet attrs) {
-		String ns = "http://schemas.android.com/apk/res/android";
-		String dtmf = attrs.getAttributeValue(ns, "text");
-		DialKeyListener lListener = new DialKeyListener(dtmf);
+	
+	@Override
+	protected void onTextChanged(CharSequence text, int start, int before,
+			int after) {
+		super.onTextChanged(text, start, before, after);
+		
+		if (text == null || text.length() < 1) return;
+
+		DialKeyListener lListener = new DialKeyListener();
 		setOnClickListener(lListener);
 		setOnTouchListener(lListener);
 		
-		if ("0+".equals(dtmf)) {
-			setOnLongClickListener(new OnLongClickListener() {
-				public boolean onLongClick(View arg0) {
-					LinphoneCore lc = LinphoneManager.getLc();
-					lc.stopDtmf();
-					int lBegin = mAddress.getSelectionStart();
-					if (lBegin == -1) {
-						lBegin = mAddress.getEditableText().length();
-					}
-					if (lBegin >=0) {
-					mAddress.getEditableText().insert(lBegin,"+");
-					}
-					return true;
-				}
-			});
+		if ("0+".equals(text)) {
+			setOnLongClickListener(this);
 		}
 	}
 	
+	public boolean onLongClick(View arg0) {
+		// Called if "0+" dtmf
+		LinphoneCore lc = LinphoneManager.getLc();
+		lc.stopDtmf();
+		int lBegin = mAddress.getSelectionStart();
+		if (lBegin == -1) {
+			lBegin = mAddress.getEditableText().length();
+		}
+		if (lBegin >=0) {
+		mAddress.getEditableText().insert(lBegin,"+");
+		}
+		return true;
+	}
+
 	public Digit(Context context, AttributeSet attrs, int style) {
 		super(context, attrs, style);
-		createWidget(context, attrs);
 	}
 	
 	public Digit(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		createWidget(context, attrs);
 	}
 
-	
-	
-	private class DialKeyListener implements  OnClickListener ,OnTouchListener {
+	public Digit(Context context) {
+		super(context);
+	}
+
+
+
+
+	private class DialKeyListener implements OnClickListener, OnTouchListener {
 		final CharSequence mKeyCode;
 		boolean mIsDtmfStarted=false;
-		DialKeyListener(String aKeyCode) {
-			mKeyCode = aKeyCode.subSequence(0, 1);
+		DialKeyListener() {
+			mKeyCode = Digit.this.getText().subSequence(0, 1);
 		}
 		public void onClick(View v) {
 			LinphoneCore lc = LinphoneManager.getLc();

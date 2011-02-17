@@ -1,5 +1,5 @@
 /*
-HangCallButton.java
+AddVideoButton.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -18,8 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.ui;
 
-import org.linphone.LinphoneManager;
-import org.linphone.core.LinphoneCore;
+import org.linphone.CallManager;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -27,15 +26,33 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-public class HangCallButton extends ImageButton implements OnClickListener {
+public class AddVideoButton extends ImageButton implements OnClickListener {
 
-	public HangCallButton(Context context, AttributeSet attrs) {
+	private AlreadyInVideoCallListener alreadyInVideoCallListener;
+
+	public AddVideoButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setOnClickListener(this);
 	}
 
 	public void onClick(View v) {
-		LinphoneCore lc =  LinphoneManager.getLc();
-		lc.terminateCall(lc.getCurrentCall());
+		// If no in video call; try to reinvite with video
+		boolean alreadyInVideoCall = !CallManager.getInstance().reinviteWithVideo();
+		if (alreadyInVideoCall && alreadyInVideoCallListener != null) {
+			// In video call; going back to video call activity
+			alreadyInVideoCallListener.onAlreadyInVideoCall();
+		}
 	}
+
+	
+	public void setOnAlreadyInVideoCallListener(AlreadyInVideoCallListener listener) {
+		this.alreadyInVideoCallListener = listener;
+	}
+
+
+
+	public static interface AlreadyInVideoCallListener {
+		void onAlreadyInVideoCall();
+	}
+
 }

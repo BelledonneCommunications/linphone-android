@@ -1,6 +1,6 @@
 /*
-LinphoneCoreException.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+AddressAwareWidget.java
+Copyright (C) 2011  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,22 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone;
+package org.linphone.ui;
 
-@SuppressWarnings("serial")
-public class LinphoneException extends Exception {
+public interface AddressAwareWidget {
 
-	public LinphoneException() {}
+	void setAddressWidget(AddressText address);
 
-	public LinphoneException(String detailMessage) {
-		super(detailMessage);
-	}
-
-	public LinphoneException(Throwable throwable) {
-		super(throwable);
-	}
-
-	public LinphoneException(String detailMessage, Throwable throwable) {
-		super(detailMessage, throwable);
-	}
 }

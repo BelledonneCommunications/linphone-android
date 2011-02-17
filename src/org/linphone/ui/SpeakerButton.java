@@ -19,8 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
-import org.linphone.component.ToggleImageButton;
-import org.linphone.component.ToggleImageButton.OnCheckedChangeListener;
+import org.linphone.ui.ToggleImageButton.OnCheckedChangeListener;
 
 import android.content.Context;
 import android.util.AttributeSet;
