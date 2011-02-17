@@ -115,6 +115,7 @@ public class CallManager {
 
 	/**
 	 * Update current call, without reinvite.
+	 * The camera will be restarted when mediastreamer chain is recreated and setParameters is called.
 	 */
 	public void updateCall() {
 		LinphoneCore lc = lc();
@@ -122,7 +123,6 @@ public class CallManager {
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
 		bm().updateWithProfileSettings(lc, params);
 		lc.updateCall(lCall, null);
-		
 	}
 	
 }

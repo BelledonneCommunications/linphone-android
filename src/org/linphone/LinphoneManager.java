@@ -183,4 +183,33 @@ public class LinphoneManager {
 
 		getLc().playDtmf(dtmf, -1);
 	}
+
+	
+	public void changeResolution() {
+		BandwidthManager manager = BandwidthManager.getInstance();
+		manager.setUserRestriction(!manager.isUserRestriction());
+		LinphoneManager.getInstance().sendStaticImage(AndroidCameraRecordManager.getInstance().isMuted());
+	}
+
+	public void terminateCall() {
+		LinphoneCore lc =  LinphoneService.getLc();
+		if (lc.isIncall()) {
+			lc.terminateCall(lc.getCurrentCall());
+		}
+	}
+
+	/**
+	 * Camera will be restarted when mediastreamer chain is recreated and setParameters is called.
+	 */
+	public void switchCamera() {
+		AndroidCameraRecordManager rm = AndroidCameraRecordManager.getInstance();
+		rm.stopVideoRecording();
+		rm.toggleUseFrontCamera();
+		CallManager.getInstance().updateCall();
+	}
+
+	public void toggleCameraMuting() {
+		AndroidCameraRecordManager rm = AndroidCameraRecordManager.getInstance();
+		LinphoneManager.getInstance().sendStaticImage(rm.toggleMute());
+	}
 }
