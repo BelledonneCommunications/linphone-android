@@ -81,12 +81,16 @@ public class Digit extends Button implements OnLongClickListener, AddressAwareWi
 	private class DialKeyListener implements OnClickListener, OnTouchListener {
 		final CharSequence mKeyCode;
 		boolean mIsDtmfStarted=false;
+
 		DialKeyListener() {
 			mKeyCode = Digit.this.getText().subSequence(0, 1);
 		}
+
 		public void onClick(View v) {
 			LinphoneCore lc = LinphoneManager.getLc();
-			stopDtmf(); 
+			lc.stopDtmf();
+			mIsDtmfStarted =false;
+
 			if (lc.isIncall()) {
 				lc.sendDtmf(mKeyCode.charAt(0));
 			} else {
@@ -100,24 +104,19 @@ public class Digit extends Button implements OnLongClickListener, AddressAwareWi
 				mAddress.clearDisplayedName();
 			}
 		}
+
 		public boolean onTouch(View v, MotionEvent event) {
+			LinphoneCore lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && mIsDtmfStarted ==false) {
-				LinphoneCore lc = LinphoneManager.getLc();
-				lc.playDtmf(mKeyCode.charAt(0), -1);
+				LinphoneManager.getInstance().playDtmf(mKeyCode.charAt(0));
 				mIsDtmfStarted=true;
 			} else {
 				if (event.getAction() == MotionEvent.ACTION_UP) 
-					stopDtmf();
+					lc.stopDtmf();
+					mIsDtmfStarted =false;
 			}
 			return false;
 		}
-
-		private void stopDtmf() {
-			LinphoneCore lc = LinphoneManager.getLc();
-			lc.stopDtmf();
-			mIsDtmfStarted =false;
-		}
-		
 	};
 	
 	public void setAddressWidget(AddressText address) {

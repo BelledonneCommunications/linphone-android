@@ -23,10 +23,13 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 
+import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Build;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
 public class LinphoneManager {
@@ -163,4 +166,21 @@ public class LinphoneManager {
 		}
 	}
 
+	public void playDtmf(char dtmf) {
+		if (getLc().isIncall()) {
+			// Play if in call as it will not go to speaker
+			getLc().playDtmf(dtmf, -1);
+			return;
+		}
+
+		ContentResolver r = LinphoneService.instance().getContentResolver();
+		try {
+			if (Settings.System.getInt(r, Settings.System.DTMF_TONE_WHEN_DIALING) == 0) {
+				// audible touch disabled: don't play
+				return;
+			}
+		} catch (SettingNotFoundException e) {}
+
+		getLc().playDtmf(dtmf, -1);
+	}
 }
