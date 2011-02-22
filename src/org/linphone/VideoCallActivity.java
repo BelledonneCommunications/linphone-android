@@ -56,7 +56,7 @@ public class VideoCallActivity extends Activity {
 		setContentView(R.layout.videocall);
 
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
-		LinphoneCore lc = LinphoneService.getLc();
+		LinphoneCore lc = LinphoneManager.getLc();
 		lc.setVideoWindow(mVideoView);
 		
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
@@ -72,7 +72,7 @@ public class VideoCallActivity extends Activity {
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mWakeLock.acquire();
 		
-		if (Version.sdkBelow(8)) {
+		if (Version.sdkStrictlyBelow(8)) {
 			// Force to display in portrait orientation for old devices
 			// as they do not support surfaceView rotation
 			setRequestedOrientation(recordManager.isCameraOrientationPortrait() ?
@@ -87,7 +87,7 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onResume() {
 		// Update call if orientation changed
-		if (Version.sdkAbove(8) && previousPhoneOrientation != phoneOrientation) {
+		if (Version.sdkAboveOrEqual(8) && previousPhoneOrientation != phoneOrientation) {
 			CallManager.getInstance().updateCall();
 			resizeCapturePreview(mVideoCaptureView);
 		}
@@ -137,7 +137,7 @@ public class VideoCallActivity extends Activity {
 	 */
 	private void resizeCapturePreview(SurfaceView sv) {
 		LayoutParams lp = sv.getLayoutParams();
-		VideoSize vs = LinphoneService.getLc().getPreferredVideoSize();
+		VideoSize vs = LinphoneManager.getLc().getPreferredVideoSize();
 
 		float newRatio = (float) vs.width / vs.height;
 
@@ -180,11 +180,11 @@ public class VideoCallActivity extends Activity {
 			resizeCapturePreview(mVideoCaptureView);
 			break;
 		default:
-			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
+			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
 			break;
 		}
 
-		return false;
+		return true;
 	}
 
 

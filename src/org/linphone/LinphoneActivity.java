@@ -19,19 +19,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 
+import static android.content.Intent.ACTION_MAIN;
+import static android.media.AudioManager.*;
 import java.util.List;
+
+import org.linphone.core.Version;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -43,92 +47,92 @@ import android.widget.FrameLayout;
 import android.widget.TabHost;
 
 public class LinphoneActivity extends TabActivity  {
-	public static String DIALER_TAB = "dialer";
+	public static final String DIALER_TAB = "dialer";
 	private AudioManager mAudioManager;
-	private static LinphoneActivity theLinphoneActivity;
+	private static LinphoneActivity instance;
 	
 	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
-	static private SensorEventListener mSensorEventListener;
+	private static SensorEventListener mSensorEventListener;
 	
-	private static String SCREEN_IS_HIDDEN ="screen_is_hidden";
+	private static final String SCREEN_IS_HIDDEN ="screen_is_hidden";
 	
-	protected static LinphoneActivity instance()
-	  {
-		if (theLinphoneActivity == null) {
-			throw new RuntimeException("LinphoneActivity not instanciated yet");
-		} else {
-			return theLinphoneActivity;
-		}
+	protected static LinphoneActivity instance() {
+		if (instance != null) return instance;
+
+		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
+
 	protected void onSaveInstanceState (Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mMainFrame.getVisibility() == View.INVISIBLE) {
-			outState.putBoolean(SCREEN_IS_HIDDEN, true);
-		} else {
-			outState.putBoolean(SCREEN_IS_HIDDEN, false);
-		}
-			
+		outState.putBoolean(SCREEN_IS_HIDDEN, mMainFrame.getVisibility() == View.INVISIBLE);
 	}
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		instance = this;
 		setContentView(R.layout.main);
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		
-		theLinphoneActivity = this;
+
 		// start linphone as background       
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.setClass(this, LinphoneService.class);
-		startService(intent);
+		startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+
 		
 		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
-		
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
 		
 		TabHost lTabHost = getTabHost();  // The activity TabHost  
 	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
-	   
+	    Drawable tabDrawable; // Drawable for a tab
+	    Intent tabIntent; // Intent for the a table
+	    CharSequence indicator;
 
 	    //Call History
-	    Intent lHistoryItent =  new Intent().setClass(this, HistoryActivity.class);
-	    
-	    spec = lTabHost.newTabSpec("history").setIndicator(getString(R.string.tab_history),
-	    		getResources().getDrawable(R.drawable.history_orange))
-	                  .setContent(lHistoryItent);
+	    tabIntent =  new Intent().setClass(this, HistoryActivity.class);
+	    tabDrawable = getResources().getDrawable(R.drawable.history_orange);
+	    indicator = getString(R.string.tab_history);
+	    spec = lTabHost.newTabSpec("history")
+	    		.setIndicator(indicator, tabDrawable)
+	    		.setContent(tabIntent);
 	    lTabHost.addTab(spec);
 	    
-	    // dialer
-	    Intent lDialerIntent = new Intent().setClass(this, DialerActivity.class);
-	    lDialerIntent.setData(getIntent().getData());
+	    // Dialer
+	    tabIntent = new Intent().setClass(this, DialerActivity.class).setData(getIntent().getData());
+	    tabDrawable = getResources().getDrawable(R.drawable.dialer_orange);
+	    indicator = getString(R.string.tab_dialer);
+	    tabDrawable = getResources().getDrawable(R.drawable.dialer_orange);
+	    spec = lTabHost.newTabSpec(DIALER_TAB)
+	    		.setIndicator(indicator, tabDrawable)
+	    		.setContent(tabIntent);
+	    lTabHost.addTab(spec);
+	    
 
-	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = lTabHost.newTabSpec("dialer").setIndicator(getString(R.string.tab_dialer),
-	                      getResources().getDrawable(R.drawable.dialer_orange))
-	                  .setContent(lDialerIntent);
-	    lTabHost.addTab(spec);
-	    
-	    // contact pick
-	    Intent lContactItent =  new Intent().setClass(this, ContactPickerActivity.class);
-	    
-	    spec = lTabHost.newTabSpec("contact").setIndicator(getString(R.string.tab_contact),
-	    		getResources().getDrawable(R.drawable.contact_orange))
-	                  .setContent(lContactItent);
+	    // Contact picker
+	    tabIntent = new Intent().setClass(this, ContactPickerActivity.class);
+	    indicator = getString(R.string.tab_contact);
+	    tabDrawable = getResources().getDrawable(R.drawable.contact_orange);
+	    spec = lTabHost.newTabSpec("contact")
+	    	.setIndicator(indicator, tabDrawable)
+	    	.setContent(tabIntent);
 	    lTabHost.addTab(spec);
 
+
+	    
 	    lTabHost.setCurrentTabByTag("dialer");
+
+	    
 	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
 	    	hideScreen(true);
 	    }
-	    
-	    
 	}
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 	    if (intent.getData() != null) {
-	    	DialerActivity.getDialer().newOutgoingCall(intent.getData().toString().substring("tel://".length()));
-	    	intent.setData(null);
+	    	DialerActivity.instance().newOutgoingCall(intent);
 	    }
 		
 	}
@@ -136,16 +140,15 @@ public class LinphoneActivity extends TabActivity  {
 	protected void onPause() {
 		super.onPause();
 		if  (isFinishing())  {
-			//restaure audio settings   
-			if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
-			mAudioManager.setMode(AudioManager.MODE_NORMAL); 
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
-			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
+			//restore audio settings   
+			if (Version.sdkStrictlyBelow(4) /*<donut*/) {
+				mAudioManager.setMode(MODE_NORMAL); 
+				mAudioManager.setRouting(MODE_NORMAL, ROUTE_SPEAKER, ROUTE_ALL);
 			} else {
 				mAudioManager.setSpeakerphoneOn(false); 
 			}
 			stopProxymitySensor();//just in case
-			theLinphoneActivity = null;
+			instance = null;
 		}
 		
 	}
@@ -166,58 +169,29 @@ public class LinphoneActivity extends TabActivity  {
 			return true;
 		case R.id.menu_exit:
 			finish();
-			Intent exitIntent = new Intent(Intent.ACTION_MAIN);
-			exitIntent.setClass(this, LinphoneService.class);
-			stopService(exitIntent);
+			stopService(new Intent(ACTION_MAIN)
+				.setClass(this, LinphoneService.class));
 			break;
 		case R.id.menu_about:
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.setClass(this, AboutActivity.class);
-			startActivity(intent);
+			startActivity(new Intent(ACTION_MAIN)
+				.setClass(this, AboutActivity.class));
 		default:
-			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
+			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
 			break;
 		}
 
 		return false;
 	}
-	protected void startprefActivity() {
-		Intent intent = new Intent(Intent.ACTION_MAIN);
+
+	void startprefActivity() {
+		Intent intent = new Intent(ACTION_MAIN);
 		intent.setClass(this, LinphonePreferencesActivity.class);
 		startActivity(intent);
 	}
-	public void initFromConf() throws LinphoneException {
-		
-		try {
-			LinphoneService.instance().initFromConf();
-		} catch (LinphoneConfigException e) {
-			handleBadConfig(e.getMessage());
-		}
-		
-	}
-	private void handleBadConfig(String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(String.format(getString(R.string.config_error),message))
-		       .setCancelable(false)
-		       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   startprefActivity();
-		           }
-		       })
-		       .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		           }
-		       });
-		builder.create().show();
-	}
-
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			//nop 	 	
-	}
 
 
-	protected void hideScreen(boolean isHidden) {
+
+	void hideScreen(boolean isHidden) {
 		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
 		if (isHidden) {
 			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
@@ -228,16 +202,17 @@ public class LinphoneActivity extends TabActivity  {
 		}
 		getWindow().setAttributes(lAttrs);
 	}
-	protected synchronized void startProxymitySensor() {
+
+	synchronized void startProxymitySensor() {
 		if (mSensorEventListener != null) {
-			Log.i(LinphoneService.TAG, "proximity sensor already active");
+			Log.i(LinphoneManager.TAG, "proximity sensor already active");
 			return;
 		}
 		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
 		mSensorEventListener = new SensorEventListener() {
 			public void onSensorChanged(SensorEvent event) {
 				if (event.timestamp == 0) return; //just ignoring for nexus 1
-				Log.d(LinphoneService.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
+				Log.d(LinphoneManager.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
 				
 				if (event.values[0] != event.sensor.getMaximumRange() ) {
 					instance().hideScreen(true);
@@ -250,15 +225,37 @@ public class LinphoneActivity extends TabActivity  {
 		};
 		if (lSensorList.size() >0) {
 			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
-			Log.i(LinphoneService.TAG, "Proximity sensor detected, registering");
+			Log.i(LinphoneManager.TAG, "Proximity sensor detected, registering");
 		}		
 	}
+
 	protected synchronized void stopProxymitySensor() {
 		if (mSensorManager!=null) {
 			mSensorManager.unregisterListener(mSensorEventListener);
 			mSensorEventListener=null; 
 		}
 		hideScreen(false);
+	}
+
+
+	void showPreferenceErrorDialog(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+		.setMessage(String.format(getString(R.string.config_error), message))
+		.setCancelable(false)
+		.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				Intent intent = new Intent(ACTION_MAIN);
+				intent.setClass(getApplicationContext(), LinphonePreferencesActivity.class);
+				startActivity(intent);
+			}
+		})
+		.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+
+		builder.create().show();
 	}	
 }
 

@@ -63,7 +63,7 @@ public class ContactPickerActivity extends Activity {
                     // Get the field values
                     lName = lCur.getString(lCur.getColumnIndex(People.NAME));
                     lPhoneNo = lCur.getString(lCur.getColumnIndex(People.NUMBER));
-                    DialerActivity.getDialer().setContactAddress(lPhoneNo, lName);
+                    DialerActivity.instance().setContactAddress(lPhoneNo, lName);
                 }
             }
             	

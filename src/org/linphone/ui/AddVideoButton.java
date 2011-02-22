@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.ui;
 
-import org.linphone.CallManager;
+import org.linphone.LinphoneManager;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -37,7 +37,7 @@ public class AddVideoButton extends ImageButton implements OnClickListener {
 
 	public void onClick(View v) {
 		// If no in video call; try to reinvite with video
-		boolean alreadyInVideoCall = !CallManager.getInstance().reinviteWithVideo();
+		boolean alreadyInVideoCall = !LinphoneManager.reinviteWithVideo();
 		if (alreadyInVideoCall && alreadyInVideoCallListener != null) {
 			// In video call; going back to video call activity
 			alreadyInVideoCallListener.onAlreadyInVideoCall();

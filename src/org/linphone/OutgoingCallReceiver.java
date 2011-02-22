@@ -24,20 +24,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+/**
+ * Intercept outgoing calls dialed through Android dialer.
+ * Redirect the calls through Linphone according to user preferences.
+ * 
+ */
 public class OutgoingCallReceiver extends BroadcastReceiver {
-	public static String TAG = ";0000000";
-	public static String key_off="off";
-	public static String key_on_demand="ask_for_outcall_interception";
-	public static String key_always="alway_intercept_out_call";
+	public static final String TAG = ";0000000";
+	public static final String key_off="off";
+	public static final String key_on_demand="ask_for_outcall_interception";
+	public static final String key_always="alway_intercept_out_call";
+
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String to = intent.getStringExtra("android.intent.extra.PHONE_NUMBER");
+
 		//do not catch ussd codes
 		if (to==null || to.contains("#"))
 			return;
+
 		if (!to.contains(TAG)) {
-			if (LinphoneService.isready() && LinphoneService.instance().getLinphoneCore().getDefaultProxyConfig()==null) {
+			if (LinphoneService.isReady() && LinphoneManager.getLc().getDefaultProxyConfig()==null) {
 				//just return
 				return;
 			}
@@ -52,7 +62,7 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 				lIntent.setAction(Intent.ACTION_CALL);
 			}
 				
-			lIntent.setData(Uri.parse("tel://"+to+TAG));
+			lIntent.setData(Uri.parse("tel:"+to+TAG));
 			lIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(lIntent);
 

@@ -31,7 +31,7 @@ import org.linphone.core.LinphoneCoreException;
  * @author Guillaume Beraudo
  *
  */
-public class CallManager {
+class CallManager {
 
 	private static CallManager instance;
 	
@@ -41,9 +41,6 @@ public class CallManager {
 		return instance;
 	}
 	
-	private LinphoneCore lc() {
-		return LinphoneService.instance().getLinphoneCore();
-	}
 	private AndroidCameraRecordManager videoManager() {
 		return AndroidCameraRecordManager.getInstance();
 	}
@@ -54,8 +51,8 @@ public class CallManager {
 
 	
 	
-	public void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled) throws LinphoneCoreException {
-		LinphoneCore lc = lc();
+	void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled) throws LinphoneCoreException {
+		LinphoneCore lc = LinphoneManager.getLc();
 		
 		LinphoneCallParams params = lc.createDefaultCallParameters();
 		bm().updateWithProfileSettings(lc, params);
@@ -79,8 +76,8 @@ public class CallManager {
 	 * or if the bandwidth settings are too low.
 	 * @return if updateCall called
 	 */
-	public boolean reinviteWithVideo() {
-		LinphoneCore lc =  lc();
+	boolean reinviteWithVideo() {
+		LinphoneCore lc =  LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
 
@@ -105,8 +102,8 @@ public class CallManager {
 	/**
 	 * Re-invite with parameters updated from profile.
 	 */
-	public void reinvite() {
-		LinphoneCore lc = lc();
+	void reinvite() {
+		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
 		bm().updateWithProfileSettings(lc, params);
@@ -117,8 +114,8 @@ public class CallManager {
 	 * Update current call, without reinvite.
 	 * The camera will be restarted when mediastreamer chain is recreated and setParameters is called.
 	 */
-	public void updateCall() {
-		LinphoneCore lc = lc();
+	void updateCall() {
+		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
 		bm().updateWithProfileSettings(lc, params);

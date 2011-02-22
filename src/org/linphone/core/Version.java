@@ -30,11 +30,11 @@ public class Version {
 				8 : Integer.parseInt(Build.VERSION.SDK); // Force versions above 9 to 8
 //		7; // 2.1
 
-	public static final boolean sdkAbove(int value) {
+	public static final boolean sdkAboveOrEqual(int value) {
 		return buildVersion >= value;
 	}
 
-	public static final boolean sdkBelow(int value) {
+	public static final boolean sdkStrictlyBelow(int value) {
 		return buildVersion < value;
 	}
 

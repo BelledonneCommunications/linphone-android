@@ -27,27 +27,34 @@ import android.util.Log;
 
 
 
+/**
+ * 
+ * Intercept network state changes and update linphone core through LinphoneManager.
+ *
+ */
 public class NetworkManager extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		 NetworkInfo lNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-		Log.i(LinphoneService.TAG, "Network info ["+lNetworkInfo+"]");
+		NetworkInfo lNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+		Log.i(LinphoneManager.TAG, "Network info ["+lNetworkInfo+"]");
 		Boolean lNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,false);
-		if (!LinphoneService.isready()) {
-			Log.i(LinphoneService.TAG, "Linphone service not ready");
+
+		
+		if (!LinphoneService.isReady()) {
+			Log.i(LinphoneManager.TAG, "Network broadcast received while Linphone service not ready");
 			return;
 		}
-		if (lNoConnectivity| ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
-			 LinphoneService.instance().getLinphoneCore().setNetworkReachable(false);
+		
+		
+		if (lNoConnectivity | ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
+			LinphoneManager.getLc().setNetworkReachable(false);
 		 } else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
-			 LinphoneService.instance().getLinphoneCore().setNetworkReachable(true);
+			 LinphoneManager.getLc().setNetworkReachable(true);
 		 } else {
-			 //unhandled event 
+			 // Other unhandled events
 		 }
-			
-
 	}
 
 }

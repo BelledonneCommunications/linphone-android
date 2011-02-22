@@ -30,14 +30,14 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		if (!LinphoneService.isready()) {
-			Log.i(LinphoneService.TAG, "Linphone service not ready");
+		if (!LinphoneService.isReady()) {
+			Log.i(LinphoneManager.TAG, "Keep alive broadcast received while Linphone service not ready");
 			return;
 		} else {
 			if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
-				LinphoneService.getLc().enableKeepAlive(true);
+				LinphoneManager.getLc().enableKeepAlive(true);
 			} else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_OFF)) {
-				LinphoneService.getLc().enableKeepAlive(false);
+				LinphoneManager.getLc().enableKeepAlive(false);
 			}
 		}
 

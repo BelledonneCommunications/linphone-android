@@ -65,7 +65,7 @@ public class BandwidthManager {
 	}
 
 	private void onProfileChanged(int newProfile) {
-		LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+		LinphoneCore lc = LinphoneManager.getLc();
 		lc.setUploadBandwidth(bandwidthes[newProfile][0]);
 		lc.setDownloadBandwidth(bandwidthes[newProfile][1]);
 

@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 
@@ -27,10 +28,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class CallButton extends ImageButton implements OnClickListener, AddressAwareWidget {
 
-	private CallButtonListener callButtonListener;
 	private AddressText mAddress;
 
 	public CallButton(Context context, AttributeSet attrs) {
@@ -45,7 +46,7 @@ public class CallButton extends ImageButton implements OnClickListener, AddressA
 				lc.acceptCall(lc.getCurrentCall());
 			} catch (LinphoneCoreException e) {
 				lc.terminateCall(lc.getCurrentCall());
-				callButtonListener.onWrongDestinationAddress();
+				onWrongDestinationAddress();
 			}
 			return;
 		}
@@ -55,15 +56,13 @@ public class CallButton extends ImageButton implements OnClickListener, AddressA
 	}
 
 	
-
-	public static interface CallButtonListener {
-		void onWrongDestinationAddress();
+	protected void onWrongDestinationAddress() {
+		Toast toast = Toast.makeText(getContext()
+				,String.format(getResources().getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
+				,Toast.LENGTH_LONG);
+		toast.show();
 	}
 
-
-	public void setCallButtonListerner(CallButtonListener listener) {
-		callButtonListener = listener;
-	}
 
 	public void setAddressWidget(AddressText address) {
 		mAddress = address;

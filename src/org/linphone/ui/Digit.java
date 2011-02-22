@@ -108,7 +108,7 @@ public class Digit extends Button implements OnLongClickListener, AddressAwareWi
 		public boolean onTouch(View v, MotionEvent event) {
 			LinphoneCore lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && mIsDtmfStarted ==false) {
-				LinphoneManager.getInstance().playDtmf(mKeyCode.charAt(0));
+				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode.charAt(0));
 				mIsDtmfStarted=true;
 			} else {
 				if (event.getAction() == MotionEvent.ACTION_UP) 

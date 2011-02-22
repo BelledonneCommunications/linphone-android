@@ -67,7 +67,7 @@ public class AndroidCameraRecordManager {
 
 	// singleton
 	private AndroidCameraRecordManager() {
-		cc = Version.sdkAbove(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
+		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
 
 		int[] fId = {-1};int[] rId = {-1};int[] cId = {-1};
 		cc.findFrontAndRearCameraIds(fId, rId, cId);
@@ -172,11 +172,11 @@ public class AndroidCameraRecordManager {
 		parameters.rotation = bufferRotationForCorrectImageOrientation();
 
 		parameters.surfaceView = surfaceView;
-		if (Version.sdkAbove(9)) {
+		if (Version.sdkAboveOrEqual(9)) {
 			recorder = new AndroidCameraRecord9Impl(parameters);
-		} else if (Version.sdkAbove(8)) {
+		} else if (Version.sdkAboveOrEqual(8)) {
 			recorder = new AndroidCameraRecord8Impl(parameters);
-		} else if (Version.sdkAbove(5)) {
+		} else if (Version.sdkAboveOrEqual(5)) {
 			recorder = new AndroidCameraRecord5Impl(parameters);
 		} else {
 			recorder = new AndroidCameraRecordImpl(parameters);
@@ -208,7 +208,7 @@ public class AndroidCameraRecordManager {
 			if (supportedVideoSizes != null) return supportedVideoSizes;
 		}
 
-		if (Version.sdkAbove(5)) {
+		if (Version.sdkAboveOrEqual(5)) {
 			supportedVideoSizes = AndroidCameraRecord5Impl.oneShotSupportedVideoSizes();
 		}
 		
@@ -253,7 +253,7 @@ public class AndroidCameraRecordManager {
 
 	private int bufferRotationForCorrectImageOrientation() {
 		final int cameraOrientation = cc.getCameraOrientation(cameraId);
-		final int rotation = Version.sdkAbove(8) ?
+		final int rotation = Version.sdkAboveOrEqual(8) ?
 				(360 - cameraOrientation + 90 - phoneOrientation) % 360
 				: 0;
 		Log.d(tag, "Capture video buffer will need a rotation of " + rotation
