@@ -21,6 +21,7 @@ package org.linphone;
 import java.io.IOException;
 
 import org.linphone.LinphoneManager.LinphoneServiceListener;
+import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCall.State;
@@ -234,7 +235,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 	
-	public interface LinphoneGuiListener {
+	public interface LinphoneGuiListener extends NewOutgoingCallUiListener {
 		void onDisplayStatus(String message);
 		void onGlobalStateChangedToOn(String message);
 //		void onRegistrationStateChanged(RegistrationState state, String message);
@@ -249,6 +250,33 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		} catch (IOException e) {
 			Log.e(LinphoneManager.TAG, "cannot set ringtone", e);
 		}
+	}
+
+	public void tryingNewOutgoingCallButAlreadyInCall() {
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (guiListener() != null)
+					guiListener().onAlreadyInCall();			
+			}
+		});
+	}
+
+	public void tryingNewOutgoingCallButCannotGetCallParameters() {
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (guiListener() != null)
+					guiListener().onCannotGetCallParameters();			
+			}
+		});
+	}
+
+	public void tryingNewOutgoingCallButWrongDestinationAddress() {
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (guiListener() != null)
+					guiListener().onWrongDestinationAddress();			
+			}
+		});
 	}
 }
 

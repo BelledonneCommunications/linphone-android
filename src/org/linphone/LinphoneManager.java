@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -42,16 +41,16 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.video.AndroidCameraRecordManager;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -83,7 +82,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private static LinphoneManager instance;
 	private AudioManager mAudioManager;
-	private NewOutgoingCallUiListener newOutgoingCallUiListener;
 	private SharedPreferences mPref;
 	private Resources mR;
 	private LinphoneCore mLc;
@@ -95,7 +93,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
-		mPackageManager = c.getPackageManager();
 		mR = c.getResources();
 
 		// Register a sensor to track phoneOrientation for placing new calls.
@@ -111,8 +108,22 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				mPhoneOrientation = o;
 			}
 		}.enable();
+
+		detectIfHasCamera();
 	}
 
+	private void detectIfHasCamera() {
+		Log.i(TAG, "Detecting if a camera is present");
+		try {
+			Camera camera = Camera.open();
+			if (hasCamera = camera != null) {
+				camera.release();
+			}
+		} catch (Throwable e) {}
+		Log.i(TAG,  (hasCamera ? "A" : "No") + " camera is present");
+
+	}
+	
 	public static final String TAG="Linphone";
 	/** Called when the activity is first created. */
 	private static final String LINPHONE_FACTORY_RC = "/data/data/org.linphone/files/linphonerc";
@@ -123,7 +134,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private Timer mTimer = new Timer("Linphone scheduler");
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
-	private PackageManager mPackageManager;
+	private boolean hasCamera;
 
 
 	
@@ -157,12 +168,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 	
-	public synchronized static final LinphoneManager createAndStart(Context c, LinphoneServiceListener listener) {
+	public synchronized static final LinphoneManager createAndStart(
+			Context c, LinphoneServiceListener listener) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
 
 		instance = new LinphoneManager(c);
-		instance.startLibLinphone(c, listener);
+		instance.serviceListener = listener;
+		instance.startLibLinphone(c);
 		return instance;
 	}
 	
@@ -186,20 +199,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public void newOutgoingCall(AddressType address) {
 		String to = address.getText().toString();
-		if (to.contains(OutgoingCallReceiver.TAG)) {
-			to = to.replace(OutgoingCallReceiver.TAG, "");
-			address.setText(to);
-		}
 
 		if (mLc.isIncall()) {
-			newOutgoingCallUiListener.onAlreadyInCall();
+			serviceListener.tryingNewOutgoingCallButAlreadyInCall();
 			return;
 		}
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
 		} catch (LinphoneCoreException e) {
-			newOutgoingCallUiListener.onWrongDestinationAddress();
+			serviceListener.tryingNewOutgoingCallButWrongDestinationAddress();
 			return;
 		}
 		lAddress.setDisplayName(address.getDisplayedName());
@@ -211,7 +220,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
 
 		} catch (LinphoneCoreException e) {
-			newOutgoingCallUiListener.onCannotGetCallParameters();
+			serviceListener.tryingNewOutgoingCallButCannotGetCallParameters();
 			return;
 		}
 	}
@@ -221,10 +230,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean useFrontCam = mPref.getBoolean(mR.getString(R.string.pref_video_use_front_camera_key), false);
 		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
 		AndroidCameraRecordManager.getInstance().setPhoneOrientation(mPhoneOrientation);
-	}
-
-	public void setNewOutgoingCallUiListener(NewOutgoingCallUiListener l) {
-		this.newOutgoingCallUiListener = l;
 	}
 
 	public static interface AddressType {
@@ -288,9 +293,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		sendStaticImage(rm.toggleMute());
 	}
 
-	private synchronized void startLibLinphone(final Context context, final LinphoneServiceListener listener) {
+	private synchronized void startLibLinphone(final Context context) {
 		try {
-			this.serviceListener = listener;
 			copyAssetsFromPackage(context);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
@@ -369,28 +373,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				enableDisableVideoCodecs(videoCodec);
 			}
 			
-
-			String sOutcalls = mPref.getString(getString(R.string.pref_handle_outcall_key), OutgoingCallReceiver.key_on_demand);
-			boolean handleOutcalls = !sOutcalls.equalsIgnoreCase(OutgoingCallReceiver.key_off);
-			
-/* Now useless, see enablePkgComponent
- * 			if (handleOutcalls){
-				IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-				lFilter.setPriority(0);
-				lFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
-				if (mOutgoingCallReceiver == null) {
-					mOutgoingCallReceiver = new OutgoingCallReceiver(); 
-				}
-				context.registerReceiver(mOutgoingCallReceiver,lFilter);
-			} else if (mOutgoingCallReceiver!=null) {
-				context.unregisterReceiver(mOutgoingCallReceiver);
-				mOutgoingCallReceiver=null;
-			}*/
-
-			// Enable/disable outgoing call receiver according to user wishes
-			// Could be done already once when the preference is changed in UI.
-			enablePkgComponent(context, OutgoingCallReceiver.class, handleOutcalls);
-
 
 			mLc.enableEchoCancellation(mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false)); 
 		} catch (LinphoneCoreException e) {
@@ -480,14 +462,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 
-	private void enablePkgComponent(Context context, Class<?> clazz, boolean state) {
-		mPackageManager.setComponentEnabledSetting(
-				new ComponentName(context, clazz),
-				state ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-						: PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-				0);
-	}
-
 	private void enableDisableAudioCodec(String codec, int rate, int key) throws LinphoneCoreException {
 		PayloadType pt = mLc.findPayloadType(codec, rate);
 		if (pt !=null) {
@@ -517,7 +491,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public boolean hasCamera() {
-		 return mPackageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+		return hasCamera;
 	}
 	
 	public static synchronized void destroy(Context context) {
@@ -555,6 +529,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public interface LinphoneServiceListener {
 		void onGlobalStateChanged(GlobalState state, String message);
+		void tryingNewOutgoingCallButCannotGetCallParameters();
+		void tryingNewOutgoingCallButWrongDestinationAddress();
+		void tryingNewOutgoingCallButAlreadyInCall();
 		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onCallStateChanged(LinphoneCall call, State state, String message);
 		void onEcCalibrationStatus(EcCalibratorStatus status, Object data,

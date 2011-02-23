@@ -66,13 +66,7 @@
 	<receiver android:name="NetworkManager">
 		<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
 	</receiver>
-	
-	<receiver android:name="OutgoingCallReceiver">
-		<intent-filter android:priority="0">
-			<action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
-		</intent-filter>
-	</receiver>
-	
+
 	<receiver android:name="BootReceiver">
 		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
 	</receiver>
@@ -84,7 +78,7 @@
 	
 	
 	
-        <activity android:name=".core.tutorials.TestVideoActivity"
+        <activity android:name="core.tutorials.video.TestVideoActivity"
                   android:label="Video test"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:launchMode="singleTask"

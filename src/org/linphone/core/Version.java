@@ -38,4 +38,8 @@ public class Version {
 		return buildVersion < value;
 	}
 
+	public static int sdk() {
+		return buildVersion;
+	}
+
 }

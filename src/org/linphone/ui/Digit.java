@@ -25,10 +25,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.Button;
 
-public class Digit extends Button implements OnLongClickListener, AddressAwareWidget {
+public class Digit extends Button implements AddressAwareWidget {
 
 	private AddressText mAddress;
 
@@ -45,40 +44,32 @@ public class Digit extends Button implements OnLongClickListener, AddressAwareWi
 		setOnTouchListener(lListener);
 		
 		if ("0+".equals(text)) {
-			setOnLongClickListener(this);
+			setOnLongClickListener(lListener);
+
 		}
 	}
 	
-	public boolean onLongClick(View arg0) {
-		// Called if "0+" dtmf
-		LinphoneCore lc = LinphoneManager.getLc();
-		lc.stopDtmf();
-		int lBegin = mAddress.getSelectionStart();
-		if (lBegin == -1) {
-			lBegin = mAddress.getEditableText().length();
-		}
-		if (lBegin >=0) {
-		mAddress.getEditableText().insert(lBegin,"+");
-		}
-		return true;
-	}
 
 	public Digit(Context context, AttributeSet attrs, int style) {
 		super(context, attrs, style);
+		setLongClickable(true);
 	}
 	
 	public Digit(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		setLongClickable(true);
+
 	}
 
 	public Digit(Context context) {
 		super(context);
+		setLongClickable(true);
 	}
 
 
 
 
-	private class DialKeyListener implements OnClickListener, OnTouchListener {
+	private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
 		final CharSequence mKeyCode;
 		boolean mIsDtmfStarted=false;
 
@@ -116,6 +107,20 @@ public class Digit extends Button implements OnLongClickListener, AddressAwareWi
 					mIsDtmfStarted =false;
 			}
 			return false;
+		}
+		
+		public boolean onLongClick(View v) {
+			// Called if "0+" dtmf
+			LinphoneCore lc = LinphoneManager.getLc();
+			lc.stopDtmf();
+			int lBegin = mAddress.getSelectionStart();
+			if (lBegin == -1) {
+				lBegin = mAddress.getEditableText().length();
+			}
+			if (lBegin >=0) {
+			mAddress.getEditableText().insert(lBegin,"+");
+			}
+			return true;
 		}
 	};
 	

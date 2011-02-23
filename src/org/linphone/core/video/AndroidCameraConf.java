@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.core.video;
 
 import org.linphone.Hacks;
 
 import android.util.Log;
 
-public class AndroidCameraConf {
+class AndroidCameraConf {
 	private static final String tag = "Linphone";
 
 	public void findFrontAndRearCameraIds(int[] frontCameraId, int[] rearCameraId, int[] cameraId) {
@@ -39,6 +39,7 @@ public class AndroidCameraConf {
 	}
 
 	public int getNumberOfCameras() {
+		Log.i(tag, "Detecting the number of cameras");
 		// Use hacks to guess the number of cameras
 		if (Hacks.isGalaxyS()) {
 			Log.d(tag, "Hack Galaxy S : has 2 cameras");
@@ -46,7 +47,7 @@ public class AndroidCameraConf {
 		} else
 			return 1;
 	}
-	
+
 
 
 	public int getCameraOrientation(int cameraId) {

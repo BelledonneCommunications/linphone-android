@@ -21,8 +21,8 @@ package org.linphone.core.tutorials;
 import java.util.Stack;
 
 import org.linphone.R;
-import org.linphone.core.AndroidCameraRecord;
 import org.linphone.core.VideoSize;
+import org.linphone.core.video.AndroidCameraRecord;
 
 import android.app.Activity;
 import android.os.Bundle;

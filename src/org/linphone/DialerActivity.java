@@ -20,14 +20,14 @@ package org.linphone;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
-import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.video.AndroidCameraRecordManager;
 import org.linphone.ui.AddVideoButton;
+import org.linphone.ui.AddressAwareWidget;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
-import org.linphone.ui.Digit;
 import org.linphone.ui.EraseButton;
 import org.linphone.ui.MuteMicButton;
 import org.linphone.ui.SpeakerButton;
@@ -46,8 +46,6 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,8 +74,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	private MuteMicButton mMute;
 	private SpeakerButton mSpeaker;
 	
-	private LinearLayout mCallControlRow;
-	private TableRow mInCallControlRow;
+	private View mCallControlRow;
+	private View mInCallControlRow;
 	private View mAddressLayout;
 	private View mInCallAddressLayout;
 	
@@ -138,15 +136,15 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		mHangup = findViewById(R.id.HangUp); 
 
 
-		mCallControlRow = (LinearLayout) findViewById(R.id.CallControlRow);
-		mAddressLayout = (View) findViewById(R.id.Addresslayout);
+		mCallControlRow = findViewById(R.id.CallControlRow);
+		mAddressLayout = findViewById(R.id.Addresslayout);
 
-		mInCallControlRow = (TableRow) findViewById(R.id.IncallControlRow);
+		mInCallControlRow = findViewById(R.id.IncallControlRow);
 		mInCallControlRow.setVisibility(View.GONE);
-		mInCallAddressLayout = (View) findViewById(R.id.IncallAddressLayout);
+		mInCallAddressLayout = findViewById(R.id.IncallAddressLayout);
 		mInCallAddressLayout.setVisibility(View.GONE);
-		mMute = (MuteMicButton)findViewById(R.id.mic_mute_button);
-		mSpeaker = (SpeakerButton)findViewById(R.id.speaker_button);
+		mMute = (MuteMicButton) findViewById(R.id.mic_mute_button);
+		mSpeaker = (SpeakerButton) findViewById(R.id.speaker_button);
 
 
 		try {
@@ -181,21 +179,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			finish();
 		}
 
+		AddressAwareWidget numpad = (AddressAwareWidget) findViewById(R.id.Dialer);
+		if (numpad != null)
+			numpad.setAddressWidget(mAddress);
 
-		if (findViewById(R.id.Digit00) != null) { // In landscape view, no keyboard
-			((Digit) findViewById(R.id.Digit00)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit1)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit2)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit3)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit4)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit5)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit6)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit7)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit8)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.Digit9)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.DigitStar)).setAddressWidget(mAddress);
-			((Digit) findViewById(R.id.DigitHash)).setAddressWidget(mAddress);
-		}
 		mStatus =  (TextView) findViewById(R.id.status_label);
 		
 

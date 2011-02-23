@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.core.video;
 
 import android.hardware.Camera;
 
@@ -26,10 +26,10 @@ import android.hardware.Camera;
  * @author Guillaume Beraudo
  *
  */
-public class AndroidCameraRecord9Impl extends AndroidCameraRecord8Impl {
+class AndroidCameraRecord9 extends AndroidCameraRecord8 {
 
 
-	public AndroidCameraRecord9Impl(RecorderParams parameters) {
+	public AndroidCameraRecord9(RecorderParams parameters) {
 		super(parameters);
 	}
 

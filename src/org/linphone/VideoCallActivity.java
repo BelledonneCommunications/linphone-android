@@ -20,10 +20,10 @@ package org.linphone;
 
 
 
-import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Version;
 import org.linphone.core.VideoSize;
+import org.linphone.core.video.AndroidCameraRecordManager;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,6 +38,11 @@ import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
 
+/**
+ * For Android SDK >= 
+ * @author Guillaume Beraudo
+ *
+ */
 public class VideoCallActivity extends Activity {
 	private SurfaceView mVideoView;
 	private SurfaceView mVideoCaptureView;

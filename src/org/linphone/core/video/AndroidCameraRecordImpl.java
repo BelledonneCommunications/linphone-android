@@ -16,19 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.linphone.core;
+package org.linphone.core.video;
+
+import java.util.List;
 
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.util.Log;
 
 /**
  * Record from Android camera.
+ * Android >= 5 (2.0) version.
  *
  * @author Guillaume Beraudo
  *
  */
-public class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
+class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
 
 	private long filterCtxPtr;
 	private double timeElapsedBetweenFrames = 0;
@@ -85,7 +90,35 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		putImage(filterCtxPtr, data, rotation);
 	}
 
+	@Override
+	protected void onSettingCameraParameters(Parameters parameters) {
+		super.onSettingCameraParameters(parameters);
 
+		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+			Log.w(tag, "Auto Focus supported by camera device");
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		} else {
+			Log.w(tag, "Auto Focus not supported by camera device");
+			if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
+				Log.w(tag, "Infinity Focus supported by camera device");
+				parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
+			} else {
+				Log.w(tag, "Infinity Focus not supported by camera device");
+			}
+		}
+	}
+
+	public static List<Size> oneShotSupportedVideoSizes() {
+		Camera camera = Camera.open();
+		List<Size> supportedVideoSizes =camera.getParameters().getSupportedPreviewSizes();
+		camera.release();
+		return supportedVideoSizes;
+	}
+	
+	@Override
+	protected List<Size> getSupportedPreviewSizes(Parameters parameters) {
+		return parameters.getSupportedPreviewSizes();
+	}
 
 	@Override
 	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {

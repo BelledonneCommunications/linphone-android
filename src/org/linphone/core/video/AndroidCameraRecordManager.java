@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.core.video;
 
 import java.util.List;
 
-import org.linphone.core.AndroidCameraRecord.RecorderParams;
+import org.linphone.core.Version;
+import org.linphone.core.video.AndroidCameraRecord.RecorderParams;
 
 import android.hardware.Camera.Size;
 import android.util.Log;
@@ -173,13 +174,13 @@ public class AndroidCameraRecordManager {
 
 		parameters.surfaceView = surfaceView;
 		if (Version.sdkAboveOrEqual(9)) {
-			recorder = new AndroidCameraRecord9Impl(parameters);
+			recorder = new AndroidCameraRecord9(parameters);
 		} else if (Version.sdkAboveOrEqual(8)) {
-			recorder = new AndroidCameraRecord8Impl(parameters);
+			recorder = new AndroidCameraRecord8(parameters);
 		} else if (Version.sdkAboveOrEqual(5)) {
-			recorder = new AndroidCameraRecord5Impl(parameters);
-		} else {
 			recorder = new AndroidCameraRecordImpl(parameters);
+		} else {
+			throw new RuntimeException("SDK version unsupported " + Version.sdk());
 		}
 
 		recorder.startPreview();
@@ -209,7 +210,7 @@ public class AndroidCameraRecordManager {
 		}
 
 		if (Version.sdkAboveOrEqual(5)) {
-			supportedVideoSizes = AndroidCameraRecord5Impl.oneShotSupportedVideoSizes();
+			supportedVideoSizes = AndroidCameraRecordImpl.oneShotSupportedVideoSizes();
 		}
 		
 		// eventually null

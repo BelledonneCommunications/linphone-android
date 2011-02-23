@@ -23,11 +23,12 @@ import android.widget.TextView;
 
 /**
  * Write notifications to a TextView widget.
+ * This is an helper class, not a test activity.
  * 
  * @author Guillaume Beraudo
  *
  */
-public class AndroidTutorialNotifier extends TutorialNotifier {
+class AndroidTutorialNotifier extends TutorialNotifier {
 
 	private Handler mHandler;
 	private TextView outputTextView;

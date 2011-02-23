@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-<string-array name="pref_handle_outcall_keys">
-<item>off</item>
-<item>ask_for_outcall_interception</item>
-<item>alway_intercept_out_call</item>
-</string-array>
-</resources>

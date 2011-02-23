@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.tutorials;
 
-import org.linphone.core.AndroidCameraRecord;
+import org.linphone.core.video.AndroidCameraRecord;
 
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
@@ -26,7 +26,13 @@ import android.hardware.Camera.Size;
 import android.util.Log;
 import android.widget.TextView;
 
-public class JavaCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
+/**
+ * This is an helper class, not a test activity.
+ * 
+ * @author Guillaume Beraudo
+ *
+ */
+class JavaCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
 
 	private TextView debug;
 	private long count = 0;
