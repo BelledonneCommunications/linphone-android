@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
-      android:versionCode="1103" android:versionName="1.1.3"  android:installLocation="auto"> 
+      android:versionCode="1104" android:versionName="1.1.4"  android:installLocation="auto"> 
     <uses-sdk android:minSdkVersion="3" />
     <application android:label="@string/app_name" android:debuggable = "true" android:icon="@drawable/logo_linphone_57x57">
          
@@ -127,9 +127,6 @@
 <uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 <uses-permission android:name="android.permission.CAMERA" />
-
-<uses-feature android:name="android.hardware.camera" />
-<uses-feature android:name="android.hardware.camera.autofocus" />
 
 <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 </manifest> 
