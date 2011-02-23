@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		android:layout_width="fill_parent" android:layout_height="fill_parent"  android:layout_weight="1">
 
 	<TableRow android:layout_height="fill_parent" android:layout_weight="1" android:layout_width="fill_parent">
 		<org.linphone.ui.Digit android:id="@+id/Digit1"	android:text="1" style="@style/DialerDigit" />
