@@ -5,7 +5,7 @@
     <uses-sdk android:minSdkVersion="3" />
     
     
-    <application android:label="@string/app_name" android:debuggable ="true" android:icon="@drawable/logo_linphone_57x57">
+    <application android:label="@string/app_name" android:debuggable="true" android:icon="@drawable/logo_linphone_57x57">
          
          
         <activity android:name=".LinphoneActivity"
@@ -28,7 +28,7 @@
 
 
 
-        <activity android:name=".IncallActivity">
+        <activity android:name=".IncallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
