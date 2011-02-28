@@ -27,7 +27,12 @@
         </activity>
 
 
-      
+
+        <activity android:name=".IncallActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
         <activity android:name=".LinphonePreferencesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -143,9 +148,5 @@
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 <uses-permission android:name="android.permission.CAMERA" />
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e7697429c4475fb5f6ddfb800d5bbce0d4c20865
 <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 </manifest> 

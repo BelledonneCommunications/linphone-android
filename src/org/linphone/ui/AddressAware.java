@@ -20,7 +20,7 @@ package org.linphone.ui;
 
 
 
-public interface AddressAwareWidget {
+public interface AddressAware {
 
 	void setAddressWidget(AddressText address);
 

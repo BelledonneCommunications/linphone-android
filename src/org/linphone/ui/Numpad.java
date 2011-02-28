@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class Numpad extends LinearLayout implements AddressAwareWidget {
+public class Numpad extends LinearLayout implements AddressAware {
 
 	public Numpad(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -39,22 +39,22 @@ public class Numpad extends LinearLayout implements AddressAwareWidget {
 	}
 
 	public void setAddressWidget(AddressText address) {
-		for (AddressAwareWidget v : retrieveChildren(this)) {
+		for (AddressAware v : retrieveChildren(this)) {
 			v.setAddressWidget(address);
 		}
 	}
 
 
-	private Collection<AddressAwareWidget> retrieveChildren(ViewGroup viewGroup) {
-		final Collection<AddressAwareWidget> views = new ArrayList<AddressAwareWidget>();
+	private Collection<AddressAware> retrieveChildren(ViewGroup viewGroup) {
+		final Collection<AddressAware> views = new ArrayList<AddressAware>();
 
 		for (int i = 0; i < viewGroup.getChildCount(); i++) {
 			View v = viewGroup.getChildAt(i);
 			if (v instanceof ViewGroup) {
 				views.addAll(retrieveChildren((ViewGroup) v));
 			} else {
-				if (v instanceof AddressAwareWidget)
-					views.add((AddressAwareWidget) v);
+				if (v instanceof AddressAware)
+					views.add((AddressAware) v);
 			}
 		}
 

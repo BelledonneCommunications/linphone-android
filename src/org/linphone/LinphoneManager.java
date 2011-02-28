@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import static android.media.AudioManager.*;
+import static org.linphone.core.LinphoneCall.State.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -140,7 +143,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public void routeAudioToSpeaker() {
 		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
+			mAudioManager.setRouting(MODE_NORMAL, 
 			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
 		} else {
 			mAudioManager.setSpeakerphoneOn(true); 
@@ -155,7 +158,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void routeAudioToReceiver() {
 		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
-			mAudioManager.setRouting(AudioManager.MODE_NORMAL, 
+			mAudioManager.setRouting(MODE_NORMAL, 
 			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
 		} else {
 			mAudioManager.setSpeakerphoneOn(false); 
@@ -192,7 +195,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	
 	public boolean isSpeakerOn() {
-		return (Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getRouting(AudioManager.MODE_NORMAL) == AudioManager.ROUTE_SPEAKER) 
+		return (Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getRouting(MODE_NORMAL) == ROUTE_SPEAKER) 
 		|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn();
 	}
 
@@ -254,15 +257,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void playDtmf(ContentResolver r, char dtmf) {
-		boolean speaker = true;
 		try {
 			if (Settings.System.getInt(r, Settings.System.DTMF_TONE_WHEN_DIALING) == 0) {
 				// audible touch disabled: don't play on speaker, only send in outgoing stream
-				speaker = false;
+				return;
 			}
 		} catch (SettingNotFoundException e) {}
 
-		getLc().playDtmf(dtmf, -1, speaker);
+		getLc().playDtmf(dtmf, -1);
 	}
 
 	
@@ -313,7 +315,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				public void run() {
 					mLc.iterate();
 				}
-
 			};
 
 			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
@@ -582,7 +583,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i(TAG, "new state ["+state+"]");
-		if (state == LinphoneCall.State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
+		if (state == IncomingReceived && !call.equals(lc.getCurrentCall())) {
 			if (call.getReplacedCall()==null){
 				//no multicall support, just decline
 				lc.terminateCall(call);
@@ -590,18 +591,23 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			
 			return;
 		}
-		serviceListener.onCallStateChanged(call, state, message);
 
-		if (state == LinphoneCall.State.IncomingReceived) {
+		if (state == IncomingReceived) {
 			startRinging();
 		}
 
-		if (mCurrentCallState ==  LinphoneCall.State.IncomingReceived) { 
+		if (mCurrentCallState == IncomingReceived) { 
 			//previous state was ringing, so stop ringing
 			stopRinging();
 			//routeAudioToReceiver();
 		}
+		
+		if (state == CallEnd || state == Error) {
+			mAudioManager.setMode(MODE_NORMAL);
+		}
+
 		mCurrentCallState=state;
+		serviceListener.onCallStateChanged(call, state, message);
 	}
 
 
@@ -622,14 +628,18 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 
 	private synchronized void startRinging()  {
+		if (Hacks.isGalaxyS()) {
+			mAudioManager.setMode(MODE_RINGTONE);
+		}
+
 		try {
-			if (mAudioManager.shouldVibrate(AudioManager.VIBRATE_TYPE_RINGER) && mVibrator !=null) {
+			if (mAudioManager.shouldVibrate(VIBRATE_TYPE_RINGER) && mVibrator !=null) {
 				long[] patern = {0,1000,1000};
 				mVibrator.vibrate(patern, 1);
 			}
 			if (mRingerPlayer == null) {
 				mRingerPlayer = new MediaPlayer();
-				mRingerPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+				mRingerPlayer.setAudioStreamType(STREAM_RING);
 				serviceListener.onRingerPlayerCreated(mRingerPlayer);
 				mRingerPlayer.prepare();
 				mRingerPlayer.setLooping(true);
@@ -651,6 +661,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		if (mVibrator!=null) {
 			mVibrator.cancel();
+		}
+
+		if (Hacks.isGalaxyS()) {
+			mAudioManager.setMode(MODE_IN_CALL);
 		}
 	}
 
@@ -675,6 +689,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public boolean isVideoEnabled() {
 		return mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
 	}
-	
-	
+
+	public void setAudioModeIncallForGalaxyS() {
+		if (!Hacks.isGalaxyS()) return;
+
+		try {
+			stopRinging();
+			Thread.sleep(100);
+			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			/* ops */
+		}
+	}
 }

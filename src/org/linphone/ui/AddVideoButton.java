@@ -36,7 +36,9 @@ public class AddVideoButton extends ImageButton implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		// If no in video call; try to reinvite with video
+		if (!LinphoneManager.getLc().isIncall()) return;
+
+		// If not in video call; try to reinvite with video
 		boolean alreadyInVideoCall = !LinphoneManager.reinviteWithVideo();
 		if (alreadyInVideoCall && alreadyInVideoCallListener != null) {
 			// In video call; going back to video call activity

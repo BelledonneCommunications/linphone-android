@@ -64,7 +64,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
 	private native boolean isEchoCancellationEnabled(long nativePtr);
 	private native long getCurrentCall(long nativePtr) ;
-	private native void playDtmf(long nativePtr,char dtmf,int duration, boolean speaker);
+	private native void playDtmf(long nativePtr,char dtmf,int duration);
 	private native void stopDtmf(long nativePtr);
 	private native void setVideoWindowId(long nativePtr, Object wid);
 	private native void setPreviewWindowId(long nativePtr, Object wid);
@@ -298,8 +298,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	public void playDtmf(char number, int duration, boolean speaker) {
-		playDtmf(nativePtr,number, duration, speaker);
+	public void playDtmf(char number, int duration) {
+		playDtmf(nativePtr,number, duration);
 		
 	}
 	public void stopDtmf() {
@@ -438,5 +438,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void startEchoCalibration(Object data) throws LinphoneCoreException {
 		startEchoCalibration(nativePtr, data);
+	}
+	public Transport getSignalingTransport() {
+		throw new RuntimeException("Not implemented");
 	}
 }

@@ -30,7 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class CallButton extends ImageButton implements OnClickListener, AddressAwareWidget {
+public class CallButton extends ImageButton implements OnClickListener, AddressAware {
 
 	private AddressText mAddress;
 
@@ -40,6 +40,7 @@ public class CallButton extends ImageButton implements OnClickListener, AddressA
 	}
 
 	public void onClick(View v) {
+		LinphoneManager.getInstance().setAudioModeIncallForGalaxyS();
 		LinphoneCore lc =  LinphoneManager.getLc();
 		if (lc.isInComingInvitePending()) {
 			try {

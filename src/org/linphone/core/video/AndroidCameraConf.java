@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.video;
 
-import org.linphone.Hacks;
+import org.linphone.core.Hacks;
 
 import android.util.Log;
 

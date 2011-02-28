@@ -27,7 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-public class Digit extends Button implements AddressAwareWidget {
+public class Digit extends Button implements AddressAware {
 
 	private AddressText mAddress;
 
@@ -84,7 +84,7 @@ public class Digit extends Button implements AddressAwareWidget {
 
 			if (lc.isIncall()) {
 				lc.sendDtmf(mKeyCode.charAt(0));
-			} else {
+			} else if (mAddress != null) {
 				int lBegin = mAddress.getSelectionStart();
 				if (lBegin == -1) {
 					lBegin = mAddress.getEditableText().length();
@@ -113,6 +113,9 @@ public class Digit extends Button implements AddressAwareWidget {
 			// Called if "0+" dtmf
 			LinphoneCore lc = LinphoneManager.getLc();
 			lc.stopDtmf();
+			
+			if (mAddress == null) return true;
+
 			int lBegin = mAddress.getSelectionStart();
 			if (lBegin == -1) {
 				lBegin = mAddress.getEditableText().length();

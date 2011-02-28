@@ -20,12 +20,13 @@ package org.linphone;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
+import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.video.AndroidCameraRecordManager;
 import org.linphone.ui.AddVideoButton;
-import org.linphone.ui.AddressAwareWidget;
+import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
@@ -179,7 +180,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			finish();
 		}
 
-		AddressAwareWidget numpad = (AddressAwareWidget) findViewById(R.id.Dialer);
+		AddressAware numpad = (AddressAware) findViewById(R.id.Dialer);
 		if (numpad != null)
 			numpad.setAddressWidget(mAddress);
 
@@ -196,6 +197,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 				checkAccount = false;
 			}
 		}
+
 	}
 
 
@@ -320,14 +322,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	
 
 	private void startVideoView(int requestCode) {
-		Intent lIntent = new Intent();
-		lIntent.setClass(this, VideoCallActivity.class);
+		Intent lIntent = new Intent().setClass(this, VideoCallActivity.class);
 		startActivityForResult(lIntent,requestCode);
 	}
 	
 	
 	private void enterIncallMode(LinphoneCore lc) {
-		LinphoneManager m = LinphoneManager.getInstance();
 		mCallControlRow.setVisibility(View.GONE);
 		mInCallControlRow.setVisibility(View.VISIBLE);
 		mAddressLayout.setVisibility(View.GONE);
@@ -335,17 +335,24 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		mCall.setEnabled(false);
 		updateIncallVideoCallButton();
 		mHangup.setEnabled(true);
-		mDisplayNameView.setText(m.extractADisplayName());
+		mDisplayNameView.setText(LinphoneManager.getInstance().extractADisplayName());
 
 		loadMicAndSpeakerUiStateFromManager();
-		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+//		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
 		LinphoneActivity.instance().startProxymitySensor();
 		if (!mWakeLock.isHeld()) mWakeLock.acquire(); 
-
+		
 	}
 
 	
+	private void openIncallActivity(CharSequence callerName) {
+		startActivity(new Intent()
+			.setClass(this, IncallActivity.class)
+			.putExtra(IncallActivity.CONTACT_KEY, callerName));
+	}
+
+
 	private void updateIncallVideoCallButton() {
 		boolean prefVideoEnabled = LinphoneManager.getInstance().isVideoEnabled();
 		if (prefVideoEnabled && !mCall.isEnabled()) {
@@ -453,12 +460,15 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (state == LinphoneCall.State.OutgoingInit) {
 			enterIncallMode(lc);
-			LinphoneManager.getInstance().routeAudioToReceiver();
+			openIncallActivity(mDisplayNameView.getText());
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
 			LinphoneManager.getInstance().resetCameraFromPreferences();
 			callPending(call);
 		} else if (state == LinphoneCall.State.Connected) {
-			enterIncallMode(lc);
+			if (call.getDirection() == CallDirection.Incoming) {
+				enterIncallMode(lc);
+				openIncallActivity(mDisplayNameView.getText());
+			}
 		} else if (state == LinphoneCall.State.Error) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
 			Toast toast = Toast.makeText(this
@@ -470,9 +480,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			exitCallMode();
 		} else if (state == LinphoneCall.State.StreamsRunning) {
 			if (LinphoneManager.getLc().getCurrentCall().getCurrentParamsCopy().getVideoEnabled()) {
-				if (!VideoCallActivity.launched) {
-					startVideoView(VIDEO_VIEW_ACTIVITY);
-				}
+				startVideoView(VIDEO_VIEW_ACTIVITY);
 			}
 		}		
 	}
