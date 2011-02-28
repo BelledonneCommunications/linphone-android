@@ -23,7 +23,6 @@ import java.util.TimerTask;
 
 import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.HangCallButton;
-import org.linphone.ui.AddVideoButton.AlreadyInVideoCallListener;
 
 import android.app.Activity;
 import android.content.Intent;

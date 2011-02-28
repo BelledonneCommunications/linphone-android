@@ -24,12 +24,14 @@ import static android.media.AudioManager.*;
 import java.util.List;
 
 import org.linphone.core.Version;
+import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -37,6 +39,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,8 +59,13 @@ public class LinphoneActivity extends TabActivity  {
 	private static SensorEventListener mSensorEventListener;
 	
 	private static final String SCREEN_IS_HIDDEN ="screen_is_hidden";
+	static final int VIDEO_VIEW_ACTIVITY = 100;
+	static final int FIRST_LOGIN_ACTIVITY = 101;
+	static final int INCALL_ACTIVITY = 102; 
+
 	
-	protected static LinphoneActivity instance() {
+
+	static final LinphoneActivity instance() {
 		if (instance != null) return instance;
 
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
@@ -81,8 +89,34 @@ public class LinphoneActivity extends TabActivity  {
 		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
 		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
 		
+		if (pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+			fillTabHost();
+		} else {
+			startActivityForResult(new Intent().setClass(this, FirstLoginActivity.class), FIRST_LOGIN_ACTIVITY);
+		}
+	    
+	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
+	    	hideScreen(true);
+	    }
+	}
+	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		if (requestCode == FIRST_LOGIN_ACTIVITY) {
+			fillTabHost();
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+
+	private void fillTabHost() {
 		TabHost lTabHost = getTabHost();  // The activity TabHost  
 	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
 	    Drawable tabDrawable; // Drawable for a tab
@@ -119,15 +153,9 @@ public class LinphoneActivity extends TabActivity  {
 	    lTabHost.addTab(spec);
 
 
-	    
 	    lTabHost.setCurrentTabByTag("dialer");
-
-	    
-	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
-	    	hideScreen(true);
-	    }
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -256,6 +284,15 @@ public class LinphoneActivity extends TabActivity  {
 		});
 
 		builder.create().show();
-	}	
+	}
+
+	public void onRegistrationStateChanged(RegistrationState state,
+			String message) {
+		
+		if (FirstLoginActivity.instance != null) {
+			FirstLoginActivity.instance.onRegistrationStateChanged(state);
+		}
+	}
+	
 }
 

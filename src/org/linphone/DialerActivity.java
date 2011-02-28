@@ -88,9 +88,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	
 	private static final String PREF_CHECK_CONFIG = "pref_check_config";
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
-	private static String CURRENT_ADDRESS = "org.linphone.current-address"; 
-	private static String CURRENT_DISPLAYNAME = "org.linphone.current-displayname"; 
-	static int VIDEO_VIEW_ACTIVITY = 100;
+	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
+	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 	
 	private static boolean checkAccount = true;
 
@@ -113,8 +112,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		mPref = PreferenceManager.getDefaultSharedPreferences(this);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
-
-
 
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
@@ -317,8 +314,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 
 
 
-
-
 	
 
 	private void startVideoView(int requestCode) {
@@ -346,10 +341,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	}
 
 	
-	private void openIncallActivity(CharSequence callerName) {
-		startActivity(new Intent()
+	private void startIncallActivity(CharSequence callerName) {
+		startActivityForResult(new Intent()
 			.setClass(this, IncallActivity.class)
-			.putExtra(IncallActivity.CONTACT_KEY, callerName));
+			.putExtra(IncallActivity.CONTACT_KEY, callerName),
+			LinphoneActivity.INCALL_ACTIVITY);
 	}
 
 
@@ -381,7 +377,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 		mDecline.setEnabled(false);
 		if (LinphoneManager.getLc().isVideoEnabled()) {
-			finishActivity(VIDEO_VIEW_ACTIVITY); 
+			finishActivity(LinphoneActivity.VIDEO_VIEW_ACTIVITY); 
 		}
 		if (mWakeLock.isHeld())mWakeLock.release();
 		mSpeaker.setSpeakerOn(false);
@@ -430,7 +426,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	}
 
 	public void onAlreadyInVideoCall() {
-		startVideoView(VIDEO_VIEW_ACTIVITY);		
+		startVideoView(LinphoneActivity.VIDEO_VIEW_ACTIVITY);		
 	}
 
 	public void onAlreadyInCall() {
@@ -460,17 +456,18 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (state == LinphoneCall.State.OutgoingInit) {
 			enterIncallMode(lc);
-			openIncallActivity(mDisplayNameView.getText());
+			startIncallActivity(mDisplayNameView.getText());
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
 			LinphoneManager.getInstance().resetCameraFromPreferences();
 			callPending(call);
 		} else if (state == LinphoneCall.State.Connected) {
 			if (call.getDirection() == CallDirection.Incoming) {
 				enterIncallMode(lc);
-				openIncallActivity(mDisplayNameView.getText());
+				startIncallActivity(mDisplayNameView.getText());
 			}
 		} else if (state == LinphoneCall.State.Error) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
+			finishActivity(LinphoneActivity.INCALL_ACTIVITY);
 			Toast toast = Toast.makeText(this
 					,String.format(getString(R.string.call_error),message)
 					, Toast.LENGTH_LONG);
@@ -480,10 +477,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			exitCallMode();
 		} else if (state == LinphoneCall.State.StreamsRunning) {
 			if (LinphoneManager.getLc().getCurrentCall().getCurrentParamsCopy().getVideoEnabled()) {
-				startVideoView(VIDEO_VIEW_ACTIVITY);
+				startVideoView(LinphoneActivity.VIDEO_VIEW_ACTIVITY);
 			}
 		}		
 	}
+
 
 
 	public void onGlobalStateChangedToOn(String message) {
@@ -503,4 +501,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			outgoingCallIntentReceived();
 		}
 	}
+
+
 }

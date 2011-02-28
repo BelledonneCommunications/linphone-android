@@ -27,6 +27,11 @@
         </activity>
 
 
+        <activity android:name=".FirstLoginActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
 
         <activity android:name=".IncallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>

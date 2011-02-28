@@ -87,8 +87,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 
 	private static final int IC_LEVEL_ORANGE=0;
-	private static final int IC_LEVEL_GREEN=1;
-	private static final int IC_LEVEL_RED=2;
+	/*private static final int IC_LEVEL_GREEN=1;
+	private static final int IC_LEVEL_RED=2;*/
 	private static final int IC_LEVEL_OFFLINE=3;
 
 	
@@ -189,13 +189,22 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 
-	public void onRegistrationStateChanged(RegistrationState state,
-			String message) {
-		if (state == LinphoneCore.RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+	public void onRegistrationStateChanged(final RegistrationState state,
+			final String message) {
+		if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 			sendNotificationWithId(IC_LEVEL_ORANGE, R.string.notification_registered);
 		}
-		if (state == LinphoneCore.RegistrationState.RegistrationFailed ) {
+
+		if (state == RegistrationState.RegistrationFailed) {
 			sendNotificationWithId(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
+		}
+
+		if (state == RegistrationState.RegistrationOk || state == RegistrationState.RegistrationFailed) {
+			mHandler.post(new Runnable() {
+				public void run() {
+					LinphoneActivity.instance().onRegistrationStateChanged(state, message);
+				}
+			});
 		}
 	}
 

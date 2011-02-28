@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android" 
+	a:layout_width="fill_parent" a:layout_height="fill_parent" a:orientation="vertical">
+
+	<TextView a:text="@string/first_login_explanation" a:layout_width="fill_parent" a:layout_height="wrap_content" a:layout_marginBottom="20px"/>
+
+	<LinearLayout a:layout_width="fill_parent" a:layout_height="wrap_content">
+		<TextView a:text="@string/first_login_username" a:layout_width="wrap_content" a:layout_height="wrap_content" />
+		<EditText a:id="@+id/login" a:layout_width="fill_parent" a:layout_height="wrap_content" />
+	</LinearLayout>
+
+	<LinearLayout a:layout_width="fill_parent" a:layout_height="wrap_content">
+		<TextView a:text="@string/first_login_password"  a:layout_width="wrap_content" a:layout_height="wrap_content"/>
+		<EditText a:id="@+id/password" a:password="true" a:layout_width="fill_parent" a:layout_height="wrap_content" />
+	</LinearLayout>
+
+	<Button a:id="@+id/connect" a:text="@string/first_login_connect" a:layout_width="fill_parent" a:layout_height="wrap_content" a:layout_marginTop="20px"/>
+
+	// Some moving widget
+
+</LinearLayout>
