@@ -22,12 +22,20 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
 
-public class Hacks {
+public final class Hacks {
 
 	private Hacks() {}
 
 	public static boolean isGalaxyS() {
-		return Build.DEVICE.startsWith("GT-I9000") || Build.DEVICE.startsWith("GT-P1000");
+		return Build.DEVICE.startsWith("GT-I9000");
+	}
+
+	public static boolean isGalaxySOrTab() {
+		return isGalaxyS() || isGalaxyTab();
+	}
+
+	public static boolean isGalaxyTab() {
+		return Build.DEVICE.startsWith("GT-P1000");
 	}
 
 /*	private static final boolean log(final String msg) {
