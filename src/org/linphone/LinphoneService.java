@@ -24,7 +24,6 @@ import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
