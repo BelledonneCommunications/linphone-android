@@ -376,11 +376,14 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		mHangup.setEnabled(false);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 		mDecline.setEnabled(false);
+		mSpeaker.setSpeakerOn(false);
+
 		if (LinphoneManager.getLc().isVideoEnabled()) {
 			finishActivity(LinphoneActivity.VIDEO_VIEW_ACTIVITY); 
 		}
+		finishActivity(LinphoneActivity.INCALL_ACTIVITY);
+
 		if (mWakeLock.isHeld())mWakeLock.release();
-		mSpeaker.setSpeakerOn(false);
 
 		BandwidthManager.getInstance().setUserRestriction(false);
 		LinphoneManager.getInstance().resetCameraFromPreferences();
