@@ -25,7 +25,6 @@ import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
@@ -40,7 +39,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.preference.CheckBoxPreference;
 import android.util.Log;
 
 /***
@@ -224,24 +222,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		});
 	}
 
-
-	public void onEcCalibrationStatus(final EcCalibratorStatus status, Object data,
-			final int delay_ms) {
-		final CheckBoxPreference pref = (CheckBoxPreference) data;
-
-		mHandler.post(new Runnable() {
-			public void run() {
-				 if (status == EcCalibratorStatus.Done) {
-					pref.setSummary(String.format(getString(R.string.ec_calibrated), delay_ms));
-					pref.setChecked(true);
-					
-				} else if (status == EcCalibratorStatus.Failed) {
-					pref.setSummary(R.string.failed);
-					pref.setChecked(false);
-				}
-			}
-		});		
-	}
 
 	
 	public interface LinphoneGuiListener extends NewOutgoingCallUiListener {

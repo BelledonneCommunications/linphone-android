@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 
-import static android.media.AudioManager.STREAM_VOICE_CALL;
-import static org.linphone.R.string.cont;
 import static org.linphone.R.string.ec_calibrating;
 import static org.linphone.R.string.ec_calibration_launch_message;
 import static org.linphone.R.string.pref_codec_ilbc_key;
@@ -31,35 +29,43 @@ import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
+import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Version;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.media.AudioManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
+import android.widget.Toast;
 
-public class LinphonePreferencesActivity extends PreferenceActivity {
+public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private boolean mIsLowEndCpu = true;
-	private AudioManager mAudioManager;
-	
+	   private Handler mHandler = new Handler();
+	   private CheckBoxPreference ecPref;
+
+	   private SharedPreferences prefs() {
+		   return getPreferenceManager().getSharedPreferences();
+	   }
+	   
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
+		// Load the preferences from an XML resource
+		addPreferencesFromResource(R.xml.preferences);
+
+
 		boolean enableIlbc=false;
 		if (LinphoneService.isReady()) {
 			// if not ilbc, we are on low end cpu.
 			enableIlbc = LinphoneManager.getLc().findPayloadType("iLBC", 8000)!=null?true:false;
 			mIsLowEndCpu=!enableIlbc;
-			if (!mIsLowEndCpu && !getPreferenceManager().getSharedPreferences().contains(getString(pref_echo_cancellation_key))) {
+			if (!mIsLowEndCpu && !prefs().contains(getString(pref_echo_cancellation_key))) {
 				writeBoolean(pref_echo_cancellation_key, true);
 			}
 			if (mIsLowEndCpu) {
@@ -70,54 +76,60 @@ public class LinphonePreferencesActivity extends PreferenceActivity {
 
 		}
 
-		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.preferences);
+		ecPref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
+		ecPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				startEcCalibration();
+				return false;
+			}
+		});
+
+
 		if (!mIsLowEndCpu) {
 			findPreference(pref_codec_ilbc_key).setEnabled(enableIlbc);
 			findPreference(pref_codec_speex16_key).setEnabled(enableIlbc);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
-		findPreference(pref_echo_canceller_calibration_key)
-		.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
-				startEcCalibration(preference);
-				return false;
-			}
-		});
 
 		// Force disable video
 		if (Version.sdkStrictlyBelow(5) || !enableIlbc || !LinphoneManager.getInstance().hasCamera()) {
 			disableCheckbox(pref_video_enable_key);
 		}
-		if (getPreferenceManager().getSharedPreferences().getBoolean(DialerActivity.PREF_FIRST_LAUNCH,true)) {
+		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
 			if (!mIsLowEndCpu  ) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-				builder.setTitle(ec_calibration_launch_message).setCancelable(false).setPositiveButton(getString(cont), new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						startEcCalibration(findPreference(pref_echo_canceller_calibration_key));
-					}
-				}).create().show();
+				Toast.makeText(this, getString(ec_calibration_launch_message), Toast.LENGTH_LONG).show();
+				startEcCalibration();
 
 			} 
-			getPreferenceManager().getSharedPreferences().edit().putBoolean(DialerActivity.PREF_FIRST_LAUNCH, false).commit();
+			prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 		}
 				
 	}
-	private synchronized void startEcCalibration(Preference preference) {
+	private synchronized void startEcCalibration() {
 		try {
-			int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
-			int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
-			mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
+			LinphoneManager.getInstance().startEcCalibration(this);
 
-			LinphoneManager.getLc().startEchoCalibration(preference);
-			
-			mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
-			
-			preference.setSummary(ec_calibrating);
-			preference.getEditor().putBoolean(getString(pref_echo_canceller_calibration_key), false).commit();
+			ecPref.setSummary(ec_calibrating);
+			ecPref.getEditor().putBoolean(getString(pref_echo_canceller_calibration_key), false).commit();
 		} catch (LinphoneCoreException e) {
 			Log.w(LinphoneManager.TAG, "Cannot calibrate EC",e);
 		}	
+	}
+
+	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
+
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (status == EcCalibratorStatus.Done) {
+					ecPref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+					ecPref.setChecked(true);
+
+				} else if (status == EcCalibratorStatus.Failed) {
+					ecPref.setSummary(R.string.failed);
+					ecPref.setChecked(false);
+				}
+			}
+		});
 	}
 
 	private void disableCheckbox(int key) {
@@ -128,11 +140,11 @@ public class LinphonePreferencesActivity extends PreferenceActivity {
 	}
 	
 	private Preference findPreference(int key) {
-		return getPreferenceScreen().findPreference(getString(key));
+		return getPreferenceManager().findPreference(getString(key));
 	}
 	
 	private void writeBoolean(int key, boolean value) {
-		getPreferenceManager().getSharedPreferences().edit().putBoolean(getString(key), value).commit();
+		prefs().edit().putBoolean(getString(key), value).commit();
 	}
 	
 	@Override

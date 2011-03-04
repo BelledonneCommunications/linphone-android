@@ -535,12 +535,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		void tryingNewOutgoingCallButAlreadyInCall();
 		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onCallStateChanged(LinphoneCall call, State state, String message);
-		void onEcCalibrationStatus(EcCalibratorStatus status, Object data,
-				int delayMs);
 		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
 		void onDisplayStatus(String message);
 	}
 
+	public interface EcCalibrationListener {
+		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
+	}
 
 	private LinphoneServiceListener serviceListener;
 	private LinphoneCall.State mCurrentCallState;
@@ -611,20 +612,30 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 
-	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delay_ms,
+	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delayMs,
 			final Object data) {
-		serviceListener.onEcCalibrationStatus(status, data, delay_ms);
+		EcCalibrationListener listener = (EcCalibrationListener) data;
+		listener.onEcCalibrationStatus(status, delayMs);
 	}
 	
 
 
-	
-	
-	
-	
-	
-	
-	
+	public void startEcCalibration(EcCalibrationListener l) throws LinphoneCoreException {
+		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
+		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
+		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
+
+		mLc.startEchoCalibration(l);
+
+		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
+	}
+
+
+
+
+
+
+
 
 
 	private synchronized void startRinging()  {

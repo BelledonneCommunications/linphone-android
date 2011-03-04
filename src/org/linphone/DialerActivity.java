@@ -86,13 +86,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	private SharedPreferences mPref;
 	private AddVideoButton mAddVideo;
 	
-	private static final String PREF_CHECK_CONFIG = "pref_check_config";
-	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
-	
-	private static boolean checkAccount = true;
-
 
 
 	/**
@@ -184,17 +179,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		mStatus =  (TextView) findViewById(R.id.status_label);
 		
 
-		if (checkAccount) {
-			if (mPref.getBoolean(PREF_FIRST_LAUNCH, true)) {
-				onFirstLaunch();
-			} else if (!mPref.getBoolean(PREF_CHECK_CONFIG, false)
-					&& !checkDefined(R.string.pref_username_key, R.string.pref_passwd_key, R.string.pref_domain_key)) {
-				onBadSettings();
-			} else {
-				checkAccount = false;
-			}
-		}
-
 	}
 
 
@@ -213,66 +197,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	}
 
 
-	/***** Check Account *******/
-	private boolean checkDefined(int ... keys) {
-		for (int key : keys) {
-			String conf = mPref.getString(getString(key), null);
-			if (conf == null || "".equals(conf))
-				return false;
-		}
-		return true;
-	}
 
-	private void onFirstLaunch() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		TextView lDialogTextView = new TextView(this);
-		lDialogTextView.setAutoLinkMask(0x0f/*all*/);
-		lDialogTextView.setPadding(10, 10, 10, 10);
-
-		lDialogTextView.setText(Html.fromHtml(getString(R.string.first_launch_message)));
-
-		builder.setCustomTitle(lDialogTextView)
-		.setCancelable(false)
-		.setPositiveButton(getString(R.string.cont), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				LinphoneActivity.instance().startprefActivity();
-				checkAccount = false;
-			}
-		});
-
-		builder.create().show();
-	}
-
-	private void onBadSettings() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		TextView lDialogTextView = new TextView(this);
-		lDialogTextView.setAutoLinkMask(0x0f/*all*/);
-		lDialogTextView.setPadding(10, 10, 10, 10);
-
-		lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error)));
-
-		builder.setCustomTitle(lDialogTextView)
-		.setCancelable(false)
-		.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				LinphoneActivity.instance().startprefActivity();
-				checkAccount = false;
-			}
-		}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				checkAccount = false;
-			}
-		}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				mPref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
-				dialog.cancel();
-				checkAccount = false;
-			}
-		});
-
-		builder.create().show();
-	}
 
 
 
@@ -449,7 +374,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 
 	public void onWrongDestinationAddress() {
 		Toast toast = Toast.makeText(this
-				,String.format(getResources().getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
+				,String.format(getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
 				,Toast.LENGTH_LONG);
 		toast.show();
 	}

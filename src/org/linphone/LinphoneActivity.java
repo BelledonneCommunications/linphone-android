@@ -26,7 +26,10 @@ import static android.media.AudioManager.ROUTE_SPEAKER;
 
 import java.util.List;
 
+import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Version;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.app.AlertDialog;
@@ -43,6 +46,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,25 +55,39 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 	
 public class LinphoneActivity extends TabActivity  {
 	public static final String DIALER_TAB = "dialer";
-	private AudioManager mAudioManager;
-		
+    public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
+    static final int VIDEO_VIEW_ACTIVITY = 100;
+    static final int FIRST_LOGIN_ACTIVITY = 101;
+    static final int INCALL_ACTIVITY = 102; 
+    private static final String PREF_CHECK_CONFIG = "pref_check_config";
+
 	private static LinphoneActivity instance;
+	private AudioManager mAudioManager;
+
+	
 	
 	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
 	private static SensorEventListener mSensorEventListener;
 	
 	private static final String SCREEN_IS_HIDDEN ="screen_is_hidden";
-	static final int VIDEO_VIEW_ACTIVITY = 100;
-	static final int FIRST_LOGIN_ACTIVITY = 101;
-	static final int INCALL_ACTIVITY = 102; 
+	
+	
+	// Customization
+	private static final boolean useFirstLoginActivity = false;
+	private static final boolean useMenuSettings = true;
+	private static final boolean useMenuAbout = true;
+	private boolean checkAccount = !useFirstLoginActivity;
 
 	
-
+	
+	
+	
 	static final LinphoneActivity instance() {
 		if (instance != null) return instance;
 
@@ -96,13 +114,23 @@ public class LinphoneActivity extends TabActivity  {
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-		
-		if (pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+		if (!useFirstLoginActivity || pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
 			fillTabHost();
 		} else {
 			startActivityForResult(new Intent().setClass(this, FirstLoginActivity.class), FIRST_LOGIN_ACTIVITY);
 		}
-	    
+
+		if (checkAccount && !useFirstLoginActivity) {
+			if (pref.getBoolean(PREF_FIRST_LAUNCH, true)) {
+				onFirstLaunch();
+			} else if (!pref.getBoolean(PREF_CHECK_CONFIG, false)
+					&& !checkDefined(pref, R.string.pref_username_key, R.string.pref_passwd_key, R.string.pref_domain_key)) {
+				onBadSettings(pref);
+			} else {
+				checkAccount = false;
+			}
+		}
+		
 	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
 	    	hideScreen(true);
 	    }
@@ -115,6 +143,21 @@ public class LinphoneActivity extends TabActivity  {
 		
 		if (requestCode == FIRST_LOGIN_ACTIVITY) {
 			if (resultCode == RESULT_OK) {
+				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
+
+				try {
+					LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
+						public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
+							PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.this)
+							.edit().putBoolean(
+									getString(R.string.pref_echo_canceller_calibration_key),
+									status == EcCalibratorStatus.Done).commit();
+						}
+					});
+				} catch (LinphoneCoreException e) {
+					Log.e(LinphoneManager.TAG, "Unable to calibrate EC", e);
+				}
+
 				fillTabHost();
 			} else {
 				finish();
@@ -200,6 +243,9 @@ public class LinphoneActivity extends TabActivity  {
 		// Inflate the currently selected menu XML resource.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.linphone_activity_menu, menu);
+		
+		menu.findItem(R.id.menu_settings).setVisible(useMenuSettings);
+		menu.findItem(R.id.menu_about).setVisible(useMenuAbout);
 		return true;
 	}
 
@@ -281,23 +327,27 @@ public class LinphoneActivity extends TabActivity  {
 
 
 	void showPreferenceErrorDialog(String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-		.setMessage(String.format(getString(R.string.config_error), message))
-		.setCancelable(false)
-		.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				Intent intent = new Intent(ACTION_MAIN);
-				intent.setClass(getApplicationContext(), LinphonePreferencesActivity.class);
-				startActivity(intent);
-			}
-		})
-		.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
+		if (!useMenuSettings) {
+			Toast.makeText(this, message, Toast.LENGTH_LONG);
+		} else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this)
+			.setMessage(String.format(getString(R.string.config_error), message))
+			.setCancelable(false)
+			.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Intent intent = new Intent(ACTION_MAIN);
+					intent.setClass(getApplicationContext(), LinphonePreferencesActivity.class);
+					startActivity(intent);
+				}
+			})
+			.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 
-		builder.create().show();
+			builder.create().show();
+		}
 	}
 
 	public void onRegistrationStateChanged(RegistrationState state,
@@ -308,5 +358,67 @@ public class LinphoneActivity extends TabActivity  {
 		}
 	}
 	
+	
+	
+	/***** Check Account *******/
+	private boolean checkDefined(SharedPreferences pref, int ... keys) {
+		for (int key : keys) {
+			String conf = pref.getString(getString(key), null);
+			if (conf == null || "".equals(conf))
+				return false;
+		}
+		return true;
+	}
+
+	private void onFirstLaunch() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		TextView lDialogTextView = new TextView(this);
+		lDialogTextView.setAutoLinkMask(0x0f/*all*/);
+		lDialogTextView.setPadding(10, 10, 10, 10);
+
+		lDialogTextView.setText(Html.fromHtml(getString(R.string.first_launch_message)));
+
+		builder.setCustomTitle(lDialogTextView)
+		.setCancelable(false)
+		.setPositiveButton(getString(R.string.cont), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				LinphoneActivity.instance().startprefActivity();
+				checkAccount = false;
+			}
+		});
+
+		builder.create().show();
+	}
+
+	private void onBadSettings(final SharedPreferences pref) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		TextView lDialogTextView = new TextView(this);
+		lDialogTextView.setAutoLinkMask(0x0f/*all*/);
+		lDialogTextView.setPadding(10, 10, 10, 10);
+
+		lDialogTextView.setText(Html.fromHtml(getString(R.string.initial_config_error)));
+
+		builder.setCustomTitle(lDialogTextView)
+		.setCancelable(false)
+		.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				LinphoneActivity.instance().startprefActivity();
+				checkAccount = false;
+			}
+		}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				checkAccount = false;
+			}
+		}).setNegativeButton(getString(R.string.never_remind), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				pref.edit().putBoolean(PREF_CHECK_CONFIG, true).commit();
+				dialog.cancel();
+				checkAccount = false;
+			}
+		});
+
+		builder.create().show();
+	}
 }
 
