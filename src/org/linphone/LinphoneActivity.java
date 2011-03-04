@@ -20,7 +20,10 @@ package org.linphone;
 
 
 import static android.content.Intent.ACTION_MAIN;
-import static android.media.AudioManager.*;
+import static android.media.AudioManager.MODE_NORMAL;
+import static android.media.AudioManager.ROUTE_ALL;
+import static android.media.AudioManager.ROUTE_SPEAKER;
+
 import java.util.List;
 
 import org.linphone.core.Version;
@@ -48,10 +51,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TabHost;
-
+import android.widget.Toast;
+	
 public class LinphoneActivity extends TabActivity  {
 	public static final String DIALER_TAB = "dialer";
 	private AudioManager mAudioManager;
+		
 	private static LinphoneActivity instance;
 	
 	private FrameLayout mMainFrame;
@@ -109,7 +114,12 @@ public class LinphoneActivity extends TabActivity  {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		if (requestCode == FIRST_LOGIN_ACTIVITY) {
-			fillTabHost();
+			if (resultCode == RESULT_OK) {
+				fillTabHost();
+			} else {
+				finish();
+				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+			}
 		}
 		
 		super.onActivityResult(requestCode, resultCode, data);
@@ -160,7 +170,11 @@ public class LinphoneActivity extends TabActivity  {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 	    if (intent.getData() != null) {
-	    	DialerActivity.instance().newOutgoingCall(intent);
+	    	 if (DialerActivity.instance() != null) {
+	    		 DialerActivity.instance().newOutgoingCall(intent);
+	          } else {
+	        	  Toast.makeText(this, getString(R.string.dialer_null_on_new_intent), Toast.LENGTH_LONG).show();
+	        }
 	    }
 		
 	}

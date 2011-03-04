@@ -21,13 +21,15 @@ package org.linphone;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 	private TextView login;
 	private TextView password;
 	private SharedPreferences mPref;
+	private ProgressBar bar;
 	static FirstLoginActivity instance;
 
 	@Override
@@ -47,8 +50,14 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 		
 		login = (TextView) findViewById(R.id.login);
 		login.setText(mPref.getString(getString(R.string.pref_username_key), ""));
-		password = (TextView) findViewById(R.id.password);
 
+		password = (TextView) findViewById(R.id.password);
+        password.setText(mPref.getString(getString(R.string.pref_passwd_key), ""));
+
+        bar = (ProgressBar) findViewById(R.id.progress_bar);
+        bar.setVisibility(View.INVISIBLE);
+
+        
 		findViewById(R.id.connect).setOnClickListener(this);
 		instance = this;
 	}
@@ -67,6 +76,9 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 			return;
 		}
 
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+
 		writePreference(R.string.pref_username_key, login.getText().toString());
 		writePreference(R.string.pref_passwd_key, password.getText().toString());
 
@@ -74,6 +86,7 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 			LinphoneManager.getInstance().initFromConf(getApplicationContext());
 		} catch (Throwable e) {
 			Log.e(LinphoneManager.TAG, "Error while initializing from config in first login activity", e);
+            toast(R.string.error);;
 		}
 	}
 
@@ -91,10 +104,16 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 
 	public void onRegistrationStateChanged(RegistrationState state) {
 		if (RegistrationState.RegistrationOk == state) {
+			bar.setVisibility(View.INVISIBLE);
+			toast(R.string.first_launch_ok);
 			mPref.edit().putBoolean(getString(R.string.first_launch_suceeded_once_key), true).commit();
+			setResult(RESULT_OK);
 			finish();
 		} else if (RegistrationState.RegistrationFailed == state) {
-				toast(R.string.first_launch_bad_login_password);
+			bar.setVisibility(View.INVISIBLE);
+			toast(R.string.first_launch_bad_login_password);
+		} else if (RegistrationState.RegistrationProgress == state) {
+			bar.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -102,13 +121,4 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 		Toast.makeText(instance, instance.getString(key), Toast.LENGTH_LONG).show();
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			// Forbid user to press back button
-			return true;
-		}
-
-		return super.onKeyDown(keyCode, event);
-	}
 }

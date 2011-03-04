@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
+    <!-- Custom start -->
+    <string name="app_name">RelTime</string>
+
+    <!-- Custom end -->
+
+
+    <string name="first_launch_ok">Registration successful</string>
+    <string name="error">Error</string>
+    <string name="click_to_show_first_login_view">Start</string>
+    <string name="dialer_null_on_new_intent">Application not ready</string>
+
+
+
     <string name="pref_echo_canceller_calibration_key">pref_echo_canceller_calibration_key</string>
     <string name="pref_echo_canceller_calibration">Echo calibration</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>
@@ -53,7 +68,6 @@
 <string name="pref_passwd">Password*</string>
 <string name="pref_username">Username*</string>
 <string name="hello">Hello World, Linphone!</string>
-<string name="app_name">Linphone</string>
 <string name="pref_sipaccount">SIP Account</string>
 <string name="wrong_username">wrong user name</string>
 <string name="wrong_passwd">wrong password</string>
