@@ -2,12 +2,8 @@
 <resources>
 
 
-       <!-- Custom start -->
-       <string name="default_domain">test.linphone.org</string>
 
-       <!-- Custom end -->
-       
-
+    <string name="pref_echo_canceller_calibration_key">pref_echo_canceller_calibration_key</string>
     <string name="pref_prefix_key">pref_prefix_key</string>
     <string name="pref_proxy_key">pref_proxy_key</string>
     <string name="pref_domain_key">pref_domain_key</string>
