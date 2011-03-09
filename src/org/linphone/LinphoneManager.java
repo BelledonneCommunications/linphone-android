@@ -59,7 +59,9 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.PowerManager;
 import android.os.Vibrator;
+import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -85,6 +87,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private static LinphoneManager instance;
 	private AudioManager mAudioManager;
+	private PowerManager mPowerManager;
 	private SharedPreferences mPref;
 	private Resources mR;
 	private LinphoneCore mLc;
@@ -96,6 +99,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
+		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
 
 		// Register a sensor to track phoneOrientation for placing new calls.
@@ -594,6 +598,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == IncomingReceived) {
+			// Brighten screen for at least 10 seconds
+			WakeLock wl = mPowerManager.newWakeLock(
+					PowerManager.ACQUIRE_CAUSES_WAKEUP
+					|PowerManager.ON_AFTER_RELEASE
+					|PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+					"incoming_call");
+			wl.acquire(10000);
+
 			startRinging();
 		}
 
