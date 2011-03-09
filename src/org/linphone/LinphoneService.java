@@ -80,7 +80,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	private Notification mNotif;
 	private PendingIntent mNotifContentIntent;
-	private static final String NOTIF_TITLE = "Linphone";
+	private String notificationTitle;
 
 
 	private static final int IC_LEVEL_ORANGE=0;
@@ -96,6 +96,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
+		
+		notificationTitle = getString(R.string.app_name);
 
 		// Dump some debugging information to the logs
 		Hacks.dumpDeviceInformation();
@@ -107,7 +109,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
-		mNotif.setLatestEventInfo(this, NOTIF_TITLE,"", mNotifContentIntent);
+		mNotif.setLatestEventInfo(this, notificationTitle,"", mNotifContentIntent);
 		mNotificationMgr.notify(NOTIF_ID, mNotif);		
 	
 	
@@ -122,7 +124,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private void sendNotification(int level, int text) {
 		mNotif.iconLevel = level;
 		mNotif.when=System.currentTimeMillis();
-		mNotif.setLatestEventInfo(this, NOTIF_TITLE,getString(text), mNotifContentIntent);
+		mNotif.setLatestEventInfo(this, notificationTitle,getString(text), mNotifContentIntent);
 		mNotificationMgr.notify(NOTIF_ID, mNotif);
 	}
 	
@@ -130,7 +132,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNotif.iconLevel = level;
 		mNotif.when=System.currentTimeMillis();
 		String id = LinphoneManager.getLc().getDefaultProxyConfig().getIdentity();
-		mNotif.setLatestEventInfo(this, NOTIF_TITLE,
+		mNotif.setLatestEventInfo(this, notificationTitle,
 				String.format(getString(text), id),
 				mNotifContentIntent);
 		mNotificationMgr.notify(NOTIF_ID, mNotif);

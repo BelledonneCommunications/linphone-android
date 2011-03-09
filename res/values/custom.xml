@@ -8,5 +8,10 @@
 	<bool name="use_android_contact_picker">true</bool>
 <!--	<string name="merge_another_contact_provider">content://something</string>-->
     
+    <bool name="useFirstLoginActivity">false</bool>
+	<bool name="useMenuSettings">true</bool>
+	<bool name="useMenuAbout">true</bool>
+	
+	<string name="notification_title">Linphone</string>
 </resources>
  

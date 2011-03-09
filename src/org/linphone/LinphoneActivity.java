@@ -80,12 +80,11 @@ public class LinphoneActivity extends TabActivity  {
 	
 	
 	// Customization
-	private static final boolean useFirstLoginActivity = false;
-	private static final boolean useMenuSettings = true;
-	private static final boolean useMenuAbout = true;
-	private boolean checkAccount = !useFirstLoginActivity;
+	private static boolean useFirstLoginActivity;
+	private static boolean useMenuSettings;
+	private static boolean useMenuAbout;
+	private boolean checkAccount;
 
-	
 	
 	
 	
@@ -104,7 +103,11 @@ public class LinphoneActivity extends TabActivity  {
 		super.onCreate(savedInstanceState);
 		instance = this;
 		setContentView(R.layout.main);
-		
+
+		useFirstLoginActivity = getResources().getBoolean(R.bool.useFirstLoginActivity);
+		useMenuSettings = getResources().getBoolean(R.bool.useMenuSettings);
+		useMenuAbout = getResources().getBoolean(R.bool.useMenuAbout);
+		checkAccount = !useFirstLoginActivity;
 
 		// start linphone as background       
 		startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
