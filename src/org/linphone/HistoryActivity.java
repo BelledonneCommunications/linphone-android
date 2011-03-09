@@ -59,12 +59,12 @@ public class HistoryActivity extends ListActivity {
 		TextView lSecondLineView = (TextView) v.findViewById(R.id.history_cell_second_line);
 		if (lSecondLineView.getVisibility() == View.GONE) {
 			// no display name
-			DialerActivity.instance().setContactAddress(lFirstLineView.getText().toString(), null);
+			LinphoneActivity.setAddressAndGoToDialer(lFirstLineView.getText().toString(), null);
 		} else {
-			DialerActivity.instance().setContactAddress(lSecondLineView.getText().toString()
-														,lFirstLineView.getText().toString());
+			LinphoneActivity.setAddressAndGoToDialer(
+					lSecondLineView.getText().toString(),
+					lFirstLineView.getText().toString());
 		}
-		LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);	
 	}
 
 

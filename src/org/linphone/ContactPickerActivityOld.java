@@ -25,8 +25,8 @@ import android.os.Bundle;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
 
-
-public class ContactPickerActivity extends Activity {
+@SuppressWarnings("deprecation")
+public class ContactPickerActivityOld extends Activity {
     static final int PICK_CONTACT_REQUEST = 0;
     static final int PICK_PHONE_NUMBER_REQUEST = 1;
 

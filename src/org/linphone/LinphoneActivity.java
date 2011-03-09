@@ -1,5 +1,5 @@
 /*
-LinphoneActivity.java
+iLinphoneActivity.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -74,6 +74,7 @@ public class LinphoneActivity extends TabActivity  {
 	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
 	private static SensorEventListener mSensorEventListener;
+	private static String TAG = LinphoneManager.TAG;
 	
 	private static final String SCREEN_IS_HIDDEN ="screen_is_hidden";
 	
@@ -155,7 +156,7 @@ public class LinphoneActivity extends TabActivity  {
 						}
 					});
 				} catch (LinphoneCoreException e) {
-					Log.e(LinphoneManager.TAG, "Unable to calibrate EC", e);
+					Log.e(TAG, "Unable to calibrate EC", e);
 				}
 
 				fillTabHost();
@@ -197,7 +198,8 @@ public class LinphoneActivity extends TabActivity  {
 	    
 
 	    // Contact picker
-	    tabIntent = new Intent().setClass(this, ContactPickerActivity.class);
+	    tabIntent = new Intent().setClass(this, Version.sdkAboveOrEqual(5) ?
+	    		ContactPickerActivityNew.class : ContactPickerActivityOld.class);
 	    indicator = getString(R.string.tab_contact);
 	    tabDrawable = getResources().getDrawable(R.drawable.contact_orange);
 	    spec = lTabHost.newTabSpec("contact")
@@ -212,14 +214,17 @@ public class LinphoneActivity extends TabActivity  {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-	    if (intent.getData() != null) {
-	    	 if (DialerActivity.instance() != null) {
-	    		 DialerActivity.instance().newOutgoingCall(intent);
-	          } else {
-	        	  Toast.makeText(this, getString(R.string.dialer_null_on_new_intent), Toast.LENGTH_LONG).show();
-	        }
-	    }
+		if (intent.getData() == null) {
+			Log.e(TAG, "LinphoneActivity received an intent without data, discarding");
+			return;
+		}
 		
+
+		if (DialerActivity.instance() != null) {
+			DialerActivity.instance().newOutgoingCall(intent);
+		} else {
+			Toast.makeText(this, getString(R.string.dialer_null_on_new_intent), Toast.LENGTH_LONG).show();
+		}
 	}
 	@Override
 	protected void onPause() {
@@ -264,7 +269,7 @@ public class LinphoneActivity extends TabActivity  {
 			startActivity(new Intent(ACTION_MAIN)
 				.setClass(this, AboutActivity.class));
 		default:
-			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
+			Log.e(TAG, "Unknown menu item ["+item+"]");
 			break;
 		}
 
@@ -293,14 +298,14 @@ public class LinphoneActivity extends TabActivity  {
 
 	synchronized void startProxymitySensor() {
 		if (mSensorEventListener != null) {
-			Log.i(LinphoneManager.TAG, "proximity sensor already active");
+			Log.i(TAG, "proximity sensor already active");
 			return;
 		}
 		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
 		mSensorEventListener = new SensorEventListener() {
 			public void onSensorChanged(SensorEvent event) {
 				if (event.timestamp == 0) return; //just ignoring for nexus 1
-				Log.d(LinphoneManager.TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
+				Log.d(TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
 				
 				if (event.values[0] != event.sensor.getMaximumRange() ) {
 					instance().hideScreen(true);
@@ -313,7 +318,7 @@ public class LinphoneActivity extends TabActivity  {
 		};
 		if (lSensorList.size() >0) {
 			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
-			Log.i(LinphoneManager.TAG, "Proximity sensor detected, registering");
+			Log.i(TAG, "Proximity sensor detected, registering");
 		}		
 	}
 
@@ -419,6 +424,11 @@ public class LinphoneActivity extends TabActivity  {
 		});
 
 		builder.create().show();
+	}
+
+	public static void setAddressAndGoToDialer(String number, String name) {
+		DialerActivity.instance().setContactAddress(number, name);
+		instance.getTabHost().setCurrentTabByTag(DIALER_TAB);
 	}
 }
 
