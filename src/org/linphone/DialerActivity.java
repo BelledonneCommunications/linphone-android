@@ -35,16 +35,13 @@ import org.linphone.ui.SpeakerButton;
 import org.linphone.ui.AddVideoButton.AlreadyInVideoCallListener;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -330,7 +327,13 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	
 	
 	public void newOutgoingCall(Intent intent) {
-		mAddress.setText(intent.getData().toString().substring("tel:".length()));
+		
+		if (Intent.ACTION_CALL.equalsIgnoreCase(intent.getAction())) {
+			mAddress.setText(intent.getData().getSchemeSpecificPart());
+		} else if (Intent.ACTION_SENDTO.equals(intent.getAction())) {
+			mAddress.setText("sip:" + intent.getData().getLastPathSegment());
+		}
+		
 		mAddress.clearDisplayedName();
 		intent.setData(null);
 
