@@ -101,6 +101,8 @@ public class HistoryActivity extends ListActivity {
 
 	class CallHistoryAdapter extends  BaseAdapter {
 		final List<LinphoneCallLog> mLogs; 
+
+		@SuppressWarnings("unchecked")
 		CallHistoryAdapter(Context aContext) {
 			mLogs = LinphoneManager.getLc().getCallLogs();
 		}

@@ -11,7 +11,10 @@
     <bool name="useFirstLoginActivity">false</bool>
 	<bool name="useMenuSettings">true</bool>
 	<bool name="useMenuAbout">true</bool>
-	
+	<bool name="use_incall_activity">true</bool>
+	<bool name="use_video_activity">false</bool>
+
 	<string name="notification_title">Linphone</string>
+	
 </resources>
  

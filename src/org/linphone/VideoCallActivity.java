@@ -63,7 +63,7 @@ public class VideoCallActivity extends Activity {
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
 		LinphoneCore lc = LinphoneManager.getLc();
 		lc.setVideoWindow(mVideoView);
-		
+
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
 
 		previousPhoneOrientation = AndroidCameraRecordManager.getInstance().getPhoneOrientation();
