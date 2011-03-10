@@ -44,6 +44,7 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.video.AndroidCameraRecordManager;
 
 import android.content.BroadcastReceiver;
@@ -92,6 +93,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private Resources mR;
 	private LinphoneCore mLc;
 	private int mPhoneOrientation;
+	private static Transports initialTransports;
 
 
 	
@@ -363,6 +365,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
 		
+		if (initialTransports == null)
+			initialTransports = mLc.getSignalingTransportPorts();
+		
+		setSignalingTransportsFromConfiguration(initialTransports);
+		
+		
 		try {
 			// Configure audio codecs
 			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
@@ -466,6 +474,34 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 	
+	private boolean getBool(int key, boolean defValue) {
+		return mPref.getBoolean(getString(key), defValue);
+	}
+
+	private void setSignalingTransportsFromConfiguration(Transports t) {
+		Transports ports = new Transports(t);
+		boolean useStandardPort = getBool(R.string.pref_transport_use_standard_ports_key, false);
+
+		if (!getBool(R.string.pref_transport_udp_key, false)) {
+			ports.udp = 0;
+		} else if (useStandardPort) {
+			ports.udp = 5600;
+		}
+		
+		if (!getBool(R.string.pref_transport_tcp_key, false)) {
+			ports.tcp = 0;
+		} else if (useStandardPort) {
+			ports.tcp = 5600;
+		}
+
+		if (!getBool(R.string.pref_transport_tls_key, false)) {
+			ports.tls = 0;
+		} else if (useStandardPort) {
+			ports.tls = 5600;
+		}
+
+		mLc.setSignalingTransportPorts(ports);
+	}
 
 	private void enableDisableAudioCodec(String codec, int rate, int key) throws LinphoneCoreException {
 		PayloadType pt = mLc.findPayloadType(codec, rate);

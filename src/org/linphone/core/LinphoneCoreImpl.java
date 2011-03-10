@@ -91,7 +91,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void enableKeepAlive(long nativePtr,boolean enable);
 	private native boolean isKeepAliveEnabled(long nativePtr);
 	private native int startEchoCalibration(long nativePtr,Object data);
-	
+	private native int getSignalingTransportPort(long nativePtr, int code);
+	private native void setSignalingTransportPorts(long nativePtr, int udp, int tcp, int tls);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -286,10 +287,6 @@ class LinphoneCoreImpl implements LinphoneCore {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setSignalingTransport(Transport aTransport) {
-		// TODO Auto-generated method stub
-		
-	}
 	public void enableSpeaker(boolean value) {
 		// TODO Auto-generated method stub
 		
@@ -439,7 +436,19 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void startEchoCalibration(Object data) throws LinphoneCoreException {
 		startEchoCalibration(nativePtr, data);
 	}
-	public Transport getSignalingTransport() {
-		throw new RuntimeException("Not implemented");
+	
+	public Transports getSignalingTransportPorts() {
+		Transports transports = new Transports();
+		transports.udp = getSignalingTransportPort(nativePtr, 0);
+		transports.tcp = getSignalingTransportPort(nativePtr, 1);
+		transports.tls = getSignalingTransportPort(nativePtr, 3);
+		// See C struct LCSipTransports in linphonecore.h
+		// Code is the index in the structure
+		return transports;
 	}
+	public void setSignalingTransportPorts(Transports transports) {
+		setSignalingTransportPorts(nativePtr, transports.udp, transports.tcp, transports.tls);
+	}
+
+
 }

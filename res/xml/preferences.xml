@@ -112,6 +112,16 @@
 
 		<CheckBoxPreference android:key="@string/pref_debug_key"
 			android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
+
+		<PreferenceScreen android:title="@string/pref_network_title">
+			<CheckBoxPreference android:key="@string/pref_transport_udp_key"
+			 android:title="@string/pref_transport_udp" android:defaultValue="true"/>
+			<CheckBoxPreference android:key="@string/pref_transport_tcp_key"
+			 android:title="@string/pref_transport_tcp" />
+			<CheckBoxPreference android:key="@string/pref_transport_tls_key" android:title="@string/pref_transport_tls" />
+			<CheckBoxPreference android:key="@string/pref_transport_use_standard_ports_key"
+				 android:title="@string/pref_transport_use_standard_ports"/>
+		</PreferenceScreen>
 	</PreferenceCategory>
 
 </PreferenceScreen>

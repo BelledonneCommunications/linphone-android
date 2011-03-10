@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 
 package org.linphone;
 
@@ -29,6 +29,9 @@ import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Version;
@@ -40,25 +43,33 @@ import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
 import android.widget.Toast;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private boolean mIsLowEndCpu = true;
-	   private Handler mHandler = new Handler();
-	   private CheckBoxPreference ecPref;
+	private Handler mHandler = new Handler();
+	private CheckBoxPreference ecPref;
 
-	   private SharedPreferences prefs() {
-		   return getPreferenceManager().getSharedPreferences();
-	   }
-	   
+	private SharedPreferences prefs() {
+		return getPreferenceManager().getSharedPreferences();
+	}
+
+	private CheckBoxPreference findCheckbox(int key) {
+		return (CheckBoxPreference) findPreference(getString(key));
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 
+		addTransportChecboxesListener();
+		
 
 		boolean enableIlbc=false;
 		if (LinphoneService.isReady()) {
@@ -103,8 +114,63 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			} 
 			prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 		}
-				
+
 	}
+	
+	private List<CheckBoxPreference> findTransportCb() {
+		return Arrays.asList(
+				findCheckbox(R.string.pref_transport_udp_key),
+				findCheckbox(R.string.pref_transport_tcp_key),
+				findCheckbox(R.string.pref_transport_tls_key));
+	}
+	
+	private void addTransportChecboxesListener() {
+
+		final List<CheckBoxPreference> checkboxes = findTransportCb();
+
+		OnPreferenceChangeListener changedListener = new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				if ((Boolean) newValue) {
+					for (CheckBoxPreference p : checkboxes) {
+						if (p == preference) continue;
+						p.setChecked(false);
+					}
+					return true;
+				} else {
+					for (CheckBoxPreference p : checkboxes) {
+						if (p == preference) continue;
+						if (p.isChecked()) return true;
+					}
+					return false;
+				}
+			}
+		};
+		
+		OnPreferenceClickListener clickListener = new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				// Forbid no protocol selection
+				
+				if (((CheckBoxPreference) preference).isChecked()) {
+					// Trying to unckeck
+					for (CheckBoxPreference p : checkboxes) {
+						if (p == preference) continue;
+						if (p.isChecked()) return false;
+					}
+					/*Toast.makeText(LinphonePreferencesActivity.this,
+							getString(R.string.at_least_a_protocol),
+							Toast.LENGTH_SHORT).show();*/
+					return true;
+				}
+				return false;
+			}
+		};
+
+		for (CheckBoxPreference c : checkboxes) {
+			c.setOnPreferenceChangeListener(changedListener);
+			c.setOnPreferenceClickListener(clickListener);
+		}
+	}
+
 	private synchronized void startEcCalibration() {
 		try {
 			LinphoneManager.getInstance().startEcCalibration(this);
@@ -138,15 +204,15 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		box.setEnabled(false);
 		box.setChecked(false);
 	}
-	
+
 	private Preference findPreference(int key) {
 		return getPreferenceManager().findPreference(getString(key));
 	}
-	
+
 	private void writeBoolean(int key, boolean value) {
 		prefs().edit().putBoolean(getString(key), value).commit();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
