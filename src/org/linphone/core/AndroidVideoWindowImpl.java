@@ -34,11 +34,11 @@ public class AndroidVideoWindowImpl  {
 					mSurface=holder.getSurface();
 				}
 				if (mListener!=null) mListener.onSurfaceReady(AndroidVideoWindowImpl.this);
-				Log.w("Linphone", "Video display surface changed");
+				Log.w(TAG, "Video display surface changed");
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {
-				Log.w("Linphone", "Video display surface created");
+				Log.w(TAG, "Video display surface created");
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
@@ -48,7 +48,7 @@ public class AndroidVideoWindowImpl  {
 				}
 				if (mListener!=null)
 					mListener.onSurfaceDestroyed(AndroidVideoWindowImpl.this);
-				Log.d("Linphone", "Video display surface destroyed"); 
+				Log.d(TAG, "Video display surface destroyed"); 
 			}
 		});
 	}
