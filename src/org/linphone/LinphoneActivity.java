@@ -151,7 +151,6 @@ public class LinphoneActivity extends TabActivity  {
 		if (requestCode == FIRST_LOGIN_ACTIVITY) {
 			if (resultCode == RESULT_OK) {
 				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
-				LinphoneManager.getInstance().initializePayloads();
 				try {
 					LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
 						public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {

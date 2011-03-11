@@ -82,6 +82,8 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 		writePreference(R.string.pref_username_key, login.getText().toString());
 		writePreference(R.string.pref_passwd_key, password.getText().toString());
 
+		LinphoneManager.getInstance().initializePayloads();
+
 		try {
 			LinphoneManager.getInstance().initFromConf(getApplicationContext());
 		} catch (Throwable e) {
