@@ -41,11 +41,20 @@ public class AddressText extends EditText implements AddressType {
 	}
 
 	public void setContactAddress(String uri, String displayedName) {
-		this.displayedName = displayedName;
 		setText(uri);
+		this.displayedName = displayedName;
 	}
 
 	public void setDisplayedName(String displayedName) {
 		this.displayedName = displayedName;
 	}
+
+	@Override
+	protected void onTextChanged(CharSequence text, int start, int before,
+			int after) {
+		clearDisplayedName();
+		super.onTextChanged(text, start, before, after);
+	}
+
+	
 }

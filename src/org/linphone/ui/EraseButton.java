@@ -36,7 +36,6 @@ public class EraseButton extends Button implements OnClickListener, OnLongClickL
 	}
 
 	public void onClick(View v) {
-		address.clearDisplayedName();
 		if (address.getText().length() >0) {
 			int lBegin = address.getSelectionStart();
 			if (lBegin == -1) {

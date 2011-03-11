@@ -87,12 +87,11 @@ public class Digit extends Button implements AddressAware {
 			} else if (mAddress != null) {
 				int lBegin = mAddress.getSelectionStart();
 				if (lBegin == -1) {
-					lBegin = mAddress.getEditableText().length();
+					lBegin = mAddress.length();
 				}
 				if (lBegin >=0) {
 					mAddress.getEditableText().insert(lBegin,mKeyCode);
 				}
-				mAddress.clearDisplayedName();
 			}
 		}
 
