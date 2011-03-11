@@ -59,7 +59,7 @@ class JavaCameraRecordImpl extends AndroidCameraRecord implements PreviewCallbac
 		Size s = camera.getParameters().getPreviewSize();
 		int expectedBuffLength = s.width * s.height * 3 /2;
 		if (expectedBuffLength != data.length) {
-			Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
+			Log.e(tag, "onPreviewFrame called with bad buffer length " + data.length
 					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
 			return;
 		}

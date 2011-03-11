@@ -56,17 +56,17 @@ class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCall
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
 		if (data == null) {
-			Log.e("Linphone", "onPreviewFrame Called with null buffer");
+			Log.e(tag, "onPreviewFrame Called with null buffer");
 			return;
 		}
 		if (filterCtxPtr == 0l) {
-			Log.e("Linphone", "onPreviewFrame Called with no filterCtxPtr set");
+			Log.e(tag, "onPreviewFrame Called with no filterCtxPtr set");
 			return;
 		}
 		
 		int expectedBuffLength = getExpectedBufferLength();
 		if (expectedBuffLength != data.length) {
-			Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
+			Log.e(tag, "onPreviewFrame called with bad buffer length " + data.length
 					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
 			return;
 		}
@@ -80,7 +80,7 @@ class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCall
 
 		double currentTimeElapsed = 0.8 * (curTime - lastFrameTime) / 1000 + 0.2 * timeElapsedBetweenFrames;
 		if (currentTimeElapsed < expectedTimeBetweenFrames) {
-//			Log.d("Linphone", "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
+//			Log.d(tag, "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
 			return;
 		}
 		lastFrameTime = curTime;

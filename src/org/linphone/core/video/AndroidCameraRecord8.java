@@ -40,7 +40,7 @@ class AndroidCameraRecord8 extends AndroidCameraRecordImpl {
 	@Override
 	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {
 		if (cb != null) {
-			Log.d("Linphone", "Setting optimized callback with buffer (Android >= 8). Remember to manage the pool of buffers!!!");
+			Log.d(tag, "Setting optimized callback with buffer (Android >= 8). Remember to manage the pool of buffers!!!");
 		}
 		camera.setPreviewCallbackWithBuffer(cb);
 	}

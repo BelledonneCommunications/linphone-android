@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core;
 
+import org.linphone.LinphoneManager;
+
 import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
@@ -78,6 +80,6 @@ public final class Hacks {
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK);
 		
-		Log.d("Linphone", sb.toString());
+		Log.d(LinphoneManager.TAG, sb.toString());
 	}
 }
