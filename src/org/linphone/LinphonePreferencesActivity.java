@@ -24,8 +24,6 @@ import static org.linphone.R.string.ec_calibrating;
 import static org.linphone.R.string.ec_calibration_launch_message;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
-import static org.linphone.R.string.pref_codec_speex32_key;
-import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
@@ -43,14 +41,12 @@ import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
 import android.widget.Toast;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
-	private boolean mIsLowEndCpu = true;
 	private Handler mHandler = new Handler();
 	private CheckBoxPreference ecPref;
 
@@ -70,23 +66,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		addTransportChecboxesListener();
 		
-
-		boolean enableIlbc=false;
-		if (LinphoneService.isReady()) {
-			// if not ilbc, we are on low end cpu.
-			enableIlbc = LinphoneManager.getLc().findPayloadType("iLBC", 8000)!=null?true:false;
-			mIsLowEndCpu=!enableIlbc;
-			if (!mIsLowEndCpu && !prefs().contains(getString(pref_echo_cancellation_key))) {
-				writeBoolean(pref_echo_cancellation_key, true);
-			}
-			if (mIsLowEndCpu) {
-				writeBoolean(pref_codec_ilbc_key, false);
-				writeBoolean(pref_codec_speex16_key, false);
-				writeBoolean(pref_codec_speex32_key, false);
-			}
-
-		}
-
 		ecPref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
 		ecPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
@@ -95,38 +74,37 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			}
 		});
 
-
-		if (!mIsLowEndCpu) {
-			findPreference(pref_codec_ilbc_key).setEnabled(enableIlbc);
-			findPreference(pref_codec_speex16_key).setEnabled(enableIlbc);
+		boolean fastCpu = Version.isArmv7();
+		if (fastCpu) {
+			boolean ilbc = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType("iLBC", 8000)!=null;
+			findPreference(pref_codec_ilbc_key).setEnabled(ilbc);
+			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
 
-		// Force disable video
-		if (Version.sdkStrictlyBelow(5) || !enableIlbc || !LinphoneManager.getInstance().hasCamera()) {
+		// No video
+		if (Version.sdkStrictlyBelow(5) || !fastCpu || !LinphoneManager.getInstance().hasCamera()) {
 			disableCheckbox(pref_video_enable_key);
 		}
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
-			if (!mIsLowEndCpu  ) {
+			if (fastCpu) {
 				Toast.makeText(this, getString(ec_calibration_launch_message), Toast.LENGTH_LONG).show();
 				startEcCalibration();
+			}
 
-			} 
 			prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 		}
+	}
+	
 
-	}
-	
-	private List<CheckBoxPreference> findTransportCb() {
-		return Arrays.asList(
-				findCheckbox(R.string.pref_transport_udp_key),
-				findCheckbox(R.string.pref_transport_tcp_key),
-				findCheckbox(R.string.pref_transport_tls_key));
-	}
-	
 	private void addTransportChecboxesListener() {
 
-		final List<CheckBoxPreference> checkboxes = findTransportCb();
+		final List<CheckBoxPreference> checkboxes = Arrays.asList(
+				findCheckbox(R.string.pref_transport_udp_key)
+				,findCheckbox(R.string.pref_transport_tcp_key)
+//				,findCheckbox(R.string.pref_transport_tls_key)
+				);
+		
 
 		OnPreferenceChangeListener changedListener = new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {

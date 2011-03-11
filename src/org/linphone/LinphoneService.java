@@ -201,7 +201,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if (state == RegistrationState.RegistrationOk || state == RegistrationState.RegistrationFailed) {
 			mHandler.post(new Runnable() {
 				public void run() {
-					LinphoneActivity.instance().onRegistrationStateChanged(state, message);
+					if (LinphoneActivity.isInstanciated())
+							LinphoneActivity.instance().onRegistrationStateChanged(state, message);
 				}
 			});
 		}

@@ -42,4 +42,13 @@ public class Version {
 		return buildVersion;
 	}
 
+	public static boolean isArmv7() {
+		try {
+			return sdkAboveOrEqual(4)
+			&& Build.class.getField("CPU_ABI").get(null).toString().startsWith("armeabi-v7");
+		} catch (Throwable e) {}
+		return false;
+	}
+
+
 }

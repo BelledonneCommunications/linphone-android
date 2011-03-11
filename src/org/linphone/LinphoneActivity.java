@@ -55,6 +55,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 	
@@ -86,7 +87,9 @@ public class LinphoneActivity extends TabActivity  {
 	private boolean checkAccount;
 
 	
-	
+	static final boolean isInstanciated() {
+		return instance != null;
+	}
 	
 	static final LinphoneActivity instance() {
 		if (instance != null) return instance;
@@ -148,7 +151,7 @@ public class LinphoneActivity extends TabActivity  {
 		if (requestCode == FIRST_LOGIN_ACTIVITY) {
 			if (resultCode == RESULT_OK) {
 				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
-
+				LinphoneManager.getInstance().initializePayloads();
 				try {
 					LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
 						public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
@@ -173,7 +176,9 @@ public class LinphoneActivity extends TabActivity  {
 	}
 
 
-	private void fillTabHost() {
+	private synchronized void fillTabHost() {
+		if (((TabWidget) findViewById(android.R.id.tabs)).getChildCount() != 0) return;
+
 		TabHost lTabHost = getTabHost();  // The activity TabHost  
 	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
 	    Drawable tabDrawable; // Drawable for a tab
@@ -343,9 +348,7 @@ public class LinphoneActivity extends TabActivity  {
 			.setCancelable(false)
 			.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					Intent intent = new Intent(ACTION_MAIN);
-					intent.setClass(getApplicationContext(), LinphonePreferencesActivity.class);
-					startActivity(intent);
+					startprefActivity();
 				}
 			})
 			.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -390,7 +393,8 @@ public class LinphoneActivity extends TabActivity  {
 		.setCancelable(false)
 		.setPositiveButton(getString(R.string.cont), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				LinphoneActivity.instance().startprefActivity();
+				LinphoneManager.getInstance().initializePayloads();
+				startprefActivity();
 				checkAccount = false;
 			}
 		});
@@ -410,7 +414,7 @@ public class LinphoneActivity extends TabActivity  {
 		.setCancelable(false)
 		.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				LinphoneActivity.instance().startprefActivity();
+				startprefActivity();
 				checkAccount = false;
 			}
 		}).setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {

@@ -18,8 +18,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import static android.media.AudioManager.*;
-import static org.linphone.core.LinphoneCall.State.*;
+import static android.media.AudioManager.MODE_IN_CALL;
+import static android.media.AudioManager.MODE_NORMAL;
+import static android.media.AudioManager.MODE_RINGTONE;
+import static android.media.AudioManager.ROUTE_SPEAKER;
+import static android.media.AudioManager.STREAM_RING;
+import static android.media.AudioManager.STREAM_VOICE_CALL;
+import static android.media.AudioManager.VIBRATE_TYPE_RINGER;
+import static org.linphone.R.string.pref_codec_ilbc_key;
+import static org.linphone.R.string.pref_codec_speex16_key;
+import static org.linphone.R.string.pref_codec_speex32_key;
+import static org.linphone.R.string.pref_echo_cancellation_key;
+import static org.linphone.core.LinphoneCall.State.CallEnd;
+import static org.linphone.core.LinphoneCall.State.Error;
+import static org.linphone.core.LinphoneCall.State.IncomingReceived;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,6 +52,7 @@ import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.Version;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
@@ -53,6 +67,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -98,6 +113,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	
 	private LinphoneManager(final Context c) {
+		String basePath = c.getFilesDir().getAbsolutePath();
+		linphoneInitialConfigFile = basePath + "/linphonerc";
+		linphoneConfigFile = basePath + "/.linphonerc";
+		ringSoundFile = basePath + "/oldphone_mono.wav"; 
+		ringbackSoundFile = basePath + "/ringback.wav";
+
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
@@ -135,10 +156,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public static final String TAG="Linphone";
 	/** Called when the activity is first created. */
-	private static final String LINPHONE_FACTORY_RC = "/data/data/org.linphone/files/linphonerc";
-	private static final String LINPHONE_RC = "/data/data/org.linphone/files/.linphonerc";
-	private static final String RING_SND = "/data/data/org.linphone/files/oldphone_mono.wav"; 
-	private static final String RINGBACK_SND = "/data/data/org.linphone/files/ringback.wav";
+	private final String linphoneInitialConfigFile;
+	private final String linphoneConfigFile;
+	private final String ringSoundFile; 
+	private final String ringbackSoundFile;
 
 	private Timer mTimer = new Timer("Linphone scheduler");
 
@@ -306,7 +327,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			copyAssetsFromPackage(context);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
-					this, LINPHONE_RC, LINPHONE_FACTORY_RC, null);
+					this, linphoneConfigFile, linphoneInitialConfigFile, null);
 
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
@@ -335,9 +356,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	private void copyAssetsFromPackage(Context context) throws IOException {
-		copyIfNotExist(context, R.raw.oldphone_mono,RING_SND);
-		copyIfNotExist(context, R.raw.ringback,RINGBACK_SND);
-		copyFromPackage(context, R.raw.linphonerc, new File(LINPHONE_FACTORY_RC).getName());
+		copyIfNotExist(context, R.raw.oldphone_mono,ringSoundFile);
+		copyIfNotExist(context, R.raw.ringback,ringbackSoundFile);
+		copyFromPackage(context, R.raw.linphonerc, new File(linphoneInitialConfigFile).getName());
 	}
 	private  void copyIfNotExist(Context context, int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
@@ -760,5 +781,26 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} catch (InterruptedException e) {
 			/* ops */
 		}
+	}
+
+	public void initializePayloads() {
+		Log.i(TAG, "Initializing supported payloads");
+		Editor e = mPref.edit();
+		boolean fastCpu = Version.isArmv7();
+
+		e.putBoolean(getString(pref_echo_cancellation_key), fastCpu);
+
+		e.putBoolean(getString(R.string.pref_codec_gsm_key), true);
+		e.putBoolean(getString(R.string.pref_codec_pcma_key), true);
+		e.putBoolean(getString(R.string.pref_codec_pcmu_key), true);
+		e.putBoolean(getString(R.string.pref_codec_speex8_key), true);
+		e.putBoolean(getString(pref_codec_speex16_key), fastCpu);
+		e.putBoolean(getString(pref_codec_speex32_key), fastCpu);
+
+		boolean ilbc = LinphoneService.isReady() && LinphoneManager.getLc()
+		.findPayloadType("iLBC", 8000)!=null;
+		e.putBoolean(getString(pref_codec_ilbc_key), ilbc);
+
+		e.commit();
 	}
 }

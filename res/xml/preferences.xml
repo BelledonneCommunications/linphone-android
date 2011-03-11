@@ -44,23 +44,25 @@
 		<CheckBoxPreference android:key="@string/pref_echo_cancellation_key"
 			android:title="@string/pref_echo_cancellation" android:summary="@string/pref_echo_cancellation_summary"></CheckBoxPreference>
 
-		<CheckBoxPreference android:key="@string/pref_echo_canceller_calibration_key" android:title="@string/pref_echo_canceller_calibration" android:defaultValue="false"></CheckBoxPreference><PreferenceScreen android:title="@string/pref_codecs"
+		<CheckBoxPreference android:key="@string/pref_echo_canceller_calibration_key"
+		 android:title="@string/pref_echo_canceller_calibration" />
+		 
+		 <PreferenceScreen android:title="@string/pref_codecs"
 			android:key="@string/pref_codecs_key">
 			<CheckBoxPreference android:key="@string/pref_codec_speex16_key"
-				android:title="@string/pref_codec_speex16" android:defaultValue="true"
-				android:enabled="false"></CheckBoxPreference>
+				android:title="@string/pref_codec_speex16"/>
 			<CheckBoxPreference android:key="@string/pref_codec_speex8_key"
-				android:title="@string/pref_codec_speex8" android:defaultValue="true"></CheckBoxPreference>
+				android:title="@string/pref_codec_speex8"/>
 			<CheckBoxPreference android:key="@string/pref_codec_ilbc_key"
-				android:title="@string/pref_codec_ilbc" android:enabled="false"
-				android:shouldDisableView="true" android:defaultValue="true"
-				android:summary="@string/pref_ilbc_summary"></CheckBoxPreference>
+				android:title="@string/pref_codec_ilbc"
+				android:shouldDisableView="true"
+				android:summary="@string/pref_ilbc_summary"/>
 			<CheckBoxPreference android:key="@string/pref_codec_gsm_key"
-				android:title="@string/pref_codec_gsm" android:defaultValue="true"></CheckBoxPreference>
+				android:title="@string/pref_codec_gsm"/>
 			<CheckBoxPreference android:key="@string/pref_codec_pcmu_key"
-				android:title="@string/pref_codec_pcmu" android:defaultValue="true"></CheckBoxPreference>
+				android:title="@string/pref_codec_pcmu"/>
 			<CheckBoxPreference android:key="@string/pref_codec_pcma_key"
-				android:title="@string/pref_codec_pcma" android:defaultValue="true"></CheckBoxPreference>
+				android:title="@string/pref_codec_pcma"/>
 		</PreferenceScreen>
 	
 </PreferenceCategory>
@@ -118,7 +120,8 @@
 			 android:title="@string/pref_transport_udp" android:defaultValue="true"/>
 			<CheckBoxPreference android:key="@string/pref_transport_tcp_key"
 			 android:title="@string/pref_transport_tcp" />
-			<CheckBoxPreference android:key="@string/pref_transport_tls_key" android:title="@string/pref_transport_tls" />
+<!--			<CheckBoxPreference android:key="@string/pref_transport_tls_key"-->
+<!--			 android:title="@string/pref_transport_tls" />-->
 			<CheckBoxPreference android:key="@string/pref_transport_use_standard_ports_key"
 				 android:title="@string/pref_transport_use_standard_ports"/>
 		</PreferenceScreen>
