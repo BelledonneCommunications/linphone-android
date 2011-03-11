@@ -9,7 +9,7 @@
     <!-- Don't remove the space after android:debuggable: it prevents ndk-build to try including gdbserver and crash gcc -->
     <application android:label="@string/app_name" android:debuggable ="true" android:icon="@drawable/logo_linphone_57x57">
          
-        <activity android:name=".LinphoneActivity"
+        <activity android:name="org.linphone.LinphoneActivity"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:launchMode="singleTask">
@@ -36,28 +36,28 @@
         </activity>
 
 
-        <activity android:name=".FirstLoginActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name="org.linphone.FirstLoginActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
 
-        <activity android:name=".IncallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name="org.linphone.IncallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-        <activity android:name=".LinphonePreferencesActivity">
+        <activity android:name="org.linphone.LinphonePreferencesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-        <activity android:name=".DialerActivity">
+        <activity android:name="org.linphone.DialerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-         <activity android:name=".VideoCallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+         <activity android:name="org.linphone.VideoCallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -72,12 +72,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-		 <activity android:name=".HistoryActivity">
+		 <activity android:name="org.linphone.HistoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>         
-		 <activity android:name=".AboutActivity">
+		 <activity android:name="org.linphone.AboutActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -85,13 +85,13 @@
 
 
 
-    <service android:name=".LinphoneService" />
+    <service android:name="org.linphone.LinphoneService" />
         
-	<receiver android:name="NetworkManager">
+	<receiver android:name="org.linphone.NetworkManager">
 		<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
 	</receiver>
 
-	<receiver android:name="BootReceiver">
+	<receiver android:name="org.linphone.BootReceiver">
 		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
 	</receiver>
 	
@@ -112,7 +112,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
          </activity>
-         <activity android:name=".core.tutorials.TutorialHelloWorldActivity"
+         <activity android:name="org.linphone.core.tutorials.TutorialHelloWorldActivity"
                   android:label="Hello World"
                   android:enabled="false">
             <intent-filter>
@@ -120,7 +120,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
          </activity>
-         <activity android:name=".core.tutorials.TutorialRegistrationActivity"
+         <activity android:name="org.linphone.core.tutorials.TutorialRegistrationActivity"
                   android:label="Registration"
                   android:enabled="false">
             <intent-filter>
@@ -128,7 +128,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
          </activity>
-         <activity android:name=".core.tutorials.TutorialBuddyStatusActivity"
+         <activity android:name="org.linphone.core.tutorials.TutorialBuddyStatusActivity"
                   android:label="Buddy status"
                   android:enabled="false">
             <intent-filter>
@@ -136,7 +136,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
          </activity>
-         <activity android:name=".core.tutorials.TutorialChatRoomActivity"
+         <activity android:name="org.linphone.core.tutorials.TutorialChatRoomActivity"
                   android:label="Chat Room"
                   android:enabled="false">
             <intent-filter>
