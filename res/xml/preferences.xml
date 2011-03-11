@@ -96,9 +96,9 @@
 			<CheckBoxPreference android:key="@string/pref_video_codec_mpeg4_key"
 				android:title="@string/pref_video_codec_mpeg4_title"
 				android:defaultValue="true"></CheckBoxPreference>
-<!-- 			<CheckBoxPreference android:key="@string/pref_video_codec_h263_key"
-				android:title="@string/pref_video_codec_h263_title" android:enabled="false"
-				android:defaultValue="false" android:selectable="false"></CheckBoxPreference>-->
+ 			<CheckBoxPreference android:key="@string/pref_video_codec_h263_key"
+				android:title="@string/pref_video_codec_h263_title"
+				android:defaultValue="false" android:layout="@layout/hidden"></CheckBoxPreference>
 		</PreferenceScreen>
 </PreferenceCategory>
 
@@ -120,8 +120,8 @@
 			 android:title="@string/pref_transport_udp" android:defaultValue="true"/>
 			<CheckBoxPreference android:key="@string/pref_transport_tcp_key"
 			 android:title="@string/pref_transport_tcp" />
-<!--			<CheckBoxPreference android:key="@string/pref_transport_tls_key"-->
-<!--			 android:title="@string/pref_transport_tls" />-->
+			<CheckBoxPreference android:key="@string/pref_transport_tls_key"
+			 android:title="@string/pref_transport_tls" android:layout="@layout/hidden"/>
 			<CheckBoxPreference android:key="@string/pref_transport_use_standard_ports_key"
 				 android:title="@string/pref_transport_use_standard_ports"/>
 		</PreferenceScreen>
