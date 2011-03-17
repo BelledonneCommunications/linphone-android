@@ -1,5 +1,5 @@
 ##lib swcale###################
-LOCAL_PATH:= $(call my-dir)/../../libswscale/
+LOCAL_PATH:= $(call my-dir)/../../ffmpeg/libswscale/
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libswscale
@@ -16,8 +16,7 @@ LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
 LOCAL_ARM_MODE := arm
 
 #for including config.h:
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg  \
-					$(LOCAL_PATH)/../ffmpeg \
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../build/ffmpeg  \
 					$(LOCAL_PATH)/ \
 					$(LOCAL_PATH)/../
 
