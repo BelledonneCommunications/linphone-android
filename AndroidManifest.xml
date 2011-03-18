@@ -12,7 +12,8 @@
         <activity android:name="org.linphone.LinphoneActivity"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"
-                  android:launchMode="singleTask">
+                  android:launchMode="singleTask"
+                  > <!-- android:alwaysRetainTaskState="true" clearTaskOnLaunch="false"-->
                   
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +43,9 @@
             </intent-filter>
          </activity>
 
-        <activity android:name="org.linphone.IncallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name="org.linphone.IncallActivity"
+                    android:launchMode="singleTop"
+        			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -57,7 +60,9 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-         <activity android:name="org.linphone.VideoCallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+         <activity android:name="org.linphone.VideoCallActivity"
+          android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+          android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -105,7 +110,6 @@
         <activity android:name="core.tutorials.video.TestVideoActivity"
                   android:label="Video test"
                   android:theme="@android:style/Theme.NoTitleBar"
-                  android:launchMode="singleTask"
                    android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
