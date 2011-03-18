@@ -215,6 +215,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			startActivity(new Intent()
 					.setClass(this, LinphoneActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		} else if (state == LinphoneCall.State.StreamsRunning) {
+			if (LinphoneActivity.isInstanciated()
+					&& getResources().getBoolean(R.bool.use_video_activity)
+					&& LinphoneManager.getLc().getCurrentCall().getCurrentParamsCopy().getVideoEnabled()) {
+				LinphoneActivity.instance().startVideoActivity();
+			}
 		}
 
 		mHandler.post(new Runnable() {
@@ -269,6 +275,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 					guiListener().onWrongDestinationAddress();			
 			}
 		});
+	}
+
+	public void onAlreadyInVideoCall() {
+		LinphoneActivity.instance().startVideoActivity();
 	}
 }
 
