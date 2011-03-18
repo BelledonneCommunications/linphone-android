@@ -27,6 +27,7 @@ import static android.media.AudioManager.ROUTE_SPEAKER;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -54,10 +55,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TabHost.TabSpec;
 	
 public class LinphoneActivity extends TabActivity  {
 	public static final String DIALER_TAB = "dialer";
@@ -77,7 +78,7 @@ public class LinphoneActivity extends TabActivity  {
 	private static SensorEventListener mSensorEventListener;
 	private static String TAG = LinphoneManager.TAG;
 	
-	private static final String SCREEN_IS_HIDDEN ="screen_is_hidden";
+	private static final String SCREEN_IS_HIDDEN = "screen_is_hidden";
 	
 	
 	// Customization
@@ -178,54 +179,56 @@ public class LinphoneActivity extends TabActivity  {
 	private synchronized void fillTabHost() {
 		if (((TabWidget) findViewById(android.R.id.tabs)).getChildCount() != 0) return;
 
-		TabHost lTabHost = getTabHost();  // The activity TabHost  
-	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
-	    Drawable tabDrawable; // Drawable for a tab
-	    Intent tabIntent; // Intent for the a table
-	    CharSequence indicator;
+	    startActivityInTab("history",
+	    		new Intent().setClass(this, HistoryActivity.class),
+	    		R.string.tab_history, R.drawable.history_orange);
 
-	    //Call History
-	    tabIntent =  new Intent().setClass(this, HistoryActivity.class);
-	    tabDrawable = getResources().getDrawable(R.drawable.history_orange);
-	    indicator = getString(R.string.tab_history);
-	    spec = lTabHost.newTabSpec("history")
-	    		.setIndicator(indicator, tabDrawable)
-	    		.setContent(tabIntent);
-	    lTabHost.addTab(spec);
 	    
-	    // Dialer
-	    tabIntent = new Intent().setClass(this, DialerActivity.class).setData(getIntent().getData());
-	    tabDrawable = getResources().getDrawable(R.drawable.dialer_orange);
-	    indicator = getString(R.string.tab_dialer);
-	    tabDrawable = getResources().getDrawable(R.drawable.dialer_orange);
-	    spec = lTabHost.newTabSpec(DIALER_TAB)
-	    		.setIndicator(indicator, tabDrawable)
-	    		.setContent(tabIntent);
-	    lTabHost.addTab(spec);
+	    startActivityInTab(DIALER_TAB,
+	    		new Intent().setClass(this, DialerActivity.class).setData(getIntent().getData()),
+	    		R.string.tab_dialer, R.drawable.dialer_orange);
 	    
 
-	    // Contact picker
-	    tabIntent = new Intent().setClass(this, Version.sdkAboveOrEqual(5) ?
-	    		ContactPickerActivityNew.class : ContactPickerActivityOld.class);
-	    indicator = getString(R.string.tab_contact);
-	    tabDrawable = getResources().getDrawable(R.drawable.contact_orange);
-	    spec = lTabHost.newTabSpec("contact")
-	    	.setIndicator(indicator, tabDrawable)
-	    	.setContent(tabIntent);
-	    lTabHost.addTab(spec);
+	    startActivityInTab("contact",
+	    		new Intent().setClass(this, Version.sdkAboveOrEqual(5) ?
+	    		ContactPickerActivityNew.class : ContactPickerActivityOld.class),
+	    		R.string.tab_contact, R.drawable.contact_orange);
 
 
-	    lTabHost.setCurrentTabByTag("dialer");
+	    /*if (LinphoneService.isReady()) {
+	    	LinphoneCore lc = LinphoneManager.getLc();
+	    	if (lc.isIncall()) {
+	    		String caller = LinphoneManager.getInstance().extractADisplayName();
+	    		startIncallActivity(caller);
+	    	}
+	    }*/
+	    
+	    getTabHost().setCurrentTabByTag(DIALER_TAB);
+	    
+	    
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		if (intent.getData() == null) {
-			Log.e(TAG, "LinphoneActivity received an intent without data, discarding");
+			Log.e(TAG, "LinphoneActivity received an intent without data, recreating GUI if needed");
+			if (!LinphoneService.isReady() || !LinphoneManager.getLc().isIncall()) return;
+			LinphoneCore lc = LinphoneManager.getLc();
+			if(lc.isInComingInvitePending()) {
+				// TODO
+				Log.e(TAG, "Not handled case: recreation while incoming invite pending");
+			} else {
+				if (getResources().getBoolean(R.bool.use_incall_activity)) {
+					startIncallActivity(LinphoneManager.getInstance().extractADisplayName());
+				} else {
+					// TODO
+					Log.e(TAG, "Not handled case: recreation while in call and not using incall activity");
+				}
+			}
 			return;
 		}
-		
+
 
 		if (DialerActivity.instance() != null) {
 			DialerActivity.instance().newOutgoingCall(intent);
@@ -247,7 +250,6 @@ public class LinphoneActivity extends TabActivity  {
 			stopProxymitySensor();//just in case
 			instance = null;
 		}
-		
 	}
 
 	@Override
@@ -432,9 +434,64 @@ public class LinphoneActivity extends TabActivity  {
 		builder.create().show();
 	}
 
-	public static void setAddressAndGoToDialer(String number, String name) {
+	static void setAddressAndGoToDialer(String number, String name) {
 		DialerActivity.instance().setContactAddress(number, name);
 		instance.getTabHost().setCurrentTabByTag(DIALER_TAB);
+	}
+
+
+	
+	private void startActivityInTab(String tag, Intent intent, int indicatorId, int drawableId) {
+	    Drawable tabDrawable = getResources().getDrawable(drawableId);
+	    TabSpec spec = getTabHost().newTabSpec(tag)
+	    		.setIndicator(getString(indicatorId), tabDrawable)
+	    		.setContent(intent);
+	    getTabHost().addTab(spec);
+	}
+
+	public void startIncallActivity(CharSequence callerName) {
+		startActivityForResult(
+				new Intent().setClass(this, IncallActivity.class),
+				INCALL_ACTIVITY);
+	}
+
+	public void closeIncallActivity() {
+		finishActivity(INCALL_ACTIVITY);
+	}
+
+	/*
+	private String INCALL_ACTIVITY_TAG = "incall";
+
+	void changeTabVisibility(String tag, int value) {
+		View tab = getTabHost().getTabWidget().findViewWithTag(tag);
+		if (tab != null) {
+			tab.setVisibility(value);
+		} else {
+			Log.e(TAG, "Tab not found: " + tag);
+		}
+	}
+
+	public void closeIncallActivity() {
+		changeTabVisibility(DIALER_TAB, View.VISIBLE);
+		getTabHost().setCurrentTabByTag(DIALER_TAB);
+		getLocalActivityManager().getActivity(INCALL_ACTIVITY_TAG).finish();
+		getTabHost().clearAllTabs();
+		fillTabHost();
+	}
+
+	@Override
+	public void finishFromChild(Activity child) {
+		if (child instanceof IncallActivity) {
+			return;
+		}
+		super.finishFromChild(child);
+	}*/
+	
+	
+	public void startVideoActivity() {
+		startActivityForResult(
+				new Intent().setClass(this, VideoCallActivity.class),
+				LinphoneActivity.VIDEO_VIEW_ACTIVITY);
 	}
 }
 
