@@ -145,14 +145,19 @@ public class AndroidCameraRecordManager {
 		});
 	}
 	
-	public void setMuted(boolean muteState) {
-		if (muteState == muted) return;
+	/**
+	 * @param muteState
+	 * @return true if mute state changed
+	 */
+	public boolean setMuted(boolean muteState) {
+		if (muteState == muted) return false;
 		muted = muteState;
 		if (muted) {
 			stopVideoRecording();
 		} else {
 			tryToStartVideoRecording();
 		}
+		return true;
 	}
 	public boolean toggleMute() {
 		setMuted(!muted);
