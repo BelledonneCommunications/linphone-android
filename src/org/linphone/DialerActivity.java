@@ -32,7 +32,6 @@ import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 import org.linphone.ui.MuteMicButton;
 import org.linphone.ui.SpeakerButton;
-import org.linphone.ui.AddVideoButton.AlreadyInVideoCallListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -59,7 +58,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends Activity implements LinphoneGuiListener, AlreadyInVideoCallListener, NewOutgoingCallUiListener {
+public class DialerActivity extends Activity implements LinphoneGuiListener, NewOutgoingCallUiListener {
 	
 	private AddressText mAddress;
 	private TextView mDisplayNameView;
@@ -81,7 +80,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	
 	private PowerManager.WakeLock mWakeLock;
 	private SharedPreferences mPref;
-	private AddVideoButton mAddVideo;
 	private boolean useIncallActivity;
 	private boolean useVideoActivity;
 	
@@ -133,11 +131,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout = findViewById(R.id.IncallAddressLayout);
 			mInCallAddressLayout.setVisibility(View.GONE);
-			
-			if (useVideoActivity) {
-				mAddVideo = (AddVideoButton) findViewById(R.id.AddVideo);
-				mAddVideo.setOnAlreadyInVideoCallListener(this);
-			}
 		}
 
 		mMute = (MuteMicButton) findViewById(R.id.mic_mute_button);
@@ -148,22 +141,17 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		if (numpad != null)
 			numpad.setAddressWidget(mAddress);
 
+		checkIfOutgoingCallIntentReceived();
 
-		try {
-			outgoingCallIntentReceived();
-			if (LinphoneService.isReady()) {
-				LinphoneCore lc = LinphoneManager.getLc();
-				if (lc.isIncall()) {
-					if(lc.isInComingInvitePending()) {
-						callPending(lc.getCurrentCall());
-					} else {
-						enterIncallMode(lc);
-					} 
+		if (LinphoneService.isReady()) {
+			LinphoneCore lc = LinphoneManager.getLc();
+			if (lc.isIncall()) {
+				if(lc.isInComingInvitePending()) {
+					callPending(lc.getCurrentCall());
+				} else {
+					enterIncallMode(lc);
 				}
 			}
-		} catch (Exception e) {
-			Log.e(LinphoneManager.TAG,"Cannot start linphone",e);
-			finish();
 		}
 		instance = this;
 	}
@@ -171,7 +159,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 
 
 
-    private void outgoingCallIntentReceived() {
+    private void checkIfOutgoingCallIntentReceived() {
     	if (getIntent().getData() == null) return;
 
     	if (!LinphoneService.isReady() || LinphoneManager.getLc().isIncall()) {
@@ -221,12 +209,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	
 	
 
-	private void startVideoView(int requestCode) {
-		if (!useVideoActivity) throw new RuntimeException("internal error");
-		Intent lIntent = new Intent().setClass(this, VideoCallActivity.class);
-		startActivityForResult(lIntent,requestCode);
-	}
-	
 	
 	private void enterIncallMode(LinphoneCore lc) {
 		mDisplayNameView.setText(LinphoneManager.getInstance().extractADisplayName());
@@ -237,7 +219,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		if (!mWakeLock.isHeld()) mWakeLock.acquire();
 		
 		if (useIncallActivity) {
-			startIncallActivity(mDisplayNameView.getText());
+			LinphoneActivity.instance().startIncallActivity(mDisplayNameView.getText());
 		} else {
 			loadMicAndSpeakerUiStateFromManager();
 			mCallControlRow.setVisibility(View.GONE);
@@ -251,19 +233,13 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	}
 
 	
-	private void startIncallActivity(CharSequence callerName) {
-		if (!useIncallActivity) throw new RuntimeException("Internal error");
-		startActivityForResult(new Intent()
-			.setClass(this, IncallActivity.class)
-			.putExtra(IncallActivity.CONTACT_KEY, callerName),
-			LinphoneActivity.INCALL_ACTIVITY);
-	}
-
 
 	private void updateIncallVideoCallButton() {
 		if (useIncallActivity) throw new RuntimeException("Internal error");
 
 		boolean prefVideoEnabled = LinphoneManager.getInstance().isVideoEnabled();
+		AddVideoButton mAddVideo = (AddVideoButton) findViewById(R.id.AddVideo);
+
 		if (prefVideoEnabled && !mCall.isEnabled()) {
 			mAddVideo.setVisibility(View.VISIBLE);
 			mAddVideo.setEnabled(true);
@@ -282,12 +258,13 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 	
 	
 	private void exitCallMode() {
-		if (!useIncallActivity) {
+		if (useIncallActivity) {
+			LinphoneActivity.instance().closeIncallActivity();
+		} else {
 			mCallControlRow.setVisibility(View.VISIBLE);
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			updateIncallVideoCallButton();
-			finishActivity(LinphoneActivity.INCALL_ACTIVITY);
 		}
 		
 		mAddressLayout.setVisibility(View.VISIBLE);
@@ -304,7 +281,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			LinphoneManager.getInstance().resetCameraFromPreferences();
 		}
 
-		if (mWakeLock.isHeld())mWakeLock.release();
+		if (mWakeLock.isHeld()) mWakeLock.release();
 		LinphoneActivity.instance().stopProxymitySensor();
 		
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
@@ -356,11 +333,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		mStatus.setText(message);
 	}
 
-	public void onAlreadyInVideoCall() {
-		if (useVideoActivity) {
-			startVideoView(LinphoneActivity.VIDEO_VIEW_ACTIVITY);
-		}
-	}
 
 	public void onAlreadyInCall() {
 		showToast(R.string.warning_already_incall);
@@ -390,16 +362,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 			}
 		} else if (state == LinphoneCall.State.Error) {
 			if (mWakeLock.isHeld()) mWakeLock.release();
-			finishActivity(LinphoneActivity.INCALL_ACTIVITY);
 			showToast(R.string.call_error, message);
 			exitCallMode();
 		} else if (state == LinphoneCall.State.CallEnd) {
 			exitCallMode();
-		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (useVideoActivity && LinphoneManager.getLc().getCurrentCall().getCurrentParamsCopy().getVideoEnabled()) {
-				startVideoView(LinphoneActivity.VIDEO_VIEW_ACTIVITY);
-			}
-		}		
+		}
 	}
 
 	private void showToast(int id, String txt) {
@@ -427,7 +394,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Alr
 		}
 
 		if (getIntent().getData() != null) {
-			outgoingCallIntentReceived();
+			checkIfOutgoingCallIntentReceived();
 		}
 	}
 
