@@ -24,6 +24,10 @@ import org.linphone.ui.ToggleImageButton.OnCheckedChangeListener;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public class MuteMicButton extends ToggleImageButton implements OnCheckedChangeListener {
 
 	public MuteMicButton(Context context, AttributeSet attrs) {

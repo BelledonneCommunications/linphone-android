@@ -24,6 +24,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public class AddressText extends EditText implements AddressType {
 
 	private String displayedName;

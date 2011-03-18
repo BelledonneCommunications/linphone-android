@@ -30,6 +30,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public class Numpad extends LinearLayout implements AddressAware {
 
 	public Numpad(Context context, AttributeSet attrs) {

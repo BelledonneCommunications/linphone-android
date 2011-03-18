@@ -20,6 +20,10 @@ package org.linphone.ui;
 
 
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public interface AddressAware {
 
 	void setAddressWidget(AddressText address);

@@ -30,6 +30,10 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public class CallButton extends ImageButton implements OnClickListener, AddressAware {
 
 	private AddressText mAddress;

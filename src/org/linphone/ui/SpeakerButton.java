@@ -24,6 +24,10 @@ import org.linphone.ui.ToggleImageButton.OnCheckedChangeListener;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public class SpeakerButton extends ToggleImageButton implements OnCheckedChangeListener {
 
 	public SpeakerButton(Context context, AttributeSet attrs) {
