@@ -598,6 +598,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		void onCallStateChanged(LinphoneCall call, State state, String message);
 		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
 		void onDisplayStatus(String message);
+		void onAlreadyInVideoCall();
 	}
 
 	public interface EcCalibrationListener {
@@ -802,5 +803,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		e.putBoolean(getString(pref_codec_ilbc_key), ilbc);
 
 		e.commit();
+	}
+
+	public void addVideo() {
+		if (!LinphoneManager.getLc().isIncall()) return;
+		if (!reinviteWithVideo()) {
+			serviceListener.onAlreadyInVideoCall();
+		}
 	}
 }
