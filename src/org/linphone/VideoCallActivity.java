@@ -202,6 +202,7 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onPause() {
 		Log.d(tag, "onPause VideoCallActivity");
+		LinphoneManager.getInstance().sendStaticImage(true);
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
 	}
