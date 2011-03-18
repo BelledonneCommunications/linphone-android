@@ -15,18 +15,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 package org.linphone;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.HangCallButton;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -48,10 +49,10 @@ public class IncallActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incall_view);
-		
+
 		numpad = findViewById(R.id.incallDialer);
 		buttonsZone = findViewById(R.id.incallButtonsZone);
-		
+
 		numpadClose = findViewById(R.id.incallNumpadClose);
 		numpadClose.setOnClickListener(this);
 
@@ -60,7 +61,7 @@ public class IncallActivity extends Activity implements OnClickListener {
 
 		hangButton = (HangCallButton) findViewById(R.id.incallHang);
 		hangButton.setOnClickListener(this);
-		
+
 		TextView contact = (TextView) findViewById(R.id.incallContactName);
 		if (getIntent().getExtras() != null) {
 			contact.setText(getIntent().getExtras().getCharSequence(CONTACT_KEY));
@@ -69,9 +70,6 @@ public class IncallActivity extends Activity implements OnClickListener {
 		}
 
 		elapsedTime = (TextView) findViewById(R.id.incallElapsedTime);
-
-		AddVideoButton addVideoButton = (AddVideoButton) findViewById(R.id.AddVideo);
-		addVideoButton.setOnAlreadyInVideoCallListener(DialerActivity.instance());
 	}
 
 	public void onClick(View v) {
@@ -88,26 +86,25 @@ public class IncallActivity extends Activity implements OnClickListener {
 			finish();
 		}
 	}
-	
-	
+
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		task = new TimerTask() {
 			@Override
 			public void run() {
-				if (LinphoneManager.getLc().isIncall()) {
-					final int duration = LinphoneManager.getLc().getCurrentCall().getDuration();
-					if (duration != 0) {
-						handler.post(new Runnable() {
-							public void run() {
-								elapsedTime.setText(String.valueOf(duration));
-							}
-						});
-						
+				if (!LinphoneManager.getLc().isIncall()) return;
+
+				final int duration = LinphoneManager.getLc().getCurrentCall().getDuration();
+				if (duration == 0) return;
+
+				handler.post(new Runnable() {
+					public void run() {
+						elapsedTime.setText(String.valueOf(duration));
 					}
-				}
+				});
 			}
 		};
 
@@ -117,11 +114,36 @@ public class IncallActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		if (task != null) {
 			task.cancel();
 			task = null;
 		}
 	}
 
+
+	// Go to home on Back key
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			if (event.getAction() == KeyEvent.ACTION_DOWN
+					&& event.getRepeatCount() == 0) {
+				// Tell the framework to start tracking this event.
+				numpad.getKeyDispatcherState().startTracking(event, this);
+				return true;
+
+			} else if (event.getAction() == KeyEvent.ACTION_UP) {
+				numpad.getKeyDispatcherState().handleUpEvent(event);
+				if (event.isTracking() && !event.isCanceled()) {
+					startActivity(new Intent()
+					.setAction(Intent.ACTION_MAIN)
+					.addCategory(Intent.CATEGORY_HOME));
+					return true;
+				}
+			}
+			return super.dispatchKeyEvent(event);
+		} else {
+			return super.dispatchKeyEvent(event);
+		}
+	}
 }
