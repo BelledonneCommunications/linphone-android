@@ -93,9 +93,8 @@
 <string name="menu_clear_history">Clear</string>
 <string name="error_cannot_get_call_parameters">Cannot get call parameters</string>
 <string name="error_cannot_create_default_parameters">Cannot create default call parameters</string>
-<string name="error_cannot_invite_address">Cannot invite destination address  [%s]</string>
-<string name="notification_registered">registered to %s </string> 
-<string name="notification_register_failure">fails to register to %s</string>
+<string name="error_cannot_invite_address">Cannot invite destination address [%s]</string>
+
 <string name="notification_started">started</string>
 <string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 <string name="pref_stun_server">Stun server</string>

@@ -119,22 +119,16 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 
 
-
-
-	private void sendNotification(int level, int text) {
+	private void sendNotification(int level, int textId) {
 		mNotif.iconLevel = level;
 		mNotif.when=System.currentTimeMillis();
-		mNotif.setLatestEventInfo(this, notificationTitle,getString(text), mNotifContentIntent);
-		mNotificationMgr.notify(NOTIF_ID, mNotif);
-	}
-	
-	private void sendNotificationWithId(int level, int text) {
-		mNotif.iconLevel = level;
-		mNotif.when=System.currentTimeMillis();
-		String id = LinphoneManager.getLc().getDefaultProxyConfig().getIdentity();
-		mNotif.setLatestEventInfo(this, notificationTitle,
-				String.format(getString(text), id),
-				mNotifContentIntent);
+		String text = getString(textId);
+		if (text.contains("%s")) {
+			String id = LinphoneManager.getLc().getDefaultProxyConfig().getIdentity();
+			text = String.format(text, id);
+		}
+		
+		mNotif.setLatestEventInfo(this, notificationTitle, text, mNotifContentIntent);
 		mNotificationMgr.notify(NOTIF_ID, mNotif);
 	}
 
@@ -191,11 +185,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public void onRegistrationStateChanged(final RegistrationState state,
 			final String message) {
 		if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
-			sendNotificationWithId(IC_LEVEL_ORANGE, R.string.notification_registered);
+			sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 		}
 
 		if (state == RegistrationState.RegistrationFailed) {
-			sendNotificationWithId(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
+			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
 		}
 
 		if (state == RegistrationState.RegistrationOk || state == RegistrationState.RegistrationFailed) {

@@ -15,7 +15,8 @@
 	<bool name="use_video_activity">false</bool>
 
 	<string name="notification_title">Linphone</string>
-	   <bool name="allow_edit_in_dialer">true</bool>
-	
+	<bool name="allow_edit_in_dialer">true</bool>
+	<string name="notification_registered">registered to %s </string> 
+	<string name="notification_register_failure">fails to register to %s</string>
 </resources>
  
