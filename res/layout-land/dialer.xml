@@ -9,7 +9,7 @@
 			android:layout_width="fill_parent" android:id="@+id/Addresslayout">
 			<org.linphone.ui.AddressText android:id="@+id/SipUri" android:layout_height="wrap_content"
 				android:hint="sip:" android:layout_width="fill_parent" android:lines="1"
-				android:layout_weight="0.2"/>
+				android:layout_weight="0.2" android:editable="@bool/allow_edit_in_dialer"/>
 			<org.linphone.ui.EraseButton android:layout_height="wrap_content" android:id="@+id/Erase"
 				android:layout_width="fill_parent" android:layout_weight="0.8"
 				android:text="&lt;"/>
