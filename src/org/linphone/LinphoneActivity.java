@@ -451,7 +451,8 @@ public class LinphoneActivity extends TabActivity  {
 
 	public void startIncallActivity(CharSequence callerName) {
 		startActivityForResult(
-				new Intent().setClass(this, IncallActivity.class),
+				new Intent().setClass(this, IncallActivity.class)
+				.putExtra(IncallActivity.CONTACT_KEY, callerName),
 				INCALL_ACTIVITY);
 	}
 
