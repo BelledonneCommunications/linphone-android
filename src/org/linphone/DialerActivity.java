@@ -30,10 +30,13 @@ import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
+import org.linphone.ui.HangCallButton;
 import org.linphone.ui.MuteMicButton;
 import org.linphone.ui.SpeakerButton;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +46,7 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -288,16 +292,36 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 		mCall.setEnabled(true);
 	}
 
-	private void callPending(LinphoneCall call) {
-		mDecline.setEnabled(true);
 
-		// Privacy setting to not share the user camera by default
-		boolean prefVideoEnable = LinphoneManager.getInstance().isVideoEnabled();
-		boolean prefAutoShareMyCamera = mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
-		boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
-		AndroidCameraRecordManager.getInstance().setMuted(videoMuted);
+	private void callPending(final LinphoneCall call) {
+		String from = LinphoneManager.getInstance().extractIncomingRemoteName();
+		View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 
-		call.enableCamera(prefAutoShareMyCamera);
+		final Dialog dialog = new AlertDialog.Builder(this)
+		.setMessage(String.format(getString(R.string.incoming_call_dialog_title), from))
+		.setCancelable(false)
+		.setView(incomingCallView).create();
+		
+		
+		((CallButton) incomingCallView.findViewById(R.id.Call)).setExternalClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+				LinphoneManager.getInstance().resetCameraFromPreferences();
+
+				// Privacy setting to not share the user camera by default
+				boolean prefVideoEnable = LinphoneManager.getInstance().isVideoEnabled();
+				boolean prefAutoShareMyCamera = mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
+				boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
+				AndroidCameraRecordManager.getInstance().setMuted(videoMuted);
+
+				call.enableCamera(prefAutoShareMyCamera);
+			}
+		});
+		((HangCallButton) incomingCallView.findViewById(R.id.Decline)).setExternalClickListener(new OnClickListener() {
+			public void onClick(View v) {dialog.dismiss();}
+		});
+		
+		dialog.show();
 	}
 
 
@@ -354,7 +378,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 		if (state == LinphoneCall.State.OutgoingInit) {
 			enterIncallMode(lc);
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
-			LinphoneManager.getInstance().resetCameraFromPreferences();
 			callPending(call);
 		} else if (state == LinphoneCall.State.Connected) {
 			if (call.getDirection() == CallDirection.Incoming) {

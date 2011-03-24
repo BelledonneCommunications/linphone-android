@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:linphone="http://schemas.android.com/apk/res/linphone"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+<!--	<View android:layout_height="0px" android:layout_width="0px" android:layout_weight="1" />-->
+
+	<LinearLayout android:layout_height="fill_parent" android:layout_width="fill_parent"
+	 android:gravity="bottom">
+		<org.linphone.ui.CallButton android:id="@+id/Call"
+		 android:layout_height="wrap_content" android:layout_width="fill_parent"
+		 android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
+		<org.linphone.ui.HangCallButton android:id="@+id/Decline" 
+		 android:layout_height="wrap_content" android:layout_width="fill_parent"
+		 android:layout_weight="0.25" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
+	</LinearLayout>
+</LinearLayout>

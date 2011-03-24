@@ -40,7 +40,7 @@
 	<LinearLayout android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
 		<LinearLayout android:id="@+id/CallControlRow" android:layout_height="fill_parent" android:layout_width="fill_parent">
 			<org.linphone.ui.CallButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
-			<org.linphone.ui.HangCallButton android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:id="@+id/Decline" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
+			<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 		</LinearLayout>
 
 		<LinearLayout android:id="@+id/IncallControlRow" android:layout_height="fill_parent" android:layout_width="fill_parent">

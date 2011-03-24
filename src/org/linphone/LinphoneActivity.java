@@ -65,7 +65,8 @@ public class LinphoneActivity extends TabActivity  {
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     static final int VIDEO_VIEW_ACTIVITY = 100;
     static final int FIRST_LOGIN_ACTIVITY = 101;
-    static final int INCALL_ACTIVITY = 102; 
+    static final int INCALL_ACTIVITY = 102;
+    static final int INCOMING_CALL_ACTIVITY = 103;
     private static final String PREF_CHECK_CONFIG = "pref_check_config";
 
 	private static LinphoneActivity instance;
@@ -203,9 +204,7 @@ public class LinphoneActivity extends TabActivity  {
 	    	}
 	    }*/
 	    
-	    getTabHost().setCurrentTabByTag(DIALER_TAB);
-	    
-	    
+	    gotToDialer();
 	}
 
 	@Override
@@ -216,8 +215,7 @@ public class LinphoneActivity extends TabActivity  {
 			if (!LinphoneService.isReady() || !LinphoneManager.getLc().isIncall()) return;
 			LinphoneCore lc = LinphoneManager.getLc();
 			if(lc.isInComingInvitePending()) {
-				// TODO
-				Log.e(TAG, "Not handled case: recreation while incoming invite pending");
+				gotToDialer();
 			} else {
 				if (getResources().getBoolean(R.bool.use_incall_activity)) {
 					startIncallActivity(LinphoneManager.getInstance().extractADisplayName());
@@ -436,9 +434,12 @@ public class LinphoneActivity extends TabActivity  {
 
 	static void setAddressAndGoToDialer(String number, String name) {
 		DialerActivity.instance().setContactAddress(number, name);
-		instance.getTabHost().setCurrentTabByTag(DIALER_TAB);
+		instance.gotToDialer();
 	}
 
+	private void gotToDialer() {
+		getTabHost().setCurrentTabByTag(DIALER_TAB);
+	}
 
 	
 	private void startActivityInTab(String tag, Intent intent, int indicatorId, int drawableId) {

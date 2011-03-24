@@ -13,6 +13,7 @@
 	<bool name="useMenuAbout">true</bool>
 	<bool name="use_incall_activity">true</bool>
 	<bool name="use_video_activity">false</bool>
+	<bool name="show_full_remote_address_on_incoming_call">true</bool>
 
 	<string name="notification_title">Linphone</string>
 	<bool name="allow_edit_in_dialer">true</bool>

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
+	<string name="error_while_accepting_pending_call">Error while accepting pending call</string>
+	<string name="incoming_call_dialog_title">%s is calling you</string>
+	<string name="accept">Accept</string>
+	<string name="decline">Decline</string>
+	<string name="unknown_incoming_call_name">Unknown</string>
 	
 	<string name="pref_network_title">Network</string>
 	<string name="pref_transport_udp">UDP</string>

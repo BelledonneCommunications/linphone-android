@@ -506,19 +506,19 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (!getBool(R.string.pref_transport_udp_key, false)) {
 			ports.udp = 0;
 		} else if (useStandardPort) {
-			ports.udp = 5600;
+			ports.udp = 5060;
 		}
 		
 		if (!getBool(R.string.pref_transport_tcp_key, false)) {
 			ports.tcp = 0;
 		} else if (useStandardPort) {
-			ports.tcp = 5600;
+			ports.tcp = 5060;
 		}
 
 		if (!getBool(R.string.pref_transport_tls_key, false)) {
 			ports.tls = 0;
 		} else if (useStandardPort) {
-			ports.tls = 5600;
+			ports.tls = 5060;
 		}
 
 		mLc.setSignalingTransportPorts(ports);
@@ -749,9 +749,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
+	
 	public String extractADisplayName() {
 		final LinphoneAddress remote = mLc.getRemoteAddress();
-		if (remote == null) return null;
+		if (remote == null) return mR.getString(R.string.unknown_incoming_call_name);
 
 		final String displayName = remote.getDisplayName();
 		if (displayName!=null) {
@@ -759,7 +760,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else  if (remote.getUserName() != null){
 			return remote.getUserName();
 		} else {
-			return remote.toString();
+			String rms = remote.toString();
+			if (rms != null && rms.length() > 1)
+				return rms;
+				
+			return mR.getString(R.string.unknown_incoming_call_name);
 		}
 	}
 
@@ -810,5 +815,25 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (!reinviteWithVideo()) {
 			serviceListener.onAlreadyInVideoCall();
 		}
+	}
+
+	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
+		setAudioModeIncallForGalaxyS();
+		if (mLc.isInComingInvitePending()) {
+			mLc.acceptCall(mLc.getCurrentCall());
+			return true;
+		}
+		return false;
+	}
+
+	public String extractIncomingRemoteName() {
+		if (!mR.getBoolean(R.bool.show_full_remote_address_on_incoming_call))
+			return extractADisplayName();
+
+		LinphoneAddress remote = mLc.getRemoteAddress();
+		if (remote != null)
+			return remote.toString();
+
+		return mR.getString(R.string.unknown_incoming_call_name);
 	}
 }

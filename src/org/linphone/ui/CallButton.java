@@ -20,7 +20,6 @@ package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 
 import android.content.Context;
@@ -37,6 +36,10 @@ import android.widget.Toast;
 public class CallButton extends ImageButton implements OnClickListener, AddressAware {
 
 	private AddressText mAddress;
+	public void setAddressWidget(AddressText a) {mAddress = a;}
+
+	private OnClickListener externalClickListener;
+	public void setExternalClickListener(OnClickListener e) {externalClickListener = e;}
 
 	public CallButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -44,20 +47,18 @@ public class CallButton extends ImageButton implements OnClickListener, AddressA
 	}
 
 	public void onClick(View v) {
-		LinphoneManager.getInstance().setAudioModeIncallForGalaxyS();
-		LinphoneCore lc =  LinphoneManager.getLc();
-		if (lc.isInComingInvitePending()) {
-			try {
-				lc.acceptCall(lc.getCurrentCall());
-			} catch (LinphoneCoreException e) {
-				lc.terminateCall(lc.getCurrentCall());
-				onWrongDestinationAddress();
+		try {
+			if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
+				if (mAddress.getText().length() >0) { 
+					LinphoneManager.getInstance().newOutgoingCall(mAddress);
+				}
 			}
-			return;
-		}
-		if (mAddress.getText().length() >0) { 
-			LinphoneManager.getInstance().newOutgoingCall(mAddress);
-		}
+		} catch (LinphoneCoreException e) {
+			LinphoneManager.getInstance().terminateCall();
+			onWrongDestinationAddress();
+		};
+
+		if (externalClickListener != null) externalClickListener.onClick(v);
 	}
 
 	
@@ -68,9 +69,5 @@ public class CallButton extends ImageButton implements OnClickListener, AddressA
 		toast.show();
 	}
 
-
-	public void setAddressWidget(AddressText address) {
-		mAddress = address;
-	}
 
 }
