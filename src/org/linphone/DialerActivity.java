@@ -90,6 +90,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 
+	private static final int INCOMING_CALL_DIALOG_ID = 1;
 
 	/**
 	 * @return null if not ready yet
@@ -262,6 +263,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 	
 	
 	private void exitCallMode() {
+		// Remove dialog if existing
+		try {
+			dismissDialog(INCOMING_CALL_DIALOG_ID);
+		} catch (Throwable e) {/* Exception if never created */}
+
 		if (useIncallActivity) {
 			LinphoneActivity.instance().closeIncallActivity();
 		} else {
@@ -294,6 +300,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 
 
 	private void callPending(final LinphoneCall call) {
+		showDialog(INCOMING_CALL_DIALOG_ID);
+	}
+
+
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle b) {
 		String from = LinphoneManager.getInstance().extractIncomingRemoteName();
 		View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 
@@ -314,17 +326,15 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 				boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
 				AndroidCameraRecordManager.getInstance().setMuted(videoMuted);
 
-				call.enableCamera(prefAutoShareMyCamera);
+				LinphoneManager.getLc().getCurrentCall().enableCamera(prefAutoShareMyCamera);
 			}
 		});
 		((HangCallButton) incomingCallView.findViewById(R.id.Decline)).setExternalClickListener(new OnClickListener() {
 			public void onClick(View v) {dialog.dismiss();}
 		});
 		
-		dialog.show();
+		return dialog;
 	}
-
-
 	
 	
 	
