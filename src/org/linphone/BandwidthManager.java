@@ -18,10 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import org.linphone.core.AndroidCameraRecordManager;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.VideoSize;
+import org.linphone.core.video.AndroidCameraRecordManager;
 
 public class BandwidthManager {
 
@@ -65,7 +65,7 @@ public class BandwidthManager {
 	}
 
 	private void onProfileChanged(int newProfile) {
-		LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+		LinphoneCore lc = LinphoneManager.getLc();
 		lc.setUploadBandwidth(bandwidthes[newProfile][0]);
 		lc.setDownloadBandwidth(bandwidthes[newProfile][1]);
 

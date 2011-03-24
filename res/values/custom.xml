@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+	<string name="app_name">Linphone</string>
+	<string name="default_domain">test.linphone.org</string>
+
+	<bool name="use_android_contact_picker">true</bool>
+<!--	<string name="merge_another_contact_provider">content://something</string>-->
+    
+    <bool name="useFirstLoginActivity">false</bool>
+	<bool name="useMenuSettings">true</bool>
+	<bool name="useMenuAbout">true</bool>
+	<bool name="use_incall_activity">true</bool>
+	<bool name="use_video_activity">false</bool>
+	<bool name="show_full_remote_address_on_incoming_call">true</bool>
+
+	<string name="notification_title">Linphone</string>
+	<bool name="allow_edit_in_dialer">true</bool>
+	<string name="notification_registered">registered to %s </string> 
+	<string name="notification_register_failure">fails to register to %s</string>
+</resources>
+ 

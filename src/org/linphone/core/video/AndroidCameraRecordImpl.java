@@ -16,19 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.linphone.core;
+package org.linphone.core.video;
+
+import java.util.List;
 
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.util.Log;
 
 /**
  * Record from Android camera.
+ * Android >= 5 (2.0) version.
  *
  * @author Guillaume Beraudo
  *
  */
-public class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
+class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
 
 	private long filterCtxPtr;
 	private double timeElapsedBetweenFrames = 0;
@@ -51,17 +56,17 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
 		if (data == null) {
-			Log.e("Linphone", "onPreviewFrame Called with null buffer");
+			Log.e(tag, "onPreviewFrame Called with null buffer");
 			return;
 		}
 		if (filterCtxPtr == 0l) {
-			Log.e("Linphone", "onPreviewFrame Called with no filterCtxPtr set");
+			Log.e(tag, "onPreviewFrame Called with no filterCtxPtr set");
 			return;
 		}
 		
 		int expectedBuffLength = getExpectedBufferLength();
 		if (expectedBuffLength != data.length) {
-			Log.e("Linphone", "onPreviewFrame called with bad buffer length " + data.length
+			Log.e(tag, "onPreviewFrame called with bad buffer length " + data.length
 					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
 			return;
 		}
@@ -75,7 +80,7 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 
 		double currentTimeElapsed = 0.8 * (curTime - lastFrameTime) / 1000 + 0.2 * timeElapsedBetweenFrames;
 		if (currentTimeElapsed < expectedTimeBetweenFrames) {
-//			Log.d("Linphone", "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
+//			Log.d(tag, "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
 			return;
 		}
 		lastFrameTime = curTime;
@@ -85,7 +90,35 @@ public class AndroidCameraRecordImpl extends AndroidCameraRecord implements Prev
 		putImage(filterCtxPtr, data, rotation);
 	}
 
+	@Override
+	protected void onSettingCameraParameters(Parameters parameters) {
+		super.onSettingCameraParameters(parameters);
 
+		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+			Log.w(tag, "Auto Focus supported by camera device");
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		} else {
+			Log.w(tag, "Auto Focus not supported by camera device");
+			if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
+				Log.w(tag, "Infinity Focus supported by camera device");
+				parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
+			} else {
+				Log.w(tag, "Infinity Focus not supported by camera device");
+			}
+		}
+	}
+
+	public static List<Size> oneShotSupportedVideoSizes() {
+		Camera camera = Camera.open();
+		List<Size> supportedVideoSizes =camera.getParameters().getSupportedPreviewSizes();
+		camera.release();
+		return supportedVideoSizes;
+	}
+	
+	@Override
+	protected List<Size> getSupportedPreviewSizes(Parameters parameters) {
+		return parameters.getSupportedPreviewSizes();
+	}
 
 	@Override
 	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {

@@ -16,16 +16,28 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.linphone;
+package org.linphone.core;
+
+import org.linphone.LinphoneManager;
 
 import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
 
-public class Hacks {
+public final class Hacks {
+
+	private Hacks() {}
 
 	public static boolean isGalaxyS() {
-		return Build.DEVICE.startsWith("GT-I9000") || Build.DEVICE.startsWith("GT-P1000");
+		return Build.DEVICE.startsWith("GT-I9000");
+	}
+
+	public static boolean isGalaxySOrTab() {
+		return isGalaxyS() || isGalaxyTab();
+	}
+
+	public static boolean isGalaxyTab() {
+		return Build.DEVICE.startsWith("GT-P1000");
 	}
 
 /*	private static final boolean log(final String msg) {
@@ -68,6 +80,6 @@ public class Hacks {
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK);
 		
-		Log.d("Linphone", sb.toString());
+		Log.d(LinphoneManager.TAG, sb.toString());
 	}
 }

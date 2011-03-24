@@ -40,7 +40,6 @@ el_transmit_thres=1.7
 ng_floorgain=0.01
 
 
-
 [video]
 size=qvga-portrait
 

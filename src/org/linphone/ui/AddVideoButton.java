@@ -1,5 +1,5 @@
 /*
-ContactPickerActivity.java
+AddVideoButton.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -15,32 +15,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-package org.linphone;
+ */
+package org.linphone.ui;
 
-import android.content.BroadcastReceiver;
+import org.linphone.LinphoneManager;
+
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
+public class AddVideoButton extends ImageButton implements OnClickListener {
 
-
-public class KeepAliveManager extends BroadcastReceiver {
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		
-		if (!LinphoneService.isready()) {
-			Log.i(LinphoneService.TAG, "Linphone service not ready");
-			return;
-		} else {
-			if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
-				LinphoneService.getLc().enableKeepAlive(true);
-			} else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_OFF)) {
-				LinphoneService.getLc().enableKeepAlive(false);
-			}
-		}
-
+	public AddVideoButton(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		setOnClickListener(this);
 	}
 
+	public void onClick(View v) {
+		LinphoneManager.getInstance().addVideo();
+	}
 }

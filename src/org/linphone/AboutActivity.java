@@ -35,7 +35,7 @@ public class AboutActivity extends Activity {
 		try {
 			aboutText.setText(String.format(getString(R.string.about_text), getPackageManager().getPackageInfo(getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
-			Log.e(LinphoneService.TAG, "cannot get version name", e);
+			Log.e(LinphoneManager.TAG, "cannot get version name", e);
 		}
 	}     
 	

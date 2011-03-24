@@ -1,5 +1,5 @@
 /*
-AndroidTutorialNotifier.java
+KeepAliveReceiver.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,35 +16,31 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core.tutorials;
+package org.linphone;
 
-import android.os.Handler;
-import android.widget.TextView;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
-/**
- * Write notifications to a TextView widget.
- * This is an helper class, not a test activity.
- * 
- * @author Guillaume Beraudo
- *
- */
-class AndroidTutorialNotifier extends TutorialNotifier {
 
-	private Handler mHandler;
-	private TextView outputTextView;
-	
-	public AndroidTutorialNotifier(Handler mHandler, final TextView outputTextView) {
-		this.mHandler = mHandler;
-		this.outputTextView = outputTextView;
-	}
-	
-	
+
+public class KeepAliveReceiver extends BroadcastReceiver {
+
 	@Override
-	public void notify(final String s) {
-		mHandler.post(new Runnable() {
-			public void run() {
-				outputTextView.setText(s + "\n" + outputTextView.getText());
+	public void onReceive(Context context, Intent intent) {
+		
+		if (!LinphoneService.isReady()) {
+			Log.i(LinphoneManager.TAG, "Keep alive broadcast received while Linphone service not ready");
+			return;
+		} else {
+			if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
+				LinphoneManager.getLc().enableKeepAlive(true);
+			} else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_OFF)) {
+				LinphoneManager.getLc().enableKeepAlive(false);
 			}
-		});
+		}
+
 	}
+
 }

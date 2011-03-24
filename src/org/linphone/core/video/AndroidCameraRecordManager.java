@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.core.video;
 
 import java.util.List;
 
-import org.linphone.core.AndroidCameraRecord.RecorderParams;
+import org.linphone.core.Version;
+import org.linphone.core.video.AndroidCameraRecord.RecorderParams;
 
 import android.hardware.Camera.Size;
 import android.util.Log;
@@ -67,7 +68,7 @@ public class AndroidCameraRecordManager {
 
 	// singleton
 	private AndroidCameraRecordManager() {
-		cc = Version.sdkAbove(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
+		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
 
 		int[] fId = {-1};int[] rId = {-1};int[] cId = {-1};
 		cc.findFrontAndRearCameraIds(fId, rId, cId);
@@ -144,14 +145,19 @@ public class AndroidCameraRecordManager {
 		});
 	}
 	
-	public void setMuted(boolean muteState) {
-		if (muteState == muted) return;
+	/**
+	 * @param muteState
+	 * @return true if mute state changed
+	 */
+	public boolean setMuted(boolean muteState) {
+		if (muteState == muted) return false;
 		muted = muteState;
 		if (muted) {
 			stopVideoRecording();
 		} else {
 			tryToStartVideoRecording();
 		}
+		return true;
 	}
 	public boolean toggleMute() {
 		setMuted(!muted);
@@ -172,14 +178,14 @@ public class AndroidCameraRecordManager {
 		parameters.rotation = bufferRotationForCorrectImageOrientation();
 
 		parameters.surfaceView = surfaceView;
-		if (Version.sdkAbove(9)) {
-			recorder = new AndroidCameraRecord9Impl(parameters);
-		} else if (Version.sdkAbove(8)) {
-			recorder = new AndroidCameraRecord8Impl(parameters);
-		} else if (Version.sdkAbove(5)) {
-			recorder = new AndroidCameraRecord5Impl(parameters);
-		} else {
+		if (Version.sdkAboveOrEqual(9)) {
+			recorder = new AndroidCameraRecord9(parameters);
+		} else if (Version.sdkAboveOrEqual(8)) {
+			recorder = new AndroidCameraRecord8(parameters);
+		} else if (Version.sdkAboveOrEqual(5)) {
 			recorder = new AndroidCameraRecordImpl(parameters);
+		} else {
+			throw new RuntimeException("SDK version unsupported " + Version.sdk());
 		}
 
 		recorder.startPreview();
@@ -208,8 +214,8 @@ public class AndroidCameraRecordManager {
 			if (supportedVideoSizes != null) return supportedVideoSizes;
 		}
 
-		if (Version.sdkAbove(5)) {
-			supportedVideoSizes = AndroidCameraRecord5Impl.oneShotSupportedVideoSizes();
+		if (Version.sdkAboveOrEqual(5)) {
+			supportedVideoSizes = AndroidCameraRecordImpl.oneShotSupportedVideoSizes();
 		}
 		
 		// eventually null
@@ -253,7 +259,7 @@ public class AndroidCameraRecordManager {
 
 	private int bufferRotationForCorrectImageOrientation() {
 		final int cameraOrientation = cc.getCameraOrientation(cameraId);
-		final int rotation = Version.sdkAbove(8) ?
+		final int rotation = Version.sdkAboveOrEqual(8) ?
 				(360 - cameraOrientation + 90 - phoneOrientation) % 360
 				: 0;
 		Log.d(tag, "Capture video buffer will need a rotation of " + rotation

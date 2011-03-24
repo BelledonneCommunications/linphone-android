@@ -59,12 +59,12 @@ public class HistoryActivity extends ListActivity {
 		TextView lSecondLineView = (TextView) v.findViewById(R.id.history_cell_second_line);
 		if (lSecondLineView.getVisibility() == View.GONE) {
 			// no display name
-			DialerActivity.getDialer().setContactAddress(lFirstLineView.getText().toString(), null);
+			LinphoneActivity.setAddressAndGoToDialer(lFirstLineView.getText().toString(), null);
 		} else {
-			DialerActivity.getDialer().setContactAddress(lSecondLineView.getText().toString()
-														,lFirstLineView.getText().toString());
+			LinphoneActivity.setAddressAndGoToDialer(
+					lSecondLineView.getText().toString(),
+					lFirstLineView.getText().toString());
 		}
-		LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);	
 	}
 
 
@@ -86,12 +86,12 @@ public class HistoryActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_clear_history:
-			LinphoneService.instance().getLinphoneCore().clearCallLogs();
+			LinphoneManager.getLc().clearCallLogs();
 			setListAdapter(new CallHistoryAdapter(this));
 			
 			break;
 		default:
-			Log.e(LinphoneService.TAG, "Unknown menu item ["+item+"]");
+			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
 			break;
 		}
 
@@ -101,8 +101,10 @@ public class HistoryActivity extends ListActivity {
 
 	class CallHistoryAdapter extends  BaseAdapter {
 		final List<LinphoneCallLog> mLogs; 
+
+		@SuppressWarnings("unchecked")
 		CallHistoryAdapter(Context aContext) {
-			mLogs = LinphoneService.instance().getLinphoneCore().getCallLogs();
+			mLogs = LinphoneManager.getLc().getCallLogs();
 		}
 		public int getCount() {
 			return mLogs.size();
@@ -142,7 +144,7 @@ public class HistoryActivity extends ListActivity {
 				lDirectionImageIn.setVisibility(View.GONE);
 				lDirectionImageOut.setVisibility(View.VISIBLE);
 			}
-			LinphoneCore lc = LinphoneService.instance().getLinphoneCore();
+			LinphoneCore lc = LinphoneManager.getLc();
 			LinphoneProxyConfig lProxyConfig = lc.getDefaultProxyConfig();
 			String lDetailedName=null;
 			String lDisplayName = lAddress.getDisplayName(); 

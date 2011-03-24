@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_echo_canceller_calibration_key">pref_echo_canceller_calibration_key</string>
+
+	<string name="error_while_accepting_pending_call">Error while accepting pending call</string>
+	<string name="incoming_call_dialog_title">%s is calling you</string>
+	<string name="accept">Accept</string>
+	<string name="decline">Decline</string>
+	<string name="unknown_incoming_call_name">Unknown</string>
+	
+	<string name="pref_network_title">Network</string>
+	<string name="pref_transport_udp">UDP</string>
+	<string name="pref_transport_tcp">TCP</string>
+	<string name="pref_transport_tls">TLS</string>
+	<string name="pref_transport_use_standard_ports">Use standard ports</string>
+	<string name="at_least_a_protocol">At least one item is required</string>
+
+
+    <string name="first_launch_ok">Registration successful</string>
+    <string name="error">Error</string>
+    <string name="click_to_show_first_login_view">Start</string>
+    <string name="dialer_null_on_new_intent">Application not ready</string>
+
+
+	<string name="no_phone_numbers">No phone numbers found for %s</string>
+	<string name="filter_contacts">Filter contacts</string>
+	<string name="title_numbers_dialog">%s\'s phone numbers</string>
     <string name="pref_echo_canceller_calibration">Echo calibration</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>
-    <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
 	<string name="pref_video">Video</string>
 	<string name="pref_preferences">Preferences</string>
     <string name="pref_video_codec_h263_title">H263</string>
-    <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
     <string name="pref_video_codec_mpeg4_title">MPEG4</string>
-    <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
     <string name="pref_video_codec_h264_title">H264</string>
-    <string name="pref_video_codec_h264_key">pref_video_codec_h264_key</string>
     <string name="pref_video_codecs_title">Codecs</string>
     <string name="pref_video_codecs_key">pref_video_codecs_key</string>
 	<string name="menu_videocall_back_to_dialer_title">Display dialer</string>
@@ -24,43 +43,23 @@
 	<string name="menu_videocall_toggle_camera_enable">Enable camera</string>
 	<string name="menu_videocall_terminate_call_title">Terminate call</string>
     <string name="pref_video_settings_title">Video settings</string>
-    <string name="pref_video_automatically_share_my_video_key">pref_video_automatically_share_my_video_key</string>
     <string name="pref_video_automatically_share_my_video_title">Share my camera</string>
     <string name="pref_video_automatically_share_my_video">Automatically send my camera on incoming calls</string>
-    <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
     <string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>
     <string name="pref_video_initiate_call_with_video">Always send my camera on outgoing calls</string>
-    <string name="pref_video_enable_key">pref_video_enable_key</string>
     <string name="pref_video_enable_title">Enable Video</string>
     <string name="pref_escape_plus">Replace + by 00</string>
-    <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>
     <string name="pref_echo_cancellation">Echo cancellation</string>
-    <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
-    <string name="pref_handle_outcall_summarry">Configure how cellular calls are redirected to voip when possible</string>
-    <string name="pref_handle_outcall">Redirect cellular calls</string>
-    <string name="pref_handle_outcall_key">pref_handle_outcall_key_v2</string>
     <string name="pref_autostart">Start at boot time</string>
-    <string name="pref_autostart_key">pref_autostart_key</string>
-    <string name="outcall_chooser_cellular">Cellular</string>
-    <string name="outcall_chooser_text">Choose application to call %s</string>
     <string name="pref_enable_outbound_proxy">Outbound proxy</string>
-    <string name="pref_enable_outbound_proxy_key">Outbound proxy</string>
     <string name="pref_codec_pcma">pcma</string>
-    <string name="pref_codec_pcma_key">pref_codec_pcma_key</string>
     <string name="pref_codec_pcmu">pcmu</string>
-    <string name="pref_codec_pcmu_key">pref_codec_pcmu_key</string>
     <string name="pref_codec_gsm">gsm</string>
-    <string name="pref_codec_gsm_key">pref_codec_gsm_key</string>
     <string name="pref_codec_ilbc">ilbc</string>
-    <string name="pref_codec_ilbc_key">pref_codec_ilbc_key</string>
     <string name="pref_codec_speex8">speex 8 Khz</string>
-    <string name="pref_codec_speex8_key">pref_codec_speex8_key</string>
     <string name="pref_codec_speex16">speex 16 Khz</string>
-    <string name="pref_codec_speex16_key">pref_codec_speex16_key</string>
-    <string name="pref_codec_speex32_key">pref_codec_speex32_key</string>
     <string name="pref_codecs">Codecs</string>
-    <string name="pref_codecs_key">pref_codecs_key</string>
     <string name="place_call_chooser">Place a call</string>
 <string name="pref_debug">Debug</string>
 <string name="about_text">Linphone  %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
@@ -75,7 +74,6 @@
 <string name="pref_passwd">Password*</string>
 <string name="pref_username">Username*</string>
 <string name="hello">Hello World, Linphone!</string>
-<string name="app_name">Linphone</string>
 <string name="pref_sipaccount">SIP Account</string>
 <string name="wrong_username">wrong user name</string>
 <string name="wrong_passwd">wrong password</string>
@@ -99,20 +97,18 @@
 <string name="menu_clear_history">Clear</string>
 <string name="error_cannot_get_call_parameters">Cannot get call parameters</string>
 <string name="error_cannot_create_default_parameters">Cannot create default call parameters</string>
-<string name="error_cannot_invite_address">Cannot invite destination address  [%s]</string>
-<string name="notification_registered">registered to %s </string> 
-<string name="notification_register_failure">fails to register to %s</string>
+<string name="error_cannot_invite_address">Cannot invite destination address [%s]</string>
+
 <string name="notification_started">started</string>
 <string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 <string name="pref_stun_server">Stun server</string>
-<string name="pref_stun_server_key">pref_stun_server_key</string>
 <string name="ec_calibrating">Calibrating...</string>
 <string name="ec_calibrated">Calibrated [%s ms]</string>
 <string name="failed">failed</string>
-
-<string-array name="pref_handle_outcall_values">
-<item>Off</item>
-<item>On demand</item>
-<item>Always</item>
-</string-array>
+<string name="first_login_explanation">Enter your username and password to connect to the service.</string>
+<string name="first_login_username">Username</string>
+<string name="first_login_password">Password</string>
+<string name="first_login_connect">Connect</string>
+<string name="first_launch_no_login_password">Please enter your login and password</string>
+<string name="first_launch_bad_login_password">Couldn\'t connect; check your login and password and start again</string>
 </resources>

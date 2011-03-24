@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android" 
+	a:layout_width="fill_parent" a:layout_height="fill_parent" a:orientation="vertical">
+
+
+       <EditText a:id="@+id/login"
+               a:hint="@string/first_login_username"
+               a:layout_width="wrap_content" a:layout_height="wrap_content"
+               a:layout_marginTop="20sp" a:layout_marginRight="15sp" a:layout_gravity="right"
+               a:width="180sp"/>
+
+       <EditText a:id="@+id/password" a:password="true"
+               a:hint="@string/first_login_password"
+               a:layout_width="wrap_content" a:layout_height="wrap_content"
+               a:layout_marginTop="10sp" a:layout_marginRight="15sp" a:layout_gravity="right"
+               a:width="180sp"/>
+
+       <Button a:id="@+id/connect" a:text="@string/first_login_connect"
+               a:layout_width="wrap_content" a:layout_height="wrap_content"
+               a:layout_marginTop="20sp" a:layout_marginRight="15sp" a:layout_gravity="right"
+               a:width="180sp"/>
+
+       <View a:layout_width="wrap_content" a:layout_height="wrap_content" a:layout_weight="1" />
+
+       <ProgressBar a:id="@+id/progress_bar"
+        a:layout_width="wrap_content" a:layout_height="wrap_content"
+        a:layout_gravity="center|bottom" a:layout_marginTop="50sp"
+        />
+        
+       <View a:layout_width="wrap_content" a:layout_height="wrap_content" a:layout_weight="1" />
+
+
+</LinearLayout>

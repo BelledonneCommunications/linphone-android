@@ -1,5 +1,5 @@
 /*
-Version.java
+SpeakerButton.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,38 +16,41 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.ui;
 
-import android.os.Build;
+import org.linphone.LinphoneManager;
+import org.linphone.ui.ToggleImageButton.OnCheckedChangeListener;
+
+import android.content.Context;
+import android.util.AttributeSet;
 
 /**
- * Centralize version access and allow simulation of lower versions.
  * @author Guillaume Beraudo
+ *
  */
-public class Version {
+public class SpeakerButton extends ToggleImageButton implements OnCheckedChangeListener {
 
-	private static final int buildVersion = Integer.parseInt(Build.VERSION.SDK) >= 9?
-				8 : Integer.parseInt(Build.VERSION.SDK); // Force versions above 9 to 8
-//		7; // 2.1
-
-	public static final boolean sdkAboveOrEqual(int value) {
-		return buildVersion >= value;
+	public SpeakerButton(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		setOnCheckedChangeListener(this);
 	}
 
-	public static final boolean sdkStrictlyBelow(int value) {
-		return buildVersion < value;
+
+	public boolean isSpeakerOn() {
+		return isChecked();
 	}
 
-	public static int sdk() {
-		return buildVersion;
+	public void setSpeakerOn(boolean state) {
+		setChecked(state);
 	}
 
-	public static boolean isArmv7() {
-		try {
-			return sdkAboveOrEqual(4)
-			&& Build.class.getField("CPU_ABI").get(null).toString().startsWith("armeabi-v7");
-		} catch (Throwable e) {}
-		return false;
+
+	public void onCheckedChanged(ToggleImageButton button, boolean checked) {
+		if (checked) {
+			LinphoneManager.getInstance().routeAudioToSpeaker();
+		} else {
+			LinphoneManager.getInstance().routeAudioToReceiver();
+		}
 	}
 
 

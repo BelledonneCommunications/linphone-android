@@ -21,22 +21,17 @@ package org.linphone;
 @SuppressWarnings("serial")
 public class LinphoneException extends Exception {
 
-	public LinphoneException() {
-		// TODO Auto-generated constructor stub
-	}
+	public LinphoneException() {}
 
 	public LinphoneException(String detailMessage) {
 		super(detailMessage);
-		// TODO Auto-generated constructor stub
 	}
 
 	public LinphoneException(Throwable throwable) {
 		super(throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 	public LinphoneException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
 	}
 }

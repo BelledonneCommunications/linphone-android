@@ -1,5 +1,5 @@
 /*
-Version.java
+AndroidCameraRecord9Impl.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -16,39 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.core.video;
 
-import android.os.Build;
+import android.hardware.Camera;
 
 /**
- * Centralize version access and allow simulation of lower versions.
+ * 
+ * Android >= 9 (2.3) version.
  * @author Guillaume Beraudo
+ *
  */
-public class Version {
+class AndroidCameraRecord9 extends AndroidCameraRecord8 {
 
-	private static final int buildVersion = Integer.parseInt(Build.VERSION.SDK) >= 9?
-				8 : Integer.parseInt(Build.VERSION.SDK); // Force versions above 9 to 8
-//		7; // 2.1
 
-	public static final boolean sdkAboveOrEqual(int value) {
-		return buildVersion >= value;
+	public AndroidCameraRecord9(RecorderParams parameters) {
+		super(parameters);
 	}
 
-	public static final boolean sdkStrictlyBelow(int value) {
-		return buildVersion < value;
+	@Override
+	protected Camera openCamera(int cameraId) {
+		return Camera.open(cameraId);
 	}
-
-	public static int sdk() {
-		return buildVersion;
-	}
-
-	public static boolean isArmv7() {
-		try {
-			return sdkAboveOrEqual(4)
-			&& Build.class.getField("CPU_ABI").get(null).toString().startsWith("armeabi-v7");
-		} catch (Throwable e) {}
-		return false;
-	}
-
-
 }

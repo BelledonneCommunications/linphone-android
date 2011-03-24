@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.core;
+package org.linphone.core.video;
 
 import android.hardware.Camera;
 
-public class AndroidCameraConf9 extends AndroidCameraConf {
+class AndroidCameraConf9 extends AndroidCameraConf {
 
 	public void findFrontAndRearCameraIds9(Integer frontCameraId, Integer rearCameraId, Integer cameraId) {
 		for (int id=0; id < getNumberOfCameras(); id++) {

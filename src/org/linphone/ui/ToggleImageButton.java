@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.linphone.component;
+package org.linphone.ui;
 
 
 import android.content.Context;
@@ -36,7 +36,8 @@ import android.widget.ImageButton;
  *
  */
 public class ToggleImageButton extends ImageButton implements OnClickListener {
-	private static final String namespace = null;
+//	private static final String ns = "http://schemas.android.com/apk/res/linphone";
+	private static final String ns = null;
 	private boolean checked;
 	private Drawable stateChecked;
 	private Drawable stateUnChecked;
@@ -44,8 +45,8 @@ public class ToggleImageButton extends ImageButton implements OnClickListener {
 
 	public ToggleImageButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "checked", -1));
-		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(namespace, "unchecked", -1));
+		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "checked", -1));
+		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "unchecked", -1));
 		setBackgroundColor(Color.TRANSPARENT);
 
 		setOnClickListener(this);

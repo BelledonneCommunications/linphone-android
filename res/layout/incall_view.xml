@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+
+	<RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<TextView android:id="@+id/incallContactName"  android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+		<org.linphone.ui.IncallTimer android:id="@+id/incallElapsedTime" android:text="Calling..." android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/incallContactName"/>
+	</RelativeLayout>
+	
+		
+
+	<View android:layout_weight="1" android:layout_width="0px" android:layout_height="0px" android:visibility="invisible"/>
+		
+
+	<FrameLayout android:layout_gravity="center" android:layout_margin="20dip"
+	 android:layout_width="wrap_content" android:layout_height="wrap_content">
+	<TableLayout android:id="@+id/incallButtonsZone" 
+	 android:layout_width="wrap_content" android:layout_height="wrap_content">
+		<TableRow>
+		<org.linphone.ui.MuteMicButton checked="@drawable/mic_muted" unchecked="@drawable/mic_active" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<RelativeLayout android:layout_gravity="center" ><Button android:id="@+id/incallNumpadShow" android:background="@drawable/numpad" 
+		 android:layout_width="wrap_content" android:layout_height="wrap_content"/></RelativeLayout>
+		<org.linphone.ui.SpeakerButton checked="@drawable/speaker_32_on" unchecked="@drawable/speaker_32_off" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+		</TableRow>
+		
+		<TableRow>
+		<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:src="@drawable/startvideo_green"
+		 android:layout_height="wrap_content" android:layout_width="wrap_content" android:height="10px"
+		 android:layout_column="1" />
+		</TableRow>
+	</TableLayout>
+
+	<org.linphone.ui.Numpad android:id="@+id/incallDialer" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	</FrameLayout>
+
+	<View android:layout_weight="1" android:layout_width="0px" android:layout_height="0px" android:visibility="invisible"/>
+
+
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<org.linphone.ui.HangCallButton android:id="@+id/incallHang" android:layout_width="wrap_content" android:layout_height="wrap_content"
+		 android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg" android:layout_weight="10" />
+		 
+		<Button android:text="Close numpad" android:id="@+id/incallNumpadClose"
+		 android:visibility="gone" android:layout_width="wrap_content"
+		 android:layout_height="fill_parent" android:background="@drawable/clavier_bg"  />
+	</LinearLayout>
+
+</LinearLayout>
