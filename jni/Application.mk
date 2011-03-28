@@ -1,5 +1,7 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2  liblinphone 
+APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2  liblinphone libcrypto
+APP_STL := stlport_static
+
 
 ifeq ($(RING),yes)
 APP_MODULES      += libring

@@ -28,3 +28,6 @@
 [submodule "submodules/msx264"]
 	path = submodules/msx264
 	url = git://git.linphone.org/msx264.git
+[submodule "submodules/externals/openssl"]
+	path = submodules/externals/openssl
+	url = git://android.git.kernel.org/platform/external/openssl.git
