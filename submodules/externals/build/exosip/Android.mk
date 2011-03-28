@@ -24,7 +24,8 @@ LOCAL_SRC_FILES = \
 	src/eXutils.c \
 	src/jevents.c \
 	src/misc.c \
-	src/jauth.c 
+	src/jauth.c \
+	src/eXosip_transport_hook.c
 
 LOCAL_SRC_FILES += \
 	src/eXtl.c \
