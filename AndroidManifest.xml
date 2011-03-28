@@ -97,12 +97,8 @@
 	</receiver>
 
 	<receiver android:name="org.linphone.BootReceiver">
-		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
+		<intent-filter><action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED"></action></intent-filter>
 	</receiver>
-	
-	
-	
-	
 	
 	
 	
