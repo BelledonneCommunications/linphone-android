@@ -41,5 +41,5 @@ LOCAL_ARM_MODE := arm
 
 #for including config.h:
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg  $(LOCAL_PATH)/
-include $(BUILD_STATIC_LIBRARY)
+include $(BUILD_SHARED_LIBRARY)
 

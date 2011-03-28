@@ -20,5 +20,8 @@ LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
 
 #for including config.h:
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg  $(LOCAL_PATH)/
-include $(BUILD_STATIC_LIBRARY)
+
+LOCAL_SHARED_LIBRARIES := libavutil
+
+include $(BUILD_SHARED_LIBRARY)
 

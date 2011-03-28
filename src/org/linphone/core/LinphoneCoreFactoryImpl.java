@@ -21,9 +21,25 @@ package org.linphone.core;
 import java.io.File;
 import java.io.IOException;
 
+import org.linphone.LinphoneManager;
+
+import android.util.Log;
+
 public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
+	private static void loadOptionalLibrary(String s) {
+		try {
+			System.loadLibrary(s);
+		} catch (Throwable e) {
+			Log.w(LinphoneManager.TAG, "Unable to load optional library lib" + s);
+		}
+	}
+
 	static {
+		loadOptionalLibrary("avutil");
+		loadOptionalLibrary("swscale");
+		loadOptionalLibrary("avcore");
+		loadOptionalLibrary("avcodec");
 		System.loadLibrary("linphone");
 	}
 	@Override

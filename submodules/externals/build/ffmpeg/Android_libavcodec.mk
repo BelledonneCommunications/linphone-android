@@ -16,6 +16,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/arm/dsputil_neon.S.neon \
 	libavcodec/arm/dsputil_vfp.S.neon \
 	libavcodec/arm/fft_init_arm.c \
+	libavcodec/arm/fft_neon.S.neon \
 	libavcodec/arm/h264dsp_init_arm.c \
 	libavcodec/arm/h264dsp_neon.S.neon \
 	libavcodec/arm/h264idct_neon.S.neon \
@@ -23,6 +24,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/arm/h264pred_neon.S.neon \
 	libavcodec/arm/int_neon.S.neon \
 	libavcodec/arm/jrevdct_arm.S \
+	libavcodec/arm/mdct_neon.S.neon \
 	libavcodec/arm/mpegvideo_arm.c \
 	libavcodec/arm/mpegvideo_armv5te.c \
 	libavcodec/arm/mpegvideo_armv5te_s.S \
@@ -42,6 +44,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/faanidct.c \
 	libavcodec/flvdec.c \
 	libavcodec/flvenc.c \
+	libavcodec/fft.c \
 	libavcodec/golomb.c \
 	libavcodec/h263.c.arm \
 	libavcodec/h263_parser.c \
@@ -99,5 +102,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/ \
 	$(LOCAL_PATH)/libavutil 
 
-include $(BUILD_STATIC_LIBRARY)
+LOCAL_SHARED_LIBRARIES := libavutil libavcore
+
+include $(BUILD_SHARED_LIBRARY)
 
