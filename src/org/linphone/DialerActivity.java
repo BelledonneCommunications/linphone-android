@@ -64,22 +64,20 @@ import android.widget.Toast;
  */
 public class DialerActivity extends Activity implements LinphoneGuiListener, NewOutgoingCallUiListener {
 	
-	private AddressText mAddress;
-	private TextView mDisplayNameView;
-
 	private TextView mStatus;
-	private CallButton mCall;
-	private View mDecline;
 	private View mHangup;
-	
+
+	private View mCallControlRow;
+	private TextView mDisplayNameView;
+	private AddressText mAddress;
+	private View mAddressLayout;
+	private CallButton mCall;
+
+	private View mInCallControlRow;
+	private View mInCallAddressLayout;
 	private MuteMicButton mMute;
 	private SpeakerButton mSpeaker;
-	
-	private View mCallControlRow;
-	private View mInCallControlRow;
-	private View mAddressLayout;
-	private View mInCallAddressLayout;
-	
+
 	private static DialerActivity instance;
 	
 	private PowerManager.WakeLock mWakeLock;
@@ -122,24 +120,23 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 		mCall.setAddressWidget(mAddress);
 
 
-		mDecline= findViewById(R.id.Decline);
-		mDecline.setEnabled(false);
-
-
 		mCallControlRow = findViewById(R.id.CallControlRow);
 		mAddressLayout = findViewById(R.id.Addresslayout);
 
+		mInCallControlRow = findViewById(R.id.IncallControlRow);
+		mInCallControlRow.setVisibility(View.GONE);
+		mInCallAddressLayout = findViewById(R.id.IncallAddressLayout);
+		mInCallAddressLayout.setVisibility(View.GONE);
+
 		if (useIncallActivity) {
 			mHangup = findViewById(R.id.HangUp); 
-
-			mInCallControlRow = findViewById(R.id.IncallControlRow);
-			mInCallControlRow.setVisibility(View.GONE);
-			mInCallAddressLayout = findViewById(R.id.IncallAddressLayout);
-			mInCallAddressLayout.setVisibility(View.GONE);
+		} else {
+			mMute = (MuteMicButton) findViewById(R.id.mic_mute_button);
+			mSpeaker = (SpeakerButton) findViewById(R.id.speaker_button);
+			mHangup = findViewById(R.id.Decline); 
 		}
 
-		mMute = (MuteMicButton) findViewById(R.id.mic_mute_button);
-		mSpeaker = (SpeakerButton) findViewById(R.id.speaker_button);
+
 		mStatus =  (TextView) findViewById(R.id.status_label);
 
 		AddressAware numpad = (AddressAware) findViewById(R.id.Dialer);
@@ -275,14 +272,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
 			updateIncallVideoCallButton();
+			mSpeaker.setSpeakerOn(false);
 		}
 		
 		mAddressLayout.setVisibility(View.VISIBLE);
 
 		mHangup.setEnabled(false);
-
-		mDecline.setEnabled(false);
-		mSpeaker.setSpeakerOn(false);
 
 
 		if (useVideoActivity && LinphoneManager.getLc().isVideoEnabled()) {
@@ -415,16 +410,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 
 	public void onGlobalStateChangedToOn(String message) {
 		mCall.setEnabled(!LinphoneManager.getLc().isIncall());
-		mHangup.setEnabled(!mCall.isEnabled());  
 		if (!useIncallActivity) updateIncallVideoCallButton();
-
-		try{
-			LinphoneManager.getInstance().initFromConf(this);
-		} catch (LinphoneConfigException e) {
-			Log.w(LinphoneManager.TAG, "Cannot get initial config : " + e.getMessage());
-		} catch (Exception e) {
-			Log.e(LinphoneManager.TAG, "Cannot get initial config", e);
-		}
+		else mHangup.setEnabled(!mCall.isEnabled());  
 
 		if (getIntent().getData() != null) {
 			checkIfOutgoingCallIntentReceived();
