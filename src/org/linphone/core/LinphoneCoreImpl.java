@@ -203,7 +203,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 			throw new RuntimeException("object already destroyed");
 		}
 	}
-	public void setNetworkReachable(boolean isReachable) {
+	public synchronized void setNetworkReachable(boolean isReachable) {
 		setNetworkStateReachable(nativePtr,isReachable);
 	}
 	public void setPlaybackGain(float gain) {
