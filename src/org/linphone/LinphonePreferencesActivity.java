@@ -58,6 +58,15 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		return (CheckBoxPreference) findPreference(getString(key));
 	}
 
+	private void detectAudioCodec(int id, String mime, int rate) {
+		boolean enable = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType(mime, rate)!=null;
+		findPreference(id).setEnabled(enable);
+	}
+	private void detectVideoCodec(int id, String mime) {
+		findPreference(id).setEnabled(LinphoneManager.getInstance().detectVideoCodec(mime));
+	}
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,8 +85,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		boolean fastCpu = Version.isArmv7();
 		if (fastCpu) {
-			boolean ilbc = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType("iLBC", 8000)!=null;
-			findPreference(pref_codec_ilbc_key).setEnabled(ilbc);
+			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000);
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
@@ -94,6 +102,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 			prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 		}
+
+		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
 	}
 	
 

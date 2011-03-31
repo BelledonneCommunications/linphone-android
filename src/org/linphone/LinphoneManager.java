@@ -379,7 +379,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		lInputStream.close();
 	}
 
-	
+	public boolean detectVideoCodec(String mime) {
+		for (PayloadType videoCodec : mLc.listVideoCodecs()) {
+			if (mime.equals(videoCodec.getMime())) return true;
+		}
+		return false;
+	}
 
 	public void initFromConf(Context context) throws LinphoneConfigException {
 		//traces
