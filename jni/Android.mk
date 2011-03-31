@@ -16,7 +16,9 @@ include $(root-dir)/submodules/externals/build/exosip/Android.mk
 
 include $(root-dir)/submodules/externals/build/osip/Android.mk
 
+ifeq ($(WITH_OPENSSL), 1)
 include $(root-dir)/submodules/externals/openssl/Android.mk
+endif
 
 include $(root-dir)/submodules/linphone/oRTP/build/android/Android.mk
 
