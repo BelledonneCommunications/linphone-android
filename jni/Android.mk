@@ -2,7 +2,7 @@ root-dir:=$(APP_PROJECT_PATH)
 
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-BUILD_X264?=1
+BUILD_X264=1
 LINPHONE_VIDEO=1
 else
 BUILD_X264=0
