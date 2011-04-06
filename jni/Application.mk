@@ -17,7 +17,6 @@ APP_MODULES      +=libmsilbc libavutil libavcore libavcodec libswscale libx264 l
 endif
 APP_BUILD_SCRIPT:=$(call my-dir)/Android.mk
 APP_PLATFORM := android-8
-APP_ABI := armeabi-v7a
-#APP_ABI := armeabi armeabi-v7a
+APP_ABI := armeabi armeabi-v7a
 #APP_OPTIM := debug
 
