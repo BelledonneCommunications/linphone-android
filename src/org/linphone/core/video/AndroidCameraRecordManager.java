@@ -76,11 +76,17 @@ public class AndroidCameraRecordManager {
 	public boolean hasSeveralCameras() {
 		return cc.getFoundCameras().hasSeveralCameras();
 	}
+	public boolean hasFrontCamera() {
+		return cc.getFoundCameras().front != null;
+	}
 
 	
 	public void setUseFrontCamera(boolean value) {
+		if (!hasFrontCamera()) {
+			Log.e(tag, "setUseFrontCamera(true) while no front camera detected on device: using rear");
+			value = false;
+		}
 		if (cc.isFrontCamera(cameraId) == value) return; // already OK
-
 		toggleUseFrontCamera();
 	}
 

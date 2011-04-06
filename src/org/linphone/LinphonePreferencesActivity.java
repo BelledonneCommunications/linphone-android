@@ -34,6 +34,7 @@ import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.video.AndroidCameraRecordManager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -104,6 +105,10 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		}
 
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
+
+		if (!AndroidCameraRecordManager.getInstance().hasFrontCamera()) {
+			disableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
+		}
 	}
 	
 
@@ -184,6 +189,14 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 				}
 			}
 		});
+	}
+
+	private void disableAndHideCheckbox(int key) { 
+		writeBoolean(key, false);
+		CheckBoxPreference box = (CheckBoxPreference) findPreference(key);
+		box.setEnabled(false);
+		box.setChecked(false);
+		box.setLayoutResource(R.layout.hidden);
 	}
 
 	private void disableCheckbox(int key) {

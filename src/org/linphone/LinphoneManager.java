@@ -714,7 +714,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 
 	private synchronized void startRinging()  {
-		if (Hacks.isGalaxyS()) {
+		if (Hacks.needGalaxySAudioHack()) {
 			mAudioManager.setMode(MODE_RINGTONE);
 		}
 
@@ -749,7 +749,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mVibrator.cancel();
 		}
 
-		if (Hacks.isGalaxyS()) {
+		if (Hacks.needGalaxySAudioHack()) {
 			mAudioManager.setMode(MODE_IN_CALL);
 		}
 	}
@@ -782,7 +782,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
-		if (!Hacks.isGalaxyS()) return;
+		if (!Hacks.needGalaxySAudioHack()) return;
 
 		try {
 			stopRinging();

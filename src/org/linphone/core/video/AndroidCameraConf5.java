@@ -30,12 +30,17 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 	public AndroidCameraConf5() {
 		Log.i(tag, "Detecting cameras");
 		
-		// Defaults 0/0/0
+		// Defaults
 		foundCameras = new AndroidCameras();
 
 		if (Hacks.isGalaxySOrTab()) {
-			Log.d(tag, "Hack Galaxy S : has 2 cameras front=2; rear=1");
-			foundCameras.front = 2;
+			Log.d(tag, "Hack Galaxy S : has one or more cameras");
+			if (Hacks.isGalaxySOrTabWithFrontCamera()) {
+				Log.d(tag, "Hack Galaxy S : HAVE a front camera");
+				foundCameras.front = 2;
+			} else {
+				Log.d(tag, "Hack Galaxy S : NO front camera");
+			}
 			foundCameras.rear = 1;
 			foundCameras.defaultC = foundCameras.rear;
 		}
@@ -44,7 +49,7 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 
 	public int getNumberOfCameras() {
 		Log.i(tag, "Detecting the number of cameras");
-		if (Hacks.isGalaxySOrTab()) {
+		if (Hacks.isGalaxySOrTabWithFrontCamera()) {
 			Log.d(tag, "Hack Galaxy S : has 2 cameras");
 			return 2;
 		} else
@@ -55,8 +60,8 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 
 	public int getCameraOrientation(int cameraId) {
 		// Use hacks to guess orientation of the camera
-		if (Hacks.isGalaxySOrTab() && !isFrontCamera(cameraId)) {
-			Log.d(tag, "Hack Galaxy S : rear camera mounted landscape");
+		if (Hacks.isGalaxySOrTab() && isFrontCamera(cameraId)) {
+			Log.d(tag, "Hack Galaxy S : front camera mounted landscape");
 			// mounted in landscape for a portrait phone orientation
 			//  |^^^^^^^^|
 			//  |  ____  |
@@ -69,7 +74,6 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 		}
 		return 0;
 	}
-
 
 
 

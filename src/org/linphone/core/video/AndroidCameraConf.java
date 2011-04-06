@@ -33,10 +33,15 @@ interface AndroidCameraConf {
 
 	boolean isFrontCamera(int cameraId);
 
+	/**
+	 * Default: no front; rear=0; default=rear
+	 * @author Guillaume Beraudo
+	 *
+	 */
 	class AndroidCameras {
 		Integer front;
-		Integer rear;
-		Integer defaultC;
+		Integer rear = 0;
+		Integer defaultC = rear;
 		
 		boolean hasFrontCamera() { return front != null; }
 		boolean hasRearCamera() { return rear != null; }

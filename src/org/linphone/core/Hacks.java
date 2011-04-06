@@ -29,7 +29,15 @@ public final class Hacks {
 	private Hacks() {}
 
 	public static boolean isGalaxyS() {
-		return Build.DEVICE.startsWith("GT-I9000");
+		return isGT9000() || isSC02B();
+	}
+
+	public static boolean needGalaxySAudioHack() {
+		return isGalaxySOrTab();
+	}
+
+	public static boolean isGalaxySOrTabWithFrontCamera() {
+		return isGalaxySOrTab() && !isGalaxySOrTabWithoutFrontCamera();
 	}
 
 	public static boolean isGalaxySOrTab() {
@@ -37,7 +45,14 @@ public final class Hacks {
 	}
 
 	public static boolean isGalaxyTab() {
-		return Build.DEVICE.startsWith("GT-P1000");
+		return isGTP1000();
+	}
+
+	private static boolean isGT9000() {return Build.DEVICE.startsWith("GT-I9000");}
+	private static boolean isSC02B() {return Build.DEVICE.startsWith("SC-02B");}
+	private static boolean isGTP1000() {return Build.DEVICE.startsWith("GT-P1000");}
+	private static boolean isGalaxySOrTabWithoutFrontCamera() {
+		return isSC02B();
 	}
 
 /*	private static final boolean log(final String msg) {

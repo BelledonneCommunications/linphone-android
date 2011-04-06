@@ -26,7 +26,9 @@ import android.os.Build;
  */
 public class Version {
 
-	private static final int buildVersion = Integer.parseInt(Build.VERSION.SDK);
+	private static final int buildVersion = 
+		Integer.parseInt(Build.VERSION.SDK);
+//		8; // 2.2
 //		7; // 2.1
 
 	public static final boolean sdkAboveOrEqual(int value) {
