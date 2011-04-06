@@ -39,6 +39,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /***
@@ -96,6 +97,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
+		
+		// Set default preferences
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
+
 		
 		notificationTitle = getString(R.string.app_name);
 
