@@ -116,6 +116,9 @@
 			android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
 
 		<PreferenceScreen android:title="@string/pref_network_title">
+			<CheckBoxPreference android:key="@string/pref_ipv6_key"
+             android:title="@string/pref_ipv6_title" android:defaultValue="false" />
+		
 			<CheckBoxPreference android:key="@string/pref_transport_udp_key"
 			 android:title="@string/pref_transport_udp" android:defaultValue="true"/>
 			<CheckBoxPreference android:key="@string/pref_transport_tcp_key"

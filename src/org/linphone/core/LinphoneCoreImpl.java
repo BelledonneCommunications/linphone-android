@@ -93,7 +93,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int startEchoCalibration(long nativePtr,Object data);
 	private native int getSignalingTransportPort(long nativePtr, int code);
 	private native void setSignalingTransportPorts(long nativePtr, int udp, int tcp, int tls);
-	
+	private native void enableIpv6(long nativePtr,boolean enable);
+
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -450,5 +451,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 		setSignalingTransportPorts(nativePtr, transports.udp, transports.tcp, transports.tls);
 	}
 
+	public void enableIpv6(boolean enable) {
+		enableIpv6(nativePtr,enable);
+	}
 
 }

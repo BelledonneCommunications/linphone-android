@@ -329,6 +329,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, linphoneConfigFile, linphoneInitialConfigFile, null);
 
+			mLc.enableIpv6(mPref.getBoolean(getString(R.string.pref_ipv6_key), false));
+
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
 
