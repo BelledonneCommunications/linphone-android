@@ -26,8 +26,7 @@ import android.os.Build;
  */
 public class Version {
 
-	private static final int buildVersion = Integer.parseInt(Build.VERSION.SDK) >= 9?
-				8 : Integer.parseInt(Build.VERSION.SDK); // Force versions above 9 to 8
+	private static final int buildVersion = Integer.parseInt(Build.VERSION.SDK);
 //		7; // 2.1
 
 	public static final boolean sdkAboveOrEqual(int value) {

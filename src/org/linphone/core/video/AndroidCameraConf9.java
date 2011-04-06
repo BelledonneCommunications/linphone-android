@@ -20,14 +20,21 @@ package org.linphone.core.video;
 
 import android.hardware.Camera;
 
-class AndroidCameraConf9 extends AndroidCameraConf {
+class AndroidCameraConf9 implements AndroidCameraConf {
+	private AndroidCameras foundCameras;
+	public AndroidCameras getFoundCameras() {return foundCameras;}
 
-	public void findFrontAndRearCameraIds9(Integer frontCameraId, Integer rearCameraId, Integer cameraId) {
+	public AndroidCameraConf9() {
+		foundCameras = new AndroidCameras();
+
 		for (int id=0; id < getNumberOfCameras(); id++) {
+			if (foundCameras.defaultC == null)
+				foundCameras.defaultC = id;
+
 			if (isFrontCamera(id)) {
-				frontCameraId = id;
+				foundCameras.front = id;
 			} else {
-				rearCameraId = id;
+				foundCameras.rear = id;
 			}
 		}
 	}
@@ -39,7 +46,7 @@ class AndroidCameraConf9 extends AndroidCameraConf {
 	public int getCameraOrientation(int cameraId) {
 		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
 		Camera.getCameraInfo(cameraId, info);
-		return info.orientation;
+		return (info.orientation - 90) %360;
 	}
 	
 	public boolean isFrontCamera(int cameraId) {
@@ -47,4 +54,5 @@ class AndroidCameraConf9 extends AndroidCameraConf {
 		Camera.getCameraInfo(cameraId, info);
 		return info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT ? true : false;
 	}
+
 }

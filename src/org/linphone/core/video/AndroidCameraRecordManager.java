@@ -63,23 +63,18 @@ public class AndroidCameraRecordManager {
 	public int getPhoneOrientation() {return phoneOrientation;}
 	public void setPhoneOrientation(int degrees) {this.phoneOrientation = degrees;}
 
-	private int frontCameraId;
-	private int rearCameraId;
 
 	// singleton
 	private AndroidCameraRecordManager() {
-		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf();
-
-		int[] fId = {-1};int[] rId = {-1};int[] cId = {-1};
-		cc.findFrontAndRearCameraIds(fId, rId, cId);
-		frontCameraId=fId[0];rearCameraId=rId[0];cameraId=cId[0];
+		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf5();
+		cameraId = cc.getFoundCameras().defaultC;
 	}
 
 	
 
 
 	public boolean hasSeveralCameras() {
-		return frontCameraId != rearCameraId;
+		return cc.getFoundCameras().hasSeveralCameras();
 	}
 
 	
@@ -93,7 +88,7 @@ public class AndroidCameraRecordManager {
 	public boolean toggleUseFrontCamera() {
 		boolean previousUseFront = cc.isFrontCamera(cameraId);
 
-		cameraId = previousUseFront ? rearCameraId : frontCameraId;
+		cameraId = previousUseFront ? cc.getFoundCameras().rear : cc.getFoundCameras().front;
 
 		if (parameters != null) {
 			parameters.cameraId = cameraId;
