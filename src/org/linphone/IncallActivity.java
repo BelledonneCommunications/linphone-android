@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,6 +63,11 @@ public class IncallActivity extends Activity implements OnClickListener {
 		hangButton = (HangCallButton) findViewById(R.id.incallHang);
 		hangButton.setOnClickListener(this);
 
+		if (!PreferenceManager.getDefaultSharedPreferences(this)
+				.getBoolean(getString(R.string.pref_video_enable_key), false)) {
+			findViewById(R.id.AddVideo).setVisibility(View.GONE);
+		}
+
 		TextView contact = (TextView) findViewById(R.id.incallContactName);
 		if (getIntent().getExtras() != null) {
 			contact.setText(getIntent().getExtras().getCharSequence(CONTACT_KEY));
@@ -71,6 +77,7 @@ public class IncallActivity extends Activity implements OnClickListener {
 
 		elapsedTime = (TextView) findViewById(R.id.incallElapsedTime);
 	}
+
 
 	public void onClick(View v) {
 		if (v == numpadClose) {
