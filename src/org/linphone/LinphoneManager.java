@@ -330,6 +330,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					this, linphoneConfigFile, linphoneInitialConfigFile, null);
 
 			mLc.enableIpv6(mPref.getBoolean(getString(R.string.pref_ipv6_key), false));
+			if (mPref.getBoolean(getString(R.string.pref_audio_soft_volume_key), false)) {
+				adjustSoftwareVolume(0); // Set maximum
+			}
 
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
@@ -843,4 +846,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		return mR.getString(R.string.unknown_incoming_call_name);
 	}
+
+	public void adjustSoftwareVolume(int i) {
+		mLc.adjustSoftwareVolume(i);
+	}
+
 }

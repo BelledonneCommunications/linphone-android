@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="pref_audio_soft_volume_title">Use software volume</string>
+
 	<string name="pref_ipv6_title">Use ipv6 instead of ipv4</string>
 
 	<string name="error_while_accepting_pending_call">Error while accepting pending call</string>

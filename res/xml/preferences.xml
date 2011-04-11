@@ -115,6 +115,9 @@
 		<CheckBoxPreference android:key="@string/pref_debug_key"
 			android:title="@string/pref_debug" android:enabled="true"></CheckBoxPreference>
 
+		<CheckBoxPreference android:key="@string/pref_audio_soft_volume_key"
+			android:title="@string/pref_audio_soft_volume_title" />
+
 		<PreferenceScreen android:title="@string/pref_network_title">
 			<CheckBoxPreference android:key="@string/pref_ipv6_key"
              android:title="@string/pref_ipv6_title" android:defaultValue="false" />

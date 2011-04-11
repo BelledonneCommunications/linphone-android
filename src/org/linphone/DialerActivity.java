@@ -45,6 +45,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -84,6 +85,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 	private SharedPreferences mPref;
 	private boolean useIncallActivity;
 	private boolean useVideoActivity;
+	private SoftVolume softVolume;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
@@ -101,6 +103,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
+
+		softVolume = new SoftVolume(this);
 
 		useIncallActivity = getResources().getBoolean(R.bool.use_incall_activity);
 		useVideoActivity = getResources().getBoolean(R.bool.use_video_activity);
@@ -419,4 +423,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 	}
 
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (softVolume.onKeyDown(keyCode, event)) return true;
+		return super.onKeyDown(keyCode, event);
+	}
 }

@@ -94,6 +94,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int getSignalingTransportPort(long nativePtr, int code);
 	private native void setSignalingTransportPorts(long nativePtr, int udp, int tcp, int tls);
 	private native void enableIpv6(long nativePtr,boolean enable);
+	private native void adjustSoftwareVolume(long nativePtr,int db);
 
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -453,6 +454,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 	public void enableIpv6(boolean enable) {
 		enableIpv6(nativePtr,enable);
+	}
+	public void adjustSoftwareVolume(int i) {
+		adjustSoftwareVolume(nativePtr, i);
 	}
 
 }
