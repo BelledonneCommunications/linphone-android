@@ -278,14 +278,14 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 			updateIncallVideoCallButton();
 			mSpeaker.setSpeakerOn(false);
 		}
-		
+
 		mAddressLayout.setVisibility(View.VISIBLE);
 
 		mHangup.setEnabled(false);
 
 
 		if (useVideoActivity && LinphoneManager.getLc().isVideoEnabled()) {
-			finishActivity(LinphoneActivity.VIDEO_VIEW_ACTIVITY); 
+			LinphoneActivity.instance().finishVideoActivity(); 
 			BandwidthManager.getInstance().setUserRestriction(false);
 			LinphoneManager.getInstance().resetCameraFromPreferences();
 		}

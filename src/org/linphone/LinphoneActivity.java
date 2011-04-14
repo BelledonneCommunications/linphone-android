@@ -46,6 +46,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
@@ -63,7 +64,7 @@ import android.widget.TabHost.TabSpec;
 public class LinphoneActivity extends TabActivity  {
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
-    static final int VIDEO_VIEW_ACTIVITY = 100;
+    private static final int video_activity = 100;
     static final int FIRST_LOGIN_ACTIVITY = 101;
     static final int INCALL_ACTIVITY = 102;
     static final int INCOMING_CALL_ACTIVITY = 103;
@@ -80,6 +81,7 @@ public class LinphoneActivity extends TabActivity  {
 	private static String TAG = LinphoneManager.TAG;
 	
 	private static final String SCREEN_IS_HIDDEN = "screen_is_hidden";
+	private Handler mHandler = new Handler();
 	
 	
 	// Customization
@@ -491,9 +493,23 @@ public class LinphoneActivity extends TabActivity  {
 	
 	
 	public void startVideoActivity() {
-		startActivityForResult(
-				new Intent().setClass(this, VideoCallActivity.class),
-				LinphoneActivity.VIDEO_VIEW_ACTIVITY);
+		mHandler.post(new Runnable() {
+			public void run() {
+				startActivityForResult(new Intent().setClass(
+						LinphoneActivity.this,
+						VideoCallActivity.class),
+						video_activity);
+				}
+		});
+
+	}
+	
+	public void finishVideoActivity() {
+		mHandler.post(new Runnable() {
+			public void run() {
+				finishActivity(video_activity);
+			}
+		});
 	}
 }
 
