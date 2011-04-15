@@ -512,4 +512,3 @@ public class LinphoneActivity extends TabActivity  {
 		});
 	}
 }
-

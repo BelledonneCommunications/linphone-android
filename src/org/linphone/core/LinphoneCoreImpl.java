@@ -88,6 +88,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setRing(long nativePtr, String path);
 	private native String getRing(long nativePtr);
 	private native long[] listVideoPayloadTypes(long nativePtr);
+	private native long[] listAudioPayloadTypes(long nativePtr);
 	private native void enableKeepAlive(long nativePtr,boolean enable);
 	private native boolean isKeepAliveEnabled(long nativePtr);
 	private native int startEchoCalibration(long nativePtr,Object data);
@@ -413,8 +414,20 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return getRing(nativePtr);
 	}
 	
-	public PayloadType[] listVideoCodecs() {
+	public PayloadType[] getVideoCodecs() {
 		long[] typesPtr = listVideoPayloadTypes(nativePtr);
+		if (typesPtr == null) return null;
+		
+		PayloadType[] codecs = new PayloadType[typesPtr.length];
+
+		for (int i=0; i < codecs.length; i++) {
+			codecs[i] = new PayloadTypeImpl(typesPtr[i]);
+		}
+
+		return codecs;
+	}
+	public PayloadType[] getAudioCodecs() {
+		long[] typesPtr = listAudioPayloadTypes(nativePtr);
 		if (typesPtr == null) return null;
 		
 		PayloadType[] codecs = new PayloadType[typesPtr.length];

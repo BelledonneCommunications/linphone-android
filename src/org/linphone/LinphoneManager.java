@@ -26,6 +26,7 @@ import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 import static android.media.AudioManager.VIBRATE_TYPE_RINGER;
 import static org.linphone.R.string.pref_codec_ilbc_key;
+import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_codec_speex32_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
@@ -385,8 +386,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public boolean detectVideoCodec(String mime) {
-		for (PayloadType videoCodec : mLc.listVideoCodecs()) {
+		for (PayloadType videoCodec : mLc.getVideoCodecs()) {
 			if (mime.equals(videoCodec.getMime())) return true;
+		}
+		return false;
+	}
+	
+	public boolean detectAudioCodec(String mime){
+		for (PayloadType audioCodec : mLc.getAudioCodecs()) {
+			if (mime.equals(audioCodec.getMime())) return true;
 		}
 		return false;
 	}
@@ -411,9 +419,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
 			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
 			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
+			enableDisableAudioCodec("AMR", 8000, R.string.pref_codec_amr_key);
 			
 			// Configure video codecs
-			for (PayloadType videoCodec : mLc.listVideoCodecs()) {
+			for (PayloadType videoCodec : mLc.getVideoCodecs()) {
 				enableDisableVideoCodecs(videoCodec);
 			}
 			
@@ -816,6 +825,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean ilbc = LinphoneService.isReady() && LinphoneManager.getLc()
 		.findPayloadType("iLBC", 8000)!=null;
 		e.putBoolean(getString(pref_codec_ilbc_key), ilbc);
+		
+		boolean amr = LinphoneService.isReady() && LinphoneManager.getLc()
+		.findPayloadType("AMR", 8000)!=null;
+		e.putBoolean(getString(pref_codec_amr_key), amr);
 
 		e.commit();
 	}

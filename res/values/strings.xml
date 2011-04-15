@@ -60,6 +60,7 @@
     <string name="pref_codec_pcma">pcma</string>
     <string name="pref_codec_pcmu">pcmu</string>
     <string name="pref_codec_gsm">gsm</string>
+    <string name="pref_codec_amr">amr</string>
     <string name="pref_codec_ilbc">ilbc</string>
     <string name="pref_codec_speex8">speex 8 Khz</string>
     <string name="pref_codec_speex16">speex 16 Khz</string>
@@ -115,4 +116,6 @@
 <string name="first_login_connect">Connect</string>
 <string name="first_launch_no_login_password">Please enter your login and password</string>
 <string name="first_launch_bad_login_password">Couldn\'t connect; check your login and password and start again</string>
+
+<string name="pref_amr_summary">AMR codec might not be present on your phone</string>
 </resources>

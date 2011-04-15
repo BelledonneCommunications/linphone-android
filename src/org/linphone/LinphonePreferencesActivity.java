@@ -24,6 +24,7 @@ import static org.linphone.R.string.ec_calibrating;
 import static org.linphone.R.string.ec_calibration_launch_message;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
+import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
@@ -66,7 +67,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private void detectVideoCodec(int id, String mime) {
 		findPreference(id).setEnabled(LinphoneManager.getInstance().detectVideoCodec(mime));
 	}
-	
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
+		
+		detectAudioCodec(pref_codec_amr_key,"AMR",8000);
 
 		// No video
 		if (Version.sdkStrictlyBelow(5) || !fastCpu || !LinphoneManager.getInstance().hasCamera()) {

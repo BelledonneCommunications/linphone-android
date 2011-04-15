@@ -57,7 +57,10 @@
 				android:title="@string/pref_codec_ilbc"
 				android:shouldDisableView="true"
 				android:summary="@string/pref_ilbc_summary"/>
-			<CheckBoxPreference android:key="@string/pref_codec_gsm_key"
+			<CheckBoxPreference android:key="@string/pref_codec_amr_key" 
+				android:title="@string/pref_codec_amr" 
+				android:shouldDisableView="true"  />
+		 	<CheckBoxPreference android:key="@string/pref_codec_gsm_key"
 				android:title="@string/pref_codec_gsm"/>
 			<CheckBoxPreference android:key="@string/pref_codec_pcmu_key"
 				android:title="@string/pref_codec_pcmu"/>

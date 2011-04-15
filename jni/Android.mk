@@ -1,5 +1,6 @@
 root-dir:=$(APP_PROJECT_PATH)
 
+BUILD_AMR=light
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
@@ -38,6 +39,9 @@ endif
 
 include $(root-dir)/submodules/linphone/build/android/Android.mk
 
-
+ifneq ($(BUILD_AMR), 0)
+include $(root-dir)/submodules/externals/build/opencore-amr/Android.mk
+include $(root-dir)/submodules/msamr/Android.mk
+endif
 
 

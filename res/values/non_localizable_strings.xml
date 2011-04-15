@@ -33,11 +33,13 @@
     <string name="pref_codec_pcma_key">pref_codec_pcma_key</string>
     <string name="pref_codec_pcmu_key">pref_codec_pcmu_key</string>
     <string name="pref_codec_gsm_key">pref_codec_gsm_key</string>
+    <string name="pref_codec_amr_key">pref_codec_amr_key</string>
     <string name="pref_codec_ilbc_key">pref_codec_ilbc_key</string>
     <string name="pref_codec_speex8_key">pref_codec_speex8_key</string>
     <string name="pref_codec_speex16_key">pref_codec_speex16_key</string>
     <string name="pref_codec_speex32_key">pref_codec_speex32_key</string>
     <string name="pref_codecs_key">pref_codecs_key</string>
     <string name="pref_stun_server_key">pref_stun_server_key</string>
+
 
 </resources>
