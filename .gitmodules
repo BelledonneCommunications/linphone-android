@@ -36,4 +36,4 @@
 	url = git://opencore-amr.git.sourceforge.net/gitroot/opencore-amr/opencore-amr
 [submodule "submodules/msamr"]
 	path = submodules/msamr
-	url = git://git.linphone.org:msamr
+	url = git://git.linphone.org/msamr
