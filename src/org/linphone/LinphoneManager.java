@@ -813,6 +813,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
+	// Called on first launch only
 	public void initializePayloads() {
 		Log.i(TAG, "Initializing supported payloads");
 		Editor e = mPref.edit();
