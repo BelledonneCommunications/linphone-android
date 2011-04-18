@@ -25,7 +25,6 @@ import org.linphone.core.Version;
 import org.linphone.core.VideoSize;
 import org.linphone.core.video.AndroidCameraRecordManager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -43,7 +42,7 @@ import android.view.ViewGroup.LayoutParams;
  * @author Guillaume Beraudo
  *
  */
-public class VideoCallActivity extends Activity {
+public class VideoCallActivity extends SoftVolumeActivity  {
 	private SurfaceView mVideoView;
 	private SurfaceView mVideoCaptureView;
 	private AndroidCameraRecordManager recordManager;
@@ -206,6 +205,5 @@ public class VideoCallActivity extends Activity {
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
 	}
-	
 	
 }

@@ -156,6 +156,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public static final String TAG="Linphone";
+	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
+	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
 	private final String linphoneInitialConfigFile;
 	private final String linphoneConfigFile;
@@ -331,9 +333,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					this, linphoneConfigFile, linphoneInitialConfigFile, null);
 
 			mLc.enableIpv6(mPref.getBoolean(getString(R.string.pref_ipv6_key), false));
-			if (mPref.getBoolean(getString(R.string.pref_audio_soft_volume_key), false)) {
-				adjustSoftwareVolume(0); // Set maximum
-			}
 
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
@@ -696,6 +695,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mAudioManager.setMode(MODE_NORMAL);
 		}
 
+		if (state == State.Connected) {
+			if (Hacks.needSoftvolume() || LinphonePreferenceManager.getInstance().useSoftvolume()) {
+				adjustSoftwareVolume(0); // Synchronize
+			}
+		}
+
 		mCurrentCallState=state;
 		serviceListener.onCallStateChanged(call, state, message);
 	}
@@ -861,7 +866,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void adjustSoftwareVolume(int i) {
-		mLc.adjustSoftwareVolume(i);
+		int oldVolume = mAudioManager.getStreamVolume(LINPHONE_VOLUME_STREAM);
+		int maxVolume = mAudioManager.getStreamMaxVolume(LINPHONE_VOLUME_STREAM);
+
+		int nextVolume = oldVolume +i;
+		if (nextVolume > maxVolume) nextVolume = maxVolume;
+		if (nextVolume < 0) nextVolume = 0;
+
+		mLc.adjustSoftwareVolume((nextVolume - maxVolume)* dbStep);
 	}
 
 }

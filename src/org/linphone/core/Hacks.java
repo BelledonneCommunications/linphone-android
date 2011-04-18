@@ -97,4 +97,8 @@ public final class Hacks {
 		
 		Log.d(LinphoneManager.TAG, sb.toString());
 	}
+
+	public static boolean needSoftvolume() {
+		return isGalaxySOrTab();
+	}
 }

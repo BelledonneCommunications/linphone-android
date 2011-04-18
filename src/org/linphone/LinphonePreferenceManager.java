@@ -1,5 +1,5 @@
 /*
-SoftVolume.java
+PreferenceManager.java
 Copyright (C) 2011  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -19,31 +19,36 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 
-public class SoftVolume {
+public class LinphonePreferenceManager {
 
-	private Context c;
-
-	public SoftVolume(Context context) {
-		c = context.getApplicationContext();
+	private static LinphonePreferenceManager instance;
+	private static Context c;
+	private static SharedPreferences p;
+	
+	public LinphonePreferenceManager() {
+		p = PreferenceManager.getDefaultSharedPreferences(c);
 	}
 	
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (!PreferenceManager.getDefaultSharedPreferences(c).getBoolean(
-				c.getString(R.string.pref_audio_soft_volume_key), false))
-			return false;
+	private String getString(int key) {
+		return c.getString(key);
+	}
+	
+	public static final synchronized LinphonePreferenceManager getInstance() {
+		if (c == null) throw new RuntimeException("need a context");
+		if (instance == null) instance = new LinphonePreferenceManager();
+		return instance;
+	}
 
-		if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-			LinphoneManager.getInstance().adjustSoftwareVolume(6);
-			return true;
-		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-			LinphoneManager.getInstance().adjustSoftwareVolume(-6);
-			return true;
-		} 
+	public static final void setContext(Context context) {
+		c = context.getApplicationContext();
+	}
 
-		return false;
+	
+	public boolean useSoftvolume() {
+		return p.getBoolean(
+				getString(R.string.pref_audio_soft_volume_key), false);
 	}
 }
-

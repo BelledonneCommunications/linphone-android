@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -96,7 +97,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		// No video
 		if (Version.sdkStrictlyBelow(5) || !fastCpu || !LinphoneManager.getInstance().hasCamera()) {
-			disableCheckbox(pref_video_enable_key);
+			uncheckAndDisableCheckbox(pref_video_enable_key);
 		}
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
 			if (fastCpu) {
@@ -110,8 +111,10 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
 
 		if (!AndroidCameraRecordManager.getInstance().hasFrontCamera()) {
-			disableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
+			uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
 		}
+		
+		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
 	}
 	
 
@@ -194,19 +197,22 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		});
 	}
 
-	private void disableAndHideCheckbox(int key) { 
-		writeBoolean(key, false);
-		CheckBoxPreference box = (CheckBoxPreference) findPreference(key);
-		box.setEnabled(false);
-		box.setChecked(false);
-		box.setLayoutResource(R.layout.hidden);
+	private void uncheckDisableAndHideCheckbox(int key) { 
+		manageCheckbox(key, false, false, true);
 	}
 
-	private void disableCheckbox(int key) {
-		writeBoolean(key, false);
+	private void uncheckAndDisableCheckbox(int key) {
+		manageCheckbox(key, false, false, false);
+	}
+	private void checkAndDisableCheckbox(int key) {
+		manageCheckbox(key, true, false, false);
+	}
+	private void manageCheckbox(int key, boolean value, boolean enabled, boolean hidden) {
 		CheckBoxPreference box = (CheckBoxPreference) findPreference(key);
-		box.setEnabled(false);
-		box.setChecked(false);
+		box.setEnabled(enabled);
+		box.setChecked(value);
+		writeBoolean(key, value);
+		if (hidden) box.setLayoutResource(R.layout.hidden);
 	}
 
 	private Preference findPreference(int key) {
