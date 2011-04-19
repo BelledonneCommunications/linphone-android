@@ -103,7 +103,7 @@
 	
 	
 	
-        <activity android:name="core.tutorials.video.TestVideoActivity"
+        <activity android:name="org.linphone.core.tutorials.TestVideoActivity"
                   android:label="Video test"
                   android:theme="@android:style/Theme.NoTitleBar"
                    android:enabled="false">
