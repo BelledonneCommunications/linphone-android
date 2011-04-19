@@ -45,6 +45,16 @@ interface AndroidCameraConf {
 		
 		boolean hasFrontCamera() { return front != null; }
 		boolean hasRearCamera() { return rear != null; }
-		boolean hasSeveralCameras() { return front != rear && front != null; } 
+		boolean hasSeveralCameras() { return front != rear && front != null; }
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("Cameras :");
+			if (rear != null) sb.append(" rear=").append(rear);
+			if (front != null) sb.append(" front=").append(front);
+			if (defaultC != null)  sb.append(" default=").append(defaultC);
+			return sb.toString();
+		}
 	}
 }

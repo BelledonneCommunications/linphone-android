@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.linphone.core.Version;
+
 import android.hardware.Camera;
 import android.hardware.Camera.ErrorCallback;
 import android.hardware.Camera.Parameters;
@@ -65,6 +67,7 @@ public abstract class AndroidCameraRecord {
 		}
 		
 
+		Log.d(tag, "Trying to open camera with id " + params.cameraId);
 		camera = openCamera(params.cameraId);
 		camera.setErrorCallback(new ErrorCallback() {
 			public void onError(int error, Camera camera) {
@@ -74,9 +77,12 @@ public abstract class AndroidCameraRecord {
 		
 		
 		Camera.Parameters parameters=camera.getParameters();
-		parameters.set("camera-id",params.cameraId);
-		camera.setParameters(parameters);
-		parameters = camera.getParameters();
+		if (Version.sdkStrictlyBelow(9)) {
+			parameters.set("camera-id",params.cameraId);
+			camera.setParameters(parameters);
+			parameters = camera.getParameters();
+		}
+		
 		if (supportedVideoSizes == null) {
 			supportedVideoSizes = new ArrayList<Size>(getSupportedPreviewSizes(parameters));
 		}

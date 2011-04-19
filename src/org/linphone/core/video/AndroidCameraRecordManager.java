@@ -67,6 +67,7 @@ public class AndroidCameraRecordManager {
 	// singleton
 	private AndroidCameraRecordManager() {
 		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf5();
+		Log.i(tag, "=== Detected " + cc.getFoundCameras()+ " ===");
 		cameraId = cc.getFoundCameras().defaultC;
 	}
 
