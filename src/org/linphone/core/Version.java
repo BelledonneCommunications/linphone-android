@@ -25,7 +25,7 @@ import android.os.Build;
  * @author Guillaume Beraudo
  */
 public class Version {
-
+	private static native boolean nativeHasNeon();
 	private static final int buildVersion = 
 		Integer.parseInt(Build.VERSION.SDK);
 //		8; // 2.2
@@ -50,6 +50,8 @@ public class Version {
 		} catch (Throwable e) {}
 		return false;
 	}
-
+	public static boolean hasNeon(){
+		return nativeHasNeon();
+	}
 
 }
