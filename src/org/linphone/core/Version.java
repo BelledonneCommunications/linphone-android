@@ -25,7 +25,12 @@ import android.os.Build;
  * @author Guillaume Beraudo
  */
 public class Version {
+
+	public static final String TAG="Linphone";
+
 	private static native boolean nativeHasNeon();
+	private static Boolean hasNeon;
+
 	private static final int buildVersion = 
 		Integer.parseInt(Build.VERSION.SDK);
 //		8; // 2.2
@@ -51,7 +56,8 @@ public class Version {
 		return false;
 	}
 	public static boolean hasNeon(){
-		return nativeHasNeon();
+		if (hasNeon == null) hasNeon = nativeHasNeon();
+		return hasNeon;
 	}
 
 }

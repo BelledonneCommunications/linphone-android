@@ -21,8 +21,6 @@ package org.linphone.core;
 import java.io.File;
 import java.io.IOException;
 
-import org.linphone.LinphoneManager;
-
 import android.util.Log;
 
 public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
@@ -31,7 +29,7 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		try {
 			System.loadLibrary(s);
 		} catch (Throwable e) {
-			Log.w(LinphoneManager.TAG, "Unable to load optional library lib" + s);
+			Log.w(Version.TAG, "Unable to load optional library lib" + s);
 		}
 	}
 
