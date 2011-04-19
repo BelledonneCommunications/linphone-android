@@ -28,6 +28,9 @@ public class Version {
 
 	public static final String TAG="Linphone";
 
+	private static native boolean nativeHasNeon();
+	private static Boolean hasNeon;
+
 	private static final int buildVersion = 
 		Integer.parseInt(Build.VERSION.SDK);
 //		8; // 2.2
@@ -52,6 +55,9 @@ public class Version {
 		} catch (Throwable e) {}
 		return false;
 	}
-
+	public static boolean hasNeon(){
+		if (hasNeon == null) hasNeon = nativeHasNeon();
+		return hasNeon;
+	}
 
 }

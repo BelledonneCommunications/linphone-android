@@ -30,6 +30,7 @@ import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_codec_speex32_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
+import static org.linphone.R.string.pref_video_enable_key;
 import static org.linphone.core.LinphoneCall.State.CallEnd;
 import static org.linphone.core.LinphoneCall.State.Error;
 import static org.linphone.core.LinphoneCall.State.IncomingReceived;
@@ -836,6 +837,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		.findPayloadType("AMR", 8000)!=null;
 		e.putBoolean(getString(pref_codec_amr_key), amr);
 
+		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !LinphoneManager.getInstance().hasCamera()) {
+			e.putBoolean(getString(pref_video_enable_key), false);
+		}
+		
 		e.commit();
 	}
 
