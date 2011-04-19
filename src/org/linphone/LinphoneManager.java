@@ -155,7 +155,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	}
 	
-	public static final String TAG="Linphone";
+	public static final String TAG=Version.TAG;
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */

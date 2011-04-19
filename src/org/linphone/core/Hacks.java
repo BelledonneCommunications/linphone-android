@@ -18,8 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core;
 
-import org.linphone.LinphoneManager;
-
 import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
@@ -94,8 +92,8 @@ public final class Hacks {
 		//MANUFACTURER doesn't exist in android 1.5.
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK);
-		
-		Log.d(LinphoneManager.TAG, sb.toString());
+
+		Log.d(Version.TAG, sb.toString());
 	}
 
 	public static boolean needSoftvolume() {

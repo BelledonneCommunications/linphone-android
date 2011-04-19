@@ -26,6 +26,8 @@ import android.os.Build;
  */
 public class Version {
 
+	public static final String TAG="Linphone";
+
 	private static final int buildVersion = 
 		Integer.parseInt(Build.VERSION.SDK);
 //		8; // 2.2
