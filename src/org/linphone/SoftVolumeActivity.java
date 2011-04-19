@@ -34,21 +34,19 @@ public class SoftVolumeActivity extends Activity {
 
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode != KeyEvent.KEYCODE_VOLUME_UP && keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) {
-			return false;
+		if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+				&& (Hacks.needSoftvolume() || LinphonePreferenceManager.getInstance().useSoftvolume())) {
+
+			if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+				LinphoneManager.getInstance().adjustSoftwareVolume(1);
+			} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+				LinphoneManager.getInstance().adjustSoftwareVolume(-1);
+			}
 		}
-
-		if (!Hacks.needSoftvolume() && !LinphonePreferenceManager.getInstance().useSoftvolume())
-			return false;
-
 		
-		if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-			LinphoneManager.getInstance().adjustSoftwareVolume(1);
-		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-			LinphoneManager.getInstance().adjustSoftwareVolume(-1);
-		} 
-		
-		return preventVolumeBarToDisplay;
+		if (!preventVolumeBarToDisplay) {
+			return super.onKeyDown(keyCode, event);
+		} else return true;
 	}
 
 
