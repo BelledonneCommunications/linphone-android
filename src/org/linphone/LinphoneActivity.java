@@ -20,9 +20,6 @@ package org.linphone;
 
 
 import static android.content.Intent.ACTION_MAIN;
-import static android.media.AudioManager.MODE_NORMAL;
-import static android.media.AudioManager.ROUTE_ALL;
-import static android.media.AudioManager.ROUTE_SPEAKER;
 
 import java.util.List;
 
@@ -44,7 +41,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -71,8 +67,6 @@ public class LinphoneActivity extends TabActivity  {
     private static final String PREF_CHECK_CONFIG = "pref_check_config";
 
 	private static LinphoneActivity instance;
-	private AudioManager mAudioManager;
-
 	
 	
 	private FrameLayout mMainFrame;
@@ -122,7 +116,6 @@ public class LinphoneActivity extends TabActivity  {
 
 		
 		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
-		mAudioManager = ((AudioManager)getSystemService(Context.AUDIO_SERVICE));
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -242,12 +235,7 @@ public class LinphoneActivity extends TabActivity  {
 		super.onPause();
 		if  (isFinishing())  {
 			//restore audio settings   
-			if (Version.sdkStrictlyBelow(4) /*<donut*/) {
-				mAudioManager.setMode(MODE_NORMAL); 
-				mAudioManager.setRouting(MODE_NORMAL, ROUTE_SPEAKER, ROUTE_ALL);
-			} else {
-				mAudioManager.setSpeakerphoneOn(false); 
-			}
+			LinphoneManager.getInstance().routeAudioToReceiver();
 			stopProxymitySensor();//just in case
 			instance = null;
 		}
