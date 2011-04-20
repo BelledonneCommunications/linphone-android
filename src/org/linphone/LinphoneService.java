@@ -136,7 +136,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if (info != null) {
 			Log.i(LinphoneManager.TAG, "Linphone version is " + info.versionCode);
 		} else {
-			Log.i(LinphoneManager.TAG, "Linphone version is unkown");
+			Log.i(LinphoneManager.TAG, "Linphone version is unknown");
 		}
 	}
 
