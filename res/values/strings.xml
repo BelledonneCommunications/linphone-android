@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="pref_audio_hacks_title">Audio hacks</string>
+	<string name="pref_audio_use_specific_mode_title">Use specific mode hack</string>
+	<string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (default), 2=MODE_IN_CALL</string>
+	<string name="pref_audio_hacks_use_routing_api_title">Use routing API hack</string>
+	<string name="pref_audio_hacks_use_galaxys_hack_title">Use Galaxy S audio hack</string>
+
 	<string name="pref_audio_soft_volume_title">Use software volume</string>
 
 	<string name="pref_ipv6_title">Use ipv6 instead of ipv4</string>

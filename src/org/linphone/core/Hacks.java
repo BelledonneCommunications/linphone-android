@@ -30,9 +30,6 @@ public final class Hacks {
 		return isGT9000() || isSC02B();
 	}
 
-	public static boolean needGalaxySAudioHack() {
-		return isGalaxySOrTab();
-	}
 
 	public static boolean isGalaxySOrTabWithFrontCamera() {
 		return isGalaxySOrTab() && !isGalaxySOrTabWithoutFrontCamera();
@@ -93,10 +90,23 @@ public final class Hacks {
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK);
 
-		Log.d(Version.TAG, sb.toString());
+		Log.i(Version.TAG, sb.toString());
 	}
 
 	public static boolean needSoftvolume() {
 		return isGalaxySOrTab();
+	}
+
+	public static boolean needRoutingAPI() {
+		return Version.sdkStrictlyBelow(5) /*<donut*/;
+	}
+
+	public static boolean needGalaxySAudioHack() {
+		return isGalaxySOrTab() && !isSC02B();
+	}
+
+	public static boolean needPausingCallForSpeakers() {
+//		return false;
+		return isGalaxySOrTab() && !isSC02B();
 	}
 }

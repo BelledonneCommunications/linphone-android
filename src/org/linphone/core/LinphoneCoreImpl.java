@@ -96,7 +96,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setSignalingTransportPorts(long nativePtr, int udp, int tcp, int tls);
 	private native void enableIpv6(long nativePtr,boolean enable);
 	private native void adjustSoftwareVolume(long nativePtr,int db);
-
+	private native int pauseCall(long nativePtr, long callPtr);
+	private native int pauseAllCalls(long nativePtr);
+	private native int resumeCall(long nativePtr, long callPtr);
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -472,4 +474,13 @@ class LinphoneCoreImpl implements LinphoneCore {
 		adjustSoftwareVolume(nativePtr, i);
 	}
 
+	public synchronized boolean pauseCall(LinphoneCall call) {
+		return 0 == pauseCall(nativePtr, ((LinphoneCallImpl) call).nativePtr);
+	}
+	public synchronized boolean resumeCall(LinphoneCall call) {
+		return 0 == resumeCall(nativePtr, ((LinphoneCallImpl) call).nativePtr);
+	}
+	public synchronized boolean pauseAllCalls() {
+		return 0 == pauseAllCalls(nativePtr);
+	}
 }

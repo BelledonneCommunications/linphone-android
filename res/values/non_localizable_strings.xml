@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="pref_audio_use_specific_mode_key">pref_audio_use_specific_mode_key</string>
+	<string name="pref_audio_hacks_use_galaxys_hack_key">pref_audio_hacks_use_galaxys_hack_key</string>
+	<string name="pref_audio_hacks_use_routing_api_key">pref_audio_hacks_use_routing_api_key</string>
 	<string name="pref_audio_soft_volume_key">pref_audio_soft_volume_key</string>
 
 	<string name="pref_ipv6_key">pref_ipv6_key</string>

@@ -51,4 +51,18 @@ public class LinphonePreferenceManager {
 		return p.getBoolean(
 				getString(R.string.pref_audio_soft_volume_key), false);
 	}
+
+	public boolean useAudioRoutingAPIHack() {
+		return p.getBoolean(
+				getString(R.string.pref_audio_hacks_use_routing_api_key), false);
+	}
+
+	public boolean useGalaxySHack() {
+		return p.getBoolean(
+				getString(R.string.pref_audio_hacks_use_galaxys_hack_key), false);
+	}
+
+	public int useSpecificAudioModeHack() {
+		return Integer.parseInt(p.getString(getString(R.string.pref_audio_use_specific_mode_key), "0"));
+	}
 }

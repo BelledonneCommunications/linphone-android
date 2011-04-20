@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import static android.media.AudioManager.ROUTE_EARPIECE;
 import static android.media.AudioManager.MODE_IN_CALL;
 import static android.media.AudioManager.MODE_NORMAL;
 import static android.media.AudioManager.MODE_RINGTONE;
@@ -111,6 +112,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private LinphoneCore mLc;
 	private int mPhoneOrientation;
 	private static Transports initialTransports;
+	private static LinphonePreferenceManager lpm = LinphonePreferenceManager.getInstance();
 
 
 	
@@ -171,14 +173,38 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private boolean hasCamera;
 
 
+	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
+		LinphoneCall call = mLc.getCurrentCall();
+		boolean paused = false;
+		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
+			Log.d(TAG, "Hack pausing call to have speaker="+speakerOn);
+			mLc.pauseCall(call);
+			paused = true;
+		}
+
+		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
+			setAudioModeIncallForGalaxyS();
+
+		if (lpm.useSpecificAudioModeHack() != -1)
+			mAudioManager.setMode(lpm.useSpecificAudioModeHack());
+
+		if (Hacks.needRoutingAPI() || lpm.useAudioRoutingAPIHack()) {
+			mAudioManager.setRouting(
+					MODE_NORMAL,
+					speakerOn? ROUTE_SPEAKER : ROUTE_EARPIECE,
+					AudioManager.ROUTE_ALL);
+		} else {
+			mAudioManager.setSpeakerphoneOn(speakerOn); 
+		}
+
+		if (paused) {
+			Log.d(TAG, "Hack resuming call to have speaker="+speakerOn);
+			mLc.resumeCall(call);
+		}
+	}
 	
 	public void routeAudioToSpeaker() {
-		if (Integer.parseInt(Build.VERSION.SDK) <= 4 /*<donut*/) {
-			mAudioManager.setRouting(MODE_NORMAL, 
-			AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
-		} else {
-			mAudioManager.setSpeakerphoneOn(true); 
-		}
+		routeAudioToSpeakerHelper(true);
 		if (mLc.isIncall()) {
 			/*disable EC*/  
 			mLc.getCurrentCall().enableEchoCancellation(false);
@@ -188,13 +214,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void routeAudioToReceiver() {
-		if (Integer.parseInt(Build.VERSION.SDK) <=4 /*<donut*/) {
-			mAudioManager.setRouting(MODE_NORMAL, 
-			AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
-		} else {
-			mAudioManager.setSpeakerphoneOn(false); 
-		}
-		
+		routeAudioToSpeakerHelper(false);
 		if (mLc.isIncall()) {
 			//Restore default value
 			mLc.getCurrentCall().enableEchoCancellation(mLc.isEchoCancellationEnabled());
@@ -689,7 +709,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (mCurrentCallState == IncomingReceived) { 
 			//previous state was ringing, so stop ringing
 			stopRinging();
-			//routeAudioToReceiver();
+			routeAudioToReceiver();
 		}
 		
 		if (state == CallEnd || state == Error) {
@@ -769,9 +789,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mVibrator.cancel();
 		}
 
-		if (Hacks.needGalaxySAudioHack()) {
-			mAudioManager.setMode(MODE_IN_CALL);
-		}
+		// You may need to call galaxys audio hack after this method
 	}
 
 	
@@ -802,16 +820,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
-		if (!Hacks.needGalaxySAudioHack()) return;
-
-		try {
-			stopRinging();
-			Thread.sleep(100);
-			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			/* ops */
-		}
+		stopRinging();
+		mAudioManager.setMode(MODE_IN_CALL);
 	}
 
 	// Called on first launch only
@@ -852,7 +862,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
-		setAudioModeIncallForGalaxyS();
+		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
+			setAudioModeIncallForGalaxyS();
+		
 		if (mLc.isInComingInvitePending()) {
 			mLc.acceptCall(mLc.getCurrentCall());
 			return true;

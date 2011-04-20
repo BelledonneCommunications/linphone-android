@@ -41,15 +41,12 @@ public class MuteMicButton extends ToggleImageButton implements OnCheckedChangeL
 	}
 
 	public void setMicMuted(boolean state) {
-		setChecked(state);
+		if (state != isChecked())
+			setChecked(state);
 	}
 
 
 	public void onCheckedChanged(ToggleImageButton button, boolean checked) {
-		if (checked) {
-			LinphoneManager.getLc().muteMic(true);
-		} else {
-			LinphoneManager.getLc().muteMic(false);
-		}
+		LinphoneManager.getLc().muteMic(checked);
 	}
 }

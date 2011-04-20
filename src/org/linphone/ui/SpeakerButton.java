@@ -41,7 +41,8 @@ public class SpeakerButton extends ToggleImageButton implements OnCheckedChangeL
 	}
 
 	public void setSpeakerOn(boolean state) {
-		setChecked(state);
+		if (state != isChecked())
+			setChecked(state);
 	}
 
 

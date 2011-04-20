@@ -100,6 +100,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		super.onCreate();
 		instance = this;
 		
+		LinphonePreferenceManager.setContext(this); // In case restart after a crash . Main in LinphoneActivity
+
 		// Set default preferences
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
 
@@ -233,7 +235,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		} else if (state == LinphoneCall.State.StreamsRunning) {
 			if (LinphoneActivity.isInstanciated()
 					&& getResources().getBoolean(R.bool.use_video_activity)
-					&& LinphoneManager.getLc().getCurrentCall().getCurrentParamsCopy().getVideoEnabled()) {
+					&& call.getCurrentParamsCopy().getVideoEnabled()) {
 				LinphoneActivity.instance().startVideoActivity();
 			}
 		}
