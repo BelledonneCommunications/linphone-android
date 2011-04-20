@@ -34,6 +34,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -106,6 +108,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		// Dump some debugging information to the logs
 		Hacks.dumpDeviceInformation();
+		dumpInstalledLinphoneInformation();
 
 		mNotificationMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotif = new Notification(R.drawable.status_level, "", System.currentTimeMillis());
@@ -123,6 +126,19 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 
 
+
+	private void dumpInstalledLinphoneInformation() {
+		PackageInfo info = null;
+		try {
+		    info = getPackageManager().getPackageInfo(getPackageName(),0);
+		} catch (NameNotFoundException nnfe) {}
+
+		if (info != null) {
+			Log.i(LinphoneManager.TAG, "Linphone version is " + info.versionCode);
+		} else {
+			Log.i(LinphoneManager.TAG, "Linphone version is unkown");
+		}
+	}
 
 	private void sendNotification(int level, int textId) {
 		mNotif.iconLevel = level;
