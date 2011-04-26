@@ -28,10 +28,10 @@ cat > $D/.classpath <<EOF
 EOF
 
 # Fix package name
-{
+(
 cd $D
 grep -R "org.linphone.R" . -l  | grep java | xargs sed -i 's/org\.linphone\.R/org\.linphone\.sdk\.R/g'
-}
+)
 
 # Create a basic AndroidManifest.xml
 cat > $D/AndroidManifest.xml <<EOF
@@ -138,13 +138,16 @@ copy res/layout/videotest.xml $D
 androidize $D
 
 echo "Creating zip $D"
-{
+(
 cd ..
-zip -r liblinphone-android-sdk.zip $DBASE
+zip -rq liblinphone-android-sdk.zip $DBASE
 rm -rf $DBASE
-}
+)
 
-javadoc -d liblinphone-android-javadoc  src/org/linphone/*.java src/org/linphone/ui/*.java src/org/linphone/core/*.java src/org/linphone/core/video/*.java src/org/linphone/core/tutorials/* submodules/linphone/java/common/org/linphone/core/*.java submodules/linphone/java/j2se/org/linphone/core/*.java
-rm -f ../liblinphone-android-javadoc.zip
-zip -r ../liblinphone-android-javadoc.zip liblinphone-android-javadoc
-rm -rf liblinphone-android-javadoc
+DBASE="liblinphone-android-javadoc"
+D="../$DBASE.zip"
+echo "Generating javadoc to $D"
+javadoc -quiet -d $DBASE  src/org/linphone/*.java src/org/linphone/ui/*.java src/org/linphone/core/*.java src/org/linphone/core/video/*.java src/org/linphone/core/tutorials/* submodules/linphone/java/common/org/linphone/core/*.java submodules/linphone/java/j2se/org/linphone/core/*.java
+rm -rf $D
+zip -rq $D $DBASE
+rm -rf $DBASE
