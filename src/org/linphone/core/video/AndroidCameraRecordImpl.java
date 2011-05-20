@@ -20,6 +20,8 @@ package org.linphone.core.video;
 
 import java.util.List;
 
+import org.linphone.core.video.AndroidCameraRecord.RecorderParams.MirrorType;
+
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
@@ -40,18 +42,20 @@ class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCall
 	private long lastFrameTime = 0;
 	private final double expectedTimeBetweenFrames;
 	protected final int rotation;
+	private MirrorType mirror;
 
 	public AndroidCameraRecordImpl(RecorderParams parameters) {
 		super(parameters);
 		expectedTimeBetweenFrames = 1d / Math.round(parameters.fps);
 		filterCtxPtr = parameters.filterDataNativePtr;
 		rotation = parameters.rotation;
+		mirror = parameters.mirror;
 
 		storePreviewCallBack(this);
 	}
 
 	
-	private native void putImage(long filterCtxPtr, byte[] buffer, int rotate);
+	private native void putImage(long filterCtxPtr, byte[] buffer, int rotate, int mirror);
 
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
@@ -74,7 +78,7 @@ class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCall
 		long curTime = System.currentTimeMillis();
 		if (lastFrameTime == 0) {
 			lastFrameTime = curTime;
-			putImage(filterCtxPtr, data, rotation);
+			putImage(filterCtxPtr, data, rotation, mirror.ordinal());
 			return;
 		}
 
@@ -87,7 +91,7 @@ class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCall
 		timeElapsedBetweenFrames = currentTimeElapsed;
 
 		//		Log.d("onPreviewFrame: ", Integer.toString(data.length));
-		putImage(filterCtxPtr, data, rotation);
+		putImage(filterCtxPtr, data, rotation, mirror.ordinal());
 	}
 
 	@Override

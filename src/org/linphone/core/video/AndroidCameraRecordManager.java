@@ -118,6 +118,17 @@ public class AndroidCameraRecordManager {
 		p.height = height;
 		p.cameraId = cameraId;
 		parameters = p;
+		
+		/* Need first a working camera to test
+		if (isUseFrontCamera()) {
+			if (isCameraOrientationPortrait()) {
+				p.mirror = RecorderParams.MirrorType.CENTRAL;
+			} else {
+				p.mirror = RecorderParams.MirrorType.HORIZONTAL;
+			}
+		} // else no mirror
+		*/
+
 		tryToStartVideoRecording();
 	} 
 	
@@ -174,7 +185,7 @@ public class AndroidCameraRecordManager {
 		tryToStartVideoRecording();
 	}
 	
-	private void tryToStartVideoRecording() {
+	private synchronized void tryToStartVideoRecording() {
 		if (muted || surfaceView == null || parameters == null) return;
 		
 		parameters.rotation = bufferRotationForCorrectImageOrientation();
@@ -193,7 +204,7 @@ public class AndroidCameraRecordManager {
 		recorder.startPreview();
 	}
 
-	public void stopVideoRecording() {
+	public synchronized void stopVideoRecording() {
 		if (recorder != null) {
 			recorder.stopPreview();
 			recorder = null;
@@ -244,7 +255,7 @@ public class AndroidCameraRecordManager {
 		final int rotation = bufferRotationForCorrectImageOrientation();
 		final boolean isPortrait = (rotation % 180) == 90;
 		
-		Log.d(tag, "Camera sensor in portrait orientation ?" + isPortrait);
+		Log.d(tag, "Camera sensor in portrait orientation? " + isPortrait);
 		return isPortrait;
 	}
 
@@ -260,13 +271,16 @@ public class AndroidCameraRecordManager {
 
 
 	private int bufferRotationForCorrectImageOrientation() {
-		final int cameraOrientation = cc.getCameraOrientation(cameraId);
-		final int rotation = Version.sdkAboveOrEqual(8) ?
-				(360 - cameraOrientation + 90 - phoneOrientation) % 360
-				: 0;
-		Log.d(tag, "Capture video buffer will need a rotation of " + rotation
-				+ " degrees : camera " + cameraOrientation
-				+ ", phone " + phoneOrientation);
-		return rotation;
+		if (Version.sdkAboveOrEqual(8)) {
+			final int cameraOrientation = cc.getCameraOrientation(cameraId);
+			final int rotation = (360 - cameraOrientation + 90 - phoneOrientation) % 360;
+			Log.d(tag, String.format(
+				"Capture video buffer of cameraId=%d will need a rotation of "
+				+ "%d degrees: camera_orientation=%d, phone_orientation=%d",
+				cameraId, rotation, cameraOrientation, phoneOrientation));
+			return rotation;
+		}
+
+		return 0;
 	}
 }

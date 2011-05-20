@@ -26,14 +26,14 @@ public final class Hacks {
 
 	private Hacks() {}
 
-	public static boolean isGalaxyS() {
-		return isGT9000() || isSC02B();
-	}
-
 
 	public static boolean isGalaxySOrTabWithFrontCamera() {
 		return isGalaxySOrTab() && !isGalaxySOrTabWithoutFrontCamera();
 	}
+	private static boolean isGalaxySOrTabWithoutFrontCamera() {
+		return isSC02B() || isSGHI896();
+	}
+
 
 	public static boolean isGalaxySOrTab() {
 		return isGalaxyS() || isGalaxyTab();
@@ -42,13 +42,26 @@ public final class Hacks {
 	public static boolean isGalaxyTab() {
 		return isGTP1000();
 	}
-
-	private static boolean isGT9000() {return Build.DEVICE.startsWith("GT-I9000");}
-	private static boolean isSC02B() {return Build.DEVICE.startsWith("SC-02B");}
-	private static boolean isGTP1000() {return Build.DEVICE.startsWith("GT-P1000");}
-	private static boolean isGalaxySOrTabWithoutFrontCamera() {
-		return isSC02B();
+	private static boolean isGalaxyS() {
+		return isGT9000() || isSC02B() || isSGHI896() || isSPHD700();
 	}
+	
+	public static final boolean hasTwoCamerasRear0Front1() {
+		return isSPHD700() || isADR6400();
+	}
+	
+	// HTC
+	private static final boolean isADR6400() {
+		return Build.MODEL.startsWith("ADR6400") || Build.DEVICE.startsWith("ADR6400");
+	} // HTC Thunderbolt
+	
+	// Galaxy S variants
+	private static final boolean isSPHD700() {return Build.DEVICE.startsWith("SPH-D700");} // Epic 
+	private static boolean isSGHI896() {return Build.DEVICE.startsWith("SGH-I896");} // Captivate
+	private static boolean isGT9000() {return Build.DEVICE.startsWith("GT-I9000");} // Galaxy S
+	private static boolean isSC02B() {return Build.DEVICE.startsWith("SC-02B");} // Docomo
+	private static boolean isGTP1000() {return Build.DEVICE.startsWith("GT-P1000");} // Tab
+
 
 /*	private static final boolean log(final String msg) {
 		Log.d("Linphone", msg);
@@ -108,5 +121,9 @@ public final class Hacks {
 	public static boolean needPausingCallForSpeakers() {
 //		return false;
 		return isGalaxySOrTab() && !isSC02B();
+	}
+
+	public static boolean hasTwoCameras() {
+		return isSPHD700() || isGalaxySOrTabWithFrontCamera();
 	}
 }

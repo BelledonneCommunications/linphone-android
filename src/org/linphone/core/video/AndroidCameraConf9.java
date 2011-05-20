@@ -18,7 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.video;
 
+import org.linphone.LinphoneManager;
+
 import android.hardware.Camera;
+import android.util.Log;
 
 class AndroidCameraConf9 implements AndroidCameraConf {
 	private AndroidCameras foundCameras;
@@ -46,6 +49,10 @@ class AndroidCameraConf9 implements AndroidCameraConf {
 	public int getCameraOrientation(int cameraId) {
 		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
 		Camera.getCameraInfo(cameraId, info);
+		Log.d(LinphoneManager.TAG, String.format("Camera info for %i: orientation=%i returned=%i ",
+						cameraId,
+						info.orientation,
+						(info.orientation - 90) %360));
 		return (info.orientation - 90) %360;
 	}
 	

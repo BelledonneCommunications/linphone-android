@@ -53,7 +53,7 @@ public abstract class AndroidCameraRecord {
 		return Collections.emptyList();
 	}
 	
-	public void startPreview() { // FIXME throws exception?
+	public synchronized void startPreview() { // FIXME throws exception?
 		if (previewStarted) {
 			Log.w(tag, "Already started");
 			throw new RuntimeException("Video recorder already started");
@@ -68,6 +68,10 @@ public abstract class AndroidCameraRecord {
 		
 
 		Log.d(tag, "Trying to open camera with id " + params.cameraId);
+		if (camera != null) {
+			Log.e(tag, "Camera is not null, ?already open? : aborting");
+			return;
+		}
 		camera = openCamera(params.cameraId);
 		camera.setErrorCallback(new ErrorCallback() {
 			public void onError(int error, Camera camera) {
@@ -79,8 +83,6 @@ public abstract class AndroidCameraRecord {
 		Camera.Parameters parameters=camera.getParameters();
 		if (Version.sdkStrictlyBelow(9)) {
 			parameters.set("camera-id",params.cameraId);
-			camera.setParameters(parameters);
-			parameters = camera.getParameters();
 		}
 		
 		if (supportedVideoSizes == null) {
@@ -94,13 +96,14 @@ public abstract class AndroidCameraRecord {
 			// invert height and width
 			parameters.setPreviewSize(params.height, params.width);
 		}
+		// should setParameters and get again to have the real one??
+		currentPreviewSize = parameters.getPreviewSize(); 
+
 		parameters.setPreviewFrameRate(Math.round(params.fps));
 
 
 		onSettingCameraParameters(parameters);
 		camera.setParameters(parameters);
-
-		currentPreviewSize = camera.getParameters().getPreviewSize();
 
 		SurfaceHolder holder = params.surfaceView.getHolder();
 		try {
@@ -113,9 +116,11 @@ public abstract class AndroidCameraRecord {
 
 		try {
 			camera.startPreview();
-			previewStarted = true;
 		} catch (Throwable e) {
-			Log.e(tag, "Can't start camera preview");
+			Log.e(tag, "Error, can't start camera preview. Releasing camera!");
+			camera.release();
+			camera = null;
+			return;
 		}
 
 		previewStarted = true;
@@ -160,7 +165,7 @@ public abstract class AndroidCameraRecord {
 		camera.stopPreview();
 		camera.release();
 		camera=null;
-		if (currentPreviewSize != null) currentPreviewSize = null;
+		currentPreviewSize = null;
 		previewStarted = false;
 	}
 	
@@ -176,6 +181,8 @@ public abstract class AndroidCameraRecord {
 
 
 	public static class RecorderParams {
+		public static enum MirrorType {NO, HORIZONTAL, CENTRAL, VERTICAL};
+
 		public float fps;
 		public int height;
 		public int width;
@@ -184,7 +191,9 @@ public abstract class AndroidCameraRecord {
 		public int cameraId;
 		public int rotation;
 		public SurfaceView surfaceView;
-		
+
+		public MirrorType mirror = MirrorType.NO;
+
 		public RecorderParams(long ptr) {
 			filterDataNativePtr = ptr;
 		}

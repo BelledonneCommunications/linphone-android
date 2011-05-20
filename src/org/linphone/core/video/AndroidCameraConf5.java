@@ -36,21 +36,25 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 		if (Hacks.isGalaxySOrTab()) {
 			Log.d(tag, "Hack Galaxy S : has one or more cameras");
 			if (Hacks.isGalaxySOrTabWithFrontCamera()) {
-				Log.d(tag, "Hack Galaxy S : HAVE a front camera");
+				Log.d(tag, "Hack Galaxy S : HAS a front camera with id=2");
 				foundCameras.front = 2;
 			} else {
 				Log.d(tag, "Hack Galaxy S : NO front camera");
 			}
+			Log.d(tag, "Hack Galaxy S : HAS a rear camera with id=1");
 			foundCameras.rear = 1;
 			foundCameras.defaultC = foundCameras.rear;
+		} else if (Hacks.hasTwoCamerasRear0Front1()) {
+			Log.d(tag, "Hack SPHD700 has 2 cameras a rear with id=0 and a front with id=1");
+			foundCameras.front = 1;
 		}
 
 	}
 
 	public int getNumberOfCameras() {
 		Log.i(tag, "Detecting the number of cameras");
-		if (Hacks.isGalaxySOrTabWithFrontCamera()) {
-			Log.d(tag, "Hack Galaxy S : has 2 cameras");
+		if (Hacks.hasTwoCamerasRear0Front1() || Hacks.isGalaxySOrTabWithFrontCamera()) {
+			Log.d(tag, "Hack: we know this model has 2 cameras");
 			return 2;
 		} else
 			return 1;
@@ -81,6 +85,9 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 		// Use hacks to guess facing of the camera
 		if (cameraId == 2 && Hacks.isGalaxySOrTab()) {
 			Log.d(tag, "Hack Galaxy S : front camera has id=2");
+			return true;
+		} else if (cameraId == 1 && Hacks.hasTwoCamerasRear0Front1()) {
+			Log.d(tag, "Hack SPHD700 : front camera has id=1");
 			return true;
 		}
 
