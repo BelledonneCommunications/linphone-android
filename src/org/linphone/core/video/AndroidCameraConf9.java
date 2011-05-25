@@ -49,7 +49,7 @@ class AndroidCameraConf9 implements AndroidCameraConf {
 	public int getCameraOrientation(int cameraId) {
 		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
 		Camera.getCameraInfo(cameraId, info);
-		Log.d(LinphoneManager.TAG, String.format("Camera info for %i: orientation=%i returned=%i ",
+		Log.d(LinphoneManager.TAG, String.format("Camera info for %d: orientation=%d returned=%d ",
 						cameraId,
 						info.orientation,
 						(info.orientation - 90) %360));
