@@ -40,6 +40,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -220,7 +221,8 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		if (!mWakeLock.isHeld()) mWakeLock.acquire();
 		
 		if (useIncallActivity) {
-			LinphoneActivity.instance().startIncallActivity(mDisplayNameView.getText());
+			LinphoneActivity.instance().startIncallActivity(
+				mDisplayNameView.getText(), mAddress.getPictureUri());
 		} else {
 			loadMicAndSpeakerUiStateFromManager();
 			mCallControlRow.setVisibility(View.GONE);
@@ -346,9 +348,10 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 	}
 
 	
-	public void setContactAddress(String aContact,String aDisplayName) {
+	public void setContactAddress(String aContact,String aDisplayName, Uri photo) {
 		mAddress.setText(aContact);
 		mAddress.setDisplayedName(aDisplayName);
+		mAddress.setPictureUri(photo);
 	}
 
 	

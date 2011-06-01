@@ -41,6 +41,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -214,7 +215,7 @@ public class LinphoneActivity extends TabActivity  {
 				gotToDialer();
 			} else {
 				if (getResources().getBoolean(R.bool.use_incall_activity)) {
-					startIncallActivity(LinphoneManager.getInstance().extractADisplayName());
+					startIncallActivity(LinphoneManager.getInstance().extractADisplayName(), null);
 				} else {
 					// TODO
 					Log.e(TAG, "Not handled case: recreation while in call and not using incall activity");
@@ -423,8 +424,8 @@ public class LinphoneActivity extends TabActivity  {
 		builder.create().show();
 	}
 
-	static void setAddressAndGoToDialer(String number, String name) {
-		DialerActivity.instance().setContactAddress(number, name);
+	static void setAddressAndGoToDialer(String number, String name, Uri photo) {
+		DialerActivity.instance().setContactAddress(number, name, photo);
 		instance.gotToDialer();
 	}
 
@@ -441,11 +442,12 @@ public class LinphoneActivity extends TabActivity  {
 	    getTabHost().addTab(spec);
 	}
 
-	public void startIncallActivity(CharSequence callerName) {
-		startActivityForResult(
-				new Intent().setClass(this, IncallActivity.class)
-				.putExtra(IncallActivity.CONTACT_KEY, callerName),
-				INCALL_ACTIVITY);
+	public void startIncallActivity(CharSequence callerName, Uri pictureUri) {
+		Intent intent = new Intent().setClass(this, IncallActivity.class)
+                                .putExtra(IncallActivity.CONTACT_KEY, callerName);
+		if (pictureUri != null)
+			intent.putExtra(IncallActivity.PICTURE_URI_KEY, pictureUri.toString());
+		startActivityForResult(intent, INCALL_ACTIVITY);
 	}
 
 	public void closeIncallActivity() {

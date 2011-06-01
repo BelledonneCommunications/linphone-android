@@ -35,6 +35,7 @@ import android.widget.TextView;
 public class IncallActivity extends SoftVolumeActivity implements OnClickListener {
 
 	public static final String CONTACT_KEY = "contact";
+	public static final String PICTURE_URI_KEY = "picture_uri";
 	private View numpadClose;
 	private View numpadShow;
 	private View numpad;

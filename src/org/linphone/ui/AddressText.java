@@ -21,6 +21,7 @@ package org.linphone.ui;
 import org.linphone.LinphoneManager.AddressType;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
@@ -31,6 +32,10 @@ import android.widget.EditText;
 public class AddressText extends EditText implements AddressType {
 
 	private String displayedName;
+	private Uri pictureUri;
+	public void setPictureUri(Uri uri) {pictureUri = uri;}
+	public Uri getPictureUri() {return pictureUri;}
+
 
 	public AddressText(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -57,8 +62,8 @@ public class AddressText extends EditText implements AddressType {
 	protected void onTextChanged(CharSequence text, int start, int before,
 			int after) {
 		clearDisplayedName();
+		pictureUri=null;
 		super.onTextChanged(text, start, before, after);
 	}
 
-	
 }

@@ -59,11 +59,12 @@ public class HistoryActivity extends ListActivity {
 		TextView lSecondLineView = (TextView) v.findViewById(R.id.history_cell_second_line);
 		if (lSecondLineView.getVisibility() == View.GONE) {
 			// no display name
-			LinphoneActivity.setAddressAndGoToDialer(lFirstLineView.getText().toString(), null);
+			LinphoneActivity.setAddressAndGoToDialer(lFirstLineView.getText().toString(), null, null);
 		} else {
 			LinphoneActivity.setAddressAndGoToDialer(
 					lSecondLineView.getText().toString(),
-					lFirstLineView.getText().toString());
+					lFirstLineView.getText().toString(),
+					null);
 		}
 	}
 
