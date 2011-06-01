@@ -35,7 +35,7 @@ import android.util.Log;
  * @author Guillaume Beraudo
  *
  */
-class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCallback {
+class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallback {
 
 	private long filterCtxPtr;
 	private double timeElapsedBetweenFrames = 0;
@@ -44,7 +44,7 @@ class AndroidCameraRecordImpl extends AndroidCameraRecord implements PreviewCall
 	protected final int rotation;
 	private MirrorType mirror;
 
-	public AndroidCameraRecordImpl(RecorderParams parameters) {
+	public AndroidCameraRecord5(RecorderParams parameters) {
 		super(parameters);
 		expectedTimeBetweenFrames = 1d / Math.round(parameters.fps);
 		filterCtxPtr = parameters.filterDataNativePtr;

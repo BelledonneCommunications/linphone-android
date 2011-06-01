@@ -38,7 +38,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
 
 /**
- * For Android SDK >= 
+ * For Android SDK >= 5
  * @author Guillaume Beraudo
  *
  */

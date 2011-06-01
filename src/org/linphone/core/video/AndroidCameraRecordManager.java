@@ -196,7 +196,7 @@ public class AndroidCameraRecordManager {
 		} else if (Version.sdkAboveOrEqual(8)) {
 			recorder = new AndroidCameraRecord8(parameters);
 		} else if (Version.sdkAboveOrEqual(5)) {
-			recorder = new AndroidCameraRecordImpl(parameters);
+			recorder = new AndroidCameraRecord5(parameters);
 		} else {
 			throw new RuntimeException("SDK version unsupported " + Version.sdk());
 		}
@@ -228,7 +228,7 @@ public class AndroidCameraRecordManager {
 		}
 
 		if (Version.sdkAboveOrEqual(5)) {
-			supportedVideoSizes = AndroidCameraRecordImpl.oneShotSupportedVideoSizes();
+			supportedVideoSizes = AndroidCameraRecord5.oneShotSupportedVideoSizes();
 		}
 		
 		// eventually null

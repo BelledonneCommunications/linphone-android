@@ -30,7 +30,7 @@ import android.util.Log;
  * @author Guillaume Beraudo
  *
  */
-class AndroidCameraRecord8 extends AndroidCameraRecordImpl {
+class AndroidCameraRecord8 extends AndroidCameraRecord5 {
 
 
 	public AndroidCameraRecord8(RecorderParams parameters) {

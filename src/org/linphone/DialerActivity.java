@@ -301,7 +301,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 
 	@Override
-	protected Dialog onCreateDialog(int id, Bundle b) {
+	protected Dialog onCreateDialog(int id) {
 		String from = LinphoneManager.getInstance().extractIncomingRemoteName();
 		View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 

@@ -129,28 +129,15 @@ public class IncallActivity extends SoftVolumeActivity implements OnClickListene
 	}
 
 
-	// Go to home on Back key
 	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			if (event.getAction() == KeyEvent.ACTION_DOWN
-					&& event.getRepeatCount() == 0) {
-				// Tell the framework to start tracking this event.
-				numpad.getKeyDispatcherState().startTracking(event, this);
-				return true;
-
-			} else if (event.getAction() == KeyEvent.ACTION_UP) {
-				numpad.getKeyDispatcherState().handleUpEvent(event);
-				if (event.isTracking() && !event.isCanceled()) {
-					startActivity(new Intent()
-					.setAction(Intent.ACTION_MAIN)
-					.addCategory(Intent.CATEGORY_HOME));
-					return true;
-				}
-			}
-			return super.dispatchKeyEvent(event);
+			startActivity(new Intent()
+			.setAction(Intent.ACTION_MAIN)
+			.addCategory(Intent.CATEGORY_HOME));
+			return true;
 		} else {
-			return super.dispatchKeyEvent(event);
+			return super.onKeyUp(keyCode, event);
 		}
 	}
 }
