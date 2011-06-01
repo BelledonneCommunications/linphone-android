@@ -73,6 +73,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.hardware.Camera;
+import android.hardware.SensorEvent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -892,6 +893,21 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (nextVolume < 0) nextVolume = 0;
 
 		mLc.adjustSoftwareVolume((nextVolume - maxVolume)* dbStep);
+	}
+
+	public static Boolean isProximitySensorNearby(final SensorEvent event) {
+		float threshold = 4.001f; // <= 4 cm is near
+
+		final float distanceInCm = event.values[0];
+		final float maxDistance = event.sensor.getMaximumRange();
+		Log.d(TAG, "Proximity sensor report ["+distanceInCm+"] , for max range ["+maxDistance+"]");
+
+		if (maxDistance <= threshold) {
+			// Case binary 0/1 and short sensors
+			threshold = maxDistance;
+		}
+
+		return distanceInCm < threshold;
 	}
 
 }

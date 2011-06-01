@@ -303,14 +303,9 @@ public class LinphoneActivity extends TabActivity  {
 		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
 		mSensorEventListener = new SensorEventListener() {
 			public void onSensorChanged(SensorEvent event) {
-				if (event.timestamp == 0) return; //just ignoring for nexus 1
-				Log.d(TAG, "Proximity sensor report ["+event.values[0]+"] , for max range ["+event.sensor.getMaximumRange()+"]");
-				
-				if (event.values[0] != event.sensor.getMaximumRange() ) {
-					instance().hideScreen(true);
-				} else  {
-					instance().hideScreen(false);
-				}
+				//just ignoring for nexus 1
+				if (event.timestamp == 0) return;
+				instance().hideScreen(LinphoneManager.isProximitySensorNearby(event));
 			}
 
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {}	
