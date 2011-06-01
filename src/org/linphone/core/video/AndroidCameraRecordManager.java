@@ -119,15 +119,15 @@ public class AndroidCameraRecordManager {
 		p.cameraId = cameraId;
 		parameters = p;
 		
-		/* Need first a working camera to test
 		if (isUseFrontCamera()) {
-			if (isCameraOrientationPortrait()) {
+			if (!isCameraOrientationPortrait()) {
+				// Code for Nexus S: to be tested
 				p.mirror = RecorderParams.MirrorType.CENTRAL;
 			} else {
+				// Code for Galaxy S like: camera mounted landscape when phone hold portrait
 				p.mirror = RecorderParams.MirrorType.HORIZONTAL;
 			}
-		} // else no mirror
-		*/
+		}
 
 		tryToStartVideoRecording();
 	} 
