@@ -25,6 +25,7 @@ import java.util.List;
 import org.linphone.core.Version;
 
 import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.ErrorCallback;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
@@ -32,9 +33,11 @@ import android.hardware.Camera.Size;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 
-public abstract class AndroidCameraRecord {
+public abstract class AndroidCameraRecord implements AutoFocusCallback {
 
 	protected Camera camera;
 	private RecorderParams params;
@@ -125,6 +128,19 @@ public abstract class AndroidCameraRecord {
 
 		previewStarted = true;
 
+		// Activate autofocus
+		if (Camera.Parameters.FOCUS_MODE_AUTO.equals(parameters.getFocusMode())) {
+			OnClickListener svClickListener = new OnClickListener() {
+				public void onClick(View v) {
+					Log.i(tag, "Auto focus requested");
+					camera.autoFocus(AndroidCameraRecord.this);
+				}
+			};
+			params.surfaceView.setOnClickListener(svClickListener);
+		//	svClickListener.onClick(null);
+		} else {
+			params.surfaceView.setOnClickListener(null);
+		}
 		
 		// Register callback to get capture buffer
 		lowLevelSetPreviewCallback(camera, storedPreviewCallback);
@@ -151,7 +167,7 @@ public abstract class AndroidCameraRecord {
 	public void storePreviewCallBack(PreviewCallback cb) {
 		this.storedPreviewCallback = cb;
 		if (camera == null) {
-			Log.w(tag, "Capture camera not ready, storing callback");
+			Log.w(tag, "Capture camera not ready, storing preview callback");
 			return;
 		}
 		
@@ -165,6 +181,7 @@ public abstract class AndroidCameraRecord {
 		camera.stopPreview();
 		camera.release();
 		camera=null;
+		Log.d(tag, "Camera released");
 		currentPreviewSize = null;
 		previewStarted = false;
 	}
@@ -189,6 +206,7 @@ public abstract class AndroidCameraRecord {
 
 		final long filterDataNativePtr;
 		public int cameraId;
+		public boolean isFrontCamera;
 		public int rotation;
 		public SurfaceView surfaceView;
 
@@ -215,5 +233,9 @@ public abstract class AndroidCameraRecord {
 
 		return currentPreviewSize.width * currentPreviewSize.height * 3 /2;
 	}
-	
+
+	public void onAutoFocus(boolean success, Camera camera) {
+		if (success) Log.i(tag, "Autofocus success");
+		else Log.i(tag, "Autofocus failure");
+	}
 }

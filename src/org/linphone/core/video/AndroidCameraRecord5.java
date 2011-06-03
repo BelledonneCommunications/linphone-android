@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core.video;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.core.video.AndroidCameraRecord.RecorderParams.MirrorType;
@@ -43,6 +44,7 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 	private final double expectedTimeBetweenFrames;
 	protected final int rotation;
 	private MirrorType mirror;
+//	private boolean isUsingFrontCamera;
 
 	public AndroidCameraRecord5(RecorderParams parameters) {
 		super(parameters);
@@ -50,6 +52,7 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 		filterCtxPtr = parameters.filterDataNativePtr;
 		rotation = parameters.rotation;
 		mirror = parameters.mirror;
+//		isUsingFrontCamera = parameters.isFrontCamera;
 
 		storePreviewCallBack(this);
 	}
@@ -94,31 +97,34 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 		putImage(filterCtxPtr, data, rotation, mirror.ordinal());
 	}
 
+	protected String selectFocusMode(final List<String> supportedFocusModes) {/*
+		if (isUsingFrontCamera && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_FIXED)) {
+			return Camera.Parameters.FOCUS_MODE_FIXED;
+		}
+		if (!isUsingFrontCamera && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
+			return Camera.Parameters.FOCUS_MODE_INFINITY;
+		}*/
+
+		if (supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+			return Camera.Parameters.FOCUS_MODE_AUTO;
+		}
+		
+		return null; // Should not occur?
+	}
+	
 	@Override
 	protected void onSettingCameraParameters(Parameters parameters) {
 		super.onSettingCameraParameters(parameters);
-
-		if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-			Log.w(tag, "Auto Focus supported by camera device");
-			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+		String focusMode = selectFocusMode(supportedFocusModes);
+		if (focusMode != null) {
+			Log.w(tag, "Selected focus mode: " + focusMode);
+			parameters.setFocusMode(focusMode);
 		} else {
-			Log.w(tag, "Auto Focus not supported by camera device");
-			if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
-				Log.w(tag, "Infinity Focus supported by camera device");
-				parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
-			} else {
-				Log.w(tag, "Infinity Focus not supported by camera device");
-			}
+			Log.i(tag, "No suitable focus mode found in : " + Arrays.toString(supportedFocusModes.toArray()));
 		}
 	}
 
-	public static List<Size> oneShotSupportedVideoSizes() {
-		Camera camera = Camera.open();
-		List<Size> supportedVideoSizes =camera.getParameters().getSupportedPreviewSizes();
-		camera.release();
-		return supportedVideoSizes;
-	}
-	
 	@Override
 	protected List<Size> getSupportedPreviewSizes(Parameters parameters) {
 		return parameters.getSupportedPreviewSizes();

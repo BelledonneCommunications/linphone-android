@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.video;
 
+import java.util.List;
+
 import android.hardware.Camera;
 
 /**
@@ -36,5 +38,13 @@ class AndroidCameraRecord9 extends AndroidCameraRecord8 {
 	@Override
 	protected Camera openCamera(int cameraId) {
 		return Camera.open(cameraId);
+	}
+
+	@Override
+	protected String selectFocusMode(final List<String> supportedFocusModes) {
+		if (supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+			return Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO;
+		} else
+			return super.selectFocusMode(supportedFocusModes);
 	}
 }

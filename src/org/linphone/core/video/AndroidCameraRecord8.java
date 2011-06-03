@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.video;
 
+import java.util.List;
+
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
@@ -67,5 +69,13 @@ class AndroidCameraRecord8 extends AndroidCameraRecord5 {
 		super.onSettingCameraParameters(parameters);
 		// Only on v8 hardware
 		camera.setDisplayOrientation(rotation);
+	}
+
+	@Override
+	protected String selectFocusMode(final List<String> supportedFocusModes) {
+		if (supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_EDOF)) {
+			return Camera.Parameters.FOCUS_MODE_EDOF;
+		} else
+			return super.selectFocusMode(supportedFocusModes);
 	}
 }

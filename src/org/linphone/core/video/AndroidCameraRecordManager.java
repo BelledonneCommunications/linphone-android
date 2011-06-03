@@ -99,6 +99,7 @@ public class AndroidCameraRecordManager {
 
 		if (parameters != null) {
 			parameters.cameraId = cameraId;
+			parameters.isFrontCamera = !previousUseFront;
 			if (isRecording()) {
 				stopVideoRecording();
 				tryToStartVideoRecording();
@@ -117,9 +118,10 @@ public class AndroidCameraRecordManager {
 		p.width = width;
 		p.height = height;
 		p.cameraId = cameraId;
+		p.isFrontCamera = isUseFrontCamera();
 		parameters = p;
 		
-		if (isUseFrontCamera()) {
+		if (p.isFrontCamera) {
 			if (!isCameraOrientationPortrait()) {
 				// Code for Nexus S: to be tested
 				p.mirror = RecorderParams.MirrorType.CENTRAL;
@@ -227,10 +229,6 @@ public class AndroidCameraRecordManager {
 			if (supportedVideoSizes != null) return supportedVideoSizes;
 		}
 
-		if (Version.sdkAboveOrEqual(5)) {
-			supportedVideoSizes = AndroidCameraRecord5.oneShotSupportedVideoSizes();
-		}
-		
 		// eventually null
 
 		return supportedVideoSizes;
