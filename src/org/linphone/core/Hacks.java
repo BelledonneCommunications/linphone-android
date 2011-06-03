@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core;
 
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
@@ -126,4 +127,21 @@ public final class Hacks {
 	public static boolean hasTwoCameras() {
 		return isSPHD700() || isGalaxySOrTabWithFrontCamera();
 	}
+
+	public static boolean hasCamera() {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			int nb = 0;
+			try {
+				nb = (Integer) Camera.class.getMethod("getNumberOfCameras", (Class[])null).invoke(null);
+			} catch (Exception e) {
+				Log.wtf(Version.TAG, "Error getting number of cameras");
+			}
+			return nb > 0;
+		}
+
+		Log.i(Version.TAG, "Hack: considering there IS a camera.\n"
+				+ "If it is not the case, report DEVICE and MODEL to linphone-users@nongnu.org");
+		return true;
+	}
+
 }

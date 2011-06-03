@@ -18,16 +18,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import static android.media.AudioManager.ROUTE_EARPIECE;
 import static android.media.AudioManager.MODE_IN_CALL;
 import static android.media.AudioManager.MODE_NORMAL;
 import static android.media.AudioManager.MODE_RINGTONE;
+import static android.media.AudioManager.ROUTE_EARPIECE;
 import static android.media.AudioManager.ROUTE_SPEAKER;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 import static android.media.AudioManager.VIBRATE_TYPE_RINGER;
-import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_amr_key;
+import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_codec_speex32_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
@@ -72,7 +72,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
-import android.hardware.Camera;
 import android.hardware.SensorEvent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -143,20 +142,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				mPhoneOrientation = o;
 			}
 		}.enable();
-
-		detectIfHasCamera();
-	}
-
-	private void detectIfHasCamera() {
-		Log.i(TAG, "Detecting if a camera is present");
-		try {
-			Camera camera = Camera.open();
-			if (hasCamera = camera != null) {
-				camera.release();
-			}
-		} catch (Throwable e) {}
-		Log.i(TAG,  (hasCamera ? "A" : "No") + " camera is present");
-
 	}
 	
 	public static final String TAG=Version.TAG;
@@ -171,8 +156,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private Timer mTimer = new Timer("Linphone scheduler");
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
-	private boolean hasCamera;
-
 
 	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
 		LinphoneCall call = mLc.getCurrentCall();
@@ -592,10 +575,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.enablePayloadType(videoCodec, enable);
 	}
 
-	public boolean hasCamera() {
-		return hasCamera;
-	}
-	
 	public static synchronized void destroy(Context context) {
 		if (instance == null) return;
 
@@ -848,7 +827,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		.findPayloadType("AMR", 8000)!=null;
 		e.putBoolean(getString(pref_codec_amr_key), amr);
 
-		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !LinphoneManager.getInstance().hasCamera()) {
+		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !Hacks.hasCamera()) {
 			e.putBoolean(getString(pref_video_enable_key), false);
 		}
 		
