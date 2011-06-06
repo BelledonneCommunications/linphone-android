@@ -87,7 +87,7 @@ ifeq ($(TARGET_ARCH),arm)
 			LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)
 			LOCAL_CFLAGS += -DOVERRIDE_INTERPOLATE_PRODUCT_SINGLE -Dinterpolate_product_single=interpolate_product_single_int
 			ifeq ($(LINPHONE_VIDEO),1)
-				LOCAL_CFLAGS += -DOVERRIDE_INNER_PRODUCT_SINGLE -Dinner_product_single=ff_scalarproduct_int16_neon
+				LOCAL_CFLAGS += -DOVERRIDE_INNER_PRODUCT_SINGLE -Dinner_product_single=msresampler_scalarproduct_int16
 			endif
 		endif
 	else
