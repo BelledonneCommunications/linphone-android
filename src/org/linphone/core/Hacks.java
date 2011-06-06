@@ -134,7 +134,7 @@ public final class Hacks {
 			try {
 				nb = (Integer) Camera.class.getMethod("getNumberOfCameras", (Class[])null).invoke(null);
 			} catch (Exception e) {
-				Log.wtf(Version.TAG, "Error getting number of cameras");
+				Log.e(Version.TAG, "Error getting number of cameras");
 			}
 			return nb > 0;
 		}
