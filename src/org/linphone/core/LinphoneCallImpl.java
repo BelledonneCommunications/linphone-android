@@ -37,6 +37,8 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native boolean isEchoLimiterEnabled(long nativePtr);
 	private native long getReplacedCall(long nativePtr);
 	private native int getDuration(long nativePtr);
+	private native float getCurrentQuality(long nativePtr);
+	private native float getAverageQuality(long nativePtr);
 
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -100,6 +102,12 @@ class LinphoneCallImpl implements LinphoneCall {
 
 	public int getDuration() {
 		return getDuration(nativePtr);
+	}
+	public float getAverageQuality() {
+		return getAverageQuality(nativePtr);
+	}
+	public float getCurrentQuality() {
+		return getCurrentQuality(nativePtr);
 	}
 	
 }
