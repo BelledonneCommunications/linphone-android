@@ -3,6 +3,7 @@ download_bw=256
 upload_bw=256
 firewall_policy=0
 mtu=1300
+#adaptive_rate_control=1
 
 [sip]
 sip_port=5060
