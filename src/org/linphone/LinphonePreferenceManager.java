@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 package org.linphone;
 
 import android.content.Context;
@@ -25,28 +25,26 @@ import android.preference.PreferenceManager;
 public class LinphonePreferenceManager {
 
 	private static LinphonePreferenceManager instance;
-	private static Context c;
-	private static SharedPreferences p;
-	
-	public LinphonePreferenceManager() {
+	private Context c;
+	private SharedPreferences p;
+
+	public LinphonePreferenceManager(Context context) {
+		c = context.getApplicationContext();
 		p = PreferenceManager.getDefaultSharedPreferences(c);
 	}
-	
+
 	private String getString(int key) {
 		return c.getString(key);
 	}
-	
+
 	public static final synchronized LinphonePreferenceManager getInstance() {
-		if (c == null) throw new RuntimeException("need a context");
-		if (instance == null) instance = new LinphonePreferenceManager();
+		if (instance == null) {
+			throw new RuntimeException("LinphonePreferenceManager not instanciated");
+		}
 		return instance;
 	}
 
-	public static final void setContext(Context context) {
-		c = context.getApplicationContext();
-	}
 
-	
 	public boolean useSoftvolume() {
 		return p.getBoolean(
 				getString(R.string.pref_audio_soft_volume_key), false);
@@ -65,4 +63,12 @@ public class LinphonePreferenceManager {
 	public int useSpecificAudioModeHack() {
 		return Integer.parseInt(p.getString(getString(R.string.pref_audio_use_specific_mode_key), "0"));
 	}
+
+	public static final synchronized LinphonePreferenceManager getInstance(Context c) {
+		if (instance == null) {
+			instance = new LinphonePreferenceManager(c.getApplicationContext());
+		}
+		return instance;
+	}
+
 }

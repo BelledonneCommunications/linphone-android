@@ -100,7 +100,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		super.onCreate();
 		instance = this;
 		
-		LinphonePreferenceManager.setContext(this); // In case restart after a crash . Main in LinphoneActivity
+		// In case restart after a crash. Main in LinphoneActivity
+		LinphonePreferenceManager.getInstance(this);
 
 		// Set default preferences
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);

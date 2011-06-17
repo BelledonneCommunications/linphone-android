@@ -77,7 +77,7 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
 			return;
 		}
-		
+
 		long curTime = System.currentTimeMillis();
 		if (lastFrameTime == 0) {
 			lastFrameTime = curTime;

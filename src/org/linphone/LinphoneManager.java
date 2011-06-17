@@ -112,7 +112,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private LinphoneCore mLc;
 	private int mPhoneOrientation;
 	private static Transports initialTransports;
-	private static LinphonePreferenceManager lpm = LinphonePreferenceManager.getInstance();
+	private static LinphonePreferenceManager lpm;
 
 
 	
@@ -123,6 +123,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		ringSoundFile = basePath + "/oldphone_mono.wav"; 
 		ringbackSoundFile = basePath + "/ringback.wav";
 
+		lpm = LinphonePreferenceManager.getInstance(c);
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);

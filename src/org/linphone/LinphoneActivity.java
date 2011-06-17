@@ -106,7 +106,7 @@ public class LinphoneActivity extends TabActivity  {
 		instance = this;
 		setContentView(R.layout.main);
 
-		LinphonePreferenceManager.setContext(this);
+		LinphonePreferenceManager.getInstance(this);
 		useFirstLoginActivity = getResources().getBoolean(R.bool.useFirstLoginActivity);
 		useMenuSettings = getResources().getBoolean(R.bool.useMenuSettings);
 		useMenuAbout = getResources().getBoolean(R.bool.useMenuAbout);
