@@ -20,11 +20,14 @@ package org.linphone.core.video;
 
 import java.util.List;
 
+import org.linphone.LinphoneManager;
 import org.linphone.core.Version;
 import org.linphone.core.video.AndroidCameraRecord.RecorderParams;
 
+import android.content.Context;
 import android.hardware.Camera.Size;
 import android.util.Log;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
@@ -40,6 +43,8 @@ import android.view.SurfaceHolder.Callback;
 public class AndroidCameraRecordManager {
 	private static final String tag = "Linphone";
 	private static AndroidCameraRecordManager instance;
+    private OrientationEventListener orientationEventListener;
+    private OnCapturingStateChangedListener capturingStateChangedListener;
 
 	/**
 	 * @return instance
@@ -59,9 +64,7 @@ public class AndroidCameraRecordManager {
 
 	private AndroidCameraRecord recorder;
 	private List<Size> supportedVideoSizes;
-	private int phoneOrientation;
-	public int getPhoneOrientation() {return phoneOrientation;}
-	public void setPhoneOrientation(int degrees) {this.phoneOrientation = degrees;}
+	private int mAlwaysChangingPhoneOrientation=0;
 
 
 	// singleton
@@ -112,7 +115,10 @@ public class AndroidCameraRecordManager {
 
 	
 	public void setParametersFromFilter(long filterDataPtr, int height, int width, float fps) {
-		stopVideoRecording();
+		if (recorder != null) {
+			Log.w(tag, "Recorder should not be running");
+			stopVideoRecording();
+		}
 		RecorderParams p = new RecorderParams(filterDataPtr);
 		p.fps = fps;
 		p.width = width;
@@ -135,8 +141,7 @@ public class AndroidCameraRecordManager {
 	} 
 	
 	
-	public final void setSurfaceView(final SurfaceView sv, final int phoneOrientation) {
-		this.phoneOrientation = phoneOrientation;
+	public final void setSurfaceView(final SurfaceView sv) {
 		SurfaceHolder holder = sv.getHolder();
 	    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
@@ -186,11 +191,20 @@ public class AndroidCameraRecordManager {
 		if (isRecording()) return;
 		tryToStartVideoRecording();
 	}
-	
+
 	private synchronized void tryToStartVideoRecording() {
+		if (orientationEventListener == null) {
+			throw new RuntimeException("startOrientationSensor was not called");
+		}
+
 		if (muted || surfaceView == null || parameters == null) return;
-		
-		parameters.rotation = bufferRotationForCorrectImageOrientation();
+
+		if (recorder != null) {
+			Log.e(tag, "Recorder already present");
+			stopVideoRecording();
+		}
+
+		parameters.rotation = bufferRotationToCompensateCameraAndPhoneOrientations();
 
 		parameters.surfaceView = surfaceView;
 		if (Version.sdkAboveOrEqual(9)) {
@@ -204,20 +218,26 @@ public class AndroidCameraRecordManager {
 		}
 
 		recorder.startPreview();
+
+		if (capturingStateChangedListener != null) {
+			capturingStateChangedListener.captureStarted();
+		}
 	}
 
 	public synchronized void stopVideoRecording() {
 		if (recorder != null) {
 			recorder.stopPreview();
 			recorder = null;
+			if (capturingStateChangedListener != null) {
+				capturingStateChangedListener.captureStopped();
+			}
 		}
 	}
 
 	
-	// FIXME select right camera
+	
 	/**
-	 * Eventually null if API < 5.
-	 * 
+	 * FIXME select right camera
 	 */
 	public List<Size> supportedVideoSizes() {
 		if (supportedVideoSizes != null) {
@@ -228,8 +248,6 @@ public class AndroidCameraRecordManager {
 			supportedVideoSizes = recorder.getSupportedVideoSizes();
 			if (supportedVideoSizes != null) return supportedVideoSizes;
 		}
-
-		// eventually null
 
 		return supportedVideoSizes;
 	}
@@ -249,11 +267,11 @@ public class AndroidCameraRecordManager {
 		parameters = null;
 	}
 
-	public boolean outputIsPortrait() {
-		final int rotation = bufferRotationForCorrectImageOrientation();
+	public boolean isOutputPortraitDependingOnCameraAndPhoneOrientations() {
+		final int rotation = bufferRotationToCompensateCameraAndPhoneOrientations();
 		final boolean isPortrait = (rotation % 180) == 90;
 		
-		Log.d(tag, "Camera sensor in portrait orientation? " + isPortrait);
+		Log.d(tag, "Camera sensor in " + (isPortrait? "portrait":"landscape") + " orientation.");
 		return isPortrait;
 	}
 
@@ -263,22 +281,76 @@ public class AndroidCameraRecordManager {
 
 
 	public boolean isCameraOrientationPortrait() {
-		return (cc.getCameraOrientation(cameraId) % 180) == 90;
+		return (cc.getCameraOrientation(cameraId) % 180) == 0;
 	}
 
 
 
-	private int bufferRotationForCorrectImageOrientation() {
-		if (Version.sdkAboveOrEqual(8)) {
-			final int cameraOrientation = cc.getCameraOrientation(cameraId);
-			final int rotation = (360 - cameraOrientation + 90 - phoneOrientation) % 360;
-			Log.d(tag, String.format(
+	private int bufferRotationToCompensateCameraAndPhoneOrientations() {
+		if (Version.sdkStrictlyBelow(Version.API08_FROYO_22)) {
+			// Don't perform any rotation
+			// Phone screen should use fitting orientation
+			return 0;
+		}
+
+		final int phoneOrientation = mAlwaysChangingPhoneOrientation;
+		final int cameraOrientation = cc.getCameraOrientation(cameraId);
+		final int rotation = (cameraOrientation + phoneOrientation) % 360;
+		Log.d(tag, String.format(
 				"Capture video buffer of cameraId=%d will need a rotation of "
 				+ "%d degrees: camera_orientation=%d, phone_orientation=%d",
 				cameraId, rotation, cameraOrientation, phoneOrientation));
-			return rotation;
-		}
-
-		return 0;
+		return rotation;
 	}
+
+
+	/**
+	 * Register a sensor to track phoneOrientation changes
+	 */
+	public void startOrientationSensor(Context c) {
+		if (orientationEventListener == null) {
+			orientationEventListener = new LocalOrientationEventListener(c);
+			orientationEventListener.enable();
+		}
+	}
+
+	private class LocalOrientationEventListener extends OrientationEventListener {
+		public LocalOrientationEventListener(Context context) {
+			super(context);
+		}
+		@Override
+		public void onOrientationChanged(final int o) {
+			if (o == OrientationEventListener.ORIENTATION_UNKNOWN) return;
+
+			int degrees=270;
+			if (o < 45 || o >315) degrees=0;
+			else if (o<135) degrees=90;
+			else if (o<225) degrees=180;
+
+			if (mAlwaysChangingPhoneOrientation == degrees) return;
+
+			Log.i(tag, "Phone orientation changed to " + degrees);
+			mAlwaysChangingPhoneOrientation = degrees;
+		}
+	}
+
+	/**
+	 * @return true if linphone core configured to send a A buffer while phone orientation induces !A buffer (A=landscape or portrait)
+	 */
+	public boolean isOutputOrientationMismatch() {
+		final boolean currentlyPortrait = LinphoneManager.getLc().getPreferredVideoSize().isPortrait();
+		final boolean shouldBePortrait = isOutputPortraitDependingOnCameraAndPhoneOrientations();
+		return currentlyPortrait ^ shouldBePortrait;
+	}
+
+	public void setOnCapturingStateChanged(OnCapturingStateChangedListener listener) {
+		this.capturingStateChangedListener=listener;
+	}
+
+	public static interface OnCapturingStateChangedListener {
+		void captureStarted();
+		void captureStopped();
+	}
+
+
 }

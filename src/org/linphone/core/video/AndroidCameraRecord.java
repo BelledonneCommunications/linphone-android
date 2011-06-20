@@ -211,6 +211,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		public SurfaceView surfaceView;
 
 		public MirrorType mirror = MirrorType.NO;
+        public int phoneOrientation;
 
 		public RecorderParams(long ptr) {
 			filterDataNativePtr = ptr;
@@ -237,5 +238,9 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 	public void onAutoFocus(boolean success, Camera camera) {
 		if (success) Log.i(tag, "Autofocus success");
 		else Log.i(tag, "Autofocus failure");
+	}
+
+	public int getStoredPhoneOrientation() {
+		return params.phoneOrientation;
 	}
 }

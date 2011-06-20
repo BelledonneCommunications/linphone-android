@@ -74,9 +74,9 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 			//  |        |
 			//  | Phone  |
 			//  |________|
-			return 90;
+			return 180;
 		}
-		return 0;
+		return 90;
 	}
 
 

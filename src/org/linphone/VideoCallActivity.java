@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 package org.linphone;
 
 
@@ -24,10 +24,12 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.Version;
 import org.linphone.core.VideoSize;
 import org.linphone.core.video.AndroidCameraRecordManager;
+import org.linphone.core.video.AndroidCameraRecordManager.OnCapturingStateChangedListener;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
@@ -42,7 +44,7 @@ import android.view.ViewGroup.LayoutParams;
  * @author Guillaume Beraudo
  *
  */
-public class VideoCallActivity extends SoftVolumeActivity  {
+public class VideoCallActivity extends SoftVolumeActivity implements OnCapturingStateChangedListener {
 	private SurfaceView mVideoView;
 	private SurfaceView mVideoCaptureView;
 	private AndroidCameraRecordManager recordManager;
@@ -50,8 +52,8 @@ public class VideoCallActivity extends SoftVolumeActivity  {
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
 	private static final int capturePreviewLargestDimension = 150;
-	private int previousPhoneOrientation;
-	private int phoneOrientation;
+	private Handler handler = new Handler();
+
 
 	public void onCreate(Bundle savedInstanceState) {
 		launched = true;
@@ -65,35 +67,36 @@ public class VideoCallActivity extends SoftVolumeActivity  {
 
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
 
-		previousPhoneOrientation = AndroidCameraRecordManager.getInstance().getPhoneOrientation();
-		phoneOrientation = 90 * getWindowManager().getDefaultDisplay().getOrientation();
 		recordManager = AndroidCameraRecordManager.getInstance();
-		recordManager.setSurfaceView(mVideoCaptureView, phoneOrientation);
+		recordManager.setOnCapturingStateChanged(this);
+		recordManager.setSurfaceView(mVideoCaptureView);
 		mVideoCaptureView.setZOrderOnTop(true);
-		
+
 		if (!recordManager.isMuted()) LinphoneManager.getInstance().sendStaticImage(false);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
 		mWakeLock.acquire();
-		
-		if (Version.sdkStrictlyBelow(8)) {
-			// Force to display in portrait orientation for old devices
-			// as they do not support surfaceView rotation
-			setRequestedOrientation(recordManager.isCameraOrientationPortrait() ?
-					ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-					ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}
 
+		fixScreenOrientationForOldDevices();
+	}
+
+	private void fixScreenOrientationForOldDevices() {
+		if (Version.sdkAboveOrEqual(Version.API08_FROYO_22)) return;
+
+		// Force to display in portrait orientation for old devices
+		// as they do not support surfaceView rotation
+		setRequestedOrientation(recordManager.isCameraOrientationPortrait() ?
+				ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
+				ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		resizeCapturePreview(mVideoCaptureView);
 	}
 
-
 	@Override
 	protected void onResume() {
-		// Update call if orientation changed
-		if (Version.sdkAboveOrEqual(8) && previousPhoneOrientation != phoneOrientation) {
+		if (Version.sdkAboveOrEqual(8) && recordManager.isOutputOrientationMismatch()) {
+			Log.i(tag,"Phone orientation has changed: updating call.");
 			CallManager.getInstance().updateCall();
-			resizeCapturePreview(mVideoCaptureView);
+			// resizeCapturePreview by callback when recording started
 		}
 		super.onResume();
 	}
@@ -122,12 +125,12 @@ public class VideoCallActivity extends SoftVolumeActivity  {
 		// Inflate the currently selected menu XML resource.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.videocall_activity_menu, menu);
-		
+
 		rewriteToggleCameraItem(menu.findItem(R.id.videocall_menu_toggle_camera));
 		rewriteChangeResolutionItem(menu.findItem(R.id.videocall_menu_change_resolution));
-		
+
 		if (!recordManager.hasSeveralCameras()) {
-			 menu.findItem(R.id.videocall_menu_switch_camera).setVisible(false);
+			menu.findItem(R.id.videocall_menu_switch_camera).setVisible(false);
 		}
 		return true;
 	}
@@ -162,14 +165,11 @@ public class VideoCallActivity extends SoftVolumeActivity  {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.videocall_menu_back_to_dialer:
-			if (!recordManager.isMuted())
-				LinphoneManager.getInstance().sendStaticImage(true);
 			finish();
 			break;
 		case R.id.videocall_menu_change_resolution:
 			LinphoneManager.getInstance().changeResolution();
 			rewriteChangeResolutionItem(item);
-			resizeCapturePreview(mVideoCaptureView);
 			break;
 		case R.id.videocall_menu_terminate_call:
 			LinphoneManager.getInstance().terminateCall();
@@ -181,7 +181,7 @@ public class VideoCallActivity extends SoftVolumeActivity  {
 			break;
 		case R.id.videocall_menu_switch_camera:
 			LinphoneManager.getInstance().switchCamera();
-			resizeCapturePreview(mVideoCaptureView);
+			fixScreenOrientationForOldDevices();
 			break;
 		default:
 			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
@@ -205,5 +205,16 @@ public class VideoCallActivity extends SoftVolumeActivity  {
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
 	}
-	
+
+	public void captureStarted() {
+		handler.post(new Runnable() {
+			public void run() {
+				resizeCapturePreview(mVideoCaptureView);
+			}
+		});
+	}
+
+	public void captureStopped() {
+	}
+
 }

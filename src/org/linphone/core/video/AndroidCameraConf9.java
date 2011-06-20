@@ -49,11 +49,10 @@ class AndroidCameraConf9 implements AndroidCameraConf {
 	public int getCameraOrientation(int cameraId) {
 		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
 		Camera.getCameraInfo(cameraId, info);
-		Log.d(Version.TAG, String.format("Camera info for %d: orientation=%d returned=%d ",
+		Log.d(Version.TAG, String.format("Camera info for %d: orientation=%d",
 						cameraId,
-						info.orientation,
-						(info.orientation - 90) %360));
-		return (info.orientation - 90) %360;
+						info.orientation));
+		return info.orientation;
 	}
 	
 	public boolean isFrontCamera(int cameraId) {

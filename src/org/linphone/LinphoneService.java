@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
@@ -28,6 +29,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -234,9 +236,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 					.setClass(this, LinphoneActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (LinphoneActivity.isInstanciated()
+			if (!VideoCallActivity.launched && LinphoneActivity.isInstanciated()
 					&& getResources().getBoolean(R.bool.use_video_activity)
 					&& call.getCurrentParamsCopy().getVideoEnabled()) {
+				// Do not call if video activity already launched as it would cause a pause() of the launched one
+				// and a race condition with capture surfaceview leading to a crash
 				LinphoneActivity.instance().startVideoActivity();
 			}
 		}

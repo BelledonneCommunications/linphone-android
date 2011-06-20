@@ -121,6 +121,7 @@ class CallManager {
 	}
 
 	/**
+	 * Change the preferred video size used by linphone core. (impact landscape/portrait buffer).
 	 * Update current call, without reinvite.
 	 * The camera will be restarted when mediastreamer chain is recreated and setParameters is called.
 	 */

@@ -120,6 +120,6 @@ public class BandwidthManager {
 	}
 
 	public VideoSize getMaximumVideoSize() {
-		return maximumVideoSize(currentProfile, AndroidCameraRecordManager.getInstance().outputIsPortrait());
+		return maximumVideoSize(currentProfile, AndroidCameraRecordManager.getInstance().isOutputPortraitDependingOnCameraAndPhoneOrientations());
 	}
 }

@@ -85,7 +85,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
-import android.view.OrientationEventListener;
 
 /**
  * 
@@ -110,7 +109,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private SharedPreferences mPref;
 	private Resources mR;
 	private LinphoneCore mLc;
-	private int mPhoneOrientation;
 	private static Transports initialTransports;
 	private static LinphonePreferenceManager lpm;
 
@@ -130,19 +128,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
 
-		// Register a sensor to track phoneOrientation for placing new calls.
-		new OrientationEventListener(c) {
-			@Override
-			public void onOrientationChanged(int o) {
-				if (o == OrientationEventListener.ORIENTATION_UNKNOWN) return;
-
-				o = 90 * (o / 90);
-
-				if (Math.abs(mPhoneOrientation - o) < 90) return;
-
-				mPhoneOrientation = o;
-			}
-		}.enable();
+		AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
 	}
 	
 	public static final String TAG=Version.TAG;
@@ -268,7 +254,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void resetCameraFromPreferences() {
 		boolean useFrontCam = mPref.getBoolean(mR.getString(R.string.pref_video_use_front_camera_key), false);
 		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
-		AndroidCameraRecordManager.getInstance().setPhoneOrientation(mPhoneOrientation);
 	}
 
 	public static interface AddressType {
@@ -307,7 +292,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void changeResolution() {
 		BandwidthManager manager = BandwidthManager.getInstance();
 		manager.setUserRestriction(!manager.isUserRestriction());
-		sendStaticImage(AndroidCameraRecordManager.getInstance().isMuted());
 	}
 
 	public void terminateCall() {
@@ -320,9 +304,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	 * Camera will be restarted when mediastreamer chain is recreated and setParameters is called.
 	 */
 	public void switchCamera() {
-		AndroidCameraRecordManager rm = AndroidCameraRecordManager.getInstance();
-		rm.stopVideoRecording();
-		rm.toggleUseFrontCamera();
+		AndroidCameraRecordManager.getInstance().stopVideoRecording();
+		AndroidCameraRecordManager.getInstance().toggleUseFrontCamera();
 		CallManager.getInstance().updateCall();
 	}
 
