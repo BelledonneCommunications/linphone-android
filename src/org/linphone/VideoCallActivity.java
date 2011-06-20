@@ -21,6 +21,7 @@ package org.linphone;
 
 
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.VideoSize;
 import org.linphone.core.video.AndroidCameraRecordManager;
@@ -32,7 +33,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,7 +48,6 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 	private SurfaceView mVideoView;
 	private SurfaceView mVideoCaptureView;
 	private AndroidCameraRecordManager recordManager;
-	private static final String tag = "Linphone";
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
 	private static final int capturePreviewLargestDimension = 150;
@@ -57,7 +56,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 
 	public void onCreate(Bundle savedInstanceState) {
 		launched = true;
-		Log.d(tag, "onCreate VideoCallActivity");
+		Log.d("onCreate VideoCallActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 
@@ -74,7 +73,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 
 		if (!recordManager.isMuted()) LinphoneManager.getInstance().sendStaticImage(false);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
 
 		fixScreenOrientationForOldDevices();
@@ -94,7 +93,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 	@Override
 	protected void onResume() {
 		if (Version.sdkAboveOrEqual(8) && recordManager.isOutputOrientationMismatch()) {
-			Log.i(tag,"Phone orientation has changed: updating call.");
+			Log.i("Phone orientation has changed: updating call.");
 			CallManager.getInstance().updateCall();
 			// resizeCapturePreview by callback when recording started
 		}
@@ -173,7 +172,6 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 			break;
 		case R.id.videocall_menu_terminate_call:
 			LinphoneManager.getInstance().terminateCall();
-			finish();
 			break;
 		case R.id.videocall_menu_toggle_camera:
 			LinphoneManager.getInstance().toggleCameraMuting();
@@ -184,7 +182,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 			fixScreenOrientationForOldDevices();
 			break;
 		default:
-			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
+			Log.e("Unknown menu item [",item,"]");
 			break;
 		}
 
@@ -200,7 +198,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 
 	@Override
 	protected void onPause() {
-		Log.d(tag, "onPause VideoCallActivity");
+		Log.d("onPause VideoCallActivity");
 		LinphoneManager.getInstance().sendStaticImage(true);
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();

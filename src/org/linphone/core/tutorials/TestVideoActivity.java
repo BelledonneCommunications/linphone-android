@@ -18,15 +18,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core.tutorials;
 
+import static org.linphone.core.VideoSize.CIF;
+import static org.linphone.core.VideoSize.HVGA;
+import static org.linphone.core.VideoSize.QCIF;
+import static org.linphone.core.VideoSize.QVGA;
+
 import java.util.Stack;
 
 import org.linphone.R;
+import org.linphone.core.Log;
 import org.linphone.core.VideoSize;
 import org.linphone.core.video.AndroidCameraRecord;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -35,7 +40,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import static org.linphone.core.VideoSize.*;
 
 /**
  * Activity for displaying and starting the HelloWorld example on Android phone.
@@ -48,7 +52,6 @@ public class TestVideoActivity extends Activity implements Callback, OnClickList
 	private SurfaceView surfaceView;
 	private static final int rate = 7;
 	private JavaCameraRecordImpl recorder;
-	private static String tag = "Linphone";
 	private TextView debugView;
 	private Button nextSize;
 	private Button changeCamera;
@@ -171,12 +174,12 @@ public class TestVideoActivity extends Activity implements Callback, OnClickList
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		surfaceView = null;
-		Log.d(tag , "Video capture surface destroyed");
+		Log.d("Video capture surface destroyed");
 		if (recorder != null) recorder.stopPreview();
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		Log.d(tag , "Video capture surface created");
+		Log.d("Video capture surface created");
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,	int height) {

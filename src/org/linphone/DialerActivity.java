@@ -23,6 +23,7 @@ import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.video.AndroidCameraRecordManager;
 import org.linphone.ui.AddVideoButton;
@@ -44,7 +45,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -108,7 +108,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 		mPref = PreferenceManager.getDefaultSharedPreferences(this);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"Linphone");
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
@@ -165,7 +165,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
     	if (getIntent().getData() == null) return;
 
     	if (!LinphoneService.isReady() || LinphoneManager.getLc().isIncall()) {
-    		Log.w(LinphoneManager.TAG, "Outgoing call aborted as LinphoneService"
+    		Log.w("Outgoing call aborted as LinphoneService"
     				+ " is not ready or we are already in call");
     		return;
     	}

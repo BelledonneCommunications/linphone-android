@@ -18,10 +18,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.Log;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 
 
@@ -31,7 +32,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		
 		if (!LinphoneService.isReady()) {
-			Log.i(LinphoneManager.TAG, "Keep alive broadcast received while Linphone service not ready");
+			Log.i("Keep alive broadcast received while Linphone service not ready");
 			return;
 		} else {
 			if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {

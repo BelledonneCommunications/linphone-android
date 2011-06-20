@@ -23,9 +23,9 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.core.video.AndroidCameraRecordManager;
 
-import android.util.Log;
 
 /**
  * Handle call updating, reinvites.
@@ -82,7 +82,7 @@ class CallManager {
 		LinphoneCore lc =  LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		if (lCall == null) {
-			Log.e(LinphoneManager.TAG, "Trying to reinviteWithVideo while not in call: doing nothing");
+			Log.e("Trying to reinviteWithVideo while not in call: doing nothing");
 			return false;
 		}
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
@@ -112,7 +112,7 @@ class CallManager {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		if (lCall == null) {
-			Log.e(LinphoneManager.TAG, "Trying to reinvite while not in call: doing nothing");
+			Log.e("Trying to reinvite while not in call: doing nothing");
 			return;
 		}
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();
@@ -129,7 +129,7 @@ class CallManager {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		if (lCall == null) {
-			Log.e(LinphoneManager.TAG, "Trying to updateCall while not in call: doing nothing");
+			Log.e("Trying to updateCall while not in call: doing nothing");
 			return;
 		}
 		LinphoneCallParams params = lCall.getCurrentParamsCopy();

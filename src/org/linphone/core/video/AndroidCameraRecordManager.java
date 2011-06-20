@@ -21,12 +21,12 @@ package org.linphone.core.video;
 import java.util.List;
 
 import org.linphone.LinphoneManager;
+import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.video.AndroidCameraRecord.RecorderParams;
 
 import android.content.Context;
 import android.hardware.Camera.Size;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -41,7 +41,6 @@ import android.view.SurfaceHolder.Callback;
  *
  */
 public class AndroidCameraRecordManager {
-	private static final String tag = "Linphone";
 	private static AndroidCameraRecordManager instance;
     private OrientationEventListener orientationEventListener;
     private OnCapturingStateChangedListener capturingStateChangedListener;
@@ -70,7 +69,7 @@ public class AndroidCameraRecordManager {
 	// singleton
 	private AndroidCameraRecordManager() {
 		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf5();
-		Log.i(tag, "=== Detected " + cc.getFoundCameras()+ " ===");
+		Log.i("=== Detected " + cc.getFoundCameras()+ " ===");
 		cameraId = cc.getFoundCameras().defaultC;
 	}
 
@@ -87,7 +86,7 @@ public class AndroidCameraRecordManager {
 	
 	public void setUseFrontCamera(boolean value) {
 		if (!hasFrontCamera()) {
-			Log.e(tag, "setUseFrontCamera(true) while no front camera detected on device: using rear");
+			Log.e("setUseFrontCamera(true) while no front camera detected on device: using rear");
 			value = false;
 		}
 		if (cc.isFrontCamera(cameraId) == value) return; // already OK
@@ -116,7 +115,7 @@ public class AndroidCameraRecordManager {
 	
 	public void setParametersFromFilter(long filterDataPtr, int height, int width, float fps) {
 		if (recorder != null) {
-			Log.w(tag, "Recorder should not be running");
+			Log.w("Recorder should not be running");
 			stopVideoRecording();
 		}
 		RecorderParams p = new RecorderParams(filterDataPtr);
@@ -148,19 +147,19 @@ public class AndroidCameraRecordManager {
 		holder.addCallback(new Callback() {
 			public void surfaceDestroyed(SurfaceHolder holder) {
 				surfaceView = null;
-				Log.d(tag , "Video capture surface destroyed");
+				Log.d("Video capture surface destroyed");
 				stopVideoRecording();
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {
 				surfaceView = sv;
-				Log.d(tag , "Video capture surface created");
+				Log.d("Video capture surface created");
 				tryToStartVideoRecording();
 			}
 
 			public void surfaceChanged(SurfaceHolder holder, int format, int width,
 					int height) {
-				Log.d(tag , "Video capture surface changed");
+				Log.d("Video capture surface changed");
 			}
 		});
 	}
@@ -200,7 +199,7 @@ public class AndroidCameraRecordManager {
 		if (muted || surfaceView == null || parameters == null) return;
 
 		if (recorder != null) {
-			Log.e(tag, "Recorder already present");
+			Log.e("Recorder already present");
 			stopVideoRecording();
 		}
 
@@ -271,7 +270,7 @@ public class AndroidCameraRecordManager {
 		final int rotation = bufferRotationToCompensateCameraAndPhoneOrientations();
 		final boolean isPortrait = (rotation % 180) == 90;
 		
-		Log.d(tag, "Camera sensor in " + (isPortrait? "portrait":"landscape") + " orientation.");
+		Log.d("Camera sensor in ", isPortrait? "portrait":"landscape"," orientation.");
 		return isPortrait;
 	}
 
@@ -296,10 +295,10 @@ public class AndroidCameraRecordManager {
 		final int phoneOrientation = mAlwaysChangingPhoneOrientation;
 		final int cameraOrientation = cc.getCameraOrientation(cameraId);
 		final int rotation = (cameraOrientation + phoneOrientation) % 360;
-		Log.d(tag, String.format(
-				"Capture video buffer of cameraId=%d will need a rotation of "
-				+ "%d degrees: camera_orientation=%d, phone_orientation=%d",
-				cameraId, rotation, cameraOrientation, phoneOrientation));
+		Log.d("Capture video buffer of cameraId=",cameraId,
+				" will need a rotation of ",rotation,
+				" degrees: camera_orientation=",cameraOrientation,
+				" phone_orientation=", phoneOrientation);
 		return rotation;
 	}
 
@@ -329,7 +328,7 @@ public class AndroidCameraRecordManager {
 
 			if (mAlwaysChangingPhoneOrientation == degrees) return;
 
-			Log.i(tag, "Phone orientation changed to " + degrees);
+			Log.i("Phone orientation changed to ", degrees);
 			mAlwaysChangingPhoneOrientation = degrees;
 		}
 	}

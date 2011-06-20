@@ -18,12 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.Log;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 
 
@@ -38,12 +39,12 @@ public class NetworkManager extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		
 		NetworkInfo lNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-		Log.i(LinphoneManager.TAG, "Network info ["+lNetworkInfo+"]");
+		Log.i("Network info [",lNetworkInfo,"]");
 		Boolean lNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,false);
 
 		
 		if (!LinphoneService.isReady()) {
-			Log.i(LinphoneManager.TAG, "Network broadcast received while Linphone service not ready");
+			Log.i("Network broadcast received while Linphone service not ready");
 			return;
 		}
 		

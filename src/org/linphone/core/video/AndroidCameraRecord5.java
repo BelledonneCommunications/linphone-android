@@ -21,13 +21,13 @@ package org.linphone.core.video;
 import java.util.Arrays;
 import java.util.List;
 
+import org.linphone.core.Log;
 import org.linphone.core.video.AndroidCameraRecord.RecorderParams.MirrorType;
 
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
-import android.util.Log;
 
 /**
  * Record from Android camera.
@@ -63,18 +63,18 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 
 	public void onPreviewFrame(byte[] data, Camera camera) {
 		if (data == null) {
-			Log.e(tag, "onPreviewFrame Called with null buffer");
+			Log.e("onPreviewFrame Called with null buffer");
 			return;
 		}
 		if (filterCtxPtr == 0l) {
-			Log.e(tag, "onPreviewFrame Called with no filterCtxPtr set");
+			Log.e("onPreviewFrame Called with no filterCtxPtr set");
 			return;
 		}
 		
 		int expectedBuffLength = getExpectedBufferLength();
 		if (expectedBuffLength != data.length) {
-			Log.e(tag, "onPreviewFrame called with bad buffer length " + data.length
-					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
+			Log.e("onPreviewFrame called with bad buffer length ", data.length,
+					" whereas expected is ", expectedBuffLength, " don't calling putImage");
 			return;
 		}
 
@@ -87,7 +87,7 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 
 		double currentTimeElapsed = 0.8 * (curTime - lastFrameTime) / 1000 + 0.2 * timeElapsedBetweenFrames;
 		if (currentTimeElapsed < expectedTimeBetweenFrames) {
-//			Log.d(tag, "Clipping frame " + Math.round(1 / currentTimeElapsed) + " > " + fps);
+//			Log.d("Clipping frame ", Math.round(1 / currentTimeElapsed), " > ", fps);
 			return;
 		}
 		lastFrameTime = curTime;
@@ -118,10 +118,10 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 		List<String> supportedFocusModes = parameters.getSupportedFocusModes();
 		String focusMode = selectFocusMode(supportedFocusModes);
 		if (focusMode != null) {
-			Log.w(tag, "Selected focus mode: " + focusMode);
+			Log.w("Selected focus mode: ", focusMode);
 			parameters.setFocusMode(focusMode);
 		} else {
-			Log.i(tag, "No suitable focus mode found in : " + Arrays.toString(supportedFocusModes.toArray()));
+			Log.i("No suitable focus mode found in : ", Arrays.toString(supportedFocusModes.toArray()));
 		}
 	}
 

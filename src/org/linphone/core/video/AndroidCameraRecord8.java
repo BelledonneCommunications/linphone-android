@@ -20,11 +20,12 @@ package org.linphone.core.video;
 
 import java.util.List;
 
+import org.linphone.core.Log;
+
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
-import android.util.Log;
 
 /**
  * 
@@ -42,7 +43,7 @@ class AndroidCameraRecord8 extends AndroidCameraRecord5 {
 	@Override
 	protected void lowLevelSetPreviewCallback(Camera camera, PreviewCallback cb) {
 		if (cb != null) {
-			Log.d(tag, "Setting optimized callback with buffer (Android >= 8). Remember to manage the pool of buffers!!!");
+			Log.d("Setting optimized callback with buffer (Android >= 8). Remember to manage the pool of buffers!!!");
 		}
 		camera.setPreviewCallbackWithBuffer(cb);
 	}

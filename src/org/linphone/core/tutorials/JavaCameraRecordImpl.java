@@ -18,12 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.tutorials;
 
+import org.linphone.core.Log;
 import org.linphone.core.video.AndroidCameraRecord;
 
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
-import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -59,8 +59,8 @@ class JavaCameraRecordImpl extends AndroidCameraRecord implements PreviewCallbac
 		Size s = camera.getParameters().getPreviewSize();
 		int expectedBuffLength = s.width * s.height * 3 /2;
 		if (expectedBuffLength != data.length) {
-			Log.e(tag, "onPreviewFrame called with bad buffer length " + data.length
-					+ " whereas expected is " + expectedBuffLength + " don't calling putImage");
+			Log.e("onPreviewFrame called with bad buffer length ", data.length,
+					" whereas expected is ", expectedBuffLength, " don't calling putImage");
 			return;
 		}
 

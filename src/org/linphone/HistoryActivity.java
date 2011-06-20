@@ -27,11 +27,11 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Log;
 
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,7 +92,7 @@ public class HistoryActivity extends ListActivity {
 			
 			break;
 		default:
-			Log.e(LinphoneManager.TAG, "Unknown menu item ["+item+"]");
+			Log.e("Unknown menu item [",item,"]");
 			break;
 		}
 

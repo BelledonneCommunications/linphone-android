@@ -3,7 +3,6 @@ package org.linphone.core;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Bitmap.Config;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -15,7 +14,6 @@ public class AndroidVideoWindowImpl  {
 	private SurfaceView mView;
 	private Surface mSurface;
 	private VideoWindowListener mListener;
-	static private String TAG = "Linphone"; 
 	public static interface VideoWindowListener{
 		void onSurfaceReady(AndroidVideoWindowImpl vw);
 		void onSurfaceDestroyed(AndroidVideoWindowImpl vw);
@@ -28,17 +26,17 @@ public class AndroidVideoWindowImpl  {
 		view.getHolder().addCallback(new Callback(){
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
-				Log.i(TAG,"Surface is being changed.");
+				Log.i("Surface is being changed.");
 				synchronized(AndroidVideoWindowImpl.this){
 					mBitmap=Bitmap.createBitmap(width,height,Config.RGB_565);
 					mSurface=holder.getSurface();
 				}
 				if (mListener!=null) mListener.onSurfaceReady(AndroidVideoWindowImpl.this);
-				Log.w(TAG, "Video display surface changed");
+				Log.w("Video display surface changed");
 			}
 
 			public void surfaceCreated(SurfaceHolder holder) {
-				Log.w(TAG, "Video display surface created");
+				Log.w("Video display surface created");
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
@@ -48,7 +46,7 @@ public class AndroidVideoWindowImpl  {
 				}
 				if (mListener!=null)
 					mListener.onSurfaceDestroyed(AndroidVideoWindowImpl.this);
-				Log.d(TAG, "Video display surface destroyed"); 
+				Log.d("Video display surface destroyed"); 
 			}
 		});
 	}
@@ -56,7 +54,7 @@ public class AndroidVideoWindowImpl  {
 	static final int PORTRAIT=1;
 	public void requestOrientation(int orientation){
 		//Surface.setOrientation(0, orientation==LANDSCAPE ? 1 : 0);
-		//Log.d("Linphone", "Orientation changed.");
+		//Log.d("Orientation changed.");
 	}
 	public void setListener(VideoWindowListener l){
 		mListener=l;

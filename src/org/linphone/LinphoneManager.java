@@ -54,6 +54,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Log;
 import org.linphone.core.PayloadType;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCall.State;
@@ -84,7 +85,6 @@ import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import android.util.Log;
 
 /**
  * 
@@ -131,7 +131,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
 	}
 	
-	public static final String TAG=Version.TAG;
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
@@ -148,7 +147,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		LinphoneCall call = mLc.getCurrentCall();
 		boolean paused = false;
 		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
-			Log.d(TAG, "Hack pausing call to have speaker="+speakerOn);
+			Log.d("Hack pausing call to have speaker=",speakerOn);
 			mLc.pauseCall(call);
 			paused = true;
 		}
@@ -169,7 +168,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (paused) {
-			Log.d(TAG, "Hack resuming call to have speaker="+speakerOn);
+			Log.d("Hack resuming call to have speaker=",speakerOn);
 			mLc.resumeCall(call);
 		}
 	}
@@ -329,7 +328,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			try {
 				initFromConf(context);
 			} catch (LinphoneException e) {
-				Log.w(TAG, "no config ready yet");
+				Log.w("no config ready yet");
 			}
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -345,7 +344,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			context.registerReceiver(mKeepAliveReceiver, lFilter);
 		}
 		catch (Exception e) {
-			Log.e(TAG,"Cannot start linphone",e);
+			Log.e(e,"Cannot start linphone");
 		}
 	}
 	
@@ -550,7 +549,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else if ("H263-1998".equals(mime)) {
 			key = R.string.pref_video_codec_h263_key;
 		} else {
-			Log.e(TAG, "Unhandled video codec " + mime);
+			Log.e("Unhandled video codec ", mime);
 			mLc.enablePayloadType(videoCodec, false);
 			return;
 		}
@@ -629,26 +628,26 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	
 	public void displayStatus(final LinphoneCore lc, final String message) {
-		Log.i(TAG, message);
+		Log.i(message);
 		serviceListener.onDisplayStatus(message);
 	}
 
 
 	public void globalState(final LinphoneCore lc, final LinphoneCore.GlobalState state, final String message) {
-		Log.i(TAG, "new state ["+state+"]");
+		Log.i("new state [",state,"]");
 		serviceListener.onGlobalStateChanged(state, message);
 	}
 
 
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String message) {
-		Log.i(TAG, "new state ["+state+"]");
+		Log.i("new state ["+state+"]");
 		serviceListener.onRegistrationStateChanged(state, message);
 	}
 
 
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
-		Log.i(TAG, "new state ["+state+"]");
+		Log.i("new state [",state,"]");
 		if (state == IncomingReceived && !call.equals(lc.getCurrentCall())) {
 			if (call.getReplacedCall()==null){
 				//no multicall support, just decline
@@ -735,10 +734,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				mRingerPlayer.setLooping(true);
 				mRingerPlayer.start();
 			} else {
-				Log.w(LinphoneManager.TAG,"already ringing");
+				Log.w("already ringing");
 			}
 		} catch (Exception e) {
-			Log.e(LinphoneManager.TAG, "cannot handle incoming call",e);
+			Log.e(e,"cannot handle incoming call");
 		}
 
 	}
@@ -790,7 +789,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	// Called on first launch only
 	public void initializePayloads() {
-		Log.i(TAG, "Initializing supported payloads");
+		Log.i("Initializing supported payloads");
 		Editor e = mPref.edit();
 		boolean fastCpu = Version.isArmv7();
 
@@ -863,7 +862,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		final float distanceInCm = event.values[0];
 		final float maxDistance = event.sensor.getMaximumRange();
-		Log.d(TAG, "Proximity sensor report ["+distanceInCm+"] , for max range ["+maxDistance+"]");
+		Log.d("Proximity sensor report [",distanceInCm,"] , for max range [",maxDistance,"]");
 
 		if (maxDistance <= threshold) {
 			// Case binary 0/1 and short sensors

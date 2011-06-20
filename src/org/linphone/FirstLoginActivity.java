@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.Log;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.app.Activity;
@@ -25,7 +26,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -87,7 +87,7 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 		try {
 			LinphoneManager.getInstance().initFromConf(getApplicationContext());
 		} catch (Throwable e) {
-			Log.e(LinphoneManager.TAG, "Error while initializing from config in first login activity", e);
+			Log.e(e, "Error while initializing from config in first login activity");
             toast(R.string.error);;
 		}
 	}

@@ -19,17 +19,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -44,7 +43,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 /***
  * 
@@ -139,9 +137,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		} catch (NameNotFoundException nnfe) {}
 
 		if (info != null) {
-			Log.i(LinphoneManager.TAG, "Linphone version is " + info.versionCode);
+			Log.i("Linphone version is ", info.versionCode);
 		} else {
-			Log.i(LinphoneManager.TAG, "Linphone version is unknown");
+			Log.i("Linphone version is unknown");
 		}
 	}
 
@@ -268,7 +266,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		try {
 			mRingerPlayer.setDataSource(getApplicationContext(), ringtoneUri);
 		} catch (IOException e) {
-			Log.e(LinphoneManager.TAG, "cannot set ringtone", e);
+			Log.e(e, "cannot set ringtone");
 		}
 	}
 

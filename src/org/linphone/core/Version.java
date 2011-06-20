@@ -26,8 +26,6 @@ import android.os.Build;
  */
 public class Version {
 
-	public static final String TAG="Linphone";
-
 	public static final int API03_CUPCAKE_15 = 3;
 	public static final int API04_DONUT_16 = 4;
 	public static final int API06_ECLAIR_20 = 6;

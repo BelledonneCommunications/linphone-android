@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.linphone.core.Log;
 import org.linphone.core.Version;
 
 import android.hardware.Camera;
@@ -30,7 +31,6 @@ import android.hardware.Camera.ErrorCallback;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -44,7 +44,6 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 
 	private PreviewCallback storedPreviewCallback;
 	private boolean previewStarted;
-	protected static final String tag="Linphone";
 	private List <Size> supportedVideoSizes;
 	private Size currentPreviewSize;
 	
@@ -58,27 +57,27 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 	
 	public synchronized void startPreview() { // FIXME throws exception?
 		if (previewStarted) {
-			Log.w(tag, "Already started");
+			Log.w("Already started");
 			throw new RuntimeException("Video recorder already started");
 			// return
 		}
 		
 		if (params.surfaceView.getVisibility() != SurfaceView.VISIBLE) {
 			// Illegal state
-			Log.e(tag, "Illegal state: video capture surface view is not visible");
+			Log.e("Illegal state: video capture surface view is not visible");
 			return;
 		}
 		
 
-		Log.d(tag, "Trying to open camera with id " + params.cameraId);
+		Log.d("Trying to open camera with id ", params.cameraId);
 		if (camera != null) {
-			Log.e(tag, "Camera is not null, ?already open? : aborting");
+			Log.e("Camera is not null, ?already open? : aborting");
 			return;
 		}
 		camera = openCamera(params.cameraId);
 		camera.setErrorCallback(new ErrorCallback() {
 			public void onError(int error, Camera camera) {
-				Log.e(tag, "Camera error : " + error);
+				Log.e("Camera error : ", error);
 			}
 		});
 		
@@ -113,14 +112,14 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 			camera.setPreviewDisplay(holder);
 		}
 		catch (Throwable t) {
-			Log.e(tag, "Exception in Video capture setPreviewDisplay()", t);
+			Log.e(t,"Exception in Video capture setPreviewDisplay()");
 		}
 
 
 		try {
 			camera.startPreview();
 		} catch (Throwable e) {
-			Log.e(tag, "Error, can't start camera preview. Releasing camera!");
+			Log.e("Error, can't start camera preview. Releasing camera!");
 			camera.release();
 			camera = null;
 			return;
@@ -132,7 +131,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		if (Camera.Parameters.FOCUS_MODE_AUTO.equals(parameters.getFocusMode())) {
 			OnClickListener svClickListener = new OnClickListener() {
 				public void onClick(View v) {
-					Log.i(tag, "Auto focus requested");
+					Log.i("Auto focus requested");
 					camera.autoFocus(AndroidCameraRecord.this);
 				}
 			};
@@ -167,7 +166,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 	public void storePreviewCallBack(PreviewCallback cb) {
 		this.storedPreviewCallback = cb;
 		if (camera == null) {
-			Log.w(tag, "Capture camera not ready, storing preview callback");
+			Log.w("Capture camera not ready, storing preview callback");
 			return;
 		}
 		
@@ -181,7 +180,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		camera.stopPreview();
 		camera.release();
 		camera=null;
-		Log.d(tag, "Camera released");
+		Log.d("Camera released");
 		currentPreviewSize = null;
 		previewStarted = false;
 	}
@@ -236,8 +235,8 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 	}
 
 	public void onAutoFocus(boolean success, Camera camera) {
-		if (success) Log.i(tag, "Autofocus success");
-		else Log.i(tag, "Autofocus failure");
+		if (success) Log.i("Autofocus success");
+		else Log.i("Autofocus failure");
 	}
 
 	public int getStoredPhoneOrientation() {

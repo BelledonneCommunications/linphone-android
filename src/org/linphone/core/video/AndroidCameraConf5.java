@@ -19,42 +19,41 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.core.video;
 
 import org.linphone.core.Hacks;
+import org.linphone.core.Log;
 
-import android.util.Log;
 
 class AndroidCameraConf5 implements AndroidCameraConf {
-	private static final String tag = "Linphone";
 	private AndroidCameras foundCameras;
 	public AndroidCameras getFoundCameras() {return foundCameras;}
 
 	public AndroidCameraConf5() {
-		Log.i(tag, "Detecting cameras");
+		Log.i("Detecting cameras");
 		
 		// Defaults
 		foundCameras = new AndroidCameras();
 
 		if (Hacks.isGalaxySOrTab()) {
-			Log.d(tag, "Hack Galaxy S : has one or more cameras");
+			Log.d("Hack Galaxy S : has one or more cameras");
 			if (Hacks.isGalaxySOrTabWithFrontCamera()) {
-				Log.d(tag, "Hack Galaxy S : HAS a front camera with id=2");
+				Log.d("Hack Galaxy S : HAS a front camera with id=2");
 				foundCameras.front = 2;
 			} else {
-				Log.d(tag, "Hack Galaxy S : NO front camera");
+				Log.d("Hack Galaxy S : NO front camera");
 			}
-			Log.d(tag, "Hack Galaxy S : HAS a rear camera with id=1");
+			Log.d("Hack Galaxy S : HAS a rear camera with id=1");
 			foundCameras.rear = 1;
 			foundCameras.defaultC = foundCameras.rear;
 		} else if (Hacks.hasTwoCamerasRear0Front1()) {
-			Log.d(tag, "Hack SPHD700 has 2 cameras a rear with id=0 and a front with id=1");
+			Log.d("Hack SPHD700 has 2 cameras a rear with id=0 and a front with id=1");
 			foundCameras.front = 1;
 		}
 
 	}
 
 	public int getNumberOfCameras() {
-		Log.i(tag, "Detecting the number of cameras");
+		Log.i("Detecting the number of cameras");
 		if (Hacks.hasTwoCamerasRear0Front1() || Hacks.isGalaxySOrTabWithFrontCamera()) {
-			Log.d(tag, "Hack: we know this model has 2 cameras");
+			Log.d("Hack: we know this model has 2 cameras");
 			return 2;
 		} else
 			return 1;
@@ -65,7 +64,7 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 	public int getCameraOrientation(int cameraId) {
 		// Use hacks to guess orientation of the camera
 		if (Hacks.isGalaxySOrTab() && isFrontCamera(cameraId)) {
-			Log.d(tag, "Hack Galaxy S : front camera mounted landscape");
+			Log.d("Hack Galaxy S : front camera mounted landscape");
 			// mounted in landscape for a portrait phone orientation
 			//  |^^^^^^^^|
 			//  |  ____  |
@@ -84,10 +83,10 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 	public boolean isFrontCamera(int cameraId) {
 		// Use hacks to guess facing of the camera
 		if (cameraId == 2 && Hacks.isGalaxySOrTab()) {
-			Log.d(tag, "Hack Galaxy S : front camera has id=2");
+			Log.d("Hack Galaxy S : front camera has id=2");
 			return true;
 		} else if (cameraId == 1 && Hacks.hasTwoCamerasRear0Front1()) {
-			Log.d(tag, "Hack SPHD700 : front camera has id=1");
+			Log.d("Hack SPHD700 : front camera has id=1");
 			return true;
 		}
 

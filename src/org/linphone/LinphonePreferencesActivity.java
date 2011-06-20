@@ -22,9 +22,9 @@ package org.linphone;
 
 import static org.linphone.R.string.ec_calibrating;
 import static org.linphone.R.string.ec_calibration_launch_message;
+import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
-import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
@@ -34,6 +34,7 @@ import java.util.List;
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.video.AndroidCameraRecordManager;
@@ -46,7 +47,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.util.Log;
 import android.widget.Toast;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
@@ -177,7 +177,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			ecPref.setSummary(ec_calibrating);
 			ecPref.getEditor().putBoolean(getString(pref_echo_canceller_calibration_key), false).commit();
 		} catch (LinphoneCoreException e) {
-			Log.w(LinphoneManager.TAG, "Cannot calibrate EC",e);
+			Log.w(e, "Cannot calibrate EC");
 		}	
 	}
 
@@ -235,7 +235,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		} catch (LinphoneException e) {
 
 			if (! (e instanceof LinphoneConfigException)) {
-				Log.e(LinphoneManager.TAG, "Cannot update config",e);
+				Log.e(e, "Cannot update config");
 				return;
 			}
 

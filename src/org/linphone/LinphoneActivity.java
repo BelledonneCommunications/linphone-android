@@ -26,6 +26,7 @@ import java.util.List;
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -46,7 +47,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,7 +73,6 @@ public class LinphoneActivity extends TabActivity  {
 	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
 	private static SensorEventListener mSensorEventListener;
-	private static String TAG = LinphoneManager.TAG;
 	
 	private static final String SCREEN_IS_HIDDEN = "screen_is_hidden";
 	private Handler mHandler = new Handler();
@@ -160,7 +159,7 @@ public class LinphoneActivity extends TabActivity  {
 						}
 					});
 				} catch (LinphoneCoreException e) {
-					Log.e(TAG, "Unable to calibrate EC", e);
+					Log.e(e, "Unable to calibrate EC");
 				}
 
 				fillTabHost();
@@ -208,7 +207,7 @@ public class LinphoneActivity extends TabActivity  {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		if (intent.getData() == null) {
-			Log.e(TAG, "LinphoneActivity received an intent without data, recreating GUI if needed");
+			Log.e("LinphoneActivity received an intent without data, recreating GUI if needed");
 			if (!LinphoneService.isReady() || !LinphoneManager.getLc().isIncall()) return;
 			LinphoneCore lc = LinphoneManager.getLc();
 			if(lc.isInComingInvitePending()) {
@@ -218,7 +217,7 @@ public class LinphoneActivity extends TabActivity  {
 					startIncallActivity(LinphoneManager.getInstance().extractADisplayName(), null);
 				} else {
 					// TODO
-					Log.e(TAG, "Not handled case: recreation while in call and not using incall activity");
+					Log.e("Not handled case: recreation while in call and not using incall activity");
 				}
 			}
 			return;
@@ -268,7 +267,7 @@ public class LinphoneActivity extends TabActivity  {
 			startActivity(new Intent(ACTION_MAIN)
 				.setClass(this, AboutActivity.class));
 		default:
-			Log.e(TAG, "Unknown menu item ["+item+"]");
+			Log.e("Unknown menu item [",item,"]");
 			break;
 		}
 
@@ -297,7 +296,7 @@ public class LinphoneActivity extends TabActivity  {
 
 	synchronized void startProxymitySensor() {
 		if (mSensorEventListener != null) {
-			Log.i(TAG, "proximity sensor already active");
+			Log.i("proximity sensor already active");
 			return;
 		}
 		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
@@ -312,7 +311,7 @@ public class LinphoneActivity extends TabActivity  {
 		};
 		if (lSensorList.size() >0) {
 			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
-			Log.i(TAG, "Proximity sensor detected, registering");
+			Log.i("Proximity sensor detected, registering");
 		}		
 	}
 
@@ -449,35 +448,6 @@ public class LinphoneActivity extends TabActivity  {
 		finishActivity(INCALL_ACTIVITY);
 	}
 
-	/*
-	private String INCALL_ACTIVITY_TAG = "incall";
-
-	void changeTabVisibility(String tag, int value) {
-		View tab = getTabHost().getTabWidget().findViewWithTag(tag);
-		if (tab != null) {
-			tab.setVisibility(value);
-		} else {
-			Log.e(TAG, "Tab not found: " + tag);
-		}
-	}
-
-	public void closeIncallActivity() {
-		changeTabVisibility(DIALER_TAB, View.VISIBLE);
-		getTabHost().setCurrentTabByTag(DIALER_TAB);
-		getLocalActivityManager().getActivity(INCALL_ACTIVITY_TAG).finish();
-		getTabHost().clearAllTabs();
-		fillTabHost();
-	}
-
-	@Override
-	public void finishFromChild(Activity child) {
-		if (child instanceof IncallActivity) {
-			return;
-		}
-		super.finishFromChild(child);
-	}*/
-	
-	
 	public void startVideoActivity() {
 		mHandler.post(new Runnable() {
 			public void run() {

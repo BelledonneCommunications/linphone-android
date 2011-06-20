@@ -21,7 +21,6 @@ package org.linphone.core;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Build;
-import android.util.Log;
 
 public final class Hacks {
 
@@ -65,7 +64,7 @@ public final class Hacks {
 
 
 /*	private static final boolean log(final String msg) {
-		Log.d("Linphone", msg);
+		Log.d(msg);
 		return true;
 	}*/
 
@@ -104,7 +103,7 @@ public final class Hacks {
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK);
 
-		Log.i(Version.TAG, sb.toString());
+		Log.i(sb.toString());
 	}
 
 	public static boolean needSoftvolume() {
@@ -134,12 +133,12 @@ public final class Hacks {
 			try {
 				nb = (Integer) Camera.class.getMethod("getNumberOfCameras", (Class[])null).invoke(null);
 			} catch (Exception e) {
-				Log.e(Version.TAG, "Error getting number of cameras");
+				Log.e("Error getting number of cameras");
 			}
 			return nb > 0;
 		}
 
-		Log.i(Version.TAG, "Hack: considering there IS a camera.\n"
+		Log.i("Hack: considering there IS a camera.\n"
 				+ "If it is not the case, report DEVICE and MODEL to linphone-users@nongnu.org");
 		return true;
 	}
