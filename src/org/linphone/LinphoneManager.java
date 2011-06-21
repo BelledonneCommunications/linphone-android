@@ -111,6 +111,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private LinphoneCore mLc;
 	private static Transports initialTransports;
 	private static LinphonePreferenceManager lpm;
+	private String lastLcStatusMessage;
 
 
 	
@@ -626,9 +627,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			LinphoneAddress from, String message) {}
 
 
-	
+	public String getLastLcStatusMessage() {
+		return lastLcStatusMessage;
+	}
 	public void displayStatus(final LinphoneCore lc, final String message) {
 		Log.i(message);
+		lastLcStatusMessage=message;
 		serviceListener.onDisplayStatus(message);
 	}
 

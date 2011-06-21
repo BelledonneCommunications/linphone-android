@@ -420,4 +420,18 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		// When coming back from a video call, if the phone orientation is different
+		// Android will destroy the previous Dialer and create a new one.
+		// Unfortunately the "call end" status event is received in the meanwhile
+		// and set to the to be destroyed Dialer.
+		// Note1: We wait as long as possible before setting the last message.
+		// Note2: Linphone service is in charge of instantiating LinphoneManager
+		if (LinphoneService.isReady()) {
+			mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
+		}
+
+		super.onResume();
+	}
 }
