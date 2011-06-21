@@ -294,7 +294,10 @@ public class AndroidCameraRecordManager {
 
 		final int phoneOrientation = mAlwaysChangingPhoneOrientation;
 		final int cameraOrientation = cc.getCameraOrientation(cameraId);
-		final int rotation = (cameraOrientation + phoneOrientation) % 360;
+		int frontCameraCorrection = 0;
+		if (cc.isFrontCamera(cameraId)) // TODO: check with other phones (Nexus S, ...)
+			frontCameraCorrection=180; // hack that "just works" on Galaxy S.
+		final int rotation = (cameraOrientation + phoneOrientation + frontCameraCorrection) % 360;
 		Log.d("Capture video buffer of cameraId=",cameraId,
 				" will need a rotation of ",rotation,
 				" degrees: camera_orientation=",cameraOrientation,
