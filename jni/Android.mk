@@ -1,13 +1,13 @@
 root-dir:=$(APP_PROJECT_PATH)
-
+#default values
 BUILD_AMR=light
-
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
 LINPHONE_VIDEO=1
 else
 BUILD_X264=0
 endif
+
 
 include $(root-dir)/submodules/externals/build/speex/Android.mk
 
