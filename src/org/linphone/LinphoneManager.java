@@ -509,23 +509,30 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private void setSignalingTransportsFromConfiguration(Transports t) {
 		Transports ports = new Transports(t);
 		boolean useStandardPort = getBool(R.string.pref_transport_use_standard_ports_key, false);
-
-		if (!getBool(R.string.pref_transport_udp_key, false)) {
-			ports.udp = 0;
-		} else if (useStandardPort) {
-			ports.udp = 5060;
-		}
+		int lPreviousPort = ports.tcp +ports.udp +ports.tls; // assume only one port is active 
 		
 		if (!getBool(R.string.pref_transport_tcp_key, false)) {
 			ports.tcp = 0;
 		} else if (useStandardPort) {
 			ports.tcp = 5060;
+		} else if (ports.tcp==0){
+			ports.tcp=lPreviousPort;
+		}
+
+		if (!getBool(R.string.pref_transport_udp_key, false)) {
+			ports.udp = 0;
+		} else if (useStandardPort) {
+			ports.udp = 5060;
+		} else if (ports.udp==0) {
+			ports.udp = lPreviousPort;
 		}
 
 		if (!getBool(R.string.pref_transport_tls_key, false)) {
 			ports.tls = 0;
 		} else if (useStandardPort) {
 			ports.tls = 5060;
+		} else if (ports.tls==0) {
+			ports.tls=lPreviousPort;
 		}
 
 		mLc.setSignalingTransportPorts(ports);
