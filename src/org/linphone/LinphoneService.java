@@ -25,6 +25,7 @@ import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
+import org.linphone.core.Version;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -234,8 +235,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 					.setClass(this, LinphoneActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (!VideoCallActivity.launched && LinphoneActivity.isInstanciated()
+			if (Version.isVideoCapable() 
 					&& getResources().getBoolean(R.bool.use_video_activity)
+					&& !VideoCallActivity.launched && LinphoneActivity.isInstanciated()
 					&& call.getCurrentParamsCopy().getVideoEnabled()) {
 				// Do not call if video activity already launched as it would cause a pause() of the launched one
 				// and a race condition with capture surfaceview leading to a crash

@@ -96,7 +96,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		detectAudioCodec(pref_codec_amr_key,"AMR",8000);
 
 		// No video
-		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !Hacks.hasCamera()) {
+		if (!Version.isVideoCapable()) {
 			uncheckAndDisableCheckbox(pref_video_enable_key);
 		}
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {

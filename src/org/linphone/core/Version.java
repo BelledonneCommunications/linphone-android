@@ -65,5 +65,8 @@ public class Version {
 		if (hasNeon == null) hasNeon = nativeHasNeon();
 		return hasNeon;
 	}
+	public static boolean isVideoCapable() {
+		return !Version.sdkStrictlyBelow(5) && Version.hasNeon() && Hacks.hasCamera();
+	}
 
 }
