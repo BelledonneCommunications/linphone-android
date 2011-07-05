@@ -87,6 +87,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/resample2.c \
 	libavcodec/simple_idct.c \
 	libavcodec/utils.c \
+	libavcodec/svq3.c \
 	libavcodec/pthread.c 
 
 
