@@ -34,6 +34,7 @@ public class Version {
 	public static final int API09_GINGERBREAD_23 = 9;
 	public static final int API11_HONEYCOMB_30 = 11;
 
+	private static native boolean nativeHasZrtp();
 	private static native boolean nativeHasNeon();
 	private static Boolean hasNeon;
 
@@ -69,4 +70,7 @@ public class Version {
 		return !Version.sdkStrictlyBelow(5) && Version.hasNeon() && Hacks.hasCamera();
 	}
 
+	public static boolean hasZrtp(){
+		return nativeHasZrtp();
+	}
 }

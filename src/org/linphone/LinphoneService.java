@@ -260,6 +260,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		void onGlobalStateChangedToOn(String message);
 //		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onCallStateChanged(LinphoneCall call, State state, String message);
+		void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
+				String authenticationToken);
 	}
 
 
@@ -301,6 +303,16 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	public void onAlreadyInVideoCall() {
 		LinphoneActivity.instance().startVideoActivity();
+	}
+
+	public void onCallEncryptionChanged(final LinphoneCall call, final boolean encrypted,
+			final String authenticationToken) {
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (guiListener() != null)
+					guiListener().onCallEncryptionChanged(call, encrypted, authenticationToken);			
+			}
+		});
 	}
 }
 

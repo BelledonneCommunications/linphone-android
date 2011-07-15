@@ -101,7 +101,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int resumeCall(long nativePtr, long callPtr);
 	private native void setUploadPtime(long nativePtr, int ptime);
 	private native void setDownloadPtime(long nativePtr, int ptime);
-	
+	private native void setZrtpSecretsCache(long nativePtr, String file);
+
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -492,5 +493,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void setUploadPtime(int ptime) {
 		setUploadPtime(nativePtr,ptime);
+	}
+
+	public void setZrtpSecretsCache(String file) {
+		setZrtpSecretsCache(nativePtr,file);
 	}
 }

@@ -112,11 +112,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private static Transports initialTransports;
 	private static LinphonePreferenceManager lpm;
 	private String lastLcStatusMessage;
-
+	private String basePath;
 
 	
 	private LinphoneManager(final Context c) {
-		String basePath = c.getFilesDir().getAbsolutePath();
+		basePath = c.getFilesDir().getAbsolutePath();
 		linphoneInitialConfigFile = basePath + "/linphonerc";
 		linphoneConfigFile = basePath + "/.linphonerc";
 		ringSoundFile = basePath + "/oldphone_mono.wav"; 
@@ -322,6 +322,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					this, linphoneConfigFile, linphoneInitialConfigFile, null);
 
 			mLc.enableIpv6(mPref.getBoolean(getString(R.string.pref_ipv6_key), false));
+			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
 
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
@@ -400,7 +401,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		try {
 			// Configure audio codecs
-			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
+//			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
+			enableDisableAudioCodec("speex", 32000, false);
 			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex16_key);
 			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
 			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
@@ -545,6 +547,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.enablePayloadType(pt, enable);
 		}
 	}
+	private void enableDisableAudioCodec(String codec, int rate, boolean enable) throws LinphoneCoreException {
+		PayloadType pt = mLc.findPayloadType(codec, rate);
+		if (pt !=null) {
+			mLc.enablePayloadType(pt, enable);
+		}
+	}
 
 	private void enableDisableVideoCodecs(PayloadType videoCodec) throws LinphoneCoreException {
 		String mime = videoCodec.getMime();
@@ -609,6 +617,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
 		void onDisplayStatus(String message);
 		void onAlreadyInVideoCall();
+		void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
+				String authenticationToken);
 	}
 
 	public interface EcCalibrationListener {
@@ -700,6 +710,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		serviceListener.onCallStateChanged(call, state, message);
 	}
 
+	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
+			boolean encrypted, String authenticationToken) {
+		serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
+	}
 
 	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delayMs,
 			final Object data) {

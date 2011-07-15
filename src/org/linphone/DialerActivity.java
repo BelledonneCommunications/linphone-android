@@ -420,6 +420,17 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		}
 	}
 
+	public void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
+			String authenticationToken) {
+		if (encrypted) {
+			boolean verified=call.isAuthenticationTokenVerified();
+			mStatus.setText("Call encrypted ["+ authenticationToken+"] "
+					+ (verified ? "verified":"unverified"));
+		} else {
+			mStatus.setText("Call not encrypted");
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		// When coming back from a video call, if the phone orientation is different
@@ -434,4 +445,6 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 		super.onResume();
 	}
+
+
 }

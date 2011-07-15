@@ -39,6 +39,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native int getDuration(long nativePtr);
 	private native float getCurrentQuality(long nativePtr);
 	private native float getAverageQuality(long nativePtr);
+	private native String getAuthenticationToken(long nativePtr);
+	private native boolean isAuthenticationTokenVerified(long nativePtr);
+	private native boolean areStreamsEncrypted(long nativePtr);
 
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -109,5 +112,14 @@ class LinphoneCallImpl implements LinphoneCall {
 	public float getCurrentQuality() {
 		return getCurrentQuality(nativePtr);
 	}
-	
+
+	public String getAuthenticationToken(){
+		return getAuthenticationToken(nativePtr);
+	}
+	public boolean isAuthenticationTokenVerified(){
+		return isAuthenticationTokenVerified(nativePtr);
+	}
+	public boolean areStreamsEncrypted() {
+		return areStreamsEncrypted(nativePtr);
+	}
 }

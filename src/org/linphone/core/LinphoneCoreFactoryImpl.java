@@ -32,10 +32,22 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 	}
 
 	static {
+		// FFMPEG (audio/video)
 		loadOptionalLibrary("avutil");
 		loadOptionalLibrary("swscale");
 		loadOptionalLibrary("avcore");
 		loadOptionalLibrary("avcodec");
+
+		// OPENSSL (cryptography)
+		// lin prefix avoids collision with libs in /system/lib
+		loadOptionalLibrary("lincrypto");
+		loadOptionalLibrary("linssl");
+
+		// Secure RTP and key negotiation
+		loadOptionalLibrary("srtp");
+		loadOptionalLibrary("zrtpcpp"); // GPLv3+
+
+		//Main library
 		System.loadLibrary("linphone");
 	}
 	@Override
