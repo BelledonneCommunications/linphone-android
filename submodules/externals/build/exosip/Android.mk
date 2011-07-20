@@ -61,7 +61,6 @@ LOCAL_CFLAGS += \
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \
 	$(LOCAL_PATH)/../osip/include \
-
-#LOCAL_SHARED_LIBRARIES := libosip2
+	$(LOCAL_PATH)/../openssl/include \
 
 include $(BUILD_STATIC_LIBRARY)
