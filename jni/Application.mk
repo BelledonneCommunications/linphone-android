@@ -14,7 +14,7 @@ ifeq ($(BUILD_AMR),1)
 APP_MODULES += libopencoreamr libmsamr
 endif
 
-ifeq ($(WITH_OPENSSL),1)
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 APP_MODULES += liblincrypto liblinssl
 endif
 

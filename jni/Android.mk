@@ -9,7 +9,6 @@ endif
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
-WITH_OPENSSL=1
 BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
 	$(root-dir)/submodules/externals/libzrtpcpp/src
@@ -32,9 +31,7 @@ include $(root-dir)/submodules/externals/build/exosip/Android.mk
 
 include $(root-dir)/submodules/externals/build/osip/Android.mk
 
-ifeq ($(WITH_OPENSSL), 1)
 include $(root-dir)/submodules/externals/openssl/Android.mk
-endif
 
 include $(root-dir)/submodules/linphone/oRTP/build/android/Android.mk
 
