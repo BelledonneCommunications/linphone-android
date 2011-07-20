@@ -532,7 +532,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (!getBool(R.string.pref_transport_tls_key, false)) {
 			ports.tls = 0;
 		} else if (useStandardPort) {
-			ports.tls = 5060;
+			ports.tls = 5061;
 		} else if (ports.tls==0) {
 			ports.tls=lPreviousPort;
 		}

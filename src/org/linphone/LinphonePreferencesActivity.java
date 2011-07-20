@@ -123,7 +123,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		final List<CheckBoxPreference> checkboxes = Arrays.asList(
 				findCheckbox(R.string.pref_transport_udp_key)
 				,findCheckbox(R.string.pref_transport_tcp_key)
-//				,findCheckbox(R.string.pref_transport_tls_key)
+				,findCheckbox(R.string.pref_transport_tls_key)
 				);
 		
 

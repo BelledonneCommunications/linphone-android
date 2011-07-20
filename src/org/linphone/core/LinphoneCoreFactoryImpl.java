@@ -37,7 +37,7 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		loadOptionalLibrary("swscale");
 		loadOptionalLibrary("avcore");
 		loadOptionalLibrary("avcodec");
-
+ 
 		// OPENSSL (cryptography)
 		// lin prefix avoids collision with libs in /system/lib
 		loadOptionalLibrary("lincrypto");
