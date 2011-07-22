@@ -20,7 +20,8 @@ package org.linphone.core.video;
 
 import java.util.List;
 
-import org.linphone.LinphoneManager;
+
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.video.AndroidCameraRecord.RecorderParams;
@@ -339,8 +340,8 @@ public class AndroidCameraRecordManager {
 	/**
 	 * @return true if linphone core configured to send a A buffer while phone orientation induces !A buffer (A=landscape or portrait)
 	 */
-	public boolean isOutputOrientationMismatch() {
-		final boolean currentlyPortrait = LinphoneManager.getLc().getPreferredVideoSize().isPortrait();
+	public boolean isOutputOrientationMismatch(LinphoneCore lc) {
+		final boolean currentlyPortrait = lc.getPreferredVideoSize().isPortrait();
 		final boolean shouldBePortrait = isOutputPortraitDependingOnCameraAndPhoneOrientations();
 		return currentlyPortrait ^ shouldBePortrait;
 	}

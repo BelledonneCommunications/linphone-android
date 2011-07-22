@@ -92,7 +92,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 
 	@Override
 	protected void onResume() {
-		if (Version.sdkAboveOrEqual(8) && recordManager.isOutputOrientationMismatch()) {
+		if (Version.sdkAboveOrEqual(8) && recordManager.isOutputOrientationMismatch(LinphoneManager.getLc())) {
 			Log.i("Phone orientation has changed: updating call.");
 			CallManager.getInstance().updateCall();
 			// resizeCapturePreview by callback when recording started
