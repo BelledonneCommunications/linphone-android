@@ -87,6 +87,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int[] getPreferredVideoSize(long nativePtr);
 	private native void setRing(long nativePtr, String path);
 	private native String getRing(long nativePtr);
+	private native void setRootCA(long nativePtr, String path);
 	private native long[] listVideoPayloadTypes(long nativePtr);
 	private native long[] listAudioPayloadTypes(long nativePtr);
 	private native void enableKeepAlive(long nativePtr,boolean enable);
@@ -418,6 +419,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public String getRing() {
 		return getRing(nativePtr);
+	}
+	
+	public void setRootCA(String path) {
+		setRootCA(nativePtr, path);
 	}
 	
 	public PayloadType[] getVideoCodecs() {

@@ -119,6 +119,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		basePath = c.getFilesDir().getAbsolutePath();
 		linphoneInitialConfigFile = basePath + "/linphonerc";
 		linphoneConfigFile = basePath + "/.linphonerc";
+		linphoneRootCaFile = basePath + "/rootca.pem";
 		ringSoundFile = basePath + "/oldphone_mono.wav"; 
 		ringbackSoundFile = basePath + "/ringback.wav";
 
@@ -136,6 +137,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
 	private final String linphoneInitialConfigFile;
+	private final String linphoneRootCaFile;
 	private final String linphoneConfigFile;
 	private final String ringSoundFile; 
 	private final String ringbackSoundFile;
@@ -326,6 +328,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
+			mLc.setRootCA(linphoneRootCaFile);
+			
 
 			try {
 				initFromConf(context);
@@ -354,6 +358,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(context, R.raw.oldphone_mono,ringSoundFile);
 		copyIfNotExist(context, R.raw.ringback,ringbackSoundFile);
 		copyFromPackage(context, R.raw.linphonerc, new File(linphoneInitialConfigFile).getName());
+		copyIfNotExist(context, R.raw.rootca, new File(linphoneRootCaFile).getName());
 	}
 	private  void copyIfNotExist(Context context, int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
