@@ -63,7 +63,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	/* Listener needs to be implemented in the Service as it calls
 	 * setLatestEventInfo and startActivity() which needs a context.
 	 */
-	
+
 	private Handler mHandler = new Handler();
 	private static LinphoneService instance;
 

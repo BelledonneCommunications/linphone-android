@@ -7,7 +7,7 @@ LINPHONE_VIDEO=1
 endif
 
 
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
@@ -19,7 +19,7 @@ SRTP_C_INCLUDE= \
 	$(root-dir)/submodules/externals/srtp/include \
 	$(root-dir)/submodules/externals/srtp/crypto/include
 endif
-endif
+#endif
 
 
 
@@ -49,6 +49,8 @@ include $(root-dir)/submodules/externals/build/x264/Android.mk
 endif
 
 include $(root-dir)/submodules/externals/build/ffmpeg/Android.mk
+endif #armeabi-v7a
+
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 include $(root-dir)/submodules/externals/build/libzrtpcpp/Android.mk
@@ -57,7 +59,6 @@ endif
 ifeq ($(BUILD_SRTP), 1)
 include $(root-dir)/submodules/externals/build/srtp/Android.mk
 endif
-endif #armeabi-v7a
 
 
 include $(root-dir)/submodules/linphone/build/android/Android.mk

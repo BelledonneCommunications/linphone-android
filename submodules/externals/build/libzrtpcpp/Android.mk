@@ -3,7 +3,6 @@ LOCAL_EXTERNALS:= $(call my-dir)/../..
 LOCAL_PATH:= $(LOCAL_EXTERNALS:=)/libzrtpcpp
 include $(CLEAR_VARS)
 
-LOCAL_MODULE:= libzrtpcpp
 
 
 LOCAL_SRC_FILES := \
@@ -55,12 +54,23 @@ LOCAL_SRC_FILES += \
 	
 
 LOCAL_CFLAGS := -D__EXPORT=""
-LOCAL_SHARED_LIBRARIES := liblincrypto liblinssl
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/src/ \
 	$(LOCAL_EXTERNALS)/openssl \
         $(LOCAL_EXTERNALS)/openssl/include 
 
+
+
+# Build dynamic and static versions
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+LOCAL_MODULE:= libzrtpcpp
+LOCAL_SHARED_LIBRARIES := liblincrypto liblinssl
 include $(BUILD_SHARED_LIBRARY)
+else
+LOCAL_STATIC_LIBRARIES := libcrypto-static libssl-static
+LOCAL_MODULE:= libzrtpcpp-static
+include $(BUILD_STATIC_LIBRARY)
+endif
+
 

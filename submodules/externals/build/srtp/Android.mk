@@ -2,7 +2,6 @@
 LOCAL_PATH:= $(call my-dir)/../../srtp
 include $(CLEAR_VARS)
 
-LOCAL_MODULE:= libsrtp
 LOCAL_SRC_FILES := \
 	 	 srtp/srtp.c \
 	 	 crypto/ae_xfm/xfm.c \
@@ -49,5 +48,15 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \
 	$(LOCAL_PATH)/crypto/include 
 
+
+
+# Build dynamic and static versions
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+LOCAL_MODULE:= libsrtp
 include $(BUILD_SHARED_LIBRARY)
+else
+LOCAL_MODULE:= libsrtp-static
+include $(BUILD_STATIC_LIBRARY)
+endif
+
 

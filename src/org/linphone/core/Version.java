@@ -73,4 +73,11 @@ public class Version {
 	public static boolean hasZrtp(){
 		return nativeHasZrtp();
 	}
+
+	public static void dumpCapabilities(){
+		StringBuilder sb = new StringBuilder(" ==== Capabilities dump ====\n");
+		sb.append("Has neon: ").append(Boolean.toString(hasNeon())).append("\n");
+		sb.append("Has ZRTP: ").append(Boolean.toString(hasZrtp())).append("\n");
+		Log.i(sb.toString());
+	}
 }

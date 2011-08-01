@@ -63,6 +63,8 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 		//Main library
 		System.loadLibrary("linphone");
+
+		Version.dumpCapabilities();
 	}
 	@Override
 	public LinphoneAuthInfo createAuthInfo(String username, String password,

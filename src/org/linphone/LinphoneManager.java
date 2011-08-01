@@ -329,7 +329,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
 			mLc.setRootCA(linphoneRootCaFile);
-			
+
 
 			try {
 				initFromConf(context);

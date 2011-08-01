@@ -27,8 +27,6 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 	public AndroidCameras getFoundCameras() {return foundCameras;}
 
 	public AndroidCameraConf5() {
-		Log.i("Detecting cameras");
-		
 		// Defaults
 		foundCameras = new AndroidCameras();
 
