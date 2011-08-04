@@ -130,7 +130,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
 
-		AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
+		if (Version.isVideoCapable()) {
+			AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
+		}
 	}
 	
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -241,10 +243,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		lAddress.setDisplayName(address.getDisplayedName());
 
 		try {
-			boolean prefVideoEnable = isVideoEnabled();
-			boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(R.string.pref_video_initiate_call_with_video_key), false);
-			resetCameraFromPreferences();
-			CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+			if (Version.isVideoCapable()) {
+				boolean prefVideoEnable = isVideoEnabled();
+				int key = R.string.pref_video_initiate_call_with_video_key;
+				boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(key), false);
+				resetCameraFromPreferences();
+				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+			} else {
+				CallManager.getInstance().inviteAddress(lAddress, false);
+			}
+			
 
 		} catch (LinphoneCoreException e) {
 			serviceListener.tryingNewOutgoingCallButCannotGetCallParameters();

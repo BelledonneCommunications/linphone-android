@@ -23,6 +23,7 @@ import java.util.List;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
+import org.linphone.core.Version;
 import org.linphone.core.VideoSize;
 import org.linphone.core.video.AndroidCameraRecordManager;
 
@@ -83,7 +84,7 @@ public class BandwidthManager {
 	public void updateWithProfileSettings(LinphoneCore lc, LinphoneCallParams callParams) {
 		// Setting Linphone Core Preferred Video Size
 		boolean bandwidthOKForVideo = isVideoPossible();
-		if (bandwidthOKForVideo) {
+		if (bandwidthOKForVideo && Version.isVideoCapable()) {
 			AndroidCameraRecordManager acrm = AndroidCameraRecordManager.getInstance();
 			boolean isPortrait=acrm.isFrameToBeShownPortrait();
 			VideoSize targetVideoSize=maxSupportedVideoSize(isPortrait, getMaximumVideoSize(isPortrait),
