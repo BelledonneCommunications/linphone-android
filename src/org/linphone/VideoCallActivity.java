@@ -84,7 +84,7 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 
 		// Force to display in portrait orientation for old devices
 		// as they do not support surfaceView rotation
-		setRequestedOrientation(recordManager.isCameraOrientationPortrait() ?
+		setRequestedOrientation(recordManager.isCameraMountedPortrait() ?
 				ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
 				ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		resizeCapturePreview(mVideoCaptureView);

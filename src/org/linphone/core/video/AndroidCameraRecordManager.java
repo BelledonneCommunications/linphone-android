@@ -20,14 +20,13 @@ package org.linphone.core.video;
 
 import java.util.List;
 
-
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.Version;
+import org.linphone.core.VideoSize;
 import org.linphone.core.video.AndroidCameraRecord.RecorderParams;
 
 import android.content.Context;
-import android.hardware.Camera.Size;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -63,7 +62,6 @@ public class AndroidCameraRecordManager {
 	private int cameraId;
 
 	private AndroidCameraRecord recorder;
-	private List<Size> supportedVideoSizes;
 	private int mAlwaysChangingPhoneOrientation=0;
 
 
@@ -126,11 +124,14 @@ public class AndroidCameraRecordManager {
 		p.cameraId = cameraId;
 		p.isFrontCamera = isUseFrontCamera();
 		parameters = p;
-		
+
+		// Mirror the sent frames in order to make them readable
+		// (otherwise it is mirrored and thus unreadable)
 		if (p.isFrontCamera) {
-			if (!isCameraOrientationPortrait()) {
-				// Code for Nexus S: to be tested
-				p.mirror = RecorderParams.MirrorType.CENTRAL;
+			if (!isCameraMountedPortrait()) {
+				// Code for Nexus S
+				if (isFrameToBeShownPortrait())
+					p.mirror = RecorderParams.MirrorType.CENTRAL;
 			} else {
 				// Code for Galaxy S like: camera mounted landscape when phone hold portrait
 				p.mirror = RecorderParams.MirrorType.HORIZONTAL;
@@ -236,20 +237,9 @@ public class AndroidCameraRecordManager {
 
 	
 	
-	/**
-	 * FIXME select right camera
-	 */
-	public List<Size> supportedVideoSizes() {
-		if (supportedVideoSizes != null) {
-			return supportedVideoSizes;
-		}
-
-		if (recorder != null) {
-			supportedVideoSizes = recorder.getSupportedVideoSizes();
-			if (supportedVideoSizes != null) return supportedVideoSizes;
-		}
-
-		return supportedVideoSizes;
+	public List<VideoSize> supportedVideoSizes() {
+		Log.d("Using supportedVideoSizes of camera ",cameraId);
+		return cc.getSupportedPreviewSizes(cameraId);
 	}
 
 
@@ -267,20 +257,28 @@ public class AndroidCameraRecordManager {
 		parameters = null;
 	}
 
-	public boolean isOutputPortraitDependingOnCameraAndPhoneOrientations() {
+	/** Depends on currently selected camera, camera mounted portrait/landscape, current phone orientation */
+	public boolean isFrameToBeShownPortrait() {
 		final int rotation = bufferRotationToCompensateCameraAndPhoneOrientations();
-		final boolean isPortrait = (rotation % 180) == 90;
-		
-		Log.d("Camera sensor in ", isPortrait? "portrait":"landscape"," orientation.");
+
+		boolean isPortrait;
+		if (isCameraMountedPortrait()) {
+			// Nexus S
+			isPortrait = (rotation % 180) == 0;
+		} else {
+			isPortrait = (rotation % 180) == 90;
+		}
+
+		Log.d("The frame to be shown and sent to remote is ", isPortrait? "portrait":"landscape"," orientation.");
 		return isPortrait;
 	}
 
 	
-	
-	
 
 
-	public boolean isCameraOrientationPortrait() {
+
+
+	public boolean isCameraMountedPortrait() {
 		return (cc.getCameraOrientation(cameraId) % 180) == 0;
 	}
 
@@ -296,8 +294,10 @@ public class AndroidCameraRecordManager {
 		final int phoneOrientation = mAlwaysChangingPhoneOrientation;
 		final int cameraOrientation = cc.getCameraOrientation(cameraId);
 		int frontCameraCorrection = 0;
-		if (cc.isFrontCamera(cameraId)) // TODO: check with other phones (Nexus S, ...)
-			frontCameraCorrection=180; // hack that "just works" on Galaxy S.
+		if (cc.isFrontCamera(cameraId)) {
+			frontCameraCorrection=180; // hack that "just works" on Galaxy S and Nexus S.
+			// See also magic with mirrors in setParametersFromFilter
+		}
 		final int rotation = (cameraOrientation + phoneOrientation + frontCameraCorrection) % 360;
 		Log.d("Capture video buffer of cameraId=",cameraId,
 				" will need a rotation of ",rotation,
@@ -342,7 +342,7 @@ public class AndroidCameraRecordManager {
 	 */
 	public boolean isOutputOrientationMismatch(LinphoneCore lc) {
 		final boolean currentlyPortrait = lc.getPreferredVideoSize().isPortrait();
-		final boolean shouldBePortrait = isOutputPortraitDependingOnCameraAndPhoneOrientations();
+		final boolean shouldBePortrait = isFrameToBeShownPortrait();
 		return currentlyPortrait ^ shouldBePortrait;
 	}
 

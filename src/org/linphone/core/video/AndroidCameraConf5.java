@@ -18,8 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.video;
 
+import java.util.List;
+
 import org.linphone.core.Hacks;
 import org.linphone.core.Log;
+import org.linphone.core.VideoSize;
+
+import android.hardware.Camera;
 
 
 class AndroidCameraConf5 implements AndroidCameraConf {
@@ -89,6 +94,18 @@ class AndroidCameraConf5 implements AndroidCameraConf {
 		}
 
 		return false;
+	}
+
+	public List<VideoSize> getSupportedPreviewSizes(int cameraId) {
+		if (getNumberOfCameras() >1) {
+			Log.w("Hack: on older devices, using video formats supported by default camera");
+		}
+		Log.i("Opening camera to retrieve supported video sizes");
+		Camera c = Camera.open();
+		List<VideoSize> sizes=VideoUtil.createList(c.getParameters().getSupportedPreviewSizes());
+		c.release();
+		Log.i("Camera opened to retrieve supported video sizes released");
+		return sizes;
 	}
 	
 	

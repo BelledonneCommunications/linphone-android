@@ -18,12 +18,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core.video;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.linphone.core.Log;
+import org.linphone.core.VideoSize;
 
 import android.hardware.Camera;
 
 class AndroidCameraConf9 implements AndroidCameraConf {
 	private AndroidCameras foundCameras;
+	private Map<Integer,List<VideoSize>> supportedSizes = new HashMap<Integer, List<VideoSize>>();
 	public AndroidCameras getFoundCameras() {return foundCameras;}
 
 	public AndroidCameraConf9() {
@@ -38,9 +44,19 @@ class AndroidCameraConf9 implements AndroidCameraConf {
 			} else {
 				foundCameras.rear = id;
 			}
+			supportedSizes.put(id, findSupportedVideoSizes(id));
 		}
 	}
 	
+	private List<VideoSize> findSupportedVideoSizes(int id) {
+		Log.i("Opening camera ",id," to retrieve supported video sizes");
+		Camera c = Camera.open(id);
+		List<VideoSize> sizes=VideoUtil.createList(c.getParameters().getSupportedPreviewSizes());
+		c.release();
+		Log.i("Camera ",id," opened to retrieve supported video sizes released");
+		return sizes;
+	}
+
 	public int getNumberOfCameras() {
 		return Camera.getNumberOfCameras();
 	}
@@ -56,6 +72,10 @@ class AndroidCameraConf9 implements AndroidCameraConf {
 		android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
 		Camera.getCameraInfo(cameraId, info);
 		return info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT ? true : false;
+	}
+
+	public List<VideoSize> getSupportedPreviewSizes(int cameraId) {
+		return supportedSizes.get(cameraId);
 	}
 
 }

@@ -18,12 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core.video;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.linphone.core.Log;
 import org.linphone.core.Version;
+import org.linphone.core.VideoSize;
 
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -44,7 +44,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 
 	private PreviewCallback storedPreviewCallback;
 	private boolean previewStarted;
-	private List <Size> supportedVideoSizes;
+	private List <VideoSize> supportedVideoSizes;
 	private Size currentPreviewSize;
 	
 	public AndroidCameraRecord(RecorderParams parameters) {
@@ -55,6 +55,23 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		return Collections.emptyList();
 	}
 	
+	private int[] findClosestFpsRange(int expectedFps, List<int[]> fpsRanges) {
+		Log.d("Searching for closest fps range from ",expectedFps);
+		int measure = Integer.MAX_VALUE;
+		int[] closestRange = {expectedFps,expectedFps};
+		for (int[] curRange : fpsRanges) {
+			if (curRange[0] > expectedFps || curRange[1] < expectedFps) continue;
+			int curMeasure = Math.abs(curRange[0] - expectedFps)
+					+ Math.abs(curRange[1] - expectedFps);
+			if (curMeasure < measure) {
+				closestRange=curRange;
+				Log.d("a better range has been found: w=",closestRange[0],",h=",closestRange[1]);
+			}
+		}
+		Log.d("The closest fps range is w=",closestRange[0],",h=",closestRange[1]);
+		return closestRange;
+	}
+
 	public synchronized void startPreview() { // FIXME throws exception?
 		if (previewStarted) {
 			Log.w("Already started");
@@ -83,12 +100,12 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		
 		
 		Camera.Parameters parameters=camera.getParameters();
-		if (Version.sdkStrictlyBelow(9)) {
+		if (Version.sdkStrictlyBelow(Version.API09_GINGERBREAD_23)) {
 			parameters.set("camera-id",params.cameraId);
 		}
 		
 		if (supportedVideoSizes == null) {
-			supportedVideoSizes = new ArrayList<Size>(getSupportedPreviewSizes(parameters));
+			supportedVideoSizes = VideoUtil.createList(getSupportedPreviewSizes(parameters));
 		}
 
 
@@ -101,7 +118,13 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		// should setParameters and get again to have the real one??
 		currentPreviewSize = parameters.getPreviewSize(); 
 
-		parameters.setPreviewFrameRate(Math.round(params.fps));
+		// Frame rate
+		if (Version.sdkStrictlyBelow(Version.API09_GINGERBREAD_23)) {
+			parameters.setPreviewFrameRate(Math.round(params.fps));
+		} else {
+			int[] range=findClosestFpsRange((int)(1000*params.fps), parameters.getSupportedPreviewFpsRange());
+			parameters.setPreviewFpsRange(range[0], range[1]);
+		}
 
 
 		onSettingCameraParameters(parameters);
@@ -223,8 +246,8 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		return previewStarted;
 	}
 
-	public List<Size> getSupportedVideoSizes() {
-		return new ArrayList<Size>(supportedVideoSizes);
+	public List<VideoSize> getSupportedVideoSizes() {
+		return supportedVideoSizes;
 	}
 	
 	

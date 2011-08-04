@@ -135,4 +135,5 @@ class AndroidCameraRecord5 extends AndroidCameraRecord implements PreviewCallbac
 		camera.setPreviewCallback(cb);
 	}
 
+
 }

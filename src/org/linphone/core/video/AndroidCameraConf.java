@@ -18,6 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.core.video;
 
+import java.util.List;
+
+import org.linphone.core.VideoSize;
+
 
 /**
  * @author Guillaume Beraudo
@@ -32,6 +36,8 @@ interface AndroidCameraConf {
 	int getCameraOrientation(int cameraId);
 
 	boolean isFrontCamera(int cameraId);
+
+	List<VideoSize> getSupportedPreviewSizes(int cameraId);
 
 	/**
 	 * Default: no front; rear=0; default=rear
