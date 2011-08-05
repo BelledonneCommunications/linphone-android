@@ -89,7 +89,7 @@ public final class Hacks {
 		sleep(200);
 	}
 
-	private static final void sleep(int time) {
+	public static final void sleep(int time) {
 		try  {
 			Thread.sleep(time);
 		} catch(InterruptedException ie){}
