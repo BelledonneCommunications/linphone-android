@@ -124,4 +124,5 @@
 <string name="first_launch_bad_login_password">Couldn\'t connect; check your login and password and start again</string>
 
 <string name="pref_amr_summary">AMR codec might not be present on your phone</string>
+<string name="pref_video_codec_vp8_title">VP8</string>
 </resources>

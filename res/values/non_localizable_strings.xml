@@ -43,6 +43,7 @@
     <string name="pref_codec_speex32_key">pref_codec_speex32_key</string>
     <string name="pref_codecs_key">pref_codecs_key</string>
     <string name="pref_stun_server_key">pref_stun_server_key</string>
+    <string name="pref_video_codec_vp8_key">pref_video_codec_vp8_key</string>
 
 
 </resources>
