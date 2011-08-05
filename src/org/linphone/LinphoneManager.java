@@ -144,15 +144,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
-	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
-		LinphoneCall call = mLc.getCurrentCall();
-		boolean paused = false;
-		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
-			Log.d("Hack pausing call to have speaker=",speakerOn);
-			mLc.pauseCall(call);
-			paused = true;
-		}
-
+	private native void hackSpeakerState(boolean speakerOn);
+	@SuppressWarnings("unused")
+	private static void sRouteAudioToSpeakerHelperHelper(boolean speakerOn) {
+		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
+	}
+	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
 		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 
@@ -167,12 +164,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(speakerOn); 
 		}
-
-		if (paused) {
-			Log.d("Hack resuming call to have speaker=",speakerOn);
-			mLc.resumeCall(call);
+	}
+	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
+		final LinphoneCall call = mLc.getCurrentCall();
+		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
+			Log.d("Hack to have speaker=",speakerOn," while on call");
+			hackSpeakerState(speakerOn);
+		} else {
+			routeAudioToSpeakerHelperHelper(speakerOn);
 		}
 	}
+
 	
 	public void routeAudioToSpeaker() {
 		routeAudioToSpeakerHelper(true);
