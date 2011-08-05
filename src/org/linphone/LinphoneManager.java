@@ -129,10 +129,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
-
-		if (Version.isVideoCapable()) {
-			AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
-		}
 	}
 	
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -205,6 +201,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		instance = new LinphoneManager(c);
 		instance.serviceListener = listener;
 		instance.startLibLinphone(c);
+		if (Version.isVideoCapable()) {
+			AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
+		}
 		return instance;
 	}
 	
