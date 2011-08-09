@@ -98,6 +98,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		// No video
 		if (!Version.isVideoCapable()) {
 			uncheckAndDisableCheckbox(pref_video_enable_key);
+		} else if (!AndroidCameraRecordManager.getInstance().hasFrontCamera()) {
+			uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
 		}
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
 			if (fastCpu) {
@@ -110,9 +112,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
 
-		if (!AndroidCameraRecordManager.getInstance().hasFrontCamera()) {
-			uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
-		}
+		
 		
 		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
 	}

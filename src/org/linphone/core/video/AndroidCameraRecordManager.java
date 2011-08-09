@@ -67,6 +67,9 @@ public class AndroidCameraRecordManager {
 
 	// singleton
 	private AndroidCameraRecordManager() {
+		if (!Version.isVideoCapable()) { // imply sdk>=5
+			throw new RuntimeException("AndroidCameraRecordManager: hardware is not video capable");
+		}
 		cc = Version.sdkAboveOrEqual(9) ? new AndroidCameraConf9() : new AndroidCameraConf5();
 		Log.i("=== Detected " + cc.getFoundCameras()+ " ===");
 		cameraId = cc.getFoundCameras().defaultC;

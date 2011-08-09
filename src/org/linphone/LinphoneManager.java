@@ -129,8 +129,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
-
-		AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
 	}
 	
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -146,15 +144,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
-	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
-		LinphoneCall call = mLc.getCurrentCall();
-		boolean paused = false;
-		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
-			Log.d("Hack pausing call to have speaker=",speakerOn);
-			mLc.pauseCall(call);
-			paused = true;
-		}
-
+	private native void hackSpeakerState(boolean speakerOn);
+	@SuppressWarnings("unused")
+	private static void sRouteAudioToSpeakerHelperHelper(boolean speakerOn) {
+		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
+	}
+	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
 		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 
@@ -169,12 +164,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(speakerOn); 
 		}
-
-		if (paused) {
-			Log.d("Hack resuming call to have speaker=",speakerOn);
-			mLc.resumeCall(call);
+	}
+	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
+		final LinphoneCall call = mLc.getCurrentCall();
+		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
+			Log.d("Hack to have speaker=",speakerOn," while on call");
+			hackSpeakerState(speakerOn);
+		} else {
+			routeAudioToSpeakerHelperHelper(speakerOn);
 		}
 	}
+
 	
 	public void routeAudioToSpeaker() {
 		routeAudioToSpeakerHelper(true);
@@ -203,6 +203,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		instance = new LinphoneManager(c);
 		instance.serviceListener = listener;
 		instance.startLibLinphone(c);
+		if (Version.isVideoCapable()) {
+			AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
+		}
 		return instance;
 	}
 	
@@ -241,10 +244,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		lAddress.setDisplayName(address.getDisplayedName());
 
 		try {
-			boolean prefVideoEnable = isVideoEnabled();
-			boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(R.string.pref_video_initiate_call_with_video_key), false);
-			resetCameraFromPreferences();
-			CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+			if (Version.isVideoCapable()) {
+				boolean prefVideoEnable = isVideoEnabled();
+				int key = R.string.pref_video_initiate_call_with_video_key;
+				boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(key), false);
+				resetCameraFromPreferences();
+				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+			} else {
+				CallManager.getInstance().inviteAddress(lAddress, false);
+			}
+			
 
 		} catch (LinphoneCoreException e) {
 			serviceListener.tryingNewOutgoingCallButCannotGetCallParameters();
