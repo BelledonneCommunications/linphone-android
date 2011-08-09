@@ -37,3 +37,6 @@
 [submodule "submodules/msamr"]
 	path = submodules/msamr
 	url = git://git.linphone.org/msamr
+[submodule "submodules/externals/libvpx"]
+	path = submodules/externals/libvpx
+	url = git://review.webmproject.org/libvpx.git

@@ -7,7 +7,7 @@ APP_MODULES      +=libmsilbc
 endif
 
 ifeq ($(LINPHONE_VIDEO),1)
-APP_MODULES += libavutil libavcore libavcodec libswscale
+APP_MODULES += libavutil libavcore libavcodec libswscale libvpx
 endif
 
 ifeq ($(BUILD_AMR),1)

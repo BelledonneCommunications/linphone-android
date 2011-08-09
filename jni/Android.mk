@@ -76,6 +76,8 @@ include $(root-dir)/submodules/externals/prebuilts/ffmpeg.mk
 endif
 endif #armeabi-v7a
 
+include $(root-dir)/submodules/externals/build/libvpx/Android.mk
+
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 ifeq ($(wildcard $(root-dir)/submodules/externals/prebuilts/zrtpcpp.mk),)
