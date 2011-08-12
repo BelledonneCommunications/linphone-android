@@ -58,7 +58,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 	private int[] findClosestFpsRange(int expectedFps, List<int[]> fpsRanges) {
 		Log.d("Searching for closest fps range from ",expectedFps);
 		int measure = Integer.MAX_VALUE;
-		int[] closestRange = {expectedFps,expectedFps};
+		int[] closestRange = fpsRanges.get(0);
 		for (int[] curRange : fpsRanges) {
 			if (curRange[0] > expectedFps || curRange[1] < expectedFps) continue;
 			int curMeasure = Math.abs(curRange[0] - expectedFps)
