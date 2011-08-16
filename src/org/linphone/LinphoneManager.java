@@ -113,9 +113,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private static LinphonePreferenceManager lpm;
 	private String lastLcStatusMessage;
 	private String basePath;
+	private static boolean sExited;
 
 	
 	private LinphoneManager(final Context c) {
+		sExited=false;
 		basePath = c.getFilesDir().getAbsolutePath();
 		linphoneInitialConfigFile = basePath + "/linphonerc";
 		linphoneConfigFile = basePath + "/.linphonerc";
@@ -209,14 +211,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return instance;
 	}
 	
-	public static final LinphoneManager getInstance() {
+	public static synchronized final LinphoneManager getInstance() {
 		if (instance != null) return instance;
 
-		throw new RuntimeException("Linphone Manager should be created before accessed");
+		if (!sExited) throw new RuntimeException("Linphone Manager should be created before accessed");
+		return null;
 	}
 	
-	public static final LinphoneCore getLc() {
-		return getInstance().mLc;
+	public static synchronized final LinphoneCore getLc() {
+		LinphoneManager m=getInstance();
+		return m!=null ? m.mLc : null;
 	}
 
 
@@ -592,7 +596,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public static synchronized void destroy(Context context) {
 		if (instance == null) return;
-
+		sExited=true;
 		try {
 			instance.mTimer.cancel();
 			instance.mLc.destroy();

@@ -386,6 +386,10 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 	public void onCallStateChanged(LinphoneCall call, State state, String message) {
 		LinphoneCore lc = LinphoneManager.getLc();
+		if (lc==null) {
+			/* we are certainly exiting, ignore then.*/
+			return;
+		}
 		if (state == LinphoneCall.State.OutgoingInit) {
 			enterIncallMode(lc);
 		} else if (state == LinphoneCall.State.IncomingReceived) { 
