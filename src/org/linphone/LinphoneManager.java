@@ -214,13 +214,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public static synchronized final LinphoneManager getInstance() {
 		if (instance != null) return instance;
 
-		if (!sExited) throw new RuntimeException("Linphone Manager should be created before accessed");
-		return null;
+		if (sExited) {
+			throw new RuntimeException("Linphone Manager was already destroyed. "
+					+ "Better use getLcIfManagerNotDestroyed and check returned value");
+		}
+
+		throw new RuntimeException("Linphone Manager should be created before accessed");
 	}
 	
 	public static synchronized final LinphoneCore getLc() {
-		LinphoneManager m=getInstance();
-		return m!=null ? m.mLc : null;
+		return getInstance().mLc;
 	}
 
 
@@ -915,6 +918,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		return distanceInCm < threshold;
+	}
+	public static synchronized LinphoneCore getLcIfManagerNotDestroyedOrNull() {
+		if (sExited) {
+			// Can occur if the UI thread play a posted event but in the meantime the LinphoneManager was destroyed
+			// Ex: stop call and quickly terminate application.
+			Log.w("Trying to get linphone core while LinphoneManager already destroyed");
+			return null;
+		}
+		return getLc();
 	}
 
 }
