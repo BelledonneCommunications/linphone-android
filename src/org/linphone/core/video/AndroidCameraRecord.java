@@ -55,7 +55,7 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 		return Collections.emptyList();
 	}
 	
-	private int[] findClosestFpsRange(int expectedFps, List<int[]> fpsRanges) {
+	private int[] findClosestEnclosingFpsRange(int expectedFps, List<int[]> fpsRanges) {
 		Log.d("Searching for closest fps range from ",expectedFps);
 		int measure = Integer.MAX_VALUE;
 		int[] closestRange = fpsRanges.get(0);
@@ -120,9 +120,20 @@ public abstract class AndroidCameraRecord implements AutoFocusCallback {
 
 		// Frame rate
 		if (Version.sdkStrictlyBelow(Version.API09_GINGERBREAD_23)) {
-			parameters.setPreviewFrameRate(Math.round(params.fps));
+			// Select the supported fps just faster than the target rate
+			List<Integer> supportedFrameRates=parameters.getSupportedPreviewFrameRates();
+			if (supportedFrameRates != null && supportedFrameRates.size() > 0) {
+				Collections.sort(supportedFrameRates);
+				int selectedRate = -1;
+				for (Integer rate : supportedFrameRates) {
+					selectedRate=rate;
+					if (rate >= params.fps) break; 
+				}
+				parameters.setPreviewFrameRate(selectedRate);
+			}
 		} else {
-			int[] range=findClosestFpsRange((int)(1000*params.fps), parameters.getSupportedPreviewFpsRange());
+			List<int[]> supportedRanges = parameters.getSupportedPreviewFpsRange();
+			int[] range=findClosestEnclosingFpsRange((int)(1000*params.fps), supportedRanges);
 			parameters.setPreviewFpsRange(range[0], range[1]);
 		}
 
