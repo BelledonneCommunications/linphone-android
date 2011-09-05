@@ -41,7 +41,7 @@
 
 
 	<PreferenceCategory android:title="@string/pref_audio">
-		<CheckBoxPreference android:key="@string/pref_echo_cancellation_key"
+		<CheckBoxPreference android:key="@string/pref_echo_cancellation_key" android:defaultValue="true"
 			android:title="@string/pref_echo_cancellation" android:summary="@string/pref_echo_cancellation_summary"></CheckBoxPreference>
 
 		<CheckBoxPreference android:key="@string/pref_echo_canceller_calibration_key"

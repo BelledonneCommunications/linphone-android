@@ -450,9 +450,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		if (LinphoneService.isReady()) {
 			mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
 		}
-
 		super.onResume();
 	}
-
-
+	
 }

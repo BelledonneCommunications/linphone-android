@@ -181,8 +181,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void routeAudioToSpeaker() {
 		routeAudioToSpeakerHelper(true);
 		if (mLc.isIncall()) {
-			/*disable EC*/  
+			/*disable EC, it is not efficient enough on speaker mode due to bad quality of speakers and saturation*/  
 			mLc.getCurrentCall().enableEchoCancellation(false);
+			/* instead we prefer the echo limiter */
 			mLc.getCurrentCall().enableEchoLimiter(true);
 		}
 		
@@ -192,8 +193,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		routeAudioToSpeakerHelper(false);
 		if (mLc.isIncall()) {
 			//Restore default value
-			mLc.getCurrentCall().enableEchoCancellation(mLc.isEchoCancellationEnabled());
-			mLc.getCurrentCall().enableEchoLimiter(false);
+			if (Version.isArmv7()){
+				mLc.getCurrentCall().enableEchoCancellation(mLc.isEchoCancellationEnabled());
+				mLc.getCurrentCall().enableEchoLimiter(false);
+			}else{
+				mLc.getCurrentCall().enableEchoCancellation(false);
+				mLc.getCurrentCall().enableEchoLimiter(mLc.isEchoCancellationEnabled());
+			}
 		}
 	}
 	
@@ -436,9 +442,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			for (PayloadType videoCodec : mLc.getVideoCodecs()) {
 				enableDisableVideoCodecs(videoCodec);
 			}
-			
-
-			mLc.enableEchoCancellation(mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false)); 
+			boolean use_ec=mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false);
+			if (Version.isArmv7()){
+				mLc.enableEchoCancellation(use_ec);
+				mLc.enableEchoLimiter(false);
+			}else{
+				mLc.enableEchoCancellation(false);
+				mLc.enableEchoLimiter(false);
+			}
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
@@ -451,9 +462,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		String lPasswd = mPref.getString(getString(R.string.pref_passwd_key), null);
-		if (lPasswd == null || lPasswd.length()==0) {
-			throw new LinphoneConfigException(getString(R.string.wrong_passwd));
-		}
+		// we have the right of having no password
+		//if (lPasswd == null || lPasswd.length()==0) {
+		//	throw new LinphoneConfigException(getString(R.string.wrong_passwd));
+		//}
 
 		String lDomain = mPref.getString(getString(R.string.pref_domain_key), null);
 		if (lDomain == null || lDomain.length()==0) {
@@ -468,8 +480,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		//auth
 		mLc.clearAuthInfos();
-		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd,null);
-		mLc.addAuthInfo(lAuthInfo);
+		if (lPasswd!=null && lPasswd.length()>0){
+			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd,null);
+			mLc.addAuthInfo(lAuthInfo);
+		}
 
 
 		//proxy
@@ -840,8 +854,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		Log.i("Initializing supported payloads");
 		Editor e = mPref.edit();
 		boolean fastCpu = Version.isArmv7();
-
-		e.putBoolean(getString(pref_echo_cancellation_key), fastCpu);
 
 		e.putBoolean(getString(R.string.pref_codec_gsm_key), true);
 		e.putBoolean(getString(R.string.pref_codec_pcma_key), true);

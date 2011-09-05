@@ -103,6 +103,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setUploadPtime(long nativePtr, int ptime);
 	private native void setDownloadPtime(long nativePtr, int ptime);
 	private native void setZrtpSecretsCache(long nativePtr, String file);
+	private native void enableEchoLimiter(long nativePtr2, boolean val);
 
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -503,4 +504,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public synchronized void setZrtpSecretsCache(String file) {
 		setZrtpSecretsCache(nativePtr,file);
 	}
+	public void enableEchoLimiter(boolean val) {
+		enableEchoLimiter(nativePtr,val);
+	}
+	
 }

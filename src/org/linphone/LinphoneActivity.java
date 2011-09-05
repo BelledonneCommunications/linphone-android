@@ -139,7 +139,7 @@ public class LinphoneActivity extends TabActivity  {
 			if (pref.getBoolean(PREF_FIRST_LAUNCH, true)) {
 				onFirstLaunch();
 			} else if (!pref.getBoolean(PREF_CHECK_CONFIG, false)
-					&& !checkDefined(pref, R.string.pref_username_key, R.string.pref_passwd_key, R.string.pref_domain_key)) {
+					&& !checkDefined(pref, R.string.pref_username_key, R.string.pref_domain_key)) {
 				onBadSettings(pref);
 			} else {
 				checkAccount = false;
@@ -502,6 +502,7 @@ public class LinphoneActivity extends TabActivity  {
 	}
 
 	public void startVideoActivity() {
+		
 		mHandler.post(new Runnable() {
 			public void run() {
 				startActivityForResult(new Intent().setClass(
@@ -510,7 +511,7 @@ public class LinphoneActivity extends TabActivity  {
 						video_activity);
 				}
 		});
-
+		LinphoneManager.getInstance().routeAudioToSpeaker();
 	}
 	
 	public void finishVideoActivity() {
