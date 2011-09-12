@@ -21,6 +21,9 @@ package org.linphone;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.core.Version;
+
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,6 +31,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 /**
@@ -110,6 +114,20 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 		}
 
 		c.close();
+		
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			selection = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
+			String projection[] = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+			selArgs = new String[] {id, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE};
+			c = this.getContentResolver().query(uri, projection, selection, selArgs, null);
+
+			nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+			while (c.moveToNext()) {
+				list.add("sip:" + c.getString(nbId)); 
+			}
+
+			c.close();
+		}
 
 		return list;
 	}
