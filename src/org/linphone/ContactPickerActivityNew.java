@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.linphone.core.Version;
 
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,7 +30,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
-import android.util.Log;
 
 
 /**
