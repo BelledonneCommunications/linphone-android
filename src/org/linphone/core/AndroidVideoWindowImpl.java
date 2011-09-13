@@ -120,15 +120,20 @@ public class AndroidVideoWindowImpl  {
     private static class Renderer implements GLSurfaceView.Renderer {
     	int ptr;
     	boolean initPending;
-    	int width, height;
+    	int width=-1, height=-1;
     	
     	public Renderer() {
-    		ptr = 0;
+    		ptr = 0; 
     		initPending = false;
     	}
     	 
     	public void setOpenGLESDisplay(int ptr) {
     		this.ptr = ptr;
+    		// if dimension are set, we are recreating MS2 graph without
+    		// recreating the surface => need to force init
+    		if (width > 0 && height > 0) {
+    			initPending = true;
+    		}
     	}
 
         public void onDrawFrame(GL10 gl) {
