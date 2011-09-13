@@ -22,10 +22,10 @@ import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.Version;
-import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.video.AndroidCameraRecordManager;
 import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.AddressAware;
@@ -170,7 +170,11 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
     				+ " is not ready or we are already in call");
     		return;
     	}
-
+    	
+    	// Fix call from contact issue
+    	if (getIntent().getData().getSchemeSpecificPart() != null)
+    		getIntent().setAction(Intent.ACTION_CALL);
+    	
     	newOutgoingCall(getIntent());
 	}
 
@@ -344,7 +348,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		} else if (Intent.ACTION_SENDTO.equals(intent.getAction())) {
 			mAddress.setText("sip:" + intent.getData().getLastPathSegment());
 		}
-		
+
 		mAddress.clearDisplayedName();
 		intent.setData(null);
 
