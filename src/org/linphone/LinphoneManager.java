@@ -1012,4 +1012,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 	}
+
+
+	public static final boolean isInstanciated() {
+		return instance != null;
+	}
 }

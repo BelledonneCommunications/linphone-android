@@ -128,4 +128,9 @@ class LinphoneCallImpl implements LinphoneCall {
 		LinphoneCallParamsImpl params = new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
 		return params.localConferenceMode();
 	}
+
+	@Override
+	public String toString() {
+		return "Call " + nativePtr;
+	}
 }

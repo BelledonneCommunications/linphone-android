@@ -23,9 +23,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 
 import android.app.AlertDialog;
@@ -49,6 +51,11 @@ public class ConferenceActivity extends ListActivity implements
 
 	// Start Override to test block
 	protected LinphoneCore lc() {
+		final int waitSlice=20;
+		while(!LinphoneManager.isInstanciated()) {
+			Log.d("LinphoneManager is not ready, waiting for ",waitSlice, "ms");
+			Hacks.sleep(waitSlice);
+		}
 		return LinphoneManager.getLc();
 	}
 
@@ -330,6 +337,8 @@ public class ConferenceActivity extends ListActivity implements
 			public void run() {
 				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
 
+				String stateStr = call + " " + state.toString();
+				Log.d("ConferenceActivity received state ",stateStr);
 				switch (state.value()) {
 				case State.ID_INCOMING_RECEIVED:
 				case State.ID_OUTGOING_RINGING:
