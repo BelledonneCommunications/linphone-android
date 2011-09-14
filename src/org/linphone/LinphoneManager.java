@@ -30,7 +30,6 @@ import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_codec_speex32_key;
-import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_video_enable_key;
 import static org.linphone.core.LinphoneCall.State.CallEnd;
 import static org.linphone.core.LinphoneCall.State.Error;
@@ -43,7 +42,6 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -63,7 +61,10 @@ import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
-import org.linphone.core.video.AndroidCameraRecordManager;
+import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -211,9 +212,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		instance = new LinphoneManager(c);
 		instance.serviceListener = listener;
 		instance.startLibLinphone(c);
-		if (Version.isVideoCapable()) {
-			AndroidCameraRecordManager.getInstance().startOrientationSensor(c.getApplicationContext());
-		}
+		
+		AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Build.VERSION.SDK_INT);
 		return instance;
 	}
 	
@@ -261,7 +261,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				boolean prefVideoEnable = isVideoEnabled();
 				int key = R.string.pref_video_initiate_call_with_video_key;
 				boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(key), false);
-				resetCameraFromPreferences();
 				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
 			} else {
 				CallManager.getInstance().inviteAddress(lAddress, false);
@@ -273,13 +272,20 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			return;
 		}
 	}
-
 	
 	public void resetCameraFromPreferences() {
 		boolean useFrontCam = mPref.getBoolean(mR.getString(R.string.pref_video_use_front_camera_key), false);
-		AndroidCameraRecordManager.getInstance().setUseFrontCamera(useFrontCam);
+		
+		int camId = 0;
+		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
+		for (AndroidCamera androidCamera : cameras) {
+			if (androidCamera.frontFacing == useFrontCam)
+				camId = androidCamera.id;
+		}
+		LinphoneManager.getLc().setVideoDevice(camId);
 	}
 
+	
 	public static interface AddressType {
 		void setText(CharSequence s);
 		CharSequence getText();
@@ -294,7 +300,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		public void onAlreadyInCall();
 	}
 
-
+	public void toggleEnableCamera() {
+		if (mLc.isIncall()) {
+			mLc.getCurrentCall().enableCamera(!mLc.getCurrentCall().cameraEnabled());
+		}
+	}
+	
 	public void sendStaticImage(boolean send) {
 		if (mLc.isIncall()) {
 			mLc.getCurrentCall().enableCamera(!send);
@@ -322,20 +333,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (mLc.isIncall()) {
 			mLc.terminateCall(mLc.getCurrentCall());
 		}
-	}
-
-	/**
-	 * Camera will be restarted when mediastreamer chain is recreated and setParameters is called.
-	 */
-	public void switchCamera() {
-		AndroidCameraRecordManager.getInstance().stopVideoRecording();
-		AndroidCameraRecordManager.getInstance().toggleUseFrontCamera();
-		CallManager.getInstance().updateCall();
-	}
-
-	public void toggleCameraMuting() {
-		AndroidCameraRecordManager rm = AndroidCameraRecordManager.getInstance();
-		sendStaticImage(rm.toggleMute());
 	}
 
 	private synchronized void startLibLinphone(final Context context) {
@@ -417,7 +414,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void initFromConf(Context context) throws LinphoneConfigException {
 		//traces
-		boolean lIsDebug = mPref.getBoolean(getString(R.string.pref_debug_key), false);
+		boolean lIsDebug = true;//mPref.getBoolean(getString(R.string.pref_debug_key), false);
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
 		
 		if (initialTransports == null)
@@ -842,6 +839,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public boolean isVideoEnabled() {
 		return mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
+	}
+	
+	public boolean shareMyCamera() {
+		return mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video), false);
 	}
 
 	public void setAudioModeIncallForGalaxyS() {

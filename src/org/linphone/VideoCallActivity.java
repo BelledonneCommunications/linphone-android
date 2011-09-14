@@ -20,89 +20,97 @@ package org.linphone;
 
 
 
-import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
-import org.linphone.core.Version;
-import org.linphone.core.VideoSize;
-import org.linphone.core.video.AndroidCameraRecordManager;
-import org.linphone.core.video.AndroidCameraRecordManager.OnCapturingStateChangedListener;
+import org.linphone.mediastream.video.AndroidVideoWindowImpl;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.ViewGroup.LayoutParams;
 
 /**
  * For Android SDK >= 5
  * @author Guillaume Beraudo
  *
  */
-public class VideoCallActivity extends SoftVolumeActivity implements OnCapturingStateChangedListener {
+public class VideoCallActivity extends SoftVolumeActivity {
 	private SurfaceView mVideoView;
 	private SurfaceView mVideoCaptureView;
-	private AndroidCameraRecordManager recordManager;
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
-	private static final int capturePreviewLargestDimension = 150;
-	private Handler handler = new Handler();
+	
+	AndroidVideoWindowImpl androidVideoWindowImpl;
 
-
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {		
 		launched = true;
 		Log.d("onCreate VideoCallActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 
 		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
-		LinphoneCore lc = LinphoneManager.getLc();
-		lc.setVideoWindow(mVideoView);
 
 		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
+		mVideoCaptureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-		recordManager = AndroidCameraRecordManager.getInstance();
-		recordManager.setOnCapturingStateChanged(this);
-		recordManager.setSurfaceView(mVideoCaptureView);
+		/* force surfaces Z ordering */
+		mVideoView.setZOrderOnTop(false);
 		mVideoCaptureView.setZOrderOnTop(true);
+	
+		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mVideoCaptureView);
+		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
+			
+			@Override
+			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw) {
+				LinphoneManager.getLc().setVideoWindow(vw);
+			}
+			
+			@Override
+			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				LinphoneManager.getLc().setVideoWindow(null);
+			}
+			
+			@Override 
+			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw) {
+				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
+			}
+			
+			@Override
+			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				
+			}
+		});
+		
+		androidVideoWindowImpl.init();
+		
+		// When changing phone orientation _DURING_ a call, VideoCallActivity is destroyed then recreated
+		// In this case, the following sequence happen:
+		//   * onDestroy -> sendStaticImage(true)  => destroy video graph
+		//   * onCreate  -> sendStaticImage(false) => recreate the video graph.
+		// Before creating the graph, the orientation must be known to LC => this is done here
+		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getRotation()));
 
-		if (!recordManager.isMuted()) LinphoneManager.getInstance().sendStaticImage(false);
+		if (LinphoneManager.getInstance().shareMyCamera()) 
+			LinphoneManager.getInstance().sendStaticImage(false);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
-
-		fixScreenOrientationForOldDevices();
 	}
 
-	private void fixScreenOrientationForOldDevices() {
-		if (Version.sdkAboveOrEqual(Version.API08_FROYO_22)) return;
-
-		// Force to display in portrait orientation for old devices
-		// as they do not support surfaceView rotation
-		setRequestedOrientation(recordManager.isCameraMountedPortrait() ?
-				ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-				ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		resizeCapturePreview(mVideoCaptureView);
-	}
-
+ 
 	@Override
 	protected void onResume() {
-		if (Version.sdkAboveOrEqual(8) && recordManager.isOutputOrientationMismatch(LinphoneManager.getLc())) {
-			Log.i("Phone orientation has changed: updating call.");
-			CallManager.getInstance().updateCall();
-			// resizeCapturePreview by callback when recording started
-		}
 		super.onResume();
 	}
 
 
 	private void rewriteToggleCameraItem(MenuItem item) {
-		if (recordManager.isRecording()) {
+		if (LinphoneManager.getLc().getCurrentCall().cameraEnabled()) {
 			item.setTitle(getString(R.string.menu_videocall_toggle_camera_disable));
 		} else {
 			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
@@ -128,37 +136,11 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 		rewriteToggleCameraItem(menu.findItem(R.id.videocall_menu_toggle_camera));
 		rewriteChangeResolutionItem(menu.findItem(R.id.videocall_menu_change_resolution));
 
-		if (!recordManager.hasSeveralCameras()) {
+		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
 			menu.findItem(R.id.videocall_menu_switch_camera).setVisible(false);
 		}
 		return true;
 	}
-
-
-
-	/**
-	 * Base capture frame on streamed dimensions and orientation.
-	 * @param sv capture surface view to resize the layout
-	 * @param vs video size from which to calculate the dimensions
-	 */
-	private void resizeCapturePreview(SurfaceView sv) {
-		LayoutParams lp = sv.getLayoutParams();
-		VideoSize vs = LinphoneManager.getLc().getPreferredVideoSize();
-
-		float newRatio = (float) vs.width / vs.height;
-
-		if (vs.isPortrait()) {
-			lp.height = capturePreviewLargestDimension;
-			lp.width = Math.round(lp.height * newRatio);
-		} else {
-			lp.width = capturePreviewLargestDimension;
-			lp.height = Math.round(lp.width / newRatio);
-		}
-
-		sv.setLayoutParams(lp);
-	}
-
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -168,30 +150,37 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 			break;
 		case R.id.videocall_menu_change_resolution:
 			LinphoneManager.getInstance().changeResolution();
+			// previous call will cause graph reconstruction -> regive preview window
 			rewriteChangeResolutionItem(item);
 			break;
 		case R.id.videocall_menu_terminate_call:
 			LinphoneManager.getInstance().terminateCall();
 			break;
 		case R.id.videocall_menu_toggle_camera:
-			LinphoneManager.getInstance().toggleCameraMuting();
+			LinphoneManager.getInstance().toggleEnableCamera();
 			rewriteToggleCameraItem(item);
+			// previous call will cause graph reconstruction -> regive preview window
+			LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
 			break;
 		case R.id.videocall_menu_switch_camera:
-			LinphoneManager.getInstance().switchCamera();
-			fixScreenOrientationForOldDevices();
+			int id = LinphoneManager.getLc().getVideoDevice();
+			id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+			LinphoneManager.getLc().setVideoDevice(id);
+			CallManager.getInstance().updateCall();
+			// previous call will cause graph reconstruction -> regive preview window
+			LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
 			break;
 		default:
 			Log.e("Unknown menu item [",item,"]");
 			break;
 		}
-
 		return true;
 	}
 
 
 	@Override
 	protected void onDestroy() {
+		androidVideoWindowImpl.release();
 		launched = false;
 		super.onDestroy();
 	}
@@ -203,16 +192,4 @@ public class VideoCallActivity extends SoftVolumeActivity implements OnCapturing
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
 	}
-
-	public void captureStarted() {
-		handler.post(new Runnable() {
-			public void run() {
-				resizeCapturePreview(mVideoCaptureView);
-			}
-		});
-	}
-
-	public void captureStopped() {
-	}
-
 }
