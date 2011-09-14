@@ -48,4 +48,9 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	public void setAudioBandwidth(int value) {
 		audioBandwidth(nativePtr, value);
 	}
+
+	private native boolean localConferenceMode(long nativePtr);
+	public boolean localConferenceMode() {
+		return localConferenceMode(nativePtr);
+	}
 }

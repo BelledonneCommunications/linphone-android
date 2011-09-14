@@ -10,7 +10,7 @@
     <bool name="useFirstLoginActivity">false</bool>
 	<bool name="useMenuSettings">true</bool>
 	<bool name="useMenuAbout">true</bool>
-	<bool name="use_incall_activity">false</bool>
+	<bool name="use_incall_activity">true</bool>
 	<bool name="use_video_activity">true</bool>
 	<bool name="show_full_remote_address_on_incoming_call">true</bool>
 

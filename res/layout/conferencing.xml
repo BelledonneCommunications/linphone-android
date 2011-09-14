@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         android:orientation="vertical"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:paddingLeft="8dp"
+         android:paddingRight="8dp">
+
+
+<RelativeLayout android:id="@+id/conf_header"
+  android:layout_width="fill_parent" android:layout_height="wrap_content" >
+    <LinearLayout android:id="@+id/conf_management_buttons" android:layout_alignParentRight="true" 
+       android:layout_width="wrap_content" android:layout_height="wrap_content">
+      <Button android:id="@+id/conf_enter_or_leave_button" android:layout_alignParentRight="true" 
+        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+      <ImageButton android:id="@+id/terminate_conference" android:src="@drawable/conf_terminate"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical"
+    	android:layout_toLeftOf="@id/conf_management_buttons" android:layout_alignParentLeft="true">
+      <TextView android:text="@string/conf_text_you_host_a_conference"
+        android:layout_width="fill_parent" android:layout_height="wrap_content" />
+      <TextView android:id="@+id/conf_self_attending"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>
+
+
+     <ListView android:id="@android:id/list"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:drawSelectorOnTop="false"/>
+
+	<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content"> 
+	<ToggleButton android:textOn="Mute" android:textOff="Mute" android:id="@+id/toggleMuteMic"
+	  android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" />
+	<ToggleButton android:textOn="Speaker" android:textOff="Speaker" android:id="@+id/toggleSpeaker" 
+	  android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" />
+	<ToggleButton android:textOn="Bluetooth" android:textOff="Bluetooth" android:id="@+id/toggleBluetooth" 
+	  android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" />
+	</LinearLayout>
+
+<!--android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1-->
+
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<Button android:text="+ Add call" android:id="@+id/addCall"
+	     android:layout_width="wrap_content" android:layout_height="wrap_content"
+	     />
+
+		<org.linphone.ui.HangCallButton android:id="@+id/incallHang" android:layout_width="wrap_content" android:layout_height="wrap_content"
+		 android:src="@drawable/mini_stopcall_red"  android:layout_weight="1" />
+		 
+		<Button android:id="@+id/incallNumpadShow" android:text="@string/show_send_dtmfs_button"  
+		 android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+
+ </LinearLayout>

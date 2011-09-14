@@ -123,8 +123,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	public boolean areStreamsEncrypted() {
 		return areStreamsEncrypted(nativePtr);
 	}
+
 	public boolean isInConference() {
-		// TODO Auto-generated method stub
-		return false;
+		LinphoneCallParamsImpl params = new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
+		return params.localConferenceMode();
 	}
 }

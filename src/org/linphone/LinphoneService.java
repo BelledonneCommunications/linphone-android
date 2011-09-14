@@ -20,8 +20,9 @@ package org.linphone;
 
 import java.io.IOException;
 
-import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
+import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;

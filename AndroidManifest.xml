@@ -42,7 +42,13 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-
+		<activity android:name="org.linphone.ConferenceActivity"
+                    android:launchMode="singleTop"
+        			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
         <activity android:name="org.linphone.IncallActivity"
                     android:launchMode="singleTop"
         			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
@@ -103,6 +109,15 @@
 	
 	
 	
+		<activity android:name="org.linphone.TestConferenceActivity"
+                  android:label="Test Linphone conference UI"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                   android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
         <activity android:name="org.linphone.core.tutorials.TestVideoActivity"
                   android:label="Video test"
                   android:theme="@android:style/Theme.NoTitleBar"

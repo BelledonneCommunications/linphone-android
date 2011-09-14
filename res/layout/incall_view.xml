@@ -24,9 +24,7 @@
 		</TableRow>
 		
 		<TableRow>
-		<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:src="@drawable/startvideo_green"
-		 android:layout_height="wrap_content" android:layout_width="wrap_content" android:height="10px"
-		 android:layout_column="1" />
+		
 		</TableRow>
 	</TableLayout>
 
@@ -34,8 +32,21 @@
 	</FrameLayout>
 
 	<View android:layout_weight="1" android:layout_width="0px" android:layout_height="0px" android:visibility="invisible"/>
+	
+	<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content"> 
+	<Button android:text="+ Add call" android:id="@+id/toggleButton4" android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+	<Button android:text="Video" android:id="@+id/toggleButton4" android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+	<Button android:text="Chat" android:id="@+id/toggleButton4" android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+	</LinearLayout>
+	
+	<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content"> 
+	<ToggleButton android:text="Mute" android:id="@+id/toggleButton1" android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1"></ToggleButton>
+	<ToggleButton android:text="Speaker" android:id="@+id/toggleButton2" android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1"></ToggleButton>
+	<ToggleButton android:text="Bluetooth" android:id="@+id/toggleButton3" android:width="0px" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1"></ToggleButton>
+	</LinearLayout>
 
-
+<!--	<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:src="@drawable/startvideo_green"-->
+<!--		 android:layout_height="wrap_content" android:layout_width="fill_parent" android:width="0px" android:layout_weight="1"/>-->
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<org.linphone.ui.HangCallButton android:id="@+id/incallHang" android:layout_width="wrap_content" android:layout_height="wrap_content"
 		 android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg" android:layout_weight="10" />

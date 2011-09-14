@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="show_send_dtmfs_button">DTMFs</string>
+
+	<string name="conf_text_you_host_a_conference">You host a conference</string>
+	<string name="in_conf">You are part of it</string>
+	<string name="in_conf_leave">Go out</string>
+	<string name="out_conf">You are out of it</string>
+	<string name="out_conf_enter">Go in</string>
+
 	<string name="pref_audio_hacks_title">Audio hacks</string>
 	<string name="pref_audio_use_specific_mode_title">Use specific mode hack</string>
 	<string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (default), 2=MODE_IN_CALL</string>

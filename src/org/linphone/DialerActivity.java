@@ -21,6 +21,7 @@ package org.linphone;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
@@ -219,7 +220,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 	
 	private void enterIncallMode(LinphoneCore lc) {
-		mDisplayNameView.setText(LinphoneManager.getInstance().extractADisplayName());
+		LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+		mDisplayNameView.setText(LinphoneManager.extractADisplayName(getResources(), address));
 
 //		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
@@ -227,8 +229,9 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		if (!mWakeLock.isHeld()) mWakeLock.acquire();
 		
 		if (useIncallActivity) {
-			LinphoneActivity.instance().startIncallActivity(
-				mDisplayNameView.getText(), mAddress.getPictureUri());
+//			LinphoneActivity.instance().startIncallActivity(
+//				mDisplayNameView.getText(), mAddress.getPictureUri());
+			LinphoneActivity.instance().startConferenceActivity();
 		} else {
 			loadMicAndSpeakerUiStateFromManager();
 			mCallControlRow.setVisibility(View.GONE);
@@ -319,6 +322,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (id == incomingCallDialogId) {
+			LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+			String from = LinphoneManager.extractIncomingRemoteName(getResources(), address);
 			View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 
 			final Dialog dialog = new AlertDialog.Builder(this)

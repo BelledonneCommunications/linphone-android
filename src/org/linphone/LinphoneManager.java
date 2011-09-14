@@ -39,9 +39,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -116,7 +120,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String basePath;
 	private static boolean sExited;
 
-	
+	private List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
+	public void addListener(LinphoneSimpleListener listener) {
+		if (!simpleListeners.contains(listener)) {
+			simpleListeners.add(listener);
+		}
+	}
+	public void removeListener(LinphoneSimpleListener listener) {
+		simpleListeners.remove(listener);
+	}
+
+
 	private LinphoneManager(final Context c) {
 		sExited=false;
 		basePath = c.getFilesDir().getAbsolutePath();
@@ -203,14 +217,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 	}
-	
+
 	public synchronized static final LinphoneManager createAndStart(
 			Context c, LinphoneServiceListener listener) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
 
 		instance = new LinphoneManager(c);
-		instance.serviceListener = listener;
+		instance.listenerDispatcher.setServiceListener(listener);
 		instance.startLibLinphone(c);
 		
 		if (Version.isVideoCapable())
@@ -245,14 +259,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		String to = address.getText().toString();
 
 		if (mLc.isIncall()) {
-			serviceListener.tryingNewOutgoingCallButAlreadyInCall();
+			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
 			return;
 		}
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
 		} catch (LinphoneCoreException e) {
-			serviceListener.tryingNewOutgoingCallButWrongDestinationAddress();
+			listenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 			return;
 		}
 		lAddress.setDisplayName(address.getDisplayedName());
@@ -269,7 +283,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			
 
 		} catch (LinphoneCoreException e) {
-			serviceListener.tryingNewOutgoingCallButCannotGetCallParameters();
+			listenerDispatcher.tryingNewOutgoingCallButCannotGetCallParameters();
 			return;
 		}
 	}
@@ -646,25 +660,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	
 	
-	public interface LinphoneServiceListener {
-		void onGlobalStateChanged(GlobalState state, String message);
-		void tryingNewOutgoingCallButCannotGetCallParameters();
-		void tryingNewOutgoingCallButWrongDestinationAddress();
-		void tryingNewOutgoingCallButAlreadyInCall();
-		void onRegistrationStateChanged(RegistrationState state, String message);
-		void onCallStateChanged(LinphoneCall call, State state, String message);
-		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
-		void onDisplayStatus(String message);
-		void onAlreadyInVideoCall();
-		void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
-				String authenticationToken);
-	}
-
 	public interface EcCalibrationListener {
 		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
 	}
 
-	private LinphoneServiceListener serviceListener;
+	private ListenerDispatcher listenerDispatcher = new ListenerDispatcher(simpleListeners);
 	private LinphoneCall.State mCurrentCallState;
 
 	private MediaPlayer mRingerPlayer;
@@ -689,32 +689,31 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void displayStatus(final LinphoneCore lc, final String message) {
 		Log.i(message);
 		lastLcStatusMessage=message;
-		serviceListener.onDisplayStatus(message);
+		listenerDispatcher.onDisplayStatus(message);
 	}
 
 
 	public void globalState(final LinphoneCore lc, final LinphoneCore.GlobalState state, final String message) {
 		Log.i("new state [",state,"]");
-		serviceListener.onGlobalStateChanged(state, message);
+		listenerDispatcher.onGlobalStateChanged(state, message);
 	}
 
 
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String message) {
 		Log.i("new state ["+state+"]");
-		serviceListener.onRegistrationStateChanged(state, message);
+		listenerDispatcher.onRegistrationStateChanged(state, message);
 	}
 
 
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("new state [",state,"]");
 		if (state == IncomingReceived && !call.equals(lc.getCurrentCall())) {
-			if (call.getReplacedCall()==null){
-				//no multicall support, just decline
-				lc.terminateCall(call);
-			}//otherwise it will be accepted automatically.
-			
-			return;
+			if (call.getReplacedCall()!=null){
+				// attended transfer
+				// it will be accepted automatically.
+				return;
+			} 
 		}
 
 		if (state == IncomingReceived) {
@@ -746,12 +745,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		mCurrentCallState=state;
-		serviceListener.onCallStateChanged(call, state, message);
+		listenerDispatcher.onCallStateChanged(call, state, message);
 	}
 
 	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
 			boolean encrypted, String authenticationToken) {
-		serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
+		listenerDispatcher.onCallEncryptionChanged(call, encrypted, authenticationToken);
 	}
 
 	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delayMs,
@@ -793,7 +792,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (mRingerPlayer == null) {
 				mRingerPlayer = new MediaPlayer();
 				mRingerPlayer.setAudioStreamType(STREAM_RING);
-				serviceListener.onRingerPlayerCreated(mRingerPlayer);
+				listenerDispatcher.onRingerPlayerCreated(mRingerPlayer);
 				mRingerPlayer.prepare();
 				mRingerPlayer.setLooping(true);
 				mRingerPlayer.start();
@@ -820,21 +819,20 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	
-	public String extractADisplayName() {
-		final LinphoneAddress remote = mLc.getRemoteAddress();
-		if (remote == null) return mR.getString(R.string.unknown_incoming_call_name);
+	public static String extractADisplayName(Resources r, LinphoneAddress address) {
+		if (address == null) return r.getString(R.string.unknown_incoming_call_name);
 
-		final String displayName = remote.getDisplayName();
+		final String displayName = address.getDisplayName();
 		if (displayName!=null) {
 			return displayName;
-		} else  if (remote.getUserName() != null){
-			return remote.getUserName();
+		} else  if (address.getUserName() != null){
+			return address.getUserName();
 		} else {
-			String rms = remote.toString();
+			String rms = address.toString();
 			if (rms != null && rms.length() > 1)
 				return rms;
 				
-			return mR.getString(R.string.unknown_incoming_call_name);
+			return r.getString(R.string.unknown_incoming_call_name);
 		}
 	}
 
@@ -887,7 +885,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void addVideo() {
 		if (!LinphoneManager.getLc().isIncall()) return;
 		if (!reinviteWithVideo()) {
-			serviceListener.onAlreadyInVideoCall();
+			listenerDispatcher.onAlreadyInVideoCall();
 		}
 	}
 
@@ -902,15 +900,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return false;
 	}
 
-	public String extractIncomingRemoteName() {
-		if (!mR.getBoolean(R.bool.show_full_remote_address_on_incoming_call))
-			return extractADisplayName();
+	public static String extractIncomingRemoteName(Resources r, LinphoneAddress linphoneAddress) {
+		if (!r.getBoolean(R.bool.show_full_remote_address_on_incoming_call))
+			return extractADisplayName(r, linphoneAddress);
 
-		LinphoneAddress remote = mLc.getRemoteAddress();
-		if (remote != null)
-			return remote.toString();
+		if (linphoneAddress != null)
+			return linphoneAddress.toString();
 
-		return mR.getString(R.string.unknown_incoming_call_name);
+		return r.getString(R.string.unknown_incoming_call_name);
 	}
 
 	public void adjustSoftwareVolume(int i) {
@@ -948,4 +945,71 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return getLc();
 	}
 
+	private static class ListenerDispatcher implements LinphoneServiceListener {
+		private LinphoneServiceListener serviceListener;
+		List<LinphoneSimpleListener> simpleListeners;
+		public ListenerDispatcher(List<LinphoneSimpleListener> simpleListeners) {
+			this.simpleListeners = simpleListeners;
+		}
+
+		@SuppressWarnings("unchecked")
+		private <T> List<T> getSimpleListeners(Class<T> clazz) {
+			List<T> list = new ArrayList<T>();
+			for (LinphoneSimpleListener l : simpleListeners) {
+				if (clazz.isInstance(l)) list.add((T) l);
+			}
+			return list;
+		}
+
+		public void setServiceListener(LinphoneServiceListener s) {
+			this.serviceListener = s;
+		}
+
+		public void onAlreadyInVideoCall() {
+			if (serviceListener != null) serviceListener.onAlreadyInVideoCall();
+		}
+
+		public void onCallEncryptionChanged(LinphoneCall call,
+				boolean encrypted, String authenticationToken) {
+			if (serviceListener != null) serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
+		}
+
+		public void onCallStateChanged(LinphoneCall call, State state,
+				String message) {
+			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
+			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
+				l.onCallStateChanged(call, state, message);
+			}
+		}
+
+		public void onDisplayStatus(String message) {
+			if (serviceListener != null) serviceListener.onDisplayStatus(message);
+		}
+
+		public void onGlobalStateChanged(GlobalState state, String message) {
+			if (serviceListener != null) serviceListener.onGlobalStateChanged( state, message);
+		}
+
+		public void onRegistrationStateChanged(RegistrationState state,
+				String message) {
+			if (serviceListener != null) serviceListener.onRegistrationStateChanged(state, message);
+		}
+
+		public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
+			if (serviceListener != null) serviceListener.onRingerPlayerCreated(mRingerPlayer);
+		}
+
+		public void tryingNewOutgoingCallButAlreadyInCall() {
+			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButAlreadyInCall();
+		}
+
+		public void tryingNewOutgoingCallButCannotGetCallParameters() {
+			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButCannotGetCallParameters();
+		}
+
+		public void tryingNewOutgoingCallButWrongDestinationAddress() {
+			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButWrongDestinationAddress();
+		}
+		
+	}
 }

@@ -24,6 +24,7 @@ import static android.content.Intent.ACTION_MAIN;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
@@ -66,6 +67,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
     static final int FIRST_LOGIN_ACTIVITY = 101;
     static final int INCALL_ACTIVITY = 102;
     static final int INCOMING_CALL_ACTIVITY = 103;
+	private static final int conference_activity = 104;
     private static final String PREF_CHECK_CONFIG = "pref_check_config";
 
 	private static LinphoneActivity instance;
@@ -141,7 +143,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		
 	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
 	    	hideScreen(true);
-	    }	
+	    }
 	}
 	
 	
@@ -217,7 +219,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				gotToDialer();
 			} else {
 				if (getResources().getBoolean(R.bool.use_incall_activity)) {
-					startIncallActivity(LinphoneManager.getInstance().extractADisplayName(), null);
+					LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+					startIncallActivity(LinphoneManager.getInstance().extractADisplayName(getResources(), address), null);
 				} else {
 					// TODO
 					Log.e("Not handled case: recreation while in call and not using incall activity");
@@ -478,11 +481,13 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void startIncallActivity(CharSequence callerName, Uri pictureUri) {
-		Intent intent = new Intent().setClass(this, IncallActivity.class)
+/*		Intent intent = new Intent().setClass(this, IncallActivity.class)
                                 .putExtra(IncallActivity.CONTACT_KEY, callerName);
 		if (pictureUri != null)
 			intent.putExtra(IncallActivity.PICTURE_URI_KEY, pictureUri.toString());
-		startActivityForResult(intent, INCALL_ACTIVITY);
+		startActivityForResult(intent, INCALL_ACTIVITY);*/
+		// Hacked
+		startConferenceActivity();
 	}
 
 	public void closeIncallActivity() {
@@ -490,7 +495,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void startVideoActivity() {
-		
 		mHandler.post(new Runnable() {
 			public void run() {
 				startActivityForResult(new Intent().setClass(
@@ -501,6 +505,17 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		});
 		LinphoneManager.getInstance().routeAudioToSpeaker();
 	}
+
+	public void startConferenceActivity() {
+		mHandler.post(new Runnable() {
+			public void run() {
+				startActivityForResult(new Intent().setClass(
+						LinphoneActivity.this,
+						ConferenceActivity.class),
+						conference_activity);
+				}
+		});
+	}
 	
 	public void finishVideoActivity() {
 		mHandler.post(new Runnable() {
@@ -509,4 +524,5 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			}
 		});
 	}
+
 }
