@@ -18,14 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import java.util.List;
-
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
-import org.linphone.core.Version;
-import org.linphone.core.VideoSize;
-import org.linphone.core.video.AndroidCameraRecordManager;
 
 public class BandwidthManager {
 
@@ -82,24 +76,9 @@ public class BandwidthManager {
 
 
 	public void updateWithProfileSettings(LinphoneCore lc, LinphoneCallParams callParams) {
-		// Setting Linphone Core Preferred Video Size
-		boolean bandwidthOKForVideo = isVideoPossible();
-		if (bandwidthOKForVideo && Version.isVideoCapable()) {
-			AndroidCameraRecordManager acrm = AndroidCameraRecordManager.getInstance();
-			boolean isPortrait=acrm.isFrameToBeShownPortrait();
-			VideoSize targetVideoSize=maxSupportedVideoSize(isPortrait, getMaximumVideoSize(isPortrait),
-					acrm.supportedVideoSizes());
-			
-			lc.setPreferredVideoSize(targetVideoSize);
-			VideoSize actualVideoSize = lc.getPreferredVideoSize();
-			if (!targetVideoSize.equals(actualVideoSize)) {
-				lc.setPreferredVideoSize(VideoSize.createStandard(VideoSize.QCIF, targetVideoSize.isPortrait()));
-			}
-		}
-
 		if (callParams != null) { // in call
 			// Update video parm if
-			if (!bandwidthOKForVideo) { // NO VIDEO
+			if (!isVideoPossible()) { // NO VIDEO
 				callParams.setVideoEnabled(false);
 				callParams.setAudioBandwidth(40);
 			} else {
@@ -109,44 +88,7 @@ public class BandwidthManager {
 		}
 	}
 
-
-	private VideoSize maxSupportedVideoSize(boolean isPortrait, VideoSize maximumVideoSize,
-			List<VideoSize> supportedVideoSizes) {
-		Log.d("Searching for maximum video size for ", isPortrait ? "portrait" : "landscape","capture from (",maximumVideoSize);
-		VideoSize selected = VideoSize.createStandard(VideoSize.QCIF, isPortrait);
-		for (VideoSize s : supportedVideoSizes) {
-			int sW = s.width;
-			int sH = s.height;
-			if (s.isPortrait() != isPortrait) {
-				sW=s.height;
-				sH=s.width;
-			}
-			if (sW >maximumVideoSize.width || sH>maximumVideoSize.height) continue;
-			if (selected.width <sW && selected.height <sH) {
-				selected=new VideoSize(sW, sH);
-				Log.d("A better video size has been found: ",selected);
-			}
-		}
-		return selected;
-	}
-
-	private VideoSize maximumVideoSize(int profile, boolean cameraIsPortrait) {
-		switch (profile) {
-		case LOW_RESOLUTION:
-			return VideoSize.createStandard(VideoSize.QCIF, cameraIsPortrait);
-		case HIGH_RESOLUTION:
-			return VideoSize.createStandard(VideoSize.QVGA, cameraIsPortrait);
-		default:
-			throw new RuntimeException("profile not managed : " + profile);
-		}
-	}
-
-
 	public boolean isVideoPossible() {
 		return currentProfile != LOW_BANDWIDTH;
-	}
-
-	private VideoSize getMaximumVideoSize(boolean isPortrait) {
-		return maximumVideoSize(currentProfile, isPortrait);
 	}
 }

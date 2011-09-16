@@ -195,7 +195,7 @@ ASM_FILES += \
 	vp8/decoder/arm/armv6/dequant_dc_idct_v6.$(ASM) \
 	vp8/decoder/arm/armv6/dequant_idct_v6.$(ASM) \
 	vp8/decoder/arm/armv6/dequantize_v6.$(ASM)
-	
+
 # vpx_mem subfolder [vpx_mem.mk]
 LOCAL_SRC_FILES += vpx_mem/vpx_mem.c
 
@@ -212,6 +212,8 @@ ASM_FILES += \
 	vpx_scale/arm/neon/vp8_vpxyv12_copyframeyonly_neon.$(ASM) \
 	vpx_scale/arm/neon/vp8_vpxyv12_copysrcframe_func_neon.$(ASM) \
 	vpx_scale/arm/neon/vp8_vpxyv12_extendframeborders_neon.$(ASM) \
+
+LOCAL_SRC_FILES += vpx_ports/arm_cpudetect.c
 
 LOCAL_SRC_FILES += $(ASM_FILES)
 
@@ -231,4 +233,3 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/vpx_codec
 
 include $(BUILD_STATIC_LIBRARY)
-

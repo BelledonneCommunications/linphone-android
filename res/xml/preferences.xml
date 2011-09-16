@@ -94,15 +94,15 @@
 		<PreferenceScreen android:dependency="@string/pref_video_enable_key"
 			android:shouldDisableView="true" android:key="@string/pref_video_codecs_key"
 			android:title="@string/pref_video_codecs_title">
+			<CheckBoxPreference android:key="@string/pref_video_codec_vp8_key"
+				android:title="@string/pref_video_codec_vp8_title"
+				android:defaultValue="true"></CheckBoxPreference>
 			<CheckBoxPreference android:key="@string/pref_video_codec_h264_key"
 				android:title="@string/pref_video_codec_h264_title"
 				android:defaultValue="false"></CheckBoxPreference>
-			<CheckBoxPreference android:key="@string/pref_video_codec_vp8_key"
-				android:title="@string/pref_video_codec_vp8_title"
-				android:defaultValue="false"></CheckBoxPreference>
 			<CheckBoxPreference android:key="@string/pref_video_codec_mpeg4_key"
 				android:title="@string/pref_video_codec_mpeg4_title"
-				android:defaultValue="true"></CheckBoxPreference>
+				android:defaultValue="false"></CheckBoxPreference>
  			<CheckBoxPreference android:key="@string/pref_video_codec_h263_key"
 				android:title="@string/pref_video_codec_h263_title"
 				android:defaultValue="false" android:layout="@layout/hidden"></CheckBoxPreference>

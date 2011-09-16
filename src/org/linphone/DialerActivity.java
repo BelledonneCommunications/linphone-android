@@ -26,7 +26,6 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.video.AndroidCameraRecordManager;
 import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -170,7 +169,11 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
     				+ " is not ready or we are already in call");
     		return;
     	}
-
+    	
+    	// Fix call from contact issue
+    	if (getIntent().getData().getSchemeSpecificPart() != null)
+    		getIntent().setAction(Intent.ACTION_CALL);
+    	
     	newOutgoingCall(getIntent());
 	}
 
@@ -317,14 +320,13 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 				dialog.dismiss();
 				if (Version.isVideoCapable()) {
 					LinphoneManager.getInstance().resetCameraFromPreferences();
-
+					
 					// Privacy setting to not share the user camera by default
 					boolean prefVideoEnable = LinphoneManager.getInstance().isVideoEnabled();
 					int key = R.string.pref_video_automatically_share_my_video_key;
 					boolean prefAutoShareMyCamera = mPref.getBoolean(getString(key), false);
 					boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
-					AndroidCameraRecordManager.getInstance().setMuted(videoMuted);
-
+					
 					LinphoneManager.getLc().getCurrentCall().enableCamera(prefAutoShareMyCamera);
 				}
 			}
@@ -344,7 +346,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		} else if (Intent.ACTION_SENDTO.equals(intent.getAction())) {
 			mAddress.setText("sip:" + intent.getData().getLastPathSegment());
 		}
-		
+
 		mAddress.clearDisplayedName();
 		intent.setData(null);
 
@@ -374,7 +376,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 	}
 
 
-	public void onCannotGetCallParameters() {
+	public void onCannotGetCallParameters() { 
 		showToast(R.string.error_cannot_get_call_parameters,mAddress.getText());
 	}
 
@@ -390,20 +392,35 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 			/* we are certainly exiting, ignore then.*/
 			return;
 		}
-		if (state == LinphoneCall.State.OutgoingInit) {
-			enterIncallMode(lc);
-		} else if (state == LinphoneCall.State.IncomingReceived) { 
-			callPending(call);
-		} else if (state == LinphoneCall.State.Connected) {
-			if (call.getDirection() == CallDirection.Incoming) {
+		
+		switch (state) {
+			case OutgoingInit:
 				enterIncallMode(lc);
-			}
-		} else if (state == LinphoneCall.State.Error) {
-			if (mWakeLock.isHeld()) mWakeLock.release();
-			showToast(R.string.call_error, message);
-			exitCallMode();
-		} else if (state == LinphoneCall.State.CallEnd) {
-			exitCallMode();
+				if (!LinphoneManager.getInstance().shareMyCamera())
+					call.enableCamera(false);
+				LinphoneActivity.instance().startOrientationSensor();
+				break;
+			case IncomingReceived: 
+				callPending(call);
+				if (!LinphoneManager.getInstance().shareMyCamera())
+					call.enableCamera(false);
+				LinphoneActivity.instance().startOrientationSensor();
+				break;
+			case Connected:
+				if (call.getDirection() == CallDirection.Incoming) {
+					enterIncallMode(lc);
+				}
+				break;
+			case Error:
+				if (mWakeLock.isHeld()) mWakeLock.release();
+				showToast(R.string.call_error, message);
+				exitCallMode();
+				LinphoneActivity.instance().stopOrientationSensor();
+				break;
+			case CallEnd:
+				exitCallMode();
+				LinphoneActivity.instance().stopOrientationSensor();
+				break;
 		}
 	}
 

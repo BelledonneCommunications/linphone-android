@@ -39,6 +39,7 @@ import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
@@ -68,7 +69,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 	
-public class LinphoneActivity extends TabActivity  {
+public class LinphoneActivity extends TabActivity implements SensorEventListener {
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     private static final int video_activity = 100;
@@ -82,6 +83,8 @@ public class LinphoneActivity extends TabActivity  {
 	
 	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
+	private Sensor mAccelerometer;
+	private int previousRotation = -1;
 	private static SensorEventListener mSensorEventListener;
 	
 	private static final String SCREEN_IS_HIDDEN = "screen_is_hidden";
@@ -283,9 +286,30 @@ public class LinphoneActivity extends TabActivity  {
 			Toast.makeText(this, getString(R.string.dialer_null_on_new_intent), Toast.LENGTH_LONG).show();
 		}
 	}
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		
+	}
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (event==null || event.sensor == mAccelerometer) {
+			// WARNING : getRotation() is SDK > 5
+			int rot = AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getRotation());
+			
+			if (rot != previousRotation) {
+				Log.d("New device rotation: ", rot);
+				// Returning rotation FROM ITS NATURAL ORIENTATION
+				LinphoneManager.getLc().setDeviceRotation(rot);
+				previousRotation = rot;
+			}
+		}
+	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
 		if  (isFinishing())  {
 			//restore audio settings   
 			LinphoneManager.getInstance().routeAudioToReceiver();
@@ -359,13 +383,29 @@ public class LinphoneActivity extends TabActivity  {
 				if (event.timestamp == 0) return;
 				instance().hideScreen(LinphoneManager.isProximitySensorNearby(event));
 			}
-
+ 
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {}	
 		};
 		if (lSensorList.size() >0) {
 			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
 			Log.i("Proximity sensor detected, registering");
 		}		
+	}
+	
+	public synchronized void startOrientationSensor() {
+		if (mSensorManager!=null) {
+			mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+		
+		/* init LC orientation value on orientation sensor startup */
+		previousRotation = -1;
+		onSensorChanged(null);
+	}
+	
+	public synchronized void stopOrientationSensor() {
+		if (mSensorManager!=null)
+			mSensorManager.unregisterListener(this, mAccelerometer);
 	}
 
 	protected synchronized void stopProxymitySensor() {

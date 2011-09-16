@@ -24,7 +24,6 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
-import org.linphone.core.video.AndroidCameraRecordManager;
 
 
 /**
@@ -33,7 +32,7 @@ import org.linphone.core.video.AndroidCameraRecordManager;
  * @author Guillaume Beraudo
  *
  */
-class CallManager {
+public class CallManager {
 
 	private static CallManager instance;
 	
@@ -43,9 +42,6 @@ class CallManager {
 		return instance;
 	}
 	
-	private AndroidCameraRecordManager videoManager() {
-		return AndroidCameraRecordManager.getInstance();
-	}
 	private BandwidthManager bm() {
 		return BandwidthManager.getInstance();
 	}
@@ -60,7 +56,6 @@ class CallManager {
 		bm().updateWithProfileSettings(lc, params);
 
 		if (videoEnabled && params.getVideoEnabled()) {
-			videoManager().setMuted(false);
 			params.setVideoEnabled(true);
 		} else {
 			params.setVideoEnabled(false);
@@ -98,7 +93,6 @@ class CallManager {
 
 		// Not yet in video call: try to re-invite with video
 		params.setVideoEnabled(true);
-		videoManager().setMuted(false);
 		lc.updateCall(lCall, params);
 		return true;
 	}
@@ -125,7 +119,7 @@ class CallManager {
 	 * Update current call, without reinvite.
 	 * The camera will be restarted when mediastreamer chain is recreated and setParameters is called.
 	 */
-	void updateCall() {
+	public void updateCall() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall lCall = lc.getCurrentCall();
 		if (lCall == null) {

@@ -4,7 +4,7 @@
   android:id="@+id/video_frame"
   android:layout_height="fill_parent" android:layout_width="fill_parent">
   
-<org.linphone.GL2JNIView android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/video_surface"></org.linphone.GL2JNIView>
+<org.linphone.mediastream.video.display.GL2JNIView android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/video_surface"></org.linphone.mediastream.video.display.GL2JNIView>
 <SurfaceView android:layout_height="88dip" android:layout_width="72dip" android:id="@+id/video_capture_surface" android:layout_gravity="right|bottom"
  android:layout_margin="15dip"></SurfaceView>
  </FrameLayout>

@@ -21,6 +21,8 @@ package org.linphone;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.core.Version;
+
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -110,6 +112,21 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 		}
 
 		c.close();
+		
+		// Using the SIP contact field added in SDK 9
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			selection = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
+			String projection[] = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+			selArgs = new String[] {id, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE};
+			c = this.getContentResolver().query(uri, projection, selection, selArgs, null);
+
+			nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+			while (c.moveToNext()) {
+				list.add("sip:" + c.getString(nbId)); 
+			}
+
+			c.close();
+		}
 
 		return list;
 	}
@@ -131,8 +148,9 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 			if (resultCode == RESULT_OK) {
 				String id = intent.getData().getLastPathSegment();
 				String contactName = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
-				if (contactName == null)
+				if (contactName == null) {
 					contactName = retrieveContactName(id);
+				}
 				choosePhoneNumberAndDial(contactName, id);
 			}
 		}
@@ -142,14 +160,15 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 
 
 	private String retrieveContactName(String id) {
-		Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-		String selection = ContactsContract.CommonDataKinds.Phone._ID + " = ?";
+		//Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+		Uri uri = ContactsContract.Contacts.CONTENT_URI;
+		String selection = ContactsContract.Contacts._ID + " = ?";
 		String[] selArgs = new String[] {id};
 		Cursor c = this.getContentResolver().query(uri,	null, selection, selArgs, null);
 
 		String name = "";
 		if (c.moveToFirst()) {
-			name =  c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)); 
+			name =  c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)); 
 		}
 		c.close();
 
