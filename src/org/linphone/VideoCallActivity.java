@@ -95,7 +95,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		// Before creating the graph, the orientation must be known to LC => this is done here
 		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getRotation()));
 
-		if (LinphoneManager.getInstance().shareMyCamera()) 
+		if (!LinphoneManager.getInstance().shareMyCamera()) 
 			LinphoneManager.getInstance().sendStaticImage(false);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
