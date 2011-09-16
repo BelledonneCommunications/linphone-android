@@ -25,6 +25,7 @@ import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.content.Context;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -72,6 +73,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 			
 			@Override
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+				Log.d("VIDEO WINDOW destroyed!\n");
 				LinphoneManager.getLc().setVideoWindow(null);
 			}
 			
@@ -106,6 +108,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		((GLSurfaceView)mVideoView).onResume();
 	}
 
 
@@ -188,8 +191,10 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity");
+		LinphoneManager.getLc().setVideoWindow(null);
 		LinphoneManager.getInstance().sendStaticImage(true);
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
+		((GLSurfaceView)mVideoView).onPause();
 	}
 }
