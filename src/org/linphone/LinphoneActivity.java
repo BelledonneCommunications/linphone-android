@@ -287,11 +287,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		}
 	}
 	
-	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		
 	}
-	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (event==null || event.sensor == mAccelerometer) {
 			// WARNING : getRotation() is SDK > 5

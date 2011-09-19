@@ -80,7 +80,6 @@ class LinphoneCallImpl implements LinphoneCall {
 	public void enableCamera(boolean enabled) {
 		enableCamera(nativePtr, enabled);
 	}
-	@Override
 	public boolean cameraEnabled() {
 		return cameraEnabled(nativePtr);
 	}
@@ -126,5 +125,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	}
 	public boolean areStreamsEncrypted() {
 		return areStreamsEncrypted(nativePtr);
+	}
+	public boolean isInConference() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

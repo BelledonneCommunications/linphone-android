@@ -66,23 +66,19 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mVideoCaptureView);
 		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
 			
-			@Override
 			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw) {
 				LinphoneManager.getLc().setVideoWindow(vw);
 			}
 			
-			@Override
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
 				Log.d("VIDEO WINDOW destroyed!\n");
 				LinphoneManager.getLc().setVideoWindow(null);
 			}
 			
-			@Override 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw) {
 				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
 			}
 			
-			@Override
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
 				
 			}

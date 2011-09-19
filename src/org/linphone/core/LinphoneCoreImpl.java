@@ -20,6 +20,7 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 import org.linphone.LinphoneManager;
@@ -491,16 +492,58 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void enableEchoLimiter(boolean val) {
 		enableEchoLimiter(nativePtr,val);
 	}
-	@Override
 	public void setVideoDevice(int id) {
 		Log.i("Setting camera id :", id);
 		if (setVideoDevice(nativePtr, id) != 0) {
 			Log.e("Failed to set video device to id:", id);
 		}
 	}
-	@Override
 	public int getVideoDevice() {
 		return getVideoDevice(nativePtr);
+	}
+	public void addAllToConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void addToConference(LinphoneCall call) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void enterConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public List getCalls() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public int getCallsNb() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public int getConferenceSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public boolean isInConference() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void leaveConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void removeFromConference(LinphoneCall call) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void terminateAllCalls() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void terminateConference() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

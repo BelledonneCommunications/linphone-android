@@ -393,34 +393,28 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 			return;
 		}
 		
-		switch (state) {
-			case OutgoingInit:
+		if (state==LinphoneCall.State.OutgoingInit){
+			enterIncallMode(lc);
+			if (!LinphoneManager.getInstance().shareMyCamera())
+				call.enableCamera(false);
+			LinphoneActivity.instance().startOrientationSensor();
+		}else if (state==LinphoneCall.State.IncomingReceived){
+			callPending(call);
+			if (!LinphoneManager.getInstance().shareMyCamera())
+				call.enableCamera(false);
+			LinphoneActivity.instance().startOrientationSensor();
+		}else if (state==LinphoneCall.State.Connected){
+			if (call.getDirection() == CallDirection.Incoming) {
 				enterIncallMode(lc);
-				if (!LinphoneManager.getInstance().shareMyCamera())
-					call.enableCamera(false);
-				LinphoneActivity.instance().startOrientationSensor();
-				break;
-			case IncomingReceived: 
-				callPending(call);
-				if (!LinphoneManager.getInstance().shareMyCamera())
-					call.enableCamera(false);
-				LinphoneActivity.instance().startOrientationSensor();
-				break;
-			case Connected:
-				if (call.getDirection() == CallDirection.Incoming) {
-					enterIncallMode(lc);
-				}
-				break;
-			case Error:
-				if (mWakeLock.isHeld()) mWakeLock.release();
-				showToast(R.string.call_error, message);
-				exitCallMode();
-				LinphoneActivity.instance().stopOrientationSensor();
-				break;
-			case CallEnd:
-				exitCallMode();
-				LinphoneActivity.instance().stopOrientationSensor();
-				break;
+			}
+		}else if (state==LinphoneCall.State.Error){
+			if (mWakeLock.isHeld()) mWakeLock.release();
+			showToast(R.string.call_error, message);
+			exitCallMode();
+			LinphoneActivity.instance().stopOrientationSensor();
+		}else if (state==LinphoneCall.State.CallEnd){
+			exitCallMode();
+			LinphoneActivity.instance().stopOrientationSensor();
 		}
 	}
 
