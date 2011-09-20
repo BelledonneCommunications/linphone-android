@@ -213,7 +213,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		instance.serviceListener = listener;
 		instance.startLibLinphone(c);
 		
-		AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Build.VERSION.SDK_INT);
+		if (Version.isVideoCapable())
+			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Build.VERSION.SDK_INT);
 		return instance;
 	}
 	
