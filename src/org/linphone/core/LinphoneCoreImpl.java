@@ -545,5 +545,14 @@ class LinphoneCoreImpl implements LinphoneCore {
 		// TODO Auto-generated method stub
 		
 	}
+	public void transferCall(LinphoneCall call, String referTo) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void transferCallToAnother(LinphoneCall callToTransfer,
+			LinphoneCall destination) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
