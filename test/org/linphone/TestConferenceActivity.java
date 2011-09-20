@@ -59,6 +59,14 @@ public class TestConferenceActivity extends ConferenceActivity {
 			}
 		}, millis);
 	}
+	private void delayedCallEvent(final LinphoneCall call, final State targetState, int millis) {
+		mHandler.postDelayed(new Runnable() {
+			public void run() {
+				((LinphoneCallTest)call).state = targetState;
+				onCallStateChanged(call, call.getState(), "simulated delayed state change " + targetState);
+			}
+		}, millis);
+	}
 
 	protected final List<LinphoneCall> getInitialCalls() {
 		List<LinphoneCall> calls = new ArrayList<LinphoneCall>();
@@ -105,7 +113,8 @@ public class TestConferenceActivity extends ConferenceActivity {
 			if (isInConference()) {
 				leaveConference();
 			} else {
-				pauseCall(getCurrentCall());
+				LinphoneCall current = getCurrentCall();
+				if (current != null) pauseCall(current);
 			}
 			changeState(call, State.StreamsRunning);
 		}
@@ -180,6 +189,7 @@ public class TestConferenceActivity extends ConferenceActivity {
 		}
 		public void playDtmf(char number, int duration) {}
 		public boolean resumeCall(LinphoneCall call) {
+			if (isInConference()) leaveConference();
 			pauseAllCalls();
 			changeState(call, State.StreamsRunning);
 			return true;
@@ -230,9 +240,12 @@ public class TestConferenceActivity extends ConferenceActivity {
 		}
 		public void addAllToConference() {
 			for (LinphoneCall c : calls) {
-				int stateId = c.getState().value();
-				boolean connectionEstablished = stateId == State.ID_STREAMS_RUNNING || stateId == State.ID_PAUSED || stateId == State.ID_PAUSED_BY_REMOTE;
-				if (connectionEstablished) changeStateInConf(c, true);
+				final LinphoneCall.State state = c.getState();
+				boolean connectionEstablished = state == State.StreamsRunning || state == State.Paused || state == State.PausedByRemote;
+				if (connectionEstablished) {
+					changeState(c, State.StreamsRunning);
+					changeStateInConf(c, true);
+				}
 			}
 			enterConference();
 		}
@@ -241,6 +254,7 @@ public class TestConferenceActivity extends ConferenceActivity {
 				addAllToConference();
 			} else {
 				boolean mergingActiveCall = call.equals(getCurrentCall());
+				changeState(call, State.StreamsRunning);
 				changeStateInConf(call, true);
 				if (mergingActiveCall) enterConference();
 			}
@@ -278,9 +292,22 @@ public class TestConferenceActivity extends ConferenceActivity {
 			return new ArrayList<LinphoneCall>(calls);
 		}
 		public void removeFromConference(LinphoneCall call) {
-			changeState(call, State.StreamsRunning);
+			changeStateInConf(call, false);
+			changeState(call, State.Paused);
 		}
-		
+		public void transferCall(LinphoneCall call, String referTo) {
+			terminateCall(call);
+		}
+		public void transferCallToAnother(LinphoneCall callToTransfer, LinphoneCall destination) {
+			if (!State.Paused.equals(callToTransfer.getState())) {
+				throw new RuntimeException("call to transfer should be paused first");
+			}
+			terminateCall(callToTransfer);
+			delayedCallEvent(destination, State.CallEnd, 3000);
+		}
+		public int getVideoDevice() {return 0;}
+		public void setDeviceRotation(int rotation) {}
+		public void setVideoDevice(int id) {}
 	}
 
 
@@ -338,6 +365,7 @@ public class TestConferenceActivity extends ConferenceActivity {
 		public boolean isEchoCancellationEnabled() {return false;}
 		public boolean isEchoLimiterEnabled() {return false;}
 		public boolean isInConference() { return inConf;}
+		public boolean cameraEnabled() {return false;}
 	}
 
 

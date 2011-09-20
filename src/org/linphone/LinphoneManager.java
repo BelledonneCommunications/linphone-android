@@ -45,7 +45,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
-import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -258,10 +257,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void newOutgoingCall(AddressType address) {
 		String to = address.getText().toString();
 
-		if (mLc.isIncall()) {
-			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
-			return;
-		}
+//		if (mLc.isIncall()) {
+//			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
+//			return;
+//		}
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);

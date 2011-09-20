@@ -477,7 +477,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public synchronized void setZrtpSecretsCache(String file) {
 		setZrtpSecretsCache(nativePtr,file);
 	}
-	public void enableEchoLimiter(boolean val) {
+	public synchronized void enableEchoLimiter(boolean val) {
 		enableEchoLimiter(nativePtr,val);
 	}
 	public void setVideoDevice(int id) {
@@ -492,43 +492,38 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 
 	private native void leaveConference(long nativePtr);	
-	public void leaveConference() {
+	public synchronized void leaveConference() {
 		leaveConference(nativePtr);
 	}
 
 	private native void enterConference(long nativePtr);	
-	public void enterConference() {
+	public synchronized void enterConference() {
 		enterConference(nativePtr);
 	}
 
 	private native boolean isInConference(long nativePtr);
-	public boolean isInConference() {
+	public synchronized boolean isInConference() {
 		return isInConference(nativePtr);
 	}
 
-	private native void addToConference(long nativePtr, long nativePtrLcall);
-	public void addToConference(LinphoneCall call, boolean addOthersToNewConference) {
-		addToConference(nativePtr, ((LinphoneCallImpl)call).nativePtr);
-	}
-
 	private native void terminateConference(long nativePtr);
-	public void terminateConference() {
+	public synchronized void terminateConference() {
 		terminateConference(nativePtr);
 	}
 	private native int getConferenceSize(long nativePtr);
-	public int getConferenceSize() {
+	public synchronized int getConferenceSize() {
 		return getConferenceSize(nativePtr);
 	}
 	private native int getCallsNb(long nativePtr);
-	public int getCallsNb() {
+	public synchronized int getCallsNb() {
 		return getCallsNb(nativePtr);
 	}
 	private native void terminateAllCalls(long nativePtr);
-	public void terminateAllCalls() {
+	public synchronized void terminateAllCalls() {
 		terminateAllCalls(nativePtr);
 	}
 	private native long getCall(long nativePtr, int position);
-	@SuppressWarnings("unchecked") public List getCalls() {
+	@SuppressWarnings("unchecked") public synchronized List getCalls() {
 		int size = getCallsNb(nativePtr);
 		List<LinphoneCall> calls = new ArrayList<LinphoneCall>(size);
 		for (int i=0; i < size; i++) {
@@ -537,27 +532,31 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return calls;
 	}
 	private native void addAllToConference(long nativePtr);
-	public void addAllToConference() {
+	public synchronized void addAllToConference() {
 		addAllToConference(nativePtr);
 		
 	}
-	private native void addToConference(long nativePtr);
-	public void addToConference(LinphoneCall call) {
-		addToConference(nativePtr);
+	private native void addToConference(long nativePtr, long nativePtrLcall);
+	public synchronized void addToConference(LinphoneCall call) {
+		addToConference(nativePtr, getCallPtr(call));
 		
 	}
 	private native void removeFromConference(long nativePtr);
-	public void removeFromConference(LinphoneCall call) {
-		removeFromConference(nativePtr);
+	public synchronized void removeFromConference(LinphoneCall call) {
+		removeFromConference(getCallPtr(call));
 	}
 
-	public void transferCall(LinphoneCall call, String referTo) {
-		// TODO Auto-generated method stub
-		
+	private long getCallPtr(LinphoneCall call) {
+		return ((LinphoneCallImpl)call).nativePtr;
 	}
-	public void transferCallToAnother(LinphoneCall callToTransfer,
-			LinphoneCall destination) {
-		// TODO Auto-generated method stub
-		
+
+	private native int transferCall(long nativePtr, long callPtr, String referTo);
+	public synchronized void transferCall(LinphoneCall call, String referTo) {
+		transferCall(nativePtr, getCallPtr(call), referTo);
+	}
+
+	private native int transferCallToAnother(long nativePtr, long callPtr, long destPtr);
+	public synchronized void transferCallToAnother(LinphoneCall call, LinphoneCall dest) {
+		transferCallToAnother(nativePtr, getCallPtr(call), getCallPtr(dest));
 	}
 }

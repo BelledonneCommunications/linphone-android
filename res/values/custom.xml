@@ -18,6 +18,7 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<string name="notification_registered">Registered to %s </string> 
 	<string name="notification_register_failure">Fails to register to %s</string>
+	<color name="conf_active_bg_color">#191970</color>
 
 	<string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>

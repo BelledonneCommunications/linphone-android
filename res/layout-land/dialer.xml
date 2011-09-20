@@ -51,6 +51,15 @@
 			<org.linphone.ui.HangCallButton android:id="@+id/HangUp" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 		</LinearLayout>
 
+		<LinearLayout android:id="@+id/AddCallControlRow" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="bottom" android:visibility="gone">
+			<Button android:id="@+id/AddCallButton" android:text="@string/AddCallButtonText" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
+			<Button android:id="@+id/AddCallCancelButton" android:text="@string/CancelButtonText" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
+		</LinearLayout>
+
+		<LinearLayout android:id="@+id/transferCallControlRow" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="bottom" android:visibility="gone">
+			<Button android:id="@+id/TransferCallButton" android:text="@string/TransferCallButtonText" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
+			<Button android:id="@+id/TransferCallCancelButton" android:text="@string/CancelButtonText" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
+		</LinearLayout>
 
 
 		<EditText android:id="@+id/status_label" android:layout_width="fill_parent" 

@@ -27,6 +27,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -47,6 +48,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -311,7 +313,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		if (id == incomingCallDialogId) {
-			String from = LinphoneManager.getInstance().extractIncomingRemoteName();
+			LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+			String from = LinphoneManager.extractIncomingRemoteName(getResources(), address);
 			String msg = String.format(getString(R.string.incoming_call_dialog_title), from);
 			((AlertDialog) dialog).setMessage(msg);
 		} else {
@@ -489,6 +492,57 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 			mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
 		}
 		super.onResume();
+	}
+
+
+	private void switchControlRow(ViewGroup v, OnClickListener l) {
+		final View ok = v.getChildAt(0);
+		final View cancel = v.getChildAt(1);
+		ok.setOnClickListener(l);
+		cancel.setOnClickListener(l);
+		findViewById(R.id.IncallControlRow).setVisibility(View.GONE);
+		findViewById(R.id.CallControlRow).setVisibility(View.GONE);
+		v.setVisibility(View.VISIBLE);
+	}
+	public void configureForAddingCall() {
+		ViewGroup v = (ViewGroup) findViewById(R.id.AddCallControlRow);
+		OnClickListener l = new OnClickListener() {
+			public void onClick(View v) {
+				ViewGroup group = (ViewGroup) v.getParent();
+				if (v == group.getChildAt(1)) {
+					LinphoneActivity.instance().startConferenceActivity();
+				} else {
+					LinphoneManager.getInstance().newOutgoingCall(mAddress);
+				}
+			}
+		};
+		switchControlRow(v, l);
+	}
+
+
+	public void configureForTransferingCall(final long callNativeId) {
+		throw new RuntimeException("create another activity for this");
+//		ViewGroup v = (ViewGroup) findViewById(R.id.transferCallControlRow);
+//		OnClickListener l = new OnClickListener() {
+//			public void onClick(View v) {
+//				ViewGroup group = (ViewGroup) v.getParent();
+//				if (v == group.getChildAt(1)) {
+//					LinphoneActivity.instance().startConferenceActivity();
+//				} else {
+//					LinphoneManager.getLc().transferCall(Hacks.createCall(callNativeId),
+//							mAddress.getText().toString());
+//				}
+//			}
+//		};
+//		switchControlRow(v, l);
+	}
+
+
+	public void configureForDialer() {
+		findViewById(R.id.AddCallControlRow).setVisibility(R.id.transferCallControlRow);
+		findViewById(R.id.AddCallControlRow).setVisibility(View.GONE);
+		findViewById(R.id.IncallControlRow).setVisibility(View.GONE);
+		findViewById(R.id.CallControlRow).setVisibility(View.VISIBLE);
 	}
 	
 }

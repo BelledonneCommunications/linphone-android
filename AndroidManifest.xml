@@ -110,9 +110,9 @@
 	
 	
 		<activity android:name="org.linphone.TestConferenceActivity"
-                  android:label="Test Linphone conference UI"
-                  android:theme="@android:style/Theme.NoTitleBar"
-                   android:enabled="true">
+                  android:label="Conf test"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                  android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

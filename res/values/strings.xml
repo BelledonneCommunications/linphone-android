@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="status_conf_call">conf</string>
+	<string name="status_active_call">active</string>
+	<string name="state_paused">paused</string>
+	<string name="state_paused_by_remote">paused</string>
+	<string name="state_streams_running"></string>
+	<string name="state_incoming_received">incoming</string>
+	<string name="state_outgoing_ringing">ringing</string>
+	
+	<string name="mutemic_button_txt">Mute</string>
+	<string name="speaker_button_txt">Speaker</string>
+	<string name="bluetooth_button_txt">Bluetooth</string>
+
+	<string name="CancelButtonText">Cancel</string>
+	<string name="AddCallButtonText">Add call</string>
+	<string name="TransferCallButtonText">Transfer call</string>
+
+	<string name="conf_admin_choice_enter">Enter conference</string>
+	<string name="conf_admin_choice_leave">Momentarily leave conference</string>
+	<string name="conf_admin_choice_terminate">Terminate conference</string>
+
+	<string name="conf_choice_transfer_existing">Transfer to existing call</string>
+	<string name="conf_choice_transfer_new">Transfer to new call</string>
+	<string name="conf_choice_resume">Resume</string>
+	<string name="conf_choice_pause">Pause</string>
+	<string name="conf_choice_merge_to_conference">Add to conference</string>
+	<string name="conf_choice_merge_all_to_conference">Add all calls to conference</string>
+	<string name="conf_choice_remove_from_conference">Remove from the conference</string>
+	<string name="conf_choice_terminate">Terminate</string>
+
+	<string name="conf_simple_merge">Merge calls</string>
+	
 	<string name="show_send_dtmfs_button">DTMFs</string>
 
 	<string name="conf_text_you_host_a_conference">You host a conference</string>

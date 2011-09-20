@@ -150,8 +150,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		if (requestCode == FIRST_LOGIN_ACTIVITY) {
+		switch (requestCode) {
+		case FIRST_LOGIN_ACTIVITY:
 			if (resultCode == RESULT_OK) {
 				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
 				try {
@@ -172,6 +172,22 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				finish();
 				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			}
+			break;
+		case conference_activity:
+			if (data == null) {
+				DialerActivity.instance().configureForDialer();
+			} else if (data.getBooleanExtra(ConferenceActivity.ADD_CALL, false)) {
+				DialerActivity.instance().configureForAddingCall();
+				gotToDialer();
+			} else if (data.getBooleanExtra(ConferenceActivity.TRANSFER_TO_NEW_CALL, false)) {
+				long callId = data.getLongExtra(ConferenceActivity.CALL_NATIVE_ID, 0l);
+				if (callId == 0) throw new RuntimeException("call id is 0");
+				DialerActivity.instance().configureForTransferingCall(callId);
+				gotToDialer();
+			}
+			break;
+		default:
+			break;
 		}
 		
 		super.onActivityResult(requestCode, resultCode, data);
@@ -507,6 +523,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void startConferenceActivity() {
+		if (ConferenceActivity.active) return;
+
 		mHandler.post(new Runnable() {
 			public void run() {
 				startActivityForResult(new Intent().setClass(
