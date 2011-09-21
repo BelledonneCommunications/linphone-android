@@ -292,9 +292,10 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 	public void onSensorChanged(SensorEvent event) {
 		if (event==null || event.sensor == mAccelerometer) {
-			// WARNING : getRotation() is SDK > 5
-			int rot = AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getRotation());
+			int rot;
 			
+			rot=getWindowManager().getDefaultDisplay().getOrientation();
+
 			if (rot != previousRotation) {
 				Log.d("New device rotation: ", rot);
 				// Returning rotation FROM ITS NATURAL ORIENTATION
