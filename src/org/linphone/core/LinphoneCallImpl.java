@@ -35,14 +35,17 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native boolean isEchoCancellationEnabled(long nativePtr) ;
 	private native void enableEchoLimiter(long nativePtr,boolean enable);
 	private native boolean isEchoLimiterEnabled(long nativePtr);
-	private native long getReplacedCall(long nativePtr);
+	private native Object getReplacedCall(long nativePtr);
 	private native int getDuration(long nativePtr);
 	private native float getCurrentQuality(long nativePtr);
 	private native float getAverageQuality(long nativePtr);
 	private native String getAuthenticationToken(long nativePtr);
 	private native boolean isAuthenticationTokenVerified(long nativePtr);
 	private native boolean areStreamsEncrypted(long nativePtr);
-
+	
+	/*
+	 * This method must always be called from JNI, nothing else.
+	 */
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
 	}
@@ -98,11 +101,7 @@ class LinphoneCallImpl implements LinphoneCall {
 		return isEchoLimiterEnabled(nativePtr);
 	}
 	public LinphoneCall getReplacedCall(){
-		long callptr=getReplacedCall(nativePtr);
-		if (callptr!=0){
-			return new LinphoneCallImpl(callptr);
-		}
-		return null;
+		return (LinphoneCall)getReplacedCall(nativePtr);
 	}
 
 	public int getDuration() {
