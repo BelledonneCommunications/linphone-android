@@ -96,8 +96,8 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		// Before creating the graph, the orientation must be known to LC => this is done here
 		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
 
-		if (!LinphoneManager.getInstance().shareMyCamera()) 
-			LinphoneManager.getInstance().sendStaticImage(false);
+		LinphoneManager.getInstance().sendStaticImage(!LinphoneManager.getInstance().shareMyCamera());
+			
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
@@ -158,6 +158,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		case R.id.videocall_menu_change_resolution:
 			LinphoneManager.getInstance().changeResolution();
 			// previous call will cause graph reconstruction -> regive preview window
+			LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
 			rewriteChangeResolutionItem(item);
 			break;
 		case R.id.videocall_menu_terminate_call:
