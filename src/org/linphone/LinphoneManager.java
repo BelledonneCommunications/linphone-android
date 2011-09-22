@@ -434,6 +434,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
 			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
 			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
+			enableDisableAudioCodec("G722", 8000, R.string.pref_codec_g722_key);
 			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
 			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
 			enableDisableAudioCodec("AMR", 8000, R.string.pref_codec_amr_key);

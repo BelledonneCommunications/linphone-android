@@ -66,6 +66,7 @@
     <string name="pref_codec_pcma">pcma</string>
     <string name="pref_codec_pcmu">pcmu</string>
     <string name="pref_codec_gsm">gsm</string>
+    <string name="pref_codec_g722">g722</string>
     <string name="pref_codec_amr">amr</string>
     <string name="pref_codec_ilbc">ilbc</string>
     <string name="pref_codec_speex8">speex 8 Khz</string>

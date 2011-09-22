@@ -63,6 +63,9 @@
 				android:shouldDisableView="true"  />
 		 	<CheckBoxPreference android:key="@string/pref_codec_gsm_key"
 				android:title="@string/pref_codec_gsm"/>
+			<CheckBoxPreference android:key="@string/pref_codec_g722_key"
+				android:defaultValue="false"
+				android:title="@string/pref_codec_g722"/>
 			<CheckBoxPreference android:key="@string/pref_codec_pcmu_key"
 				android:title="@string/pref_codec_pcmu"/>
 			<CheckBoxPreference android:key="@string/pref_codec_pcma_key"
