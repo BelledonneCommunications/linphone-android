@@ -22,6 +22,7 @@ package org.linphone;
 
 import junit.runner.Version;
 
+import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -96,7 +97,13 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		// Before creating the graph, the orientation must be known to LC => this is done here
 		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
 
-		LinphoneManager.getInstance().sendStaticImage(!LinphoneManager.getInstance().shareMyCamera());
+		if (LinphoneManager.getLc().isIncall()) {
+			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+			if (call != null) {
+				LinphoneManager.getInstance().sendStaticImage(!call.cameraEnabled());
+			}
+		}
+		
 			
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
