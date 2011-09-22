@@ -32,12 +32,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
-import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
-import org.linphone.core.video.AndroidCameraRecordManager;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -98,7 +98,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		// No video
 		if (!Version.isVideoCapable()) {
 			uncheckAndDisableCheckbox(pref_video_enable_key);
-		} else if (!AndroidCameraRecordManager.getInstance().hasFrontCamera()) {
+		} else if (!AndroidCameraConfiguration.hasFrontCamera()) {
 			uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
 		}
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {

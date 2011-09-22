@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="org/linphone/mediastream/MediastreamerActivity.java" kind="src" path="submodules/linphone/mediastreamer2/java/src"/>
 	<classpathentry kind="src" path="submodules/linphone/java/j2se"/>
 	<classpathentry kind="src" path="submodules/linphone/java/common"/>
 	<classpathentry kind="src" path="gen"/>

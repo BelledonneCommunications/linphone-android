@@ -20,7 +20,7 @@ package org.linphone.core;
 
 
 class LinphoneCallImpl implements LinphoneCall {
-
+ 
 	protected final long nativePtr;
 	boolean ownPtr = false;
 	native private void ref(long ownPtr);
@@ -31,6 +31,7 @@ class LinphoneCallImpl implements LinphoneCall {
 	native private int getState(long nativePtr);
 	private native long getCurrentParamsCopy(long nativePtr);
 	private native void enableCamera(long nativePtr, boolean enabled);
+	private native boolean cameraEnabled(long nativePtr);
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
 	private native boolean isEchoCancellationEnabled(long nativePtr) ;
 	private native void enableEchoLimiter(long nativePtr,boolean enable);
@@ -48,7 +49,7 @@ class LinphoneCallImpl implements LinphoneCall {
 		ref(nativePtr);
 	}
 	protected void finalize() throws Throwable {
-		unref(nativePtr);
+		unref(nativePtr); 
 	}
 	public LinphoneCallLog getCallLog() {
 		long lNativePtr = getCallLog(nativePtr);
@@ -78,6 +79,9 @@ class LinphoneCallImpl implements LinphoneCall {
 
 	public void enableCamera(boolean enabled) {
 		enableCamera(nativePtr, enabled);
+	}
+	public boolean cameraEnabled() {
+		return cameraEnabled(nativePtr);
 	}
 	public boolean equals(Object call) {
 		return nativePtr == ((LinphoneCallImpl)call).nativePtr;
@@ -121,5 +125,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	}
 	public boolean areStreamsEncrypted() {
 		return areStreamsEncrypted(nativePtr);
+	}
+	public boolean isInConference() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

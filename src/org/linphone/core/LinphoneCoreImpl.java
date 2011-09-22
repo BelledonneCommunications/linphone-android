@@ -20,9 +20,11 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
-import android.view.SurfaceView;
+import org.linphone.LinphoneManager;
+import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 
 class LinphoneCoreImpl implements LinphoneCore {
@@ -68,8 +70,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void stopDtmf(long nativePtr);
 	private native void setVideoWindowId(long nativePtr, Object wid);
 	private native void setPreviewWindowId(long nativePtr, Object wid);
-	private AndroidVideoWindowImpl mVideoWindow;
-	private AndroidVideoWindowImpl mPreviewWindow;
+	private native void setDeviceRotation(long nativePtr, int rotation);
 	private native void addFriend(long nativePtr,long friend);
 	private native void setPresenceInfo(long nativePtr,int minute_away, String alternative_contact,int status);
 	private native long createChatRoom(long nativePtr,String to);
@@ -104,6 +105,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setDownloadPtime(long nativePtr, int ptime);
 	private native void setZrtpSecretsCache(long nativePtr, String file);
 	private native void enableEchoLimiter(long nativePtr2, boolean val);
+	private native int setVideoDevice(long nativePtr2, int id);
+	private native int getVideoDevice(long nativePtr2);
 
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -327,33 +330,15 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return new LinphoneChatRoomImpl(createChatRoom(nativePtr,to));
 	}
 	public synchronized void setPreviewWindow(Object w) {
-		if (mPreviewWindow!=null)
-			mPreviewWindow.setListener(null);
-		mPreviewWindow=new AndroidVideoWindowImpl((SurfaceView)w);
-		mPreviewWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
-			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				setPreviewWindowId(nativePtr,null);
-			}
-
-			public void onSurfaceReady(AndroidVideoWindowImpl vw) {
-				setPreviewWindowId(nativePtr,vw);
-			}
-		});
+		setPreviewWindowId(nativePtr,w);
 	}
 	public synchronized void setVideoWindow(Object w) {
-		if (mVideoWindow!=null)
-			mVideoWindow.setListener(null);
-		mVideoWindow=new AndroidVideoWindowImpl((SurfaceView) w);
-		mVideoWindow.setListener(new AndroidVideoWindowImpl.VideoWindowListener(){
-			public void onSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				setVideoWindowId(nativePtr,null);
-			}
-
-			public void onSurfaceReady(AndroidVideoWindowImpl vw) {
-				setVideoWindowId(nativePtr,vw);
-			}
-		});
+		setVideoWindowId(nativePtr, w);
 	}
+	public synchronized void setDeviceRotation(int rotation) {
+		setDeviceRotation(nativePtr, rotation);
+	}
+	
 	public synchronized void enableVideo(boolean vcap_enabled, boolean display_enabled) {
 		enableVideo(nativePtr,vcap_enabled, display_enabled);
 	}
@@ -506,6 +491,68 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	public void enableEchoLimiter(boolean val) {
 		enableEchoLimiter(nativePtr,val);
+	}
+	public void setVideoDevice(int id) {
+		Log.i("Setting camera id :", id);
+		if (setVideoDevice(nativePtr, id) != 0) {
+			Log.e("Failed to set video device to id:", id);
+		}
+	}
+	public int getVideoDevice() {
+		return getVideoDevice(nativePtr);
+	}
+	public void addAllToConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void addToConference(LinphoneCall call) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void enterConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public List getCalls() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public int getCallsNb() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public int getConferenceSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public boolean isInConference() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void leaveConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void removeFromConference(LinphoneCall call) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void terminateAllCalls() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void terminateConference() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void transferCall(LinphoneCall call, String referTo) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void transferCallToAnother(LinphoneCall callToTransfer,
+			LinphoneCall destination) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -22,13 +22,13 @@ import java.io.IOException;
 
 import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
-import org.linphone.core.Hacks;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.core.Version;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Notification;
 import android.app.NotificationManager;
