@@ -34,8 +34,8 @@ import java.util.List;
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
-import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 

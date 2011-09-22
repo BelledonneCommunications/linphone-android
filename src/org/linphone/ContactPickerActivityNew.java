@@ -21,7 +21,7 @@ package org.linphone;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.core.Version;
+import org.linphone.mediastream.Version;
 
 import android.content.ContentUris;
 import android.content.Intent;

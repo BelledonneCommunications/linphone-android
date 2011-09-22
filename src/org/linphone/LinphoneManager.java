@@ -54,13 +54,13 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.core.PayloadType;
-import org.linphone.core.Version;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -214,7 +214,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		instance.startLibLinphone(c);
 		
 		if (Version.isVideoCapable())
-			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Build.VERSION.SDK_INT);
+			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Version.sdk());
 		return instance;
 	}
 	

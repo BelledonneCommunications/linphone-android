@@ -20,6 +20,8 @@ package org.linphone;
 
 
 
+import junit.runner.Version;
+
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -60,8 +62,9 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		mVideoCaptureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
 		/* force surfaces Z ordering */
-		mVideoView.setZOrderOnTop(false);
-		mVideoCaptureView.setZOrderOnTop(true);
+		if (org.linphone.mediastream.Version.sdkAboveOrEqual(5)) {
+			fixZOrder();
+		}
 	
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mVideoCaptureView);
 		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
@@ -91,13 +94,18 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		//   * onDestroy -> sendStaticImage(true)  => destroy video graph
 		//   * onCreate  -> sendStaticImage(false) => recreate the video graph.
 		// Before creating the graph, the orientation must be known to LC => this is done here
-		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getRotation()));
+		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
 
 		if (!LinphoneManager.getInstance().shareMyCamera()) 
 			LinphoneManager.getInstance().sendStaticImage(false);
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
+	}
+	
+	void fixZOrder() {
+		mVideoView.setZOrderOnTop(false);
+		mVideoCaptureView.setZOrderOnTop(true);
 	}
 
  
@@ -188,6 +196,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity");
 		LinphoneManager.getLc().setVideoWindow(null);
+		LinphoneManager.getLc().setPreviewWindow(null);
 		LinphoneManager.getInstance().sendStaticImage(true);
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();

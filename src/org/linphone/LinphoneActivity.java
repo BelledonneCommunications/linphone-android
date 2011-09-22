@@ -21,24 +21,15 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.Enumeration;
 import java.util.List;
-
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
-import org.linphone.core.Version;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.app.AlertDialog;
@@ -57,7 +48,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -151,50 +141,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		
 	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
 	    	hideScreen(true);
-	    }
-	     
-	    if (false) {
-	    	try {
-		    	KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-		    	Enumeration<String> al = ks.aliases();
-		    	while(al.hasMoreElements()) {
-					Log.i(al.nextElement()); 
-				}
-		    	Log.i("Enumeration done");
-	    	} catch (KeyStoreException e) {
-     	    		e.printStackTrace();
-	    	}
-			
-	    } else if (false) {
-		try {
-			String defaultAlg = TrustManagerFactory.getDefaultAlgorithm();
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance(defaultAlg);
-			// init is needed for Android to fill the javax.net.ssl.trustStore property
-			// ref : http://groups.google.com/group/android-developers/browse_thread/thread/366a3c8a6b2a7ad/163ff07c8ac39929?lnk=gst&q=SSL+root
-			tmf.init((KeyStore)null);
-			String trustStore = System.getProperty("javax.net.ssl.trustStore");
-			Log.i(trustStore + "\n");
-			
-			for(TrustManager tm: tmf.getTrustManagers()) {
-				X509TrustManager xtm = (X509TrustManager)tm;
-				Log.i(xtm.getAcceptedIssuers().length);
-				for(X509Certificate ca : xtm.getAcceptedIssuers()) {
-					byte[] encoded = ca.getEncoded();
-					String s = new String(encoded);
-					byte[] d2 = Base64.decode(encoded, 0);
-					String s2 = new String(d2);
-					Log.i(ca.toString());
-					
-					
-				}
-			}
-		} catch (KeyStoreException e) {
-		} catch (NoSuchAlgorithmException e) {
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    }
-	
+	    }	
 	}
 	
 	
@@ -294,7 +241,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		if (event==null || event.sensor == mAccelerometer) {
 			int rot;
 			
-			rot=getWindowManager().getDefaultDisplay().getOrientation();
+			rot = AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation());
 
 			if (rot != previousRotation) {
 				Log.d("New device rotation: ", rot);

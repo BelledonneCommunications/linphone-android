@@ -35,6 +35,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import org.linphone.mediastream.Version;
+
 public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 	private static void loadOptionalLibrary(String s) {
