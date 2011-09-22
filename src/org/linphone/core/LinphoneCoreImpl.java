@@ -65,7 +65,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int enablePayloadType(long nativePtr, long payloadType,	boolean enable);
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
 	private native boolean isEchoCancellationEnabled(long nativePtr);
-	private native long getCurrentCall(long nativePtr) ;
+	private native Object getCurrentCall(long nativePtr) ;
 	private native void playDtmf(long nativePtr,char dtmf,int duration);
 	private native void stopDtmf(long nativePtr);
 	private native void setVideoWindowId(long nativePtr, Object wid);
@@ -285,12 +285,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 	public synchronized LinphoneCall getCurrentCall() {
 		isValid();
-		long lNativePtr = getCurrentCall(nativePtr);
-		if (lNativePtr!=0) {
-			return new LinphoneCallImpl(lNativePtr); 
-		} else {
-			return null;
-		}
+		return (LinphoneCall)getCurrentCall(nativePtr);
 	}
 	
 	public int getPlayLevel() {
@@ -554,5 +549,4 @@ class LinphoneCoreImpl implements LinphoneCore {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

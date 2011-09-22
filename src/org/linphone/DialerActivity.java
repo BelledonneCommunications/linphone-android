@@ -82,6 +82,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 	
 	private PowerManager.WakeLock mWakeLock;
 	private SharedPreferences mPref;
+	private LinphoneCall mCurrentCall;
 	private boolean useIncallActivity;
 	private boolean useVideoActivity;
 	
@@ -394,11 +395,13 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		}
 		
 		if (state==LinphoneCall.State.OutgoingInit){
+			mCurrentCall=call;
 			enterIncallMode(lc);
 			if (!LinphoneManager.getInstance().shareMyCamera())
 				call.enableCamera(false);
 			LinphoneActivity.instance().startOrientationSensor();
 		}else if (state==LinphoneCall.State.IncomingReceived){
+			mCurrentCall=call;
 			callPending(call);
 			if (!LinphoneManager.getInstance().shareMyCamera())
 				call.enableCamera(false);
@@ -408,13 +411,19 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 				enterIncallMode(lc);
 			}
 		}else if (state==LinphoneCall.State.Error){
-			if (mWakeLock.isHeld()) mWakeLock.release();
-			showToast(R.string.call_error, message);
-			exitCallMode();
-			LinphoneActivity.instance().stopOrientationSensor();
+			if (mCurrentCall==call){
+				if (mWakeLock.isHeld()) mWakeLock.release();
+				showToast(R.string.call_error, message);
+				exitCallMode();
+				LinphoneActivity.instance().stopOrientationSensor();
+				mCurrentCall=null;
+			}
 		}else if (state==LinphoneCall.State.CallEnd){
-			exitCallMode();
-			LinphoneActivity.instance().stopOrientationSensor();
+			if (mCurrentCall==call){
+				exitCallMode();
+				LinphoneActivity.instance().stopOrientationSensor();
+				mCurrentCall=null;
+			}
 		}
 	}
 

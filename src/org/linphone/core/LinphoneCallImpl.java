@@ -23,8 +23,7 @@ class LinphoneCallImpl implements LinphoneCall {
  
 	protected final long nativePtr;
 	boolean ownPtr = false;
-	native private void ref(long ownPtr);
-	native private void unref(long ownPtr);
+	native private void finalize(long nativePtr);
 	native private long  getCallLog(long nativePtr);
 	private native boolean isIncoming(long nativePtr);
 	native private long getRemoteAddress(long nativePtr);
@@ -46,10 +45,9 @@ class LinphoneCallImpl implements LinphoneCall {
 
 	protected LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
-		ref(nativePtr);
 	}
 	protected void finalize() throws Throwable {
-		unref(nativePtr); 
+		finalize(nativePtr);
 	}
 	public LinphoneCallLog getCallLog() {
 		long lNativePtr = getCallLog(nativePtr);
