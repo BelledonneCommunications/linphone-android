@@ -246,7 +246,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			if (rot != previousRotation) {
 				Log.d("New device rotation: ", rot);
 				// Returning rotation FROM ITS NATURAL ORIENTATION
-				LinphoneManager.getLc().setDeviceRotation(rot);
+				LinphoneCore lc=LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				if (lc!=null) lc.setDeviceRotation(rot);
+				//else ignore, we are probably exiting.
 				previousRotation = rot;
 			}
 		}
