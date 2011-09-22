@@ -4,10 +4,6 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := libvpx
 
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-	LOCAL_ARM_NEON := true
-endif
-
 LOCAL_ARM_MODE := arm
 ASM := s
 
@@ -53,7 +49,7 @@ LOCAL_SRC_FILES += \
 	vp8/common/arm/filter_arm.c \
 	vp8/common/arm/loopfilter_arm.c \
 	vp8/common/arm/reconintra_arm.c \
-	vp8/common/arm/neon/recon_neon.c
+	vp8/common/arm/neon/recon_neon.c.neon
 
 ASM_FILES = \
 	vp8/common/arm/armv6/bilinearfilter_v6.$(ASM) \
@@ -68,31 +64,31 @@ ASM_FILES = \
 	vp8/common/arm/armv6/recon_v6.$(ASM) \
 	vp8/common/arm/armv6/simpleloopfilter_v6.$(ASM) \
 	vp8/common/arm/armv6/sixtappredict8x4_v6.$(ASM) \
-	vp8/common/arm/neon/bilinearpredict4x4_neon.$(ASM) \
-	vp8/common/arm/neon/bilinearpredict8x4_neon.$(ASM) \
-	vp8/common/arm/neon/bilinearpredict8x8_neon.$(ASM) \
-	vp8/common/arm/neon/bilinearpredict16x16_neon.$(ASM) \
-	vp8/common/arm/neon/copymem8x4_neon.$(ASM) \
-	vp8/common/arm/neon/copymem8x8_neon.$(ASM) \
-	vp8/common/arm/neon/copymem16x16_neon.$(ASM) \
-	vp8/common/arm/neon/dc_only_idct_add_neon.$(ASM) \
-	vp8/common/arm/neon/iwalsh_neon.$(ASM) \
-	vp8/common/arm/neon/loopfilter_neon.$(ASM) \
-	vp8/common/arm/neon/loopfiltersimplehorizontaledge_neon.$(ASM) \
-	vp8/common/arm/neon/loopfiltersimpleverticaledge_neon.$(ASM) \
-	vp8/common/arm/neon/mbloopfilter_neon.$(ASM) \
-	vp8/common/arm/neon/recon2b_neon.$(ASM) \
-	vp8/common/arm/neon/recon4b_neon.$(ASM) \
-	vp8/common/arm/neon/reconb_neon.$(ASM) \
-	vp8/common/arm/neon/shortidct4x4llm_1_neon.$(ASM) \
-	vp8/common/arm/neon/shortidct4x4llm_neon.$(ASM) \
-	vp8/common/arm/neon/sixtappredict4x4_neon.$(ASM) \
-	vp8/common/arm/neon/sixtappredict8x4_neon.$(ASM) \
-	vp8/common/arm/neon/sixtappredict8x8_neon.$(ASM) \
-	vp8/common/arm/neon/sixtappredict16x16_neon.$(ASM) \
-	vp8/common/arm/neon/recon16x16mb_neon.$(ASM) \
-	vp8/common/arm/neon/buildintrapredictorsmby_neon.$(ASM) \
-	vp8/common/arm/neon/save_neon_reg.$(ASM) \
+	vp8/common/arm/neon/bilinearpredict4x4_neon.$(ASM).neon \
+	vp8/common/arm/neon/bilinearpredict8x4_neon.$(ASM).neon \
+	vp8/common/arm/neon/bilinearpredict8x8_neon.$(ASM).neon \
+	vp8/common/arm/neon/bilinearpredict16x16_neon.$(ASM).neon \
+	vp8/common/arm/neon/copymem8x4_neon.$(ASM).neon \
+	vp8/common/arm/neon/copymem8x8_neon.$(ASM).neon \
+	vp8/common/arm/neon/copymem16x16_neon.$(ASM).neon \
+	vp8/common/arm/neon/dc_only_idct_add_neon.$(ASM).neon \
+	vp8/common/arm/neon/iwalsh_neon.$(ASM).neon \
+	vp8/common/arm/neon/loopfilter_neon.$(ASM).neon \
+	vp8/common/arm/neon/loopfiltersimplehorizontaledge_neon.$(ASM).neon \
+	vp8/common/arm/neon/loopfiltersimpleverticaledge_neon.$(ASM).neon \
+	vp8/common/arm/neon/mbloopfilter_neon.$(ASM).neon \
+	vp8/common/arm/neon/recon2b_neon.$(ASM).neon \
+	vp8/common/arm/neon/recon4b_neon.$(ASM).neon \
+	vp8/common/arm/neon/reconb_neon.$(ASM).neon \
+	vp8/common/arm/neon/shortidct4x4llm_1_neon.$(ASM).neon \
+	vp8/common/arm/neon/shortidct4x4llm_neon.$(ASM).neon \
+	vp8/common/arm/neon/sixtappredict4x4_neon.$(ASM).neon \
+	vp8/common/arm/neon/sixtappredict8x4_neon.$(ASM).neon \
+	vp8/common/arm/neon/sixtappredict8x8_neon.$(ASM).neon \
+	vp8/common/arm/neon/sixtappredict16x16_neon.$(ASM).neon \
+	vp8/common/arm/neon/recon16x16mb_neon.$(ASM).neon \
+	vp8/common/arm/neon/buildintrapredictorsmby_neon.$(ASM).neon \
+	vp8/common/arm/neon/save_neon_reg.$(ASM).neon \
 
 # vp8 subfolder [vp8cx.mk]
 LOCAL_SRC_FILES += \
@@ -147,20 +143,20 @@ ASM_FILES += \
 	vp8/encoder/arm/armv6/vp8_mse16x16_armv6.$(ASM) \
 	vp8/encoder/arm/armv6/vp8_variance8x8_armv6.$(ASM) \
 	vp8/encoder/arm/armv6/walsh_v6.$(ASM) \
-	vp8/encoder/arm/neon/fastfdct4x4_neon.$(ASM) \
-	vp8/encoder/arm/neon/fastfdct8x4_neon.$(ASM) \
-	vp8/encoder/arm/neon/fastquantizeb_neon.$(ASM) \
-	vp8/encoder/arm/neon/sad8_neon.$(ASM) \
-	vp8/encoder/arm/neon/sad16_neon.$(ASM) \
-	vp8/encoder/arm/neon/shortfdct_neon.$(ASM) \
-	vp8/encoder/arm/neon/subtract_neon.$(ASM) \
-	vp8/encoder/arm/neon/variance_neon.$(ASM) \
-	vp8/encoder/arm/neon/vp8_mse16x16_neon.$(ASM) \
-	vp8/encoder/arm/neon/vp8_subpixelvariance8x8_neon.$(ASM) \
-	vp8/encoder/arm/neon/vp8_subpixelvariance16x16_neon.$(ASM) \
-	vp8/encoder/arm/neon/vp8_subpixelvariance16x16s_neon.$(ASM) \
-	vp8/encoder/arm/neon/vp8_memcpy_neon.$(ASM) \
-	vp8/encoder/arm/neon/vp8_shortwalsh4x4_neon.$(ASM) \
+	vp8/encoder/arm/neon/fastfdct4x4_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/fastfdct8x4_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/fastquantizeb_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/sad8_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/sad16_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/shortfdct_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/subtract_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/variance_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/vp8_mse16x16_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/vp8_subpixelvariance8x8_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/vp8_subpixelvariance16x16_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/vp8_subpixelvariance16x16s_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/vp8_memcpy_neon.$(ASM).neon \
+	vp8/encoder/arm/neon/vp8_shortwalsh4x4_neon.$(ASM).neon \
 
 # vp8 subfolder [vp8dx.mk]
 LOCAL_SRC_FILES += \
@@ -182,16 +178,16 @@ LOCAL_SRC_FILES += \
 	vp8/decoder/arm/arm_dsystemdependent.c \
 	vp8/decoder/asm_dec_offsets.c \
 	vp8/decoder/arm/dequantize_arm.c \
-	vp8/decoder/arm/neon/idct_blk_neon.c \
+	vp8/decoder/arm/neon/idct_blk_neon.c.neon \
 	vp8/decoder/arm/armv6/idct_blk_v6.c
 
 ASM_FILES += \
-	vp8/decoder/arm/neon/idct_dequant_dc_full_2x_neon.$(ASM) \
-	vp8/decoder/arm/neon/idct_dequant_dc_0_2x_neon.$(ASM) \
-	vp8/decoder/arm/neon/dequant_idct_neon.$(ASM) \
-	vp8/decoder/arm/neon/idct_dequant_full_2x_neon.$(ASM) \
-	vp8/decoder/arm/neon/idct_dequant_0_2x_neon.$(ASM) \
-	vp8/decoder/arm/neon/dequantizeb_neon.$(ASM) \
+	vp8/decoder/arm/neon/idct_dequant_dc_full_2x_neon.$(ASM).neon \
+	vp8/decoder/arm/neon/idct_dequant_dc_0_2x_neon.$(ASM).neon \
+	vp8/decoder/arm/neon/dequant_idct_neon.$(ASM).neon \
+	vp8/decoder/arm/neon/idct_dequant_full_2x_neon.$(ASM).neon \
+	vp8/decoder/arm/neon/idct_dequant_0_2x_neon.$(ASM).neon \
+	vp8/decoder/arm/neon/dequantizeb_neon.$(ASM).neon \
 	vp8/decoder/arm/armv6/dequant_dc_idct_v6.$(ASM) \
 	vp8/decoder/arm/armv6/dequant_idct_v6.$(ASM) \
 	vp8/decoder/arm/armv6/dequantize_v6.$(ASM)
@@ -208,18 +204,14 @@ LOCAL_SRC_FILES += \
 	vpx_scale/arm/yv12extend_arm.c \
 	vpx_scale/generic/scalesystemdependent.c
 ASM_FILES += \
-	vpx_scale/arm/neon/vp8_vpxyv12_copyframe_func_neon.$(ASM) \
-	vpx_scale/arm/neon/vp8_vpxyv12_copyframeyonly_neon.$(ASM) \
-	vpx_scale/arm/neon/vp8_vpxyv12_copysrcframe_func_neon.$(ASM) \
-	vpx_scale/arm/neon/vp8_vpxyv12_extendframeborders_neon.$(ASM) \
+	vpx_scale/arm/neon/vp8_vpxyv12_copyframe_func_neon.$(ASM).neon \
+	vpx_scale/arm/neon/vp8_vpxyv12_copyframeyonly_neon.$(ASM).neon \
+	vpx_scale/arm/neon/vp8_vpxyv12_copysrcframe_func_neon.$(ASM).neon \
+	vpx_scale/arm/neon/vp8_vpxyv12_extendframeborders_neon.$(ASM).neon \
 
 LOCAL_SRC_FILES += vpx_ports/arm_cpudetect.c
 
 LOCAL_SRC_FILES += $(ASM_FILES)
-
-LOCAL_CFLAGS += \
-	-D__ARM_HAVE_NEON \
-	-mfpu=neon
 
 LOCAL_MODULE_CLASS := STATIC_LIBRARIES
 

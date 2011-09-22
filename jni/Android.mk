@@ -78,9 +78,9 @@ include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 else
 include $(linphone-root-dir)/submodules/externals/prebuilts/ffmpeg.mk
 endif
-endif #armeabi-v7a
 
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
+endif #armeabi-v7a
 
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
