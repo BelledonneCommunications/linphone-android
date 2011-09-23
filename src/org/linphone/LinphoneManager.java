@@ -862,6 +862,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		e.putBoolean(getString(R.string.pref_codec_pcma_key), true);
 		e.putBoolean(getString(R.string.pref_codec_pcmu_key), true);
 		e.putBoolean(getString(R.string.pref_codec_speex8_key), true);
+		e.putBoolean(getString(R.string.pref_codec_g722_key), false);
 		e.putBoolean(getString(pref_codec_speex16_key), fastCpu);
 		e.putBoolean(getString(pref_codec_speex32_key), fastCpu);
 
