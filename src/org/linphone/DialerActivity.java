@@ -304,14 +304,20 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		showDialog(INCOMING_CALL_DIALOG_ID);
 	}
 
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+			String from = LinphoneManager.getInstance().extractIncomingRemoteName();
+			String msg = String.format(getString(R.string.incoming_call_dialog_title), from);
+			((AlertDialog) dialog).setMessage(msg);
+			super.onPrepareDialog(id, dialog);
+	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		String from = LinphoneManager.getInstance().extractIncomingRemoteName();
 		View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 
 		final Dialog dialog = new AlertDialog.Builder(this)
-		.setMessage(String.format(getString(R.string.incoming_call_dialog_title), from))
+		.setMessage("")
 		.setCancelable(false)
 		.setView(incomingCallView).create();
 		

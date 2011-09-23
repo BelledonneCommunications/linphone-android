@@ -301,10 +301,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		public void onAlreadyInCall();
 	}
 
-	public void toggleEnableCamera() {
+	public boolean toggleEnableCamera() { 
 		if (mLc.isIncall()) {
-			mLc.getCurrentCall().enableCamera(!mLc.getCurrentCall().cameraEnabled());
+			boolean enabled = !mLc.getCurrentCall().cameraEnabled();
+			mLc.getCurrentCall().enableCamera(enabled);
+			return enabled;
 		}
+		return false;
 	}
 	
 	public void sendStaticImage(boolean send) {

@@ -42,7 +42,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	
 	private native void clearProxyConfigs(long nativePtr);
 	private native void addAuthInfo(long nativePtr,long authInfoNativePtr);
-	private native long invite(long nativePtr,String uri);
+	private native Object invite(long nativePtr,String uri);
 	private native void terminateCall(long nativePtr, long call);
 	private native long getRemoteAddress(long nativePtr);
 	private native boolean  isInCall(long nativePtr);
@@ -56,8 +56,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native float getPlaybackGain(long nativeptr);
 	private native void muteMic(long nativePtr,boolean isMuted);
 	private native long interpretUrl(long nativePtr,String destination);
-	private native long inviteAddress(long nativePtr,long to);
-	private native long inviteAddressWithParams(long nativePtrLc,long to, long nativePtrParam);
+	private native Object inviteAddress(long nativePtr,long to);
+	private native Object inviteAddressWithParams(long nativePtrLc,long to, long nativePtrParam);
 	private native void sendDtmf(long nativePtr,char dtmf);
 	private native void clearCallLogs(long nativePtr);
 	private native boolean isMicMuted(long nativePtr);
@@ -140,12 +140,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 	public synchronized LinphoneCall invite(String uri) {
 		isValid();
-		long lNativePtr = invite(nativePtr,uri);
-		if (lNativePtr!=0) {
-			return new LinphoneCallImpl(lNativePtr); 
-		} else {
-			return null;
-		}
+		return (LinphoneCall)invite(nativePtr,uri);
 	}
 
 	public synchronized void iterate() {
@@ -239,9 +234,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		}
 	}
 	public synchronized LinphoneCall invite(LinphoneAddress to) throws LinphoneCoreException { 
-		long lNativePtr = inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
-		if (lNativePtr!=0) {
-			return new LinphoneCallImpl(lNativePtr); 
+		LinphoneCall call = (LinphoneCall)inviteAddress(nativePtr,((LinphoneAddressImpl)to).nativePtr);
+		if (call!=null) {
+			return call;
 		} else {
 			throw new LinphoneCoreException("Unable to invite address " + to.asString());
 		}
@@ -361,9 +356,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		long ptrDestination = ((LinphoneAddressImpl)to).nativePtr;
 		long ptrParams =((LinphoneCallParamsImpl)params).nativePtr;
 		
-		long lcNativePtr = inviteAddressWithParams(nativePtr, ptrDestination, ptrParams);
-		if (lcNativePtr!=0) {
-			return new LinphoneCallImpl(lcNativePtr); 
+		LinphoneCall call = (LinphoneCall)inviteAddressWithParams(nativePtr, ptrDestination, ptrParams);
+		if (call!=null) {
+			return call;
 		} else {
 			throw new LinphoneCoreException("Unable to invite with params " + to.asString());
 		}
