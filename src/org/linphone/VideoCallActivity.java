@@ -103,10 +103,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		if (LinphoneManager.getLc().isIncall()) {
 			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 			if (call != null) {
-				boolean camEnabled = call.cameraEnabled();
-				
-				LinphoneManager.getInstance().sendStaticImage(!camEnabled);
-				updatePreview(camEnabled);
+				updatePreview(call.cameraEnabled());
 			}
 		}
 		

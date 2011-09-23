@@ -394,6 +394,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 
 	public void onCallStateChanged(LinphoneCall call, State state, String message) {
+		Log.i("OnCallStateChanged: call=", call, ", state=", state, ", message=", message, ", currentCall=", mCurrentCall);
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc==null) {
 			/* we are certainly exiting, ignore then.*/
@@ -402,15 +403,13 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		
 		if (state==LinphoneCall.State.OutgoingInit){
 			mCurrentCall=call;
+			call.enableCamera(LinphoneManager.getInstance().shareMyCamera());
 			enterIncallMode(lc);
-			if (!LinphoneManager.getInstance().shareMyCamera())
-				call.enableCamera(false);
 			LinphoneActivity.instance().startOrientationSensor();
 		}else if (state==LinphoneCall.State.IncomingReceived){
 			mCurrentCall=call;
 			callPending(call);
-			if (!LinphoneManager.getInstance().shareMyCamera())
-				call.enableCamera(false);
+			call.enableCamera(LinphoneManager.getInstance().shareMyCamera());
 			LinphoneActivity.instance().startOrientationSensor();
 		}else if (state==LinphoneCall.State.Connected){
 			if (call.getDirection() == CallDirection.Incoming) {
