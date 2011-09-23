@@ -36,7 +36,6 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 
 /**
  * For Android SDK >= 5
@@ -123,9 +122,10 @@ public class VideoCallActivity extends SoftVolumeActivity {
 			findViewById(R.id.imageView1).setVisibility(View.INVISIBLE);
 			findViewById(R.id.video_capture_surface).setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.imageView1).setVisibility(View.VISIBLE);
 			findViewById(R.id.video_capture_surface).setVisibility(View.INVISIBLE);
+			findViewById(R.id.imageView1).setVisibility(View.VISIBLE);
 		}
+		findViewById(R.id.video_frame).requestLayout();
 	}
 	
 	void fixZOrder(SurfaceView video, SurfaceView preview) {
