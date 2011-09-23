@@ -227,6 +227,9 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity");
+		LinphoneManager.getLc().setVideoWindow(null);
+		LinphoneManager.getLc().setPreviewWindow(null);
+		
 		if (!isFinishing() && LinphoneManager.getLc().isIncall()) {
 			// we're getting paused for real
 			if (getChangingConfigurations() == 0) {
@@ -236,8 +239,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 				LinphoneManager.getLc().updateCall(LinphoneManager.getLc().getCurrentCall(), null);
 			}
 		}
-		LinphoneManager.getLc().setVideoWindow(null);
-		LinphoneManager.getLc().setPreviewWindow(null);
+		
 		
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
