@@ -20,8 +20,6 @@ package org.linphone;
 
 
 
-import junit.runner.Version;
-
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
@@ -37,6 +35,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.FrameLayout;
 
 /**
  * For Android SDK >= 5
@@ -44,8 +44,8 @@ import android.view.SurfaceView;
  *
  */
 public class VideoCallActivity extends SoftVolumeActivity {
-	private SurfaceView mVideoView;
-	private SurfaceView mVideoCaptureView;
+	private SurfaceView mVideoViewReady;
+	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
 	
@@ -57,21 +57,24 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
 
-		mVideoView = (SurfaceView) findViewById(R.id.video_surface); 
+		SurfaceView videoView = (SurfaceView) findViewById(R.id.video_surface); 
 
-		mVideoCaptureView = (SurfaceView) findViewById(R.id.video_capture_surface);
-		mVideoCaptureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		//((FrameLayout) findViewById(R.id.video_frame)).bringChildToFront(findViewById(R.id.imageView1));
+		
+		SurfaceView captureView = (SurfaceView) findViewById(R.id.video_capture_surface);
+		captureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
 		/* force surfaces Z ordering */
 		if (org.linphone.mediastream.Version.sdkAboveOrEqual(5)) {
-			fixZOrder();
+			fixZOrder(videoView, captureView);
 		}
 	
-		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mVideoCaptureView);
+		androidVideoWindowImpl = new AndroidVideoWindowImpl(videoView, captureView);
 		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
 			
-			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw) {
+			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				LinphoneManager.getLc().setVideoWindow(vw);
+				mVideoViewReady = surface;
 			}
 			
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -79,8 +82,9 @@ public class VideoCallActivity extends SoftVolumeActivity {
 				LinphoneManager.getLc().setVideoWindow(null);
 			}
 			
-			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw) {
-				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
+			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
+				mVideoCaptureViewReady = surface;
+				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
 			}
 			
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -100,7 +104,10 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		if (LinphoneManager.getLc().isIncall()) {
 			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 			if (call != null) {
-				LinphoneManager.getInstance().sendStaticImage(!call.cameraEnabled());
+				boolean camEnabled = call.cameraEnabled();
+				
+				LinphoneManager.getInstance().sendStaticImage(!camEnabled);
+				updatePreview(camEnabled);
 			}
 		}
 		
@@ -110,16 +117,28 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		mWakeLock.acquire();
 	}
 	
-	void fixZOrder() {
-		mVideoView.setZOrderOnTop(false);
-		mVideoCaptureView.setZOrderOnTop(true);
+	void updatePreview(boolean cameraCaptureEnabled) {
+		mVideoCaptureViewReady = null;
+		if (cameraCaptureEnabled) {
+			findViewById(R.id.imageView1).setVisibility(View.INVISIBLE);
+			findViewById(R.id.video_capture_surface).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.imageView1).setVisibility(View.VISIBLE);
+			findViewById(R.id.video_capture_surface).setVisibility(View.INVISIBLE);
+		}
+	}
+	
+	void fixZOrder(SurfaceView video, SurfaceView preview) {
+		video.setZOrderOnTop(false);
+		preview.setZOrderOnTop(true);
 	}
 
  
 	@Override
 	protected void onResume() {
 		super.onResume();
-		((GLSurfaceView)mVideoView).onResume();
+		if (mVideoViewReady != null)
+			((GLSurfaceView)mVideoViewReady).onResume();
 	}
 
 
@@ -165,17 +184,24 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		case R.id.videocall_menu_change_resolution:
 			LinphoneManager.getInstance().changeResolution();
 			// previous call will cause graph reconstruction -> regive preview window
-			LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
+			if (mVideoCaptureViewReady != null)
+				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
 			rewriteChangeResolutionItem(item);
 			break;
 		case R.id.videocall_menu_terminate_call:
 			LinphoneManager.getInstance().terminateCall();
 			break;
 		case R.id.videocall_menu_toggle_camera:
-			LinphoneManager.getInstance().toggleEnableCamera();
+			boolean camEnabled = LinphoneManager.getInstance().toggleEnableCamera(); 
+			updatePreview(camEnabled);
+			Log.e("winwow camera enabled: " + camEnabled);
 			rewriteToggleCameraItem(item);
 			// previous call will cause graph reconstruction -> regive preview window
-			LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
+			if (camEnabled) {
+				if (mVideoCaptureViewReady != null)
+					LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
+			} else
+				LinphoneManager.getLc().setPreviewWindow(null);
 			break;
 		case R.id.videocall_menu_switch_camera:
 			int id = LinphoneManager.getLc().getVideoDevice();
@@ -183,12 +209,13 @@ public class VideoCallActivity extends SoftVolumeActivity {
 			LinphoneManager.getLc().setVideoDevice(id);
 			CallManager.getInstance().updateCall();
 			// previous call will cause graph reconstruction -> regive preview window
-			LinphoneManager.getLc().setPreviewWindow(mVideoCaptureView);
+			if (mVideoCaptureViewReady != null)
+				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
 			break;
 		default:
 			Log.e("Unknown menu item [",item,"]");
 			break;
-		}
+		} 
 		return true;
 	}
 
@@ -203,11 +230,21 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity");
+		if (!isFinishing() && LinphoneManager.getLc().isIncall()) {
+			// we're getting paused for real
+			if (getChangingConfigurations() == 0) {
+				LinphoneManager.getInstance().sendStaticImage(true);
+			} else {
+				LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
+				LinphoneManager.getLc().updateCall(LinphoneManager.getLc().getCurrentCall(), null);
+			}
+		}
 		LinphoneManager.getLc().setVideoWindow(null);
 		LinphoneManager.getLc().setPreviewWindow(null);
-		LinphoneManager.getInstance().sendStaticImage(true);
+		
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
-		((GLSurfaceView)mVideoView).onPause();
+		if (mVideoViewReady != null)
+			((GLSurfaceView)mVideoViewReady).onPause();
 	}
 }
