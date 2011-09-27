@@ -174,17 +174,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			}
 			break;
 		case conference_activity:
-			if (data == null) {
-				DialerActivity.instance().configureForDialer();
-			} else if (data.getBooleanExtra(ConferenceActivity.ADD_CALL, false)) {
-				DialerActivity.instance().configureForAddingCall();
-				gotToDialer();
-			} else if (data.getBooleanExtra(ConferenceActivity.TRANSFER_TO_NEW_CALL, false)) {
-				long callId = data.getLongExtra(ConferenceActivity.CALL_NATIVE_ID, 0l);
-				if (callId == 0) throw new RuntimeException("call id is 0");
-				DialerActivity.instance().configureForTransferingCall(callId);
-				gotToDialer();
-			}
 			break;
 		default:
 			break;
@@ -236,7 +225,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			} else {
 				if (getResources().getBoolean(R.bool.use_incall_activity)) {
 					LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
-					startIncallActivity(LinphoneManager.getInstance().extractADisplayName(getResources(), address), null);
+					startIncallActivity(LinphoneManager.extractADisplayName(getResources(), address), null);
+				} if (getResources().getBoolean(R.bool.use_conference_activity)) {
+					startConferenceActivity();
 				} else {
 					// TODO
 					Log.e("Not handled case: recreation while in call and not using incall activity");
@@ -497,17 +488,18 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void startIncallActivity(CharSequence callerName, Uri pictureUri) {
-/*		Intent intent = new Intent().setClass(this, IncallActivity.class)
+		Intent intent = new Intent().setClass(this, IncallActivity.class)
                                 .putExtra(IncallActivity.CONTACT_KEY, callerName);
 		if (pictureUri != null)
 			intent.putExtra(IncallActivity.PICTURE_URI_KEY, pictureUri.toString());
-		startActivityForResult(intent, INCALL_ACTIVITY);*/
-		// Hacked
-		startConferenceActivity();
+		startActivityForResult(intent, INCALL_ACTIVITY);
 	}
 
 	public void closeIncallActivity() {
 		finishActivity(INCALL_ACTIVITY);
+	}
+	public void closeConferenceActivity() {
+		finishActivity(conference_activity);
 	}
 
 	public void startVideoActivity() {

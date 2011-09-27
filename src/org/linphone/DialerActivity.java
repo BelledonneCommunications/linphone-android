@@ -47,7 +47,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +86,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	private LinphoneCall mCurrentCall;
 	private boolean useIncallActivity;
 	private boolean useVideoActivity;
+	private boolean useConferenceActivity;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
@@ -107,6 +107,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		setContentView(R.layout.dialer);
 
 		useIncallActivity = getResources().getBoolean(R.bool.use_incall_activity);
+		useConferenceActivity = getResources().getBoolean(R.bool.use_conference_activity);
 		useVideoActivity = getResources().getBoolean(R.bool.use_video_activity);
 		// Don't use Linphone Manager in the onCreate as it takes time in LinphoneService to initialize it.
 
@@ -231,8 +232,9 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		if (!mWakeLock.isHeld()) mWakeLock.acquire();
 		
 		if (useIncallActivity) {
-//			LinphoneActivity.instance().startIncallActivity(
-//				mDisplayNameView.getText(), mAddress.getPictureUri());
+			LinphoneActivity.instance().startIncallActivity(
+				mDisplayNameView.getText(), mAddress.getPictureUri());
+		} else if (useConferenceActivity) {
 			LinphoneActivity.instance().startConferenceActivity();
 		} else {
 			loadMicAndSpeakerUiStateFromManager();
@@ -249,7 +251,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	
 
 	private void updateIncallVideoCallButton() {
-		if (useIncallActivity) throw new RuntimeException("Internal error");
+		if (useIncallActivity || useConferenceActivity)
+			throw new RuntimeException("Internal error");
 
 		boolean prefVideoEnabled = LinphoneManager.getInstance().isVideoEnabled();
 		AddVideoButton mAddVideo = (AddVideoButton) findViewById(R.id.AddVideo);
@@ -264,7 +267,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 
 	private void loadMicAndSpeakerUiStateFromManager() {
-		if (useIncallActivity) throw new RuntimeException("Internal error"); // only dialer widgets are updated with this
+		if (useIncallActivity || useConferenceActivity)
+			throw new RuntimeException("Internal error"); // only dialer widgets are updated with this
 
 		mMute.setChecked(LinphoneManager.getLc().isMicMuted());
 		mSpeaker.setSpeakerOn(LinphoneManager.getInstance().isSpeakerOn());
@@ -272,15 +276,21 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	
 	
 	private void exitCallMode() {
-		// Remove dialog if existing
-		try {
-//			dismissDialog(incomingCallDialogId);
+		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
 			finishActivity(INCOMING_CALL_ACTIVITY);
-		} catch (Throwable e) {/* Exception if never created */}
+		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
+			// Remove dialog if existing
+			try {
+				dismissDialog(incomingCallDialogId);
+			} catch (Throwable e) {/* Exception if never created */}
+		}
+		
 
 		if (useIncallActivity) {
 			LinphoneActivity.instance().closeIncallActivity();
-		} else {
+		} else if(useConferenceActivity) { 
+			LinphoneActivity.instance().closeConferenceActivity();
+		}else {
 			mCallControlRow.setVisibility(View.VISIBLE);
 			mInCallControlRow.setVisibility(View.GONE);
 			mInCallAddressLayout.setVisibility(View.GONE);
@@ -308,15 +318,12 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 
 	private void callPending(final LinphoneCall call) {
-//		showDialog(incomingCallDialogId);
-		LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
-		String from = LinphoneManager.extractADisplayName(getResources(), address);
-		Intent intent = new Intent()
-		.setClass(this, IncomingCallActivity.class)
-		.putExtra("name", from)
-		.putExtra("number", address.asStringUriOnly());
-		
-		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
+		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
+			Intent intent = new Intent().setClass(this, IncomingCallActivity.class);
+			startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
+		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
+			showDialog(incomingCallDialogId);
+		}
 	}
 
 	@Override
@@ -470,7 +477,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 	public void onGlobalStateChangedToOn(String message) {
 		mCall.setEnabled(!LinphoneManager.getLc().isIncall());
-		if (!useIncallActivity) updateIncallVideoCallButton();
+		if (!useIncallActivity && !useConferenceActivity) updateIncallVideoCallButton();
 		else mHangup.setEnabled(!mCall.isEnabled());  
 
 		if (getIntent().getData() != null) {
@@ -503,55 +510,4 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		super.onResume();
 	}
 
-
-	private void switchControlRow(ViewGroup v, OnClickListener l) {
-		final View ok = v.getChildAt(0);
-		final View cancel = v.getChildAt(1);
-		ok.setOnClickListener(l);
-		cancel.setOnClickListener(l);
-		findViewById(R.id.IncallControlRow).setVisibility(View.GONE);
-		findViewById(R.id.CallControlRow).setVisibility(View.GONE);
-		v.setVisibility(View.VISIBLE);
-	}
-	public void configureForAddingCall() {
-		ViewGroup v = (ViewGroup) findViewById(R.id.AddCallControlRow);
-		OnClickListener l = new OnClickListener() {
-			public void onClick(View v) {
-				ViewGroup group = (ViewGroup) v.getParent();
-				if (v == group.getChildAt(1)) {
-					LinphoneActivity.instance().startConferenceActivity();
-				} else {
-					LinphoneManager.getInstance().newOutgoingCall(mAddress);
-				}
-			}
-		};
-		switchControlRow(v, l);
-	}
-
-
-	public void configureForTransferingCall(final long callNativeId) {
-		throw new RuntimeException("create another activity for this");
-//		ViewGroup v = (ViewGroup) findViewById(R.id.transferCallControlRow);
-//		OnClickListener l = new OnClickListener() {
-//			public void onClick(View v) {
-//				ViewGroup group = (ViewGroup) v.getParent();
-//				if (v == group.getChildAt(1)) {
-//					LinphoneActivity.instance().startConferenceActivity();
-//				} else {
-//					LinphoneManager.getLc().transferCall(Hacks.createCall(callNativeId),
-//							mAddress.getText().toString());
-//				}
-//			}
-//		};
-//		switchControlRow(v, l);
-	}
-
-
-	public void configureForDialer() {
-		findViewById(R.id.AddCallControlRow).setVisibility(R.id.transferCallControlRow);
-		findViewById(R.id.AddCallControlRow).setVisibility(View.GONE);
-		findViewById(R.id.IncallControlRow).setVisibility(View.GONE);
-		findViewById(R.id.CallControlRow).setVisibility(View.VISIBLE);
-	}
-	
 }

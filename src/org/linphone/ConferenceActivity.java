@@ -298,8 +298,6 @@ public class ConferenceActivity extends ListActivity implements
 				lc().resumeCall(call);
 				break;
 			case R.id.unhook_call:
-				LinphoneCall currentCall = lc().getCurrentCall();
-				if (currentCall != null) lc().pauseCall(currentCall);
 				try {
 					lc().acceptCall(call);
 				} catch (LinphoneCoreException e) {
@@ -454,7 +452,7 @@ public class ConferenceActivity extends ListActivity implements
 			setVisibility(removeFromConfButton, false);
 			
 			final int numberOfCalls = linphoneCalls.size();
-			setVisibility(v, R.id.addVideo, !showUnhook && numberOfCalls == 1);
+			setVisibility(v, R.id.addVideo, !isInConference && !showUnhook && numberOfCalls == 1);
 
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);

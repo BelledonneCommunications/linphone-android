@@ -32,6 +32,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+/**
+ * @author Guillaume Beraudo
+ *
+ */
 public class IncallActivity extends SoftVolumeActivity implements OnClickListener {
 
 	public static final String CONTACT_KEY = "contact";
