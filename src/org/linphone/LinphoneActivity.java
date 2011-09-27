@@ -1,5 +1,5 @@
 /*
-iLinphoneActivity.java
+LinphoneActivity.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 	
-public class LinphoneActivity extends TabActivity implements SensorEventListener {
+public class LinphoneActivity extends TabActivity implements SensorEventListener, ContactPicked {
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     private static final int video_activity = 100;
@@ -478,7 +478,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		builder.create().show();
 	}
 
-	static void setAddressAndGoToDialer(String number, String name, Uri photo) {
+	public void setAddressAndGoToDialer(String number, String name, Uri photo) {
 		DialerActivity.instance().setContactAddress(number, name, photo);
 		instance.gotToDialer();
 	}
@@ -542,5 +542,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			}
 		});
 	}
+}
 
+interface ContactPicked {
+	void setAddressAndGoToDialer(String number, String name, Uri photo);
 }

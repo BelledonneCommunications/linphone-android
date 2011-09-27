@@ -84,6 +84,8 @@ public class ConferenceActivity extends ListActivity implements
 	public static final String ADD_CALL = "add_call";
 	public static final String TRANSFER_TO_NEW_CALL = "transfer_to_new_call";
 	public static final String CALL_NATIVE_ID = "call_native_id";
+	private static final int ID_ADD_CALL = 1;
+	private static final int ID_TRANSFER_CALL = 2;
 
 
 	private void workaroundStatusBarBug() {
@@ -196,11 +198,10 @@ public class ConferenceActivity extends ListActivity implements
 			Toast.makeText(this,
 					"Should now finish this activity to go back to dialer",
 					Toast.LENGTH_LONG).show();
-			// startActivityForResult(new Intent().setClass(this,
-			// LinphoneContactSelectorActivity.class), 0);
+			Intent intent = new Intent().setClass(this, UriPickerActivity.class);
+			intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_ADD);
+			startActivityForResult(intent, ID_ADD_CALL);
 			lc().pauseAllCalls();
-			setResult(RESULT_OK, new Intent().putExtra(ADD_CALL, true));
-			finish();
 			break;
 		case R.id.conf_header:
 			View content = getLayoutInflater().inflate(R.layout.conf_choices_admin, null);
@@ -304,9 +305,10 @@ public class ConferenceActivity extends ListActivity implements
 				break;
 			case R.id.transfer_new:
 				Toast.makeText(ConferenceActivity.this, "Transfer choice selected : to do, create activity to select new call", Toast.LENGTH_LONG).show();
-//				setResult(RESULT_OK, new Intent().putExtra(TRANSFER_TO_NEW_CALL, true));
-//				setResult(RESULT_OK, new Intent().putExtra(CALL_NATIVE_ID, Hacks.ptrOf(call)));
-//				finish();
+				Intent intent = new Intent().setClass(ConferenceActivity.this, UriPickerActivity.class);
+				intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER);
+				callToTransfer = call;	
+				startActivityForResult(intent, ID_TRANSFER_CALL);
 				break;
 			case R.id.remove_from_conference:
 				lc().removeFromConference(call);
@@ -431,7 +433,8 @@ public class ConferenceActivity extends ListActivity implements
 			View removeFromConfButton = v.findViewById(R.id.remove_from_conference);
 			setVisibility(removeFromConfButton, false);
 			
-			setVisibility(v, R.id.addVideo, !showUnhook && linphoneCalls.size() == 1);
+			final int numberOfCalls = linphoneCalls.size();
+			setVisibility(v, R.id.addVideo, !showUnhook && numberOfCalls == 1);
 
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
@@ -451,7 +454,7 @@ public class ConferenceActivity extends ListActivity implements
 					View content = getLayoutInflater().inflate(R.layout.conf_choices_dialog, null);
 					Dialog dialog = new AlertDialog.Builder(ConferenceActivity.this).setView(content).create();
 					OnClickListener l = new CallActionListener(call, dialog);
-					enableView(content, R.id.transfer_existing, l, !isInConference);
+					enableView(content, R.id.transfer_existing, l, !isInConference && numberOfCalls >=2);
 					enableView(content, R.id.transfer_new, l, !isInConference);
 					enableView(content, R.id.remove_from_conference, l, isInConference);
 					enableView(content, R.id.merge_to_conference, l, showMergeToConf);
@@ -536,6 +539,35 @@ public class ConferenceActivity extends ListActivity implements
 		return durationDiff;
 
 	}
+
+	private LinphoneCall callToTransfer;
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) {
+			callToTransfer = null;
+			Toast.makeText(this, R.string.uri_picking_canceled, Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		String uri = data.getStringExtra(UriPickerActivity.EXTRA_CALLEE_URI);
+		switch (requestCode) {
+		case ID_ADD_CALL:
+			try {
+				lc().invite(uri);
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
+				Toast.makeText(this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
+			}
+			break;
+		case ID_TRANSFER_CALL:
+			lc().transferCall(callToTransfer, uri);
+			Toast.makeText(this, R.string.transfer_started, Toast.LENGTH_LONG).show();
+			break;
+		default:
+			throw new RuntimeException("unhandled request code " + requestCode);
+		}
+	}
+	
 	/*
 	 * public int compare(LinphoneCall c1, LinphoneCall c2) { if (c1 == c2)
 	 * return 0;

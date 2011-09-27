@@ -155,7 +155,7 @@ public abstract class AbstractContactPickerActivity extends Activity implements 
 			finish();
 		}*/
 
-		LinphoneActivity.setAddressAndGoToDialer(number, name, photo);
+		((ContactPicked) getParent()).setAddressAndGoToDialer(number, name, photo);
 	}
 
 	

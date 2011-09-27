@@ -57,11 +57,12 @@ public class HistoryActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		TextView lFirstLineView = (TextView) v.findViewById(R.id.history_cell_first_line);
 		TextView lSecondLineView = (TextView) v.findViewById(R.id.history_cell_second_line);
+		ContactPicked parent = (ContactPicked) getParent();
 		if (lSecondLineView.getVisibility() == View.GONE) {
 			// no display name
-			LinphoneActivity.setAddressAndGoToDialer(lFirstLineView.getText().toString(), null, null);
+			parent.setAddressAndGoToDialer(lFirstLineView.getText().toString(), null, null);
 		} else {
-			LinphoneActivity.setAddressAndGoToDialer(
+			parent.setAddressAndGoToDialer(
 					lSecondLineView.getText().toString(),
 					lFirstLineView.getText().toString(),
 					null);

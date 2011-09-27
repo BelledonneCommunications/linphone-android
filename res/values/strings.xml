@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="uri_picking_canceled">Canceled</string>
+	<string name="error_adding_new_call">Error adding new call</string>
+	<string name="transfer_started">Transfer started</string>
+
+
 	<string name="status_conf_call">conf</string>
 	<string name="status_active_call">active</string>
 	<string name="state_paused">paused</string>
