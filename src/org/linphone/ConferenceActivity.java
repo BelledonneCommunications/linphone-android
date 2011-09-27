@@ -51,6 +51,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 /**
  * @author Guillaume Beraudo
@@ -94,6 +95,12 @@ public class ConferenceActivity extends ListActivity implements
 				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 	}
 
+	private void pauseCurrentCallOrLeaveConference() {
+		LinphoneCall call = lc().getCurrentCall();
+		if (call != null) lc().pauseCall(call);
+		lc().leaveConference();
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.conferencing);
@@ -107,6 +114,9 @@ public class ConferenceActivity extends ListActivity implements
 
 		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
 		findViewById(R.id.conf_simple_merge).setOnClickListener(this);
+
+		findViewById(R.id.toggleMuteMic).setOnClickListener(this);
+		findViewById(R.id.toggleSpeaker).setOnClickListener(this);
 
 		List<LinphoneCall> calls = getInitialCalls();
 		setListAdapter(new CalleeListAdapter(calls));
@@ -201,7 +211,7 @@ public class ConferenceActivity extends ListActivity implements
 			Intent intent = new Intent().setClass(this, UriPickerActivity.class);
 			intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_ADD);
 			startActivityForResult(intent, ID_ADD_CALL);
-			lc().pauseAllCalls();
+			pauseCurrentCallOrLeaveConference();
 			break;
 		case R.id.conf_header:
 			View content = getLayoutInflater().inflate(R.layout.conf_choices_admin, null);
@@ -246,6 +256,16 @@ public class ConferenceActivity extends ListActivity implements
 			break;
 		case R.id.conf_simple_merge:
 			lc().addAllToConference();
+			break;
+		case R.id.toggleMuteMic:
+			lc().muteMic(((ToggleButton) v).isChecked());
+			break;
+		case R.id.toggleSpeaker:
+			if (((ToggleButton) v).isChecked()) {
+				LinphoneManager.getInstance().routeAudioToSpeaker();
+			} else {
+				LinphoneManager.getInstance().routeAudioToReceiver();
+			}
 			break;
 		default:
 			break;
