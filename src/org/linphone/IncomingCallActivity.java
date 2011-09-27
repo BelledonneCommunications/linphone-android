@@ -18,9 +18,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCore;
+import org.linphone.ui.CallButton;
+import org.linphone.ui.HangCallButton;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 /**
@@ -29,20 +38,28 @@ import android.widget.TextView;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity {
+public class IncomingCallActivity extends Activity implements OnClickListener {
 
 	private TextView mNameView;
 	private TextView mNumberView;
+	private LinphoneCall mCall;
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		LinphoneCore lc = LinphoneManager.getLc();
+		mCall = lc.getCurrentCall();
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incoming);
 
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
 
+		HangCallButton hang = (HangCallButton) findViewById(R.id.Decline);
+		CallButton accept = (CallButton) findViewById(R.id.Answer);
+		hang.setExternalClickListener(this);
+		accept.setExternalClickListener(this);
 		
         // set this flag so this activity will stay in front of the keyguard
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
@@ -52,8 +69,23 @@ public class IncomingCallActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		mNameView.setText(getIntent().getStringExtra("name"));
-		mNumberView.setText(getIntent().getStringExtra("number"));
+		LinphoneAddress address = mCall.getRemoteAddress();
+		String from = LinphoneManager.extractADisplayName(getResources(), address);
+		mNameView.setText(from);
+		mNumberView.setText(address.asStringUriOnly());
 		super.onResume();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+			LinphoneManager.getLc().terminateCall(mCall);
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onClick(View v) {
+		finish();
 	}
 }

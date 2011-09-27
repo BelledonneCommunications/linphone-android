@@ -28,15 +28,17 @@
 	</LinearLayout>
 
 
-	<org.linphone.ui.CallButton  android:src="@drawable/startcall_green" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/Answer"
+	<org.linphone.ui.CallButton android:id="@+id/Answer"
+		android:src="@drawable/startcall_green" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
 		android:text="answer"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:layout_alignParentLeft="true" android:layout_marginBottom="40sp"
 		android:layout_alignParentBottom="true"/>
 
-	<org.linphone.ui.HangCallButton android:src="@drawable/stopcall_red" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/Decline"
+	<org.linphone.ui.HangCallButton android:id="@+id/Decline"
+		android:src="@drawable/stopcall_red" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
 		android:text="decline" 
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:layout_alignParentRight="true" android:layout_alignBottom="@id/Answer"/>
