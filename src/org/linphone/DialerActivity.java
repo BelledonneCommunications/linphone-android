@@ -27,7 +27,6 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -93,6 +92,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 
 	private static final int incomingCallDialogId = 1;
+	private static final int INCOMING_CALL_ACTIVITY = 10;
 
 	/**
 	 * @return null if not ready yet
@@ -274,7 +274,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	private void exitCallMode() {
 		// Remove dialog if existing
 		try {
-			dismissDialog(incomingCallDialogId);
+//			dismissDialog(incomingCallDialogId);
+			finishActivity(INCOMING_CALL_ACTIVITY);
 		} catch (Throwable e) {/* Exception if never created */}
 
 		if (useIncallActivity) {
@@ -307,7 +308,15 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 
 	private void callPending(final LinphoneCall call) {
-		showDialog(incomingCallDialogId);
+//		showDialog(incomingCallDialogId);
+		LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+		String from = LinphoneManager.extractADisplayName(getResources(), address);
+		Intent intent = new Intent()
+		.setClass(this, IncomingCallActivity.class)
+		.putExtra("name", from)
+		.putExtra("number", address.asStringUriOnly());
+		
+		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 	}
 
 	@Override
