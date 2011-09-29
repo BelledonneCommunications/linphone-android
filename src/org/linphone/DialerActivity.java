@@ -416,7 +416,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 				enterIncallMode(lc);
 			}
 		}else if (state==LinphoneCall.State.Error){
-			if (mCurrentCall==call){
+			if (lc.getCurrentCall()==call){
 				if (mWakeLock.isHeld()) mWakeLock.release();
 				showToast(R.string.call_error, message);
 				exitCallMode();
@@ -424,7 +424,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 				mCurrentCall=null;
 			}
 		}else if (state==LinphoneCall.State.CallEnd){
-			if (mCurrentCall==call){
+			if (lc.getCurrentCall() == null || lc.getCurrentCall()==call){
 				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
 				mCurrentCall=null;
