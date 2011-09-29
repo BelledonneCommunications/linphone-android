@@ -99,7 +99,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		instance = this;
 		
 		// In case restart after a crash. Main in LinphoneActivity
 		LinphonePreferenceManager.getInstance(this);
@@ -127,6 +126,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	
 		LinphoneManager.createAndStart(this, this);
+		instance = this; // instance is ready once linphone manager has been created
 	}
 
 

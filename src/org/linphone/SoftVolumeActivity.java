@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
@@ -35,9 +36,12 @@ public class SoftVolumeActivity extends Activity {
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
-				&& (Hacks.needSoftvolume() || LinphonePreferenceManager.getInstance().useSoftvolume())) {
+				&& (Hacks.needSoftvolume() || LinphonePreferenceManager.getInstance(this).useSoftvolume())) {
 
-			if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+			if (!LinphoneService.isReady()) {
+				Log.i("Couldn't change softvolume has service is not running");
+				return true;
+			} else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 				LinphoneManager.getInstance().adjustSoftwareVolume(1);
 			} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 				LinphoneManager.getInstance().adjustSoftwareVolume(-1);
