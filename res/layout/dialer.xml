@@ -39,13 +39,14 @@
 
 	<LinearLayout android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
 		<LinearLayout android:id="@+id/CallControlRow" android:layout_height="fill_parent" android:layout_width="fill_parent">
-			<org.linphone.ui.CallButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
-			<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
+			<ImageButton android:id="@+id/BackToConference" android:src="@drawable/resume_blue" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:visibility="gone"/>
+			<org.linphone.ui.CallButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
+			<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 		</LinearLayout>
 
 		<LinearLayout android:id="@+id/IncallControlRow" android:layout_height="fill_parent" android:layout_width="fill_parent" android:visibility="gone">
-			<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:src="@drawable/startvideo_green" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:background="@drawable/clavier_bg"/>
-			<org.linphone.ui.HangCallButton android:id="@+id/HangUp" android:src="@drawable/stopcall_red" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="0.25" android:background="@drawable/clavier_bg"/>
+			<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:src="@drawable/startvideo_green" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
+			<org.linphone.ui.HangCallButton android:id="@+id/HangUp" android:src="@drawable/stopcall_red" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
 		</LinearLayout>
 
 		<EditText android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content" android:layout_width="fill_parent" android:background="@android:color/transparent" android:textColor="@android:color/white" />

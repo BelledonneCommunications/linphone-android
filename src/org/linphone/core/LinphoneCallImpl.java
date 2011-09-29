@@ -84,8 +84,20 @@ class LinphoneCallImpl implements LinphoneCall {
 	public boolean cameraEnabled() {
 		return cameraEnabled(nativePtr);
 	}
+
+	@Override
 	public boolean equals(Object call) {
+		if (this == call) return true;
+		if (call == null) return false;
+		if (!(call instanceof LinphoneCallImpl)) return false;
 		return nativePtr == ((LinphoneCallImpl)call).nativePtr;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + (int) (nativePtr ^ (nativePtr >>> 32));
+		return result;
 	}
 	public void enableEchoCancellation(boolean enable) {
 		enableEchoCancellation(nativePtr,enable);

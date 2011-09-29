@@ -36,8 +36,9 @@
 			 </intent-filter>
         </activity>
 
-
-        <activity android:name="org.linphone.IncomingCallActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name="org.linphone.IncomingCallActivity"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -60,7 +61,6 @@
             </intent-filter>
          </activity>
 		<activity android:name="org.linphone.ConferenceActivity"
-		            android:launchMode="singleTop"
         			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

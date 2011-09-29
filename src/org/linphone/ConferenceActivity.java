@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.AlertDialog;
@@ -123,6 +124,11 @@ public class ConferenceActivity extends ListActivity implements
 		workaroundStatusBarBug();
 	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+	}
+
 	protected void registerLinphoneListener(boolean register) {
 		if (register)
 			LinphoneManager.getInstance().addListener(this);
@@ -135,6 +141,8 @@ public class ConferenceActivity extends ListActivity implements
 		active=true;
 		registerLinphoneListener(true);
 		updateConfState();
+		boolean showSimpleActions = lc().getConferenceSize() == 0 && lc().getCallsNb() == 2;
+		findViewById(R.id.conf_simple_merge).setVisibility(showSimpleActions ? VISIBLE : GONE);
 		super.onResume();
 	}
 
@@ -205,9 +213,6 @@ public class ConferenceActivity extends ListActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.addCall:
-			Toast.makeText(this,
-					"Should now finish this activity to go back to dialer",
-					Toast.LENGTH_LONG).show();
 			Intent intent = new Intent().setClass(this, UriPickerActivity.class);
 			intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_ADD);
 			startActivityForResult(intent, ID_ADD_CALL);
@@ -305,7 +310,6 @@ public class ConferenceActivity extends ListActivity implements
 				}
 				break;
 			case R.id.transfer_existing:
-				Toast.makeText(ConferenceActivity.this, "Transfer choice selected", Toast.LENGTH_LONG).show();
 				@SuppressWarnings("unchecked") final List<LinphoneCall> existingCalls = lc().getCalls();
 				existingCalls.remove(call);
 				final List<String> numbers = new ArrayList<String>(existingCalls.size());
@@ -322,7 +326,6 @@ public class ConferenceActivity extends ListActivity implements
 				new AlertDialog.Builder(ConferenceActivity.this).setAdapter(adapter, l).create().show();
 				break;
 			case R.id.transfer_new:
-				Toast.makeText(ConferenceActivity.this, "Transfer choice selected : to do, create activity to select new call", Toast.LENGTH_LONG).show();
 				Intent intent = new Intent().setClass(ConferenceActivity.this, UriPickerActivity.class);
 				intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER);
 				callToTransfer = call;	
@@ -342,7 +345,6 @@ public class ConferenceActivity extends ListActivity implements
 
 		public CalleeListAdapter(List<LinphoneCall> calls) {
 			linphoneCalls = calls;
-
 		}
 
 		public int getCount() {
@@ -452,7 +454,9 @@ public class ConferenceActivity extends ListActivity implements
 			setVisibility(removeFromConfButton, false);
 			
 			final int numberOfCalls = linphoneCalls.size();
-			setVisibility(v, R.id.addVideo, !isInConference && !showUnhook && numberOfCalls == 1);
+			boolean showAddVideo = !isInConference && !showUnhook && numberOfCalls == 1
+					&& Version.isVideoCapable() && LinphoneManager.getInstance().isVideoEnabled();
+			setVisibility(v, R.id.addVideo, showAddVideo);
 
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
@@ -553,7 +557,7 @@ public class ConferenceActivity extends ListActivity implements
 		if (!inConfC1 && inConfC2)
 			return 1;
 
-		int durationDiff = c1.getDuration() - c2.getDuration();
+		int durationDiff = c2.getDuration() - c1.getDuration();
 		return durationDiff;
 
 	}

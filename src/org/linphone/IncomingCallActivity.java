@@ -20,17 +20,17 @@ package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore;
-import org.linphone.ui.CallButton;
-import org.linphone.ui.HangCallButton;
+import org.linphone.core.Log;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity displayed when a call comes in.
@@ -44,11 +44,18 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 	private TextView mNumberView;
 	private LinphoneCall mCall;
 
-	
+	private void findIncomingCall(Intent intent) {
+		String stringUri = intent.getStringExtra("stringUri");
+		mCall = LinphoneManager.getInstance().retrieveIncomingCall(stringUri);
+		if (mCall == null) {
+			Log.e("Couldn't find incoming call from ", stringUri);
+			Toast.makeText(this, "Error", Toast.LENGTH_SHORT);
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		LinphoneCore lc = LinphoneManager.getLc();
-		mCall = lc.getCurrentCall();
+		findIncomingCall(getIntent());
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incoming);
@@ -56,10 +63,8 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
 
-		HangCallButton hang = (HangCallButton) findViewById(R.id.Decline);
-		CallButton accept = (CallButton) findViewById(R.id.Answer);
-		hang.setExternalClickListener(this);
-		accept.setExternalClickListener(this);
+		findViewById(R.id.Decline).setOnClickListener(this);
+		findViewById(R.id.Answer).setOnClickListener(this);
 		
         // set this flag so this activity will stay in front of the keyguard
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
@@ -67,6 +72,12 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
         getWindow().addFlags(flags);
 	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		findIncomingCall(intent);
+		super.onNewIntent(intent);
+	}
+	
 	@Override
 	protected void onResume() {
 		LinphoneAddress address = mCall.getRemoteAddress();
@@ -80,12 +91,26 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
 			LinphoneManager.getLc().terminateCall(mCall);
+			finish();
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.Answer:
+			if (!LinphoneManager.getInstance().acceptCall(mCall)) {
+				// the above method takes care of Samsung Galaxy S
+				Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG);
+			}
+			break;
+		case R.id.Decline:
+			LinphoneManager.getLc().terminateCall(mCall);
+			break;
+		default:
+			throw new RuntimeException();
+		}
 		finish();
 	}
 }

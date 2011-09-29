@@ -63,7 +63,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends LinphoneManagerWaitActivity implements LinphoneGuiListener, NewOutgoingCallUiListener {
+public class DialerActivity extends LinphoneManagerWaitActivity implements LinphoneGuiListener, NewOutgoingCallUiListener, OnClickListener {
 	
 	private TextView mStatus;
 	private View mHangup;
@@ -126,6 +126,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 
 		mCallControlRow = findViewById(R.id.CallControlRow);
+		mCallControlRow.findViewById(R.id.BackToConference).setOnClickListener(this);
 		mAddressLayout = findViewById(R.id.Addresslayout);
 
 		mInCallControlRow = findViewById(R.id.IncallControlRow);
@@ -319,7 +320,9 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 	private void callPending(final LinphoneCall call) {
 		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
-			Intent intent = new Intent().setClass(this, IncomingCallActivity.class);
+			Intent intent = new Intent()
+					.setClass(this, IncomingCallActivity.class)
+					.putExtra("stringUri", call.getRemoteAddress().asStringUriOnly());
 			startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
 			showDialog(incomingCallDialogId);
@@ -462,6 +465,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 				mCurrentCall=null;
 			}
 		}
+
+		updateCallControlRow();
 	}
 
 	private void showToast(int id, String txt) {
@@ -498,6 +503,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 	@Override
 	protected void onResume() {
+		updateCallControlRow();
+
 		// When coming back from a video call, if the phone orientation is different
 		// Android will destroy the previous Dialer and create a new one.
 		// Unfortunately the "call end" status event is received in the meanwhile
@@ -510,4 +517,38 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		super.onResume();
 	}
 
+
+	private void updateCallControlRow() {
+		if (useConferenceActivity) {
+			if (LinphoneManager.isInstanciated()) {
+				LinphoneCore lc = LinphoneManager.getLc();
+				int calls = lc.getCallsNb();
+				View backToConf = mCallControlRow.findViewById(R.id.BackToConference);
+				View callButton = mCallControlRow.findViewById(R.id.Call);
+				View hangButton = mCallControlRow.findViewById(R.id.Decline);
+				if (calls > 0) {
+					backToConf.setVisibility(View.VISIBLE);
+					callButton.setVisibility(View.GONE);
+					hangButton.setEnabled(true);
+				} else {
+					backToConf.setVisibility(View.GONE);
+					callButton.setVisibility(View.VISIBLE);
+					hangButton.setEnabled(false);
+				}
+			}
+		}
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.BackToConference:
+			LinphoneActivity.instance().startConferenceActivity();
+			break;
+		default:
+			break;
+		}
+		
+	}
 }

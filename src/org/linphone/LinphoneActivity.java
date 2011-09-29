@@ -515,7 +515,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void startConferenceActivity() {
-		if (ConferenceActivity.active) return;
+		if (ConferenceActivity.active) {
+			return;
+		}
 
 		mHandler.post(new Runnable() {
 			public void run() {

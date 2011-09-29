@@ -887,7 +887,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			listenerDispatcher.onAlreadyInVideoCall();
 		}
 	}
-
+	
 	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
 		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
@@ -895,6 +895,19 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (mLc.isInComingInvitePending()) {
 			mLc.acceptCall(mLc.getCurrentCall());
 			return true;
+		}
+		return false;
+	}
+
+	public boolean acceptCall(LinphoneCall call) {
+		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
+			setAudioModeIncallForGalaxyS();
+
+		try {
+			mLc.acceptCall(call);
+			return true;
+		} catch (LinphoneCoreException e) {
+			Log.i(e, "Accept call failed");
 		}
 		return false;
 	}
@@ -946,6 +959,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private static class ListenerDispatcher implements LinphoneServiceListener {
 		private LinphoneServiceListener serviceListener;
+		private List<LinphoneCall> incomingCalls = new ArrayList<LinphoneCall>();
 		List<LinphoneSimpleListener> simpleListeners;
 		public ListenerDispatcher(List<LinphoneSimpleListener> simpleListeners) {
 			this.simpleListeners = simpleListeners;
@@ -973,8 +987,20 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (serviceListener != null) serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
 		}
 
+		public LinphoneCall retrieveIncomingCall(String stringUri) {
+			for (LinphoneCall call : incomingCalls) {
+				if (stringUri.equals(call.getRemoteAddress().asStringUriOnly())) {
+					return call;
+				}
+			}
+			return null;
+		}
+
 		public void onCallStateChanged(LinphoneCall call, State state,
 				String message) {
+			if (State.IncomingReceived.equals(state)) {
+				incomingCalls.add(call);
+			}
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
 				l.onCallStateChanged(call, state, message);
@@ -1009,11 +1035,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		public void tryingNewOutgoingCallButWrongDestinationAddress() {
 			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButWrongDestinationAddress();
 		}
-		
 	}
-
 
 	public static final boolean isInstanciated() {
 		return instance != null;
+	}
+
+	public LinphoneCall retrieveIncomingCall(String stringUri) {
+		return listenerDispatcher.retrieveIncomingCall(stringUri);
 	}
 }
