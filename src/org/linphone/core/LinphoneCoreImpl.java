@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
-import org.linphone.LinphoneManager;
-import org.linphone.mediastream.video.AndroidVideoWindowImpl;
-
 
 class LinphoneCoreImpl implements LinphoneCore {
 

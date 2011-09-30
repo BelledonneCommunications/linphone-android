@@ -39,4 +39,4 @@
 	url = git://git.linphone.org/msamr
 [submodule "submodules/externals/libvpx"]
 	path = submodules/externals/libvpx
-	url = git://git.linphone.org/libvpx.git
+	url = http://git.chromium.org/webm/libvpx.git

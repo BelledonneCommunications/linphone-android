@@ -9,4 +9,10 @@
 		android:layout_height="wrap_content" android:text="@string/about_text"
 		android:autoLink="web" android:gravity="center" android:paddingTop="50sp"
 		android:textStyle="bold" android:id="@+id/AboutText"></TextView>
+	<Button android:id="@+id/about_report_issue"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/about_report_issue"
+		android:visibility="gone"
+		android:layout_marginTop="30sp"/>
 </LinearLayout>
