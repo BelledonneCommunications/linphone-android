@@ -133,8 +133,7 @@ public class ConferenceActivity extends ListActivity implements
 	public void onResumeWhenManagerReady() {
 		registerLinphoneListener(true);
 		updateConfState();
-		boolean showSimpleActions = lc().getConferenceSize() == 0 && lc().getCallsNb() == 2;
-		findViewById(R.id.conf_simple_merge).setVisibility(showSimpleActions ? VISIBLE : GONE);
+		updateMergeButtonState();
 	}
 
 	@Override
@@ -529,6 +528,13 @@ public class ConferenceActivity extends ListActivity implements
 
 	private Handler mHandler = new Handler();
 
+	private void updateMergeButtonState() {
+		int callNb = lc().getCallsNb();
+		int confSize = lc().getConferenceSize();
+		if (lc().isInConference()) confSize--;
+		boolean showSimpleActions = callNb >= 2 && confSize != callNb;
+		findViewById(R.id.conf_simple_merge).setVisibility(showSimpleActions ? VISIBLE : GONE);
+	}
 	public void onCallStateChanged(final LinphoneCall call, final State state,
 			final String message) {
 		final String stateStr = call + " " + state.toString();
@@ -537,8 +543,7 @@ public class ConferenceActivity extends ListActivity implements
 			public void run() {
 				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
 				Log.d("ConferenceActivity applying state ",stateStr);
-				boolean showSimpleActions = lc().getConferenceSize() == 0 && lc().getCallsNb() == 2;
-				findViewById(R.id.conf_simple_merge).setVisibility(showSimpleActions ? VISIBLE : GONE);
+				updateMergeButtonState();
 				if (state == State.IncomingReceived || state == State.OutgoingRinging) {
 					if (!adapter.linphoneCalls.contains(call)) {
 						adapter.linphoneCalls.add(call);
