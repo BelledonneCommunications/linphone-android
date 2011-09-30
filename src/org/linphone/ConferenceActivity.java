@@ -44,6 +44,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -418,10 +419,18 @@ public class ConferenceActivity extends ListActivity implements
 			final LinphoneCall call = linphoneCalls.get(position);
 			final LinphoneCall.State state = call.getState();
 
-			((TextView) v.findViewById(R.id.name)).setText(call
-					.getRemoteAddress().getDisplayName());
-			((TextView) v.findViewById(R.id.address)).setText(call
-					.getRemoteAddress().getUserName());
+			String mainText = call.getRemoteAddress().getDisplayName();
+			String complText = call.getRemoteAddress().getUserName();
+			TextView mainTextView = (TextView) v.findViewById(R.id.name);
+			TextView complTextView = (TextView) v.findViewById(R.id.address);
+			if (TextUtils.isEmpty(mainText)) {
+				mainTextView.setText(complText);
+				complTextView.setVisibility(View.GONE);
+			} else {
+				mainTextView.setText(mainText);
+				complTextView.setText(complText);
+				complTextView.setVisibility(View.VISIBLE);
+			}
 
 			final boolean isInConference = call.isInConference();
 			boolean currentlyActiveCall = !isInConference

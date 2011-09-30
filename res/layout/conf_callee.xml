@@ -30,7 +30,7 @@
 	<LinearLayout android:id="@+id/callee_statuses" android:layout_toLeftOf="@id/callee_buttons"
 	  android:layout_width="wrap_content" android:layout_height="fill_parent"
 	  android:layout_centerVertical="true">
-	  	<TextView android:id="@+id/status_label" style="@style/callee_status"/>
+	  	<TextView android:id="@+id/status_label" style="@style/callee_status" />
 	  	<ImageView android:id="@+id/callee_status_paused" style="@style/callee_status" android:src="@drawable/conf_status_paused" />
 		<ImageView android:id="@+id/callee_status_inconf" style="@style/callee_status" android:src="@drawable/conf_status_inconf"/>
 	</LinearLayout>
