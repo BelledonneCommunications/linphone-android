@@ -178,13 +178,13 @@ public class ConferenceActivity extends ListActivity implements
 					getLayoutInflater().inflate(R.layout.numpad, null))
 			// .setIcon(R.drawable.logo_linphone_57x57)
 					// .setTitle("Send DTMFs")
-					// .setPositiveButton("hide", new
-					// DialogInterface.OnClickListener() {
-					// public void onClick(DialogInterface dialog, int whichButton)
-					// {
-					// dismissDialog(id);
-					// }
-					// })
+					 .setPositiveButton(getString(R.string.close_button_text), new
+					 DialogInterface.OnClickListener() {
+					 public void onClick(DialogInterface dialog, int whichButton)
+					 {
+					 dismissDialog(id);
+					 }
+					 })
 					.create();
 		default:
 			throw new RuntimeException("unkown dialog id " + id);
