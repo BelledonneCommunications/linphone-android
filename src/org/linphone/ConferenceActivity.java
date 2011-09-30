@@ -171,6 +171,10 @@ public class ConferenceActivity extends ListActivity implements
 	}
 	@Override
 	protected Dialog onCreateDialog(final int id) {
+		if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
+			return waitHelper.createWaitDialog();
+		}
+
 		switch (id) {
 		case numpad_dialog_id:
 			return new AlertDialog.Builder(this).setView(
