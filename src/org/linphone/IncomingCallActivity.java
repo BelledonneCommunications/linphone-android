@@ -46,7 +46,7 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 
 	private void findIncomingCall(Intent intent) {
 		String stringUri = intent.getStringExtra("stringUri");
-		mCall = LinphoneManager.getInstance().retrieveIncomingCall(stringUri);
+		mCall = LinphoneManager.getLc().findCallFromUri(stringUri);
 		if (mCall == null) {
 			Log.e("Couldn't find incoming call from ", stringUri);
 			Toast.makeText(this, "Error", Toast.LENGTH_SHORT);

@@ -959,7 +959,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private static class ListenerDispatcher implements LinphoneServiceListener {
 		private LinphoneServiceListener serviceListener;
-		private List<LinphoneCall> incomingCalls = new ArrayList<LinphoneCall>();
 		List<LinphoneSimpleListener> simpleListeners;
 		public ListenerDispatcher(List<LinphoneSimpleListener> simpleListeners) {
 			this.simpleListeners = simpleListeners;
@@ -987,20 +986,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (serviceListener != null) serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
 		}
 
-		public LinphoneCall retrieveIncomingCall(String stringUri) {
-			for (LinphoneCall call : incomingCalls) {
-				if (stringUri.equals(call.getRemoteAddress().asStringUriOnly())) {
-					return call;
-				}
-			}
-			return null;
-		}
-
 		public void onCallStateChanged(LinphoneCall call, State state,
 				String message) {
-			if (State.IncomingReceived.equals(state)) {
-				incomingCalls.add(call);
-			}
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
 				l.onCallStateChanged(call, state, message);
@@ -1041,7 +1028,4 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return instance != null;
 	}
 
-	public LinphoneCall retrieveIncomingCall(String stringUri) {
-		return listenerDispatcher.retrieveIncomingCall(stringUri);
-	}
 }

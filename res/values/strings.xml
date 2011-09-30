@@ -8,6 +8,7 @@
 	<string name="error_adding_new_call">Error adding new call</string>
 	<string name="transfer_started">Transfer started</string>
 
+	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>
 
 	<string name="status_conf_call">conf</string>
 	<string name="status_active_call">active</string>

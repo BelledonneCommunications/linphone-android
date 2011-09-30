@@ -94,10 +94,12 @@ public class TestConferenceActivity extends ConferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		LinphoneManagerWaitHelper.disabled=true;
 		super.onCreate(savedInstanceState);
-
 		//if (!serviceStarted) startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 
+		findViewById(R.id.toggleMuteMic).setOnClickListener(null);
+		findViewById(R.id.toggleSpeaker).setOnClickListener(null);
 	}
 
 
@@ -308,6 +310,15 @@ public class TestConferenceActivity extends ConferenceActivity {
 		public int getVideoDevice() {return 0;}
 		public void setDeviceRotation(int rotation) {}
 		public void setVideoDevice(int id) {}
+		@Override
+		public LinphoneCall findCallFromUri(String uri) {
+			for (LinphoneCall call : calls) {
+				if (call.getRemoteAddress().asStringUriOnly().equals(uri)) {
+					return call;
+				}
+			}
+			return null;
+		}
 	}
 
 
@@ -318,7 +329,7 @@ public class TestConferenceActivity extends ConferenceActivity {
 			this.displayName = niceName;
 			this.number = number;}
 		public String asString() {return displayName;}
-		public String asStringUriOnly() {return null;}
+		public String asStringUriOnly() {return getUserName() + "@" + getDomain();}
 		public String getDisplayName() {return displayName;}
 		public String getDomain() {return "example.org";}
 		public String getPort() {return "5060";}

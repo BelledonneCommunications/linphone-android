@@ -68,7 +68,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Handler mHandler = new Handler();
 	private static LinphoneService instance;
 
-	static boolean isReady() { return (instance!=null);	}
+	public static boolean isReady() { return (instance!=null);	}
 
 	/**
 	 * @throws RuntimeException service not instantiated

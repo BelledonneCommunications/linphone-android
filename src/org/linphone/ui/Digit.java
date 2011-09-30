@@ -19,13 +19,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
+import org.linphone.R;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class Digit extends Button implements AddressAware {
 
@@ -77,7 +81,16 @@ public class Digit extends Button implements AddressAware {
 			mKeyCode = Digit.this.getText().subSequence(0, 1);
 		}
 
+		private boolean linphoneServiceReady() {
+			if (!LinphoneService.isReady()) {
+				Log.w("Service is not ready while pressing digit");
+				Toast.makeText(getContext(), getContext().getString(R.string.skipable_error_service_not_ready), Toast.LENGTH_SHORT).show();
+				return false;
+			}
+			return true;
+		}
 		public void onClick(View v) {
+			if (!linphoneServiceReady()) return;
 			LinphoneCore lc = LinphoneManager.getLc();
 			lc.stopDtmf();
 			mIsDtmfStarted =false;
@@ -96,6 +109,7 @@ public class Digit extends Button implements AddressAware {
 		}
 
 		public boolean onTouch(View v, MotionEvent event) {
+			if (!linphoneServiceReady()) return true;
 			LinphoneCore lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && mIsDtmfStarted ==false) {
 				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode.charAt(0));
@@ -109,6 +123,7 @@ public class Digit extends Button implements AddressAware {
 		}
 		
 		public boolean onLongClick(View v) {
+			if (!linphoneServiceReady()) return true;
 			// Called if "0+" dtmf
 			LinphoneCore lc = LinphoneManager.getLc();
 			lc.stopDtmf();
