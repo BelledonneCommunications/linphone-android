@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
+import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -63,7 +64,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends LinphoneManagerWaitActivity implements LinphoneGuiListener, NewOutgoingCallUiListener, OnClickListener {
+public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiListener, LinphoneManagerReadyListener, NewOutgoingCallUiListener, OnClickListener {
 	
 	private TextView mStatus;
 	private View mHangup;
@@ -101,7 +102,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		return instance;
 	}
 
-	
+	private LinphoneManagerWaitHelper waitHelper;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
@@ -151,11 +152,13 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 		checkIfOutgoingCallIntentReceived();
 
+		waitHelper = new LinphoneManagerWaitHelper(this, this);
+		waitHelper.doManagerDependentOnCreate();
 		instance = this;
 	}
 
 	@Override
-	protected void onLinphoneManagerAvailable(LinphoneManager m) {
+	public void onCreateWhenManagerReady() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (lc.isIncall()) {
 			if(lc.isInComingInvitePending()) {
@@ -344,8 +347,6 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (id == incomingCallDialogId) {
-			LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
-			String from = LinphoneManager.extractIncomingRemoteName(getResources(), address);
 			View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 
 			final Dialog dialog = new AlertDialog.Builder(this)
@@ -375,6 +376,8 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 			});
 
 			return dialog;
+		} else if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
+			return waitHelper.createWaitDialog();
 		} else {
 			return super.onCreateDialog(id);
 		}
@@ -502,7 +505,7 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResumeWhenManagerReady() {
 		updateCallControlRow();
 
 		// When coming back from a video call, if the phone orientation is different
@@ -511,9 +514,12 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		// and set to the to be destroyed Dialer.
 		// Note1: We wait as long as possible before setting the last message.
 		// Note2: Linphone service is in charge of instantiating LinphoneManager
-		if (LinphoneService.isReady()) {
-			mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
-		}
+		mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
+	}
+
+	@Override
+	protected void onResume() {
+		waitHelper.doManagerDependentOnResume();
 		super.onResume();
 	}
 

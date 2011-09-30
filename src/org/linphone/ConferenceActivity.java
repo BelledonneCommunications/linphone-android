@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
@@ -58,6 +59,7 @@ import android.widget.ToggleButton;
  * @author Guillaume Beraudo
  */
 public class ConferenceActivity extends ListActivity implements
+		LinphoneManagerReadyListener,
 		LinphoneOnCallStateChangedListener, Comparator<LinphoneCall>,
 		OnClickListener {
 
@@ -90,6 +92,7 @@ public class ConferenceActivity extends ListActivity implements
 	private static final int ID_TRANSFER_CALL = 2;
 
 
+
 	private void workaroundStatusBarBug() {
 		getWindow().setFlags(
 				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -102,6 +105,7 @@ public class ConferenceActivity extends ListActivity implements
 		lc().leaveConference();
 	}
 
+	private LinphoneManagerWaitHelper waitHelper;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.conferencing);
@@ -119,9 +123,22 @@ public class ConferenceActivity extends ListActivity implements
 		findViewById(R.id.toggleMuteMic).setOnClickListener(this);
 		findViewById(R.id.toggleSpeaker).setOnClickListener(this);
 
+		waitHelper = new LinphoneManagerWaitHelper(this, this);
+		waitHelper.doManagerDependentOnCreate();
+		workaroundStatusBarBug();
+	}
+
+	@Override
+	public void onCreateWhenManagerReady() {
 		List<LinphoneCall> calls = getInitialCalls();
 		setListAdapter(new CalleeListAdapter(calls));
-		workaroundStatusBarBug();
+	}
+	@Override
+	public void onResumeWhenManagerReady() {
+		registerLinphoneListener(true);
+		updateConfState();
+		boolean showSimpleActions = lc().getConferenceSize() == 0 && lc().getCallsNb() == 2;
+		findViewById(R.id.conf_simple_merge).setVisibility(showSimpleActions ? VISIBLE : GONE);
 	}
 
 	@Override
@@ -136,13 +153,12 @@ public class ConferenceActivity extends ListActivity implements
 			LinphoneManager.getInstance().removeListener(this);
 	}
 
+
+
 	@Override
 	protected void onResume() {
 		active=true;
-		registerLinphoneListener(true);
-		updateConfState();
-		boolean showSimpleActions = lc().getConferenceSize() == 0 && lc().getCallsNb() == 2;
-		findViewById(R.id.conf_simple_merge).setVisibility(showSimpleActions ? VISIBLE : GONE);
+		waitHelper.doManagerDependentOnResume();
 		super.onResume();
 	}
 
@@ -589,6 +605,7 @@ public class ConferenceActivity extends ListActivity implements
 			throw new RuntimeException("unhandled request code " + requestCode);
 		}
 	}
+
 	
 	/*
 	 * public int compare(LinphoneCall c1, LinphoneCall c2) { if (c1 == c2)
