@@ -26,5 +26,13 @@ android:layout_marginBottom="15dip"
 android:layout_marginRight="15dip" >
 </ImageView>
  
- 
+<ImageView 
+android:layout_width="wrap_content"
+android:layout_height="wrap_content" 
+android:id="@+id/QoS" 
+android:src="@drawable/stat_sys_signal_0" 
+android:layout_alignParentBottom="true"
+android:layout_alignParentLeft="true" >
+</ImageView> 
+
  </RelativeLayout>
