@@ -1,5 +1,5 @@
 /*
-AbstractLinphoneConferenceActivity.java
+ConferenceActivity.java
 Copyright (C) 2011  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -34,7 +34,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -45,6 +44,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -70,11 +70,6 @@ public class ConferenceActivity extends ListActivity implements
 
 	// Start Override to test block
 	protected LinphoneCore lc() {
-		final int waitSlice=20;
-		while(!LinphoneManager.isInstanciated()) {
-			Log.d("LinphoneManager is not ready, waiting for ",waitSlice, "ms");
-			Hacks.sleep(waitSlice);
-		}
 		return LinphoneManager.getLc();
 	}
 
@@ -615,7 +610,18 @@ public class ConferenceActivity extends ListActivity implements
 		}
 	}
 
-	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyBackGoHome(this, keyCode)) return true;
+		return super.onKeyUp(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		return super.onKeyDown(keyCode, event);
+	}
+
 	/*
 	 * public int compare(LinphoneCall c1, LinphoneCall c2) { if (c1 == c2)
 	 * return 0;

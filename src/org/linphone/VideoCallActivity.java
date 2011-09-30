@@ -26,6 +26,7 @@ import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -34,6 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,7 +50,7 @@ import android.widget.ImageView;
  * @author Guillaume Beraudo
  *
  */
-public class VideoCallActivity extends SoftVolumeActivity {
+public class VideoCallActivity extends Activity {
 	private SurfaceView mVideoViewReady;
 	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
@@ -271,6 +273,11 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		return true;
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	protected void onDestroy() {

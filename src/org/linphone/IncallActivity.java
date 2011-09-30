@@ -23,7 +23,7 @@ import java.util.TimerTask;
 
 import org.linphone.ui.HangCallButton;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -36,7 +36,7 @@ import android.widget.TextView;
  * @author Guillaume Beraudo
  *
  */
-public class IncallActivity extends SoftVolumeActivity implements OnClickListener {
+public class IncallActivity extends Activity implements OnClickListener {
 
 	public static final String CONTACT_KEY = "contact";
 	public static final String PICTURE_URI_KEY = "picture_uri";
@@ -132,16 +132,15 @@ public class IncallActivity extends SoftVolumeActivity implements OnClickListene
 		}
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			startActivity(new Intent()
-			.setAction(Intent.ACTION_MAIN)
-			.addCategory(Intent.CATEGORY_HOME));
-			return true;
-		} else {
-			return super.onKeyUp(keyCode, event);
-		}
+		if (LinphoneUtils.onKeyBackGoHome(this, keyCode)) return true;
+		return super.onKeyUp(keyCode, event);
 	}
 }

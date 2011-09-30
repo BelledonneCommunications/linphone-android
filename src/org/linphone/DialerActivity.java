@@ -37,6 +37,7 @@ import org.linphone.ui.HangCallButton;
 import org.linphone.ui.MuteMicButton;
 import org.linphone.ui.SpeakerButton;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -47,6 +48,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -64,7 +66,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiListener, LinphoneManagerReadyListener, NewOutgoingCallUiListener, OnClickListener {
+public class DialerActivity extends Activity implements LinphoneGuiListener, LinphoneManagerReadyListener, NewOutgoingCallUiListener, OnClickListener {
 	
 	private TextView mStatus;
 	private View mHangup;
@@ -545,6 +547,11 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 		}
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	public void onClick(View v) {
