@@ -62,7 +62,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiListener, NewOutgoingCallUiListener {
+public class DialerActivity extends LinphoneManagerWaitActivity implements LinphoneGuiListener, NewOutgoingCallUiListener {
 	
 	private TextView mStatus;
 	private View mHangup;
@@ -89,7 +89,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 
-	private static final int INCOMING_CALL_DIALOG_ID = 1;
+	private static final int incomingCallDialogId = 1;
 
 	/**
 	 * @return null if not ready yet
@@ -146,19 +146,20 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 		checkIfOutgoingCallIntentReceived();
 
-		if (LinphoneService.isReady()) {
-			LinphoneCore lc = LinphoneManager.getLc();
-			if (lc.isIncall()) {
-				if(lc.isInComingInvitePending()) {
-					callPending(lc.getCurrentCall());
-				} else {
-					enterIncallMode(lc);
-				}
-			}
-		}
 		instance = this;
 	}
 
+	@Override
+	protected void onLinphoneManagerAvailable(LinphoneManager m) {
+		LinphoneCore lc = LinphoneManager.getLc();
+		if (lc.isIncall()) {
+			if(lc.isInComingInvitePending()) {
+				callPending(lc.getCurrentCall());
+			} else {
+				enterIncallMode(lc);
+			}
+		}
+	}
 
 
 
@@ -268,7 +269,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 	private void exitCallMode() {
 		// Remove dialog if existing
 		try {
-			dismissDialog(INCOMING_CALL_DIALOG_ID);
+			dismissDialog(incomingCallDialogId);
 		} catch (Throwable e) {/* Exception if never created */}
 
 		if (useIncallActivity) {
@@ -301,50 +302,57 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 
 
 	private void callPending(final LinphoneCall call) {
-		showDialog(INCOMING_CALL_DIALOG_ID);
+		showDialog(incomingCallDialogId);
 	}
 
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
+		if (id == incomingCallDialogId) {
 			String from = LinphoneManager.getInstance().extractIncomingRemoteName();
 			String msg = String.format(getString(R.string.incoming_call_dialog_title), from);
 			((AlertDialog) dialog).setMessage(msg);
+		} else {
 			super.onPrepareDialog(id, dialog);
+		}
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
+		if (id == incomingCallDialogId) {
+			View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
 
-		final Dialog dialog = new AlertDialog.Builder(this)
-		.setMessage("")
-		.setCancelable(false)
-		.setView(incomingCallView).create();
-		
-		
-		((CallButton) incomingCallView.findViewById(R.id.Call)).setExternalClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				dialog.dismiss();
-				if (Version.isVideoCapable()) {
-					LinphoneManager.getInstance().resetCameraFromPreferences();
-					
-					// Privacy setting to not share the user camera by default
-					boolean prefVideoEnable = LinphoneManager.getInstance().isVideoEnabled();
-					int key = R.string.pref_video_automatically_share_my_video_key;
-					boolean prefAutoShareMyCamera = mPref.getBoolean(getString(key), false);
-					boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
-					
-					LinphoneManager.getLc().getCurrentCall().enableCamera(prefAutoShareMyCamera);
+			final Dialog dialog = new AlertDialog.Builder(this)
+			.setMessage("")
+			.setCancelable(false)
+			.setView(incomingCallView).create();
+
+
+			((CallButton) incomingCallView.findViewById(R.id.Call)).setExternalClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					dialog.dismiss();
+					if (Version.isVideoCapable()) {
+						LinphoneManager.getInstance().resetCameraFromPreferences();
+
+						// Privacy setting to not share the user camera by default
+						boolean prefVideoEnable = LinphoneManager.getInstance().isVideoEnabled();
+						int key = R.string.pref_video_automatically_share_my_video_key;
+						boolean prefAutoShareMyCamera = mPref.getBoolean(getString(key), false);
+						boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
+
+						LinphoneManager.getLc().getCurrentCall().enableCamera(prefAutoShareMyCamera);
+					}
 				}
-			}
-		});
-		((HangCallButton) incomingCallView.findViewById(R.id.Decline)).setExternalClickListener(new OnClickListener() {
-			public void onClick(View v) {dialog.dismiss();}
-		});
-		
-		return dialog;
+			});
+			((HangCallButton) incomingCallView.findViewById(R.id.Decline)).setExternalClickListener(new OnClickListener() {
+				public void onClick(View v) {dialog.dismiss();}
+			});
+
+			return dialog;
+		} else {
+			return super.onCreateDialog(id);
+		}
 	}
-	
+
 	
 	
 	public void newOutgoingCall(Intent intent) {
@@ -416,7 +424,7 @@ public class DialerActivity extends SoftVolumeActivity implements LinphoneGuiLis
 				enterIncallMode(lc);
 			}
 		}else if (state==LinphoneCall.State.Error){
-			if (lc.getCurrentCall()==call){
+			if (lc.getCurrentCall() == null || lc.getCurrentCall()==call){
 				if (mWakeLock.isHeld()) mWakeLock.release();
 				showToast(R.string.call_error, message);
 				exitCallMode();

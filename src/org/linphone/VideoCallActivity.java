@@ -23,11 +23,15 @@ package org.linphone;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
+import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.content.Context;
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Menu;
@@ -36,6 +40,8 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 /**
  * For Android SDK >= 5
@@ -47,6 +53,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
 	private WakeLock mWakeLock;
+	private Handler refreshHandler = new Handler();
 	
 	AndroidVideoWindowImpl androidVideoWindowImpl;
 
@@ -111,6 +118,54 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
+		
+		Runnable runnable = new Runnable() {
+			public void run() {
+				while (launched && LinphoneManager.getLc().isIncall())
+				{
+					refreshHandler.post(new Runnable() {
+						public void run() {
+							int oldQuality = 0;
+							float newQuality = LinphoneManager.getLc().getCurrentCall().getCurrentQuality();
+							if ((int) newQuality != oldQuality)
+								updateQualityOfSignalIcon(newQuality);
+						}
+					});
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		new Thread(runnable).start();
+	}
+	
+	void updateQualityOfSignalIcon(float quality)
+	{
+		ImageView qos = (ImageView) findViewById(R.id.QoS);
+		if (quality >= 4) // Good Quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_4));
+		}
+		else if (quality >= 3) // Average quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_3));
+		}
+		else if (quality >= 2) // Low quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_2));
+		}
+		else if (quality >= 1) // Very low quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_1));
+		}
+		else // Worst quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_0));
+		}
 	}
 	
 	void updatePreview(boolean cameraCaptureEnabled) {

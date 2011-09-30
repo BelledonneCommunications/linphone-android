@@ -24,11 +24,11 @@ import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
+import org.linphone.core.OnlineStatus;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -41,6 +41,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -99,7 +100,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		instance = this;
 		
 		// In case restart after a crash. Main in LinphoneActivity
 		LinphonePreferenceManager.getInstance(this);
@@ -111,7 +111,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		notificationTitle = getString(R.string.app_name);
 
 		// Dump some debugging information to the logs
-		Hacks.dumpDeviceInformation();
+		Log.i(START_LINPHONE_LOGS);
+		dumpDeviceInformation();
 		dumpInstalledLinphoneInformation();
 
 		mNotificationMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -126,8 +127,22 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	
 		LinphoneManager.createAndStart(this, this);
+		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
+		instance = this; // instance is ready once linphone manager has been created
 	}
 
+
+
+	public static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
+	private void dumpDeviceInformation() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("DEVICE=").append(Build.DEVICE).append("\n");
+		sb.append("MODEL=").append(Build.MODEL).append("\n");
+		//MANUFACTURER doesn't exist in android 1.5.
+		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
+		sb.append("SDK=").append(Build.VERSION.SDK);
+		Log.i(sb.toString());
+	}
 
 
 
@@ -168,10 +183,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, null, OnlineStatus.Offline);
 		LinphoneManager.destroy(this);
 
 		mNotificationMgr.cancel(NOTIF_ID);
-
 		instance=null;
 	}
 
