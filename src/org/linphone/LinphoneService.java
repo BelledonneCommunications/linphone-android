@@ -24,6 +24,7 @@ import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
+import org.linphone.core.OnlineStatus;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -126,6 +127,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	
 		LinphoneManager.createAndStart(this, this);
+		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
 		instance = this; // instance is ready once linphone manager has been created
 	}
 
@@ -181,10 +183,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, null, OnlineStatus.Offline);
 		LinphoneManager.destroy(this);
 
 		mNotificationMgr.cancel(NOTIF_ID);
-
 		instance=null;
 	}
 
