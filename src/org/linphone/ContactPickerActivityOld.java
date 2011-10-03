@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -91,4 +92,8 @@ public class ContactPickerActivityOld extends Activity {
             	LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);	
             }
         }
+
+	public static Uri findUriPictureOfContact(ContentResolver resolver, String username, String domain) {
+		throw new RuntimeException("not implemented");
+	}
 }

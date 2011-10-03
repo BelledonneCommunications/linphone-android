@@ -18,17 +18,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import static android.view.View.VISIBLE;
+
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html.ImageGetter;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +47,7 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 
 	private TextView mNameView;
 	private TextView mNumberView;
+	private ImageView mPictureView;
 	private LinphoneCall mCall;
 
 	private void findIncomingCall(Intent intent) {
@@ -62,6 +68,7 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
+		mPictureView = (ImageView) findViewById(R.id.incoming_picture);
 
 		findViewById(R.id.Decline).setOnClickListener(this);
 		findViewById(R.id.Answer).setOnClickListener(this);
@@ -84,6 +91,11 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 		String from = LinphoneManager.extractADisplayName(getResources(), address);
 		mNameView.setText(from);
 		mNumberView.setText(address.asStringUriOnly());
+		String username = address.getUserName();
+		String domain = address.getDomain();
+		// May be greatly sped up using a drawable cache
+		Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
+		LinphoneUtils.setImagePictureFromUri(mPictureView, uri, R.drawable.unknown_person);
 		super.onResume();
 	}
 

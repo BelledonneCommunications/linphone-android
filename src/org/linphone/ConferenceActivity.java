@@ -41,6 +41,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -51,6 +52,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,6 +134,7 @@ public class ConferenceActivity extends ListActivity implements
 	@Override
 	public void onResumeWhenManagerReady() {
 		registerLinphoneListener(true);
+		updateCalleeImage();
 		updateConfState();
 		updateMergeButtonState();
 	}
@@ -162,6 +165,23 @@ public class ConferenceActivity extends ListActivity implements
 		active=false;
 		registerLinphoneListener(false);
 		super.onPause();
+	}
+
+	private void updateCalleeImage() {
+		ImageView view = (ImageView) findViewById(R.id.incall_picture);
+		LinphoneCall currentCall = lc().getCurrentCall();
+
+		if (lc().getCallsNb() != 1 || currentCall == null) {
+			view.setVisibility(GONE);
+			return;
+		}
+
+		Uri picture = LinphoneUtils.findPictureOfContact(
+				getContentResolver(),
+				currentCall.getRemoteAddress().getUserName(),
+				currentCall.getRemoteAddress().getDomain());
+		LinphoneUtils.setImagePictureFromUri(view, picture, R.drawable.unknown_person);
+		view.setVisibility(VISIBLE);
 	}
 
 	private void enableView(View root, int id, OnClickListener l, boolean enable) {
@@ -418,15 +438,15 @@ public class ConferenceActivity extends ListActivity implements
 			final LinphoneCall.State state = call.getState();
 
 			String mainText = call.getRemoteAddress().getDisplayName();
-			String complText = call.getRemoteAddress().getUserName();
+			String username = call.getRemoteAddress().getUserName();
 			TextView mainTextView = (TextView) v.findViewById(R.id.name);
 			TextView complTextView = (TextView) v.findViewById(R.id.address);
 			if (TextUtils.isEmpty(mainText)) {
-				mainTextView.setText(complText);
+				mainTextView.setText(username);
 				complTextView.setVisibility(View.GONE);
 			} else {
 				mainTextView.setText(mainText);
-				complTextView.setText(complText);
+				complTextView.setText(username);
 				complTextView.setVisibility(View.VISIBLE);
 			}
 
@@ -510,6 +530,17 @@ public class ConferenceActivity extends ListActivity implements
 				}
 			});
 
+			ImageView pictureView = (ImageView) v.findViewById(R.id.picture);
+			if (numberOfCalls != 1) {
+				String domain = call.getRemoteAddress().getDomain();
+				// May be greatly sped up using a drawable cache
+				Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
+				LinphoneUtils.setImagePictureFromUri(pictureView, uri, R.drawable.unknown_person);
+				pictureView.setVisibility(VISIBLE);
+			} else {
+				pictureView.setVisibility(GONE);
+			}
+
 			return v;
 		}
 	}
@@ -548,6 +579,7 @@ public class ConferenceActivity extends ListActivity implements
 				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
 				Log.d("ConferenceActivity applying state ",stateStr);
 				updateMergeButtonState();
+				updateCalleeImage();
 				if (state == State.IncomingReceived || state == State.OutgoingRinging) {
 					if (!adapter.linphoneCalls.contains(call)) {
 						adapter.linphoneCalls.add(call);

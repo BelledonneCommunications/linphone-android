@@ -18,15 +18,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.linphone.core.Log;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.KeyEvent;
+import android.widget.ImageView;
 
 /**
- * Helper to handle softvolume.
+ * Helpers.
  * @author Guillaume Beraudo
  *
  */
@@ -63,5 +74,50 @@ public final class LinphoneUtils {
 		}
 		return !preventVolumeBarToDisplay;
 	}
+
+
+	/**
+	 * @param contact sip uri
+	 * @return url/uri of the resource
+	 */
+	public static Uri findPictureOfContact(ContentResolver resolver, String username, String domain) {
+		if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
+			return ContactPickerActivityNew.findUriPictureOfContact(resolver, username, domain);
+		} else {
+			return ContactPickerActivityOld.findUriPictureOfContact(resolver, username, domain);
+		}
+	}
+	
+	public static Bitmap downloadBitmap(Uri uri) {
+		URL url;
+		InputStream is = null;
+		try {
+			url = new URL(uri.toString());
+			is = url.openStream();
+			return BitmapFactory.decodeStream(is);
+		} catch (MalformedURLException e) {
+			Log.e(e, e.getMessage());
+		} catch (IOException e) {
+			Log.e(e, e.getMessage());
+		} finally {
+			try {is.close();} catch (IOException x) {}
+		}
+		return null;
+	}
+
+	public static void setImagePictureFromUri(ImageView view, Uri uri, int notFoundResource) {
+		if (uri == null) {
+			view.setImageResource(notFoundResource);
+			return;
+		}
+		if (uri.getScheme().startsWith("http")) {
+			Bitmap bm = downloadBitmap(uri);
+			if (bm == null) view.setImageResource(notFoundResource);
+			view.setImageBitmap(bm);
+		} else {
+			view.setImageURI(uri);
+		}
+	}
+
 }
 

@@ -54,6 +54,15 @@
 			android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	</LinearLayout>
 
+	<FrameLayout android:id="@+id/incall_picture_box" android:layout_above="@id/conf_simple_actions"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_centerInParent="true">
+		<ImageView android:id="@+id/incall_picture" android:visibility="gone"
+			android:layout_height="wrap_content" android:layout_width="wrap_content" 
+			android:layout_gravity="center" android:scaleType="fitCenter"
+			android:padding="10sp" android:minWidth="288px" android:minHeight="288px"
+			android:paddingBottom="50sp" />
+	</FrameLayout>
 
      <ListView android:id="@android:id/list"
                android:layout_width="fill_parent"
@@ -62,7 +71,7 @@
                android:dividerHeight="10dip"
                android:divider="@android:color/transparent"
                android:layout_below="@id/conf_header"
-               android:layout_above="@id/conf_simple_actions"
+               android:layout_above="@id/incall_picture_box"
                android:layout_alignWithParentIfMissing="true"
                android:fadeScrollbars="false"
      />

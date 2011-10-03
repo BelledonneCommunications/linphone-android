@@ -29,6 +29,9 @@ import android.widget.ImageButton;
 
 public class HangCallButton extends ImageButton implements OnClickListener {
 
+	private boolean terminateAllCalls;
+	public void setTerminateAllCalls(boolean all) {terminateAllCalls = all;}
+
 	private OnClickListener externalClickListener;
 	public void setExternalClickListener(OnClickListener e) {externalClickListener = e;}
 
@@ -39,7 +42,11 @@ public class HangCallButton extends ImageButton implements OnClickListener {
 
 	public void onClick(View v) {
 		LinphoneCore lc =  LinphoneManager.getLc();
-		lc.terminateCall(lc.getCurrentCall());
+		if (terminateAllCalls) {
+			lc.terminateAllCalls();
+		} else {
+			lc.terminateCall(lc.getCurrentCall());
+		}
 
 		if (externalClickListener != null) externalClickListener.onClick(v);
 	}

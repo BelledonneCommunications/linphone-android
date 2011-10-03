@@ -13,6 +13,11 @@
 	<LinearLayout android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:orientation="vertical"
 		android:layout_centerInParent="true">
+		<ImageView android:id="@+id/incoming_picture"
+			android:layout_height="wrap_content" android:layout_width="wrap_content" 
+			android:layout_gravity="center" android:scaleType="fitCenter"
+			android:minWidth="288px" android:minHeight="288px"
+			android:paddingBottom="10sp"/>
 		<TextView android:id="@+id/incoming_caller_name"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:text="Caller name" android:textAppearance="?android:attr/textAppearanceLarge"
