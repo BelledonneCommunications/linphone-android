@@ -1,0 +1,30 @@
+--- submodules/externals/ffmpeg/libavcodec/arm/int_neon.S.orig	2011-09-30 19:43:21.935593025 +0200
++++ submodules/externals/ffmpeg/libavcodec/arm/int_neon.S	2011-09-30 19:44:21.115168033 +0200
+@@ -35,11 +35,11 @@
+ 
+         vdup.s32        q12, r3
+ 1:      vld1.16         {d16-d17}, [r0]!
+-        vld1.16         {d20-d21}, [r1,:128]!
++        vld1.16         {d20-d21}, [r1]!
+         vmull.s16       q12, d16,  d20
+         vld1.16         {d18-d19}, [r0]!
+         vmull.s16       q13, d17,  d21
+-        vld1.16         {d22-d23}, [r1,:128]!
++        vld1.16         {d22-d23}, [r1]!
+         vmull.s16       q14, d18,  d22
+         vmull.s16       q15, d19,  d23
+         vshl.s32        q8,  q12,  q12
+@@ -55,11 +55,11 @@
+         b               3f
+ 
+ 2:      vld1.16         {d16-d17}, [r0]!
+-        vld1.16         {d20-d21}, [r1,:128]!
++        vld1.16         {d20-d21}, [r1]!
+         vmlal.s16       q0,  d16,  d20
+         vld1.16         {d18-d19}, [r0]!
+         vmlal.s16       q1,  d17,  d21
+-        vld1.16         {d22-d23}, [r1,:128]!
++        vld1.16         {d22-d23}, [r1]!
+         vmlal.s16       q2,  d18,  d22
+         vmlal.s16       q3,  d19,  d23
+         subs            r2,  r2,   #16
