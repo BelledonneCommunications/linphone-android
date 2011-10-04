@@ -60,7 +60,7 @@
 		<ImageView android:id="@+id/incall_picture" android:visibility="gone"
 			android:layout_height="wrap_content" android:layout_width="wrap_content" 
 			android:layout_gravity="center" android:scaleType="fitCenter"
-			android:padding="10sp" android:minWidth="288px" android:minHeight="288px"
+			android:padding="10sp" android:minWidth="192px" android:minHeight="192px"
 			android:paddingBottom="50sp" />
 	</FrameLayout>
 
