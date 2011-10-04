@@ -49,17 +49,25 @@ public class ContactPickerActivityOld extends Activity {
 
 	}
 
-    private Uri getPhotoUri(Uri photoUri) {
-    	Cursor cursor = getContentResolver().query(photoUri, new String[]{Photos.DATA}, null, null, null);
+    private Uri getPhotoUri(Uri photoUriToTest) {
+		return retrievePhotoUri(getContentResolver(), photoUriToTest);
+	}
+
+	private static Uri retrievePhotoUri(ContentResolver resolver, Uri photoUriToTest) {
+    	Cursor cursor = resolver.query(photoUriToTest, new String[]{Photos.DATA}, null, null, null);
     	try {
     		if (cursor == null || !cursor.moveToNext()) {
     			return null;
     		}   
     		byte[] data = cursor.getBlob(0);
     		if (data == null) {
+    			// TODO: simplify all this stuff
+				// which is here only to check that the
+				// photoUri really points to some data.
+				// Not retrieving the data now would be better.
     			return null;
     		}   
-    		return photoUri;
+    		return photoUriToTest;
     	} finally {
     		if (cursor != null) cursor.close();
     	}   
@@ -93,7 +101,29 @@ public class ContactPickerActivityOld extends Activity {
             }
         }
 
+	private static Uri retrievePhotoUriAndCloseC(ContentResolver resolver, Cursor c, String column) {
+		if (c == null) return null;
+		while (c.moveToNext()) {
+			long id = c.getLong(c.getColumnIndex(column));
+            Uri personUri = ContentUris.withAppendedId(People.CONTENT_URI, id);
+			Uri potentialPictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
+			Uri pictureUri = retrievePhotoUri(resolver, potentialPictureUri);
+			if (pictureUri != null) {
+				c.close();
+				return personUri; // FIXME, see LinphoneUtils
+			}
+		}
+		c.close();
+		return null;
+	}
+
 	public static Uri findUriPictureOfContact(ContentResolver resolver, String username, String domain) {
-		throw new RuntimeException("not implemented");
+		// A direct qery on the number column doesn't work as the number is stored
+		// with hyphens inside it.
+		Uri contactUri = Uri.withAppendedPath(Contacts.Phones.CONTENT_FILTER_URL, Uri.encode("0952636505"));
+		String[] projection = {Contacts.Phones.PERSON_ID};
+		Cursor c = resolver.query(contactUri, projection, null, null, null);
+		
+		return retrievePhotoUriAndCloseC(resolver, c, Contacts.Phones.PERSON_ID);
 	}
 }

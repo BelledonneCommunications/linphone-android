@@ -29,6 +29,7 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -105,7 +106,7 @@ public final class LinphoneUtils {
 		return null;
 	}
 
-	public static void setImagePictureFromUri(ImageView view, Uri uri, int notFoundResource) {
+	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, int notFoundResource) {
 		if (uri == null) {
 			view.setImageResource(notFoundResource);
 			return;
@@ -115,7 +116,12 @@ public final class LinphoneUtils {
 			if (bm == null) view.setImageResource(notFoundResource);
 			view.setImageBitmap(bm);
 		} else {
-			view.setImageURI(uri);
+			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
+				view.setImageURI(uri);
+			} else {
+				Bitmap bitmap = android.provider.Contacts.People.loadContactPhoto(c, uri, notFoundResource, null);
+				view.setImageBitmap(bitmap);
+			}
 		}
 	}
 

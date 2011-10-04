@@ -180,7 +180,7 @@ public class ConferenceActivity extends ListActivity implements
 				getContentResolver(),
 				currentCall.getRemoteAddress().getUserName(),
 				currentCall.getRemoteAddress().getDomain());
-		LinphoneUtils.setImagePictureFromUri(view, picture, R.drawable.unknown_person);
+		LinphoneUtils.setImagePictureFromUri(this, view, picture, R.drawable.unknown_person);
 		view.setVisibility(VISIBLE);
 	}
 
@@ -535,7 +535,7 @@ public class ConferenceActivity extends ListActivity implements
 				String domain = call.getRemoteAddress().getDomain();
 				// May be greatly sped up using a drawable cache
 				Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
-				LinphoneUtils.setImagePictureFromUri(pictureView, uri, R.drawable.unknown_person);
+				LinphoneUtils.setImagePictureFromUri(ConferenceActivity.this, pictureView, uri, R.drawable.unknown_person);
 				pictureView.setVisibility(VISIBLE);
 			} else {
 				pictureView.setVisibility(GONE);

@@ -95,7 +95,7 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 		String domain = address.getDomain();
 		// May be greatly sped up using a drawable cache
 		Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
-		LinphoneUtils.setImagePictureFromUri(mPictureView, uri, R.drawable.unknown_person);
+		LinphoneUtils.setImagePictureFromUri(this, mPictureView, uri, R.drawable.unknown_person);
 		super.onResume();
 	}
 
