@@ -39,7 +39,7 @@
     <LinearLayout android:id="@+id/callee_block" android:orientation="vertical"
     	android:layout_toRightOf="@id/picture" android:layout_toLeftOf="@id/callee_statuses"
     	android:layout_width="fill_parent" android:layout_height="fill_parent" 
-    	android:layout_alignParentTop="true" android:layout_alignParentBottom="true">
+    	android:layout_centerVertical="true">
       <TextView android:id="@+id/name" style="@style/callee_name" />
       <TextView android:id="@+id/address" style="@style/callee_address" />
     </LinearLayout>

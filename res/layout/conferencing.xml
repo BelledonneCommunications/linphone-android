@@ -26,7 +26,7 @@
 		<Button android:text="@string/AddCallButtonText" android:id="@+id/addCall"
 	     android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
-		<org.linphone.ui.HangCallButton android:id="@+id/incallHang" android:layout_width="wrap_content" android:layout_height="wrap_content"
+		<org.linphone.ui.HangCallButton android:id="@+id/incallHang" android:layout_width="0dip" android:layout_height="wrap_content"
 		 android:src="@drawable/mini_stopcall_red"  android:layout_weight="1" />
 		 
 		<Button android:id="@+id/incallNumpadShow" android:text="@string/show_send_dtmfs_button"  

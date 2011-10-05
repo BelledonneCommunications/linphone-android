@@ -431,7 +431,11 @@ public class ConferenceActivity extends ListActivity implements
 
 		public View getView(int position, View v, ViewGroup parent) {
 			if (v == null) {
-				v = getLayoutInflater().inflate(R.layout.conf_callee, null);
+				if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
+					v = getLayoutInflater().inflate(R.layout.conf_callee, null);
+				} else {
+					v = getLayoutInflater().inflate(R.layout.conf_callee_older_devices, null);
+				}
 			}
 
 			final LinphoneCall call = linphoneCalls.get(position);
