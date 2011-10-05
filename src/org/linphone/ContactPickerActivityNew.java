@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 
@@ -266,9 +267,23 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 		}
 
 		// Finally using phone number
+		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
 		Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(username));
-		projection = new String[]{PhoneLookup._ID};
+		projection = new String[]{PhoneLookup._ID, PhoneLookup.NUMBER};
 		c = resolver.query(lookupUri, projection, null, null, null);
-		return retrievePhotoUri(resolver, c, PhoneLookup._ID);
+		while (c.moveToNext()) {
+			long id = c.getLong(c.getColumnIndex(PhoneLookup._ID));
+			String enteredNumber = c.getString(c.getColumnIndex(PhoneLookup.NUMBER));
+			if (!normalizedNumber.equals(PhoneNumberUtils.getStrippedReversed(enteredNumber))) {
+				continue;
+			}
+			Uri picture = retrievePhotoUri(resolver, id);
+			if (picture != null) {
+				c.close();
+				return picture;
+			}
+		}
+		c.close();
+		return null;
 	}
 }

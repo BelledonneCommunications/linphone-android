@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
 import android.provider.Contacts.Photos;
+import android.telephony.PhoneNumberUtils;
 
 @SuppressWarnings("deprecation")
 public class ContactPickerActivityOld extends Activity {
@@ -118,11 +119,10 @@ public class ContactPickerActivityOld extends Activity {
 	}
 
 	public static Uri findUriPictureOfContact(ContentResolver resolver, String username, String domain) {
-		// A direct qery on the number column doesn't work as the number is stored
-		// with hyphens inside it.
-		Uri contactUri = Uri.withAppendedPath(Contacts.Phones.CONTENT_FILTER_URL, Uri.encode("0952636505"));
+		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
 		String[] projection = {Contacts.Phones.PERSON_ID};
-		Cursor c = resolver.query(contactUri, projection, null, null, null);
+		String selection = Contacts.Phones.NUMBER_KEY + "=" + normalizedNumber;
+		Cursor c = resolver.query(Contacts.Phones.CONTENT_URI, projection, selection, null, null);
 		
 		return retrievePhotoUriAndCloseC(resolver, c, Contacts.Phones.PERSON_ID);
 	}
