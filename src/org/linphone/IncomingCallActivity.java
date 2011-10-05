@@ -18,8 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import static android.view.View.VISIBLE;
-
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
@@ -28,7 +26,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html.ImageGetter;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -61,8 +58,6 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		findIncomingCall(getIntent());
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incoming);
 
@@ -79,14 +74,15 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
         getWindow().addFlags(flags);
 	}
 
-	@Override
-	protected void onNewIntent(Intent intent) {
-		findIncomingCall(intent);
-		super.onNewIntent(intent);
-	}
 	
 	@Override
 	protected void onResume() {
+		super.onResume();
+		findIncomingCall(getIntent());
+		if (mCall == null) {
+			finish();
+			return;
+		}
 		LinphoneAddress address = mCall.getRemoteAddress();
 		String from = LinphoneManager.extractADisplayName(getResources(), address);
 		mNameView.setText(from);
@@ -96,7 +92,6 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 		// May be greatly sped up using a drawable cache
 		Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
 		LinphoneUtils.setImagePictureFromUri(this, mPictureView, uri, R.drawable.unknown_person);
-		super.onResume();
 	}
 
 	@Override
