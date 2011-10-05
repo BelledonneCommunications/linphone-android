@@ -56,9 +56,9 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	private Handler refreshHandler = new Handler();
 	
 	AndroidVideoWindowImpl androidVideoWindowImpl;
+	private Runnable mCallQualityUpdater;
 
 	public void onCreate(Bundle savedInstanceState) {		
-		launched = true;
 		Log.d("onCreate VideoCallActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
@@ -119,28 +119,6 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
 		
-		Runnable runnable = new Runnable() {
-			public void run() {
-				while (launched && LinphoneManager.getLc().isIncall())
-				{
-					refreshHandler.post(new Runnable() {
-						public void run() {
-							int oldQuality = 0;
-							float newQuality = LinphoneManager.getLc().getCurrentCall().getCurrentQuality();
-							if ((int) newQuality != oldQuality)
-								updateQualityOfSignalIcon(newQuality);
-						}
-					});
-					
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		};
-		new Thread(runnable).start();
 	}
 	
 	void updateQualityOfSignalIcon(float quality)
@@ -191,6 +169,24 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		super.onResume();
 		if (mVideoViewReady != null)
 			((GLSurfaceView)mVideoViewReady).onResume();
+		launched=true;
+		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
+			LinphoneCall mCurrentCall=LinphoneManager.getLc().getCurrentCall();
+			public void run() {
+				if (mCurrentCall==null){
+					mCallQualityUpdater=null;
+					return;
+				}
+				int oldQuality = 0;
+				float newQuality = mCurrentCall.getCurrentQuality();
+				if ((int) newQuality != oldQuality){
+					updateQualityOfSignalIcon(newQuality);
+				}
+				if (launched){
+					refreshHandler.postDelayed(this, 1000);
+				}else mCallQualityUpdater=null;
+			}
+		},1000);
 	}
 
 
@@ -275,13 +271,13 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	@Override
 	protected void onDestroy() {
 		androidVideoWindowImpl.release();
-		launched = false;
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity");
+		launched=false;
 		LinphoneManager.getLc().setVideoWindow(null);
 		LinphoneManager.getLc().setPreviewWindow(null);
 		
@@ -294,7 +290,10 @@ public class VideoCallActivity extends SoftVolumeActivity {
 				LinphoneManager.getLc().updateCall(LinphoneManager.getLc().getCurrentCall(), null);
 			}
 		}
-		
+		if (mCallQualityUpdater!=null){
+			refreshHandler.removeCallbacks(mCallQualityUpdater);
+			mCallQualityUpdater=null;
+		}
 		
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();
