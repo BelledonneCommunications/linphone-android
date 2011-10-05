@@ -268,6 +268,10 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 
 		// Finally using phone number
 		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
+		if (TextUtils.isEmpty(normalizedNumber)) {
+			// non phone username
+			return null;
+		}
 		Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(username));
 		projection = new String[]{PhoneLookup._ID, PhoneLookup.NUMBER};
 		c = resolver.query(lookupUri, projection, null, null, null);

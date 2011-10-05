@@ -29,6 +29,7 @@ import android.provider.Contacts;
 import android.provider.Contacts.People;
 import android.provider.Contacts.Photos;
 import android.telephony.PhoneNumberUtils;
+import android.text.TextUtils;
 
 @SuppressWarnings("deprecation")
 public class ContactPickerActivityOld extends Activity {
@@ -120,6 +121,10 @@ public class ContactPickerActivityOld extends Activity {
 
 	public static Uri findUriPictureOfContact(ContentResolver resolver, String username, String domain) {
 		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
+		if (TextUtils.isEmpty(normalizedNumber)) {
+			// non phone username
+			return null;
+		}
 		String[] projection = {Contacts.Phones.PERSON_ID};
 		String selection = Contacts.Phones.NUMBER_KEY + "=" + normalizedNumber;
 		Cursor c = resolver.query(Contacts.Phones.CONTENT_URI, projection, selection, null, null);
