@@ -515,7 +515,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean isInConference() {
 		// TODO Auto-generated method stub
 		return false;
-	}
+	} 
 	public void leaveConference() {
 		// TODO Auto-generated method stub
 		

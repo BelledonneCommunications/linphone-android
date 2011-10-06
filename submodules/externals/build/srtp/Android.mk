@@ -26,7 +26,7 @@ LOCAL_SRC_FILES := \
 	 	 crypto/rng/ctr_prng.c \
 	 	 crypto/rng/prng.c 
 
-LOCAL_CFLAGS := -Wall -O4 -fexpensive-optimizations -funroll-loops -DCPU_CISC
+LOCAL_CFLAGS := -Wall -O4 -fexpensive-optimizations -funroll-loops -DCPU_CISC -include config.h
 
 ifeq ($(SRTP_USES_LINUX_KERNEL), 1)
 LOCAL_SRC_FILES += \
