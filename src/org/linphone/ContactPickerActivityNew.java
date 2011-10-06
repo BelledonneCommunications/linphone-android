@@ -30,8 +30,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.PhoneLookup;
-import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 
@@ -55,35 +53,19 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 
 	@Override
 	public Uri getPhotoUri(String id) {
-		return retrievePhotoUri(getContentResolver(), Long.parseLong(id));
+		return retrievePhotoUriAndSetDisplayName(getContentResolver(), Long.parseLong(id));
 	}
 
-	private static Uri retrievePhotoUri(ContentResolver resolver, long id) {
+	private static Uri retrievePhotoUriAndSetDisplayName(ContentResolver resolver, long id) {
 		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
 		Uri photoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
 		if (photoUri == null) {
 			return null;
 		}
-		String[] projection = {ContactsContract.CommonDataKinds.Photo.PHOTO};
-		Cursor cursor = resolver.query(photoUri, projection, null, null, null);
-		try {
-			if (cursor == null || !cursor.moveToNext()) {
-				return null;
-			}
-			byte[] data = cursor.getBlob(0);
-			if (data == null) {
-				// TODO: simplify all this stuff
-				// which is here only to check that the
-				// photoUri really points to some data.
-				// Not retrieving the data now would be better.
-				return null;
-			}
+		if (ContactHelper.testPhotoUri(resolver, photoUri, ContactsContract.CommonDataKinds.Photo.PHOTO)) {
 			return photoUri;
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
 		}
+		return null;
 	}
 
 	protected List<String> extractPhones(String id) {
@@ -218,76 +200,4 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 	}
 
 
-	private static Uri retrievePhotoUri(ContentResolver resolver, Cursor c, String column) {
-		if (c == null) return null;
-		while (c.moveToNext()) {
-			long id = c.getLong(c.getColumnIndex(column));
-			Uri picture = retrievePhotoUri(resolver, id);
-			if (picture != null) {
-				c.close();
-				return picture;
-			}
-		}
-		c.close();
-		return null;
-	}
-	public static Uri findUriPictureOfContact(ContentResolver resolver, String username, String domain) {
-		Uri retrievedPictureUri = null;
-		String sipUri = username + "@" + domain;
-
-		// Try first using sip field
-		Uri uri = ContactsContract.Data.CONTENT_URI;
-		String[] projection = {ContactsContract.Data.CONTACT_ID};
-		String selection = new StringBuilder()
-			.append(ContactsContract.CommonDataKinds.Im.DATA).append(" =  ? AND ")
-			.append(ContactsContract.Data.MIMETYPE)
-			.append(" = '")
-			.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
-			.append("' AND lower(")
-			.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
-			.append(") = 'sip'").toString();
-		Cursor c = resolver.query(uri, projection, selection, new String[] {sipUri}, null);
-		retrievedPictureUri = retrievePhotoUri(resolver, c, ContactsContract.Data.CONTACT_ID);
-		if (retrievedPictureUri != null) return retrievedPictureUri;
-
-
-		// Then using custom SIP field
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			selection = new StringBuilder()
-				.append(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
-				.append(" = ? AND ")
-				.append(ContactsContract.Data.MIMETYPE)
-				.append(" = '")
-				.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-				.append("'")
-				.toString();
-			c = resolver.query(uri, projection, selection, new String[] {sipUri}, null);
-			retrievedPictureUri = retrievePhotoUri(resolver, c, ContactsContract.Data.CONTACT_ID);
-			if (retrievedPictureUri != null) return retrievedPictureUri;
-		}
-
-		// Finally using phone number
-		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
-		if (TextUtils.isEmpty(normalizedNumber)) {
-			// non phone username
-			return null;
-		}
-		Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(username));
-		projection = new String[]{PhoneLookup._ID, PhoneLookup.NUMBER};
-		c = resolver.query(lookupUri, projection, null, null, null);
-		while (c.moveToNext()) {
-			long id = c.getLong(c.getColumnIndex(PhoneLookup._ID));
-			String enteredNumber = c.getString(c.getColumnIndex(PhoneLookup.NUMBER));
-			if (!normalizedNumber.equals(PhoneNumberUtils.getStrippedReversed(enteredNumber))) {
-				continue;
-			}
-			Uri picture = retrievePhotoUri(resolver, id);
-			if (picture != null) {
-				c.close();
-				return picture;
-			}
-		}
-		c.close();
-		return null;
-	}
 }

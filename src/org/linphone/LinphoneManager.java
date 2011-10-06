@@ -917,7 +917,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			return extractADisplayName(r, linphoneAddress);
 
 		if (linphoneAddress != null)
-			return linphoneAddress.toString();
+			return linphoneAddress.asStringUriOnly();
 
 		return r.getString(R.string.unknown_incoming_call_name);
 	}

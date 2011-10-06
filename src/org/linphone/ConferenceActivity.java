@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
@@ -176,10 +177,8 @@ public class ConferenceActivity extends ListActivity implements
 			return;
 		}
 
-		Uri picture = LinphoneUtils.findPictureOfContact(
-				getContentResolver(),
-				currentCall.getRemoteAddress().getUserName(),
-				currentCall.getRemoteAddress().getDomain());
+		Uri picture = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(
+				currentCall.getRemoteAddress(),	getContentResolver());
 		LinphoneUtils.setImagePictureFromUri(this, view, picture, R.drawable.unknown_person);
 		view.setVisibility(VISIBLE);
 	}
@@ -441,16 +440,22 @@ public class ConferenceActivity extends ListActivity implements
 			final LinphoneCall call = linphoneCalls.get(position);
 			final LinphoneCall.State state = call.getState();
 
-			String mainText = call.getRemoteAddress().getDisplayName();
-			String username = call.getRemoteAddress().getUserName();
+			LinphoneAddress address = call.getRemoteAddress();
+			String mainText = address.getDisplayName();
+			String complText;
+			if ((getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call))) {
+				complText = address.getUserName() + "@" + address.getDomain();
+			} else {
+				complText = address.getUserName();
+			}
 			TextView mainTextView = (TextView) v.findViewById(R.id.name);
 			TextView complTextView = (TextView) v.findViewById(R.id.address);
 			if (TextUtils.isEmpty(mainText)) {
-				mainTextView.setText(username);
+				mainTextView.setText(complText);
 				complTextView.setVisibility(View.GONE);
 			} else {
 				mainTextView.setText(mainText);
-				complTextView.setText(username);
+				complTextView.setText(complText);
 				complTextView.setVisibility(View.VISIBLE);
 			}
 
@@ -536,9 +541,8 @@ public class ConferenceActivity extends ListActivity implements
 
 			ImageView pictureView = (ImageView) v.findViewById(R.id.picture);
 			if (numberOfCalls != 1) {
-				String domain = call.getRemoteAddress().getDomain();
 				// May be greatly sped up using a drawable cache
-				Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
+				Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(call.getRemoteAddress(), getContentResolver());
 				LinphoneUtils.setImagePictureFromUri(ConferenceActivity.this, pictureView, uri, R.drawable.unknown_person);
 				pictureView.setVisibility(VISIBLE);
 			} else {

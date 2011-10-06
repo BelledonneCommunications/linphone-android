@@ -84,14 +84,18 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 			return;
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
-		String from = LinphoneManager.extractADisplayName(getResources(), address);
-		mNameView.setText(from);
-		mNumberView.setText(address.asStringUriOnly());
-		String username = address.getUserName();
-		String domain = address.getDomain();
 		// May be greatly sped up using a drawable cache
-		Uri uri = LinphoneUtils.findPictureOfContact(getContentResolver(), username, domain);
+		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
 		LinphoneUtils.setImagePictureFromUri(this, mPictureView, uri, R.drawable.unknown_person);
+
+		// To be done after findUriPictureOfContactAndSetDisplayName called
+		mNameView.setText(address.getDisplayName());
+		if (getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call)) {
+			mNumberView.setText(address.asStringUriOnly());
+		} else {
+			mNumberView.setText("");
+		}
+		
 	}
 
 	@Override

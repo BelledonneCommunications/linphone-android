@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,9 +26,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
-import android.provider.Contacts.Photos;
-import android.telephony.PhoneNumberUtils;
-import android.text.TextUtils;
 
 @SuppressWarnings("deprecation")
 public class ContactPickerActivityOld extends Activity {
@@ -51,29 +47,6 @@ public class ContactPickerActivityOld extends Activity {
 
 	}
 
-    private Uri getPhotoUri(Uri photoUriToTest) {
-		return retrievePhotoUri(getContentResolver(), photoUriToTest);
-	}
-
-	private static Uri retrievePhotoUri(ContentResolver resolver, Uri photoUriToTest) {
-    	Cursor cursor = resolver.query(photoUriToTest, new String[]{Photos.DATA}, null, null, null);
-    	try {
-    		if (cursor == null || !cursor.moveToNext()) {
-    			return null;
-    		}   
-    		byte[] data = cursor.getBlob(0);
-    		if (data == null) {
-    			// TODO: simplify all this stuff
-				// which is here only to check that the
-				// photoUri really points to some data.
-				// Not retrieving the data now would be better.
-    			return null;
-    		}   
-    		return photoUriToTest;
-    	} finally {
-    		if (cursor != null) cursor.close();
-    	}   
-    }   
 
 	protected void onActivityResult(int requestCode, int resultCode,
             Intent data) {
@@ -92,8 +65,10 @@ public class ContactPickerActivityOld extends Activity {
                     String lPhoneNo = lCur.getString(lCur.getColumnIndex(People.NUMBER));
                     long id = lCur.getLong(lCur.getColumnIndex(People._ID));
                     Uri personUri = ContentUris.withAppendedId(People.CONTENT_URI, id);
-                    Uri potentialPictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
-                    Uri pictureUri = getPhotoUri(potentialPictureUri);
+                    Uri pictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
+                    if (!ContactHelper.testPhotoUri(getContentResolver(), pictureUri, Contacts.Photos.CONTENT_DIRECTORY)) {
+                    	pictureUri = null;
+                    }
                     // FIXME surprisingly all this picture stuff doesn't seem to work
                     DialerActivity.instance().setContactAddress(lPhoneNo, lName, pictureUri);
                 }
@@ -103,32 +78,4 @@ public class ContactPickerActivityOld extends Activity {
             }
         }
 
-	private static Uri retrievePhotoUriAndCloseC(ContentResolver resolver, Cursor c, String column) {
-		if (c == null) return null;
-		while (c.moveToNext()) {
-			long id = c.getLong(c.getColumnIndex(column));
-            Uri personUri = ContentUris.withAppendedId(People.CONTENT_URI, id);
-			Uri potentialPictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
-			Uri pictureUri = retrievePhotoUri(resolver, potentialPictureUri);
-			if (pictureUri != null) {
-				c.close();
-				return personUri; // FIXME, see LinphoneUtils
-			}
-		}
-		c.close();
-		return null;
-	}
-
-	public static Uri findUriPictureOfContact(ContentResolver resolver, String username, String domain) {
-		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
-		if (TextUtils.isEmpty(normalizedNumber)) {
-			// non phone username
-			return null;
-		}
-		String[] projection = {Contacts.Phones.PERSON_ID};
-		String selection = Contacts.Phones.NUMBER_KEY + "=" + normalizedNumber;
-		Cursor c = resolver.query(Contacts.Phones.CONTENT_URI, projection, selection, null, null);
-		
-		return retrievePhotoUriAndCloseC(resolver, c, Contacts.Phones.PERSON_ID);
-	}
 }

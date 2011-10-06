@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -81,12 +82,10 @@ public final class LinphoneUtils {
 	 * @param contact sip uri
 	 * @return url/uri of the resource
 	 */
-	public static Uri findPictureOfContact(ContentResolver resolver, String username, String domain) {
-		if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
-			return ContactPickerActivityNew.findUriPictureOfContact(resolver, username, domain);
-		} else {
-			return ContactPickerActivityOld.findUriPictureOfContact(resolver, username, domain);
-		}
+	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
+		ContactHelper helper = new ContactHelper(address, resolver);
+		helper.query();
+		return helper.getUri();
 	}
 	
 	public static Bitmap downloadBitmap(Uri uri) {
