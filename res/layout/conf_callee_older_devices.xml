@@ -8,7 +8,7 @@
 
 
     <LinearLayout android:id="@+id/callee_block" android:orientation="vertical"
-       	android:layout_width="wrap_content" android:layout_height="fill_parent">
+       	android:layout_width="wrap_content" android:layout_height="48px">
       <TextView android:id="@+id/name" style="@style/callee_name" />
       <TextView android:id="@+id/address" style="@style/callee_address" />
     </LinearLayout>
