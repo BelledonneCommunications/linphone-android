@@ -46,7 +46,7 @@ class LinphoneCallImpl implements LinphoneCall {
 	/*
 	 * This method must always be called from JNI, nothing else.
 	 */
-	protected LinphoneCallImpl(long aNativePtr)  {
+	private LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
 	}
 	protected void finalize() throws Throwable {

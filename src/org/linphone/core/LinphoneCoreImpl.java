@@ -560,10 +560,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		transferCallToAnother(nativePtr, getCallPtr(call), getCallPtr(dest));
 	}
 
-	private native long findCallFromUri(long nativePtr, String uri);
+	private native Object findCallFromUri(long nativePtr, String uri);
 	@Override
 	public synchronized LinphoneCall findCallFromUri(String uri) {
-		long callPtr = findCallFromUri(nativePtr, uri);
-		return callPtr != 0 ? new LinphoneCallImpl(callPtr) : null;
+		return (LinphoneCall) findCallFromUri(nativePtr, uri);
 	}
 }
