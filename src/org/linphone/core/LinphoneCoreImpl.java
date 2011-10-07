@@ -541,4 +541,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 		// TODO Auto-generated method stub
 		
 	}
+	public LinphoneCall findCallFromUri(String uri) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
