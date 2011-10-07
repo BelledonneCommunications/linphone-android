@@ -23,12 +23,9 @@ package org.linphone;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
-import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.content.Context;
-import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +37,6 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 /**
@@ -278,7 +274,13 @@ public class VideoCallActivity extends SoftVolumeActivity {
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity");
 		launched=false;
-		LinphoneManager.getLc().setVideoWindow(null);
+		synchronized (androidVideoWindowImpl) {
+			/* this call will destroy native opengl renderer
+			 * which is used by androidVideoWindowImpl
+			 */
+			LinphoneManager.getLc().setVideoWindow(null);
+		}
+		
 		LinphoneManager.getLc().setPreviewWindow(null);
 		
 		if (!isFinishing() && LinphoneManager.getLc().isIncall()) {
