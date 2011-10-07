@@ -354,7 +354,7 @@ public class ConferenceActivity extends ListActivity implements
 				lc().transferCallToAnother(call, existingCalls.get(which));
 			}
 		};
-		new AlertDialog.Builder(ConferenceActivity.this).setAdapter(adapter, l).create().show();
+		new AlertDialog.Builder(ConferenceActivity.this).setTitle(R.string.transfer_dialog_title).setAdapter(adapter, l).create().show();
 	}
 
 	private class CallActionListener implements OnClickListener {

@@ -6,7 +6,8 @@
 
 	<string name="uri_picking_canceled">Canceled</string>
 	<string name="error_adding_new_call">Error adding new call</string>
-	<string name="transfer_started">Transfer started</string>
+	<string name="transfer_started">Transfer initiated</string>
+	<string name="transfer_dialog_title">Transfer call to</string>
 
 	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>
 
