@@ -522,12 +522,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public synchronized void terminateAllCalls() {
 		terminateAllCalls(nativePtr);
 	}
-	private native long getCall(long nativePtr, int position);
+	private native Object getCall(long nativePtr, int position);
 	@SuppressWarnings("unchecked") public synchronized List getCalls() {
 		int size = getCallsNb(nativePtr);
 		List<LinphoneCall> calls = new ArrayList<LinphoneCall>(size);
 		for (int i=0; i < size; i++) {
-			calls.add(new LinphoneCallImpl(getCall(nativePtr, i)));
+			calls.add((LinphoneCall)getCall(nativePtr, i));
 		}
 		return calls;
 	}

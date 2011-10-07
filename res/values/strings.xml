@@ -41,8 +41,11 @@
 	<string name="conf_choice_remove_from_conference">Remove from the conference</string>
 	<string name="conf_choice_terminate">Terminate</string>
 
-	<string name="conf_simple_merge">Merge calls</string>
-	
+	<string name="hangup">Hang up</string>
+	<string name="conf_simple_merge_bt_txt">Merge</string>
+	<string name="conf_simple_transfer_bt_txt">Transfer</string>
+	<string name="conf_simple_permute_bt_txt">Permute</string>
+	<string name="conf_simple_no_current_call">No active call</string>
 	<string name="show_send_dtmfs_button">DTMFs</string>
 
 	<string name="conf_text_you_host_a_conference">You host a conference</string>

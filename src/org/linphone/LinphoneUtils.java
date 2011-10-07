@@ -22,8 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -124,5 +127,9 @@ public final class LinphoneUtils {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
+		return (List<LinphoneCall>) lc.getCalls();
+	}
 }
 

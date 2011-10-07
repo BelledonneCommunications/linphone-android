@@ -7,35 +7,36 @@
          android:paddingRight="8dp">
 
 
-	<LinearLayout android:id="@+id/conf_header" android:layout_alignParentTop="true"
+	<LinearLayout android:id="@+id/conf_control_buttons" 
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_alignParentTop="true">
+		<Button android:id="@+id/conf_simple_permute" style="@style/conf_icon_text_button"
+			android:drawableTop="@drawable/conf_permute" android:text="@string/conf_simple_permute_bt_txt"/>
+		<Button android:id="@+id/conf_simple_merge" style="@style/conf_icon_text_button"
+			android:drawableTop="@drawable/conf_merge" 
+		 	android:text="@string/conf_simple_merge_bt_txt"/>
+		<Button android:id="@+id/conf_simple_transfer" style="@style/conf_icon_text_button"
+			android:drawableTop="@drawable/conf_transfer"
+			android:text="@string/conf_simple_transfer_bt_txt" />
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/conf_header" android:layout_below="@id/conf_control_buttons"
 			android:orientation="vertical" android:layout_marginBottom="10dip"
-			android:layout_width="fill_parent" android:layout_height="wrap_content" >
+			android:layout_width="fill_parent" android:layout_height="wrap_content" 
+			android:layout_alignWithParentIfMissing="true">
       	<TextView android:text="@string/conf_text_you_host_a_conference"
         	android:layout_width="fill_parent" android:layout_height="wrap_content" 
         	android:gravity="center"/>
-<!--      	<TextView android:id="@+id/conf_self_attending"-->
-<!--        	android:layout_width="fill_parent" android:layout_height="wrap_content"/>-->
 	</LinearLayout>
 
 
 
 
 
-	<LinearLayout android:id="@+id/conf_bottom_row" android:layout_alignParentBottom="true"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<Button android:text="@string/AddCallButtonText" android:id="@+id/addCall"
-	     android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
-		<org.linphone.ui.HangCallButton android:id="@+id/incallHang" android:layout_width="0dip" android:layout_height="wrap_content"
-		 android:src="@drawable/mini_stopcall_red"  android:layout_weight="1" />
-		 
-		<Button android:id="@+id/incallNumpadShow" android:text="@string/show_send_dtmfs_button"  
-		 android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-	</LinearLayout>
 
 
-	<LinearLayout android:id="@+id/conf_menu_row" 
-			android:layout_above="@id/conf_bottom_row"
+	<LinearLayout android:id="@+id/conf_speaker_mic_row" 
+			android:layout_alignParentBottom="true" 
 			android:layout_width="fill_parent" android:layout_height="wrap_content"> 
 	<ToggleButton android:id="@+id/toggleMuteMic" style="@style/conf_toggle_button" 
 		android:textOn="@string/mutemic_button_txt" android:textOff="@string/mutemic_button_txt" />
@@ -46,15 +47,20 @@
 		android:visibility="gone"/>
 	</LinearLayout>
 
-	<LinearLayout android:id="@+id/conf_simple_actions" android:visibility="visible" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:layout_above="@id/conf_menu_row"
-		android:layout_centerInParent="true">
-		<Button android:id="@+id/conf_simple_merge" android:text="@string/conf_simple_merge" android:visibility="gone"
-			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<LinearLayout android:id="@+id/conf_terminate_row"
+		android:layout_above="@id/conf_speaker_mic_row"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<Button android:text="@string/AddCallButtonText" android:id="@+id/addCall"
+			style="@style/conf_icon_text_button" android:drawableTop="@drawable/plus" />
+
+		<Button	android:id="@+id/incallHang" style="@style/conf_icon_text_button"
+			android:drawableTop="@drawable/stopcall_red" android:text="@string/hangup"/>
+
+		<Button android:id="@+id/incallNumpadShow" style="@style/conf_icon_text_button"
+			android:text="@string/show_send_dtmfs_button" android:drawableTop="@drawable/numpad_big" />
 	</LinearLayout>
 
-	<FrameLayout android:id="@+id/incall_picture_box" android:layout_above="@id/conf_simple_actions"
+	<FrameLayout android:id="@+id/incall_picture_box" android:layout_above="@id/conf_terminate_row"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:layout_centerInParent="true">
 		<ImageView android:id="@+id/incall_picture" android:visibility="gone"
