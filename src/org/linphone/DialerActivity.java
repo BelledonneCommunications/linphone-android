@@ -100,7 +100,6 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 
 	
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
 
 		useIncallActivity = getResources().getBoolean(R.bool.use_incall_activity);
@@ -144,6 +143,10 @@ public class DialerActivity extends LinphoneManagerWaitActivity implements Linph
 		if (numpad != null)
 			numpad.setAddressWidget(mAddress);
 
+		// call to super must be done after all fields are initialized
+		// because it may call this.enterIncallMode
+		super.onCreate(savedInstanceState);
+		
 		checkIfOutgoingCallIntentReceived();
 
 		instance = this;
