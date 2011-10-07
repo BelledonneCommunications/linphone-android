@@ -961,7 +961,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		private LinphoneServiceListener serviceListener;
 		List<LinphoneSimpleListener> simpleListeners;
 		public ListenerDispatcher(List<LinphoneSimpleListener> simpleListeners) {
-			this.simpleListeners = simpleListeners;
+			this.simpleListeners = simpleListeners; // yes, really keeps a reference, not a copy
 		}
 
 		@SuppressWarnings("unchecked")

@@ -110,7 +110,6 @@ public class ConferenceActivity extends ListActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.conferencing);
-		super.onCreate(savedInstanceState);
 
 		confHeaderView = findViewById(R.id.conf_header);
 		confHeaderView.setOnClickListener(this);
@@ -128,6 +127,7 @@ public class ConferenceActivity extends ListActivity implements
 		waitHelper = new LinphoneManagerWaitHelper(this, this);
 		waitHelper.doManagerDependentOnCreate();
 //		workaroundStatusBarBug();
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override

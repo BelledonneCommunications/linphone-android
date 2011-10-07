@@ -106,7 +106,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 	private LinphoneManagerWaitHelper waitHelper;
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialer);
 
 		useIncallActivity = getResources().getBoolean(R.bool.use_incall_activity);
@@ -160,6 +159,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		waitHelper = new LinphoneManagerWaitHelper(this, this);
 		waitHelper.doManagerDependentOnCreate();
 		instance = this;
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override

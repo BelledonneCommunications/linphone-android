@@ -95,11 +95,12 @@ public class TestConferenceActivity extends ConferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		LinphoneManagerWaitHelper.disabled=true;
-		super.onCreate(savedInstanceState);
 		//if (!serviceStarted) startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 
 		findViewById(R.id.toggleMuteMic).setOnClickListener(null);
 		findViewById(R.id.toggleSpeaker).setOnClickListener(null);
+
+		super.onCreate(savedInstanceState);
 	}
 
 
