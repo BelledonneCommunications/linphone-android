@@ -459,15 +459,15 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 				enterIncallMode(lc);
 			}
 		}else if (state==LinphoneCall.State.Error){
-			if (lc.getCurrentCall() == null || lc.getCurrentCall()==call){
+			showToast(R.string.call_error, message);
+			if (lc.getCallsNb() == 0){
 				if (mWakeLock.isHeld()) mWakeLock.release();
-				showToast(R.string.call_error, message);
 				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
 				mCurrentCall=null;
 			}
 		}else if (state==LinphoneCall.State.CallEnd){
-			if (lc.getCurrentCall() == null || lc.getCurrentCall()==call){
+			if (lc.getCallsNb() == 0){
 				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
 				mCurrentCall=null;
