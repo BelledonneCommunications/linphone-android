@@ -18,9 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
+import org.linphone.core.LinphoneCall.State;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -40,12 +43,13 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements OnClickListener {
+public class IncomingCallActivity extends Activity implements OnClickListener, LinphoneManagerReadyListener, LinphoneOnCallStateChangedListener {
 
 	private TextView mNameView;
 	private TextView mNumberView;
 	private ImageView mPictureView;
 	private LinphoneCall mCall;
+	private LinphoneManagerWaitHelper helper;
 
 	private void findIncomingCall(Intent intent) {
 		String stringUri = intent.getStringExtra("stringUri");
@@ -58,7 +62,6 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incoming);
 
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
@@ -72,12 +75,17 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         flags |= WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
         getWindow().addFlags(flags);
+
+        helper = new LinphoneManagerWaitHelper(this, this);
+        super.onCreate(savedInstanceState);
 	}
 
-	
 	@Override
-	protected void onResume() {
-		super.onResume();
+	public void onCreateWhenManagerReady() {}
+
+	@Override
+	public void onResumeWhenManagerReady() {
+		LinphoneManager.getInstance().addListener(this);
 		findIncomingCall(getIntent());
 		if (mCall == null) {
 			finish();
@@ -95,12 +103,23 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 		} else {
 			mNumberView.setText("");
 		}
-		
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+        helper.doManagerDependentOnResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		LinphoneManager.getInstance().removeListener(this);
+	}
+	
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+		if (LinphoneManager.isInstanciated() && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
 			LinphoneManager.getLc().terminateCall(mCall);
 			finish();
 		}
@@ -124,4 +143,12 @@ public class IncomingCallActivity extends Activity implements OnClickListener {
 		}
 		finish();
 	}
+
+	@Override
+	public void onCallStateChanged(LinphoneCall call, State state, String msg) {
+		if (call == mCall && State.CallEnd == state) {
+			finish();
+		}
+	}
+
 }
