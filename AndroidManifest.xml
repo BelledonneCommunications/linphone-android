@@ -123,8 +123,10 @@
 	<receiver android:name="org.linphone.BootReceiver">
 		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
 	</receiver>
-	
-	
+
+	<receiver android:name="org.linphone.PhoneStateChangedReceiver">
+		<intent-filter><action android:name="android.intent.action.PHONE_STATE" /></intent-filter>
+	</receiver>
 	
 	
 		<activity android:name="org.linphone.TestConferenceActivity"
@@ -201,6 +203,7 @@
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.READ_LOGS" />
 
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
 <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 </manifest> 

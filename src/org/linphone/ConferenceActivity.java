@@ -143,6 +143,9 @@ public class ConferenceActivity extends ListActivity implements
 		updateCalleeImage();
 		updateConfState();
 		updateSimpleControlButtons();
+		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
+		adapter.notifyDataSetInvalidated();
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override
