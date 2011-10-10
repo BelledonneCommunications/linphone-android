@@ -21,8 +21,6 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import java.util.List;
-
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
@@ -52,8 +50,6 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -77,7 +73,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int previousRotation = -1;
-	private static SensorEventListener mSensorEventListener;
 	
 	private static final String SCREEN_IS_HIDDEN = "screen_is_hidden";
 	private Handler mHandler = new Handler();
@@ -100,14 +95,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
 
-	protected void onSaveInstanceState (Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean(SCREEN_IS_HIDDEN, mMainFrame.getVisibility() == View.INVISIBLE);
-	}
-
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		instance = this;
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		LinphonePreferenceManager.getInstance(this);
@@ -140,10 +130,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				checkAccount = false;
 			}
 		}
-		
-	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
-	    	hideScreen(true);
-	    }
+
 	}
 	
 	
@@ -271,7 +258,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		if  (isFinishing())  {
 			//restore audio settings   
 			LinphoneManager.getInstance().routeAudioToReceiver();
-			stopProxymitySensor();//just in case
+			LinphoneManager.stopProximitySensorForActivity(this);
 			instance = null;
 		}
 	}
@@ -316,39 +303,12 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 
-
-	void hideScreen(boolean isHidden) {
-		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
-		if (isHidden) {
-			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
-			mMainFrame.setVisibility(View.INVISIBLE);
-		} else  {
-			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
-			mMainFrame.setVisibility(View.VISIBLE);
-		}
-		getWindow().setAttributes(lAttrs);
+	public synchronized void stopOrientationSensor() {
+		if (mSensorManager!=null)
+			mSensorManager.unregisterListener(this, mAccelerometer);
 	}
 
-	synchronized void startProxymitySensor() {
-		if (mSensorEventListener != null) {
-			Log.i("proximity sensor already active");
-			return;
-		}
-		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
-		mSensorEventListener = new SensorEventListener() {
-			public void onSensorChanged(SensorEvent event) {
-				//just ignoring for nexus 1
-				if (event.timestamp == 0) return;
-				instance().hideScreen(LinphoneManager.isProximitySensorNearby(event));
-			}
- 
-			public void onAccuracyChanged(Sensor sensor, int accuracy) {}	
-		};
-		if (lSensorList.size() >0) {
-			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
-			Log.i("Proximity sensor detected, registering");
-		}		
-	}
+
 	
 	public synchronized void startOrientationSensor() {
 		if (mSensorManager!=null) {
@@ -360,20 +320,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		previousRotation = -1;
 		onSensorChanged(null);
 	}
-	
-	public synchronized void stopOrientationSensor() {
-		if (mSensorManager!=null)
-			mSensorManager.unregisterListener(this, mAccelerometer);
-	}
-
-	protected synchronized void stopProxymitySensor() {
-		if (mSensorManager!=null) {
-			mSensorManager.unregisterListener(mSensorEventListener);
-			mSensorEventListener=null; 
-		}
-		hideScreen(false);
-	}
-
 
 	void showPreferenceErrorDialog(String message) {
 		if (!useMenuSettings) {
@@ -537,6 +483,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		});
 	}
 }
+
+
 
 interface ContactPicked {
 	void setAddressAndGoToDialer(String number, String name, Uri photo);

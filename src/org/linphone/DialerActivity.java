@@ -237,7 +237,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 //		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-		LinphoneActivity.instance().startProxymitySensor();
+		LinphoneManager.startProximitySensorForActivity(LinphoneActivity.instance());
 		if (!mWakeLock.isHeld()) mWakeLock.acquire();
 		
 		if (useIncallActivity) {
@@ -319,7 +319,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		}
 
 		if (mWakeLock.isHeld()) mWakeLock.release();
-		LinphoneActivity.instance().stopProxymitySensor();
+		LinphoneManager.stopProximitySensorForActivity(LinphoneActivity.instance());
 		
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 		mCall.setEnabled(true);
@@ -520,6 +520,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		// Note1: We wait as long as possible before setting the last message.
 		// Note2: Linphone service is in charge of instantiating LinphoneManager
 		mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
+		if (LinphoneManager.getLc().getCallsNb() > 0) {
+			LinphoneManager.startProximitySensorForActivity(LinphoneActivity.instance());
+			// removing is done directly in LinphoneActivity.onPause()
+		}
 	}
 
 	@Override

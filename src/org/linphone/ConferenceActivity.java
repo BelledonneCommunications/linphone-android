@@ -146,6 +146,7 @@ public class ConferenceActivity extends ListActivity implements
 		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
 		adapter.notifyDataSetInvalidated();
 		adapter.notifyDataSetChanged();
+		LinphoneManager.startProximitySensorForActivity(this);
 	}
 
 	@Override
@@ -173,6 +174,7 @@ public class ConferenceActivity extends ListActivity implements
 	protected void onPause() {
 		active=false;
 		registerLinphoneListener(false);
+		LinphoneManager.stopProximitySensorForActivity(this);
 		super.onPause();
 	}
 

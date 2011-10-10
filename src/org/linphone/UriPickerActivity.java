@@ -154,6 +154,17 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 		dialer.setContactAddress(number, name, photo);
 		gotToDialer();
 	}
+	
+	@Override
+	protected void onPause() {
+		LinphoneManager.stopProximitySensorForActivity(this);
+		super.onPause();
+	}
 
+	@Override
+	protected void onResume() {
+		LinphoneManager.startProximitySensorForActivity(this);
+		super.onResume();
+	}
 
 }

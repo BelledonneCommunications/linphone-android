@@ -102,7 +102,7 @@ public class IncallActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		LinphoneManager.startProximitySensorForActivity(this);
 		task = new TimerTask() {
 			@Override
 			public void run() {
@@ -125,6 +125,7 @@ public class IncallActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		LinphoneManager.stopProximitySensorForActivity(this);
 
 		if (task != null) {
 			task.cancel();

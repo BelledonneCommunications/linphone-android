@@ -40,7 +40,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -69,6 +71,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -77,7 +80,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -89,6 +95,10 @@ import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * 
@@ -947,6 +957,79 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		return distanceInCm < threshold;
 	}
+
+
+	private static boolean sLastProximitySensorValueNearby;
+	private static Set<Activity> sProximityDependentActivities = new HashSet<Activity>();
+	private static SensorEventListener sProximitySensorListener = new SensorEventListener() {
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			if (event.timestamp == 0) return; //just ignoring for nexus 1
+			sLastProximitySensorValueNearby = isProximitySensorNearby(event);
+			proximityNearbyChanged();
+		}
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+	};
+
+
+	private static void hideActivityViewAsIfProximitySensorNearby(Activity activity) {
+		final Window window = activity.getWindow();
+		View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
+		WindowManager.LayoutParams lAttrs = activity.getWindow().getAttributes();
+		lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		view.setVisibility(View.INVISIBLE);
+		window.setAttributes(lAttrs);
+	}
+
+	private static void proximityNearbyChanged() {
+		boolean nearby = sLastProximitySensorValueNearby;
+		for (Activity activity : sProximityDependentActivities) {
+			final Window window = activity.getWindow();
+			WindowManager.LayoutParams lAttrs = activity.getWindow().getAttributes();
+			View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
+			if (nearby) {
+				lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+				view.setVisibility(View.INVISIBLE);
+			} else  {
+				lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
+				view.setVisibility(View.VISIBLE);
+			}
+			window.setAttributes(lAttrs);
+		}
+	}
+
+	public static synchronized void startProximitySensorForActivity(Activity activity) {
+		if (sProximityDependentActivities.contains(activity)) {
+			Log.i("proximity sensor already active for " + activity.getLocalClassName());
+			return;
+		}
+		
+		if (sProximityDependentActivities.isEmpty()) {
+			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+			Sensor s = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+			if (s != null) {
+				sm.registerListener(sProximitySensorListener,s,SensorManager.SENSOR_DELAY_UI);
+				Log.i("Proximity sensor detected, registering");
+			}
+		} else if (sLastProximitySensorValueNearby){
+			hideActivityViewAsIfProximitySensorNearby(activity);
+		}
+
+		sProximityDependentActivities.add(activity);
+	}
+
+	public static synchronized void stopProximitySensorForActivity(Activity activity) {
+		sProximityDependentActivities.remove(activity);
+		if (sProximityDependentActivities.isEmpty()) {
+			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+			sm.unregisterListener(sProximitySensorListener);
+			sLastProximitySensorValueNearby = false;
+			proximityNearbyChanged();
+		}
+	}
+
+
 	public static synchronized LinphoneCore getLcIfManagerNotDestroyedOrNull() {
 		if (sExited) {
 			// Can occur if the UI thread play a posted event but in the meantime the LinphoneManager was destroyed
