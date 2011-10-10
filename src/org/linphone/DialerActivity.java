@@ -136,17 +136,18 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		mInCallAddressLayout = findViewById(R.id.IncallAddressLayout);
 		mInCallAddressLayout.setVisibility(View.GONE);
 
-		if (useConferenceActivity) {
-			mHangup = findViewById(R.id.HangUp);
-			((HangCallButton)mHangup).setTerminateAllCalls(true);
-		} else if (useIncallActivity) {
-			mHangup = findViewById(R.id.HangUp);
+		HangCallButton hang = (HangCallButton) findViewById(R.id.HangUp);
+		HangCallButton decline = (HangCallButton) findViewById(R.id.Decline);
+		hang.setTerminateAllCalls(true);
+		decline.setTerminateAllCalls(true);
+
+		if (useConferenceActivity || useIncallActivity) {
+			mHangup = hang;
 		} else {
 			mMute = (MuteMicButton) findViewById(R.id.mic_mute_button);
 			mSpeaker = (SpeakerButton) findViewById(R.id.speaker_button);
-			mHangup = findViewById(R.id.Decline); 
+			mHangup = decline;
 		}
-
 
 		mStatus =  (TextView) findViewById(R.id.status_label);
 
