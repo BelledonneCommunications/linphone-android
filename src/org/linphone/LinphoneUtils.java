@@ -77,7 +77,7 @@ public final class LinphoneUtils {
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 			LinphoneManager.getInstance().adjustSoftwareVolume(-1);
 		}
-		return !preventVolumeBarToDisplay;
+		return preventVolumeBarToDisplay;
 	}
 
 
