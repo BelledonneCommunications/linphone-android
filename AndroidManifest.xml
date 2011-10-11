@@ -44,7 +44,9 @@
             </intent-filter>
          </activity>
 
-        <activity android:name="org.linphone.UriPickerActivity" android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name="org.linphone.UriPickerActivity"
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

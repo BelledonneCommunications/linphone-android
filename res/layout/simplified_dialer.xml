@@ -26,10 +26,11 @@
 	<LinearLayout android:gravity="bottom"
 		android:layout_height="wrap_content" android:layout_width="fill_parent">
 		<Button android:id="@+id/AddCallButton" android:text="@string/AddCallButtonText"
+			android:gravity="bottom|center_horizontal"
 			android:layout_height="fill_parent" android:layout_width="fill_parent"
 			android:layout_weight="1" android:background="@drawable/clavier_bg" />
 		<Button android:id="@+id/AddCallCancelButton" android:text="@string/CancelButtonText"
-			android:layout_height="fill_parent" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_width="fill_parent"
 			android:layout_weight="1" android:background="@drawable/clavier_bg" />
 	</LinearLayout>
 
