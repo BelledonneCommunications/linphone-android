@@ -24,6 +24,8 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.ui.SlidingTab;
+import org.linphone.ui.SlidingTab.OnTriggerListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,7 +34,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,13 +44,14 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements OnClickListener, LinphoneManagerReadyListener, LinphoneOnCallStateChangedListener {
+public class IncomingCallActivity extends Activity implements LinphoneManagerReadyListener, LinphoneOnCallStateChangedListener, OnTriggerListener {
 
 	private TextView mNameView;
 	private TextView mNumberView;
 	private ImageView mPictureView;
 	private LinphoneCall mCall;
-	private LinphoneManagerWaitHelper helper;
+	private LinphoneManagerWaitHelper mHelper;
+	private SlidingTab mIncomingCallWidget;
 
 	private void findIncomingCall(Intent intent) {
 		String stringUri = intent.getStringExtra("stringUri");
@@ -68,15 +70,24 @@ public class IncomingCallActivity extends Activity implements OnClickListener, L
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
 		mPictureView = (ImageView) findViewById(R.id.incoming_picture);
 
-		findViewById(R.id.Decline).setOnClickListener(this);
-		findViewById(R.id.Answer).setOnClickListener(this);
-		
         // set this flag so this activity will stay in front of the keyguard
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         flags |= WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
         getWindow().addFlags(flags);
 
-        helper = new LinphoneManagerWaitHelper(this, this);
+
+        // "Dial-to-answer" widget for incoming calls.
+        mIncomingCallWidget = (SlidingTab) findViewById(R.id.sliding_widget);
+
+        // For now, we only need to show two states: answer and decline.
+        // TODO: make left hint work
+//        mIncomingCallWidget.setLeftHintText(R.string.slide_to_answer_hint);
+//        mIncomingCallWidget.setRightHintText(R.string.slide_to_decline_hint);
+
+        mIncomingCallWidget.setOnTriggerListener(this);
+
+
+        mHelper = new LinphoneManagerWaitHelper(this, this);
         super.onCreate(savedInstanceState);
 	}
 
@@ -108,7 +119,7 @@ public class IncomingCallActivity extends Activity implements OnClickListener, L
 	@Override
 	protected void onResume() {
 		super.onResume();
-        helper.doManagerDependentOnResume();
+        mHelper.doManagerDependentOnResume();
 	}
 	
 	@Override
@@ -127,27 +138,38 @@ public class IncomingCallActivity extends Activity implements OnClickListener, L
 	}
 
 	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.Answer:
-			if (!LinphoneManager.getInstance().acceptCall(mCall)) {
-				// the above method takes care of Samsung Galaxy S
-				Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG);
-			}
-			break;
-		case R.id.Decline:
-			LinphoneManager.getLc().terminateCall(mCall);
-			break;
-		default:
-			throw new RuntimeException();
-		}
-		finish();
-	}
-
-	@Override
 	public void onCallStateChanged(LinphoneCall call, State state, String msg) {
 		if (call == mCall && State.CallEnd == state) {
 			finish();
+		}
+	}
+
+	private void decline() {
+		LinphoneManager.getLc().terminateCall(mCall);
+	}
+	private void answer() {
+		if (!LinphoneManager.getInstance().acceptCall(mCall)) {
+			// the above method takes care of Samsung Galaxy S
+			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG);
+		}
+	}
+	@Override
+	public void onGrabbedStateChange(View v, int grabbedState) {
+	}
+
+	@Override
+	public void onTrigger(View v, int whichHandle) {
+		switch (whichHandle) {
+		case OnTriggerListener.LEFT_HANDLE:
+			answer();
+			finish();
+			break;
+		case OnTriggerListener.RIGHT_HANDLE:
+			decline();
+			finish();
+			break;
+		default:
+			break;
 		}
 	}
 

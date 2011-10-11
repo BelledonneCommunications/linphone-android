@@ -4,7 +4,8 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
 
-	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+	<TextView android:id="@+id/incoming_text" 
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:layout_marginTop="25sp" android:layout_alignParentTop="true"
 		android:text="Incoming call" android:textAppearance="?android:attr/textAppearanceLarge">
@@ -12,7 +13,8 @@
 
 	<LinearLayout android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:orientation="vertical"
-		android:layout_centerInParent="true">
+		android:layout_below="@id/incoming_text"
+		android:layout_centerHorizontal="true" android:paddingTop="30dip">
 		<ImageView android:id="@+id/incoming_picture"
 			android:layout_height="wrap_content" android:layout_width="wrap_content" 
 			android:layout_gravity="center" android:scaleType="fitCenter"
@@ -33,21 +35,13 @@
 	</LinearLayout>
 
 
-	<ImageButton android:id="@+id/Answer"
-		android:src="@drawable/startcall_green" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-		android:text="answer"
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:layout_alignParentLeft="true" android:layout_marginBottom="40sp"
-		android:layout_alignParentBottom="true"/>
-
-	<ImageButton android:id="@+id/Decline"
-		android:src="@drawable/stopcall_red" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-		android:text="decline" 
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:layout_alignParentRight="true" android:layout_alignBottom="@id/Answer"/>
-
+    <org.linphone.ui.SlidingTab
+        android:id="@+id/sliding_widget"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dip"
+        />
 
 
 <!--	<org.linphone.ui.CallButton  android:src="@drawable/startvideo_green" android:layout_width="wrap_content"-->
