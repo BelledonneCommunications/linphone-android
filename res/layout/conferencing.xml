@@ -60,14 +60,14 @@
 			android:text="@string/show_send_dtmfs_button" android:drawableTop="@drawable/numpad_big" />
 	</LinearLayout>
 
-	<FrameLayout android:id="@+id/incall_picture_box" android:layout_above="@id/conf_terminate_row"
+	<FrameLayout android:id="@+id/incall_picture_box" 
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
-			android:layout_centerInParent="true">
+			android:layout_centerInParent="true" android:paddingBottom="30sp">
 		<ImageView android:id="@+id/incall_picture" android:visibility="gone"
 			android:layout_height="wrap_content" android:layout_width="wrap_content" 
 			android:layout_gravity="center" android:scaleType="fitCenter"
-			android:padding="10sp" android:minWidth="192px" android:minHeight="192px"
-			android:paddingBottom="50sp" />
+			android:minWidth="192px" android:minHeight="192px"
+			/>
 	</FrameLayout>
 
      <ListView android:id="@android:id/list"
