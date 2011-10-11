@@ -70,6 +70,7 @@ public class ConferenceActivity extends ListActivity implements
 	private View confHeaderView;
 	static boolean active;
 
+	private boolean unMuteOnReturnFromUriPicker;
 
 	// Start Override to test block
 	protected LinphoneCore lc() {
@@ -100,11 +101,11 @@ public class ConferenceActivity extends ListActivity implements
 				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 	}
 
-	private void pauseCurrentCallOrLeaveConference() {
-		LinphoneCall call = lc().getCurrentCall();
-		if (call != null) lc().pauseCall(call);
-		lc().leaveConference();
-	}
+//	private void pauseCurrentCallOrLeaveConference() {
+//		LinphoneCall call = lc().getCurrentCall();
+//		if (call != null) lc().pauseCall(call);
+//		lc().leaveConference();
+//	}
 
 	private LinphoneManagerWaitHelper waitHelper;
 	@Override
@@ -254,14 +255,21 @@ public class ConferenceActivity extends ListActivity implements
 //		v.setText(inConf ? R.string.in_conf : R.string.out_conf);
 	}
 
+	private void openUriPicker(String pickerType, int requestCode) {
+		Intent intent = new Intent().setClass(this, UriPickerActivity.class);
+		intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, pickerType);
+		startActivityForResult(intent, requestCode);
+		if (!lc().isMicMuted()) {
+			unMuteOnReturnFromUriPicker = true;
+			lc().muteMic(true);
+			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(true);
+		}
+	}
+
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.addCall:
-			Intent intent = new Intent().setClass(this, UriPickerActivity.class);
-			intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_ADD);
-			startActivityForResult(intent, ID_ADD_CALL);
-			pauseCurrentCallOrLeaveConference();
-			updateConfState();
+			openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_ADD, ID_ADD_CALL);
 			break;
 		case R.id.conf_header:
 			View content = getLayoutInflater().inflate(R.layout.conf_choices_admin, null);
@@ -397,10 +405,8 @@ public class ConferenceActivity extends ListActivity implements
 				prepareForTransferingExistingCall(call);
 				break;
 			case R.id.transfer_new:
-				Intent intent = new Intent().setClass(ConferenceActivity.this, UriPickerActivity.class);
-				intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER);
+				openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER, ID_TRANSFER_CALL);
 				callToTransfer = call;	
-				startActivityForResult(intent, ID_TRANSFER_CALL);
 				break;
 			case R.id.remove_from_conference:
 				lc().removeFromConference(call);
@@ -673,6 +679,11 @@ public class ConferenceActivity extends ListActivity implements
 	private LinphoneCall callToTransfer;
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (unMuteOnReturnFromUriPicker) {
+			lc().muteMic(false);
+			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(false);
+		}
+
 		if (resultCode != RESULT_OK) {
 			callToTransfer = null;
 			Toast.makeText(this, R.string.uri_picking_canceled, Toast.LENGTH_LONG).show();
