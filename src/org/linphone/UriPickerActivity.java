@@ -128,7 +128,7 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 				throw new RuntimeException("unknown type");
 			}
 
-			findViewById(R.id.AddCallCancelButton).setOnClickListener(this);
+//			findViewById(R.id.AddCallCancelButton).setOnClickListener(this);
 
 			super.onCreate(savedInstanceState);
 		}
