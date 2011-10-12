@@ -108,6 +108,8 @@ public class ConferenceActivity extends ListActivity implements
 //	}
 
 	private LinphoneManagerWaitHelper waitHelper;
+	private ToggleButton mMuteMicButton;
+	private ToggleButton mSpeakerButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.conferencing);
@@ -122,8 +124,10 @@ public class ConferenceActivity extends ListActivity implements
 		findViewById(R.id.conf_simple_transfer).setOnClickListener(this);
 		findViewById(R.id.conf_simple_permute).setOnClickListener(this);
 
-		findViewById(R.id.toggleMuteMic).setOnClickListener(this);
-		findViewById(R.id.toggleSpeaker).setOnClickListener(this);
+		mMuteMicButton = (ToggleButton) findViewById(R.id.toggleMuteMic);
+		mMuteMicButton.setOnClickListener(this);
+		mSpeakerButton = (ToggleButton) findViewById(R.id.toggleSpeaker);
+		mSpeakerButton.setOnClickListener(this);
 
 		waitHelper = new LinphoneManagerWaitHelper(this, this);
 		waitHelper.doManagerDependentOnCreate();
@@ -141,6 +145,8 @@ public class ConferenceActivity extends ListActivity implements
 	@Override
 	public void onResumeWhenManagerReady() {
 		registerLinphoneListener(true);
+		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
+		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 		updateCalleeImage();
 		updateConfState();
 		updateSimpleControlButtons();
