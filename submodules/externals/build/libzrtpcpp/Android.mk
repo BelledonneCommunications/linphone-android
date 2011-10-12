@@ -26,6 +26,8 @@ LOCAL_SRC_FILES := \
 	 	src/ZrtpPacketHello.cpp \
 	 	src/ZrtpPacketPingAck.cpp \
 	 	src/ZrtpPacketPing.cpp \
+		src/ZrtpPacketRelayAck.cpp \
+		src/ZrtpPacketSASrelay.cpp \
 	 	src/ZrtpStateClass.cpp \
 	 	src/ZrtpTextData.cpp
 
