@@ -129,6 +129,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String basePath;
 	private static boolean sExited;
 
+	private WakeLock mIncallWakeLock;
+
 	private List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
 	public void addListener(LinphoneSimpleListener listener) {
 		if (!simpleListeners.contains(listener)) {
@@ -742,7 +744,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			stopRinging();
 			routeAudioToReceiver();
 		}
-		
+
 		if (state == CallEnd || state == Error) {
 			mAudioManager.setMode(MODE_NORMAL);
 		}
@@ -753,6 +755,27 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 
+		if (state == CallEnd) {
+			if (mLc.getCallsNb() == 0) {
+				if (mIncallWakeLock != null && mIncallWakeLock.isHeld()) {
+					mIncallWakeLock.release();
+					Log.i("Last call ended: releasing incall (CPU only) wake lock");
+				} else {
+					Log.i("Last call ended: no incall (CPU only) wake lock were held");
+				}
+			}
+		}
+		if (state == State.StreamsRunning) {
+			if (mIncallWakeLock == null) {
+				mIncallWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,	"incall");
+			}
+			if (!mIncallWakeLock.isHeld()) {
+				Log.i("New call active : acquiring incall (CPU only) wake lock");
+				mIncallWakeLock.acquire();
+			} else {
+				Log.i("New call active while incall (CPU only) wake lock already active");
+			}
+		}
 		mCurrentCallState=state;
 		listenerDispatcher.onCallStateChanged(call, state, message);
 	}
