@@ -88,7 +88,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.os.PowerManager.WakeLock;
@@ -242,7 +241,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Version.sdk());
 		return instance;
 	}
-	
+
 	public static synchronized final LinphoneManager getInstance() {
 		if (instance != null) return instance;
 

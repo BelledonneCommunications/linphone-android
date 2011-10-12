@@ -34,8 +34,15 @@ import android.widget.Toast;
 public class Digit extends Button implements AddressAware {
 
 	private AddressText mAddress;
+	public void setAddressWidget(AddressText address) {
+		mAddress = address;
+	}
 
-	
+	private boolean mPlayDtmf;
+	public void setPlayDtmf(boolean play) {
+		mPlayDtmf = play;
+	}
+
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before,
 			int after) {
@@ -75,7 +82,7 @@ public class Digit extends Button implements AddressAware {
 
 	private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
 		final CharSequence mKeyCode;
-		boolean mIsDtmfStarted=false;
+		boolean mIsDtmfStarted;
 
 		DialKeyListener() {
 			mKeyCode = Digit.this.getText().subSequence(0, 1);
@@ -89,15 +96,20 @@ public class Digit extends Button implements AddressAware {
 			}
 			return true;
 		}
-		public void onClick(View v) {
-			if (!linphoneServiceReady()) return;
-			LinphoneCore lc = LinphoneManager.getLc();
-			lc.stopDtmf();
-			mIsDtmfStarted =false;
 
-			if (lc.isIncall()) {
-				lc.sendDtmf(mKeyCode.charAt(0));
-			} else if (mAddress != null) {
+		public void onClick(View v) {
+			if (mPlayDtmf) {
+				if (!linphoneServiceReady()) return;
+				LinphoneCore lc = LinphoneManager.getLc();
+				lc.stopDtmf();
+				mIsDtmfStarted =false;
+				if (lc.isIncall()) {
+					lc.sendDtmf(mKeyCode.charAt(0));
+					return;
+				}
+			}
+			
+			if (mAddress != null) {
 				int lBegin = mAddress.getSelectionStart();
 				if (lBegin == -1) {
 					lBegin = mAddress.length();
@@ -109,24 +121,29 @@ public class Digit extends Button implements AddressAware {
 		}
 
 		public boolean onTouch(View v, MotionEvent event) {
+			if (!mPlayDtmf) return false;
 			if (!linphoneServiceReady()) return true;
+
 			LinphoneCore lc = LinphoneManager.getLc();
-			if (event.getAction() == MotionEvent.ACTION_DOWN && mIsDtmfStarted ==false) {
+			if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
 				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode.charAt(0));
 				mIsDtmfStarted=true;
 			} else {
-				if (event.getAction() == MotionEvent.ACTION_UP) 
+				if (event.getAction() == MotionEvent.ACTION_UP) {
 					lc.stopDtmf();
-					mIsDtmfStarted =false;
+					mIsDtmfStarted=false;
+				}
 			}
 			return false;
 		}
 		
 		public boolean onLongClick(View v) {
-			if (!linphoneServiceReady()) return true;
-			// Called if "0+" dtmf
-			LinphoneCore lc = LinphoneManager.getLc();
-			lc.stopDtmf();
+			if (mPlayDtmf) {
+				if (!linphoneServiceReady()) return true;
+				// Called if "0+" dtmf
+				LinphoneCore lc = LinphoneManager.getLc();
+				lc.stopDtmf();
+			}
 			
 			if (mAddress == null) return true;
 
@@ -141,7 +158,5 @@ public class Digit extends Button implements AddressAware {
 		}
 	};
 	
-	public void setAddressWidget(AddressText address) {
-		mAddress = address;
-	}
+
 }

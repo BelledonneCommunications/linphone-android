@@ -24,6 +24,7 @@ import java.util.Collection;
 import org.linphone.R;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,29 +37,42 @@ import android.widget.LinearLayout;
  */
 public class Numpad extends LinearLayout implements AddressAware {
 
+	private boolean mPlayDtmf;
+
+
 	public Numpad(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.numpad, this);
 		setLongClickable(true);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Numpad);
+        mPlayDtmf = 1 == a.getInt(org.linphone.R.styleable.Numpad_play_dtmf, 1);
+        a.recycle();
 	}
 
+	@Override
+	protected void onFinishInflate() {
+		for (Digit v : retrieveChildren(this, Digit.class)) {
+			v.setPlayDtmf(mPlayDtmf);
+		}
+		super.onFinishInflate();
+	}
 	public void setAddressWidget(AddressText address) {
-		for (AddressAware v : retrieveChildren(this)) {
+		for (AddressAware v : retrieveChildren(this, AddressAware.class)) {
 			v.setAddressWidget(address);
 		}
 	}
 
 
-	private Collection<AddressAware> retrieveChildren(ViewGroup viewGroup) {
-		final Collection<AddressAware> views = new ArrayList<AddressAware>();
+	private <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
+		final Collection<T> views = new ArrayList<T>();
 
 		for (int i = 0; i < viewGroup.getChildCount(); i++) {
 			View v = viewGroup.getChildAt(i);
 			if (v instanceof ViewGroup) {
-				views.addAll(retrieveChildren((ViewGroup) v));
+				views.addAll(retrieveChildren((ViewGroup) v, clazz));
 			} else {
-				if (v instanceof AddressAware)
-					views.add((AddressAware) v);
+				if (clazz.isInstance(v))
+					views.add(clazz.cast(v));
 			}
 		}
 

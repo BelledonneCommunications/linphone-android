@@ -20,7 +20,9 @@ package org.linphone;
 
 
 import org.linphone.mediastream.Version;
+import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
+import org.linphone.ui.Numpad;
 
 import android.app.Activity;
 import android.app.TabActivity;
@@ -130,6 +132,7 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 
 //			findViewById(R.id.AddCallCancelButton).setOnClickListener(this);
 
+			((AddressAware)findViewById(R.id.Dialer)).setAddressWidget(mAddress);
 			super.onCreate(savedInstanceState);
 		}
 
