@@ -145,8 +145,6 @@ public class ConferenceActivity extends ListActivity implements
 	@Override
 	public void onResumeWhenManagerReady() {
 		registerLinphoneListener(true);
-		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
-		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 		updateCalleeImage();
 		updateConfState();
 		updateSimpleControlButtons();
@@ -154,6 +152,8 @@ public class ConferenceActivity extends ListActivity implements
 		adapter.notifyDataSetInvalidated();
 		adapter.notifyDataSetChanged();
 		LinphoneManager.startProximitySensorForActivity(this);
+		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
+		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 	}
 
 	@Override
