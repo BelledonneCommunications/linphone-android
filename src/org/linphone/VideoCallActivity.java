@@ -272,7 +272,8 @@ public class VideoCallActivity extends SoftVolumeActivity {
 
 	@Override
 	protected void onPause() {
-		Log.d("onPause VideoCallActivity");
+		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(), ", changingConf:", getChangingConfigurations());
+		
 		launched=false;
 		synchronized (androidVideoWindowImpl) {
 			/* this call will destroy native opengl renderer
@@ -283,7 +284,7 @@ public class VideoCallActivity extends SoftVolumeActivity {
 		
 		LinphoneManager.getLc().setPreviewWindow(null);
 		
-		if (!isFinishing() && LinphoneManager.getLc().isIncall()) {
+		if (LinphoneManager.getLc().isIncall()) {
 			// we're getting paused for real
 			if (getChangingConfigurations() == 0) {
 				LinphoneManager.getInstance().sendStaticImage(true);
