@@ -261,8 +261,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	
 	public boolean isSpeakerOn() {
-		return (Integer.parseInt(Build.VERSION.SDK) <=4 && mAudioManager.getRouting(MODE_NORMAL) == ROUTE_SPEAKER) 
-		|| Integer.parseInt(Build.VERSION.SDK) >4 &&mAudioManager.isSpeakerphoneOn();
+		if (Hacks.needRoutingAPI() || lpm.useAudioRoutingAPIHack()) {
+			return mAudioManager.getRouting(MODE_NORMAL) == ROUTE_SPEAKER;
+		} else {
+			return mAudioManager.isSpeakerphoneOn(); 
+		}
 	}
 
 	
@@ -736,13 +739,18 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					"incoming_call");
 			wl.acquire(10000);
 
-			startRinging();
+			if (mLc.getCallsNb() == 1) {
+				startRinging();
+				// otherwise there is the beep
+			}
 		}
 
 		if (mCurrentCallState == IncomingReceived) { 
 			//previous state was ringing, so stop ringing
-			stopRinging();
-			routeAudioToReceiver();
+			if (isRinging) {
+				stopRinging();
+				routeAudioToReceiver();
+			}
 		}
 
 		if (state == CallEnd || state == Error) {
@@ -811,6 +819,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 
 
+	private boolean isRinging;
 	private synchronized void startRinging()  {
 		if (Hacks.needGalaxySAudioHack()) {
 			mAudioManager.setMode(MODE_RINGTONE);
@@ -834,7 +843,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} catch (Exception e) {
 			Log.e(e,"cannot handle incoming call");
 		}
-
+		isRinging = true;
 	}
 
 	private synchronized void stopRinging() {
@@ -847,6 +856,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mVibrator.cancel();
 		}
 
+		isRinging = false;
 		// You may need to call galaxys audio hack after this method
 	}
 
@@ -881,7 +891,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
-		stopRinging();
+//		if (isRinging) stopRinging();     // FIXME was this line useful?
 		mAudioManager.setMode(MODE_IN_CALL);
 	}
 
