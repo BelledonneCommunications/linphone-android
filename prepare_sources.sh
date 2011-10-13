@@ -14,5 +14,5 @@ cd submodules/libilbc-rfc3951 && ./autogen.sh && ./configure && make || ( echo "
 
 cd $topdir/submodules/externals/build/libvpx && ./asm_conversion.sh && cp *.asm *.h ../../libvpx/ || ( echo "VP8 prepare stage failed." ; exit 1 )
 
-echo Preparing ZRTP (need cmake installed)
-cmake  -Denable-ccrtp=false submodules/externals/libzrtpcpp
+# As a memo, the config.h for zrtpcpp is generated using the command
+# cmake  -Denable-ccrtp=false submodules/externals/libzrtpcpp

@@ -1,5 +1,5 @@
-
-LOCAL_EXTERNALS:= $(call my-dir)/../..
+MK_DIR:=$(call my-dir)
+LOCAL_EXTERNALS:= $(MK_DIR)/../..
 LOCAL_PATH:= $(LOCAL_EXTERNALS:=)/libzrtpcpp
 include $(CLEAR_VARS)
 
@@ -58,6 +58,7 @@ LOCAL_SRC_FILES += \
 LOCAL_CFLAGS := -D__EXPORT=""
 
 LOCAL_C_INCLUDES += \
+	$(MK_DIR)/ \
 	$(LOCAL_PATH)/src/ \
 	$(LOCAL_EXTERNALS)/openssl \
         $(LOCAL_EXTERNALS)/openssl/include 
