@@ -665,7 +665,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	private LinphoneServiceListener serviceListener;
-	private LinphoneCall.State mCurrentCallState;
+	private LinphoneCall ringingCall;
 
 	private MediaPlayer mRingerPlayer;
 	private Vibrator mVibrator;
@@ -727,11 +727,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			wl.acquire(10000);
 
 			startRinging();
-		}
-
-		if (mCurrentCallState == IncomingReceived) { 
+			ringingCall = call;
+		} else if (call == ringingCall) { 
 			//previous state was ringing, so stop ringing
 			stopRinging();
+			ringingCall = null;
 			routeAudioToReceiver();
 		}
 		
@@ -745,7 +745,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 
-		mCurrentCallState=state;
 		serviceListener.onCallStateChanged(call, state, message);
 	}
 
@@ -853,6 +852,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void setAudioModeIncallForGalaxyS() {
 		stopRinging();
 		mAudioManager.setMode(MODE_IN_CALL);
+		ringingCall = null;
 	}
 
 	// Called on first launch only
