@@ -25,7 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 
-public class EraseButton extends Button implements OnClickListener, OnLongClickListener{
+public class EraseButton extends Button implements AddressAware, OnClickListener, OnLongClickListener{
 
 	private AddressText address;
 
@@ -52,7 +52,7 @@ public class EraseButton extends Button implements OnClickListener, OnLongClickL
 		return true;
 	}
 
-	public void setAddressView(AddressText view) {
+	public void setAddressWidget(AddressText view) {
 		address = view;
 	}
 

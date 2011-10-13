@@ -120,7 +120,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
 		mDisplayNameView = (TextView) findViewById(R.id.DisplayNameView);
-		((EraseButton) findViewById(R.id.Erase)).setAddressView(mAddress);
+		((EraseButton) findViewById(R.id.Erase)).setAddressWidget(mAddress);
 
 
 		mCall = (CallButton) findViewById(R.id.Call);
