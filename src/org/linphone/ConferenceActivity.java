@@ -101,11 +101,11 @@ public class ConferenceActivity extends ListActivity implements
 				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 	}
 
-//	private void pauseCurrentCallOrLeaveConference() {
-//		LinphoneCall call = lc().getCurrentCall();
-//		if (call != null) lc().pauseCall(call);
-//		lc().leaveConference();
-//	}
+	private void pauseCurrentCallOrLeaveConference() {
+		LinphoneCall call = lc().getCurrentCall();
+		if (call != null) lc().pauseCall(call);
+		lc().leaveConference();
+	}
 
 	private LinphoneManagerWaitHelper waitHelper;
 	private ToggleButton mMuteMicButton;
@@ -261,7 +261,12 @@ public class ConferenceActivity extends ListActivity implements
 //		v.setText(inConf ? R.string.in_conf : R.string.out_conf);
 	}
 
+	private LinphoneCall activateCallOnReturnFromUriPicker;
+	private boolean enterConferenceOnReturnFromUriPicker;
 	private void openUriPicker(String pickerType, int requestCode) {
+		activateCallOnReturnFromUriPicker = lc().getCurrentCall();
+		enterConferenceOnReturnFromUriPicker = lc().isInConference();
+		pauseCurrentCallOrLeaveConference();
 		Intent intent = new Intent().setClass(this, UriPickerActivity.class);
 		intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, pickerType);
 		startActivityForResult(intent, requestCode);
@@ -693,6 +698,7 @@ public class ConferenceActivity extends ListActivity implements
 		if (resultCode != RESULT_OK) {
 			callToTransfer = null;
 			Toast.makeText(this, R.string.uri_picking_canceled, Toast.LENGTH_LONG).show();
+			eventuallyResumeConfOrCallOnPickerReturn(true);
 			return;
 		}
 
@@ -701,6 +707,7 @@ public class ConferenceActivity extends ListActivity implements
 		case ID_ADD_CALL:
 			try {
 				lc().invite(uri);
+				eventuallyResumeConfOrCallOnPickerReturn(false);
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 				Toast.makeText(this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
@@ -708,11 +715,28 @@ public class ConferenceActivity extends ListActivity implements
 			break;
 		case ID_TRANSFER_CALL:
 			lc().transferCall(callToTransfer, uri);
+			// don't re-enter conference if call to transfer from conference
+			boolean doResume = !callToTransfer.isInConference();
+			// don't resume call if it is the call to transfer
+			doResume &= activateCallOnReturnFromUriPicker != callToTransfer;
+			eventuallyResumeConfOrCallOnPickerReturn(doResume);
 			Toast.makeText(this, R.string.transfer_started, Toast.LENGTH_LONG).show();
 			break;
 		default:
 			throw new RuntimeException("unhandled request code " + requestCode);
 		}
+	}
+
+	private void eventuallyResumeConfOrCallOnPickerReturn(boolean doCallConfResuming) {
+		if (doCallConfResuming) {
+			if (activateCallOnReturnFromUriPicker != null) {
+				lc().resumeCall(activateCallOnReturnFromUriPicker);
+			} else if (enterConferenceOnReturnFromUriPicker) {
+				lc().enterConference();
+			}
+		}
+		activateCallOnReturnFromUriPicker = null;
+		enterConferenceOnReturnFromUriPicker = false;
 	}
 
 	@Override
