@@ -54,9 +54,9 @@ public class VideoCallActivity extends Activity {
 	private Handler refreshHandler = new Handler();
 	
 	AndroidVideoWindowImpl androidVideoWindowImpl;
+	private Runnable mCallQualityUpdater;
 
 	public void onCreate(Bundle savedInstanceState) {		
-		launched = true;
 		Log.d("onCreate VideoCallActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);
@@ -117,28 +117,6 @@ public class VideoCallActivity extends Activity {
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
 		
-		Runnable runnable = new Runnable() {
-			public void run() {
-				while (launched && LinphoneManager.getLc().isIncall())
-				{
-					refreshHandler.post(new Runnable() {
-						public void run() {
-							int oldQuality = 0;
-							float newQuality = LinphoneManager.getLc().getCurrentCall().getCurrentQuality();
-							if ((int) newQuality != oldQuality)
-								updateQualityOfSignalIcon(newQuality);
-						}
-					});
-					
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		};
-		new Thread(runnable).start();
 	}
 	
 	void updateQualityOfSignalIcon(float quality)
@@ -189,6 +167,24 @@ public class VideoCallActivity extends Activity {
 		super.onResume();
 		if (mVideoViewReady != null)
 			((GLSurfaceView)mVideoViewReady).onResume();
+		launched=true;
+		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
+			LinphoneCall mCurrentCall=LinphoneManager.getLc().getCurrentCall();
+			public void run() {
+				if (mCurrentCall==null){
+					mCallQualityUpdater=null;
+					return;
+				}
+				int oldQuality = 0;
+				float newQuality = mCurrentCall.getCurrentQuality();
+				if ((int) newQuality != oldQuality){
+					updateQualityOfSignalIcon(newQuality);
+				}
+				if (launched){
+					refreshHandler.postDelayed(this, 1000);
+				}else mCallQualityUpdater=null;
+			}
+		},1000);
 	}
 
 
@@ -278,17 +274,24 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		androidVideoWindowImpl.release();
-		launched = false;
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-		Log.d("onPause VideoCallActivity");
-		LinphoneManager.getLc().setVideoWindow(null);
+		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(), ", changingConf:", getChangingConfigurations());
+		
+		launched=false;
+		synchronized (androidVideoWindowImpl) {
+			/* this call will destroy native opengl renderer
+			 * which is used by androidVideoWindowImpl
+			 */
+			LinphoneManager.getLc().setVideoWindow(null);
+		}
+		
 		LinphoneManager.getLc().setPreviewWindow(null);
 		
-		if (!isFinishing() && LinphoneManager.getLc().isIncall()) {
+		if (LinphoneManager.getLc().isIncall()) {
 			// we're getting paused for real
 			if (getChangingConfigurations() == 0) {
 				LinphoneManager.getInstance().sendStaticImage(true);
@@ -297,7 +300,10 @@ public class VideoCallActivity extends Activity {
 				LinphoneManager.getLc().updateCall(LinphoneManager.getLc().getCurrentCall(), null);
 			}
 		}
-		
+		if (mCallQualityUpdater!=null){
+			refreshHandler.removeCallbacks(mCallQualityUpdater);
+			mCallQualityUpdater=null;
+		}
 		
 		if (mWakeLock.isHeld())	mWakeLock.release();
 		super.onPause();

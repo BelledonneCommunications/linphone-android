@@ -155,6 +155,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		if (numpad != null)
 			numpad.setAddressWidget(mAddress);
 
+		// call to super must be done after all fields are initialized
+		// because it may call this.enterIncallMode
+		super.onCreate(savedInstanceState);
+		
 		checkIfOutgoingCallIntentReceived();
 
 		waitHelper = new LinphoneManagerWaitHelper(this, this);

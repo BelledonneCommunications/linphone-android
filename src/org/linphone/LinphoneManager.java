@@ -678,7 +678,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	private ListenerDispatcher listenerDispatcher = new ListenerDispatcher(simpleListeners);
-	private LinphoneCall.State mCurrentCallState;
+	private LinphoneCall ringingCall;
 
 	private MediaPlayer mRingerPlayer;
 	private Vibrator mVibrator;
@@ -739,17 +739,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			wl.acquire(10000);
 
 			if (mLc.getCallsNb() == 1) {
+				ringingCall = call;
 				startRinging();
 				// otherwise there is the beep
 			}
-		}
-
-		if (mCurrentCallState == IncomingReceived) { 
+		} else if (call == ringingCall && isRinging) { 
 			//previous state was ringing, so stop ringing
-			if (isRinging) {
-				stopRinging();
-				routeAudioToReceiver();
-			}
+			stopRinging();
+			routeAudioToReceiver();
 		}
 
 		if (state == CallEnd || state == Error) {
@@ -783,7 +780,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
 		}
-		mCurrentCallState=state;
 		listenerDispatcher.onCallStateChanged(call, state, message);
 	}
 
@@ -890,7 +886,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
-//		if (isRinging) stopRinging();     // FIXME was this line useful?
 		mAudioManager.setMode(MODE_IN_CALL);
 	}
 

@@ -273,6 +273,18 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		menu.findItem(R.id.menu_about).setVisible(useMenuAbout);
 		return true;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null)
+			return true;
+		// hide settings menu when in call
+		// otherwise, exiting the 'setting' menu will cause exosip deletion/recreation...
+		menu.findItem(R.id.menu_settings).setVisible(!lc.isIncall());
+		
+		return super.onPrepareOptionsMenu(menu);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
