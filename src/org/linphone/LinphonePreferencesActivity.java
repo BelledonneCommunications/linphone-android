@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -229,6 +230,12 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		if (!isFinishing()) return;
 
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		
+		if (lc != null && (lc.isInComingInvitePending() || lc.isIncall())) {
+			Log.w("Call in progress => settings not applied");
+			return;
+		}
 
 		try {
 			LinphoneManager.getInstance().initFromConf(getApplicationContext());
