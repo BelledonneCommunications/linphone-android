@@ -10,6 +10,7 @@ LINPHONE_VIDEO=0
 BUILD_X264=0
 endif
 
+BUILD_SRTP=0
 
 ##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
@@ -20,6 +21,7 @@ endif
 
 ifeq ($(BUILD_SRTP), 1)
 SRTP_C_INCLUDE= \
+	$(linphone-root-dir)/submodules/externals/srtp \
 	$(linphone-root-dir)/submodules/externals/srtp/include \
 	$(linphone-root-dir)/submodules/externals/srtp/crypto/include
 endif

@@ -43,3 +43,6 @@
 [submodule "submodules/externals/libzrtpcpp"]
 	path = submodules/externals/libzrtpcpp
 	url = git://github.com/wernerd/ZRTPCPP.git
+[submodule "submodules/externals/srtp"]
+	path = submodules/externals/srtp
+	url = git://git.linphone.org/srtp.git

@@ -104,7 +104,12 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void enableEchoLimiter(long nativePtr2, boolean val);
 	private native int setVideoDevice(long nativePtr2, int id);
 	private native int getVideoDevice(long nativePtr2);
-
+	private native String getMediaEncryption(long nativePtr);
+	private native void setMediaEncryption(long nativePtr, String menc);
+	private native boolean isMediaEncryptionMandatory(long nativePtr);
+	private native void setMediaEncryptionMandatory(long nativePtr, boolean yesno);
+	
+	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
 		nativePtr = newLinphoneCore(listener,userConfig.getCanonicalPath(),factoryConfig.getCanonicalPath(),userdata);
@@ -515,7 +520,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean isInConference() {
 		// TODO Auto-generated method stub
 		return false;
-	}
+	} 
 	public void leaveConference() {
 		// TODO Auto-generated method stub
 		
@@ -544,5 +549,18 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public LinphoneCall findCallFromUri(String uri) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public String getMediaEncryption() {
+		return getMediaEncryption(nativePtr);
+	}
+	public boolean isMediaEncryptionMandatory() {
+		return isMediaEncryptionMandatory(nativePtr);
+	}
+	public void setMediaEncryption(String menc) {
+		setMediaEncryption(nativePtr, menc);		
+	}
+	public void setMediaEncryptionMandatory(boolean yesno) {
+		setMediaEncryptionMandatory(nativePtr, yesno);
 	}
 }
