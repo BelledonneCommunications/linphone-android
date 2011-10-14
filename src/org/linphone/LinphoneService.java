@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
@@ -34,7 +36,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -80,7 +81,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 	
-	private NotificationManager mNotificationMgr;
 	private final static int NOTIF_ID=1;
 
 	private Notification mNotif;
@@ -115,7 +115,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		dumpDeviceInformation();
 		dumpInstalledLinphoneInformation();
 
-		mNotificationMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNotif = new Notification(R.drawable.status_level, "", System.currentTimeMillis());
 		mNotif.iconLevel=IC_LEVEL_ORANGE;
 		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
@@ -123,13 +123,103 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
 		mNotif.setLatestEventInfo(this, notificationTitle,"", mNotifContentIntent);
-		mNotificationMgr.notify(NOTIF_ID, mNotif);		
-	
 	
 		LinphoneManager.createAndStart(this, this);
 		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
 		instance = this; // instance is ready once linphone manager has been created
+
+
+		// Retrieve methods to publish notification and keep Android
+		// from killing us and keep the audio quality high.
+		if (Version.sdkStrictlyBelow(Version.API05_ECLAIR_20)) {
+			try {
+				mSetForeground = getClass().getMethod("setForeground", mSetFgSign);
+			} catch (NoSuchMethodException e) {
+				Log.e(e, "Couldn't find foreground method");
+			}
+		} else {
+			try {
+				mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
+				mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
+			} catch (NoSuchMethodException e) {
+				Log.e(e, "Couldn't find startGoreground or stopForeground");
+			}
+		}
+
+		startForegroundCompat(NOTIF_ID, mNotif);
 	}
+
+
+
+	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
+	private static final Class<?>[] mStartFgSign = new Class[] {
+		int.class, Notification.class};
+	private static final Class<?>[] mStopFgSign = new Class[] {boolean.class};
+
+	private NotificationManager mNM;
+	private Method mSetForeground;
+	private Method mStartForeground;
+	private Method mStopForeground;
+	private Object[] mSetForegroundArgs = new Object[1];
+	private Object[] mStartForegroundArgs = new Object[2];
+	private Object[] mStopForegroundArgs = new Object[1];
+
+	void invokeMethod(Method method, Object[] args) {
+		try {
+			method.invoke(this, args);
+		} catch (InvocationTargetException e) {
+			// Should not happen.
+			Log.w(e, "Unable to invoke method");
+		} catch (IllegalAccessException e) {
+			// Should not happen.
+			Log.w(e, "Unable to invoke method");
+		}
+	}
+
+	/**
+	 * This is a wrapper around the new startForeground method, using the older
+	 * APIs if it is not available.
+	 */
+	void startForegroundCompat(int id, Notification notification) {
+		// If we have the new startForeground API, then use it.
+		if (mStartForeground != null) {
+			mStartForegroundArgs[0] = Integer.valueOf(id);
+			mStartForegroundArgs[1] = notification;
+			invokeMethod(mStartForeground, mStartForegroundArgs);
+			return;
+		}
+
+		// Fall back on the old API.
+		if (mSetForeground != null) {
+			mSetForegroundArgs[0] = Boolean.TRUE;
+			invokeMethod(mSetForeground, mSetForegroundArgs);
+			// continue
+		}
+
+		mNM.notify(id, notification);
+	}
+
+	/**
+	 * This is a wrapper around the new stopForeground method, using the older
+	 * APIs if it is not available.
+	 */
+	void stopForegroundCompat(int id) {
+		// If we have the new stopForeground API, then use it.
+		if (mStopForeground != null) {
+			mStopForegroundArgs[0] = Boolean.TRUE;
+			invokeMethod(mStopForeground, mStopForegroundArgs);
+			return;
+		}
+
+		// Fall back on the old API.  Note to cancel BEFORE changing the
+		// foreground state, since we could be killed at that point.
+		mNM.cancel(id);
+		if (mSetForeground != null) {
+			mSetForegroundArgs[0] = Boolean.FALSE;
+			invokeMethod(mSetForeground, mSetForegroundArgs);
+		}
+	}
+
 
 
 
@@ -169,7 +259,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 		
 		mNotif.setLatestEventInfo(this, notificationTitle, text, mNotifContentIntent);
-		mNotificationMgr.notify(NOTIF_ID, mNotif);
+		mNM.notify(NOTIF_ID, mNotif);
 	}
 
 
@@ -183,10 +273,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+	    // Make sure our notification is gone.
+	    stopForegroundCompat(NOTIF_ID);
+
 		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, null, OnlineStatus.Offline);
 		LinphoneManager.destroy(this);
-
-		mNotificationMgr.cancel(NOTIF_ID);
 		instance=null;
 	}
 

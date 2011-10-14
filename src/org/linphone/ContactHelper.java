@@ -56,7 +56,7 @@ public final class ContactHelper {
 
 	public boolean query() {
 		boolean succeeded;
-		if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
 			ContactHelperNew helper = new ContactHelperNew();
 			succeeded = helper.queryNewContactAPI();
 		} else {

@@ -118,7 +118,7 @@ public final class LinphoneUtils {
 			if (bm == null) view.setImageResource(notFoundResource);
 			view.setImageBitmap(bm);
 		} else {
-			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
+			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
 				view.setImageURI(uri);
 			} else {
 				Bitmap bitmap = android.provider.Contacts.People.loadContactPhoto(c, uri, notFoundResource, null);

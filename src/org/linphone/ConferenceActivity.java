@@ -485,7 +485,7 @@ public class ConferenceActivity extends ListActivity implements
 		public View getView(int position, View v, ViewGroup parent) {
 			Log.i("ConferenceActivity.getView(",position,") out of ", linphoneCalls.size());
 			if (v == null) {
-				if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_20)) {
+				if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
 					v = getLayoutInflater().inflate(R.layout.conf_callee, null);
 				} else {
 					v = getLayoutInflater().inflate(R.layout.conf_callee_older_devices, null);
