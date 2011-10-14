@@ -1,9 +1,9 @@
 [submodule "linphone"]
 	path = submodules/linphone
-	url = git://git.savannah.nongnu.org/linphone.git
+	url = git://git.linphone.org/linphone.git
 [submodule "submodules/externals/osip"]
 	path = submodules/externals/osip
-	url = git://git.savannah.gnu.org/osip.git
+	url = git://git.linphone.org/osip.git
 [submodule "submodules/externals/exosip"]
 	path = submodules/externals/exosip
 	url = git://git.linphone.org/exosip.git
