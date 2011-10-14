@@ -86,7 +86,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	
 	private PowerManager.WakeLock mWakeLock;
 	private SharedPreferences mPref;
-	private LinphoneCall mCurrentCall;
 	private boolean useIncallActivity;
 	private boolean useVideoActivity;
 	private boolean useConferenceActivity;
@@ -442,7 +441,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 
 	public void onCallStateChanged(LinphoneCall call, State state, String message) {
-		Log.i("OnCallStateChanged: call=", call, ", state=", state, ", message=", message, ", currentCall=", mCurrentCall);
+		Log.i("OnCallStateChanged: call=", call, ", state=", state, ", message=", message);
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc==null) {
 			/* we are certainly exiting, ignore then.*/
@@ -450,12 +449,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		}
 		
 		if (state==LinphoneCall.State.OutgoingInit){
-			mCurrentCall=call;
 			call.enableCamera(LinphoneManager.getInstance().shareMyCamera());
 			enterIncallMode(lc);
 			LinphoneActivity.instance().startOrientationSensor();
 		}else if (state==LinphoneCall.State.IncomingReceived){
-			mCurrentCall=call;
 			callPending(call);
 			call.enableCamera(LinphoneManager.getInstance().shareMyCamera());
 			LinphoneActivity.instance().startOrientationSensor();
@@ -469,13 +466,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 				if (mWakeLock.isHeld()) mWakeLock.release();
 				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
-				mCurrentCall=null;
 			}
 		}else if (state==LinphoneCall.State.CallEnd){
 			if (lc.getCallsNb() == 0){
 				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
-				mCurrentCall=null;
 			}
 		}
 
