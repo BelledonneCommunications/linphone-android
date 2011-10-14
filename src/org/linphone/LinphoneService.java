@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.linphone.LinphoneManager.LinphoneServiceListener;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
 import org.linphone.core.LinphoneCall.State;
@@ -257,6 +258,15 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 				// Do not call if video activity already launched as it would cause a pause() of the launched one
 				// and a race condition with capture surfaceview leading to a crash
 				LinphoneActivity.instance().startVideoActivity();
+			}
+			else if (VideoCallActivity.launched && LinphoneActivity.isInstanciated()
+					&& !call.getCurrentParamsCopy().getVideoEnabled()) {
+				LinphoneActivity.instance().finishVideoActivity();
+			}
+		} else if  (state == LinphoneCall.State.CallUpdatedByRemote) {
+			if (VideoCallActivity.launched && LinphoneActivity.isInstanciated()
+					&& !call.getCurrentParamsCopy().getVideoEnabled()) {
+				LinphoneActivity.instance().finishVideoActivity();
 			}
 		}
 
