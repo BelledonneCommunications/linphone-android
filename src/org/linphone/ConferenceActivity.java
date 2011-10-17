@@ -561,7 +561,7 @@ public class ConferenceActivity extends ListActivity implements
 			setVisibility(removeFromConfButton, false);
 			
 			final int numberOfCalls = linphoneCalls.size();
-			boolean showAddVideo = !isInConference && !showUnhook && numberOfCalls == 1
+			boolean showAddVideo = State.StreamsRunning == state && !isInConference
 					&& Version.isVideoCapable() && LinphoneManager.getInstance().isVideoEnabled();
 			setVisibility(v, R.id.addVideo, showAddVideo);
 
