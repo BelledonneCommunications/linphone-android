@@ -112,7 +112,7 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 		if (getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call)) {
 			mNumberView.setText(address.asStringUriOnly());
 		} else {
-			mNumberView.setText("");
+			mNumberView.setText(address.getUserName());
 		}
 	}
 

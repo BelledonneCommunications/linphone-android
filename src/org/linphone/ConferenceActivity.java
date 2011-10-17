@@ -497,11 +497,9 @@ public class ConferenceActivity extends ListActivity implements
 
 			LinphoneAddress address = call.getRemoteAddress();
 			String mainText = address.getDisplayName();
-			String complText;
+			String complText = address.getUserName();
 			if ((getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call))) {
-				complText = address.getUserName() + "@" + address.getDomain();
-			} else {
-				complText = address.getUserName();
+				complText += "@" + address.getDomain();
 			}
 			TextView mainTextView = (TextView) v.findViewById(R.id.name);
 			TextView complTextView = (TextView) v.findViewById(R.id.address);
