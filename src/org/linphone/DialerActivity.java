@@ -87,7 +87,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	private PowerManager.WakeLock mWakeLock;
 	private SharedPreferences mPref;
 	private boolean useIncallActivity;
-	private boolean useVideoActivity;
 	private boolean useConferenceActivity;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
@@ -109,7 +108,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 		useIncallActivity = getResources().getBoolean(R.bool.use_incall_activity);
 		useConferenceActivity = getResources().getBoolean(R.bool.use_conference_activity);
-		useVideoActivity = getResources().getBoolean(R.bool.use_video_activity);
 		// Don't use Linphone Manager in the onCreate as it takes time in LinphoneService to initialize it.
 
 		mPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -288,7 +286,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	}
 	
 	
-	private void exitCallMode(LinphoneCall call) {
+	private void exitCallMode() {
 		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
 			finishActivity(INCOMING_CALL_ACTIVITY);
 		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
@@ -314,14 +312,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		mAddressLayout.setVisibility(View.VISIBLE);
 
 		mHangup.setEnabled(false);
-
-
-		if (useVideoActivity && LinphoneManager.getLc().isVideoEnabled()
-				&& VideoCallActivity.call == call) {
-			LinphoneActivity.instance().finishVideoActivity(); 
-			BandwidthManager.getInstance().setUserRestriction(false);
-			LinphoneManager.getInstance().resetCameraFromPreferences();
-		}
 
 		if (mWakeLock.isHeld()) mWakeLock.release();
 		LinphoneManager.stopProximitySensorForActivity(LinphoneActivity.instance());
@@ -377,7 +367,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 						boolean prefAutoShareMyCamera = mPref.getBoolean(getString(key), false);
 						boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
 
-						LinphoneManager.getLc().getCurrentCall().enableCamera(prefAutoShareMyCamera);
+						LinphoneManager.getLc().getCurrentCall().enableCamera(!(videoMuted || useConferenceActivity));
 					}
 				}
 			});
@@ -465,12 +455,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 			showToast(R.string.call_error, message);
 			if (lc.getCallsNb() == 0){
 				if (mWakeLock.isHeld()) mWakeLock.release();
-				exitCallMode(call);
+				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
 			}
 		}else if (state==LinphoneCall.State.CallEnd){
 			if (lc.getCallsNb() == 0){
-				exitCallMode(call);
+				exitCallMode();
 				LinphoneActivity.instance().stopOrientationSensor();
 			}
 		}

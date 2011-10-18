@@ -35,8 +35,8 @@ public interface LinphoneSimpleListener {
 		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
 		void onDisplayStatus(String message);
-		void onAlreadyInVideoCall();
 		void onCallEncryptionChanged(LinphoneCall call, boolean encrypted, String authenticationToken);
+		void onAlreadyInVideoCall();
 		
 	}
 	
@@ -48,8 +48,12 @@ public interface LinphoneSimpleListener {
 		void onCallStateChanged(LinphoneCall call, State state, String message);
 	}
 
-	public static interface LinphoneAudioChangedListener extends LinphoneSimpleListener {
+	public static interface LinphoneOnAudioChangedListener extends LinphoneSimpleListener {
 		public enum AudioState {EARPIECE, SPEAKER}
 		void onAudioStateChanged(AudioState state);
+	}
+
+	public static interface LinphoneOnVideoCallReadyListener extends LinphoneSimpleListener {
+		void onRequestedVideoCallReady(LinphoneCall call);
 	}
 }

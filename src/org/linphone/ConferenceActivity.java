@@ -27,8 +27,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
-import org.linphone.LinphoneSimpleListener.LinphoneAudioChangedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnVideoCallReadyListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
@@ -65,8 +66,10 @@ import android.widget.ToggleButton;
  */
 public class ConferenceActivity extends ListActivity implements
 		LinphoneManagerReadyListener,
-		LinphoneAudioChangedListener,
-		LinphoneOnCallStateChangedListener, Comparator<LinphoneCall>,
+		LinphoneOnAudioChangedListener,
+		LinphoneOnVideoCallReadyListener,
+		LinphoneOnCallStateChangedListener,
+		Comparator<LinphoneCall>,
 		OnClickListener {
 
 	private View confHeaderView;
@@ -112,6 +115,9 @@ public class ConferenceActivity extends ListActivity implements
 	private LinphoneManagerWaitHelper waitHelper;
 	private ToggleButton mMuteMicButton;
 	private ToggleButton mSpeakerButton;
+	private boolean useVideoActivity;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.conferencing);
@@ -133,6 +139,7 @@ public class ConferenceActivity extends ListActivity implements
 
 		waitHelper = new LinphoneManagerWaitHelper(this, this);
 		waitHelper.doManagerDependentOnCreate();
+		useVideoActivity = getResources().getBoolean(R.bool.use_video_activity);
 //		workaroundStatusBarBug();
 		super.onCreate(savedInstanceState);
 	}
@@ -429,8 +436,7 @@ public class ConferenceActivity extends ListActivity implements
 				lc().removeFromConference(call);
 				break;
 			case R.id.addVideo:
-				VideoCallActivity.call = call;
-				LinphoneActivity.instance().startVideoActivity();
+				LinphoneManager.getInstance().addVideo();
 				break;
 			default:
 				throw new RuntimeException("unknown id " + v.getId());
@@ -570,7 +576,9 @@ public class ConferenceActivity extends ListActivity implements
 			
 			final int numberOfCalls = linphoneCalls.size();
 			boolean showAddVideo = State.StreamsRunning == state && !isInConference
-					&& Version.isVideoCapable() && LinphoneManager.getInstance().isVideoEnabled();
+					&& useVideoActivity
+					&& Version.isVideoCapable()
+					&& LinphoneManager.getInstance().isVideoEnabled();
 			View addVideoButton = v.findViewById(R.id.addVideo);
 			setVisibility(addVideoButton, showAddVideo);
 
@@ -778,6 +786,11 @@ public class ConferenceActivity extends ListActivity implements
 				}
 			}
 		});
+	}
+
+	@Override
+	public void onRequestedVideoCallReady(LinphoneCall call) {
+		LinphoneActivity.instance().startVideoActivity();
 	}
 
 	/*

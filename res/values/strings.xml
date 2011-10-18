@@ -108,9 +108,9 @@
 	<string name="menu_videocall_terminate_call_title">Terminate call</string>
     <string name="pref_video_settings_title">Video settings</string>
     <string name="pref_video_automatically_share_my_video_title">Share my camera</string>
-    <string name="pref_video_automatically_share_my_video">Automatically send my camera on incoming calls</string>
-    <string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>
-    <string name="pref_video_initiate_call_with_video">Always send my camera on outgoing calls</string>
+    <string name="pref_video_automatically_share_my_video">Send my camera on video capable calls</string>
+    <string name="pref_video_initiate_call_with_video_title">Initiate video capable calls</string>
+    <string name="pref_video_initiate_call_with_video">Disable to remove negotiation of video codecs for outgoing calls</string>
     <string name="pref_video_enable_title">Enable Video</string>
     <string name="pref_escape_plus">Replace + by 00</string>
     <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>

@@ -46,9 +46,9 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.LinphoneSimpleListener.LinphoneAudioChangedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
-import org.linphone.LinphoneSimpleListener.LinphoneAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -199,7 +199,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(speakerOn); 
 		}
-		for (LinphoneAudioChangedListener listener : getSimpleListeners(LinphoneAudioChangedListener.class)) {
+		for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
 			listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
 		}
 	}
@@ -917,7 +917,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public boolean shareMyCamera() {
-		return mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
+		return isVideoEnabled() && mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
@@ -953,11 +953,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		e.commit();
 	}
 
-	public void addVideo() {
-		if (!LinphoneManager.getLc().isIncall()) return;
+	private LinphoneCall requestedVideoCall;
+	public boolean addVideo() {
+		requestedVideoCall = mLc.getCurrentCall();
+		if (requestedVideoCall == null) return false;
+
 		if (!reinviteWithVideo()) {
 			listenerDispatcher.onAlreadyInVideoCall();
 		}
+		return true;
 	}
 	
 	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
@@ -1129,8 +1133,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		public void onCallStateChanged(LinphoneCall call, State state,
 				String message) {
+			if (state == State.CallEnd && call == requestedVideoCall) {
+				requestedVideoCall = null; // drop reference
+			}
 			if (state == State.CallEnd && mLc.getCallsNb() == 0) {
 				routeAudioToReceiver(true);
+			}
+			if (state == State.StreamsRunning && call == requestedVideoCall && call.getCurrentParamsCopy().getVideoEnabled()) {
+				for (LinphoneOnVideoCallReadyListener l : getSimpleListeners(LinphoneOnVideoCallReadyListener.class)) {
+					l.onRequestedVideoCallReady(call);
+				}
+				requestedVideoCall = null;
 			}
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {

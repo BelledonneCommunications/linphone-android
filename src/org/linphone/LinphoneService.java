@@ -342,6 +342,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		} else if (state == LinphoneCall.State.StreamsRunning) {
 			if (Version.isVideoCapable() 
+					&& getResources().getBoolean(R.bool.autostart_video_activity)
 					&& getResources().getBoolean(R.bool.use_video_activity)
 					&& !VideoCallActivity.launched && LinphoneActivity.isInstanciated()
 					&& call.getCurrentParamsCopy().getVideoEnabled()) {

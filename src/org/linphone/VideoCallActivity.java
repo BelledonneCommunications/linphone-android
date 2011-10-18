@@ -20,8 +20,10 @@ package org.linphone;
 
 
 
+import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
@@ -46,11 +48,11 @@ import android.widget.ImageView;
  * @author Guillaume Beraudo
  *
  */
-public class VideoCallActivity extends Activity {
+public class VideoCallActivity extends Activity implements LinphoneOnCallStateChangedListener {
 	private SurfaceView mVideoViewReady;
 	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
-	public static LinphoneCall call;
+	private LinphoneCall videoCall;
 	private WakeLock mWakeLock;
 	private Handler refreshHandler = new Handler();
 	
@@ -106,13 +108,11 @@ public class VideoCallActivity extends Activity {
 		// Before creating the graph, the orientation must be known to LC => this is done here
 		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
 
-		if (LinphoneManager.getLc().isIncall()) {
-			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-			if (call != null) {
-				updatePreview(call.cameraEnabled());
-			}
+		videoCall = LinphoneManager.getLc().getCurrentCall();
+		if (videoCall != null) {
+			updatePreview(videoCall.cameraEnabled());
 		}
-		
+
 			
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
@@ -169,6 +169,7 @@ public class VideoCallActivity extends Activity {
 		if (mVideoViewReady != null)
 			((GLSurfaceView)mVideoViewReady).onResume();
 		launched=true;
+		LinphoneManager.getInstance().addListener(this);
 		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
 			LinphoneCall mCurrentCall=LinphoneManager.getLc().getCurrentCall();
 			public void run() {
@@ -281,8 +282,9 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(), ", changingConf:", getChangingConfigurations());
+		LinphoneManager.getInstance().removeListener(this);
 		if (isFinishing()) {
-			call = null; // release reference
+			videoCall = null; // release reference
 		}
 		LinphoneManager.getInstance().restoreUserRequestedSpeaker();
 		launched=false;
@@ -313,5 +315,15 @@ public class VideoCallActivity extends Activity {
 		super.onPause();
 		if (mVideoViewReady != null)
 			((GLSurfaceView)mVideoViewReady).onPause();
+	}
+
+	@Override
+	public void onCallStateChanged(LinphoneCall call, State state,
+			String message) {
+		if (call == videoCall && state == State.CallEnd) {
+			BandwidthManager.getInstance().setUserRestriction(false);
+			LinphoneManager.getInstance().resetCameraFromPreferences();
+			finish();
+		}
 	}
 }
