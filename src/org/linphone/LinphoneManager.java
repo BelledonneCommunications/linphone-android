@@ -96,6 +96,7 @@ import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -158,6 +159,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
+		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+		gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 	}
 	
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -752,7 +755,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		listenerDispatcher.onRegistrationStateChanged(state, message);
 	}
 
-
+	public static boolean gsmIdle;
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("new state [",state,"]");
 		if (state == IncomingReceived && !call.equals(lc.getCurrentCall())) {
@@ -764,6 +767,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == IncomingReceived) {
+			if (!gsmIdle) {
+				mLc.terminateCall(call);
+			}
 			// Brighten screen for at least 10 seconds
 			WakeLock wl = mPowerManager.newWakeLock(
 					PowerManager.ACQUIRE_CAUSES_WAKEUP

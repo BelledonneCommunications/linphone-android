@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.Log;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,15 +35,22 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+
+
 		final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
 		if (TelephonyManager.EXTRA_STATE_RINGING.equals(extraState) || TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
+			LinphoneManager.gsmIdle = false;
 			if (LinphoneManager.isInstanciated()) {
-				LinphoneManager.getLc().pauseAllCalls();
+				Log.i("GSM call state changed but manager not instantiated");
+				return;
 			}
+			LinphoneManager.getLc().pauseAllCalls();
+        } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
+        	LinphoneManager.gsmIdle = true;
         }
 		
-		// TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)
+		 
 		// do nothing
 	}
 
