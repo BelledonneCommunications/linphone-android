@@ -116,11 +116,14 @@ public class ConferenceActivity extends ListActivity implements
 	private ToggleButton mMuteMicButton;
 	private ToggleButton mSpeakerButton;
 	private boolean useVideoActivity;
-
+	private int multipleCallsLimit;
+	private boolean allowTransfers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.conferencing);
+
+		allowTransfers = getResources().getBoolean(R.bool.allow_transfers);
 
 		confHeaderView = findViewById(R.id.conf_header);
 		confHeaderView.setOnClickListener(this);
@@ -129,7 +132,11 @@ public class ConferenceActivity extends ListActivity implements
 
 		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
 		findViewById(R.id.conf_simple_merge).setOnClickListener(this);
-		findViewById(R.id.conf_simple_transfer).setOnClickListener(this);
+		View transferView = findViewById(R.id.conf_simple_transfer);
+		transferView.setOnClickListener(this);
+		if (!allowTransfers) {
+			transferView.setVisibility(View.GONE);
+		}
 		findViewById(R.id.conf_simple_permute).setOnClickListener(this);
 
 		mMuteMicButton = (ToggleButton) findViewById(R.id.toggleMuteMic);
@@ -140,6 +147,7 @@ public class ConferenceActivity extends ListActivity implements
 		waitHelper = new LinphoneManagerWaitHelper(this, this);
 		waitHelper.doManagerDependentOnCreate();
 		useVideoActivity = getResources().getBoolean(R.bool.use_video_activity);
+
 //		workaroundStatusBarBug();
 		super.onCreate(savedInstanceState);
 	}
@@ -150,6 +158,7 @@ public class ConferenceActivity extends ListActivity implements
 		setListAdapter(new CalleeListAdapter(calls));
 		
 		findViewById(R.id.incallHang).setOnClickListener(this);
+		multipleCallsLimit = lc().getMaxCalls();
 	}
 	@Override
 	public void onResumeWhenManagerReady() {
@@ -162,11 +171,19 @@ public class ConferenceActivity extends ListActivity implements
 			adapter.linphoneCalls.clear();
 			adapter.linphoneCalls.addAll(getInitialCalls());
 		}
-		adapter.notifyDataSetInvalidated();
-		adapter.notifyDataSetChanged();
+		recreateActivity(adapter);
 		LinphoneManager.startProximitySensorForActivity(this);
 		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
 		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
+
+		if (multipleCallsLimit > 0) {
+			updateAddCallButton();
+		}
+	}
+
+	private void updateAddCallButton() {
+		boolean limitReached = lc().getCallsNb() >= multipleCallsLimit;
+		findViewById(R.id.addCall).setVisibility(limitReached ? GONE : VISIBLE);
 	}
 
 	@Override
@@ -464,8 +481,9 @@ public class ConferenceActivity extends ListActivity implements
 		}
 
 		private boolean aConferenceIsPossible() {
-			if (lc().getCallsNb() < 2)
+			if (lc().getCallsNb() < 2) {
 				return false;
+			}
 			int count = 0;
 			for (LinphoneCall call : linphoneCalls) {
 				final LinphoneCall.State state = call.getState();
@@ -595,14 +613,14 @@ public class ConferenceActivity extends ListActivity implements
 			unhookCallButton.setOnClickListener(l);
 			removeFromConfButton.setOnClickListener(l);
 			addVideoButton.setOnClickListener(l);
-
+			
 			v.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					View content = getLayoutInflater().inflate(R.layout.conf_choices_dialog, null);
 					Dialog dialog = new AlertDialog.Builder(ConferenceActivity.this).setView(content).create();
 					OnClickListener l = new CallActionListener(call, dialog);
-					enableView(content, R.id.transfer_existing, l, !isInConference && numberOfCalls >=2);
-					enableView(content, R.id.transfer_new, l, !isInConference);
+					enableView(content, R.id.transfer_existing, l, allowTransfers && !isInConference && numberOfCalls >=2);
+					enableView(content, R.id.transfer_new, l, allowTransfers && !isInConference);
 					enableView(content, R.id.remove_from_conference, l, isInConference);
 					enableView(content, R.id.merge_to_conference, l, showMergeToConf);
 					enableView(content, R.id.pause, l,!isInConference && showPause);
@@ -665,28 +683,29 @@ public class ConferenceActivity extends ListActivity implements
 				if (state == State.IncomingReceived || state == State.OutgoingRinging) {
 					if (!adapter.linphoneCalls.contains(call)) {
 						adapter.linphoneCalls.add(call);
-						Collections.sort(adapter.linphoneCalls,
-								ConferenceActivity.this);
-						adapter.notifyDataSetInvalidated();
-						adapter.notifyDataSetChanged();
+						Collections.sort(adapter.linphoneCalls,	ConferenceActivity.this);
+						recreateActivity(adapter);
 					} else {
-						Log.e("Call should not be in the call lists : " + stateStr);
+						Log.e("Call should not be in the call lists : ", stateStr);
 					}
 				} else if (state == State.Paused || state == State.PausedByRemote || state == State.StreamsRunning) {
-					Collections.sort(adapter.linphoneCalls,
-							ConferenceActivity.this);
+					Collections.sort(adapter.linphoneCalls,	ConferenceActivity.this);
 					adapter.notifyDataSetChanged();
 				} else if (state == State.CallEnd) {
 					adapter.linphoneCalls.remove(call);
-					Collections.sort(adapter.linphoneCalls,
-							ConferenceActivity.this);
-					adapter.notifyDataSetInvalidated();
-					adapter.notifyDataSetChanged();
+					Collections.sort(adapter.linphoneCalls, ConferenceActivity.this);
+					updateAddCallButton();
+					recreateActivity(adapter);
 				}
 
 				updateConfState();
 			}
 		});
+	}
+
+	private void recreateActivity(CalleeListAdapter adapter) {
+		adapter.notifyDataSetInvalidated();
+		adapter.notifyDataSetChanged();
 	}
 
 	public int compare(LinphoneCall c1, LinphoneCall c2) {

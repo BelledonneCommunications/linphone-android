@@ -583,4 +583,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setMediaEncryptionMandatory(boolean yesno) {
 		setMediaEncryptionMandatory(nativePtr, yesno);
 	}
+
+	private native int getMaxCalls(long nativePtr);
+	public int getMaxCalls() {
+		return getMaxCalls(nativePtr);
+	}
 }

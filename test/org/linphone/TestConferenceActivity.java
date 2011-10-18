@@ -320,6 +320,10 @@ public class TestConferenceActivity extends ConferenceActivity {
 			}
 			return null;
 		}
+		@Override
+		public int getMaxCalls() {
+			return 10;
+		}
 	}
 
 

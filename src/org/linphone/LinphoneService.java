@@ -123,7 +123,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
 		mNotif.setLatestEventInfo(this, notificationTitle,"", mNotifContentIntent);
-	
+
 		LinphoneManager.createAndStart(this, this);
 		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
 		instance = this; // instance is ready once linphone manager has been created
