@@ -46,7 +46,9 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.LinphoneSimpleListener.LinphoneAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.LinphoneSimpleListener.LinphoneAudioChangedListener.AudioState;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -177,6 +179,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
 	}
 	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
+		boolean different = isSpeakerOn() ^ speakerOn;
+		if (!different) {
+			Log.d("Skipping change audio route by the same route ",
+					speakerOn ? "speaker" : "earpiece");
+			return;
+		}
 		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 
@@ -191,6 +199,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else {
 			mAudioManager.setSpeakerphoneOn(speakerOn); 
 		}
+		for (LinphoneAudioChangedListener listener : getSimpleListeners(LinphoneAudioChangedListener.class)) {
+			listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
+		}
 	}
 	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
 		final LinphoneCall call = mLc.getCurrentCall();
@@ -202,8 +213,24 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-	
-	public void routeAudioToSpeaker() {
+	private static boolean sUserRequestedSpeaker;
+	public static final boolean isUserRequestedSpeaker() {return sUserRequestedSpeaker;}
+
+	public void restoreUserRequestedSpeaker() {
+		if (sUserRequestedSpeaker) {
+			routeAudioToSpeaker(false);
+		} else {
+			routeAudioToReceiver(false);
+		}
+	}
+	/**
+	 * 
+	 * @param isUserRequest true if the setting is permanent, otherwise it can be lost
+	 * 	eg: video activity imply speaker on, which is not a request from the user.
+	 * 	when the activity stops, the sound is routed to the previously user requested route.
+	 */
+	public void routeAudioToSpeaker(boolean isUserRequest) {
+		if (isUserRequest) sUserRequestedSpeaker = true;
 		routeAudioToSpeakerHelper(true);
 		if (mLc.isIncall()) {
 			/*disable EC, it is not efficient enough on speaker mode due to bad quality of speakers and saturation*/  
@@ -214,7 +241,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 	}
 
-	public void routeAudioToReceiver() {
+	/**
+	 * 
+	 * @param isUserRequest true if the setting is permanent, otherwise it can be lost
+	 * 	eg: video activity imply speaker on, which is not a request from the user.
+	 * 	when the activity stops, the sound is routed to the previously user requested route.
+	 */
+	public void routeAudioToReceiver(boolean isUserRequest) {
+		if (isUserRequest) sUserRequestedSpeaker = false;
 		routeAudioToSpeakerHelper(false);
 		if (mLc.isIncall()) {
 			//Restore default value
@@ -677,7 +711,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
 	}
 
-	private ListenerDispatcher listenerDispatcher = new ListenerDispatcher(simpleListeners);
+	private ListenerDispatcher listenerDispatcher = new ListenerDispatcher();
 	private LinphoneCall ringingCall;
 
 	private MediaPlayer mRingerPlayer;
@@ -746,7 +780,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else if (call == ringingCall && isRinging) { 
 			//previous state was ringing, so stop ringing
 			stopRinging();
-			routeAudioToReceiver();
 		}
 
 		if (state == CallEnd || state == Error) {
@@ -853,6 +886,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		isRinging = false;
 		// You may need to call galaxys audio hack after this method
+		boolean isUserRequest = false;
+		routeAudioToReceiver(isUserRequest);
 	}
 
 	
@@ -1067,21 +1102,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return getLc();
 	}
 
-	private static class ListenerDispatcher implements LinphoneServiceListener {
-		private LinphoneServiceListener serviceListener;
-		List<LinphoneSimpleListener> simpleListeners;
-		public ListenerDispatcher(List<LinphoneSimpleListener> simpleListeners) {
-			this.simpleListeners = simpleListeners; // yes, really keeps a reference, not a copy
+	@SuppressWarnings("unchecked")
+	private <T> List<T> getSimpleListeners(Class<T> clazz) {
+		List<T> list = new ArrayList<T>();
+		for (LinphoneSimpleListener l : simpleListeners) {
+			if (clazz.isInstance(l)) list.add((T) l);
 		}
+		return list;
+	}
 
-		@SuppressWarnings("unchecked")
-		private <T> List<T> getSimpleListeners(Class<T> clazz) {
-			List<T> list = new ArrayList<T>();
-			for (LinphoneSimpleListener l : simpleListeners) {
-				if (clazz.isInstance(l)) list.add((T) l);
-			}
-			return list;
-		}
+	private class ListenerDispatcher implements LinphoneServiceListener {
+		private LinphoneServiceListener serviceListener;
 
 		public void setServiceListener(LinphoneServiceListener s) {
 			this.serviceListener = s;
@@ -1098,6 +1129,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		public void onCallStateChanged(LinphoneCall call, State state,
 				String message) {
+			if (state == State.CallEnd && mLc.getCallsNb() == 0) {
+				routeAudioToReceiver(true);
+			}
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
 				l.onCallStateChanged(call, state, message);

@@ -50,6 +50,7 @@ public class VideoCallActivity extends Activity {
 	private SurfaceView mVideoViewReady;
 	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
+	public static LinphoneCall call;
 	private WakeLock mWakeLock;
 	private Handler refreshHandler = new Handler();
 	
@@ -280,7 +281,10 @@ public class VideoCallActivity extends Activity {
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(), ", changingConf:", getChangingConfigurations());
-		
+		if (isFinishing()) {
+			call = null; // release reference
+		}
+		LinphoneManager.getInstance().restoreUserRequestedSpeaker();
 		launched=false;
 		synchronized (androidVideoWindowImpl) {
 			/* this call will destroy native opengl renderer

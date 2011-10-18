@@ -288,7 +288,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	}
 	
 	
-	private void exitCallMode() {
+	private void exitCallMode(LinphoneCall call) {
 		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
 			finishActivity(INCOMING_CALL_ACTIVITY);
 		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
@@ -316,7 +316,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		mHangup.setEnabled(false);
 
 
-		if (useVideoActivity && LinphoneManager.getLc().isVideoEnabled()) {
+		if (useVideoActivity && LinphoneManager.getLc().isVideoEnabled()
+				&& VideoCallActivity.call == call) {
 			LinphoneActivity.instance().finishVideoActivity(); 
 			BandwidthManager.getInstance().setUserRestriction(false);
 			LinphoneManager.getInstance().resetCameraFromPreferences();
@@ -464,12 +465,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 			showToast(R.string.call_error, message);
 			if (lc.getCallsNb() == 0){
 				if (mWakeLock.isHeld()) mWakeLock.release();
-				exitCallMode();
+				exitCallMode(call);
 				LinphoneActivity.instance().stopOrientationSensor();
 			}
 		}else if (state==LinphoneCall.State.CallEnd){
 			if (lc.getCallsNb() == 0){
-				exitCallMode();
+				exitCallMode(call);
 				LinphoneActivity.instance().stopOrientationSensor();
 			}
 		}

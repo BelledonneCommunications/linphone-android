@@ -47,4 +47,9 @@ public interface LinphoneSimpleListener {
 	public static interface LinphoneOnCallStateChangedListener extends LinphoneSimpleListener {
 		void onCallStateChanged(LinphoneCall call, State state, String message);
 	}
+
+	public static interface LinphoneAudioChangedListener extends LinphoneSimpleListener {
+		public enum AudioState {EARPIECE, SPEAKER}
+		void onAudioStateChanged(AudioState state);
+	}
 }

@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
+import org.linphone.LinphoneSimpleListener.LinphoneAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -64,6 +65,7 @@ import android.widget.ToggleButton;
  */
 public class ConferenceActivity extends ListActivity implements
 		LinphoneManagerReadyListener,
+		LinphoneAudioChangedListener,
 		LinphoneOnCallStateChangedListener, Comparator<LinphoneCall>,
 		OnClickListener {
 
@@ -149,6 +151,10 @@ public class ConferenceActivity extends ListActivity implements
 		updateConfState();
 		updateSimpleControlButtons();
 		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
+		if (adapter.linphoneCalls.size() != lc().getCallsNb()) {
+			adapter.linphoneCalls.clear();
+			adapter.linphoneCalls.addAll(getInitialCalls());
+		}
 		adapter.notifyDataSetInvalidated();
 		adapter.notifyDataSetChanged();
 		LinphoneManager.startProximitySensorForActivity(this);
@@ -353,9 +359,9 @@ public class ConferenceActivity extends ListActivity implements
 			break;
 		case R.id.toggleSpeaker:
 			if (((ToggleButton) v).isChecked()) {
-				LinphoneManager.getInstance().routeAudioToSpeaker();
+				LinphoneManager.getInstance().routeAudioToSpeaker(true);
 			} else {
-				LinphoneManager.getInstance().routeAudioToReceiver();
+				LinphoneManager.getInstance().routeAudioToReceiver(true);
 			}
 			break;
 		default:
@@ -421,6 +427,10 @@ public class ConferenceActivity extends ListActivity implements
 				break;
 			case R.id.remove_from_conference:
 				lc().removeFromConference(call);
+				break;
+			case R.id.addVideo:
+				VideoCallActivity.call = call;
+				LinphoneActivity.instance().startVideoActivity();
 				break;
 			default:
 				throw new RuntimeException("unknown id " + v.getId());
@@ -561,7 +571,8 @@ public class ConferenceActivity extends ListActivity implements
 			final int numberOfCalls = linphoneCalls.size();
 			boolean showAddVideo = State.StreamsRunning == state && !isInConference
 					&& Version.isVideoCapable() && LinphoneManager.getInstance().isVideoEnabled();
-			setVisibility(v, R.id.addVideo, showAddVideo);
+			View addVideoButton = v.findViewById(R.id.addVideo);
+			setVisibility(addVideoButton, showAddVideo);
 
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
@@ -575,6 +586,7 @@ public class ConferenceActivity extends ListActivity implements
 			resumeButton.setOnClickListener(l);
 			unhookCallButton.setOnClickListener(l);
 			removeFromConfButton.setOnClickListener(l);
+			addVideoButton.setOnClickListener(l);
 
 			v.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -747,6 +759,25 @@ public class ConferenceActivity extends ListActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onAudioStateChanged(final AudioState state) {
+		mSpeakerButton.post(new Runnable() {
+			@Override
+			public void run() {
+				switch (state) {
+				case SPEAKER:
+					mSpeakerButton.setChecked(true);
+					break;
+				case EARPIECE:
+					mSpeakerButton.setChecked(false);
+					break;
+				default:
+					throw new RuntimeException("Unkown audio state " + state);
+				}
+			}
+		});
 	}
 
 	/*

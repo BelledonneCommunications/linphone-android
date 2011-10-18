@@ -256,8 +256,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		super.onPause();
 		
 		if  (isFinishing())  {
-			//restore audio settings   
-			LinphoneManager.getInstance().routeAudioToReceiver();
+			//restore audio settings
+			boolean isUserRequest = false;
+			LinphoneManager.getInstance().routeAudioToReceiver(isUserRequest);
 			LinphoneManager.stopProximitySensorForActivity(this);
 			instance = null;
 		}
@@ -469,7 +470,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 						video_activity);
 				}
 		});
-		LinphoneManager.getInstance().routeAudioToSpeaker();
+		boolean isUserRequest = false;
+		LinphoneManager.getInstance().routeAudioToSpeaker(isUserRequest);
 	}
 
 	public void startConferenceActivity() {
