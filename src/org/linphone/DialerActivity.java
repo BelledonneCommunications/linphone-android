@@ -27,7 +27,6 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
-import org.linphone.mediastream.Version;
 import org.linphone.ui.AddVideoButton;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -38,16 +37,13 @@ import org.linphone.ui.MuteMicButton;
 import org.linphone.ui.SpeakerButton;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,14 +81,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	private static DialerActivity instance;
 	
 	private PowerManager.WakeLock mWakeLock;
-	private SharedPreferences mPref;
 	private boolean useIncallActivity;
 	private boolean useConferenceActivity;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 
-	private static final int incomingCallDialogId = 1;
 	private static final int INCOMING_CALL_ACTIVITY = 10;
 
 	/**
@@ -110,9 +104,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		useConferenceActivity = getResources().getBoolean(R.bool.use_conference_activity);
 		// Don't use Linphone Manager in the onCreate as it takes time in LinphoneService to initialize it.
 
-		mPref = PreferenceManager.getDefaultSharedPreferences(this);
-		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG+"#"+getClass().getName());
 
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
@@ -287,15 +280,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	
 	
 	private void exitCallMode() {
-		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
-			finishActivity(INCOMING_CALL_ACTIVITY);
-		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
-			// Remove dialog if existing
-			try {
-				dismissDialog(incomingCallDialogId);
-			} catch (Throwable e) {/* Exception if never created */}
-		}
-		
+		finishActivity(INCOMING_CALL_ACTIVITY);
 
 		if (useIncallActivity) {
 			LinphoneActivity.instance().closeIncallActivity();
@@ -322,61 +307,16 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 
 	private void callPending(final LinphoneCall call) {
-		if (getResources().getBoolean(R.bool.use_incoming_call_activity)) {
-			Intent intent = new Intent()
-					.setClass(this, IncomingCallActivity.class)
-					.putExtra("stringUri", call.getRemoteAddress().asStringUriOnly());
-			startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
-		} else if (getResources().getBoolean(R.bool.use_incoming_call_dialog)) {
-			showDialog(incomingCallDialogId);
-		}
+		Intent intent = new Intent()
+		.setClass(this, IncomingCallActivity.class)
+		.putExtra("stringUri", call.getRemoteAddress().asStringUriOnly());
+		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 	}
 
-	@Override
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		if (id == incomingCallDialogId) {
-			LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
-			String from = LinphoneManager.extractIncomingRemoteName(getResources(), address);
-			String msg = String.format(getString(R.string.incoming_call_dialog_title), from);
-			((AlertDialog) dialog).setMessage(msg);
-		} else {
-			super.onPrepareDialog(id, dialog);
-		}
-	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		if (id == incomingCallDialogId) {
-			View incomingCallView = getLayoutInflater().inflate(R.layout.incoming_call, null);
-
-			final Dialog dialog = new AlertDialog.Builder(this)
-			.setMessage("")
-			.setCancelable(false)
-			.setView(incomingCallView).create();
-
-
-			((CallButton) incomingCallView.findViewById(R.id.Call)).setExternalClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					dialog.dismiss();
-					if (Version.isVideoCapable()) {
-						LinphoneManager.getInstance().resetCameraFromPreferences();
-
-						// Privacy setting to not share the user camera by default
-						boolean prefVideoEnable = LinphoneManager.getInstance().isVideoEnabled();
-						int key = R.string.pref_video_automatically_share_my_video_key;
-						boolean prefAutoShareMyCamera = mPref.getBoolean(getString(key), false);
-						boolean videoMuted = !(prefVideoEnable && prefAutoShareMyCamera);
-
-						LinphoneManager.getLc().getCurrentCall().enableCamera(!(videoMuted || useConferenceActivity));
-					}
-				}
-			});
-			((HangCallButton) incomingCallView.findViewById(R.id.Decline)).setExternalClickListener(new OnClickListener() {
-				public void onClick(View v) {dialog.dismiss();}
-			});
-
-			return dialog;
-		} else if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
+		if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
 			return waitHelper.createWaitDialog();
 		} else {
 			return super.onCreateDialog(id);
