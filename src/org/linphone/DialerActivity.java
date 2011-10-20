@@ -87,8 +87,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 
-	private static final int INCOMING_CALL_ACTIVITY = 10;
-
 	/**
 	 * @return null if not ready yet
 	 */
@@ -159,13 +157,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 
 	@Override
 	public void onCreateWhenManagerReady() {
-		LinphoneCore lc = LinphoneManager.getLc();
-		if (lc.isIncall()) {
-			if(lc.isInComingInvitePending()) {
-				callPending(lc.getCurrentCall());
-			} else {
-				enterIncallMode(lc);
-			}
+		LinphoneCall pendingCall = LinphoneManager.getInstance().getPendingIncomingCall();
+		if (pendingCall != null) {
+			LinphoneActivity.instance().startIncomingCallActivity(pendingCall);
+		} else if (LinphoneManager.getLc().isIncall()) {
+			enterIncallMode();
 		}
 	}
 
@@ -226,8 +222,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	
 
 	
-	private void enterIncallMode(LinphoneCore lc) {
-		LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+	private void enterIncallMode() {
+		LinphoneCore lc = LinphoneManager.getLc();
+		LinphoneAddress address = lc.getRemoteAddress();
 		mDisplayNameView.setText(LinphoneManager.extractADisplayName(getResources(), address));
 
 //		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
@@ -280,8 +277,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 	
 	
 	private void exitCallMode() {
-		finishActivity(INCOMING_CALL_ACTIVITY);
-
 		if (useIncallActivity) {
 			LinphoneActivity.instance().closeIncallActivity();
 		} else if(useConferenceActivity) { 
@@ -303,14 +298,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 		mCall.setEnabled(true);
-	}
-
-
-	private void callPending(final LinphoneCall call) {
-		Intent intent = new Intent()
-		.setClass(this, IncomingCallActivity.class)
-		.putExtra("stringUri", call.getRemoteAddress().asStringUriOnly());
-		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 	}
 
 
@@ -379,29 +366,21 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 			return;
 		}
 		
-		if (state==LinphoneCall.State.OutgoingInit){
-			call.enableCamera(LinphoneManager.getInstance().shareMyCamera());
-			enterIncallMode(lc);
-			LinphoneActivity.instance().startOrientationSensor();
-		}else if (state==LinphoneCall.State.IncomingReceived){
-			callPending(call);
-			call.enableCamera(LinphoneManager.getInstance().shareMyCamera());
-			LinphoneActivity.instance().startOrientationSensor();
-		}else if (state==LinphoneCall.State.Connected){
+		if (state==State.OutgoingInit){
+			enterIncallMode();
+		}else if (state==State.Connected){
 			if (call.getDirection() == CallDirection.Incoming) {
-				enterIncallMode(lc);
+				enterIncallMode();
 			}
-		}else if (state==LinphoneCall.State.Error){
+		}else if (state==State.Error){
 			showToast(R.string.call_error, message);
 			if (lc.getCallsNb() == 0){
 				if (mWakeLock.isHeld()) mWakeLock.release();
 				exitCallMode();
-				LinphoneActivity.instance().stopOrientationSensor();
 			}
-		}else if (state==LinphoneCall.State.CallEnd){
+		}else if (state==State.CallEnd){
 			if (lc.getCallsNb() == 0){
 				exitCallMode();
-				LinphoneActivity.instance().stopOrientationSensor();
 			}
 		}
 

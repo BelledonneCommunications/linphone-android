@@ -96,7 +96,7 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 
 	@Override
 	public void onResumeWhenManagerReady() {
-		LinphoneManager.getInstance().addListener(this);
+		LinphoneManager.addListener(this);
 		findIncomingCall(getIntent());
 		if (mCall == null) {
 			finish();
@@ -125,7 +125,7 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 	@Override
 	protected void onPause() {
 		super.onPause();
-		LinphoneManager.getInstance().removeListener(this);
+		LinphoneManager.removeListener(this);
 	}
 	
 	@Override

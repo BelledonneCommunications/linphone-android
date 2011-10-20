@@ -179,6 +179,11 @@ public class ConferenceActivity extends ListActivity implements
 		if (multipleCallsLimit > 0) {
 			updateAddCallButton();
 		}
+
+		LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+		if (currentCall != null) {
+			tryToStartVideoActivity(currentCall, currentCall.getState());
+		}
 	}
 
 	private void updateAddCallButton() {
@@ -193,9 +198,9 @@ public class ConferenceActivity extends ListActivity implements
 
 	protected void registerLinphoneListener(boolean register) {
 		if (register)
-			LinphoneManager.getInstance().addListener(this);
+			LinphoneManager.addListener(this);
 		else
-			LinphoneManager.getInstance().removeListener(this);
+			LinphoneManager.removeListener(this);
 	}
 
 
@@ -670,10 +675,23 @@ public class ConferenceActivity extends ListActivity implements
 		controlLayout.setVisibility(hide ? GONE : VISIBLE);
 	}
 
+	private void tryToStartVideoActivity(LinphoneCall call, State state) {
+		if (State.StreamsRunning == state && call.getCurrentParamsCopy().getVideoEnabled()) {
+			if (call.cameraEnabled() ) {
+				LinphoneActivity.instance().startVideoActivity();
+			} else {
+				Log.i("Not starting video call activity as the camera is disabled");
+			}
+		}
+	}
+
 	public void onCallStateChanged(final LinphoneCall call, final State state,
 			final String message) {
 		final String stateStr = call + " " + state.toString();
 		Log.d("ConferenceActivity received state ",stateStr);
+		
+		tryToStartVideoActivity(call, state);
+		
 		mHandler.post(new Runnable() {
 			public void run() {
 				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();

@@ -49,6 +49,7 @@ import java.util.TimerTask;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -133,13 +134,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private WakeLock mIncallWakeLock;
 
-	private List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
-	public void addListener(LinphoneSimpleListener listener) {
+	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
+	public static void addListener(LinphoneSimpleListener listener) {
 		if (!simpleListeners.contains(listener)) {
 			simpleListeners.add(listener);
 		}
 	}
-	public void removeListener(LinphoneSimpleListener listener) {
+	public static void removeListener(LinphoneSimpleListener listener) {
 		simpleListeners.remove(listener);
 	}
 
@@ -1139,6 +1140,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		public void onCallStateChanged(LinphoneCall call, State state,
 				String message) {
+			if (state==State.OutgoingInit || state==State.IncomingReceived) {
+				boolean sendCamera = shareMyCamera() && mLc.getConferenceSize() == 0;
+				call.enableCamera(sendCamera);
+			}
 			if (state == State.CallEnd && call == requestedVideoCall) {
 				requestedVideoCall = null; // drop reference
 			}
@@ -1189,6 +1194,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public static final boolean isInstanciated() {
 		return instance != null;
+	}
+	
+	public synchronized LinphoneCall getPendingIncomingCall() {
+		LinphoneCall currentCall = mLc.getCurrentCall();
+		if (currentCall == null) return null;
+
+		LinphoneCall.State state = currentCall.getState();
+		boolean incomingPending = currentCall.getDirection() == CallDirection.Incoming
+			&& (state == State.IncomingReceived || state == State.CallIncomingEarlyMedia);
+
+		return incomingPending ? currentCall : null;
 	}
 
 }

@@ -169,7 +169,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		if (mVideoViewReady != null)
 			((GLSurfaceView)mVideoViewReady).onResume();
 		launched=true;
-		LinphoneManager.getInstance().addListener(this);
+		LinphoneManager.addListener(this);
 		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
 			LinphoneCall mCurrentCall=LinphoneManager.getLc().getCurrentCall();
 			public void run() {
@@ -282,7 +282,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	@Override
 	protected void onPause() {
 		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(), ", changingConf:", getChangingConfigurations());
-		LinphoneManager.getInstance().removeListener(this);
+		LinphoneManager.removeListener(this);
 		if (isFinishing()) {
 			videoCall = null; // release reference
 		}
