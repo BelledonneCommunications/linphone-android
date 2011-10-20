@@ -9,4 +9,13 @@
         <item name="android:textSize">20sp</item>
         <item name="android:layout_weight">1</item>
     </style>
+
+
+
+	<declare-styleable name="Numpad">
+		<attr name="play_dtmf">
+			<enum name="dont" value="0" />
+			<enum name="play" value="1" />
+		</attr>
+	</declare-styleable>
 </resources>

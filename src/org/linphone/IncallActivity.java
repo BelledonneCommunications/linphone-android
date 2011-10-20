@@ -23,7 +23,7 @@ import java.util.TimerTask;
 
 import org.linphone.ui.HangCallButton;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -32,7 +32,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-public class IncallActivity extends SoftVolumeActivity implements OnClickListener {
+/**
+ * @author Guillaume Beraudo
+ *
+ */
+public class IncallActivity extends Activity implements OnClickListener {
 
 	public static final String CONTACT_KEY = "contact";
 	public static final String PICTURE_URI_KEY = "picture_uri";
@@ -98,7 +102,7 @@ public class IncallActivity extends SoftVolumeActivity implements OnClickListene
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		LinphoneManager.startProximitySensorForActivity(this);
 		task = new TimerTask() {
 			@Override
 			public void run() {
@@ -121,6 +125,7 @@ public class IncallActivity extends SoftVolumeActivity implements OnClickListene
 	@Override
 	protected void onPause() {
 		super.onPause();
+		LinphoneManager.stopProximitySensorForActivity(this);
 
 		if (task != null) {
 			task.cancel();
@@ -128,16 +133,15 @@ public class IncallActivity extends SoftVolumeActivity implements OnClickListene
 		}
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			startActivity(new Intent()
-			.setAction(Intent.ACTION_MAIN)
-			.addCategory(Intent.CATEGORY_HOME));
-			return true;
-		} else {
-			return super.onKeyUp(keyCode, event);
-		}
+		if (LinphoneUtils.onKeyBackGoHome(this, keyCode)) return true;
+		return super.onKeyUp(keyCode, event);
 	}
 }

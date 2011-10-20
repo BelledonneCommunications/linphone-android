@@ -36,13 +36,39 @@
 			 </intent-filter>
         </activity>
 
+        <activity android:name="org.linphone.IncomingCallActivity"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+
+        <activity android:name="org.linphone.UriPickerActivity"
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+        <activity android:name="org.linphone.UriPickerActivity$DialerActivity" android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
 
         <activity android:name="org.linphone.FirstLoginActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-
+		<activity android:name="org.linphone.ConferenceActivity"
+        			android:theme="@android:style/Theme.NoTitleBar"
+        			android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
         <activity android:name="org.linphone.IncallActivity"
                     android:launchMode="singleTop"
         			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
@@ -99,10 +125,21 @@
 	<receiver android:name="org.linphone.BootReceiver">
 		<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
 	</receiver>
+
+	<receiver android:name="org.linphone.PhoneStateChangedReceiver">
+		<intent-filter><action android:name="android.intent.action.PHONE_STATE" /></intent-filter>
+	</receiver>
 	
 	
-	
-	
+		<activity android:name="org.linphone.TestConferenceActivity"
+                  android:label="Conf test"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
         <activity android:name="org.linphone.core.tutorials.TestVideoActivity"
                   android:label="Video test"
                   android:theme="@android:style/Theme.NoTitleBar"
@@ -168,6 +205,7 @@
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.READ_LOGS" />
 
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
 <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 </manifest> 

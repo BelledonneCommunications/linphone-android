@@ -26,7 +26,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
-import android.provider.Contacts.Photos;
 
 @SuppressWarnings("deprecation")
 public class ContactPickerActivityOld extends Activity {
@@ -48,21 +47,6 @@ public class ContactPickerActivityOld extends Activity {
 
 	}
 
-    private Uri getPhotoUri(Uri photoUri) {
-    	Cursor cursor = getContentResolver().query(photoUri, new String[]{Photos.DATA}, null, null, null);
-    	try {
-    		if (cursor == null || !cursor.moveToNext()) {
-    			return null;
-    		}   
-    		byte[] data = cursor.getBlob(0);
-    		if (data == null) {
-    			return null;
-    		}   
-    		return photoUri;
-    	} finally {
-    		if (cursor != null) cursor.close();
-    	}   
-    }   
 
 	protected void onActivityResult(int requestCode, int resultCode,
             Intent data) {
@@ -81,8 +65,10 @@ public class ContactPickerActivityOld extends Activity {
                     String lPhoneNo = lCur.getString(lCur.getColumnIndex(People.NUMBER));
                     long id = lCur.getLong(lCur.getColumnIndex(People._ID));
                     Uri personUri = ContentUris.withAppendedId(People.CONTENT_URI, id);
-                    Uri potentialPictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
-                    Uri pictureUri = getPhotoUri(potentialPictureUri);
+                    Uri pictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
+                    if (!ContactHelper.testPhotoUri(getContentResolver(), pictureUri, Contacts.Photos.CONTENT_DIRECTORY)) {
+                    	pictureUri = null;
+                    }
                     // FIXME surprisingly all this picture stuff doesn't seem to work
                     DialerActivity.instance().setContactAddress(lPhoneNo, lName, pictureUri);
                 }
@@ -91,4 +77,5 @@ public class ContactPickerActivityOld extends Activity {
             	LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);	
             }
         }
+
 }

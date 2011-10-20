@@ -46,7 +46,7 @@ class LinphoneCallImpl implements LinphoneCall {
 	/*
 	 * This method must always be called from JNI, nothing else.
 	 */
-	protected LinphoneCallImpl(long aNativePtr)  {
+	private LinphoneCallImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
 	}
 	protected void finalize() throws Throwable {
@@ -84,8 +84,20 @@ class LinphoneCallImpl implements LinphoneCall {
 	public boolean cameraEnabled() {
 		return cameraEnabled(nativePtr);
 	}
+
+	@Override
 	public boolean equals(Object call) {
+		if (this == call) return true;
+		if (call == null) return false;
+		if (!(call instanceof LinphoneCallImpl)) return false;
 		return nativePtr == ((LinphoneCallImpl)call).nativePtr;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + (int) (nativePtr ^ (nativePtr >>> 32));
+		return result;
 	}
 	public void enableEchoCancellation(boolean enable) {
 		enableEchoCancellation(nativePtr,enable);
@@ -123,8 +135,14 @@ class LinphoneCallImpl implements LinphoneCall {
 	public boolean areStreamsEncrypted() {
 		return areStreamsEncrypted(nativePtr);
 	}
+
 	public boolean isInConference() {
-		// TODO Auto-generated method stub
-		return false;
+		LinphoneCallParamsImpl params = new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
+		return params.localConferenceMode();
+	}
+
+	@Override
+	public String toString() {
+		return "Call " + nativePtr;
 	}
 }

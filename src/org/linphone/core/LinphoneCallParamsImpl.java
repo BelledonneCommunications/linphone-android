@@ -58,4 +58,9 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	public void setMediaEnctyption(String menc) {
 		setMediaEncryption(nativePtr, menc);
 	}
+
+	private native boolean localConferenceMode(long nativePtr);
+	public boolean localConferenceMode() {
+		return localConferenceMode(nativePtr);
+	}
 }

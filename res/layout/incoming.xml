@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+
+	<TextView android:id="@+id/incoming_text" 
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="25sp" android:layout_alignParentTop="true"
+		android:text="Incoming call" android:textAppearance="?android:attr/textAppearanceLarge">
+	</TextView>
+
+	<LinearLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:layout_below="@id/incoming_text"
+		android:layout_centerHorizontal="true" android:paddingTop="30dip">
+		<ImageView android:id="@+id/incoming_picture"
+			android:layout_height="wrap_content" android:layout_width="wrap_content" 
+			android:layout_gravity="center" android:scaleType="fitCenter"
+			android:minWidth="192px" android:minHeight="192px"
+			android:paddingBottom="10sp"/>
+		<TextView android:id="@+id/incoming_caller_name"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="Caller name" android:textAppearance="?android:attr/textAppearanceLarge"
+			android:layout_gravity="center_horizontal">
+		</TextView>
+		<TextView android:id="@+id/incoming_caller_number"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_marginTop="8sp"
+			android:text="Caller phone"
+			android:textAppearance="?android:attr/textAppearance"
+			android:layout_gravity="center_horizontal">
+		</TextView>
+	</LinearLayout>
+
+
+    <org.linphone.ui.SlidingTab
+        android:id="@+id/sliding_widget"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dip"
+        />
+
+
+<!--	<org.linphone.ui.CallButton  android:src="@drawable/startvideo_green" android:layout_width="wrap_content"-->
+<!--		android:layout_height="wrap_content" android:id="@+id/AnswerWithVideo"-->
+<!--		android:text="answer with video"-->
+<!--		android:textAppearance="?android:attr/textAppearanceLarge"-->
+<!--		android:layout_alignParentLeft="true" android:layout_marginBottom="30sp"-->
+<!--		android:layout_above="@id/Answer"/>-->
+
+
+</RelativeLayout>

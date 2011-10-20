@@ -4,16 +4,16 @@
 
 	<PreferenceCategory android:title="@string/pref_sipaccount">
 		<EditTextPreference android:title="@string/pref_username"
-			android:key="@string/pref_username_key"></EditTextPreference>
+			android:key="@string/pref_username_key" android:inputType="text|textEmailAddress"></EditTextPreference>
 
 		<EditTextPreference android:title="@string/pref_passwd"
 			android:key="@string/pref_passwd_key" android:password="true"></EditTextPreference>
 
 		<EditTextPreference android:title="@string/pref_domain"
-			android:key="@string/pref_domain_key"></EditTextPreference>
+			android:key="@string/pref_domain_key" android:inputType="text|textEmailAddress"></EditTextPreference>
 
 		<EditTextPreference android:title="@string/pref_proxy"
-			android:key="@string/pref_proxy_key"></EditTextPreference>
+			android:key="@string/pref_proxy_key" android:inputType="text|textEmailAddress"></EditTextPreference>
 
 		<CheckBoxPreference android:enabled="true"
 			android:selectable="true" android:key="@string/pref_enable_outbound_proxy_key"

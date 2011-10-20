@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.linphone.mediastream.Version;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -52,35 +53,28 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 
 	@Override
 	public Uri getPhotoUri(String id) {
-		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
+		return retrievePhotoUriAndSetDisplayName(getContentResolver(), Long.parseLong(id));
+	}
+
+	private static Uri retrievePhotoUriAndSetDisplayName(ContentResolver resolver, long id) {
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
 		Uri photoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
 		if (photoUri == null) {
 			return null;
 		}
-		Cursor cursor = getContentResolver().query(photoUri,
-				new String[]{ContactsContract.CommonDataKinds.Photo.PHOTO}, null, null, null);
-		try {
-			if (cursor == null || !cursor.moveToNext()) {
-				return null;
-			}
-			byte[] data = cursor.getBlob(0);
-			if (data == null) {
-				return null;
-			}
+		if (ContactHelper.testPhotoUri(resolver, photoUri, ContactsContract.CommonDataKinds.Photo.PHOTO)) {
 			return photoUri;
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
 		}
+		return null;
 	}
 
 	protected List<String> extractPhones(String id) {
 		List<String> list = new ArrayList<String>();
 		Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+		String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
 		String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?";
 		String[] selArgs = new String[] {id};
-		Cursor c = this.getContentResolver().query(uri,	null, selection, selArgs, null);
+		Cursor c = this.getContentResolver().query(uri, projection, selection, selArgs, null);
 
 		int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
@@ -96,35 +90,41 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 	protected List<String> extractSipNumbers(String id) {
 		List<String> list = new ArrayList<String>();
 		Uri uri = ContactsContract.Data.CONTENT_URI;
+		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
 		String selection = new StringBuilder()
-		.append(ContactsContract.Data.CONTACT_ID).append(" =  ? AND ")
-		.append(ContactsContract.Data.MIMETYPE).append(" = ? ")
-		.append(" AND lower(")
-		.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
-		.append(") = 'sip'").toString();
-		String[] selArgs = new String[] {id, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE};
-		Cursor c = this.getContentResolver().query(uri,	null, selection, selArgs, null);
+			.append(ContactsContract.Data.CONTACT_ID).append(" =  ? AND ")
+			.append(ContactsContract.Data.MIMETYPE).append(" = '")
+			.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+			.append("' AND lower(")
+			.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
+			.append(") = 'sip'")
+			.toString();
+		Cursor c = getContentResolver().query(uri, projection, selection, new String[]{id}, null);
 
 		int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
-
 		while (c.moveToNext()) {
 			list.add("sip:" + c.getString(nbId)); 
 		}
-
 		c.close();
 		
+
 		// Using the SIP contact field added in SDK 9
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			selection = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
-			String projection[] = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
-			selArgs = new String[] {id, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE};
-			c = this.getContentResolver().query(uri, projection, selection, selArgs, null);
+			selection = new StringBuilder()
+				.append(ContactsContract.Data.CONTACT_ID)
+				.append(" = ? AND ")
+				.append(ContactsContract.Data.MIMETYPE)
+				.append(" = '")
+				.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
+				.append("'")
+				.toString();
+			projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+			c = this.getContentResolver().query(uri, projection, selection, new String[]{id}, null);
 
 			nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
 			while (c.moveToNext()) {
 				list.add("sip:" + c.getString(nbId)); 
 			}
-
 			c.close();
 		}
 
@@ -162,13 +162,14 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 	private String retrieveContactName(String id) {
 		//Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
+		String[] projection = new String[] {ContactsContract.Contacts.DISPLAY_NAME};
 		String selection = ContactsContract.Contacts._ID + " = ?";
 		String[] selArgs = new String[] {id};
-		Cursor c = this.getContentResolver().query(uri,	null, selection, selArgs, null);
+		Cursor c = this.getContentResolver().query(uri,	projection, selection, selArgs, null);
 
 		String name = "";
 		if (c.moveToFirst()) {
-			name =  c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)); 
+			name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)); 
 		}
 		c.close();
 

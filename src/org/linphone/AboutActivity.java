@@ -73,25 +73,31 @@ public class AboutActivity extends Activity implements OnClickListener {
 		thread.start();
 	}
 
+	private File writeLogs(String logs, File directory) {
+		File tempFile = null;
+		try {
+			tempFile = File.createTempFile("bugreport", ".txt", directory);
+			tempFile.deleteOnExit();
+			FileWriter writer = new FileWriter(tempFile);
+			writer.append(logs);
+			return tempFile;
+		} catch (IOException e) {
+			Toast.makeText(this, getString(R.string.about_error_generating_bugreport_attachement), Toast.LENGTH_LONG).show();
+			Log.e(e, "couldn't write to temporary file");
+			return null;
+		}
+	}
+
 	private void onLogsRead(String logs) {
-		File tempFile;
 		if (logs == null) {
 			Toast.makeText(this, getString(R.string.about_logs_not_found), Toast.LENGTH_SHORT).show();
 		} else {
-
-			try {
-				tempFile = File.createTempFile("bugreport", ".txt");
-				tempFile.deleteOnExit();
-				FileWriter writer = new FileWriter(tempFile);
-				writer.append(logs);
-			} catch (IOException e) {
-				Toast.makeText(this, getString(R.string.about_error_generating_bugreport_attachement), Toast.LENGTH_LONG).show();
-				Log.e(e, "couldn't write to temporary file");
-				return;
-			} finally {
-				thread = null;
+			File tempFile = writeLogs(logs, null);
+			if (tempFile == null) {
+				// If writing to temporary file to default location failed
+				// Write one to our storage place
+				tempFile = writeLogs(logs, getFilesDir());
 			}
-
 
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -114,6 +120,7 @@ public class AboutActivity extends Activity implements OnClickListener {
 				@Override
 				public void run() {
 					onLogsRead(logs);
+					thread=null;
 				}
 			});
 			super.run();

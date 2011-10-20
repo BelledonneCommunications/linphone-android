@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="waiting_for_startup">Starting up...</string>
+	<string name="couldnt_accept_call">An error occurred while accepting call</string>
+
+	<string name="uri_picking_canceled">Canceled</string>
+	<string name="error_adding_new_call">Error adding new call</string>
+	<string name="transfer_started">Transfer initiated</string>
+	<string name="transfer_dialog_title">Transfer call to</string>
+
+	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>
+
+	<string name="close_button_text">Close</string>
+	
+	<string name="status_conf_call">conf</string>
+	<string name="status_active_call">active</string>
+	<string name="state_paused">paused</string>
+	<string name="state_paused_by_remote">paused</string>
+	<string name="state_streams_running"></string>
+	<string name="state_incoming_received">incoming</string>
+	<string name="state_outgoing_ringing">ringing</string>
+	
+	<string name="mutemic_button_txt">Mute</string>
+	<string name="speaker_button_txt">Speaker</string>
+	<string name="bluetooth_button_txt">Bluetooth</string>
+
+	<string name="CancelButtonText">Cancel</string>
+	<string name="AddCallButtonText">Add call</string>
+	<string name="TransferCallButtonText">Transfer call</string>
+
+	<string name="conf_admin_choice_enter">Enter conference</string>
+	<string name="conf_admin_choice_leave">Momentarily leave conference</string>
+	<string name="conf_admin_choice_terminate">Terminate conference</string>
+
+	<string name="conf_choice_transfer_existing">Transfer to existing call</string>
+	<string name="conf_choice_transfer_new">Transfer to new call</string>
+	<string name="conf_choice_resume">Resume</string>
+	<string name="conf_choice_pause">Pause</string>
+	<string name="conf_choice_merge_to_conference">Add to conference</string>
+	<string name="conf_choice_merge_all_to_conference">Add all calls to conference</string>
+	<string name="conf_choice_remove_from_conference">Remove from the conference</string>
+	<string name="conf_choice_terminate">Terminate</string>
+
+	<string name="hangup">Hang up</string>
+	<string name="conf_simple_merge_bt_txt">Merge</string>
+	<string name="conf_simple_transfer_bt_txt">Transfer</string>
+	<string name="conf_simple_permute_bt_txt">Permute</string>
+	<string name="conf_simple_no_current_call">No active call</string>
+	<string name="show_send_dtmfs_button">DTMFs</string>
+
+	<string name="conf_text_you_host_a_conference">You host a conference</string>
+	<string name="in_conf">You are part of it</string>
+	<string name="in_conf_leave">Go out</string>
+	<string name="out_conf">You are out of it</string>
+	<string name="out_conf_enter">Go in</string>
+
 	<string name="pref_audio_hacks_title">Audio hacks</string>
 	<string name="pref_audio_use_specific_mode_title">Use specific mode hack</string>
 	<string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (default), 2=MODE_IN_CALL</string>
@@ -54,9 +108,9 @@
 	<string name="menu_videocall_terminate_call_title">Terminate call</string>
     <string name="pref_video_settings_title">Video settings</string>
     <string name="pref_video_automatically_share_my_video_title">Share my camera</string>
-    <string name="pref_video_automatically_share_my_video">Automatically send my camera on incoming calls</string>
-    <string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>
-    <string name="pref_video_initiate_call_with_video">Always send my camera on outgoing calls</string>
+    <string name="pref_video_automatically_share_my_video">Send my camera on video capable calls</string>
+    <string name="pref_video_initiate_call_with_video_title">Initiate video capable calls</string>
+    <string name="pref_video_initiate_call_with_video">Disable to remove negotiation of video codecs for outgoing calls</string>
     <string name="pref_video_enable_title">Enable Video</string>
     <string name="pref_escape_plus">Replace + by 00</string>
     <string name="pref_ilbc_summary">iLBC might be unavailable depending on ARM processor and Android OS version.</string>

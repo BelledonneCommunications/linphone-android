@@ -40,6 +40,7 @@
 
 
 		<LinearLayout android:id="@+id/CallControlRow" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="bottom">
+			<ImageButton android:id="@+id/BackToConference" android:src="@drawable/resume_blue" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:visibility="gone"/>
 			<org.linphone.ui.CallButton android:id="@+id/Call"
 				android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/startcall_green"/>
 			<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent"
@@ -50,8 +51,6 @@
 			<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/startvideo_green" android:background="@drawable/clavier_bg"/>
 			<org.linphone.ui.HangCallButton android:id="@+id/HangUp" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
 		</LinearLayout>
-
-
 
 		<EditText android:id="@+id/status_label" android:layout_width="fill_parent" 
 			android:clickable="false" android:focusable="false"

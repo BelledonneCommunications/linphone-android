@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="48px" >
+  
+    <ImageView android:id="@+id/picture" android:layout_width="48px"
+     android:src="@drawable/unknown_person" android:layout_height="48px"
+     android:paddingLeft="5px" android:scaleType="centerInside"/>
+
+
+    <LinearLayout android:id="@+id/callee_block" android:orientation="vertical"
+       	android:layout_width="wrap_content" android:layout_height="48px">
+      <TextView android:id="@+id/name" style="@style/callee_name" />
+      <TextView android:id="@+id/address" style="@style/callee_address" />
+    </LinearLayout>
+
+	<View android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_weight="1"/>
+
+
+	<ImageButton android:id="@+id/addVideo" android:src="@drawable/conf_video"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/merge_to_conference"
+		android:src="@drawable/conf_merge" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/remove_from_conference"
+		android:src="@drawable/conf_remove" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/unhook_call" android:src="@drawable/conf_unhook"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/terminate_call" android:src="@drawable/conf_terminate"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/pause" android:src="@drawable/conf_pause"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/resume" android:src="@drawable/conf_resume"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+	<TextView android:id="@+id/status_label" style="@style/callee_status"
+		android:layout_height="fill_parent" />
+	<ImageView android:id="@+id/callee_status_paused" style="@style/callee_status"
+		android:src="@drawable/conf_status_paused" />
+	<ImageView android:id="@+id/callee_status_inconf" style="@style/callee_status"
+		android:src="@drawable/conf_status_inconf" />
+</LinearLayout>

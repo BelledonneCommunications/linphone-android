@@ -1,5 +1,5 @@
 /*
-iLinphoneActivity.java
+LinphoneActivity.java
 Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -21,12 +21,14 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import java.util.List;
-
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Version;
@@ -51,33 +53,28 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 	
-public class LinphoneActivity extends TabActivity implements SensorEventListener {
+public class LinphoneActivity extends TabActivity implements SensorEventListener, ContactPicked, LinphoneOnCallStateChangedListener {
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     private static final int video_activity = 100;
     static final int FIRST_LOGIN_ACTIVITY = 101;
     static final int INCALL_ACTIVITY = 102;
     static final int INCOMING_CALL_ACTIVITY = 103;
+	private static final int conference_activity = 104;
     private static final String PREF_CHECK_CONFIG = "pref_check_config";
 
 	private static LinphoneActivity instance;
 	
 	
-	private FrameLayout mMainFrame;
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int previousRotation = -1;
-	private static SensorEventListener mSensorEventListener;
 	
-	private static final String SCREEN_IS_HIDDEN = "screen_is_hidden";
 	private Handler mHandler = new Handler();
 	
 	
@@ -98,14 +95,9 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
 
-	protected void onSaveInstanceState (Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean(SCREEN_IS_HIDDEN, mMainFrame.getVisibility() == View.INVISIBLE);
-	}
-
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		instance = this;
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		LinphonePreferenceManager.getInstance(this);
@@ -118,7 +110,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 
 		
-		mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -138,18 +129,16 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				checkAccount = false;
 			}
 		}
-		
-	    if (savedInstanceState !=null && savedInstanceState.getBoolean(SCREEN_IS_HIDDEN,false)) {
-	    	hideScreen(true);
-	    }	
+
+		LinphoneManager.addListener(this);
 	}
 	
 	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		if (requestCode == FIRST_LOGIN_ACTIVITY) {
+		switch (requestCode) {
+		case FIRST_LOGIN_ACTIVITY:
 			if (resultCode == RESULT_OK) {
 				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
 				try {
@@ -170,6 +159,11 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				finish();
 				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			}
+			break;
+		case conference_activity:
+			break;
+		default:
+			break;
 		}
 		
 		super.onActivityResult(requestCode, resultCode, data);
@@ -217,7 +211,10 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				gotToDialer();
 			} else {
 				if (getResources().getBoolean(R.bool.use_incall_activity)) {
-					startIncallActivity(LinphoneManager.getInstance().extractADisplayName(), null);
+					LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
+					startIncallActivity(LinphoneManager.extractADisplayName(getResources(), address), null);
+				} if (getResources().getBoolean(R.bool.use_conference_activity)) {
+					startConferenceActivity();
 				} else {
 					// TODO
 					Log.e("Not handled case: recreation while in call and not using incall activity");
@@ -257,11 +254,12 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
 		if  (isFinishing())  {
-			//restore audio settings   
-			LinphoneManager.getInstance().routeAudioToReceiver();
-			stopProxymitySensor();//just in case
+			//restore audio settings
+			boolean isUserRequest = false;
+			LinphoneManager.getInstance().routeAudioToReceiver(isUserRequest);
+			LinphoneManager.removeListener(this);
+			LinphoneManager.stopProximitySensorForActivity(this);
 			instance = null;
 		}
 	}
@@ -318,39 +316,12 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 
-
-	void hideScreen(boolean isHidden) {
-		WindowManager.LayoutParams lAttrs =getWindow().getAttributes(); 
-		if (isHidden) {
-			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN; 
-			mMainFrame.setVisibility(View.INVISIBLE);
-		} else  {
-			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
-			mMainFrame.setVisibility(View.VISIBLE);
-		}
-		getWindow().setAttributes(lAttrs);
+	public synchronized void stopOrientationSensor() {
+		if (mSensorManager!=null)
+			mSensorManager.unregisterListener(this, mAccelerometer);
 	}
 
-	synchronized void startProxymitySensor() {
-		if (mSensorEventListener != null) {
-			Log.i("proximity sensor already active");
-			return;
-		}
-		List<Sensor> lSensorList = mSensorManager.getSensorList(Sensor.TYPE_PROXIMITY);
-		mSensorEventListener = new SensorEventListener() {
-			public void onSensorChanged(SensorEvent event) {
-				//just ignoring for nexus 1
-				if (event.timestamp == 0) return;
-				instance().hideScreen(LinphoneManager.isProximitySensorNearby(event));
-			}
- 
-			public void onAccuracyChanged(Sensor sensor, int accuracy) {}	
-		};
-		if (lSensorList.size() >0) {
-			mSensorManager.registerListener(mSensorEventListener,lSensorList.get(0),SensorManager.SENSOR_DELAY_UI);
-			Log.i("Proximity sensor detected, registering");
-		}		
-	}
+
 	
 	public synchronized void startOrientationSensor() {
 		if (mSensorManager!=null) {
@@ -362,20 +333,6 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		previousRotation = -1;
 		onSensorChanged(null);
 	}
-	
-	public synchronized void stopOrientationSensor() {
-		if (mSensorManager!=null)
-			mSensorManager.unregisterListener(this, mAccelerometer);
-	}
-
-	protected synchronized void stopProxymitySensor() {
-		if (mSensorManager!=null) {
-			mSensorManager.unregisterListener(mSensorEventListener);
-			mSensorEventListener=null; 
-		}
-		hideScreen(false);
-	}
-
 
 	void showPreferenceErrorDialog(String message) {
 		if (!useMenuSettings) {
@@ -471,7 +428,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		builder.create().show();
 	}
 
-	static void setAddressAndGoToDialer(String number, String name, Uri photo) {
+	public void setAddressAndGoToDialer(String number, String name, Uri photo) {
 		DialerActivity.instance().setContactAddress(number, name, photo);
 		instance.gotToDialer();
 	}
@@ -500,9 +457,11 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	public void closeIncallActivity() {
 		finishActivity(INCALL_ACTIVITY);
 	}
+	public void closeConferenceActivity() {
+		finishActivity(conference_activity);
+	}
 
 	public void startVideoActivity() {
-		
 		mHandler.post(new Runnable() {
 			public void run() {
 				startActivityForResult(new Intent().setClass(
@@ -511,9 +470,32 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 						video_activity);
 				}
 		});
-		LinphoneManager.getInstance().routeAudioToSpeaker();
+		boolean isUserRequest = false;
+		LinphoneManager.getInstance().routeAudioToSpeaker(isUserRequest);
 	}
-	
+
+	public void startConferenceActivity() {
+		if (ConferenceActivity.active) {
+			return;
+		}
+
+		mHandler.post(new Runnable() {
+			public void run() {
+				startActivityForResult(new Intent().setClass(
+						LinphoneActivity.this,
+						ConferenceActivity.class),
+						conference_activity);
+				}
+		});
+	}
+
+	public void startIncomingCallActivity(LinphoneCall pendingCall) {
+		Intent intent = new Intent()
+			.setClass(this, IncomingCallActivity.class)
+			.putExtra("stringUri", pendingCall.getRemoteAddress().asStringUriOnly());
+		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
+	}
+
 	public void finishVideoActivity() {
 		mHandler.post(new Runnable() {
 			public void run() {
@@ -521,4 +503,25 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			}
 		});
 	}
+
+	@Override
+	public void onCallStateChanged(LinphoneCall call, State state,
+			String message) {
+		if (state==State.IncomingReceived) {
+			startIncomingCallActivity(call);
+		}
+		if (state==State.OutgoingInit || state==State.IncomingReceived) {
+			startOrientationSensor();
+		} else if (state==State.Error || state==State.CallEnd){
+			stopOrientationSensor();
+			finishActivity(INCOMING_CALL_ACTIVITY);
+		}
+		
+	}
+}
+
+
+
+interface ContactPicked {
+	void setAddressAndGoToDialer(String number, String name, Uri photo);
 }

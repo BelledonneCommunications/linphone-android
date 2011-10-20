@@ -48,9 +48,9 @@ public class SpeakerButton extends ToggleImageButton implements OnCheckedChangeL
 
 	public void onCheckedChanged(ToggleImageButton button, boolean checked) {
 		if (checked) {
-			LinphoneManager.getInstance().routeAudioToSpeaker();
+			LinphoneManager.getInstance().routeAudioToSpeaker(true);
 		} else {
-			LinphoneManager.getInstance().routeAudioToReceiver();
+			LinphoneManager.getInstance().routeAudioToReceiver(true);
 		}
 	}
 

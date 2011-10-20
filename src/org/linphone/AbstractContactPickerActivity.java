@@ -21,6 +21,8 @@ package org.linphone;
 import java.util.Collections;
 import java.util.List;
 
+import org.linphone.mediastream.Version;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -155,7 +157,7 @@ public abstract class AbstractContactPickerActivity extends Activity implements 
 			finish();
 		}*/
 
-		LinphoneActivity.setAddressAndGoToDialer(number, name, photo);
+		((ContactPicked) getParent()).setAddressAndGoToDialer(number, name, photo);
 	}
 
 	

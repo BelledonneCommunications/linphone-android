@@ -3,23 +3,9 @@
 
 
 	<string name="app_name">Linphone</string>
-	<string name="default_domain">test.linphone.org</string>
-
-	<bool name="use_android_contact_picker">true</bool>
-    
-    <bool name="useFirstLoginActivity">false</bool>
-	<bool name="useMenuSettings">true</bool>
-	<bool name="useMenuAbout">true</bool>
-	<bool name="use_incall_activity">false</bool>
-	<bool name="use_video_activity">true</bool>
-	<bool name="show_full_remote_address_on_incoming_call">true</bool>
-
 	<string name="notification_title">Linphone</string>
-	<bool name="allow_edit_in_dialer">true</bool>
 	<string name="notification_registered">Registered to %s </string> 
 	<string name="notification_register_failure">Fails to register to %s</string>
-
 	<string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
-	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>
  
