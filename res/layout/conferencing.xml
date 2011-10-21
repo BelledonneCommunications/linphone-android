@@ -10,6 +10,8 @@
 	<LinearLayout android:id="@+id/conf_control_buttons" 
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_alignParentTop="true">
+		<Button android:id="@+id/conf_simple_resume" style="@style/conf_icon_text_button"
+			android:drawableTop="@drawable/conf_resume" android:text="@string/conf_simple_resume_bt_txt"/>
 		<Button android:id="@+id/conf_simple_permute" style="@style/conf_icon_text_button"
 			android:drawableTop="@drawable/conf_permute" android:text="@string/conf_simple_permute_bt_txt"/>
 		<Button android:id="@+id/conf_simple_merge" style="@style/conf_icon_text_button"

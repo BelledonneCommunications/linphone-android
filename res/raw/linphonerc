@@ -48,3 +48,5 @@ ng_floorgain=0.01
 [video]
 size=vga
 
+[misc]
+max_calls=10

@@ -132,6 +132,7 @@ public class ConferenceActivity extends ListActivity implements
 
 		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
 		findViewById(R.id.conf_simple_merge).setOnClickListener(this);
+		findViewById(R.id.conf_simple_resume).setOnClickListener(this);
 		View transferView = findViewById(R.id.conf_simple_transfer);
 		transferView.setOnClickListener(this);
 		if (!allowTransfers) {
@@ -365,6 +366,10 @@ public class ConferenceActivity extends ListActivity implements
 			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
 			lc().addAllToConference();
 			break;
+		case R.id.conf_simple_resume:
+			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
+			handleSimpleResume();
+			break;
 		case R.id.conf_simple_transfer:
 			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
 			LinphoneCall tCall = lc().getCurrentCall();
@@ -397,6 +402,36 @@ public class ConferenceActivity extends ListActivity implements
 			break;
 		}
 
+	}
+
+	private void handleSimpleResume() {
+		int nbCalls = lc().getCallsNb();
+		if (nbCalls == 0) {
+			return;
+		} else if (nbCalls == 1) {
+			// resume first one
+			for (LinphoneCall call : LinphoneUtils.getLinphoneCalls(lc())) {
+				if (call.getState() == State.Paused) {
+					lc().resumeCall(call);
+					break;
+				}
+			}
+		} else {
+			// Create a dialog for user to select
+			final List<LinphoneCall> existingCalls = LinphoneUtils.getLinphoneCalls(lc());
+			final List<String> numbers = new ArrayList<String>(existingCalls.size());
+			Resources r = getResources();
+			for(LinphoneCall c : existingCalls) {
+				numbers.add(LinphoneManager.extractADisplayName(r, c.getRemoteAddress()));
+			}
+			ListAdapter adapter = new ArrayAdapter<String>(ConferenceActivity.this, android.R.layout.select_dialog_item, numbers);
+			DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					lc().resumeCall(existingCalls.get(which));
+				}
+			};
+			new AlertDialog.Builder(ConferenceActivity.this).setTitle(R.string.resume_dialog_title).setAdapter(adapter, l).create().show();
+		}
 	}
 
 	private void prepareForTransferingExistingCall(final LinphoneCall call) {
@@ -669,10 +704,27 @@ public class ConferenceActivity extends ListActivity implements
 
 	private void updateSimpleControlButtons() {
 		LinphoneCall activeCall = lc().getCurrentCall();
-		View controlLayout = findViewById(R.id.conf_control_buttons);
+		View control = findViewById(R.id.conf_control_buttons);
 		int callNb = lc().getCallsNb();
-		boolean hide = activeCall == null || callNb !=2 || lc().getConferenceSize() > 0;
-		controlLayout.setVisibility(hide ? GONE : VISIBLE);
+
+		View permute = control.findViewById(R.id.conf_simple_permute);
+		boolean showPermute = activeCall != null && callNb == 2;
+		permute.setVisibility(showPermute ? VISIBLE : GONE);
+
+		View resume = control.findViewById(R.id.conf_simple_resume);
+		boolean showResume = activeCall == null && LinphoneUtils.hasExistingResumeableCall(lc());
+		resume.setVisibility(showResume ? VISIBLE : GONE);
+
+		View merge = control.findViewById(R.id.conf_simple_merge);
+		boolean showMerge = callNb >= 2;
+		merge.setVisibility(showMerge ? VISIBLE : GONE);
+
+		View transfer = control.findViewById(R.id.conf_simple_transfer);
+		boolean showTransfer = callNb >=2 && activeCall != null && allowTransfers;
+		transfer.setVisibility(showTransfer ? VISIBLE : GONE);
+
+		boolean showControl = (showMerge || showPermute || showResume || showTransfer) || lc().getConferenceSize() > 0;
+		control.setVisibility(showControl ? VISIBLE : GONE);
 	}
 
 	private void tryToStartVideoActivity(LinphoneCall call, State state) {

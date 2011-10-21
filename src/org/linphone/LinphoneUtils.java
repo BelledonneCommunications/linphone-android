@@ -28,6 +28,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -130,6 +131,15 @@ public final class LinphoneUtils {
 	@SuppressWarnings("unchecked")
 	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
 		return (List<LinphoneCall>) lc.getCalls();
+	}
+
+	public static final boolean hasExistingResumeableCall(LinphoneCore lc) {
+		for (LinphoneCall c : getLinphoneCalls(lc)) {
+			if (c.getState() == State.Paused) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
