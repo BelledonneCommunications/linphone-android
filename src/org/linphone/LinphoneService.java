@@ -341,25 +341,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			startActivity(new Intent()
 					.setClass(this, LinphoneActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-		} else if (state == LinphoneCall.State.StreamsRunning) {
-			if (Version.isVideoCapable() 
-					&& getResources().getBoolean(R.bool.autostart_video_activity)
-					&& getResources().getBoolean(R.bool.use_video_activity)
-					&& !VideoCallActivity.launched && LinphoneActivity.isInstanciated()
-					&& call.getCurrentParamsCopy().getVideoEnabled()) {
-				// Do not call if video activity already launched as it would cause a pause() of the launched one
-				// and a race condition with capture surfaceview leading to a crash
-				LinphoneActivity.instance().startVideoActivity();
-			}
-			else if (VideoCallActivity.launched && LinphoneActivity.isInstanciated()
-					&& !call.getCurrentParamsCopy().getVideoEnabled()) {
-				LinphoneActivity.instance().finishVideoActivity();
-			}
-		} else if  (state == LinphoneCall.State.CallUpdatedByRemote) {
-			if (VideoCallActivity.launched && LinphoneActivity.isInstanciated()
-					&& !call.getCurrentParamsCopy().getVideoEnabled()) {
-				LinphoneActivity.instance().finishVideoActivity();
-			}
 		}
 
 		mHandler.post(new Runnable() {

@@ -516,11 +516,27 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 			stopOrientationSensor();
 			finishActivity(INCOMING_CALL_ACTIVITY);
 		}
-		
+		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable()) {
+			boolean videoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
+			boolean videoActivityLaunched = VideoCallActivity.launched;
+			if (videoEnabled && !videoActivityLaunched
+					&& getResources().getBoolean(R.bool.autostart_video_activity)
+					&& getResources().getBoolean(R.bool.use_video_activity)) {
+				// Do not call if video activity already launched as it would cause a pause() of the launched one
+				// and a race condition with capture surfaceview leading to a crash
+				startVideoActivity();
+			} else if (!videoEnabled) {
+				finishVideoActivity();
+			}
+		}
+
+		if (state == LinphoneCall.State.CallUpdatedByRemote && Version.isVideoCapable()) {
+			if (VideoCallActivity.launched && !call.getCurrentParamsCopy().getVideoEnabled()) {
+				finishVideoActivity();
+			}
+		}
 	}
 }
-
-
 
 interface ContactPicked {
 	void setAddressAndGoToDialer(String number, String name, Uri photo);
