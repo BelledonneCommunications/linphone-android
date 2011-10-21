@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="authenticationTokenFormat">Authentication token is %s</string>
+    <string name="not_encrypted">Communication not encrypted</string>
+   
 	<string name="waiting_for_startup">Starting up...</string>
 	<string name="couldnt_accept_call">An error occurred while accepting call</string>
 

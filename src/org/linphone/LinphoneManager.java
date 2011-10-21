@@ -1135,7 +1135,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		public void onCallEncryptionChanged(LinphoneCall call,
 				boolean encrypted, String authenticationToken) {
-			if (serviceListener != null) serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
+			if (serviceListener != null) {
+				serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
+			}
+			for (LinphoneOnCallEncryptionChangedListener l : getSimpleListeners(LinphoneOnCallEncryptionChangedListener.class)) {
+				l.onCallEncryptionChanged(call, encrypted, authenticationToken);
+			}
 		}
 
 		public void onCallStateChanged(LinphoneCall call, State state,

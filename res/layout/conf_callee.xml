@@ -33,6 +33,8 @@
 	  	<TextView android:id="@+id/status_label" style="@style/callee_status" />
 	  	<ImageView android:id="@+id/callee_status_paused" style="@style/callee_status" android:src="@drawable/conf_status_paused" />
 		<ImageView android:id="@+id/callee_status_inconf" style="@style/callee_status" android:src="@drawable/conf_status_inconf"/>
+		<ImageView android:id="@+id/callee_status_secured" style="@style/callee_status" android:src="@drawable/conf_secured" android:visibility="gone"/>
+		<ImageView android:id="@+id/callee_status_not_secured" style="@style/callee_status" android:src="@drawable/conf_not_secured" android:visibility="gone"/>
 	</LinearLayout>
 
 

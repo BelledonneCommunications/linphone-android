@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnVideoCallReadyListener;
 import org.linphone.core.LinphoneAddress;
@@ -69,6 +70,7 @@ public class ConferenceActivity extends ListActivity implements
 		LinphoneOnAudioChangedListener,
 		LinphoneOnVideoCallReadyListener,
 		LinphoneOnCallStateChangedListener,
+		LinphoneOnCallEncryptionChangedListener,
 		Comparator<LinphoneCall>,
 		OnClickListener {
 
@@ -572,7 +574,8 @@ public class ConferenceActivity extends ListActivity implements
 			LinphoneAddress address = call.getRemoteAddress();
 			String mainText = address.getDisplayName();
 			String complText = address.getUserName();
-			if ((getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call))) {
+			if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20) 
+					&& getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call)) {
 				complText += "@" + address.getDomain();
 			}
 			TextView mainTextView = (TextView) v.findViewById(R.id.name);
@@ -653,6 +656,16 @@ public class ConferenceActivity extends ListActivity implements
 			unhookCallButton.setOnClickListener(l);
 			removeFromConfButton.setOnClickListener(l);
 			addVideoButton.setOnClickListener(l);
+
+			if (Version.hasZrtp()) {
+				if (call.areStreamsEncrypted()) {
+					setVisibility(v, R.id.callee_status_secured, true);
+					setVisibility(v, R.id.callee_status_not_secured, false);
+				} else {
+					setVisibility(v, R.id.callee_status_secured, false);
+					setVisibility(v, R.id.callee_status_not_secured, true);
+				}
+			}
 			
 			v.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -666,6 +679,20 @@ public class ConferenceActivity extends ListActivity implements
 					enableView(content, R.id.pause, l,!isInConference && showPause);
 					enableView(content, R.id.resume, l, !isInConference && showResume);
 					enableView(content, R.id.terminate_call, l, true);
+					
+					if (Version.hasZrtp()) {
+						if (call.areStreamsEncrypted()) {
+							setVisibility(content, R.id.encrypted, true);
+							setVisibility(content, R.id.unencrypted, false);
+							TextView token = (TextView) content.findViewById(R.id.authentication_token);
+							String fmt = getString(R.string.authenticationTokenFormat);
+							token.setText(String.format(fmt, call.getAuthenticationToken()));
+						} else {
+							setVisibility(content, R.id.encrypted, false);
+							setVisibility(content, R.id.unencrypted, true);
+						}
+					}
+
 					dialog.show();
 				}
 			});
@@ -680,6 +707,7 @@ public class ConferenceActivity extends ListActivity implements
 				pictureView.setVisibility(GONE);
 			}
 
+			
 			return v;
 		}
 	}
@@ -880,6 +908,17 @@ public class ConferenceActivity extends ListActivity implements
 	@Override
 	public void onRequestedVideoCallReady(LinphoneCall call) {
 		LinphoneActivity.instance().startVideoActivity();
+	}
+
+	@Override
+	public void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
+			String authenticationToken) {
+		mHandler.post(new Runnable() {
+			public void run() {
+				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
+				recreateActivity(adapter);
+			}
+		});
 	}
 
 	/*
