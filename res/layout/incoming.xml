@@ -18,7 +18,7 @@
 		<ImageView android:id="@+id/incoming_picture"
 			android:layout_height="wrap_content" android:layout_width="wrap_content" 
 			android:layout_gravity="center" android:scaleType="fitCenter"
-			android:minWidth="192px" android:minHeight="192px"
+			android:minWidth="128px" android:minHeight="128px"
 			android:paddingBottom="10sp"/>
 		<TextView android:id="@+id/incoming_caller_name"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
