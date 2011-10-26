@@ -588,4 +588,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public int getMaxCalls() {
 		return getMaxCalls(nativePtr);
 	}
+	@Override
+	public boolean isMyself(String uri) {
+		return uri.equals(getDefaultProxyConfig().getIdentity());
+	}
 }

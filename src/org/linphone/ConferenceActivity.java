@@ -822,6 +822,24 @@ public class ConferenceActivity extends ListActivity implements
 
 	}
 
+	private boolean checkValidTargetUri(String uri) {
+		boolean invalidUri;
+		try {
+			String target = lc().interpretUrl(uri).asStringUriOnly();
+			LinphoneCall alreadyInCall = lc().findCallFromUri(target);
+			invalidUri = alreadyInCall != null || lc().isMyself(target);
+		} catch (LinphoneCoreException e) {
+			invalidUri = true;
+		}
+
+		if (invalidUri) {
+			String msg = String.format(getString(R.string.bad_target_uri), uri);
+			Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		return true;
+	}
+	
 	private LinphoneCall callToTransfer;
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -838,6 +856,11 @@ public class ConferenceActivity extends ListActivity implements
 		}
 
 		String uri = data.getStringExtra(UriPickerActivity.EXTRA_CALLEE_URI);
+		if (!checkValidTargetUri(uri)) {
+			eventuallyResumeConfOrCallOnPickerReturn(true);
+			return;
+		}
+
 		switch (requestCode) {
 		case ID_ADD_CALL:
 			try {

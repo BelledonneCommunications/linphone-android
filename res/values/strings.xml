@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="bad_target_uri">Bad URI : %s</string>
     <string name="authenticationTokenFormat">Authentication token is %s</string>
     <string name="not_encrypted">Communication not encrypted</string>
    

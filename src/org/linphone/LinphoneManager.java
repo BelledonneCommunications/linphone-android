@@ -316,6 +316,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
+			if (mLc.isMyself(lAddress.asStringUriOnly())) {
+				listenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
+				return;
+			}
 		} catch (LinphoneCoreException e) {
 			listenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 			return;

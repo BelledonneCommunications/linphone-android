@@ -324,6 +324,10 @@ public class TestConferenceActivity extends ConferenceActivity {
 		public int getMaxCalls() {
 			return 10;
 		}
+		@Override
+		public boolean isMyself(String uri) {
+			return false;
+		}
 	}
 
 
