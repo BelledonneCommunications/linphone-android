@@ -41,7 +41,7 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
 
 		if (TelephonyManager.EXTRA_STATE_RINGING.equals(extraState) || TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
 			LinphoneManager.gsmIdle = false;
-			if (LinphoneManager.isInstanciated()) {
+			if (!LinphoneManager.isInstanciated()) {
 				Log.i("GSM call state changed but manager not instantiated");
 				return;
 			}
