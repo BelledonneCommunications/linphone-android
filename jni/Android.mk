@@ -61,11 +61,17 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/build/android/An
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tests/Android.mk
 
 
+ifeq ($(BUILD_SILK), 1)
+$(info Build proprietary SILK plugin for mediastreamer2)
+include $(linphone-root-dir)/submodules/mssilk/Android.mk
+endif
+
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 include $(linphone-root-dir)/submodules/msilbc/Android.mk
 
 ifeq ($(BUILD_X264), 1)
+$(info Build X264 plugin for mediastreamer2)
 include $(linphone-root-dir)/submodules/msx264/Android.mk
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/x264.mk),)
 include $(linphone-root-dir)/submodules/externals/build/x264/Android.mk
@@ -73,7 +79,6 @@ else
 include $(linphone-root-dir)/submodules/externals/prebuilts/x264.mk
 endif
 endif
-
 
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ffmpeg.mk),)
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
@@ -86,6 +91,7 @@ endif #armeabi-v7a
 
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
+$(info Build ZRTP support - makes application GPLv3)
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/zrtpcpp.mk),)
 include $(linphone-root-dir)/submodules/externals/build/libzrtpcpp/Android.mk
 else

@@ -62,10 +62,15 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		return (CheckBoxPreference) findPreference(getString(key));
 	}
 
-	private void detectAudioCodec(int id, String mime, int rate) {
+	private void detectAudioCodec(int id, String mime, int rate, boolean hide) {
 		boolean enable = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType(mime, rate)!=null;
-		findPreference(id).setEnabled(enable);
+		Preference cb = findPreference(id);
+		cb.setEnabled(enable);
+		if (hide && !enable) {
+			cb.setLayoutResource(R.layout.hidden);
+		}
 	}
+
 	private void detectVideoCodec(int id, String mime) {
 		findPreference(id).setEnabled(LinphoneManager.getInstance().detectVideoCodec(mime));
 	}
@@ -89,12 +94,16 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		boolean fastCpu = Version.isArmv7();
 		if (fastCpu) {
-			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000);
+			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000, false);
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
 		
-		detectAudioCodec(pref_codec_amr_key,"AMR",8000);
+		detectAudioCodec(pref_codec_amr_key,"AMR",8000, false);
+		detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, true);
+		detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, true);
+		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, true);
+		detectAudioCodec(R.string.pref_codec_silk24_key,"SILK",24000, true);
 
 		// No video
 		if (!Version.isVideoCapable()) {

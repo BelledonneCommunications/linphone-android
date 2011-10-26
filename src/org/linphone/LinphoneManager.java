@@ -504,6 +504,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
 			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
 			enableDisableAudioCodec("AMR", 8000, R.string.pref_codec_amr_key);
+			enableDisableAudioCodec("SILK", 24000, R.string.pref_codec_silk24_key);
+			enableDisableAudioCodec("SILK", 16000, R.string.pref_codec_silk16_key);
+			enableDisableAudioCodec("SILK", 12000, R.string.pref_codec_silk12_key);
+			enableDisableAudioCodec("SILK", 8000, R.string.pref_codec_silk8_key);
+
 			
 			// Configure video codecs
 			for (PayloadType videoCodec : mLc.getVideoCodecs()) {

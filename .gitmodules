@@ -46,3 +46,6 @@
 [submodule "submodules/externals/srtp"]
 	path = submodules/externals/srtp
 	url = git://git.linphone.org/srtp.git
+[submodule "submodules/mssilk"]
+	path = submodules/mssilk
+	url = git://git.linphone.org/mssilk.git
