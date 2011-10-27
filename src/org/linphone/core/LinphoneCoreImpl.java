@@ -590,6 +590,13 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	@Override
 	public boolean isMyself(String uri) {
-		return uri.equals(getDefaultProxyConfig().getIdentity());
+		LinphoneProxyConfig lpc = getDefaultProxyConfig();
+		if (lpc == null) return false;
+		return uri.equals(lpc.getIdentity());
+	}
+
+	private native boolean soundResourcesLocked(long nativePtr);
+	public boolean soundResourcesLocked() {
+		return soundResourcesLocked(nativePtr);
 	}
 }

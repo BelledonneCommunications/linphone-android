@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -140,6 +141,17 @@ public final class LinphoneUtils {
 			}
 		}
 		return false;
+	}
+
+	public static final List<LinphoneCall> getRunningOrPausedCalls(LinphoneCore lc) {
+		List<LinphoneCall> foundCalls = new ArrayList<LinphoneCall>();
+		for (LinphoneCall call : getLinphoneCalls(lc)) {
+			State state = call.getState();
+			if (state == State.Paused || state == State.PausedByRemote || state == State.StreamsRunning) {
+				foundCalls.add(call);
+			}
+		}
+		return foundCalls;
 	}
 }
 

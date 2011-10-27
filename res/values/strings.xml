@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="bad_target_uri">Bad URI : %s</string>
+    <string name="not_ready_to_make_new_call">Not ready for a new call</string>
+    <string name="bad_target_uri">Bad contact : %s</string>
     <string name="authenticationTokenFormat">Authentication token is %s</string>
     <string name="not_encrypted">Communication not encrypted</string>
    

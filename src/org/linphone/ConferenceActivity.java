@@ -92,9 +92,6 @@ public class ConferenceActivity extends ListActivity implements
 	// End override to test block
 
 	private static final int numpad_dialog_id = 1;
-	public static final String ADD_CALL = "add_call";
-	public static final String TRANSFER_TO_NEW_CALL = "transfer_to_new_call";
-	public static final String CALL_NATIVE_ID = "call_native_id";
 	private static final int ID_ADD_CALL = 1;
 	private static final int ID_TRANSFER_CALL = 2;
 
@@ -170,6 +167,8 @@ public class ConferenceActivity extends ListActivity implements
 		updateCalleeImage();
 		updateConfState();
 		updateSimpleControlButtons();
+		updateSoundLock();
+		updateDtmfButton();
 		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
 		if (adapter.linphoneCalls.size() != lc().getCallsNb()) {
 			adapter.linphoneCalls.clear();
@@ -180,9 +179,7 @@ public class ConferenceActivity extends ListActivity implements
 		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
 		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 
-		if (multipleCallsLimit > 0) {
-			updateAddCallButton();
-		}
+		updateAddCallButton();
 
 		LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
 		if (currentCall != null) {
@@ -190,11 +187,27 @@ public class ConferenceActivity extends ListActivity implements
 		}
 	}
 
-	private void updateAddCallButton() {
-		boolean limitReached = lc().getCallsNb() >= multipleCallsLimit;
-		findViewById(R.id.addCall).setVisibility(limitReached ? GONE : VISIBLE);
+	private void updateSoundLock() {
+		boolean locked = lc().soundResourcesLocked();
+		findViewById(R.id.addCall).setEnabled(!locked);
 	}
 
+	private void updateAddCallButton() {
+		boolean limitReached = false;
+		if (multipleCallsLimit > 0) {
+			limitReached = lc().getCallsNb() >= multipleCallsLimit;
+		}
+
+		int establishedCallsNb = LinphoneUtils.getRunningOrPausedCalls(lc()).size();
+		boolean hideButton = limitReached || establishedCallsNb == 0;
+		findViewById(R.id.addCall).setVisibility(hideButton? GONE : VISIBLE);
+	}
+
+	private void updateDtmfButton() {
+		LinphoneCall currentCall = lc().getCurrentCall();
+		boolean enableDtmf = currentCall != null && currentCall.getState() == State.StreamsRunning;
+		findViewById(R.id.incallNumpadShow).setEnabled(enableDtmf);
+	}
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -303,6 +316,10 @@ public class ConferenceActivity extends ListActivity implements
 	private LinphoneCall activateCallOnReturnFromUriPicker;
 	private boolean enterConferenceOnReturnFromUriPicker;
 	private void openUriPicker(String pickerType, int requestCode) {
+		if (lc().soundResourcesLocked()) {
+			Toast.makeText(this, R.string.not_ready_to_make_new_call, Toast.LENGTH_LONG).show();
+			return;
+		}
 		activateCallOnReturnFromUriPicker = lc().getCurrentCall();
 		enterConferenceOnReturnFromUriPicker = lc().isInConference();
 		pauseCurrentCallOrLeaveConference();
@@ -620,7 +637,9 @@ public class ConferenceActivity extends ListActivity implements
 			setVisibility(unhookCallButton, showUnhook);
 
 			View terminateCallButton = v.findViewById(R.id.terminate_call);
-			boolean showTerminate = state == State.IncomingReceived;
+			boolean showTerminate = state == State.IncomingReceived
+					|| state == State.OutgoingRinging || state == State.OutgoingEarlyMedia
+					|| state == State.OutgoingInit || state == State.OutgoingProgress;
 			setVisibility(terminateCallButton, showTerminate);
 
 			View pauseButton = v.findViewById(R.id.pause);
@@ -670,6 +689,9 @@ public class ConferenceActivity extends ListActivity implements
 			
 			v.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					if (lc().soundResourcesLocked()) {
+						return;
+					}
 					View content = getLayoutInflater().inflate(R.layout.conf_choices_dialog, null);
 					Dialog dialog = new AlertDialog.Builder(ConferenceActivity.this).setView(content).create();
 					OnClickListener l = new CallActionListener(call, dialog);
@@ -779,6 +801,9 @@ public class ConferenceActivity extends ListActivity implements
 				Log.d("ConferenceActivity applying state ",stateStr);
 				updateSimpleControlButtons();
 				updateCalleeImage();
+				updateSoundLock();
+				updateAddCallButton();
+				updateDtmfButton();
 				if (state == State.IncomingReceived || state == State.OutgoingRinging) {
 					if (!adapter.linphoneCalls.contains(call)) {
 						adapter.linphoneCalls.add(call);
@@ -793,7 +818,6 @@ public class ConferenceActivity extends ListActivity implements
 				} else if (state == State.CallEnd) {
 					adapter.linphoneCalls.remove(call);
 					Collections.sort(adapter.linphoneCalls, ConferenceActivity.this);
-					updateAddCallButton();
 					recreateActivity(adapter);
 				}
 
@@ -862,6 +886,12 @@ public class ConferenceActivity extends ListActivity implements
 			return;
 		}
 
+		if (lc().soundResourcesLocked()) {
+			Toast.makeText(this, R.string.not_ready_to_make_new_call, Toast.LENGTH_LONG).show();
+			eventuallyResumeConfOrCallOnPickerReturn(true);
+			return;
+		}
+		
 		switch (requestCode) {
 		case ID_ADD_CALL:
 			try {

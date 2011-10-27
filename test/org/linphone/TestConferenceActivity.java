@@ -328,6 +328,11 @@ public class TestConferenceActivity extends ConferenceActivity {
 		public boolean isMyself(String uri) {
 			return false;
 		}
+		@Override
+		public boolean soundResourcesLocked() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 
