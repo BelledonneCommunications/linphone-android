@@ -873,7 +873,10 @@ public class ConferenceActivity extends ListActivity implements
 			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(false);
 		}
 
-		String uri = data.getStringExtra(UriPickerActivity.EXTRA_CALLEE_URI);
+		String uri = null;
+		if (data != null) {
+			uri = data.getStringExtra(UriPickerActivity.EXTRA_CALLEE_URI);
+		}
 		if (resultCode != RESULT_OK || TextUtils.isEmpty(uri)) {
 			callToTransfer = null;
 			Toast.makeText(this, R.string.uri_picking_canceled, Toast.LENGTH_LONG).show();
