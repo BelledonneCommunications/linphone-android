@@ -38,19 +38,29 @@ import android.widget.LinearLayout;
 public class Numpad extends LinearLayout implements AddressAware {
 
 	private boolean mPlayDtmf;
+	public void setPlayDtmf(boolean sendDtmf) {
+		this.mPlayDtmf = sendDtmf;
+	}
 
+	public Numpad(Context context, boolean playDtmf) {
+		super(context);
+		mPlayDtmf = playDtmf;
+		LayoutInflater.from(context).inflate(R.layout.numpad, this);
+		setLongClickable(true);
+		onFinishInflate();
+	}
 
 	public Numpad(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.numpad, this);
-		setLongClickable(true);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Numpad);
         mPlayDtmf = 1 == a.getInt(org.linphone.R.styleable.Numpad_play_dtmf, 1);
         a.recycle();
+		LayoutInflater.from(context).inflate(R.layout.numpad, this);
+		setLongClickable(true);
 	}
 
 	@Override
-	protected void onFinishInflate() {
+	protected final void onFinishInflate() {
 		for (Digit v : retrieveChildren(this, Digit.class)) {
 			v.setPlayDtmf(mPlayDtmf);
 		}
@@ -63,7 +73,7 @@ public class Numpad extends LinearLayout implements AddressAware {
 	}
 
 
-	private <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
+	private final <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
 		final Collection<T> views = new ArrayList<T>();
 
 		for (int i = 0; i < viewGroup.getChildCount(); i++) {

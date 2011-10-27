@@ -38,6 +38,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
+import org.linphone.ui.Numpad;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -251,8 +252,8 @@ public class ConferenceActivity extends ListActivity implements
 
 		switch (id) {
 		case numpad_dialog_id:
-			return new AlertDialog.Builder(this).setView(
-					getLayoutInflater().inflate(R.layout.numpad, null))
+			Numpad numpad = new Numpad(this, true);
+			return new AlertDialog.Builder(this).setView(numpad)
 			// .setIcon(R.drawable.logo_linphone_57x57)
 					// .setTitle("Send DTMFs")
 					 .setPositiveButton(getString(R.string.close_button_text), new
