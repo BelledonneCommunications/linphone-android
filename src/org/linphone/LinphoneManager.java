@@ -1055,29 +1055,24 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	};
 
 
-	private static void hideActivityViewAsIfProximitySensorNearby(Activity activity) {
+	private static void simulateProximitySensorNearby(Activity activity, boolean nearby) {
 		final Window window = activity.getWindow();
-		View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
 		WindowManager.LayoutParams lAttrs = activity.getWindow().getAttributes();
-		lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		view.setVisibility(View.INVISIBLE);
+		View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
+		if (nearby) {
+			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			view.setVisibility(View.INVISIBLE);
+		} else  {
+			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
+			view.setVisibility(View.VISIBLE);
+		}
 		window.setAttributes(lAttrs);
 	}
 
 	private static void proximityNearbyChanged() {
 		boolean nearby = sLastProximitySensorValueNearby;
 		for (Activity activity : sProximityDependentActivities) {
-			final Window window = activity.getWindow();
-			WindowManager.LayoutParams lAttrs = activity.getWindow().getAttributes();
-			View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
-			if (nearby) {
-				lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-				view.setVisibility(View.INVISIBLE);
-			} else  {
-				lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
-				view.setVisibility(View.VISIBLE);
-			}
-			window.setAttributes(lAttrs);
+			simulateProximitySensorNearby(activity, nearby);
 		}
 	}
 
@@ -1095,7 +1090,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				Log.i("Proximity sensor detected, registering");
 			}
 		} else if (sLastProximitySensorValueNearby){
-			hideActivityViewAsIfProximitySensorNearby(activity);
+			simulateProximitySensorNearby(activity, true);
 		}
 
 		sProximityDependentActivities.add(activity);
@@ -1103,6 +1098,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public static synchronized void stopProximitySensorForActivity(Activity activity) {
 		sProximityDependentActivities.remove(activity);
+		simulateProximitySensorNearby(activity, false);
 		if (sProximityDependentActivities.isEmpty()) {
 			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
 			sm.unregisterListener(sProximitySensorListener);
