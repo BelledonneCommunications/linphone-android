@@ -1103,7 +1103,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
 			sm.unregisterListener(sProximitySensorListener);
 			sLastProximitySensorValueNearby = false;
-			proximityNearbyChanged();
 		}
 	}
 
