@@ -100,8 +100,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		}
 		
 		detectAudioCodec(pref_codec_amr_key,"AMR",8000, false);
-		detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, true);
-		detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, true);
+		//detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, true);
+		//detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, true);
 		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, true);
 		detectAudioCodec(R.string.pref_codec_silk24_key,"SILK",24000, true);
 
