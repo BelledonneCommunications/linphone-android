@@ -31,10 +31,8 @@ import org.linphone.core.Log;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,13 +45,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class HistoryActivity extends ListActivity {
-	LayoutInflater mInflater;   
-	Cursor mContacts;
+	LayoutInflater mInflater;  
 	@Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	        mContacts = getContacts();
 	    }
 	
 	  
@@ -110,50 +106,6 @@ public class HistoryActivity extends ListActivity {
 		return false;
 	}
 	
-	/**
-     * Obtains the contact list for the currently selected account.
-     *
-     * @return A cursor for for accessing the contact list.
-     */
-    private Cursor getContacts()
-    {
-        // Run query
-        Uri uri = ContactsContract.Data.CONTENT_URI;
-        String[] projection = new String[] {
-                ContactsContract.Data._ID,
-                ContactsContract.Data.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS,
-                ContactsContract.CommonDataKinds.Phone.NUMBER
-        };
-        String selection = 
-        	    ContactsContract.Data.MIMETYPE+" ='" 
-        	    +ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE+"'";
-        String[] selectionArgs = null;
-        String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
-
-        return managedQuery(uri, projection, selection, selectionArgs, sortOrder);
-    }
-    
-    private String getContactNameIfExist(String sipUri)
-    {
-    	String contactName = null;
-    	if (mContacts != null && mContacts.moveToFirst())
-    	{
-    		int displayNameColumnIndex = mContacts.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-    		int sipAdressColumnIndex = mContacts.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
-    		int phoneNumberColumnIndex = mContacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-    		do
-    		{
-    			String sipAdress = mContacts.getString(sipAdressColumnIndex);
-    			String phoneNumber = mContacts.getString(phoneNumberColumnIndex);
-    			if (sipUri.toLowerCase().contains(sipAdress.toLowerCase()) || sipUri.toLowerCase().contains(phoneNumber.toLowerCase()))
-    				contactName = mContacts.getString(displayNameColumnIndex);
-    		}
-    		while (contactName == null && mContacts.moveToNext());
-    	}    	
-    	return contactName;
-    }
-	
 	class CallHistoryAdapter extends  BaseAdapter {
 		final List<LinphoneCallLog> mLogs; 
 
@@ -209,7 +161,7 @@ public class HistoryActivity extends ListActivity {
 			String lDetailedName=null;
 			String lDisplayName = lAddress.getDisplayName(); 
 			if (lDisplayName == null)
-				lDisplayName = getContactNameIfExist(lAddress.asStringUriOnly());
+				lDisplayName = LinphoneUtils.findDisplayNameOfContact(lAddress, getContentResolver());
 			
 			if (lProxyConfig != null && lProxyConfig.getDomain().equals(lAddress.getDomain())) {
 				lDetailedName = lAddress.getUserName();

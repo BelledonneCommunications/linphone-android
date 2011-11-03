@@ -42,9 +42,9 @@ public final class ContactHelper {
 
 
 	private String displayName;
-//	public String getDisplayName() {
-//		return displayName;
-//	}
+	public String getDisplayName() {
+		return displayName;
+	}
 
 	private LinphoneAddress address;
 	public ContactHelper(LinphoneAddress address, ContentResolver resolver) {

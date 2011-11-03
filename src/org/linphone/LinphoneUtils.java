@@ -93,6 +93,12 @@ public final class LinphoneUtils {
 		return helper.getUri();
 	}
 	
+	public static String findDisplayNameOfContact(LinphoneAddress address, ContentResolver resolver) {
+		ContactHelper helper = new ContactHelper(address, resolver);
+		helper.query();
+		return helper.getDisplayName();
+	}
+	
 	public static Bitmap downloadBitmap(Uri uri) {
 		URL url;
 		InputStream is = null;
