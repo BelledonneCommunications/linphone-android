@@ -88,6 +88,11 @@ public class HistoryActivity extends ListActivity {
 		inflater.inflate(R.menu.history_activity_menu, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
