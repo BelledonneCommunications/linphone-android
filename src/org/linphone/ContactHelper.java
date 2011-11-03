@@ -40,7 +40,6 @@ public final class ContactHelper {
 		return foundPhotoUri;
 	}
 
-
 	private String displayName;
 	public String getDisplayName() {
 		return displayName;

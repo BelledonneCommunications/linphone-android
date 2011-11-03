@@ -85,6 +85,7 @@ public class HistoryActivity extends ListActivity {
 		return true;
 	}
 	
+	// Fix the menu from crashing the activity
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		return true;
