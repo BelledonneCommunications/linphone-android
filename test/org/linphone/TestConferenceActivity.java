@@ -333,6 +333,11 @@ public class TestConferenceActivity extends ConferenceActivity {
 			// TODO Auto-generated method stub
 			return false;
 		}
+		@Override
+		public void setMaxCalls(int max) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 

@@ -40,14 +40,14 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
 		final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
 		if (TelephonyManager.EXTRA_STATE_RINGING.equals(extraState) || TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
-			LinphoneManager.gsmIdle = false;
+			LinphoneManager.setGsmIdle(false);
 			if (!LinphoneManager.isInstanciated()) {
 				Log.i("GSM call state changed but manager not instantiated");
 				return;
 			}
 			LinphoneManager.getLc().pauseAllCalls();
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
-        	LinphoneManager.gsmIdle = true;
+        	LinphoneManager.setGsmIdle(true);
         }
 		
 		 

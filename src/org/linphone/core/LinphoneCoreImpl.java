@@ -599,4 +599,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean soundResourcesLocked() {
 		return soundResourcesLocked(nativePtr);
 	}
+
+	private native void setMaxCalls(long nativePtr, int max);
+	@Override
+	public void setMaxCalls(int max) {
+		setMaxCalls(nativePtr, max);
+	}
 }

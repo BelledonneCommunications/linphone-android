@@ -160,8 +160,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mR = c.getResources();
-		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
-		gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 	}
 	
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -274,6 +272,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		instance = new LinphoneManager(c);
 		instance.listenerDispatcher.setServiceListener(listener);
 		instance.startLibLinphone(c);
+		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
+		setGsmIdle(gsmIdle);
 		
 		if (Version.isVideoCapable())
 			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Version.sdk());
@@ -765,7 +766,33 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		listenerDispatcher.onRegistrationStateChanged(state, message);
 	}
 
-	public static boolean gsmIdle;
+	private int savedMaxCallWhileGsmIncall;
+	private synchronized void preventSIPCalls() {
+		if (savedMaxCallWhileGsmIncall != 0) {
+			Log.w("SIP calls are already blocked due to GSM call running");
+			return;
+		}
+		savedMaxCallWhileGsmIncall = mLc.getMaxCalls();
+		mLc.setMaxCalls(0);
+	}
+	private synchronized void allowSIPCalls() {
+		if (savedMaxCallWhileGsmIncall == 0) {
+			Log.w("SIP calls are already allowed as no GSM call knowned to be running");
+			return;
+		}
+		mLc.setMaxCalls(savedMaxCallWhileGsmIncall);
+		savedMaxCallWhileGsmIncall = 0;
+	}
+	public static void setGsmIdle(boolean gsmIdle) {
+		LinphoneManager mThis = instance;
+		if (mThis == null) return;
+		if (gsmIdle) {
+			mThis.allowSIPCalls();
+		} else {
+			mThis.preventSIPCalls();
+		}
+	}
+
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("new state [",state,"]");
 		if (state == IncomingReceived && !call.equals(lc.getCurrentCall())) {
@@ -777,9 +804,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == IncomingReceived) {
-			if (!gsmIdle) {
-				mLc.terminateCall(call);
-			}
 			// Brighten screen for at least 10 seconds
 			WakeLock wl = mPowerManager.newWakeLock(
 					PowerManager.ACQUIRE_CAUSES_WAKEUP
