@@ -15,6 +15,5 @@ cd $topdir/submodules/externals/build/libvpx && ./asm_conversion.sh && cp *.asm 
 
 cd $topdir/submodules/mssilk && ./autogen.sh && ./configure MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " && cd sdk && make extract-sources || ( echo "SILK audio plugin prepare state failed." ; exit 1 )
 
-
 # As a memo, the config.h for zrtpcpp is generated using the command
 # cmake  -Denable-ccrtp=false submodules/externals/libzrtpcpp

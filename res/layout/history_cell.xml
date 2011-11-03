@@ -4,19 +4,22 @@
 	android:padding="6dip">
 	<FrameLayout 
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentBottom="true" android:layout_marginRight="6dip"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentBottom="true" android:layout_marginRight="6dip"
 		android:id="@+id/history_cell_icon">
+		<ImageView android:id="@+id/history_cell_icon_contact"
+			android:layout_width="wrap_content" android:layout_height="fill_parent"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentBottom="true" android:layout_marginRight="6dip"
+			android:scaleType="centerInside"/>
 		<ImageView android:id="@+id/history_cell_icon_in"
-			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentBottom="true" android:layout_marginRight="6dip"
-			android:src="@drawable/in_call" android:scaleType="centerInside"/>
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_gravity="right|bottom" android:layout_marginRight="6dip"
+			android:src="@drawable/in_call_mini" android:scaleType="centerInside"/>
 		<ImageView android:id="@+id/history_cell_icon_out"
-			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentBottom="true" android:layout_marginRight="6dip"
-			android:src="@drawable/out_call" android:scaleType="centerInside"/>
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_gravity="right|bottom" android:layout_marginRight="6dip"
+			android:src="@drawable/out_call_mini" android:scaleType="centerInside"/>
 	</FrameLayout>
 
 	<TextView android:id="@+id/history_cell_second_line"
