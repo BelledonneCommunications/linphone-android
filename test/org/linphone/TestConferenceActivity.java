@@ -338,6 +338,26 @@ public class TestConferenceActivity extends ConferenceActivity {
 			// TODO Auto-generated method stub
 			
 		}
+		@Override
+		public String getMediaEncryption() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public boolean isMediaEncryptionMandatory() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		@Override
+		public void setMediaEncryption(String menc) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void setMediaEncryptionMandatory(boolean yesno) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 

@@ -254,12 +254,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		routeAudioToSpeakerHelper(false);
 		if (mLc.isIncall()) {
 			//Restore default value
-			if (Version.isArmv7()){
-				mLc.getCurrentCall().enableEchoCancellation(mLc.isEchoCancellationEnabled());
-				mLc.getCurrentCall().enableEchoLimiter(false);
-			}else{
-				mLc.getCurrentCall().enableEchoCancellation(false);
-				mLc.getCurrentCall().enableEchoLimiter(mLc.isEchoCancellationEnabled());
+			LinphoneCall call=mLc.getCurrentCall();
+			if (call!=null){
+				if (Version.isArmv7()){
+					call.enableEchoCancellation(mLc.isEchoCancellationEnabled());
+					call.enableEchoLimiter(false);
+				}else{
+					call.enableEchoCancellation(false);
+					call.enableEchoLimiter(mLc.isEchoCancellationEnabled());
+				}
 			}
 		}
 	}
