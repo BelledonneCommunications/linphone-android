@@ -815,12 +815,10 @@ public class ConferenceActivity extends ListActivity implements
 				} else if (state == State.Paused || state == State.PausedByRemote || state == State.StreamsRunning) {
 					Collections.sort(adapter.linphoneCalls,	ConferenceActivity.this);
 					adapter.notifyDataSetChanged();
-				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
-					if (adapter.linphoneCalls.contains(call)) {
-						adapter.linphoneCalls.remove(call);
-						Collections.sort(adapter.linphoneCalls, ConferenceActivity.this);
-						recreateActivity(adapter);
-					}
+				} else if (state == State.CallEnd) {
+					adapter.linphoneCalls.remove(call);
+					Collections.sort(adapter.linphoneCalls, ConferenceActivity.this);
+					recreateActivity(adapter);
 				}
 
 				updateConfState();
@@ -853,7 +851,8 @@ public class ConferenceActivity extends ListActivity implements
 		boolean invalidUri;
 		try {
 			String target = lc().interpretUrl(uri).asStringUriOnly();
-			invalidUri = lc().isMyself(target);
+			LinphoneCall alreadyInCall = lc().findCallFromUri(target);
+			invalidUri = alreadyInCall != null || lc().isMyself(target);
 		} catch (LinphoneCoreException e) {
 			invalidUri = true;
 		}

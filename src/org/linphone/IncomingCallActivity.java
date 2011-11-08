@@ -55,11 +55,10 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 
 	private void findIncomingCall(Intent intent) {
 		String stringUri = intent.getStringExtra("stringUri");
-		// Only one call ringing at a time is allowed
-		mCall = LinphoneManager.getLc().getCurrentCall();
+		mCall = LinphoneManager.getLc().findCallFromUri(stringUri);
 		if (mCall == null) {
 			Log.e("Couldn't find incoming call from ", stringUri);
-			finish();
+			Toast.makeText(this, "Error", Toast.LENGTH_SHORT);
 		}
 	}
 
