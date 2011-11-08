@@ -132,9 +132,6 @@ class LinphoneCallImpl implements LinphoneCall {
 	public boolean isAuthenticationTokenVerified(){
 		return isAuthenticationTokenVerified(nativePtr);
 	}
-	public boolean areStreamsEncrypted() {
-		return areStreamsEncrypted(nativePtr);
-	}
 
 	public boolean isInConference() {
 		LinphoneCallParamsImpl params = new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
