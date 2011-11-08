@@ -677,16 +677,16 @@ public class ConferenceActivity extends ListActivity implements
 			removeFromConfButton.setOnClickListener(l);
 			addVideoButton.setOnClickListener(l);
 
-			if (Version.hasZrtp()) {
-				if (call.areStreamsEncrypted()) {
-					setVisibility(v, R.id.callee_status_secured, true);
-					setVisibility(v, R.id.callee_status_not_secured, false);
-				} else {
-					setVisibility(v, R.id.callee_status_secured, false);
-					setVisibility(v, R.id.callee_status_not_secured, true);
-				}
+			String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			if ("none".equals(mediaEncryption)) {
+				boolean showUnencrypted = Version.hasZrtp();
+				setVisibility(v, R.id.callee_status_secured, false);
+				setVisibility(v, R.id.callee_status_not_secured, showUnencrypted);
+			} else {
+				setVisibility(v, R.id.callee_status_secured, true);
+				setVisibility(v, R.id.callee_status_not_secured, false);
 			}
-			
+
 			v.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (lc().soundResourcesLocked()) {
@@ -702,20 +702,22 @@ public class ConferenceActivity extends ListActivity implements
 					enableView(content, R.id.pause, l,!isInConference && showPause);
 					enableView(content, R.id.resume, l, !isInConference && showResume);
 					enableView(content, R.id.terminate_call, l, true);
-					
-					if (Version.hasZrtp()) {
-						if (call.areStreamsEncrypted()) {
-							setVisibility(content, R.id.encrypted, true);
-							setVisibility(content, R.id.unencrypted, false);
+
+					String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+					if ("none".equals(mediaEncryption)) {
+						boolean showUnencrypted = Version.hasZrtp();
+						setVisibility(content, R.id.encrypted, false);
+						setVisibility(content, R.id.unencrypted, showUnencrypted);
+					} else {
+						setVisibility(content, R.id.encrypted, true);
+						setVisibility(content, R.id.unencrypted, false);
+						if ("zrtp".equals(mediaEncryption)) {
 							TextView token = (TextView) content.findViewById(R.id.authentication_token);
 							String fmt = getString(R.string.authenticationTokenFormat);
 							token.setText(String.format(fmt, call.getAuthenticationToken()));
-						} else {
-							setVisibility(content, R.id.encrypted, false);
-							setVisibility(content, R.id.unencrypted, true);
 						}
 					}
-
+					
 					dialog.show();
 				}
 			});
