@@ -153,23 +153,21 @@ public class HistoryActivity extends ListActivity {
 				lDirectionImageIn.setVisibility(View.GONE);
 				lDirectionImageOut.setVisibility(View.VISIBLE);
 			}
-			
+
 			Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
 			LinphoneUtils.setImagePictureFromUri(lView.getContext(), lContactPicture, uri, R.drawable.unknown_person);
-			
+
 			LinphoneCore lc = LinphoneManager.getLc();
 			LinphoneProxyConfig lProxyConfig = lc.getDefaultProxyConfig();
+			boolean showOnlyUsername = getResources().getBoolean(R.bool.show_only_username_in_history);
 			String lDetailedName=null;
-			String lDisplayName = lAddress.getDisplayName(); 
-			if (lDisplayName == null)
-				lDisplayName = LinphoneUtils.findDisplayNameOfContact(lAddress, getContentResolver());
-			
-			if (lProxyConfig != null && lProxyConfig.getDomain().equals(lAddress.getDomain())) {
+			String lDisplayName = !showOnlyUsername ? lAddress.getDisplayName() : null; 
+			if (showOnlyUsername || (lProxyConfig != null && lProxyConfig.getDomain().equals(lAddress.getDomain()))) {
 				lDetailedName = lAddress.getUserName();
 			} else {
 				lDetailedName = lAddress.asStringUriOnly();
 			}
-			
+
 			if (lDisplayName == null) {
 				lFirstLineView.setText(lDetailedName);
 				lSecondLineView.setVisibility(View.GONE);
@@ -178,7 +176,7 @@ public class HistoryActivity extends ListActivity {
 				lSecondLineView.setText(lDetailedName);
 				lSecondLineView.setVisibility(View.VISIBLE);
 			}
-			
+
 			return lView;
 			
 		}
