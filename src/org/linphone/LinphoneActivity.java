@@ -499,6 +499,9 @@ public class LinphoneActivity extends TabActivity implements
 		if (state==State.IncomingReceived) {
 			startIncomingCallActivity(call);
 		}
+		if (state == State.OutgoingInit) {
+			startIncallActivity();
+		}
 		if (state==State.OutgoingInit || state==State.IncomingReceived) {
 			startOrientationSensor();
 			enterIncallMode();
@@ -507,8 +510,8 @@ public class LinphoneActivity extends TabActivity implements
 			finishActivity(INCOMING_CALL_ACTIVITY);
 		}
 		if (state==State.Connected) {
-			startIncallActivity();
 			if (call.getDirection() == CallDirection.Incoming) {
+				startIncallActivity();
 				enterIncallMode();
 			}
 		}
