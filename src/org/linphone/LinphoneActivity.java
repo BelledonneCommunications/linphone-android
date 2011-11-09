@@ -91,7 +91,7 @@ public class LinphoneActivity extends TabActivity implements
 	private static boolean useMenuSettings;
 	private static boolean useMenuAbout;
 	private boolean checkAccount;
-
+	private LinphoneManagerWaitHelper waitHelper;
 	
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -142,6 +142,8 @@ public class LinphoneActivity extends TabActivity implements
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG+"#"+getClass().getName());
 
 		LinphoneManager.addListener(this);
+		waitHelper = new LinphoneManagerWaitHelper(this, this);
+		waitHelper.doManagerDependentOnCreate();
 	}
 	
 	
@@ -597,6 +599,11 @@ public class LinphoneActivity extends TabActivity implements
 		super.onDestroy();
 	}
 	
+	@Override
+	protected void onResume() {
+		waitHelper.doManagerDependentOnResume();
+		super.onResume();
+	}
 }
 
 interface ContactPicked {
