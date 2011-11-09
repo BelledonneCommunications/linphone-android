@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.util.List;
+
 import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
@@ -28,7 +30,6 @@ import org.linphone.ui.SlidingTab;
 import org.linphone.ui.SlidingTab.OnTriggerListener;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -52,16 +53,6 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 	private LinphoneCall mCall;
 	private LinphoneManagerWaitHelper mHelper;
 	private SlidingTab mIncomingCallWidget;
-
-	private void findIncomingCall(Intent intent) {
-		String stringUri = intent.getStringExtra("stringUri");
-		// Only one call ringing at a time is allowed
-		mCall = LinphoneManager.getLc().getCurrentCall();
-		if (mCall == null) {
-			Log.e("Couldn't find incoming call from ", stringUri);
-			finish();
-		}
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +89,16 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 	@Override
 	public void onResumeWhenManagerReady() {
 		LinphoneManager.addListener(this);
-		findIncomingCall(getIntent());
+		// Only one call ringing at a time is allowed
+		List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
+		for (LinphoneCall call : calls) {
+			if (State.IncomingReceived == call.getState()) {
+				mCall = call;
+				break;
+			}
+		}
 		if (mCall == null) {
+			Log.e("Couldn't find incoming call");
 			finish();
 			return;
 		}
