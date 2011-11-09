@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.ui;
 
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 
 import android.content.Context;
@@ -38,6 +39,8 @@ public class AddVideoButton extends ImageButton implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		LinphoneManager.getInstance().addVideo();
+		if (!LinphoneManager.getInstance().addVideo()) {
+			LinphoneActivity.instance().startVideoActivity();
+		}
 	}
 }

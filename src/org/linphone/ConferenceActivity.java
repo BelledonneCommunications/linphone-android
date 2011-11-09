@@ -30,7 +30,6 @@ import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnVideoCallReadyListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
@@ -69,7 +68,6 @@ import android.widget.ToggleButton;
 public class ConferenceActivity extends ListActivity implements
 		LinphoneManagerReadyListener,
 		LinphoneOnAudioChangedListener,
-		LinphoneOnVideoCallReadyListener,
 		LinphoneOnCallStateChangedListener,
 		LinphoneOnCallEncryptionChangedListener,
 		Comparator<LinphoneCall>,
@@ -180,11 +178,6 @@ public class ConferenceActivity extends ListActivity implements
 		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 
 		updateAddCallButton();
-
-		LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
-		if (currentCall != null) {
-			tryToStartVideoActivity(currentCall, currentCall.getState());
-		}
 	}
 
 	private void updateSoundLock() {
@@ -513,7 +506,9 @@ public class ConferenceActivity extends ListActivity implements
 				lc().removeFromConference(call);
 				break;
 			case R.id.addVideo:
-				LinphoneManager.getInstance().addVideo();
+				if (!LinphoneManager.getInstance().addVideo()) {
+					LinphoneActivity.instance().startVideoActivity();
+				}
 				break;
 			default:
 				throw new RuntimeException("unknown id " + v.getId());
@@ -780,22 +775,10 @@ public class ConferenceActivity extends ListActivity implements
 		control.setVisibility(showControl ? VISIBLE : GONE);
 	}
 
-	private void tryToStartVideoActivity(LinphoneCall call, State state) {
-		if (State.StreamsRunning == state && call.getCurrentParamsCopy().getVideoEnabled()) {
-			if (call.cameraEnabled() ) {
-				LinphoneActivity.instance().startVideoActivity();
-			} else {
-				Log.i("Not starting video call activity as the camera is disabled");
-			}
-		}
-	}
-
 	public void onCallStateChanged(final LinphoneCall call, final State state,
 			final String message) {
 		final String stateStr = call + " " + state.toString();
 		Log.d("ConferenceActivity received state ",stateStr);
-		
-		tryToStartVideoActivity(call, state);
 		
 		mHandler.post(new Runnable() {
 			public void run() {
@@ -967,11 +950,6 @@ public class ConferenceActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onRequestedVideoCallReady(LinphoneCall call) {
-		LinphoneActivity.instance().startVideoActivity();
-	}
-
-	@Override
 	public void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
 			String authenticationToken) {
 		mHandler.post(new Runnable() {
@@ -982,34 +960,4 @@ public class ConferenceActivity extends ListActivity implements
 		});
 	}
 
-	/*
-	 * public int compare(LinphoneCall c1, LinphoneCall c2) { if (c1 == c2)
-	 * return 0;
-	 * 
-	 * boolean inConfC1 = c1.isInConference(); boolean inConfC2 =
-	 * c2.isInConference(); if (inConfC1 && !inConfC2) return -1; if (!inConfC1
-	 * && inConfC2) return 1;
-	 * 
-	 * int compUserName =
-	 * c1.getRemoteAddress().getUserName().compareToIgnoreCase
-	 * (c2.getRemoteAddress().getUserName()); if (inConfC1 && inConfC2) { return
-	 * compUserName; }
-	 * 
-	 * // bellow, ringings and incoming int c1State = c1.getState().value(); int
-	 * c2State = c2.getState().value();
-	 * 
-	 * boolean c1StateIsEstablishing = c1State == State.IncomingReceived ||
-	 * c1State == State.ID_OUTGOING_RINGING; boolean c2StateIsEstablishing =
-	 * c2State == State.IncomingReceived || c2State ==
-	 * State.ID_OUTGOING_RINGING;
-	 * 
-	 * // Xor only one establishing state if (c1StateIsEstablishing ^
-	 * c2StateIsEstablishing) { // below return !c1StateIsEstablishing ? -1 : 1;
-	 * }
-	 * 
-	 * // Xor only one paused state if (c1State == State.Paused ^ c2State ==
-	 * State.Paused) { return c1State == State.Paused ? -1 : 1; }
-	 * 
-	 * return compUserName; //Duration() - c1.getDuration(); }
-	 */
 }

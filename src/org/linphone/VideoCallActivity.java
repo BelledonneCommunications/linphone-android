@@ -286,7 +286,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		if (isFinishing()) {
 			videoCall = null; // release reference
 		}
-		LinphoneManager.getInstance().restoreUserRequestedSpeaker();
 		launched=false;
 		synchronized (androidVideoWindowImpl) {
 			/* this call will destroy native opengl renderer
@@ -297,14 +296,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		
 		LinphoneManager.getLc().setPreviewWindow(null);
 		
-		if (LinphoneManager.getLc().isIncall()) {
-			// we're getting paused for real
-			if (getChangingConfigurations() == 0) {
-				LinphoneManager.getInstance().sendStaticImage(true);
-			} else {
-				LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
-				LinphoneManager.getLc().updateCall(LinphoneManager.getLc().getCurrentCall(), null);
-			}
+		final LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+		if (currentCall != null && getChangingConfigurations() != 0) {
+			LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
+			LinphoneManager.getLc().updateCall(currentCall, null);
 		}
 		if (mCallQualityUpdater!=null){
 			refreshHandler.removeCallbacks(mCallQualityUpdater);

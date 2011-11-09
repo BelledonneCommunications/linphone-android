@@ -38,8 +38,6 @@ public interface LinphoneSimpleListener {
 		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
 		void onDisplayStatus(String message);
-		void onAlreadyInVideoCall();
-		
 	}
 
 
@@ -61,6 +59,6 @@ public interface LinphoneSimpleListener {
 	}
 
 	public static interface LinphoneOnVideoCallReadyListener extends LinphoneSimpleListener {
-		void onRequestedVideoCallReady(LinphoneCall call);
+		void onVideoCallReady(LinphoneCall call);
 	}
 }

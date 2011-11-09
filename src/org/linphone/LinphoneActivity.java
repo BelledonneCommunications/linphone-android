@@ -23,6 +23,7 @@ import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnVideoCallReadyListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
@@ -58,7 +59,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 	
-public class LinphoneActivity extends TabActivity implements SensorEventListener, ContactPicked, LinphoneOnCallStateChangedListener {
+public class LinphoneActivity extends TabActivity implements
+		SensorEventListener, ContactPicked,
+		LinphoneOnCallStateChangedListener,
+		LinphoneOnVideoCallReadyListener
+		{
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     private static final int video_activity = 100;
@@ -89,7 +94,7 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 		return instance != null;
 	}
 	
-	static final LinphoneActivity instance() {
+	public static final LinphoneActivity instance() {
 		if (instance != null) return instance;
 
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
@@ -462,6 +467,8 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 	}
 
 	public void startVideoActivity() {
+		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		if (call != null) call.enableCamera(true);
 		mHandler.post(new Runnable() {
 			public void run() {
 				startActivityForResult(new Intent().setClass(
@@ -535,6 +542,11 @@ public class LinphoneActivity extends TabActivity implements SensorEventListener
 				finishVideoActivity();
 			}
 		}
+	}
+
+	@Override
+	public void onVideoCallReady(LinphoneCall call) {
+		startVideoActivity();
 	}
 }
 

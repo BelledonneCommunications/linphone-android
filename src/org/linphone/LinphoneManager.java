@@ -996,15 +996,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		e.commit();
 	}
 
-	private LinphoneCall requestedVideoCall;
+	/**
+	 * 
+	 * @return false if already in video call. 
+	 */
 	public boolean addVideo() {
-		requestedVideoCall = mLc.getCurrentCall();
-		if (requestedVideoCall == null) return false;
-
-		if (!reinviteWithVideo()) {
-			listenerDispatcher.onAlreadyInVideoCall();
-		}
-		return true;
+		LinphoneCall call = mLc.getCurrentCall();
+		if (call != null) call.enableCamera(true);
+		return reinviteWithVideo();
 	}
 	
 	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
@@ -1160,10 +1159,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			this.serviceListener = s;
 		}
 
-		public void onAlreadyInVideoCall() {
-			if (serviceListener != null) serviceListener.onAlreadyInVideoCall();
-		}
-
 		public void onCallEncryptionChanged(LinphoneCall call,
 				boolean encrypted, String authenticationToken) {
 			if (serviceListener != null) {
@@ -1180,17 +1175,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				boolean sendCamera = shareMyCamera() && mLc.getConferenceSize() == 0;
 				call.enableCamera(sendCamera);
 			}
-			if (state == State.CallEnd && call == requestedVideoCall) {
-				requestedVideoCall = null; // drop reference
-			}
 			if (state == State.CallEnd && mLc.getCallsNb() == 0) {
 				routeAudioToReceiver(true);
 			}
-			if (state == State.StreamsRunning && call == requestedVideoCall && call.getCurrentParamsCopy().getVideoEnabled()) {
+			if (state == State.StreamsRunning && call.getCurrentParamsCopy().getVideoEnabled()) {
 				for (LinphoneOnVideoCallReadyListener l : getSimpleListeners(LinphoneOnVideoCallReadyListener.class)) {
-					l.onRequestedVideoCallReady(call);
+					l.onVideoCallReady(call);
 				}
-				requestedVideoCall = null;
 			}
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
