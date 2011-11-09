@@ -236,17 +236,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	 * 
 	 */
 	public void routeAudioToReceiver() {
+		routeAudioToSpeakerHelper(false);
 		if (mLc.isIncall()) {
 			//Restore default value
 			LinphoneCall call=mLc.getCurrentCall();
 			if (call!=null){
-				if (Version.isArmv7()){
-					call.enableEchoCancellation(mLc.isEchoCancellationEnabled());
-					call.enableEchoLimiter(false);
-				}else{
-					call.enableEchoCancellation(false);
-					call.enableEchoLimiter(mLc.isEchoCancellationEnabled());
-				}
+				call.enableEchoCancellation(mLc.isEchoCancellationEnabled());
+				call.enableEchoLimiter(mLc.isEchoLimiterEnabled());
 			}
 		}
 	}
@@ -507,13 +503,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				enableDisableVideoCodecs(videoCodec);
 			}
 			boolean use_ec=mPref.getBoolean(getString(R.string.pref_echo_cancellation_key),false);
-			if (Version.isArmv7()){
-				mLc.enableEchoCancellation(use_ec);
-				mLc.enableEchoLimiter(false);
-			}else{
-				mLc.enableEchoCancellation(false);
-				mLc.enableEchoLimiter(false);
-			}
+			boolean use_el=mPref.getBoolean(getString(R.string.pref_echo_limiter_key),false);
+			mLc.enableEchoCancellation(use_ec);
+			mLc.enableEchoLimiter(use_el);
+			
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}

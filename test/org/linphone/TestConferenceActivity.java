@@ -358,6 +358,11 @@ public class TestConferenceActivity extends IncallActivity {
 			// TODO Auto-generated method stub
 			
 		}
+		@Override
+		public boolean isEchoLimiterEnabled() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 

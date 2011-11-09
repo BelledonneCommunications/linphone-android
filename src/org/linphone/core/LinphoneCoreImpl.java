@@ -605,4 +605,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setMaxCalls(int max) {
 		setMaxCalls(nativePtr, max);
 	}
+	private native boolean isEchoLimiterEnabled(long nativePtr);
+	@Override
+	public boolean isEchoLimiterEnabled() {
+		return isEchoLimiterEnabled(nativePtr);
+	}
 }

@@ -46,6 +46,8 @@
 
 		<CheckBoxPreference android:key="@string/pref_echo_canceller_calibration_key"
 		 android:title="@string/pref_echo_canceller_calibration" />
+		<CheckBoxPreference android:key="@string/pref_echo_limiter_key"
+		 android:title="@string/pref_echo_limiter" android:summary="@string/pref_echo_limiter_summary"/>
 		 
 		 <PreferenceScreen android:title="@string/pref_codecs" android:key="@string/pref_codecs_key">
 			<CheckBoxPreference android:key="@string/pref_codec_speex16_key"

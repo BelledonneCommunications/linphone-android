@@ -27,6 +27,9 @@ import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
+import static org.linphone.R.string.pref_echo_limiter_key;
+import static org.linphone.R.string.pref_echo_cancellation_key;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +55,8 @@ import android.widget.Toast;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
+	private CheckBoxPreference ecCalibratePref;
+	private CheckBoxPreference elPref;
 	private CheckBoxPreference ecPref;
 
 	private SharedPreferences prefs() {
@@ -84,19 +89,24 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		addTransportChecboxesListener();
 		
-		ecPref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
-		ecPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
+		ecCalibratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				startEcCalibration();
 				return false;
 			}
 		});
+		ecPref = (CheckBoxPreference) findPreference(pref_echo_cancellation_key);
+		elPref = (CheckBoxPreference) findPreference(pref_echo_limiter_key);
 
 		boolean fastCpu = Version.isArmv7();
 		if (fastCpu) {
 			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000, false);
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
+			findPreference(pref_echo_cancellation_key).setEnabled(true);
+		}else{
+			findPreference(pref_echo_limiter_key).setEnabled(true);
 		}
 		
 		detectAudioCodec(pref_codec_amr_key,"AMR",8000, false);
@@ -122,11 +132,32 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
 
-		
+		addEchoPrefsListener();
 		
 		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
 	}
-	
+	private void addEchoPrefsListener(){
+		OnPreferenceChangeListener ec_listener=new OnPreferenceChangeListener(){
+			public boolean onPreferenceChange(Preference arg0, Object newValue) {
+				Boolean val=(Boolean)newValue;
+				if (val){
+					elPref.setChecked(!val);
+				}
+				return true;
+			}
+		};
+		OnPreferenceChangeListener el_listener=new OnPreferenceChangeListener(){
+			public boolean onPreferenceChange(Preference arg0, Object newValue) {
+				Boolean val=(Boolean)newValue;
+				if (val){
+					ecPref.setChecked(!val);
+				}
+				return true;
+			}
+		};
+		ecPref.setOnPreferenceChangeListener(ec_listener);
+		elPref.setOnPreferenceChangeListener(el_listener);
+	}
 
 	private void addTransportChecboxesListener() {
 
@@ -184,8 +215,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		try {
 			LinphoneManager.getInstance().startEcCalibration(this);
 
-			ecPref.setSummary(ec_calibrating);
-			ecPref.getEditor().putBoolean(getString(pref_echo_canceller_calibration_key), false).commit();
+			ecCalibratePref.setSummary(ec_calibrating);
+			ecCalibratePref.getEditor().putBoolean(getString(pref_echo_canceller_calibration_key), false).commit();
 		} catch (LinphoneCoreException e) {
 			Log.w(e, "Cannot calibrate EC");
 		}	
@@ -196,11 +227,13 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (status == EcCalibratorStatus.Done) {
-					ecPref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
-					ecPref.setChecked(true);
+					ecCalibratePref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+					ecCalibratePref.setChecked(true);
 
 				} else if (status == EcCalibratorStatus.Failed) {
-					ecPref.setSummary(R.string.failed);
+					ecCalibratePref.setSummary(R.string.failed);
+					ecCalibratePref.setChecked(false);
+					elPref.setChecked(true);
 					ecPref.setChecked(false);
 				}
 			}
