@@ -747,6 +747,12 @@ public class IncallActivity extends ListActivity implements
 
 	private Handler mHandler = new Handler();
 
+	private static int conferenceCalleesNb(LinphoneCore lc) {
+		int count = lc.getConferenceSize();
+		if (lc.isInConference()) count--;
+		return count;
+	}
+
 	private void updateSimpleControlButtons() {
 		LinphoneCall activeCall = lc().getCurrentCall();
 		View control = findViewById(R.id.conf_control_buttons);
@@ -761,7 +767,7 @@ public class IncallActivity extends ListActivity implements
 		resume.setVisibility(showResume ? VISIBLE : GONE);
 
 		View merge = control.findViewById(R.id.conf_simple_merge);
-		boolean showMerge = callNb >= 2;
+		boolean showMerge = callNb >= 2 && callNb > conferenceCalleesNb(lc());
 		merge.setVisibility(showMerge ? VISIBLE : GONE);
 
 		View transfer = control.findViewById(R.id.conf_simple_transfer);
@@ -940,7 +946,7 @@ public class IncallActivity extends ListActivity implements
 					mSpeakerButton.setChecked(false);
 					break;
 				default:
-					throw new RuntimeException("Unkown audio state " + state);
+					throw new RuntimeException("Unknown audio state " + state);
 				}
 			}
 		});
