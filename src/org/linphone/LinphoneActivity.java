@@ -545,7 +545,11 @@ public class LinphoneActivity extends TabActivity implements
 	
 	private void showToast(int id, String txt) {
 		final String msg = String.format(getString(id), txt);
-		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+		mHandler.post(new Runnable() {
+			public void run() {
+				Toast.makeText(LinphoneActivity.this, msg, Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	@Override
