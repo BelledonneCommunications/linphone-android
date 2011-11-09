@@ -44,7 +44,7 @@ import android.os.Handler;
 /**
  * @author Guillaume Beraudo
  */
-public class TestConferenceActivity extends ConferenceActivity {
+public class TestConferenceActivity extends IncallActivity {
 
 	private Handler mHandler = new Handler();
 	private LinphoneCoreTest mTestLc;

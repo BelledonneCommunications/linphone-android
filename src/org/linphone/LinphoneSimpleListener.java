@@ -58,7 +58,4 @@ public interface LinphoneSimpleListener {
 		void onAudioStateChanged(AudioState state);
 	}
 
-	public static interface LinphoneOnVideoCallReadyListener extends LinphoneSimpleListener {
-		void onVideoCallReady(LinphoneCall call);
-	}
 }

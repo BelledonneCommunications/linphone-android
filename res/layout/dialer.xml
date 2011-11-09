@@ -5,54 +5,19 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent">
-		<LinearLayout android:layout_height="wrap_content"
-			android:layout_width="fill_parent" android:id="@+id/Addresslayout">
-			<org.linphone.ui.AddressText android:id="@+id/SipUri" android:background="@drawable/clavier_bg_grey" android:hint="sip:" android:layout_width="fill_parent"
-				android:singleLine="true"  android:lines="1" android:layout_weight="0.2" android:layout_height="fill_parent" android:padding="10px" android:maxLines="1" android:editable="@bool/allow_edit_in_dialer"/>
-			<org.linphone.ui.EraseButton android:layout_height="fill_parent" android:background="@drawable/clavier_bg" android:id="@+id/Erase"
-				android:layout_width="fill_parent" android:layout_weight="0.8" android:textSize="20sp"
-				android:textStyle="bold" android:text="&lt;" android:layout_gravity="top" android:textColor="@android:color/black"/>
-		</LinearLayout>
-
-
-	<FrameLayout android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:id="@+id/IncallAddressLayout" android:background="@drawable/clavier_bg">
-
-		<EditText android:text="@+id/EditText01"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
-			android:lines="1"
-			android:id="@+id/DisplayNameView" android:clickable="false"
-			android:cursorVisible="false" android:layout_gravity="center"></EditText>
-		<org.linphone.ui.MuteMicButton android:id="@+id/mic_mute_button"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
-			checked="@drawable/mic_muted" unchecked="@drawable/mic_active"
-			android:layout_gravity="left|center_vertical"/>
-		<org.linphone.ui.SpeakerButton android:id="@+id/speaker_button"
-			android:layout_height="wrap_content" android:layout_width="wrap_content" 
-			checked="@drawable/speaker_32_on" unchecked="@drawable/speaker_32_off"
-			android:layout_gravity="right|center_vertical"/>
-	</FrameLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:id="@+id/Addresslayout">
+		<org.linphone.ui.AddressText android:id="@+id/SipUri" android:background="@drawable/clavier_bg_grey" android:hint="sip:" android:layout_width="fill_parent"
+			android:singleLine="true"  android:lines="1" android:layout_weight="0.2" android:layout_height="fill_parent" android:padding="10px" android:maxLines="1" android:editable="@bool/allow_edit_in_dialer"/>
+		<org.linphone.ui.EraseButton android:layout_height="fill_parent" android:background="@drawable/clavier_bg" android:id="@+id/Erase"
+			android:layout_width="fill_parent" android:layout_weight="0.8" android:textSize="20sp"
+			android:textStyle="bold" android:text="&lt;" android:layout_gravity="top" android:textColor="@android:color/black"/>
 	</LinearLayout>
 
 	<org.linphone.ui.Numpad android:id="@+id/Dialer" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="4" />
 
 	<LinearLayout android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
-		<LinearLayout android:id="@+id/CallControlRow" android:layout_height="fill_parent" android:layout_width="fill_parent">
-			<ImageButton android:id="@+id/BackToConference" android:src="@drawable/resume_blue" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:visibility="gone"/>
-			<org.linphone.ui.CallButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
-			<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/stopcall_red" android:background="@drawable/clavier_bg"/>
-		</LinearLayout>
-
-		<LinearLayout android:id="@+id/IncallControlRow" android:layout_height="fill_parent" android:layout_width="fill_parent" android:visibility="gone">
-			<org.linphone.ui.AddVideoButton android:id="@+id/AddVideo" android:src="@drawable/startvideo_green" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
-			<org.linphone.ui.HangCallButton android:id="@+id/HangUp" android:src="@drawable/stopcall_red" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg"/>
-		</LinearLayout>
-
+		<org.linphone.ui.CallButton android:id="@+id/Call" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:src="@drawable/startcall_green" android:background="@drawable/clavier_bg"/>
 		<EditText android:id="@+id/status_label" android:clickable="false" android:focusable="false" android:cursorVisible="false" android:textSize="12sp" android:height="15sp" android:layout_height="wrap_content" android:layout_width="fill_parent" android:background="@android:color/transparent" android:textColor="@android:color/white" />
 	</LinearLayout>
-
-	
-
-
 </LinearLayout>

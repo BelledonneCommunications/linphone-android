@@ -40,7 +40,7 @@ public class AddVideoButton extends ImageButton implements OnClickListener {
 
 	public void onClick(View v) {
 		if (!LinphoneManager.getInstance().addVideo()) {
-			LinphoneActivity.instance().startVideoActivity();
+			LinphoneActivity.instance().startVideoActivity(LinphoneManager.getLc().getCurrentCall(), 0);
 		}
 	}
 }

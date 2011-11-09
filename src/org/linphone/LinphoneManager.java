@@ -215,24 +215,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-	private static boolean sUserRequestedSpeaker;
-	public static final boolean isUserRequestedSpeaker() {return sUserRequestedSpeaker;}
-
-	public void restoreUserRequestedSpeaker() {
-		if (sUserRequestedSpeaker) {
-			routeAudioToSpeaker(false);
-		} else {
-			routeAudioToReceiver(false);
-		}
-	}
 	/**
 	 * 
 	 * @param isUserRequest true if the setting is permanent, otherwise it can be lost
 	 * 	eg: video activity imply speaker on, which is not a request from the user.
 	 * 	when the activity stops, the sound is routed to the previously user requested route.
 	 */
-	public void routeAudioToSpeaker(boolean isUserRequest) {
-		if (isUserRequest) sUserRequestedSpeaker = true;
+	public void routeAudioToSpeaker() {
 		routeAudioToSpeakerHelper(true);
 		LinphoneCall currentCall = mLc.getCurrentCall();
 		if (currentCall != null) {
@@ -245,13 +234,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	/**
 	 * 
-	 * @param isUserRequest true if the setting is permanent, otherwise it can be lost
-	 * 	eg: video activity imply speaker on, which is not a request from the user.
-	 * 	when the activity stops, the sound is routed to the previously user requested route.
 	 */
-	public void routeAudioToReceiver(boolean isUserRequest) {
-		if (isUserRequest) sUserRequestedSpeaker = false;
-		routeAudioToSpeakerHelper(false);
+	public void routeAudioToReceiver() {
 		if (mLc.isIncall()) {
 			//Restore default value
 			LinphoneCall call=mLc.getCurrentCall();
@@ -929,8 +913,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		isRinging = false;
 		// You may need to call galaxys audio hack after this method
-		boolean isUserRequest = false;
-		routeAudioToReceiver(isUserRequest);
+		routeAudioToReceiver();
 	}
 
 	
@@ -1176,12 +1159,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				call.enableCamera(sendCamera);
 			}
 			if (state == State.CallEnd && mLc.getCallsNb() == 0) {
-				routeAudioToReceiver(true);
-			}
-			if (state == State.StreamsRunning && call.getCurrentParamsCopy().getVideoEnabled()) {
-				for (LinphoneOnVideoCallReadyListener l : getSimpleListeners(LinphoneOnVideoCallReadyListener.class)) {
-					l.onVideoCallReady(call);
-				}
+				routeAudioToReceiver();
 			}
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {

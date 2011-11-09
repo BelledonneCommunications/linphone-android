@@ -9,10 +9,6 @@
 	<bool name="useFirstLoginActivity">false</bool>
 	<bool name="useMenuSettings">true</bool>
 	<bool name="useMenuAbout">true</bool>
-	<bool name="use_incall_activity">false</bool>
-	<bool name="use_conference_activity">true</bool>
-	<bool name="use_video_activity">true</bool>
-	<bool name="autostart_video_activity">false</bool>
 	<bool name="show_full_remote_address_on_incoming_call">true</bool>
 	<bool name="show_only_username_in_history">false</bool>
 

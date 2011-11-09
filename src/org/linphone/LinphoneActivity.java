@@ -22,9 +22,9 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnVideoCallReadyListener;
-import org.linphone.core.LinphoneAddress;
+import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
@@ -46,9 +46,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.Menu;
@@ -60,21 +62,22 @@ import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 	
 public class LinphoneActivity extends TabActivity implements
-		SensorEventListener, ContactPicked,
-		LinphoneOnCallStateChangedListener,
-		LinphoneOnVideoCallReadyListener
+		SensorEventListener
+		, ContactPicked
+		, LinphoneOnCallStateChangedListener
+		, LinphoneManagerReadyListener
 		{
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     private static final int video_activity = 100;
     static final int FIRST_LOGIN_ACTIVITY = 101;
-    static final int INCALL_ACTIVITY = 102;
     static final int INCOMING_CALL_ACTIVITY = 103;
-	private static final int conference_activity = 104;
+	private static final int incall_activity = 104;
     private static final String PREF_CHECK_CONFIG = "pref_check_config";
 
 	private static LinphoneActivity instance;
-	
+
+	private PowerManager.WakeLock mWakeLock;
 	
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
@@ -135,6 +138,9 @@ public class LinphoneActivity extends TabActivity implements
 			}
 		}
 
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG+"#"+getClass().getName());
+
 		LinphoneManager.addListener(this);
 	}
 	
@@ -165,7 +171,7 @@ public class LinphoneActivity extends TabActivity implements
 				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			}
 			break;
-		case conference_activity:
+		case incall_activity:
 			break;
 		default:
 			break;
@@ -194,14 +200,6 @@ public class LinphoneActivity extends TabActivity implements
 	    		R.string.tab_contact, R.drawable.contact_orange);
 
 
-	    /*if (LinphoneService.isReady()) {
-	    	LinphoneCore lc = LinphoneManager.getLc();
-	    	if (lc.isIncall()) {
-	    		String caller = LinphoneManager.getInstance().extractADisplayName();
-	    		startIncallActivity(caller);
-	    	}
-	    }*/
-	    
 	    gotToDialer();
 	}
 
@@ -211,19 +209,10 @@ public class LinphoneActivity extends TabActivity implements
 		if (intent.getData() == null) {
 			Log.e("LinphoneActivity received an intent without data, recreating GUI if needed");
 			if (!LinphoneService.isReady() || !LinphoneManager.getLc().isIncall()) return;
-			LinphoneCore lc = LinphoneManager.getLc();
-			if(lc.isInComingInvitePending()) {
+			if(LinphoneManager.getLc().isInComingInvitePending()) {
 				gotToDialer();
 			} else {
-				if (getResources().getBoolean(R.bool.use_incall_activity)) {
-					LinphoneAddress address = LinphoneManager.getLc().getRemoteAddress();
-					startIncallActivity(LinphoneManager.extractADisplayName(getResources(), address), null);
-				} if (getResources().getBoolean(R.bool.use_conference_activity)) {
-					startConferenceActivity();
-				} else {
-					// TODO
-					Log.e("Not handled case: recreation while in call and not using incall activity");
-				}
+				startIncallActivity();
 			}
 			return;
 		}
@@ -262,7 +251,6 @@ public class LinphoneActivity extends TabActivity implements
 		if  (isFinishing())  {
 			//restore audio settings
 			boolean isUserRequest = false;
-			LinphoneManager.getInstance().routeAudioToReceiver(isUserRequest);
 			LinphoneManager.removeListener(this);
 			LinphoneManager.stopProximitySensorForActivity(this);
 			instance = null;
@@ -451,38 +439,26 @@ public class LinphoneActivity extends TabActivity implements
 	    getTabHost().addTab(spec);
 	}
 
-	public void startIncallActivity(CharSequence callerName, Uri pictureUri) {
-		Intent intent = new Intent().setClass(this, IncallActivity.class)
-                                .putExtra(IncallActivity.CONTACT_KEY, callerName);
-		if (pictureUri != null)
-			intent.putExtra(IncallActivity.PICTURE_URI_KEY, pictureUri.toString());
-		startActivityForResult(intent, INCALL_ACTIVITY);
-	}
 
-	public void closeIncallActivity() {
-		finishActivity(INCALL_ACTIVITY);
-	}
-	public void closeConferenceActivity() {
-		finishActivity(conference_activity);
-	}
-
-	public void startVideoActivity() {
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		if (call != null) call.enableCamera(true);
-		mHandler.post(new Runnable() {
+	// Do not call if video activity already launched as it would cause a pause() of the launched one
+	// and a race condition with capture surfaceview leading to a crash
+	public void startVideoActivity(LinphoneCall call, int delay) {
+		if (VideoCallActivity.launched || call == null) return;
+		call.enableCamera(true);
+		mHandler.postDelayed(new Runnable() {
 			public void run() {
+				if (VideoCallActivity.launched) return;
 				startActivityForResult(new Intent().setClass(
 						LinphoneActivity.this,
 						VideoCallActivity.class),
 						video_activity);
 				}
-		});
-		boolean isUserRequest = false;
-		LinphoneManager.getInstance().routeAudioToSpeaker(isUserRequest);
+		}, delay);
+		LinphoneManager.getInstance().routeAudioToSpeaker();
 	}
 
-	public void startConferenceActivity() {
-		if (ConferenceActivity.active) {
+	public void startIncallActivity() {
+		if (IncallActivity.active) {
 			return;
 		}
 
@@ -490,8 +466,8 @@ public class LinphoneActivity extends TabActivity implements
 			public void run() {
 				startActivityForResult(new Intent().setClass(
 						LinphoneActivity.this,
-						ConferenceActivity.class),
-						conference_activity);
+						IncallActivity.class),
+						incall_activity);
 				}
 		});
 	}
@@ -514,25 +490,33 @@ public class LinphoneActivity extends TabActivity implements
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state,
 			String message) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc==null) {
+			/* we are certainly exiting, ignore then.*/
+			return;
+		}
+
 		if (state==State.IncomingReceived) {
 			startIncomingCallActivity(call);
 		}
 		if (state==State.OutgoingInit || state==State.IncomingReceived) {
 			startOrientationSensor();
+			enterIncallMode();
 		} else if (state==State.Error || state==State.CallEnd){
 			stopOrientationSensor();
 			finishActivity(INCOMING_CALL_ACTIVITY);
 		}
+		if (state==State.Connected) {
+			startIncallActivity();
+			if (call.getDirection() == CallDirection.Incoming) {
+				enterIncallMode();
+			}
+		}
 		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable()) {
 			boolean videoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
-			boolean videoActivityLaunched = VideoCallActivity.launched;
-			if (videoEnabled && !videoActivityLaunched
-					&& getResources().getBoolean(R.bool.autostart_video_activity)
-					&& getResources().getBoolean(R.bool.use_video_activity)) {
-				// Do not call if video activity already launched as it would cause a pause() of the launched one
-				// and a race condition with capture surfaceview leading to a crash
-				startVideoActivity();
-			} else if (!videoEnabled) {
+			if (videoEnabled) {
+				startVideoActivity(call, 1000);
+			} else {
 				finishVideoActivity();
 			}
 		}
@@ -542,12 +526,70 @@ public class LinphoneActivity extends TabActivity implements
 				finishVideoActivity();
 			}
 		}
+
+		if (state==State.Error){
+			showToast(R.string.call_error, message);
+			if (lc.getCallsNb() == 0){
+				if (mWakeLock.isHeld()) mWakeLock.release();
+				exitCallMode();
+			}
+		}else if (state==State.CallEnd){
+			if (lc.getCallsNb() == 0){
+				exitCallMode();
+			}
+		}
+	}
+	
+	private void showToast(int id, String txt) {
+		final String msg = String.format(getString(id), txt);
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
-	public void onVideoCallReady(LinphoneCall call) {
-		startVideoActivity();
+	public void onCreateWhenManagerReady() {}
+
+	private void enterIncallMode() {
+		LinphoneManager.startProximitySensorForActivity(this);
+		if (!mWakeLock.isHeld()) mWakeLock.acquire();
 	}
+
+	private void exitCallMode() {
+		finishActivity(incall_activity);
+
+		if (mWakeLock.isHeld()) mWakeLock.release();
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				LinphoneManager.stopProximitySensorForActivity(LinphoneActivity.this);				
+			}
+		});
+		
+		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
+	}
+
+
+	@Override
+	public void onResumeWhenManagerReady() {
+		LinphoneCall pendingCall = LinphoneManager.getInstance().getPendingIncomingCall();
+		if (pendingCall != null) {
+			LinphoneActivity.instance().startIncomingCallActivity(pendingCall);
+		} else if (LinphoneManager.getLc().isIncall()) {
+			enterIncallMode();
+		}
+
+		if (LinphoneManager.getLc().getCallsNb() > 0) {
+			LinphoneManager.startProximitySensorForActivity(this);
+			// removing is done directly in LinphoneActivity.onPause()
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		if (mWakeLock.isHeld()) mWakeLock.release();
+
+		super.onDestroy();
+	}
+	
 }
 
 interface ContactPicked {
