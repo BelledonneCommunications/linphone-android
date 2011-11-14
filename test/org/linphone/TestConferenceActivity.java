@@ -402,7 +402,6 @@ public class TestConferenceActivity extends IncallActivity {
 			remoteAddress = new LinphoneAddressTest(name, number);
 		}
 
-		public boolean areStreamsEncrypted() {return false;}
 		public void enableCamera(boolean enabled) {}
 		public void enableEchoCancellation(boolean enable) {}
 		public void enableEchoLimiter(boolean enable) {}
@@ -421,6 +420,12 @@ public class TestConferenceActivity extends IncallActivity {
 		public boolean isEchoLimiterEnabled() {return false;}
 		public boolean isInConference() { return inConf;}
 		public boolean cameraEnabled() {return false;}
+
+		@Override
+		public void setAuthenticationTokenVerified(boolean verified) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 

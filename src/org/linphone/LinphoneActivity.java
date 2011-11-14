@@ -36,6 +36,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -101,6 +102,14 @@ public class LinphoneActivity extends TabActivity implements
 		if (instance != null) return instance;
 
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
+	}
+
+	@Override
+	protected Dialog onCreateDialog(final int id) {
+		if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
+			return waitHelper.createWaitDialog();
+		}
+		return super.onCreateDialog(id);
 	}
 
 	public void onCreate(Bundle savedInstanceState) {

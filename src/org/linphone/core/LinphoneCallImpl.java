@@ -39,9 +39,6 @@ class LinphoneCallImpl implements LinphoneCall {
 	private native int getDuration(long nativePtr);
 	private native float getCurrentQuality(long nativePtr);
 	private native float getAverageQuality(long nativePtr);
-	private native String getAuthenticationToken(long nativePtr);
-	private native boolean isAuthenticationTokenVerified(long nativePtr);
-	private native boolean areStreamsEncrypted(long nativePtr);
 	
 	/*
 	 * This method must always be called from JNI, nothing else.
@@ -126,11 +123,19 @@ class LinphoneCallImpl implements LinphoneCall {
 		return getCurrentQuality(nativePtr);
 	}
 
+	private native String getAuthenticationToken(long nativePtr);
 	public String getAuthenticationToken(){
 		return getAuthenticationToken(nativePtr);
 	}
+
+	private native boolean isAuthenticationTokenVerified(long nativePtr);
 	public boolean isAuthenticationTokenVerified(){
 		return isAuthenticationTokenVerified(nativePtr);
+	}
+
+	private native boolean setAuthenticationTokenVerified(long nativePtr, boolean verified);
+	public void setAuthenticationTokenVerified(boolean verified){
+		setAuthenticationTokenVerified(nativePtr, verified);
 	}
 
 	public boolean isInConference() {

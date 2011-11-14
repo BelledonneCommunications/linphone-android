@@ -7,9 +7,27 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
 
+    
+	<LinearLayout android:id="@+id/encrypted" android:visibility="gone"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<ImageButton android:id="@+id/set_auth_token_verified" android:src="@drawable/conf_maybe_secured" android:visibility="gone"
+	    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<ImageButton android:id="@+id/set_auth_token_not_verified" android:src="@drawable/conf_secured" android:visibility="gone"
+	    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<TextView android:id="@+id/authentication_token"  android:layout_gravity="center_vertical"
+	    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	</LinearLayout>
+	
+	<LinearLayout android:id="@+id/unencrypted" android:visibility="gone"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<ImageView android:src="@drawable/conf_not_secured" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<TextView android:text="@string/not_encrypted"  android:layout_gravity="center_vertical"
+	    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	</LinearLayout>
+
 	<LinearLayout android:id="@+id/transfer_new"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_transfer"
+	<ImageButton android:src="@drawable/conf_transfer" android:clickable="false" 
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_transfer_new" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -17,7 +35,7 @@
 
 	<LinearLayout android:id="@+id/transfer_existing"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_transfer"
+	<ImageButton android:src="@drawable/conf_transfer" android:clickable="false"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_transfer_existing" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -25,7 +43,7 @@
 
 	<LinearLayout android:id="@+id/remove_from_conference"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_remove"
+	<ImageButton android:src="@drawable/conf_remove" android:clickable="false"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_remove_from_conference" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -34,7 +52,7 @@
 
 	<LinearLayout android:id="@+id/merge_to_conference"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_merge"
+	<ImageButton android:src="@drawable/conf_merge" android:clickable="false"
 		android:layout_width="wrap_content"	android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_merge_to_conference" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -42,7 +60,7 @@
 
 	<LinearLayout android:id="@+id/pause"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_pause"
+	<ImageButton android:src="@drawable/conf_pause" android:clickable="false"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_pause" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -50,7 +68,7 @@
 
 	<LinearLayout android:id="@+id/resume"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_resume"
+	<ImageButton android:src="@drawable/conf_resume" android:clickable="false"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_resume" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -58,22 +76,11 @@
 
 	<LinearLayout android:id="@+id/terminate_call"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageButton android:src="@drawable/conf_terminate"
+	<ImageButton android:src="@drawable/conf_terminate" android:clickable="false"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<TextView android:text="@string/conf_choice_terminate" android:layout_gravity="center_vertical"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	</LinearLayout>
 
-	<LinearLayout android:id="@+id/encrypted" android:visibility="gone"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageView android:src="@drawable/conf_secured" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	<TextView android:id="@+id/authentication_token" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	</LinearLayout>
-	
-	<LinearLayout android:id="@+id/unencrypted" android:visibility="gone"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageView android:src="@drawable/conf_not_secured" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	<TextView android:text="@string/not_encrypted" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	</LinearLayout>
 </LinearLayout>
 </ScrollView>

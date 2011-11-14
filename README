@@ -20,6 +20,8 @@ BUILD_AMR             0 (don't build amr codec), light (try to use amr codec fro
 BUILD_GPLV3_ZRTP      0 (don't support ZRTP), 1 (support ZRTP and make the whole program GPLv3)
 BUILD_SILK            0 (don't build silk plugin), 1 (build silk) [silk is Skype nonfree patented audio codec]
 
+In order to use ZRTP you also need to define the media_encryption property to
+"zrtp" in the sip section of linphonerc file.
 
 
 

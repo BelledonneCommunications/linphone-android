@@ -508,6 +508,15 @@ public class IncallActivity extends ListActivity implements
 					LinphoneActivity.instance().startVideoActivity(call, 0);
 				}
 				break;
+			case R.id.set_auth_token_verified:
+				call.setAuthenticationTokenVerified(true);
+				break;
+			case R.id.set_auth_token_not_verified:
+				call.setAuthenticationTokenVerified(false);
+				break;
+			case R.id.encrypted:
+				call.setAuthenticationTokenVerified(!call.isAuthenticationTokenVerified());
+				break;
 			default:
 				throw new RuntimeException("unknown id " + v.getId());
 			}
@@ -673,9 +682,12 @@ public class IncallActivity extends ListActivity implements
 			if ("none".equals(mediaEncryption)) {
 				boolean showUnencrypted = Version.hasZrtp();
 				setVisibility(v, R.id.callee_status_secured, false);
+				setVisibility(v, R.id.callee_status_maybe_secured, false);
 				setVisibility(v, R.id.callee_status_not_secured, showUnencrypted);
 			} else {
-				setVisibility(v, R.id.callee_status_secured, true);
+				boolean reallySecured = !Version.hasZrtp() || call.isAuthenticationTokenVerified();
+				setVisibility(v, R.id.callee_status_secured, reallySecured);
+				setVisibility(v, R.id.callee_status_maybe_secured, !reallySecured);
 				setVisibility(v, R.id.callee_status_not_secured, false);
 			}
 
@@ -698,15 +710,19 @@ public class IncallActivity extends ListActivity implements
 					String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 					if ("none".equals(mediaEncryption)) {
 						boolean showUnencrypted = Version.hasZrtp();
-						setVisibility(content, R.id.encrypted, false);
 						setVisibility(content, R.id.unencrypted, showUnencrypted);
 					} else {
-						setVisibility(content, R.id.encrypted, true);
-						setVisibility(content, R.id.unencrypted, false);
+						TextView token = (TextView) content.findViewById(R.id.authentication_token);
+						String fmt = getString(R.string.authenticationTokenFormat);
 						if ("zrtp".equals(mediaEncryption)) {
-							TextView token = (TextView) content.findViewById(R.id.authentication_token);
-							String fmt = getString(R.string.authenticationTokenFormat);
 							token.setText(String.format(fmt, call.getAuthenticationToken()));
+							boolean authVerified = call.isAuthenticationTokenVerified();
+							enableView(content, R.id.set_auth_token_not_verified, l, authVerified);
+							enableView(content, R.id.set_auth_token_verified, l, !authVerified);
+							enableView(content, R.id.encrypted, l, true);
+						} else {
+							setVisibility(content, R.id.encrypted, true);
+							token.setText(String.format(fmt, ""));
 						}
 					}
 					
