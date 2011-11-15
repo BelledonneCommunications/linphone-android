@@ -22,7 +22,6 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
-import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
@@ -57,6 +56,7 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,7 +66,6 @@ public class LinphoneActivity extends TabActivity implements
 		SensorEventListener
 		, ContactPicked
 		, LinphoneOnCallStateChangedListener
-		, LinphoneManagerReadyListener
 		{
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
@@ -83,16 +82,17 @@ public class LinphoneActivity extends TabActivity implements
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int previousRotation = -1;
-	
+
 	private Handler mHandler = new Handler();
-	
-	
+
+	private static final int waitDialogId = 1;
+	private ServiceWaitThread thread;
+
 	// Customization
 	private static boolean useFirstLoginActivity;
 	private static boolean useMenuSettings;
 	private static boolean useMenuAbout;
 	private boolean checkAccount;
-	private LinphoneManagerWaitHelper waitHelper;
 	
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -106,8 +106,9 @@ public class LinphoneActivity extends TabActivity implements
 
 	@Override
 	protected Dialog onCreateDialog(final int id) {
-		if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
-			return waitHelper.createWaitDialog();
+		if (id == waitDialogId) {
+			View v = getLayoutInflater().inflate((R.layout.wait_service_dialog), null);
+			return new AlertDialog.Builder(this).setView(v).setCancelable(false).create();
 		}
 		return super.onCreateDialog(id);
 	}
@@ -123,36 +124,19 @@ public class LinphoneActivity extends TabActivity implements
 		useMenuAbout = getResources().getBoolean(R.bool.useMenuAbout);
 		checkAccount = !useFirstLoginActivity;
 
-		// start linphone as background       
-		startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-
-		
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-
-		if (!useFirstLoginActivity || pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
-			fillTabHost();
-		} else {
-			startActivityForResult(new Intent().setClass(this, FirstLoginActivity.class), FIRST_LOGIN_ACTIVITY);
-		}
-
-		if (checkAccount && !useFirstLoginActivity) {
-			if (pref.getBoolean(PREF_FIRST_LAUNCH, true)) {
-				onFirstLaunch();
-			} else if (!pref.getBoolean(PREF_CHECK_CONFIG, false)
-					&& !checkDefined(pref, R.string.pref_username_key, R.string.pref_domain_key)) {
-				onBadSettings(pref);
-			} else {
-				checkAccount = false;
-			}
-		}
-
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG+"#"+getClass().getName());
 
-		LinphoneManager.addListener(this);
-		waitHelper = new LinphoneManagerWaitHelper(this, this);
-		waitHelper.doManagerDependentOnCreate();
+		if (LinphoneService.isReady()) {
+			onCreateWhenServiceReady();
+		} else {
+			if (thread != null) {
+				throw new RuntimeException("already waiting for Manager");
+			}
+			// start linphone as background  
+			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+			startWaitingThreadIfNotRunning();
+		}
 	}
 	
 	
@@ -259,9 +243,9 @@ public class LinphoneActivity extends TabActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		doResumeWhenServiceReady = false;
 		if  (isFinishing())  {
 			//restore audio settings
-			boolean isUserRequest = false;
 			LinphoneManager.removeListener(this);
 			LinphoneManager.stopProximitySensorForActivity(this);
 			instance = null;
@@ -273,7 +257,6 @@ public class LinphoneActivity extends TabActivity implements
 		// Inflate the currently selected menu XML resource.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.linphone_activity_menu, menu);
-		
 		menu.findItem(R.id.menu_settings).setVisible(useMenuSettings);
 		menu.findItem(R.id.menu_about).setVisible(useMenuAbout);
 		return true;
@@ -563,9 +546,6 @@ public class LinphoneActivity extends TabActivity implements
 		});
 	}
 
-	@Override
-	public void onCreateWhenManagerReady() {}
-
 	private void enterIncallMode() {
 		LinphoneManager.startProximitySensorForActivity(this);
 		if (!mWakeLock.isHeld()) mWakeLock.acquire();
@@ -587,7 +567,44 @@ public class LinphoneActivity extends TabActivity implements
 
 
 	@Override
-	public void onResumeWhenManagerReady() {
+	protected void onDestroy() {
+		if (mWakeLock.isHeld()) mWakeLock.release();
+
+		super.onDestroy();
+	}
+
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (LinphoneService.isReady()) {
+			onResumeWhenServiceReady();
+			doResumeWhenServiceReady=false;
+		} else {
+			doResumeWhenServiceReady = true;
+			startWaitingThreadIfNotRunning();
+		}
+	}
+	
+	private void startWaitingThreadIfNotRunning() {
+		if (thread == null) {
+			thread = new ServiceWaitThread();
+			thread.start();
+
+			// Delay to avoid flicker
+			mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (!LinphoneService.isReady()) {
+						showDialog(waitDialogId);
+					}
+				}
+			}, 2000);
+		}
+	}
+	
+	private void onResumeWhenServiceReady() {
 		LinphoneCall pendingCall = LinphoneManager.getInstance().getPendingIncomingCall();
 		if (pendingCall != null) {
 			LinphoneActivity.instance().startIncomingCallActivity(pendingCall);
@@ -600,19 +617,71 @@ public class LinphoneActivity extends TabActivity implements
 			// removing is done directly in LinphoneActivity.onPause()
 		}
 	}
-	
-	@Override
-	protected void onDestroy() {
-		if (mWakeLock.isHeld()) mWakeLock.release();
 
-		super.onDestroy();
+
+
+	private synchronized void onCreateWhenServiceReady() {
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if (!useFirstLoginActivity || pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+			fillTabHost();
+		} else {
+			startActivityForResult(new Intent().setClass(this, FirstLoginActivity.class), FIRST_LOGIN_ACTIVITY);
+		}
+
+		if (checkAccount && !useFirstLoginActivity) {
+			if (pref.getBoolean(PREF_FIRST_LAUNCH, true)) {
+				onFirstLaunch();
+			} else if (!pref.getBoolean(PREF_CHECK_CONFIG, false)
+					&& !checkDefined(pref, R.string.pref_username_key, R.string.pref_domain_key)) {
+				onBadSettings(pref);
+			} else {
+				checkAccount = false;
+			}
+		}
+
+		LinphoneManager.addListener(this);
 	}
-	
-	@Override
-	protected void onResume() {
-		waitHelper.doManagerDependentOnResume();
-		super.onResume();
+
+	private boolean doResumeWhenServiceReady;
+
+	private class ServiceWaitThread extends Thread {
+		public void run() {
+			while (!LinphoneService.isReady()) {
+				try {
+					sleep(30);
+				} catch (InterruptedException e) {
+					throw new RuntimeException("waiting thread sleep() has been interrupted");
+				}
+			}
+
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						dismissDialog(waitDialogId);
+					} catch (Throwable e) {
+						// Discarding exception which may be thrown if the dialog wasn't showing.
+					}
+				}
+			});
+
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					onCreateWhenServiceReady();
+					if (doResumeWhenServiceReady) {
+						onResumeWhenServiceReady();
+					}
+				}
+			});
+			thread = null;
+		}
 	}
+
+
+
 }
 
 interface ContactPicked {

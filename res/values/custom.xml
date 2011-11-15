@@ -4,6 +4,7 @@
 
 	<string name="app_name">Linphone</string>
 	<string name="notification_title">Linphone</string>
+	<string name="wait_dialog_text">Starting up</string>
 	<string name="notification_registered">Registered to %s </string> 
 	<string name="notification_register_failure">Fails to register to %s</string>
 	<string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>

@@ -94,7 +94,6 @@ public class TestConferenceActivity extends IncallActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		LinphoneManagerWaitHelper.disabled=true;
 		//if (!serviceStarted) startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 
 		findViewById(R.id.toggleMuteMic).setOnClickListener(null);

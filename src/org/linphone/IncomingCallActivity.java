@@ -20,7 +20,6 @@ package org.linphone;
 
 import java.util.List;
 
-import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -45,13 +44,12 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements LinphoneManagerReadyListener, LinphoneOnCallStateChangedListener, OnTriggerListener {
+public class IncomingCallActivity extends Activity implements LinphoneOnCallStateChangedListener, OnTriggerListener {
 
 	private TextView mNameView;
 	private TextView mNumberView;
 	private ImageView mPictureView;
 	private LinphoneCall mCall;
-	private LinphoneManagerWaitHelper mHelper;
 	private SlidingTab mIncomingCallWidget;
 
 	@Override
@@ -79,15 +77,12 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
         mIncomingCallWidget.setOnTriggerListener(this);
 
 
-        mHelper = new LinphoneManagerWaitHelper(this, this);
         super.onCreate(savedInstanceState);
 	}
 
 	@Override
-	public void onCreateWhenManagerReady() {}
-
-	@Override
-	public void onResumeWhenManagerReady() {
+	protected void onResume() {
+		super.onResume();
 		LinphoneManager.addListener(this);
 		// Only one call ringing at a time is allowed
 		List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
@@ -114,12 +109,6 @@ public class IncomingCallActivity extends Activity implements LinphoneManagerRea
 		} else {
 			mNumberView.setText(address.getUserName());
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-        mHelper.doManagerDependentOnResume();
 	}
 	
 	@Override

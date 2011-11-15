@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
@@ -66,7 +65,6 @@ import android.widget.ToggleButton;
  * @author Guillaume Beraudo
  */
 public class IncallActivity extends ListActivity implements
-		LinphoneManagerReadyListener,
 		LinphoneOnAudioChangedListener,
 		LinphoneOnCallStateChangedListener,
 		LinphoneOnCallEncryptionChangedListener,
@@ -110,7 +108,6 @@ public class IncallActivity extends ListActivity implements
 		lc().leaveConference();
 	}
 
-	private LinphoneManagerWaitHelper waitHelper;
 	private ToggleButton mMuteMicButton;
 	private ToggleButton mSpeakerButton;
 	private int multipleCallsLimit;
@@ -142,40 +139,14 @@ public class IncallActivity extends ListActivity implements
 		mSpeakerButton = (ToggleButton) findViewById(R.id.toggleSpeaker);
 		mSpeakerButton.setOnClickListener(this);
 
-		waitHelper = new LinphoneManagerWaitHelper(this, this);
-		waitHelper.doManagerDependentOnCreate();
-
-//		workaroundStatusBarBug();
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public void onCreateWhenManagerReady() {
 		List<LinphoneCall> calls = getInitialCalls();
 		setListAdapter(new CalleeListAdapter(calls));
 		
 		findViewById(R.id.incallHang).setOnClickListener(this);
 		multipleCallsLimit = lc().getMaxCalls();
-	}
-	@Override
-	public void onResumeWhenManagerReady() {
-		registerLinphoneListener(true);
-		updateCalleeImage();
-		updateConfState();
-		updateSimpleControlButtons();
-		updateSoundLock();
-		updateDtmfButton();
-		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
-		if (adapter.linphoneCalls.size() != lc().getCallsNb()) {
-			adapter.linphoneCalls.clear();
-			adapter.linphoneCalls.addAll(getInitialCalls());
-		}
-		recreateActivity(adapter);
-		LinphoneManager.startProximitySensorForActivity(this);
-		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
-		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 
-		updateAddCallButton();
+//		workaroundStatusBarBug();
+		super.onCreate(savedInstanceState);
 	}
 
 	private void updateSoundLock() {
@@ -216,7 +187,23 @@ public class IncallActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		active=true;
-		waitHelper.doManagerDependentOnResume();
+		registerLinphoneListener(true);
+		updateCalleeImage();
+		updateConfState();
+		updateSimpleControlButtons();
+		updateSoundLock();
+		updateDtmfButton();
+		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
+		if (adapter.linphoneCalls.size() != lc().getCallsNb()) {
+			adapter.linphoneCalls.clear();
+			adapter.linphoneCalls.addAll(getInitialCalls());
+		}
+		recreateActivity(adapter);
+		LinphoneManager.startProximitySensorForActivity(this);
+		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
+		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
+
+		updateAddCallButton();
 		super.onResume();
 	}
 
@@ -250,10 +237,6 @@ public class IncallActivity extends ListActivity implements
 	}
 	@Override
 	protected Dialog onCreateDialog(final int id) {
-		if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
-			return waitHelper.createWaitDialog();
-		}
-
 		switch (id) {
 		case numpad_dialog_id:
 			Numpad numpad = new Numpad(this, true);

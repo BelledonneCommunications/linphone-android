@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
-import org.linphone.LinphoneManagerWaitHelper.LinphoneManagerReadyListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
@@ -30,7 +29,6 @@ import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,7 +49,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends Activity implements LinphoneGuiListener, LinphoneManagerReadyListener, NewOutgoingCallUiListener {
+public class DialerActivity extends Activity implements LinphoneGuiListener, NewOutgoingCallUiListener {
 	
 	private TextView mStatus;
 	private Handler mHandler;
@@ -71,7 +69,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		return instance;
 	}
 
-	private LinphoneManagerWaitHelper waitHelper;
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.dialer);
 
@@ -96,8 +93,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		
 		checkIfOutgoingCallIntentReceived();
 
-		waitHelper = new LinphoneManagerWaitHelper(this, this);
-		waitHelper.doManagerDependentOnCreate();
 		instance = this;
 		super.onCreate(savedInstanceState);
 	}
@@ -153,22 +148,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		super.onDestroy();
 		instance=null;
 	}
-	
-	
 
-	
 
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (id == LinphoneManagerWaitHelper.DIALOG_ID) {
-			return waitHelper.createWaitDialog();
-		} else {
-			return super.onCreateDialog(id);
-		}
-	}
 
-	
-	
+
+
 	public void newOutgoingCall(Intent intent) {
 		if (Intent.ACTION_CALL.equalsIgnoreCase(intent.getAction())) {
 			mAddress.setText(intent.getData().getSchemeSpecificPart());
@@ -241,12 +225,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 		// done in incall view
 	}
 
-	@Override
-	public void onCreateWhenManagerReady() {}
-	
-	@Override
-	public void onResumeWhenManagerReady() {
 
+	@Override
+	protected void onResume() {
 		// When coming back from a video call, if the phone orientation is different
 		// Android will destroy the previous Dialer and create a new one.
 		// Unfortunately the "call end" status event is received in the meanwhile
@@ -267,11 +248,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, Lin
 			};
 			mHandler.postDelayed(r, 1000);
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		waitHelper.doManagerDependentOnResume();
 		super.onResume();
 	}
 

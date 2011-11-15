@@ -18,7 +18,7 @@ default_proxy=0
 auto_net_state_mon=0
 keepalive_period=30000
 auto_answer_replacing_calls=1
-media_encryption=none
+media_encryption=zrtp
 media_encryption_mandatory=0
 
 [rtp]
