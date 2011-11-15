@@ -130,12 +130,11 @@ public class LinphoneActivity extends TabActivity implements
 		if (LinphoneService.isReady()) {
 			onCreateWhenServiceReady();
 		} else {
-			if (thread != null) {
-				throw new RuntimeException("already waiting for Manager");
-			}
 			// start linphone as background  
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-			startWaitingThreadIfNotRunning();
+			mDoOnCreateWhenServiceReady = true;
+			thread = new ServiceWaitThread();
+			thread.start();
 		}
 	}
 	
@@ -243,7 +242,7 @@ public class LinphoneActivity extends TabActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		doResumeWhenServiceReady = false;
+		mDoResumeWhenServiceReady = false;
 		if  (isFinishing())  {
 			//restore audio settings
 			LinphoneManager.removeListener(this);
@@ -574,33 +573,32 @@ public class LinphoneActivity extends TabActivity implements
 	}
 
 
+	private boolean mWaitDialogPosted;
 	@Override
 	protected void onResume() {
 		super.onResume();
 
 		if (LinphoneService.isReady()) {
 			onResumeWhenServiceReady();
-			doResumeWhenServiceReady=false;
 		} else {
-			doResumeWhenServiceReady = true;
-			startWaitingThreadIfNotRunning();
-		}
-	}
-	
-	private void startWaitingThreadIfNotRunning() {
-		if (thread == null) {
-			thread = new ServiceWaitThread();
-			thread.start();
-
-			// Delay to avoid flicker
-			mHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					if (!LinphoneService.isReady()) {
-						showDialog(waitDialogId);
+			if (!mWaitDialogPosted) {
+				mWaitDialogPosted = true;
+				mHandler.postDelayed(new Runnable() {
+					// Delay to avoid flicker.
+					// Call in onResume to make sure the view (especially the tabhost) is initialized.
+					@Override
+					public void run() {
+						if (!LinphoneService.isReady()) {
+							showDialog(waitDialogId);
+						}
 					}
-				}
-			}, 2000);
+				}, 2000);
+			}
+			mDoResumeWhenServiceReady = true;
+			if (thread == null) {
+				thread = new ServiceWaitThread();
+				thread.start();
+			}
 		}
 	}
 	
@@ -620,7 +618,9 @@ public class LinphoneActivity extends TabActivity implements
 
 
 
-	private synchronized void onCreateWhenServiceReady() {
+	private boolean mDoOnCreateWhenServiceReady;
+	private void onCreateWhenServiceReady() {
+		mDoOnCreateWhenServiceReady = false;
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -644,7 +644,7 @@ public class LinphoneActivity extends TabActivity implements
 		LinphoneManager.addListener(this);
 	}
 
-	private boolean doResumeWhenServiceReady;
+	private boolean mDoResumeWhenServiceReady;
 
 	private class ServiceWaitThread extends Thread {
 		public void run() {
@@ -670,8 +670,10 @@ public class LinphoneActivity extends TabActivity implements
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					onCreateWhenServiceReady();
-					if (doResumeWhenServiceReady) {
+					if (mDoOnCreateWhenServiceReady) {
+						onCreateWhenServiceReady();
+					}
+					if (mDoResumeWhenServiceReady) {
 						onResumeWhenServiceReady();
 					}
 				}
@@ -679,9 +681,6 @@ public class LinphoneActivity extends TabActivity implements
 			thread = null;
 		}
 	}
-
-
-
 }
 
 interface ContactPicked {
