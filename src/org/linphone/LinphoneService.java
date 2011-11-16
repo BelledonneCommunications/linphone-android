@@ -69,7 +69,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Handler mHandler = new Handler();
 	private static LinphoneService instance;
 
-	public static boolean isReady() { return (instance!=null);	}
+//	private static boolean mTestDelayElapsed; // add a timer for testing
+	private static boolean mTestDelayElapsed = true; // no timer
+	
+	public static boolean isReady() {
+		return mTestDelayElapsed && instance!=null;
+	}
 
 	/**
 	 * @throws RuntimeException service not instantiated
@@ -147,6 +152,15 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 
 		startForegroundCompat(NOTIF_ID, mNotif);
+
+		if (!mTestDelayElapsed) {
+			// Only used when testing. Simulates a 5 seconds delay for launching service
+			mHandler.postDelayed(new Runnable() {
+				@Override public void run() {
+					mTestDelayElapsed = true;
+				}
+			}, 5000);
+		}
 	}
 
 
