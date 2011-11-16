@@ -54,8 +54,8 @@ public final class LinphoneUtils {
 
 	private static boolean preventVolumeBarToDisplay = false;
 
-	public static boolean onKeyBackGoHome(Activity activity, int keyCode) {
-		if (!(keyCode == KeyEvent.KEYCODE_BACK)) {
+	public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
+		if (!(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)) {
 			return false; // continue
 		}
 

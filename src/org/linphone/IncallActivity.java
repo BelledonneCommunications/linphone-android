@@ -921,14 +921,9 @@ public class IncallActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (LinphoneUtils.onKeyBackGoHome(this, keyCode)) return true;
-		return super.onKeyUp(keyCode, event);
-	}
-
-	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
 		return super.onKeyDown(keyCode, event);
 	}
 
