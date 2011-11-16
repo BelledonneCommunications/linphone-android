@@ -8,8 +8,19 @@
 
     <!-- Don't remove the space after android:debuggable: it prevents ndk-build to try including gdbserver and crash gcc -->
     <application android:label="@string/app_name" android:debuggable ="true" android:icon="@drawable/logo_linphone_57x57">
-         
-        <activity android:name="org.linphone.LinphoneActivity"
+
+		<activity android:name="org.linphone.LinphoneLauncherActivity"
+		    android:label="@string/app_name"
+		    android:theme="@android:style/Theme.NoTitleBar">
+		    <intent-filter>
+		        <action android:name="android.intent.action.MAIN" />
+		        <category android:name="android.intent.category.LAUNCHER" />
+		    </intent-filter>
+		</activity>
+
+
+
+		<activity android:name="org.linphone.LinphoneActivity"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:launchMode="singleTask"
@@ -17,7 +28,6 @@
                   
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
             <intent-filter>
@@ -86,12 +96,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-        <activity android:name="ContactPickerActivityNew">
+        <activity android:name="ContactPickerActivityNew" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-         <activity android:name="ContactPickerActivityOld">
+         <activity android:name="ContactPickerActivityOld" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

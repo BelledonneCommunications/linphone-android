@@ -47,7 +47,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 
-/***
+/**
  * 
  * Linphone service, reacting to Incoming calls, ...<br />
  * 
@@ -69,11 +69,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Handler mHandler = new Handler();
 	private static LinphoneService instance;
 
-//	private static boolean mTestDelayElapsed; // add a timer for testing
-	private static boolean mTestDelayElapsed = true; // no timer
+//	private boolean mTestDelayElapsed; // add a timer for testing
+	private boolean mTestDelayElapsed = true; // no timer
 	
 	public static boolean isReady() {
-		return mTestDelayElapsed && instance!=null;
+		return instance!=null && instance.mTestDelayElapsed;
 	}
 
 	/**
