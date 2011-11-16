@@ -59,6 +59,7 @@ libspeexdsp_SRC_FILES := \
 	libspeex/resample.c \
 	libspeex/buffer.c \
 	libspeex/scal.c \
+	libspeex/speexdsp.c \
 	$(fft_SRC_FILES)
 
 LOCAL_SRC_FILES := \
@@ -77,18 +78,13 @@ FIXED_POINT_FLAGS=\
 
 ifeq ($(TARGET_ARCH),arm)
 	ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+		LOCAL_CFLAGS += -DARMV7NEON_ASM
+		# add NEON support
+		LOCAL_SRC_FILES += libspeex/resample_neon.c.neon
 		ifeq ($(USE_FLOAT),1)
 			LOCAL_CFLAGS += -DFLOATING_POINT=1 
-			LOCAL_CFLAGS += -DOVERRIDE_INTERPOLATE_PRODUCT_SINGLE
-			ifeq ($(LINPHONE_VIDEO),1)
-				LOCAL_CFLAGS += -DOVERRIDE_INNER_PRODUCT_SINGLE -Dinner_product_single=ff_scalarproduct_float_neon
-			endif	
 		else 
 			LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)
-			LOCAL_CFLAGS += -DOVERRIDE_INTERPOLATE_PRODUCT_SINGLE -Dinterpolate_product_single=interpolate_product_single_int
-			ifeq ($(LINPHONE_VIDEO),1)
-				LOCAL_CFLAGS += -DOVERRIDE_INNER_PRODUCT_SINGLE -Dinner_product_single=msresampler_scalarproduct_int16
-			endif
 		endif
 	else
 		LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)

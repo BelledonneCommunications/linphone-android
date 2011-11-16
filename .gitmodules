@@ -12,7 +12,7 @@
 	url = git://git.linphone.org/gsm.git
 [submodule "submodules/externals/speex"]
 	path = submodules/externals/speex
-	url = http://git.xiph.org/speex.git
+	url = git://git.linphone.org/speex
 [submodule "submodules/msilbc"]
 	path = submodules/msilbc
 	url = git://git.linphone.org/msilbc.git
