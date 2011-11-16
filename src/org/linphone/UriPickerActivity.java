@@ -74,11 +74,11 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 						R.string.tab_contact, R.drawable.contact_orange);
 
 
-		gotToDialer();
+		selectDialerTab();
 	}
 
 
-	private void gotToDialer() {
+	private void selectDialerTab() {
 		getTabHost().setCurrentTabByTag(DIALER_TAB);
 	}
 
@@ -158,7 +158,12 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 	public void setAddressAndGoToDialer(String number, String name, Uri photo) {
 		DialerActivity dialer = (DialerActivity) getLocalActivityManager().getActivity(DIALER_TAB);
 		dialer.setContactAddress(number, name, photo);
-		gotToDialer();
+		selectDialerTab();
 	}
-	
+
+
+	@Override
+	public void goToDialer() {
+		selectDialerTab();
+	}
 }

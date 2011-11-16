@@ -122,6 +122,7 @@ public abstract class AbstractContactPickerActivity extends Activity implements 
 		case 0:
 			String msg = String.format(getString(R.string.no_phone_numbers), contactName);
 			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+			((ContactPicked) getParent()).goToDialer();
 			break;
 		case 1:
 			returnSelectedValues(phones.get(0), contactName.toString(), getPhotoUri(id));

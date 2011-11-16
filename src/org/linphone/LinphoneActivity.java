@@ -192,7 +192,7 @@ public class LinphoneActivity extends TabActivity implements
 	    		R.string.tab_contact, R.drawable.contact_orange);
 
 
-	    gotToDialer();
+	    selectDialerTab();
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class LinphoneActivity extends TabActivity implements
 			Log.i("LinphoneActivity received an intent without data, recreating GUI if needed");
 			if (!LinphoneManager.getLc().isIncall()) return;
 			if(LinphoneManager.getLc().isInComingInvitePending()) {
-				gotToDialer();
+				selectDialerTab();
 			} else {
 				startIncallActivity();
 			}
@@ -413,10 +413,10 @@ public class LinphoneActivity extends TabActivity implements
 
 	public void setAddressAndGoToDialer(String number, String name, Uri photo) {
 		DialerActivity.instance().setContactAddress(number, name, photo);
-		instance.gotToDialer();
+		selectDialerTab();
 	}
 
-	private void gotToDialer() {
+	private void selectDialerTab() {
 		getTabHost().setCurrentTabByTag(DIALER_TAB);
 	}
 
@@ -585,8 +585,14 @@ public class LinphoneActivity extends TabActivity implements
 			// removing is done directly in LinphoneActivity.onPause()
 		}
 	}
+
+	@Override
+	public void goToDialer() {
+		selectDialerTab();
+	}
 }
 
 interface ContactPicked {
 	void setAddressAndGoToDialer(String number, String name, Uri photo);
+	void goToDialer();
 }
