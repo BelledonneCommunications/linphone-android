@@ -28,6 +28,7 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
@@ -131,15 +132,17 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivity {
 		return list;
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// Launch the native contact picker here in spite of onResume
+		// in order to avoid a loop that sometime occurs on HTC phones.
 		if (useNativePicker) {
 			Uri uri = ContactsContract.Contacts.CONTENT_URI;
 			//ContactsContract.CommonDataKinds.Phone.CONTENT_URI
 			startActivityForResult(new Intent(Intent.ACTION_PICK, uri),	0);
 		}
+		super.onNewIntent(intent);
 	}
 
 	protected void onActivityResult(int reqCode, int resultCode, Intent intent) {

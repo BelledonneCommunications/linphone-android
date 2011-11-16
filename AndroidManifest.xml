@@ -86,12 +86,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-        <activity android:name="ContactPickerActivityNew">
+        <activity android:name="ContactPickerActivityNew" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-         <activity android:name="ContactPickerActivityOld">
+         <activity android:name="ContactPickerActivityOld" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

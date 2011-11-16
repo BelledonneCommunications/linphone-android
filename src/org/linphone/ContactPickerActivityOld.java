@@ -32,21 +32,20 @@ public class ContactPickerActivityOld extends Activity {
     static final int PICK_CONTACT_REQUEST = 0;
     static final int PICK_PHONE_NUMBER_REQUEST = 1;
 
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);    
-
+		onNewIntent(getIntent());
     }
 
-    @Override
-	protected void onResume() {
-		super.onResume();
-        startActivityForResult(new Intent(Intent.ACTION_PICK, Contacts.Phones.CONTENT_URI)
-		,
-		PICK_CONTACT_REQUEST);
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// Launch the native contact picker here in spite of onResume
+		// in order to avoid a loop that sometime occurs on HTC phones.
+		Uri uri =  Contacts.Phones.CONTENT_URI;
+		startActivityForResult(new Intent(Intent.ACTION_PICK,uri), PICK_CONTACT_REQUEST);
+		super.onNewIntent(intent);
 	}
-
 
 	protected void onActivityResult(int requestCode, int resultCode,
             Intent data) {
@@ -66,7 +65,7 @@ public class ContactPickerActivityOld extends Activity {
                     long id = lCur.getLong(lCur.getColumnIndex(People._ID));
                     Uri personUri = ContentUris.withAppendedId(People.CONTENT_URI, id);
                     Uri pictureUri = Uri.withAppendedPath(personUri, Contacts.Photos.CONTENT_DIRECTORY);
-                    if (!ContactHelper.testPhotoUri(getContentResolver(), pictureUri, Contacts.Photos.CONTENT_DIRECTORY)) {
+                    if (!ContactHelper.testPhotoUri(getContentResolver(), pictureUri, android.provider.Contacts.Photos.DATA)) {
                     	pictureUri = null;
                     }
                     // FIXME surprisingly all this picture stuff doesn't seem to work

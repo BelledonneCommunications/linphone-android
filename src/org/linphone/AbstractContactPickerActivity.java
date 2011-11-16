@@ -21,8 +21,6 @@ package org.linphone;
 import java.util.Collections;
 import java.util.List;
 
-import org.linphone.mediastream.Version;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -77,6 +75,8 @@ public abstract class AbstractContactPickerActivity extends Activity implements 
 			setContentView(R.layout.contact_picker);
 			createCustomPicker();
 		}
+
+		onNewIntent(getIntent());
 	}
 
 	
@@ -135,6 +135,7 @@ public abstract class AbstractContactPickerActivity extends Activity implements 
 			builder.setTitle(String.format(getString(R.string.title_numbers_dialog),contactName));
 			builder.setAdapter(pAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
 					returnSelectedValues(pAdapter.getItem(which), contactName.toString(),getPhotoUri(id));
 				}
 			});
@@ -144,8 +145,7 @@ public abstract class AbstractContactPickerActivity extends Activity implements 
 					dialog.dismiss();
 				}
 			});
-			AlertDialog dialog = builder.create();
-			dialog.show();
+			builder.create().show();
 		}
 	}
 
