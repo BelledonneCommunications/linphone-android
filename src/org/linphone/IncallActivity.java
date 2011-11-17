@@ -696,16 +696,16 @@ public class IncallActivity extends ListActivity implements
 						setVisibility(content, R.id.unencrypted, showUnencrypted);
 					} else {
 						TextView token = (TextView) content.findViewById(R.id.authentication_token);
-						String fmt = getString(R.string.authenticationTokenFormat);
 						if ("zrtp".equals(mediaEncryption)) {
-							token.setText(String.format(fmt, call.getAuthenticationToken()));
 							boolean authVerified = call.isAuthenticationTokenVerified();
+							String fmt = getString(authVerified ? R.string.reset_sas_fmt : R.string.validate_sas_fmt);
+							token.setText(String.format(fmt, call.getAuthenticationToken()));
 							enableView(content, R.id.set_auth_token_not_verified, l, authVerified);
 							enableView(content, R.id.set_auth_token_verified, l, !authVerified);
 							enableView(content, R.id.encrypted, l, true);
 						} else {
 							setVisibility(content, R.id.encrypted, true);
-							token.setText(String.format(fmt, ""));
+							token.setText(R.string.communication_encrypted);
 						}
 					}
 					

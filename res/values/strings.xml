@@ -3,7 +3,9 @@
 
     <string name="not_ready_to_make_new_call">Not ready for a new call</string>
     <string name="bad_target_uri">Bad contact : %s</string>
-    <string name="authenticationTokenFormat">Encrypted %s</string>
+    <string name="reset_sas_fmt">Reset validated %s</string>
+    <string name="validate_sas_fmt">Validate %s</string>
+    <string name="communication_encrypted">Encrypted</string>
     <string name="not_encrypted">Not encrypted</string>
    
 	<string name="waiting_for_startup">Starting up...</string>
