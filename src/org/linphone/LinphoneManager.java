@@ -656,7 +656,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			key = R.string.pref_video_codec_h264_key;
 		} else if ("H263-1998".equals(mime)) {
 			key = R.string.pref_video_codec_h263_key;
-		} else if ("VP8-DRAFT-0-3-2".equals(mime)) {
+		} else if ("VP8".equals(mime)) {
 			key = R.string.pref_video_codec_vp8_key;
 		} else {
 			Log.e("Unhandled video codec ", mime);
