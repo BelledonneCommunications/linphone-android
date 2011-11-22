@@ -501,9 +501,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		leaveConference(nativePtr);
 	}
 
-	private native void enterConference(long nativePtr);	
-	public synchronized void enterConference() {
-		enterConference(nativePtr);
+	private native boolean enterConference(long nativePtr);	
+	public synchronized boolean enterConference() {
+		return enterConference(nativePtr);
 	}
 
 	private native boolean isInConference(long nativePtr);

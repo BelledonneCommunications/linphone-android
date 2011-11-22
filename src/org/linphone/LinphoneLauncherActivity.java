@@ -20,12 +20,9 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 
 /**
  * 

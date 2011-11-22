@@ -65,29 +65,7 @@ public class IncallTimer extends TextView {
 		}
 	}
 
-	
-	/**
-	 * Format time as "days - hh : mm : ss".
-	 * @param seconds
-	 * @return formated string
-	 */
-	/*protected String formatTime(final int seconds) {
-		int value = seconds;
-		StringBuilder sb = new StringBuilder();
-
-		for (int base : Arrays.asList(60, 60, 24)) {
-			if (value == 0) break;
-
-			int remainder = value % base;
-			value /= base;
-
-			if (sb.length() != 0) sb.insert(0, " : ");
-			sb.insert(0, remainder < 10 ? "0" + remainder : remainder);
-		}
-
-		if (value != 0) sb.insert(0, value + " - ");
-
-		return sb.toString();
+	public void setDuration(int duration) {
+		super.setText(formatTime(duration));
 	}
-	*/
 }

@@ -51,8 +51,8 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -69,20 +69,16 @@ public class IncallActivity extends ListActivity implements
 		LinphoneOnCallStateChangedListener,
 		LinphoneOnCallEncryptionChangedListener,
 		Comparator<LinphoneCall>,
+		OnLongClickListener,
 		OnClickListener {
 
-	private View confHeaderView;
 	static boolean active;
 
-	private boolean unMuteOnReturnFromUriPicker;
+	private boolean mUnMuteOnReturnFromUriPicker;
 
 	// Start Override to test block
 	protected LinphoneCore lc() {
 		return LinphoneManager.getLc();
-	}
-
-	protected List<LinphoneCall> getInitialCalls() {
-		return LinphoneUtils.getLinphoneCalls(lc());
 	}
 
 	// End override to test block
@@ -93,15 +89,6 @@ public class IncallActivity extends ListActivity implements
 
 
 
-	@SuppressWarnings("unused")
-	private void workaroundStatusBarBug() {
-		// call from onCreate to get a clean display on full screen no icons
-		// otherwise the upper side of the activity may be corrupted
-		getWindow().setFlags(
-				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-	}
-
 	private void pauseCurrentCallOrLeaveConference() {
 		LinphoneCall call = lc().getCurrentCall();
 		if (call != null) lc().pauseCall(call);
@@ -110,41 +97,41 @@ public class IncallActivity extends ListActivity implements
 
 	private ToggleButton mMuteMicButton;
 	private ToggleButton mSpeakerButton;
-	private int multipleCallsLimit;
-	private boolean allowTransfers;
+	private View mConferenceVirtualCallee;
+	private int mMultipleCallsLimit;
+	private boolean mAllowTransfers;
+	private List<LinphoneCall> mNotInConfCalls = Collections.emptyList();
+	private CalleeListAdapter mListAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.conferencing);
+		setContentView(R.layout.incall_layout);
 
-		allowTransfers = getResources().getBoolean(R.bool.allow_transfers);
-
-		confHeaderView = findViewById(R.id.conf_header);
-		confHeaderView.setOnClickListener(this);
+		mAllowTransfers = getResources().getBoolean(R.bool.allow_transfers);
 
 		findViewById(R.id.addCall).setOnClickListener(this);
 
 		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
 		findViewById(R.id.conf_simple_merge).setOnClickListener(this);
-		findViewById(R.id.conf_simple_resume).setOnClickListener(this);
 		View transferView = findViewById(R.id.conf_simple_transfer);
 		transferView.setOnClickListener(this);
-		if (!allowTransfers) {
+		if (!mAllowTransfers) {
 			transferView.setVisibility(View.GONE);
 		}
-		findViewById(R.id.conf_simple_permute).setOnClickListener(this);
 
 		mMuteMicButton = (ToggleButton) findViewById(R.id.toggleMuteMic);
 		mMuteMicButton.setOnClickListener(this);
 		mSpeakerButton = (ToggleButton) findViewById(R.id.toggleSpeaker);
 		mSpeakerButton.setOnClickListener(this);
 
-		List<LinphoneCall> calls = getInitialCalls();
-		setListAdapter(new CalleeListAdapter(calls));
+		setListAdapter(mListAdapter = new CalleeListAdapter());
 		
 		findViewById(R.id.incallHang).setOnClickListener(this);
-		multipleCallsLimit = lc().getMaxCalls();
+		mMultipleCallsLimit = lc().getMaxCalls();
 
+		mConferenceVirtualCallee = findViewById(R.id.conf_header);
+		mConferenceVirtualCallee.setOnClickListener(this);
+		mConferenceVirtualCallee.setOnLongClickListener(this);
 //		workaroundStatusBarBug();
 		super.onCreate(savedInstanceState);
 	}
@@ -156,8 +143,8 @@ public class IncallActivity extends ListActivity implements
 
 	private void updateAddCallButton() {
 		boolean limitReached = false;
-		if (multipleCallsLimit > 0) {
-			limitReached = lc().getCallsNb() >= multipleCallsLimit;
+		if (mMultipleCallsLimit > 0) {
+			limitReached = lc().getCallsNb() >= mMultipleCallsLimit;
 		}
 
 		int establishedCallsNb = LinphoneUtils.getRunningOrPausedCalls(lc()).size();
@@ -175,42 +162,23 @@ public class IncallActivity extends ListActivity implements
 		super.onNewIntent(intent);
 	}
 
-	protected void registerLinphoneListener(boolean register) {
-		if (register)
-			LinphoneManager.addListener(this);
-		else
-			LinphoneManager.removeListener(this);
-	}
-
-
-
 	@Override
 	protected void onResume() {
 		active=true;
-		registerLinphoneListener(true);
-		updateCalleeImage();
-		updateConfState();
-		updateSimpleControlButtons();
-		updateSoundLock();
-		updateDtmfButton();
-		CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
-		if (adapter.linphoneCalls.size() != lc().getCallsNb()) {
-			adapter.linphoneCalls.clear();
-			adapter.linphoneCalls.addAll(getInitialCalls());
-		}
-		recreateActivity(adapter);
+		mNotInConfCalls = LinphoneUtils.getLinphoneCallsNotInConf(lc());
+		LinphoneManager.addListener(this);
 		LinphoneManager.startProximitySensorForActivity(this);
 		mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
 		mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 
-		updateAddCallButton();
+		recreateActivity();
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		active=false;
-		registerLinphoneListener(false);
+		LinphoneManager.removeListener(this);
 		LinphoneManager.stopProximitySensorForActivity(this);
 		super.onPause();
 	}
@@ -219,7 +187,7 @@ public class IncallActivity extends ListActivity implements
 		ImageView view = (ImageView) findViewById(R.id.incall_picture);
 		LinphoneCall currentCall = lc().getCurrentCall();
 
-		if (lc().getCallsNb() != 1 || currentCall == null) {
+		if (currentCall == null || lc().getCallsNb() != 1) {
 			view.setVisibility(GONE);
 			return;
 		}
@@ -231,10 +199,9 @@ public class IncallActivity extends ListActivity implements
 	}
 
 	private void enableView(View root, int id, OnClickListener l, boolean enable) {
-		View v = root.findViewById(id);
-		v.setVisibility(enable ? VISIBLE : GONE);
-		v.setOnClickListener(l);
+		LinphoneUtils.enableView(root, id, l, enable);
 	}
+
 	@Override
 	protected Dialog onCreateDialog(final int id) {
 		switch (id) {
@@ -257,36 +224,6 @@ public class IncallActivity extends ListActivity implements
 
 	}
 
-	// protected void conferenceMerge(boolean hostInTheConference, LinphoneCall
-	// ... calls) {
-	// for (LinphoneCall call: calls) {
-	// getLc().addToConference(call, false);
-	// }
-	// getLc().enterConference(hostInTheConference);
-	// }
-
-	// FIXME hack; should have an event?
-	protected final void hackTriggerConfStateUpdate() {
-		updateConfState();
-	}
-
-	private final void updateConfState() {
-		if (lc().getCallsNb() == 0) {
-			setResult(RESULT_OK);
-			finish();
-		}
-			
-		boolean inConf = lc().isInConference();
-
-		int bgColor = getResources().getColor(inConf? R.color.conf_active_bg_color : android.R.color.transparent);
-		confHeaderView.setBackgroundColor(bgColor);
-		confHeaderView.setVisibility(lc().getConferenceSize() > 0 ? VISIBLE: GONE);
-
-//		TextView v = (TextView) confHeaderView
-//				.findViewById(R.id.conf_self_attending);
-//		v.setText(inConf ? R.string.in_conf : R.string.out_conf);
-	}
-
 	private LinphoneCall activateCallOnReturnFromUriPicker;
 	private boolean enterConferenceOnReturnFromUriPicker;
 	private void openUriPicker(String pickerType, int requestCode) {
@@ -301,10 +238,54 @@ public class IncallActivity extends ListActivity implements
 		intent.putExtra(UriPickerActivity.EXTRA_PICKER_TYPE, pickerType);
 		startActivityForResult(intent, requestCode);
 		if (!lc().isMicMuted()) {
-			unMuteOnReturnFromUriPicker = true;
+			mUnMuteOnReturnFromUriPicker = true;
 			lc().muteMic(true);
 			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(true);
 		}
+	}
+
+	
+	@Override
+	public boolean onLongClick(View v) {
+		switch (v.getId()) {
+		case R.id.conf_header:
+			if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+				LinphoneActivity.instance().startConferenceDetailsActivity();
+			} else {
+				Log.i("conference details disabled for older phones");
+			}
+			break;
+		default:
+			break;
+		}
+		return false;
+	}
+
+	private void enterConferenceAndUpdateUI(boolean enterConf) {
+		if (enterConf) {
+			boolean success = lc().enterConference();
+			if (success) {
+				mConferenceVirtualCallee.setBackgroundResource(R.drawable.conf_callee_active_bg);
+			}
+		} else {
+			lc().leaveConference();
+			mConferenceVirtualCallee.setBackgroundResource(R.drawable.conf_callee_bg);
+		}
+	}
+	
+	private void terminateCurrentCallOrConferenceOrAll() {
+		LinphoneCall currentCall = lc().getCurrentCall();
+		if (currentCall != null) {
+			lc().terminateCall(currentCall);
+		} else if (lc().isInConference()) {
+			lc().terminateConference();
+		} else {
+			lc().terminateAllCalls();
+		}
+
+		// activity should be closed automatically by LinphoneActivity when no more calls exist
+		//		setResult(RESULT_OK);
+		//		finish();
 	}
 
 	public void onClick(View v) {
@@ -312,46 +293,12 @@ public class IncallActivity extends ListActivity implements
 		case R.id.addCall:
 			openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_ADD, ID_ADD_CALL);
 			break;
-		case R.id.conf_header:
-			View content = getLayoutInflater().inflate(R.layout.conf_choices_admin, null);
-			final Dialog dialog = new AlertDialog.Builder(IncallActivity.this).setView(content).create();
-			boolean isInConference = lc().isInConference();
-			OnClickListener l = new OnClickListener() {
-				public void onClick(View v) {
-					switch (v.getId()) {
-					case R.id.conf_add_all_to_conference_button:
-						lc().addAllToConference();
-						updateConfState();
-						break;
-					case R.id.conf_enter_button:
-						lc().enterConference();
-						updateConfState();
-						break;
-					case R.id.conf_leave_button:
-						lc().leaveConference();
-						updateConfState();
-						break;
-					case R.id.conf_terminate_button:
-						lc().terminateConference();
-						findViewById(R.id.conf_header).setVisibility(GONE);
-						break;
-					default:
-						break;
-					}
-					dialog.dismiss();
-				}
-			};
-			enableView(content, R.id.conf_enter_button, l, !isInConference);
-			enableView(content, R.id.conf_leave_button, l, isInConference);
-			content.findViewById(R.id.conf_terminate_button).setOnClickListener(l);
-			content.findViewById(R.id.conf_add_all_to_conference_button).setOnClickListener(l);
-
-			dialog.show();
-			break;
 		case R.id.incallHang:
-			lc().terminateAllCalls();
-			setResult(RESULT_OK);
-			finish();
+			terminateCurrentCallOrConferenceOrAll();
+			break;
+		case R.id.conf_header:
+			boolean enterConf = !lc().isInConference();
+			enterConferenceAndUpdateUI(enterConf);
 			break;
 		case R.id.incallNumpadShow:
 			showDialog(numpad_dialog_id);
@@ -360,26 +307,13 @@ public class IncallActivity extends ListActivity implements
 			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
 			lc().addAllToConference();
 			break;
-		case R.id.conf_simple_resume:
-			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
-			handleSimpleResume();
-			break;
 		case R.id.conf_simple_transfer:
 			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
 			LinphoneCall tCall = lc().getCurrentCall();
 			if (tCall != null) {
-				prepareForTransferingExistingCall(tCall);
+				prepareForTransferingExistingOrNewCall(tCall);
 			} else {
 				Toast.makeText(this, R.string.conf_simple_no_current_call, Toast.LENGTH_SHORT).show();
-			}
-			break;
-		case R.id.conf_simple_permute:
-			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
-			for (LinphoneCall call : LinphoneUtils.getLinphoneCalls(lc())) {
-				if (State.Paused == call.getState()) {
-					lc().resumeCall(call);
-					break;
-				}
 			}
 			break;
 		case R.id.toggleMuteMic:
@@ -398,48 +332,31 @@ public class IncallActivity extends ListActivity implements
 
 	}
 
-	private void handleSimpleResume() {
-		int nbCalls = lc().getCallsNb();
-		if (nbCalls == 0) {
-			return;
-		} else if (nbCalls == 1) {
-			// resume first one
-			for (LinphoneCall call : LinphoneUtils.getLinphoneCalls(lc())) {
-				if (call.getState() == State.Paused) {
-					lc().resumeCall(call);
-					break;
-				}
-			}
-		} else {
-			// Create a dialog for user to select
-			final List<LinphoneCall> existingCalls = LinphoneUtils.getLinphoneCalls(lc());
-			final List<String> numbers = new ArrayList<String>(existingCalls.size());
-			Resources r = getResources();
-			for(LinphoneCall c : existingCalls) {
-				numbers.add(LinphoneManager.extractADisplayName(r, c.getRemoteAddress()));
-			}
-			ListAdapter adapter = new ArrayAdapter<String>(IncallActivity.this, android.R.layout.select_dialog_item, numbers);
-			DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					lc().resumeCall(existingCalls.get(which));
-				}
-			};
-			new AlertDialog.Builder(IncallActivity.this).setTitle(R.string.resume_dialog_title).setAdapter(adapter, l).create().show();
-		}
-	}
-
-	private void prepareForTransferingExistingCall(final LinphoneCall call) {
+	private void prepareForTransferingExistingOrNewCall(final LinphoneCall call) {
 		final List<LinphoneCall> existingCalls = LinphoneUtils.getLinphoneCalls(lc());
+		if (existingCalls.size() == 1) {
+			// Only possible choice is transfer to new call: doing it directly.
+			mCallToTransfer = call;
+			openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER, ID_TRANSFER_CALL);
+			return;
+		}
 		existingCalls.remove(call);
-		final List<String> numbers = new ArrayList<String>(existingCalls.size());
+		final List<String> numbers = new ArrayList<String>(existingCalls.size() + 1);
 		Resources r = getResources();
 		for(LinphoneCall c : existingCalls) {
 			numbers.add(LinphoneManager.extractADisplayName(r, c.getRemoteAddress()));
 		}
+		numbers.add(getString(R.string.transfer_to_new_call));
 		ListAdapter adapter = new ArrayAdapter<String>(IncallActivity.this, android.R.layout.select_dialog_item, numbers);
 		DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				lc().transferCallToAnother(call, existingCalls.get(which));
+				if (which == numbers.size() -1) {
+					// Last one is transfer to new call
+					mCallToTransfer = call;
+					openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER, ID_TRANSFER_CALL);
+				} else {
+					lc().transferCallToAnother(call, existingCalls.get(which));
+				}
 			}
 		};
 		new AlertDialog.Builder(IncallActivity.this).setTitle(R.string.transfer_dialog_title).setAdapter(adapter, l).create().show();
@@ -463,28 +380,12 @@ public class IncallActivity extends ListActivity implements
 			case R.id.terminate_call:
 				lc().terminateCall(call);
 				break;
-			case R.id.pause:
-				lc().pauseCall(call);
-				break;
-			case R.id.resume:
-				lc().resumeCall(call);
-				break;
-			case R.id.unhook_call:
-				try {
-					lc().acceptCall(call);
-				} catch (LinphoneCoreException e) {
-					throw new RuntimeException(e);
-				}
-				break;
 			case R.id.transfer_existing:
-				prepareForTransferingExistingCall(call);
+				prepareForTransferingExistingOrNewCall(call);
 				break;
 			case R.id.transfer_new:
 				openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER, ID_TRANSFER_CALL);
-				callToTransfer = call;	
-				break;
-			case R.id.remove_from_conference:
-				lc().removeFromConference(call);
+				mCallToTransfer = call;	
 				break;
 			case R.id.addVideo:
 				if (!LinphoneManager.getInstance().addVideo()) {
@@ -507,18 +408,12 @@ public class IncallActivity extends ListActivity implements
 		}
 	}
 	private class CalleeListAdapter extends BaseAdapter {
-		private List<LinphoneCall> linphoneCalls;
-
-		public CalleeListAdapter(List<LinphoneCall> calls) {
-			linphoneCalls = calls;
-		}
-
 		public int getCount() {
-			return linphoneCalls != null ? linphoneCalls.size() : 0;
+			return mNotInConfCalls.size();
 		}
 
 		public Object getItem(int position) {
-			return linphoneCalls.get(position);
+			return mNotInConfCalls.get(position);
 		}
 
 		public long getItemId(int position) {
@@ -530,7 +425,7 @@ public class IncallActivity extends ListActivity implements
 				return false;
 			}
 			int count = 0;
-			for (LinphoneCall call : linphoneCalls) {
+			for (LinphoneCall call : mNotInConfCalls) {
 				final LinphoneCall.State state = call.getState();
 				boolean connectionEstablished = state == State.StreamsRunning
 						|| state == State.Paused
@@ -544,25 +439,28 @@ public class IncallActivity extends ListActivity implements
 		}
 
 		private void setVisibility(View v, int id, boolean visible) {
-			v.findViewById(id).setVisibility(visible ? VISIBLE : GONE);
+			LinphoneUtils.setVisibility(v, id, visible);
 		}
 		private void setVisibility(View v, boolean visible) {
-			v.setVisibility(visible ? VISIBLE : GONE);
+			LinphoneUtils.setVisibility(v, visible);
 		}
-		private void setStatusLabel(View v, State state, boolean inConf, boolean activeOne) {
+		private void setStatusLabel(View v, State state, boolean activeOne) {
 			String statusLabel = getStateText(state);
-
-			if (activeOne)
-				statusLabel=getString(R.string.status_active_call);
-
-			if (inConf)
-				statusLabel=getString(R.string.status_conf_call);
-			
 			((TextView) v.findViewById(R.id.status_label)).setText(statusLabel);
 		}
 
+		private boolean highlightCall(LinphoneCall call) {
+			final State state = call.getState();
+			return state == State.StreamsRunning 
+			|| state == State.OutgoingRinging
+			|| state == State.OutgoingEarlyMedia
+			|| state == State.OutgoingInit
+			|| state == State.OutgoingProgress
+			;
+		}
+
 		public View getView(int position, View v, ViewGroup parent) {
-			Log.i("IncallActivity.getView(",position,") out of ", linphoneCalls.size());
+			Log.i("IncallActivity.getView(",position,") out of ", mNotInConfCalls.size());
 			if (v == null) {
 				if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
 					v = getLayoutInflater().inflate(R.layout.conf_callee, null);
@@ -571,16 +469,12 @@ public class IncallActivity extends ListActivity implements
 				}
 			}
 
-			final LinphoneCall call = linphoneCalls.get(position);
+			final LinphoneCall call = mNotInConfCalls.get(position);
 			final LinphoneCall.State state = call.getState();
 
 			LinphoneAddress address = call.getRemoteAddress();
 			String mainText = address.getDisplayName();
 			String complText = address.getUserName();
-			if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20) 
-					&& getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call)) {
-				complText += "@" + address.getDomain();
-			}
 			TextView mainTextView = (TextView) v.findViewById(R.id.name);
 			TextView complTextView = (TextView) v.findViewById(R.id.address);
 			if (TextUtils.isEmpty(mainText)) {
@@ -592,20 +486,15 @@ public class IncallActivity extends ListActivity implements
 				complTextView.setVisibility(View.VISIBLE);
 			}
 
-			final boolean isInConference = call.isInConference();
-			boolean currentlyActiveCall = !isInConference
-					&& state == State.StreamsRunning;
-
-			setStatusLabel(v, state, isInConference, currentlyActiveCall);
+			boolean highlighted = highlightCall(call);
+			setStatusLabel(v, state, highlighted);
 
 
 			int bgDrawableId = R.drawable.conf_callee_selector_normal;
 			if (state == State.IncomingReceived) {
 				bgDrawableId = R.drawable.conf_callee_selector_incoming;
-			} else if (currentlyActiveCall) {
+			} else if (highlighted) {
 				bgDrawableId = R.drawable.conf_callee_selector_active;
-			} else if (isInConference) {
-				bgDrawableId = R.drawable.conf_callee_selector_inconf;
 			}
 			v.setBackgroundResource(bgDrawableId);
 
@@ -613,35 +502,11 @@ public class IncallActivity extends ListActivity implements
 					|| state == State.Paused
 					|| state == State.PausedByRemote;
 			View confButton = v.findViewById(R.id.merge_to_conference);
-			final boolean showMergeToConf = !isInConference && connectionEstablished
-					&& aConferenceIsPossible();
+			final boolean showMergeToConf = connectionEstablished && aConferenceIsPossible();
 			setVisibility(confButton, false);
 
-			View unhookCallButton = v.findViewById(R.id.unhook_call);
-			boolean showUnhook = state == State.IncomingReceived;
-			setVisibility(unhookCallButton, showUnhook);
-
-			View terminateCallButton = v.findViewById(R.id.terminate_call);
-			boolean showTerminate = state == State.IncomingReceived
-					|| state == State.OutgoingRinging || state == State.OutgoingEarlyMedia
-					|| state == State.OutgoingInit || state == State.OutgoingProgress;
-			setVisibility(terminateCallButton, showTerminate);
-
-			View pauseButton = v.findViewById(R.id.pause);
-			final boolean showPause = !isInConference
-					&& state == State.StreamsRunning;
-			setVisibility(pauseButton, false);
-
-			View resumeButton = v.findViewById(R.id.resume);
-			final boolean showResume = !isInConference
-					&& state == State.Paused;
-			setVisibility(resumeButton, false);
-
-			View removeFromConfButton = v.findViewById(R.id.remove_from_conference);
-			setVisibility(removeFromConfButton, false);
-			
-			final int numberOfCalls = linphoneCalls.size();
-			boolean showAddVideo = State.StreamsRunning == state && !isInConference
+			final int numberOfCalls = mNotInConfCalls.size();
+			boolean showAddVideo = State.StreamsRunning == state
 					&& Version.isVideoCapable()
 					&& LinphoneManager.getInstance().isVideoEnabled();
 			View addVideoButton = v.findViewById(R.id.addVideo);
@@ -650,23 +515,15 @@ public class IncallActivity extends ListActivity implements
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
 
-			setVisibility(v, R.id.callee_status_inconf, isInConference);
-			
 			final OnClickListener l = new CallActionListener(call);
 			confButton.setOnClickListener(l);
-			terminateCallButton.setOnClickListener(l);
-			pauseButton.setOnClickListener(l);
-			resumeButton.setOnClickListener(l);
-			unhookCallButton.setOnClickListener(l);
-			removeFromConfButton.setOnClickListener(l);
 			addVideoButton.setOnClickListener(l);
 
 			String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 			if ("none".equals(mediaEncryption)) {
-				boolean showUnencrypted = Version.hasZrtp();
 				setVisibility(v, R.id.callee_status_secured, false);
 				setVisibility(v, R.id.callee_status_maybe_secured, false);
-				setVisibility(v, R.id.callee_status_not_secured, showUnencrypted);
+				setVisibility(v, R.id.callee_status_not_secured, false);
 			} else {
 				boolean reallySecured = !Version.hasZrtp() || call.isAuthenticationTokenVerified();
 				setVisibility(v, R.id.callee_status_secured, reallySecured);
@@ -674,20 +531,17 @@ public class IncallActivity extends ListActivity implements
 				setVisibility(v, R.id.callee_status_not_secured, false);
 			}
 
-			v.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
+			v.setOnLongClickListener(new OnLongClickListener() {
+				public boolean onLongClick(View v) {
 					if (lc().soundResourcesLocked()) {
-						return;
+						return false;
 					}
 					View content = getLayoutInflater().inflate(R.layout.conf_choices_dialog, null);
 					Dialog dialog = new AlertDialog.Builder(IncallActivity.this).setView(content).create();
 					OnClickListener l = new CallActionListener(call, dialog);
-					enableView(content, R.id.transfer_existing, l, allowTransfers && !isInConference && numberOfCalls >=2);
-					enableView(content, R.id.transfer_new, l, allowTransfers && !isInConference);
-					enableView(content, R.id.remove_from_conference, l, isInConference);
+					enableView(content, R.id.transfer_existing, l, mAllowTransfers && numberOfCalls >=2);
+					enableView(content, R.id.transfer_new, l, mAllowTransfers);
 					enableView(content, R.id.merge_to_conference, l, showMergeToConf);
-					enableView(content, R.id.pause, l,!isInConference && showPause);
-					enableView(content, R.id.resume, l, !isInConference && showResume);
 					enableView(content, R.id.terminate_call, l, true);
 
 					String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
@@ -710,6 +564,21 @@ public class IncallActivity extends ListActivity implements
 					}
 					
 					dialog.show();
+					return true;
+				}
+			});
+			
+			v.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					State actualState = call.getState();
+					if (State.StreamsRunning == actualState) {
+						lc().pauseCall(call);
+					} else if (State.Paused == actualState) {
+						lc().resumeCall(call);
+					} else if (State.PausedByRemote == actualState) {
+						Toast.makeText(IncallActivity.this, getString(R.string.cannot_resume_paused_by_remote_call), Toast.LENGTH_SHORT).show();
+					}
 				}
 			});
 
@@ -730,14 +599,16 @@ public class IncallActivity extends ListActivity implements
 
 	private String getStateText(State state) {
 		int id;
-		if (state == State.IncomingReceived) {
-			id=R.string.state_incoming_received;
-		} else if (state == State.OutgoingRinging) {
-			id=R.string.state_outgoing_ringing;
+		if (state == State.StreamsRunning) {
+			id=R.string.status_active_call;
 		} else if (state == State.Paused) {
 			id=R.string.state_paused;
 		} else if (state == State.PausedByRemote) {
 			id=R.string.state_paused_by_remote;
+		} else if (state == State.IncomingReceived) {
+			id=R.string.state_incoming_received;
+		} else if (state == State.OutgoingRinging) {
+			id=R.string.state_outgoing_ringing;
 		} else {
 			return "";
 		}
@@ -746,78 +617,56 @@ public class IncallActivity extends ListActivity implements
 
 	private Handler mHandler = new Handler();
 
-	private static int conferenceCalleesNb(LinphoneCore lc) {
-		int count = lc.getConferenceSize();
-		if (lc.isInConference()) count--;
-		return count;
-	}
-
 	private void updateSimpleControlButtons() {
 		LinphoneCall activeCall = lc().getCurrentCall();
 		View control = findViewById(R.id.conf_control_buttons);
-		int callNb = lc().getCallsNb();
-
-		View permute = control.findViewById(R.id.conf_simple_permute);
-		boolean showPermute = activeCall != null && callNb == 2;
-		permute.setVisibility(showPermute ? VISIBLE : GONE);
-
-		View resume = control.findViewById(R.id.conf_simple_resume);
-		boolean showResume = activeCall == null && LinphoneUtils.hasExistingResumeableCall(lc());
-		resume.setVisibility(showResume ? VISIBLE : GONE);
+		int nonConfCallsNb = LinphoneUtils.countNonConferenceCalls(lc());
 
 		View merge = control.findViewById(R.id.conf_simple_merge);
-		boolean showMerge = callNb >= 2 && callNb > conferenceCalleesNb(lc());
+		boolean showMerge = nonConfCallsNb >=2
+			|| (lc().getConferenceSize() > 0 && nonConfCallsNb > 0);
 		merge.setVisibility(showMerge ? VISIBLE : GONE);
 
 		View transfer = control.findViewById(R.id.conf_simple_transfer);
-		boolean showTransfer = callNb >=2 && activeCall != null && allowTransfers;
+		boolean showTransfer = mAllowTransfers && activeCall != null;
 		transfer.setVisibility(showTransfer ? VISIBLE : GONE);
 
-		boolean showControl = (showMerge || showPermute || showResume || showTransfer) || lc().getConferenceSize() > 0;
+		boolean showControl = showMerge || showTransfer;
 		control.setVisibility(showControl ? VISIBLE : GONE);
 	}
 
-	public void onCallStateChanged(final LinphoneCall call, final State state,
-			final String message) {
-		final String stateStr = call + " " + state.toString();
-		Log.d("IncallActivity received state ",stateStr);
-		
+	public void onCallStateChanged(final LinphoneCall c, final State s, String m) {
 		mHandler.post(new Runnable() {
 			public void run() {
-				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
-				Log.d("IncallActivity applying state ",stateStr);
-				updateSimpleControlButtons();
-				updateCalleeImage();
-				updateSoundLock();
-				updateAddCallButton();
-				updateDtmfButton();
-				if (state == State.IncomingReceived || state == State.OutgoingRinging) {
-					if (!adapter.linphoneCalls.contains(call)) {
-						adapter.linphoneCalls.add(call);
-						Collections.sort(adapter.linphoneCalls,	IncallActivity.this);
-						recreateActivity(adapter);
-					} else {
-						Log.e("Call should not be in the call lists : ", stateStr);
-					}
-				} else if (state == State.Paused || state == State.PausedByRemote || state == State.StreamsRunning) {
-					Collections.sort(adapter.linphoneCalls,	IncallActivity.this);
-					adapter.notifyDataSetChanged();
-				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
-					if (adapter.linphoneCalls.contains(call)) {
-						adapter.linphoneCalls.remove(call);
-						Collections.sort(adapter.linphoneCalls, IncallActivity.this);
-						recreateActivity(adapter);
-					}
-				}
-
-				updateConfState();
+				mNotInConfCalls = LinphoneUtils.getLinphoneCallsNotInConf(lc());
+				recreateActivity();
 			}
 		});
 	}
 
-	private void recreateActivity(CalleeListAdapter adapter) {
-		adapter.notifyDataSetInvalidated();
-		adapter.notifyDataSetChanged();
+	private void updateConfItem() {
+		boolean confExists = lc().getConferenceSize() > 0;
+		View confView = findViewById(R.id.conf_header);
+		confView.setVisibility(confExists? VISIBLE : GONE);
+
+		if (confExists) {
+			if (lc().isInConference()) {
+				confView.setBackgroundResource(R.drawable.conf_callee_selector_active);
+			} else {
+				confView.setBackgroundResource(R.drawable.conf_callee_selector_normal);
+			}
+		}
+	}
+
+	private void recreateActivity() {
+		updateSimpleControlButtons();
+		updateCalleeImage();
+		updateSoundLock();
+		updateAddCallButton();
+		updateDtmfButton();
+		updateConfItem();
+		
+		mListAdapter.notifyDataSetChanged();
 	}
 
 	public int compare(LinphoneCall c1, LinphoneCall c2) {
@@ -853,10 +702,10 @@ public class IncallActivity extends ListActivity implements
 		return true;
 	}
 	
-	private LinphoneCall callToTransfer;
+	private LinphoneCall mCallToTransfer;
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (unMuteOnReturnFromUriPicker) {
+		if (mUnMuteOnReturnFromUriPicker) {
 			lc().muteMic(false);
 			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(false);
 		}
@@ -866,7 +715,7 @@ public class IncallActivity extends ListActivity implements
 			uri = data.getStringExtra(UriPickerActivity.EXTRA_CALLEE_URI);
 		}
 		if (resultCode != RESULT_OK || TextUtils.isEmpty(uri)) {
-			callToTransfer = null;
+			mCallToTransfer = null;
 			Toast.makeText(this, R.string.uri_picking_canceled, Toast.LENGTH_LONG).show();
 			eventuallyResumeConfOrCallOnPickerReturn(true);
 			return;
@@ -895,11 +744,11 @@ public class IncallActivity extends ListActivity implements
 			}
 			break;
 		case ID_TRANSFER_CALL:
-			lc().transferCall(callToTransfer, uri);
+			lc().transferCall(mCallToTransfer, uri);
 			// don't re-enter conference if call to transfer from conference
-			boolean doResume = !callToTransfer.isInConference();
+			boolean doResume = !mCallToTransfer.isInConference();
 			// don't resume call if it is the call to transfer
-			doResume &= activateCallOnReturnFromUriPicker != callToTransfer;
+			doResume &= activateCallOnReturnFromUriPicker != mCallToTransfer;
 			eventuallyResumeConfOrCallOnPickerReturn(doResume);
 			Toast.makeText(this, R.string.transfer_started, Toast.LENGTH_LONG).show();
 			break;
@@ -913,7 +762,7 @@ public class IncallActivity extends ListActivity implements
 			if (activateCallOnReturnFromUriPicker != null) {
 				lc().resumeCall(activateCallOnReturnFromUriPicker);
 			} else if (enterConferenceOnReturnFromUriPicker) {
-				lc().enterConference();
+				enterConferenceAndUpdateUI(true);
 			}
 		}
 		activateCallOnReturnFromUriPicker = null;
@@ -951,8 +800,7 @@ public class IncallActivity extends ListActivity implements
 			String authenticationToken) {
 		mHandler.post(new Runnable() {
 			public void run() {
-				CalleeListAdapter adapter = (CalleeListAdapter) getListAdapter();
-				recreateActivity(adapter);
+				recreateActivity();
 			}
 		});
 	}

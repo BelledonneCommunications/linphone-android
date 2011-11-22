@@ -37,14 +37,6 @@ public class LinphonePreferenceManager {
 		return c.getString(key);
 	}
 
-	public static final synchronized LinphonePreferenceManager getInstance() {
-		if (instance == null) {
-			throw new RuntimeException("LinphonePreferenceManager not instanciated");
-		}
-		return instance;
-	}
-
-
 	public boolean useSoftvolume() {
 		return p.getBoolean(
 				getString(R.string.pref_audio_soft_volume_key), false);

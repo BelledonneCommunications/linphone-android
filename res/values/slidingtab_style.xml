@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TextAppearance.SlidingTabNormal" 
-        parent="@android:attr/textAppearanceMedium">
+        parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?android:attr/textColorTertiary</item>
         <item name="android:textSize">28sp</item>
         <item name="android:shadowColor">@android:color/black</item>
@@ -11,7 +11,7 @@
     </style>
 
     <style name="TextAppearance.SlidingTabActive" 
-        parent="@android:attr/textAppearanceMedium">
+        parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">28sp</item>
     </style>

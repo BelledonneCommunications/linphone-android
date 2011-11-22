@@ -15,7 +15,10 @@
 	<string name="error_adding_new_call">Error adding new call</string>
 	<string name="transfer_started">Transfer initiated</string>
 	<string name="transfer_dialog_title">Transfer call to</string>
+	<string name="transfer_to_new_call">New call</string>
 	<string name="resume_dialog_title">Resume call</string>
+	<string name="cannot_resume_paused_by_remote_call">Cannot resume call paused by remote</string>
+	<string name="conf_show_details_text">Show details</string>
 
 	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>
 
@@ -58,7 +61,7 @@
 	<string name="conf_simple_no_current_call">No active call</string>
 	<string name="show_send_dtmfs_button">DTMFs</string>
 
-	<string name="conf_text_you_host_a_conference">You host a conference</string>
+	<string name="conf_conference">Conference</string>
 	<string name="in_conf">You are part of it</string>
 	<string name="in_conf_leave">Go out</string>
 	<string name="out_conf">You are out of it</string>

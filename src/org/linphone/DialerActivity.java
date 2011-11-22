@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.Log;
@@ -49,7 +48,7 @@ import android.widget.Toast;
  * </ul>
  *
  */
-public class DialerActivity extends Activity implements LinphoneGuiListener, NewOutgoingCallUiListener {
+public class DialerActivity extends Activity implements LinphoneGuiListener {
 	
 	private TextView mStatus;
 	private Handler mHandler;
@@ -220,11 +219,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener, New
 			checkIfOutgoingCallIntentReceived();
 		}
 	}
-
-	public void onCallEncryptionChanged(LinphoneCall call, boolean encrypted, String t) {
-		// done in incall view
-	}
-
 
 	@Override
 	protected void onResume() {

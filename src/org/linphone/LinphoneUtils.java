@@ -18,11 +18,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -41,6 +45,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 /**
@@ -116,6 +122,7 @@ public final class LinphoneUtils {
 		return null;
 	}
 
+	
 	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, int notFoundResource) {
 		if (uri == null) {
 			view.setImageResource(notFoundResource);
@@ -129,12 +136,33 @@ public final class LinphoneUtils {
 			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
 				view.setImageURI(uri);
 			} else {
+				@SuppressWarnings("deprecation")
 				Bitmap bitmap = android.provider.Contacts.People.loadContactPhoto(c, uri, notFoundResource, null);
 				view.setImageBitmap(bitmap);
 			}
 		}
 	}
 
+	public static final List<LinphoneCall> getLinphoneCallsNotInConf(LinphoneCore lc) {
+		List<LinphoneCall> calls = getLinphoneCalls(lc);
+		Iterator<LinphoneCall> iterator = calls.iterator();
+		while (iterator.hasNext()) {
+			LinphoneCall call = iterator.next();
+			if (call.isInConference()) iterator.remove();
+		}
+		return calls;
+	}
+
+	public static final List<LinphoneCall> getLinphoneCallsInConf(LinphoneCore lc) {
+		List<LinphoneCall> calls = getLinphoneCalls(lc);
+		Iterator<LinphoneCall> iterator = calls.iterator();
+		while (iterator.hasNext()) {
+			LinphoneCall call = iterator.next();
+			if (!call.isInConference()) iterator.remove();
+		}
+		return calls;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
 		return (List<LinphoneCall>) lc.getCalls();
@@ -159,5 +187,31 @@ public final class LinphoneUtils {
 		}
 		return foundCalls;
 	}
+
+	public static final int countConferenceCalls(LinphoneCore lc) {
+		int count = lc.getConferenceSize();
+		if (lc.isInConference()) count--;
+		return count;
+	}
+
+	public static int countVirtualCalls(LinphoneCore lc) {
+		return lc.getCallsNb() - countConferenceCalls(lc);
+	}
+	public static int countNonConferenceCalls(LinphoneCore lc) {
+		return lc.getCallsNb() - countConferenceCalls(lc);
+	}
+
+	public static void setVisibility(View v, int id, boolean visible) {
+		v.findViewById(id).setVisibility(visible ? VISIBLE : GONE);
+	}
+	public static void setVisibility(View v, boolean visible) {
+		v.setVisibility(visible ? VISIBLE : GONE);
+	}
+	public static void enableView(View root, int id, OnClickListener l, boolean enable) {
+		View v = root.findViewById(id);
+		v.setVisibility(enable ? VISIBLE : GONE);
+		v.setOnClickListener(l);
+	}
+
 }
 

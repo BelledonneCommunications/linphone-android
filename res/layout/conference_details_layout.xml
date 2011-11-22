@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         android:orientation="vertical"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:paddingLeft="8dp"
+         android:paddingRight="8dp">
+
+     <ListView android:id="@android:id/list"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:drawSelectorOnTop="true"
+               android:dividerHeight="10dip"
+               android:divider="@android:color/transparent"
+               android:fadeScrollbars="false"
+     />
+
+
+     <View android:layout_weight="1" android:layout_width="0px" android:layout_height="0px" android:visibility="invisible"/>
+     
+
+     <LinearLayout android:id="@+id/conf_speaker_mic_row" 
+			android:layout_alignParentBottom="true" 
+			android:layout_width="fill_parent" android:layout_height="wrap_content"> 
+		<ToggleButton android:id="@+id/toggleMuteMic" style="@style/conf_toggle_button" 
+			android:textOn="@string/mutemic_button_txt" android:textOff="@string/mutemic_button_txt" />
+		<ToggleButton android:id="@+id/toggleSpeaker" style="@style/conf_toggle_button"
+			android:textOn="@string/speaker_button_txt" android:textOff="@string/speaker_button_txt" />
+		<ToggleButton android:id="@+id/toggleBluetooth" style="@style/conf_toggle_button"  
+			android:textOn="@string/bluetooth_button_txt" android:textOff="@string/bluetooth_button_txt" 
+			android:visibility="gone"/>
+	</LinearLayout>
+ </LinearLayout>

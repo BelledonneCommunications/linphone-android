@@ -55,7 +55,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author Guillaume Beraudo
  *
  */
-public abstract class AbstractContactPickerActivity extends Activity implements FilterQueryProvider {
+public abstract class AbstractContactPickerActivityNew extends Activity implements FilterQueryProvider {
 
     private ListView mContactList;
     protected EditText mcontactFilter;

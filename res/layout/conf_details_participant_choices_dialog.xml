@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent">
+
+<LinearLayout 
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<LinearLayout android:id="@+id/remove_from_conference"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<ImageButton android:src="@drawable/conf_remove" android:clickable="false"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<TextView android:text="@string/conf_choice_remove_from_conference" android:layout_gravity="center_vertical"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	</LinearLayout>
+
+
+	<LinearLayout android:id="@+id/terminate_call"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<ImageButton android:src="@drawable/conf_terminate" android:clickable="false"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<TextView android:text="@string/conf_choice_terminate" android:layout_gravity="center_vertical"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	</LinearLayout>
+
+</LinearLayout>
+</ScrollView>

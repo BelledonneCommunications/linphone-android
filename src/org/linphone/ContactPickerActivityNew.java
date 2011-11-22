@@ -48,7 +48,7 @@ import android.text.TextUtils;
  * @author Guillaume Beraudo
  *
  */
-public class ContactPickerActivityNew extends AbstractContactPickerActivity {
+public class ContactPickerActivityNew extends AbstractContactPickerActivityNew {
 
 
 

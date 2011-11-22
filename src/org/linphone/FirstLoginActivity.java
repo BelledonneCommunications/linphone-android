@@ -85,7 +85,7 @@ public class FirstLoginActivity extends Activity implements OnClickListener {
 		LinphoneManager.getInstance().initializePayloads();
 
 		try {
-			LinphoneManager.getInstance().initFromConf(getApplicationContext());
+			LinphoneManager.getInstance().initFromConf();
 		} catch (Throwable e) {
 			Log.e(e, "Error while initializing from config in first login activity");
             toast(R.string.error);;

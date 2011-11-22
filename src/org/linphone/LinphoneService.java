@@ -291,7 +291,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    stopForegroundCompat(NOTIF_ID);
 
 		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, null, OnlineStatus.Offline);
-		LinphoneManager.destroy(this);
+		LinphoneManager.destroy();
 		instance=null;
 	}
 
@@ -369,10 +369,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public interface LinphoneGuiListener extends NewOutgoingCallUiListener {
 		void onDisplayStatus(String message);
 		void onGlobalStateChangedToOn(String message);
-//		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onCallStateChanged(LinphoneCall call, State state, String message);
-		void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
-				String authenticationToken);
 	}
 
 
@@ -414,12 +411,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	public void onCallEncryptionChanged(final LinphoneCall call, final boolean encrypted,
 			final String authenticationToken) {
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (guiListener() != null)
-					guiListener().onCallEncryptionChanged(call, encrypted, authenticationToken);			
-			}
-		});
+		// IncallActivity registers itself to this event and handle it.
 	}
 }
 

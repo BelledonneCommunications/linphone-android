@@ -121,13 +121,15 @@ import android.view.WindowManager;
 public final class LinphoneManager implements LinphoneCoreListener {
 
 	private static LinphoneManager instance;
+	private Context mServiceContext;
 	private AudioManager mAudioManager;
 	private PowerManager mPowerManager;
+	private ConnectivityManager mConnectivityManager;
 	private SharedPreferences mPref;
 	private Resources mR;
 	private LinphoneCore mLc;
 	private static Transports initialTransports;
-	private static LinphonePreferenceManager lpm;
+	private static LinphonePreferenceManager sLPref;
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
@@ -145,31 +147,34 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 
-	private LinphoneManager(final Context c) {
+	private LinphoneManager(final Context c, LinphoneServiceListener listener) {
 		sExited=false;
+		mServiceContext = c;
+		mListenerDispatcher = new ListenerDispatcher(listener);
 		basePath = c.getFilesDir().getAbsolutePath();
-		linphoneInitialConfigFile = basePath + "/linphonerc";
-		linphoneConfigFile = basePath + "/.linphonerc";
-		linphoneRootCaFile = basePath + "/rootca.pem";
-		ringSoundFile = basePath + "/oldphone_mono.wav"; 
-		ringbackSoundFile = basePath + "/ringback.wav";
+		mLinphoneInitialConfigFile = basePath + "/linphonerc";
+		mLinphoneConfigFile = basePath + "/.linphonerc";
+		mLinphoneRootCaFile = basePath + "/rootca.pem";
+		mRingSoundFile = basePath + "/oldphone_mono.wav"; 
+		mRingbackSoundFile = basePath + "/ringback.wav";
 
-		lpm = LinphonePreferenceManager.getInstance(c);
+		sLPref = LinphonePreferenceManager.getInstance(c);
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPref = PreferenceManager.getDefaultSharedPreferences(c);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 	}
 	
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
-	private final String linphoneInitialConfigFile;
-	private final String linphoneRootCaFile;
-	private final String linphoneConfigFile;
-	private final String ringSoundFile; 
-	private final String ringbackSoundFile;
+	private final String mLinphoneInitialConfigFile;
+	private final String mLinphoneRootCaFile;
+	private final String mLinphoneConfigFile;
+	private final String mRingSoundFile; 
+	private final String mRingbackSoundFile;
 
 	private Timer mTimer = new Timer("Linphone scheduler");
 
@@ -187,13 +192,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					speakerOn ? "speaker" : "earpiece");
 			return;
 		}
-		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
+		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 
-		if (lpm.useSpecificAudioModeHack() != -1)
-			mAudioManager.setMode(lpm.useSpecificAudioModeHack());
+		if (sLPref.useSpecificAudioModeHack() != -1)
+			mAudioManager.setMode(sLPref.useSpecificAudioModeHack());
 
-		if (Hacks.needRoutingAPI() || lpm.useAudioRoutingAPIHack()) {
+		if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
 			mAudioManager.setRouting(
 					MODE_NORMAL,
 					speakerOn? ROUTE_SPEAKER : ROUTE_EARPIECE,
@@ -252,9 +257,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
 
-		instance = new LinphoneManager(c);
-		instance.listenerDispatcher.setServiceListener(listener);
-		instance.startLibLinphone(c);
+		instance = new LinphoneManager(c, listener);
+		instance.startLibLinphone();
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
@@ -282,7 +286,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	
 	public boolean isSpeakerOn() {
-		if (Hacks.needRoutingAPI() || lpm.useAudioRoutingAPIHack()) {
+		if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
 			return mAudioManager.getRouting(MODE_NORMAL) == ROUTE_SPEAKER;
 		} else {
 			return mAudioManager.isSpeakerphoneOn(); 
@@ -301,11 +305,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		try {
 			lAddress = mLc.interpretUrl(to);
 			if (mLc.isMyself(lAddress.asStringUriOnly())) {
-				listenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
+				mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 				return;
 			}
 		} catch (LinphoneCoreException e) {
-			listenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
+			mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 			return;
 		}
 		lAddress.setDisplayName(address.getDisplayedName());
@@ -322,7 +326,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			
 
 		} catch (LinphoneCoreException e) {
-			listenerDispatcher.tryingNewOutgoingCallButCannotGetCallParameters();
+			mListenerDispatcher.tryingNewOutgoingCallButCannotGetCallParameters();
 			return;
 		}
 	}
@@ -392,23 +396,23 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-	private synchronized void startLibLinphone(final Context context) {
+	private synchronized void startLibLinphone() {
 		try {
-			copyAssetsFromPackage(context);
+			copyAssetsFromPackage();
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
-					this, linphoneConfigFile, linphoneInitialConfigFile, null);
+					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
 
 			mLc.enableIpv6(mPref.getBoolean(getString(R.string.pref_ipv6_key), false));
 			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
 
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
-			mLc.setRootCA(linphoneRootCaFile);
+			mLc.setRootCA(mLinphoneRootCaFile);
 
 
 			try {
-				initFromConf(context);
+				initFromConf();
 			} catch (LinphoneException e) {
 				Log.w("no config ready yet");
 			}
@@ -423,27 +427,27 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
-			context.registerReceiver(mKeepAliveReceiver, lFilter);
+	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
 		}
 		catch (Exception e) {
 			Log.e(e,"Cannot start linphone");
 		}
 	}
 	
-	private void copyAssetsFromPackage(Context context) throws IOException {
-		copyIfNotExist(context, R.raw.oldphone_mono,ringSoundFile);
-		copyIfNotExist(context, R.raw.ringback,ringbackSoundFile);
-		copyFromPackage(context, R.raw.linphonerc, new File(linphoneInitialConfigFile).getName());
-		copyIfNotExist(context, R.raw.rootca, new File(linphoneRootCaFile).getName());
+	private void copyAssetsFromPackage() throws IOException {
+		copyIfNotExist(R.raw.oldphone_mono,mRingSoundFile);
+		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
+		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
+		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}
-	private  void copyIfNotExist(Context context, int ressourceId,String target) throws IOException {
+	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {		
-		   copyFromPackage(context, ressourceId,lFileToCopy.getName()); 
+		   copyFromPackage(ressourceId,lFileToCopy.getName()); 
 		}
 	}
-	private void copyFromPackage(Context context, int ressourceId,String target) throws IOException{
-		FileOutputStream lOutputStream = context.openFileOutput (target, 0); 
+	private void copyFromPackage(int ressourceId,String target) throws IOException{
+		FileOutputStream lOutputStream = mServiceContext.openFileOutput (target, 0); 
 		InputStream lInputStream = mR.openRawResource(ressourceId);
 		int readByte;
 		byte[] buff = new byte[8048];
@@ -469,7 +473,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return false;
 	}
 
-	public void initFromConf(Context context) throws LinphoneConfigException {
+	public void initFromConf() throws LinphoneConfigException {
 		//traces
 		boolean lIsDebug = true;//mPref.getBoolean(getString(R.string.pref_debug_key), false);
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
@@ -587,10 +591,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				
 			}
 			//init network state
-			ConnectivityManager lConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo lInfo = lConnectivityManager.getActiveNetworkInfo();
-			mLc.setNetworkReachable( lInfo !=null? lConnectivityManager.getActiveNetworkInfo().getState() ==NetworkInfo.State.CONNECTED:false); 
-			
+			NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+			mLc.setNetworkReachable(networkInfo !=null? networkInfo.getState() == NetworkInfo.State.CONNECTED:false); 
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
@@ -668,17 +670,21 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.enablePayloadType(videoCodec, enable);
 	}
 
-	public static synchronized void destroy(Context context) {
-		if (instance == null) return;
-		sExited=true;
+	private void doDestroy() {
 		try {
-			instance.mTimer.cancel();
-			instance.mLc.destroy();
-			context.unregisterReceiver(instance.mKeepAliveReceiver);
+			mTimer.cancel();
+			mLc.destroy();
+			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
 		} finally {
-			instance.mLc = null;
+			mLc = null;
 			instance = null;
 		}
+	}
+
+	public static synchronized void destroy() {
+		if (instance == null) return;
+		sExited=true;
+		instance.doDestroy();
 	}
 
 	private String getString(int key) {
@@ -705,7 +711,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
 	}
 
-	private ListenerDispatcher listenerDispatcher = new ListenerDispatcher();
+	private ListenerDispatcher mListenerDispatcher;
 	private LinphoneCall ringingCall;
 
 	private MediaPlayer mRingerPlayer;
@@ -730,20 +736,20 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void displayStatus(final LinphoneCore lc, final String message) {
 		Log.i(message);
 		lastLcStatusMessage=message;
-		listenerDispatcher.onDisplayStatus(message);
+		mListenerDispatcher.onDisplayStatus(message);
 	}
 
 
 	public void globalState(final LinphoneCore lc, final LinphoneCore.GlobalState state, final String message) {
 		Log.i("new state [",state,"]");
-		listenerDispatcher.onGlobalStateChanged(state, message);
+		mListenerDispatcher.onGlobalStateChanged(state, message);
 	}
 
 
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String message) {
 		Log.i("new state ["+state+"]");
-		listenerDispatcher.onRegistrationStateChanged(state, message);
+		mListenerDispatcher.onRegistrationStateChanged(state, message);
 	}
 
 	private int savedMaxCallWhileGsmIncall;
@@ -807,7 +813,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == State.Connected) {
-			if (Hacks.needSoftvolume() || LinphonePreferenceManager.getInstance().useSoftvolume()) {
+			if (Hacks.needSoftvolume() || sLPref.useSoftvolume()) {
 				adjustSoftwareVolume(0); // Synchronize
 			}
 		}
@@ -833,12 +839,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
 		}
-		listenerDispatcher.onCallStateChanged(call, state, message);
+		mListenerDispatcher.onCallStateChanged(call, state, message);
 	}
 
 	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
 			boolean encrypted, String authenticationToken) {
-		listenerDispatcher.onCallEncryptionChanged(call, encrypted, authenticationToken);
+		mListenerDispatcher.onCallEncryptionChanged(call, encrypted, authenticationToken);
 	}
 
 	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delayMs,
@@ -881,7 +887,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (mRingerPlayer == null) {
 				mRingerPlayer = new MediaPlayer();
 				mRingerPlayer.setAudioStreamType(STREAM_RING);
-				listenerDispatcher.onRingerPlayerCreated(mRingerPlayer);
+				mListenerDispatcher.onRingerPlayerCreated(mRingerPlayer);
 				mRingerPlayer.prepare();
 				mRingerPlayer.setLooping(true);
 				mRingerPlayer.start();
@@ -983,7 +989,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
-		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
+		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 		
 		if (mLc.isInComingInvitePending()) {
@@ -994,7 +1000,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public boolean acceptCall(LinphoneCall call) {
-		if (Hacks.needGalaxySAudioHack() || lpm.useGalaxySHack())
+		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 
 		try {
@@ -1131,8 +1137,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private class ListenerDispatcher implements LinphoneServiceListener {
 		private LinphoneServiceListener serviceListener;
 
-		public void setServiceListener(LinphoneServiceListener s) {
-			this.serviceListener = s;
+		public ListenerDispatcher(LinphoneServiceListener listener) {
+			this.serviceListener = listener;
 		}
 
 		public void onCallEncryptionChanged(LinphoneCall call,
@@ -1205,4 +1211,26 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return incomingPending ? currentCall : null;
 	}
 
+	
+	
+	
+	@SuppressWarnings("serial")
+	public static class LinphoneConfigException extends LinphoneException {
+
+		public LinphoneConfigException() {
+			super();
+		}
+
+		public LinphoneConfigException(String detailMessage, Throwable throwable) {
+			super(detailMessage, throwable);
+		}
+
+		public LinphoneConfigException(String detailMessage) {
+			super(detailMessage);
+		}
+
+		public LinphoneConfigException(Throwable throwable) {
+			super(throwable);
+		}
+	}
 }

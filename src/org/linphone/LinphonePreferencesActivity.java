@@ -25,16 +25,16 @@ import static org.linphone.R.string.ec_calibration_launch_message;
 import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
-import static org.linphone.R.string.pref_echo_canceller_calibration_key;
-import static org.linphone.R.string.pref_video_enable_key;
-import static org.linphone.R.string.pref_echo_limiter_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
-
+import static org.linphone.R.string.pref_echo_canceller_calibration_key;
+import static org.linphone.R.string.pref_echo_limiter_key;
+import static org.linphone.R.string.pref_video_enable_key;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
@@ -280,9 +280,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		}
 
 		try {
-			LinphoneManager.getInstance().initFromConf(getApplicationContext());
+			LinphoneManager.getInstance().initFromConf();
 		} catch (LinphoneException e) {
-
 			if (! (e instanceof LinphoneConfigException)) {
 				Log.e(e, "Cannot update config");
 				return;
