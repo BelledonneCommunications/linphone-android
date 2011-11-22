@@ -146,10 +146,7 @@ public class IncallActivity extends ListActivity implements
 		if (mMultipleCallsLimit > 0) {
 			limitReached = lc().getCallsNb() >= mMultipleCallsLimit;
 		}
-
-		int establishedCallsNb = LinphoneUtils.getRunningOrPausedCalls(lc()).size();
-		boolean hideButton = limitReached || establishedCallsNb == 0;
-		findViewById(R.id.addCall).setVisibility(hideButton? GONE : VISIBLE);
+		findViewById(R.id.addCall).setVisibility(limitReached? View.INVISIBLE : VISIBLE);
 	}
 
 	private void updateDtmfButton() {
@@ -304,11 +301,9 @@ public class IncallActivity extends ListActivity implements
 			showDialog(numpad_dialog_id);
 			break;
 		case R.id.conf_simple_merge:
-			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
 			lc().addAllToConference();
 			break;
 		case R.id.conf_simple_transfer:
-			findViewById(R.id.conf_control_buttons).setVisibility(GONE);
 			LinphoneCall tCall = lc().getCurrentCall();
 			if (tCall != null) {
 				prepareForTransferingExistingOrNewCall(tCall);
@@ -617,22 +612,19 @@ public class IncallActivity extends ListActivity implements
 
 	private Handler mHandler = new Handler();
 
-	private void updateSimpleControlButtons() {
+	private void updateAdvancedButtons() {
 		LinphoneCall activeCall = lc().getCurrentCall();
-		View control = findViewById(R.id.conf_control_buttons);
+		View bar = findViewById(R.id.conf_advanced_buttons);
 		int nonConfCallsNb = LinphoneUtils.countNonConferenceCalls(lc());
 
-		View merge = control.findViewById(R.id.conf_simple_merge);
+		View merge = bar.findViewById(R.id.conf_simple_merge);
 		boolean showMerge = nonConfCallsNb >=2
 			|| (lc().getConferenceSize() > 0 && nonConfCallsNb > 0);
-		merge.setVisibility(showMerge ? VISIBLE : GONE);
+		merge.setEnabled(showMerge);
 
-		View transfer = control.findViewById(R.id.conf_simple_transfer);
+		View transfer = bar.findViewById(R.id.conf_simple_transfer);
 		boolean showTransfer = mAllowTransfers && activeCall != null;
-		transfer.setVisibility(showTransfer ? VISIBLE : GONE);
-
-		boolean showControl = showMerge || showTransfer;
-		control.setVisibility(showControl ? VISIBLE : GONE);
+		transfer.setEnabled(showTransfer);
 	}
 
 	public void onCallStateChanged(final LinphoneCall c, final State s, String m) {
@@ -659,7 +651,7 @@ public class IncallActivity extends ListActivity implements
 	}
 
 	private void recreateActivity() {
-		updateSimpleControlButtons();
+		updateAdvancedButtons();
 		updateCalleeImage();
 		updateSoundLock();
 		updateAddCallButton();
