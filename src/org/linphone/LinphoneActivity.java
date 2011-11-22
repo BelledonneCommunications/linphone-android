@@ -75,8 +75,6 @@ public class LinphoneActivity extends TabActivity implements
 
 	private static LinphoneActivity instance;
 
-	private PowerManager.WakeLock mWakeLock;
-	
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private int previousRotation = -1;
@@ -111,7 +109,6 @@ public class LinphoneActivity extends TabActivity implements
 		checkAccount = !useFirstLoginActivity;
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG+"#"+getClass().getName());
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -451,15 +448,10 @@ public class LinphoneActivity extends TabActivity implements
 		if (IncallActivity.active) {
 			return;
 		}
-
-		mHandler.post(new Runnable() {
-			public void run() {
-				startActivityForResult(new Intent().setClass(
-						LinphoneActivity.this,
-						IncallActivity.class),
-						incall_activity);
-				}
-		});
+		startActivityForResult(new Intent().setClass(
+				LinphoneActivity.this,
+				IncallActivity.class),
+				incall_activity);
 	}
 
 	public void startIncomingCallActivity(LinphoneCall pendingCall) {
@@ -469,14 +461,7 @@ public class LinphoneActivity extends TabActivity implements
 		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 	}
 
-	public void finishVideoActivity() {
-		mHandler.post(new Runnable() {
-			public void run() {
-				finishActivity(video_activity);
-			}
-		});
-	}
-
+	
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state,
 			String message) {
@@ -494,7 +479,6 @@ public class LinphoneActivity extends TabActivity implements
 		}
 		if (state==State.OutgoingInit || state==State.IncomingReceived) {
 			startOrientationSensor();
-			enterIncallMode();
 		} else if (state==State.Error || state==State.CallEnd){
 			stopOrientationSensor();
 			finishActivity(INCOMING_CALL_ACTIVITY);
@@ -502,7 +486,6 @@ public class LinphoneActivity extends TabActivity implements
 		if (state==State.Connected) {
 			if (call.getDirection() == CallDirection.Incoming) {
 				startIncallActivity();
-				enterIncallMode();
 			}
 		}
 		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable()) {
@@ -510,25 +493,24 @@ public class LinphoneActivity extends TabActivity implements
 			if (videoEnabled) {
 				startVideoActivity(call, 1000);
 			} else {
-				finishVideoActivity();
+				finishActivity(video_activity);
 			}
 		}
 
 		if (state == LinphoneCall.State.CallUpdatedByRemote && Version.isVideoCapable()) {
 			if (VideoCallActivity.launched && !call.getCurrentParamsCopy().getVideoEnabled()) {
-				finishVideoActivity();
+				finishActivity(video_activity);
 			}
 		}
 
 		if (state==State.Error){
 			showToast(R.string.call_error, message);
 			if (lc.getCallsNb() == 0){
-				if (mWakeLock.isHeld()) mWakeLock.release();
-				exitCallMode();
+				exitIncallActivity();
 			}
 		}else if (state==State.CallEnd){
 			if (lc.getCallsNb() == 0){
-				exitCallMode();
+				exitIncallActivity();
 			}
 		}
 	}
@@ -542,30 +524,16 @@ public class LinphoneActivity extends TabActivity implements
 		});
 	}
 
-	private void enterIncallMode() {
-		LinphoneManager.startProximitySensorForActivity(this);
-		if (!mWakeLock.isHeld()) mWakeLock.acquire();
-	}
 
-	private void exitCallMode() {
+
+	private void exitIncallActivity() {
 		finishActivity(incall_activity);
-
-		if (mWakeLock.isHeld()) mWakeLock.release();
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				LinphoneManager.stopProximitySensorForActivity(LinphoneActivity.this);				
-			}
-		});
-		
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 	}
 
 
 	@Override
 	protected void onDestroy() {
-		if (mWakeLock.isHeld()) mWakeLock.release();
-
 		super.onDestroy();
 	}
 
@@ -576,14 +544,7 @@ public class LinphoneActivity extends TabActivity implements
 		LinphoneCall pendingCall = LinphoneManager.getInstance().getPendingIncomingCall();
 		if (pendingCall != null) {
 			LinphoneActivity.instance().startIncomingCallActivity(pendingCall);
-		} else if (LinphoneManager.getLc().isIncall()) {
-			enterIncallMode();
-		}
-
-		if (LinphoneManager.getLc().getCallsNb() > 0) {
-			LinphoneManager.startProximitySensorForActivity(this);
-			// removing is done directly in LinphoneActivity.onPause()
-		}
+		} 
 	}
 
 	@Override
