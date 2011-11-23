@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent" android:layout_height="48px" >
+  android:layout_width="fill_parent" android:layout_height="48px"
+  android:background="@drawable/conf_callee_bg">
   
     <ImageView android:id="@+id/picture" android:layout_width="48px"
      android:src="@drawable/unknown_person" android:layout_height="48px"
@@ -8,9 +9,14 @@
 
 
     <LinearLayout android:id="@+id/callee_block" android:orientation="vertical"
-       	android:layout_width="wrap_content" android:layout_height="48px">
+    	android:layout_toRightOf="@id/picture" android:layout_toLeftOf="@id/callee_statuses"
+    	android:layout_width="fill_parent" android:layout_height="48px">
       <TextView android:id="@+id/name" style="@style/callee_name" />
-      <TextView android:id="@+id/address" style="@style/callee_address" />
+      <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+          <Chronometer android:id="@+id/callee_duration" style="@style/callee_address" 
+              android:paddingRight="10sp"/>
+          <TextView android:id="@+id/address" style="@style/callee_address" />
+      </LinearLayout>
     </LinearLayout>
 
 	<View android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_weight="1"/>

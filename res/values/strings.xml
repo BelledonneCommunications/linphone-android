@@ -31,6 +31,7 @@
 	<string name="state_streams_running"></string>
 	<string name="state_incoming_received">incoming</string>
 	<string name="state_outgoing_ringing">ringing</string>
+	<string name="state_outgoing_progress">calling</string>
 	
 	<string name="mutemic_button_txt">Mute</string>
 	<string name="speaker_button_txt">Speaker</string>
@@ -54,12 +55,11 @@
 	<string name="conf_choice_terminate">Terminate</string>
 
 	<string name="hangup">Hang up</string>
-	<string name="conf_simple_resume_bt_txt">Resume</string>
 	<string name="conf_simple_merge_bt_txt">Merge</string>
 	<string name="conf_simple_transfer_bt_txt">Transfer</string>
-	<string name="conf_simple_permute_bt_txt">Permute</string>
+	<string name="conf_simple_video_bt_txt">Add video</string>
 	<string name="conf_simple_no_current_call">No active call</string>
-	<string name="show_send_dtmfs_button">DTMFs</string>
+	<string name="show_send_dtmfs_button">Dialpad</string>
 
 	<string name="conf_conference">Conference</string>
 	<string name="in_conf">You are part of it</string>

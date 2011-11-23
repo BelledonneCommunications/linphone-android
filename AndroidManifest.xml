@@ -80,7 +80,8 @@
             </intent-filter>
          </activity>
         <activity android:name="org.linphone.ConferenceDetailsActivity"
-                    android:theme="@android:style/Theme.NoTitleBar">
+                    android:theme="@android:style/Theme.NoTitleBar"
+                    android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

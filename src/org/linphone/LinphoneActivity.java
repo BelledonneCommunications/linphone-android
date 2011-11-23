@@ -503,17 +503,14 @@ public class LinphoneActivity extends TabActivity implements
 
 		if (state==State.Error){
 			showToast(R.string.call_error, message);
-			if (lc.getCallsNb() == 0){
-				exitIncallActivity();
-			}
-		}else if (state==State.CallEnd){
-			if (lc.getCallsNb() == 0){
-				exitIncallActivity();
-			}
 		}
-
-		if (ConferenceDetailsActivity.active && lc.getConferenceSize() == 0) {
-			finishActivity(conferenceDetailsActivity);
+		if (state==State.Error || state==State.CallEnd) {
+			if (lc.getCallsNb() == 0){
+				exitIncallActivity();
+			}
+			if (ConferenceDetailsActivity.active && lc.getConferenceSize() == 0) {
+				finishActivity(conferenceDetailsActivity);
+			}
 		}
 	}
 	

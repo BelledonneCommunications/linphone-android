@@ -53,13 +53,13 @@ public class IncallTimer extends TextView {
 	}
 	
 	protected String formatTime(final int seconds) {
-		String time = String.format("%02d : %02d",
+		String time = String.format("%02d:%02d",
 				(seconds / 60) % 60,
 				seconds % 60);
 	
 		int hours = seconds / 3600;
 		if (hours != 0) {
-			return hours + " - " + time;
+			return hours + ":" + time;
 		} else {
 			return time;
 		}

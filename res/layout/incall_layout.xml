@@ -52,6 +52,9 @@
 	<LinearLayout android:id="@+id/conf_advanced_buttons" 
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_above="@id/conf_terminate_row">
+		<Button android:id="@+id/conf_simple_video" style="@style/conf_icon_text_button"
+			android:drawableTop="@drawable/conf_video" 
+		 	android:text="@string/conf_simple_video_bt_txt"/>
 		<Button android:id="@+id/conf_simple_merge" style="@style/conf_icon_text_button"
 			android:drawableTop="@drawable/conf_merge" 
 		 	android:text="@string/conf_simple_merge_bt_txt"/>
@@ -67,6 +70,7 @@
 		android:layout_centerInParent="true" 
 		android:layout_gravity="center" android:scaleType="fitCenter"
 		android:minWidth="192px" android:minHeight="192px"
+		android:paddingBottom="60px"
 	/>
 
      <ListView android:id="@android:id/list"
