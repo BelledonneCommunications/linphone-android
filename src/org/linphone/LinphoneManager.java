@@ -66,6 +66,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
+import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.mediastream.Version;
@@ -468,6 +469,18 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		return false;
 	}
+	
+	void initMediaEncryption(){
+		String pref = mPref.getString(getString(R.string.pref_media_encryption_key),
+				getString(R.string.pref_media_encryption_key_none));
+		MediaEncryption me=MediaEncryption.None;
+		if (pref.equals(getString(R.string.pref_media_encryption_key_srtp)))
+			me=MediaEncryption.SRTP;
+		else if (pref.equals(getString(R.string.pref_media_encryption_key_zrtp)))
+			me=MediaEncryption.ZRTP;
+		Log.i("Media encryption set to "+pref);
+		mLc.setMediaEncryption(me);
+	}
 
 	public void initFromConf(Context context) throws LinphoneConfigException {
 		//traces
@@ -478,7 +491,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			initialTransports = mLc.getSignalingTransportPorts();
 		
 		setSignalingTransportsFromConfiguration(initialTransports);
-		
+		initMediaEncryption();
 		
 		try {
 			// Configure audio codecs

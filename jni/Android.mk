@@ -2,6 +2,8 @@
 
 #default values
 BUILD_AMR=light
+BUILD_SRTP=1
+
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
 LINPHONE_VIDEO=1
@@ -14,7 +16,7 @@ endif
 
 ##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
-BUILD_SRTP=1
+	BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
 	$(linphone-root-dir)/submodules/externals/libzrtpcpp/src
 endif

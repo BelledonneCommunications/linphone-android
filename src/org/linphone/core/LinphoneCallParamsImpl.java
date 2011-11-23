@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
+import org.linphone.core.LinphoneCore.MediaEncryption;
+
 public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	protected final long nativePtr;
 	
@@ -28,8 +30,8 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	private native void enableVideo(long nativePtr, boolean b);
 	private native boolean getVideoEnabled(long nativePtr);
 	private native void audioBandwidth(long nativePtr, int bw);
-	private native void setMediaEncryption(long nativePtr, String menc);
-	private native String getMediaEncryption(long nativePtr);
+	private native void setMediaEncryption(long nativePtr, int menc);
+	private native int getMediaEncryption(long nativePtr);
 	private native void destroy(long nativePtr);
 	
 	
@@ -51,12 +53,12 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 		audioBandwidth(nativePtr, value);
 	}
 	
-	public String getMediaEncryption() {
-		return getMediaEncryption(nativePtr);
+	public MediaEncryption getMediaEncryption() {
+		return MediaEncryption.fromInt(getMediaEncryption(nativePtr));
 	}
 	
-	public void setMediaEnctyption(String menc) {
-		setMediaEncryption(nativePtr, menc);
+	public void setMediaEnctyption(MediaEncryption menc) {
+		setMediaEncryption(nativePtr, menc.mValue);
 	}
 
 	private native boolean localConferenceMode(long nativePtr);

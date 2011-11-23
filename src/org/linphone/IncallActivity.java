@@ -35,6 +35,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.Numpad;
 
@@ -661,16 +662,20 @@ public class IncallActivity extends ListActivity implements
 			removeFromConfButton.setOnClickListener(l);
 			addVideoButton.setOnClickListener(l);
 
-			String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-			if ("none".equals(mediaEncryption)) {
-				boolean showUnencrypted = Version.hasZrtp();
+			MediaEncryption supposedMediaEncryption=LinphoneManager.getLc().getMediaEncryption();
+			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			if (mediaEncryption==MediaEncryption.None) {
 				setVisibility(v, R.id.callee_status_secured, false);
 				setVisibility(v, R.id.callee_status_maybe_secured, false);
-				setVisibility(v, R.id.callee_status_not_secured, showUnencrypted);
-			} else {
-				boolean reallySecured = !Version.hasZrtp() || call.isAuthenticationTokenVerified();
+				setVisibility(v, R.id.callee_status_not_secured, supposedMediaEncryption!=MediaEncryption.None);
+			} else if (mediaEncryption==MediaEncryption.ZRTP){
+				boolean reallySecured = call.isAuthenticationTokenVerified();
 				setVisibility(v, R.id.callee_status_secured, reallySecured);
 				setVisibility(v, R.id.callee_status_maybe_secured, !reallySecured);
+				setVisibility(v, R.id.callee_status_not_secured, false);
+			}else if (mediaEncryption==MediaEncryption.SRTP){
+				setVisibility(v, R.id.callee_status_secured, true);
+				setVisibility(v, R.id.callee_status_maybe_secured, false);
 				setVisibility(v, R.id.callee_status_not_secured, false);
 			}
 
@@ -690,13 +695,13 @@ public class IncallActivity extends ListActivity implements
 					enableView(content, R.id.resume, l, !isInConference && showResume);
 					enableView(content, R.id.terminate_call, l, true);
 
-					String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-					if ("none".equals(mediaEncryption)) {
-						boolean showUnencrypted = Version.hasZrtp();
-						setVisibility(content, R.id.unencrypted, showUnencrypted);
-					} else {
+					MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+					MediaEncryption supposedEncryption = LinphoneManager.getLc().getMediaEncryption();
+					if (mediaEncryption==MediaEncryption.None) {
+						setVisibility(content, R.id.unencrypted, supposedEncryption!=MediaEncryption.None);
+					} else{
 						TextView token = (TextView) content.findViewById(R.id.authentication_token);
-						if ("zrtp".equals(mediaEncryption)) {
+						if (mediaEncryption==MediaEncryption.ZRTP) {
 							boolean authVerified = call.isAuthenticationTokenVerified();
 							String fmt = getString(authVerified ? R.string.reset_sas_fmt : R.string.validate_sas_fmt);
 							token.setText(String.format(fmt, call.getAuthenticationToken()));

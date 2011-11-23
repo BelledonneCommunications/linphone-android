@@ -146,6 +146,9 @@
 			<CheckBoxPreference android:key="@string/pref_transport_use_standard_ports_key"
 				 android:title="@string/pref_transport_use_standard_ports"/>
 		</PreferenceScreen>
+		<ListPreference android:title="@string/pref_media_encryption"
+					android:key="@string/pref_media_encryption_key"
+					android:defaultValue="@string/pref_media_encryption_key_none" /> 
 
 		<PreferenceScreen android:title="@string/pref_audio_hacks_title"
 			android:layout="@layout/hidden">

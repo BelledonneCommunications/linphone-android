@@ -223,10 +223,11 @@ public class TestConferenceActivity extends IncallActivity {
 		}
 		public int updateCall(LinphoneCall call, LinphoneCallParams params) {return 0;}
 		private boolean partOfConf;
-		public void enterConference() {
+		public boolean enterConference() {
 			pauseAllCalls();
 			partOfConf=true;
 			hackTriggerConfStateUpdate(); // FIXME hack; should have an event?
+			return true;
 		}
 		public void leaveConference() {
 			partOfConf=false;
@@ -338,7 +339,7 @@ public class TestConferenceActivity extends IncallActivity {
 			
 		}
 		@Override
-		public String getMediaEncryption() {
+		public MediaEncryption getMediaEncryption() {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -346,11 +347,6 @@ public class TestConferenceActivity extends IncallActivity {
 		public boolean isMediaEncryptionMandatory() {
 			// TODO Auto-generated method stub
 			return false;
-		}
-		@Override
-		public void setMediaEncryption(String menc) {
-			// TODO Auto-generated method stub
-			
 		}
 		@Override
 		public void setMediaEncryptionMandatory(boolean yesno) {
@@ -361,6 +357,16 @@ public class TestConferenceActivity extends IncallActivity {
 		public boolean isEchoLimiterEnabled() {
 			// TODO Auto-generated method stub
 			return false;
+		}
+		@Override
+		public boolean mediaEncryptionSupported(MediaEncryption menc) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		@Override
+		public void setMediaEncryption(MediaEncryption menc) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

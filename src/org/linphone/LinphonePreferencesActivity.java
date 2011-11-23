@@ -29,8 +29,10 @@ import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_video_enable_key;
 import static org.linphone.R.string.pref_echo_limiter_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
+import static org.linphone.R.string.pref_media_encryption_key;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,6 +41,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -47,6 +50,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -58,6 +62,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private CheckBoxPreference ecCalibratePref;
 	private CheckBoxPreference elPref;
 	private CheckBoxPreference ecPref;
+	private ListPreference mencPref;
 
 	private SharedPreferences prefs() {
 		return getPreferenceManager().getSharedPreferences();
@@ -98,6 +103,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		});
 		ecPref = (CheckBoxPreference) findPreference(pref_echo_cancellation_key);
 		elPref = (CheckBoxPreference) findPreference(pref_echo_limiter_key);
+		mencPref = (ListPreference) findPreference(pref_media_encryption_key);
 
 		boolean fastCpu = Version.isArmv7();
 		if (fastCpu) {
@@ -108,6 +114,35 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		}else{
 			findPreference(pref_echo_limiter_key).setEnabled(true);
 		}
+		
+		LinphoneCore lc=LinphoneManager.getLc();
+		boolean hasZrtp=lc.mediaEncryptionSupported(MediaEncryption.ZRTP);
+		boolean hasSrtp=lc.mediaEncryptionSupported(MediaEncryption.SRTP);
+		if (hasSrtp==false && hasZrtp==false){
+			mencPref.setEnabled(false);
+		}else{
+			ArrayList<CharSequence> mencEntries=new ArrayList<CharSequence>();
+			ArrayList<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
+			mencEntries.add(getString(R.string.media_encryption_none));
+			mencEntryValues.add(getString(R.string.pref_media_encryption_key_none));
+			if (hasSrtp){
+				mencEntries.add(getString(R.string.media_encryption_srtp));
+				mencEntryValues.add(getString(R.string.pref_media_encryption_key_srtp));
+			}
+			if (hasZrtp){
+				mencEntries.add(getString(R.string.media_encryption_zrtp));
+				mencEntryValues.add(getString(R.string.pref_media_encryption_key_zrtp));
+			}
+			CharSequence[] contents=new CharSequence[mencEntries.size()];
+			mencEntries.toArray(contents);
+			mencPref.setEntries(contents);
+			contents=new CharSequence[mencEntryValues.size()];
+			mencEntryValues.toArray(contents);
+			mencPref.setEntryValues(contents);
+			mencPref.setDefaultValue(getString(R.string.media_encryption_none));
+			//mencPref.setValueIndex(mencPref.findIndexOfValue(getString(R.string.media_encryption_none)));
+		}
+			
 		
 		detectAudioCodec(pref_codec_amr_key,"AMR",8000, false);
 		//detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, true);
