@@ -21,15 +21,12 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
@@ -138,20 +135,19 @@ public class LinphoneActivity extends TabActivity implements
 		switch (requestCode) {
 		case FIRST_LOGIN_ACTIVITY:
 			if (resultCode == RESULT_OK) {
-				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
-				try {
-					LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
-						public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-							PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.this)
-							.edit().putBoolean(
-									getString(R.string.pref_echo_canceller_calibration_key),
-									status == EcCalibratorStatus.Done).commit();
-						}
-					});
-				} catch (LinphoneCoreException e) {
-					Log.e(e, "Unable to calibrate EC");
-				}
-
+//				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
+//				try {
+//					LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
+//						public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
+//							PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.this)
+//							.edit().putBoolean(
+//									getString(R.string.pref_echo_canceller_calibration_key),
+//									status == EcCalibratorStatus.Done).commit();
+//						}
+//					});
+//				} catch (LinphoneCoreException e) {
+//					Log.e(e, "Unable to calibrate EC");
+//				}
 				fillTabHost();
 			} else {
 				finish();

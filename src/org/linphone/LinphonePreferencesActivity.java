@@ -21,7 +21,6 @@ package org.linphone;
 
 
 import static org.linphone.R.string.ec_calibrating;
-import static org.linphone.R.string.ec_calibration_launch_message;
 import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
@@ -55,7 +54,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.widget.Toast;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
@@ -129,22 +127,29 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		} else if (!AndroidCameraConfiguration.hasFrontCamera()) {
 			uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
 		}
-		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
-			if (fastCpu) {
-				Toast.makeText(this, getString(ec_calibration_launch_message), Toast.LENGTH_LONG).show();
-				startEcCalibration();
-			}
 
-			prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
+		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
+			doOnFirstLaunch();
 		}
+		if (Hacks.hasBuiltInEchoCanceller()) {
+			uncheckDisableAndHideCheckbox(R.string.pref_echo_limiter_key);
+			uncheckDisableAndHideCheckbox(R.string.pref_echo_cancellation_key);
+			uncheckDisableAndHideCheckbox(R.string.pref_echo_canceller_calibration_key);
+		}
+
 
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
 
 		addEchoPrefsListener();
 		
 		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
+
 	}
 
+	private void doOnFirstLaunch() {
+		manageCheckbox(R.string.pref_echo_limiter_key, !Hacks.hasBuiltInEchoCanceller(), true, false);
+		prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
+	}
 
 	private void initializeMediaEncryptionPreferences() {
 		LinphoneCore lc=LinphoneManager.getLc();
