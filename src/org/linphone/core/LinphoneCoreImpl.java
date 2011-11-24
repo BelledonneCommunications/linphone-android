@@ -105,8 +105,8 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void enableEchoLimiter(long nativePtr2, boolean val);
 	private native int setVideoDevice(long nativePtr2, int id);
 	private native int getVideoDevice(long nativePtr2);
-	private native String getMediaEncryption(long nativePtr);
-	private native void setMediaEncryption(long nativePtr, String menc);
+	private native int getMediaEncryption(long nativePtr);
+	private native void setMediaEncryption(long nativePtr, int menc);
 	private native boolean isMediaEncryptionMandatory(long nativePtr);
 	private native void setMediaEncryptionMandatory(long nativePtr, boolean yesno);
 	
@@ -571,14 +571,14 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return (LinphoneCall) findCallFromUri(nativePtr, uri);
 	}
 
-	public String getMediaEncryption() {
-		return getMediaEncryption(nativePtr);
+	public MediaEncryption getMediaEncryption() {
+		return MediaEncryption.fromInt(getMediaEncryption(nativePtr));
 	}
 	public boolean isMediaEncryptionMandatory() {
 		return isMediaEncryptionMandatory(nativePtr);
 	}
-	public void setMediaEncryption(String menc) {
-		setMediaEncryption(nativePtr, menc);		
+	public void setMediaEncryption(MediaEncryption menc) {
+		setMediaEncryption(nativePtr, menc.mValue);	
 	}
 	public void setMediaEncryptionMandatory(boolean yesno) {
 		setMediaEncryptionMandatory(nativePtr, yesno);
@@ -609,5 +609,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	@Override
 	public boolean isEchoLimiterEnabled() {
 		return isEchoLimiterEnabled(nativePtr);
+	}
+	private native boolean mediaEncryptionSupported(long nativePtr, int menc);
+	@Override
+	public boolean mediaEncryptionSupported(MediaEncryption menc) {
+		return mediaEncryptionSupported(nativePtr,menc.mValue);
 	}
 }

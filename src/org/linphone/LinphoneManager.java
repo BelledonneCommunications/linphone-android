@@ -66,6 +66,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
+import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.mediastream.Version;
@@ -472,6 +473,18 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		return false;
 	}
+	
+	void initMediaEncryption(){
+		String pref = mPref.getString(getString(R.string.pref_media_encryption_key),
+				getString(R.string.pref_media_encryption_key_none));
+		MediaEncryption me=MediaEncryption.None;
+		if (pref.equals(getString(R.string.pref_media_encryption_key_srtp)))
+			me=MediaEncryption.SRTP;
+		else if (pref.equals(getString(R.string.pref_media_encryption_key_zrtp)))
+			me=MediaEncryption.ZRTP;
+		Log.i("Media encryption set to "+pref);
+		mLc.setMediaEncryption(me);
+	}
 
 	public void initFromConf() throws LinphoneConfigException {
 		//traces
@@ -482,7 +495,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			initialTransports = mLc.getSignalingTransportPorts();
 		
 		setSignalingTransportsFromConfiguration(initialTransports);
-		
+		initMediaEncryption();
 		
 		try {
 			// Configure audio codecs
@@ -658,7 +671,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			key = R.string.pref_video_codec_h264_key;
 		} else if ("H263-1998".equals(mime)) {
 			key = R.string.pref_video_codec_h263_key;
-		} else if ("VP8-DRAFT-0-3-2".equals(mime)) {
+		} else if ("VP8".equals(mime)) {
 			key = R.string.pref_video_codec_vp8_key;
 		} else {
 			Log.e("Unhandled video codec ", mime);

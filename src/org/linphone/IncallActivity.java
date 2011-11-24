@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.Numpad;
 
@@ -452,8 +453,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			final OnClickListener l = new CallActionListener(call);
 			confButton.setOnClickListener(l);
 
-			String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-			if ("none".equals(mediaEncryption)) {
+			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			if (MediaEncryption.None == mediaEncryption) {
 				setVisibility(v, R.id.callee_status_secured, false);
 				setVisibility(v, R.id.callee_status_maybe_secured, false);
 				setVisibility(v, R.id.callee_status_not_secured, false);
@@ -477,13 +478,13 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					enableView(content, R.id.merge_to_conference, l, showMergeToConf);
 					enableView(content, R.id.terminate_call, l, true);
 
-					String mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-					if ("none".equals(mediaEncryption)) {
-						boolean showUnencrypted = Version.hasZrtp();
-						setVisibility(content, R.id.unencrypted, showUnencrypted);
-					} else {
+					MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+					MediaEncryption supposedEncryption = LinphoneManager.getLc().getMediaEncryption();
+					if (mediaEncryption==MediaEncryption.None) {
+						setVisibility(content, R.id.unencrypted, supposedEncryption!=MediaEncryption.None);
+					} else{
 						TextView token = (TextView) content.findViewById(R.id.authentication_token);
-						if ("zrtp".equals(mediaEncryption)) {
+						if (mediaEncryption==MediaEncryption.ZRTP) {
 							boolean authVerified = call.isAuthenticationTokenVerified();
 							String fmt = getString(authVerified ? R.string.reset_sas_fmt : R.string.validate_sas_fmt);
 							token.setText(String.format(fmt, call.getAuthenticationToken()));
