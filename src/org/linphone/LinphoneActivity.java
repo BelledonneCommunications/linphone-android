@@ -423,11 +423,11 @@ public class LinphoneActivity extends TabActivity implements
 
 	// Do not call if video activity already launched as it would cause a pause() of the launched one
 	// and a race condition with capture surfaceview leading to a crash
-	public void startVideoActivity(LinphoneCall call, int delay) {
+	public void startVideoActivity(final LinphoneCall call, int delay) {
 		if (VideoCallActivity.launched || call == null) return;
-		call.enableCamera(true);
 		mHandler.postDelayed(new Runnable() {
 			public void run() {
+				LinphoneManager.getInstance().enableCamera(call, true);
 				if (VideoCallActivity.launched) return;
 				startActivityForResult(new Intent().setClass(
 						LinphoneActivity.this,

@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
@@ -88,10 +89,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	
 	private final static int NOTIF_ID=1;
+	private final static int INCALL_NOTIF_ID=2;
 
 	private Notification mNotif;
+	private Notification mIncallNotif;
 	private PendingIntent mNotifContentIntent;
-	private String notificationTitle;
+	private String mNotificationTitle;
 
 
 	private static final int IC_LEVEL_ORANGE=0;
@@ -114,7 +117,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
 
 		
-		notificationTitle = getString(R.string.app_name);
+		mNotificationTitle = getString(R.string.app_name);
 
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
@@ -128,7 +131,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
-		mNotif.setLatestEventInfo(this, notificationTitle,"", mNotifContentIntent);
+		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
 
 		LinphoneManager.createAndStart(this, this);
 		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
@@ -164,6 +167,58 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
+	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
+	private IncallIconState mCurrentIncallIconState = IncallIconState.IDLE;
+	private synchronized void setIncallIcon(IncallIconState state) {
+		if (state == mCurrentIncallIconState) return;
+		mCurrentIncallIconState = state;
+		if (mIncallNotif == null) mIncallNotif = new Notification();
+
+		int notificationTextId = 0;
+		switch (state) {
+		case IDLE:
+			mNM.cancel(INCALL_NOTIF_ID);
+			return;
+		case INCALL:
+			mIncallNotif.icon = R.drawable.conf_unhook;
+			notificationTextId = R.string.incall_notif_active;
+			break;
+		case PAUSE:
+			mIncallNotif.icon = R.drawable.conf_status_paused;
+			notificationTextId = R.string.incall_notif_paused;
+			break;
+		case VIDEO:
+			mIncallNotif.icon = R.drawable.conf_video;
+			notificationTextId = R.string.incall_notif_video;
+			break;	
+		default:
+			throw new IllegalArgumentException("Unknown state " + state);
+		}
+
+		mIncallNotif.iconLevel = 0;
+		mIncallNotif.when=System.currentTimeMillis();
+		mIncallNotif.flags &= Notification.FLAG_ONGOING_EVENT;
+		mIncallNotif.setLatestEventInfo(this, mNotificationTitle, getString(notificationTextId), mNotifContentIntent);
+		mNM.notify(INCALL_NOTIF_ID, mIncallNotif);
+	}
+
+	public void refreshIncallIcon(LinphoneCall currentCall) {
+		LinphoneCore lc = LinphoneManager.getLc();
+		if (currentCall != null) {
+			if (currentCall.getCurrentParamsCopy().getVideoEnabled() && currentCall.cameraEnabled()) {
+				// checking first current params is mandatory
+				setIncallIcon(IncallIconState.VIDEO);
+			} else {
+				setIncallIcon(IncallIconState.INCALL);
+			}
+		} else if (lc.getCallsNb() == 0) {
+			setIncallIcon(IncallIconState.IDLE);
+		}  else if (lc.isInConference()) {
+			setIncallIcon(IncallIconState.INCALL);
+		} else {
+			setIncallIcon(IncallIconState.PAUSE);
+		}
+	}
 
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
@@ -274,7 +329,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			text = String.format(text, id);
 		}
 		
-		mNotif.setLatestEventInfo(this, notificationTitle, text, mNotifContentIntent);
+		mNotif.setLatestEventInfo(this, mNotificationTitle, text, mNotifContentIntent);
 		mNM.notify(NOTIF_ID, mNotif);
 	}
 
@@ -291,6 +346,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		super.onDestroy();
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);
+	    mNM.cancel(INCALL_NOTIF_ID);
 
 		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, null, OnlineStatus.Offline);
 		LinphoneManager.destroy();
@@ -356,6 +412,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			startActivity(new Intent()
 					.setClass(this, LinphoneActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		}
+
+		if (state == State.StreamsRunning) {
+			// Workaround bug current call seems to be updated after state changed to streams running
+			refreshIncallIcon(call);
+		} else {
+			refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 		}
 
 		mHandler.post(new Runnable() {

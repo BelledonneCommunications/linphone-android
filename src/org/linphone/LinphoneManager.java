@@ -360,15 +360,21 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public boolean toggleEnableCamera() { 
 		if (mLc.isIncall()) {
 			boolean enabled = !mLc.getCurrentCall().cameraEnabled();
-			mLc.getCurrentCall().enableCamera(enabled);
+			enableCamera(mLc.getCurrentCall(), enabled);
 			return enabled;
 		}
 		return false;
 	}
-	
+	public void enableCamera(LinphoneCall call, boolean enable) {
+		if (call != null) {
+			call.enableCamera(enable);
+			LinphoneService.instance().refreshIncallIcon(mLc.getCurrentCall());
+		}
+	}
+
 	public void sendStaticImage(boolean send) {
 		if (mLc.isIncall()) {
-			mLc.getCurrentCall().enableCamera(!send);
+			enableCamera(mLc.getCurrentCall(), !send);
 		}
 	}
 
@@ -998,7 +1004,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	 */
 	public boolean addVideo() {
 		LinphoneCall call = mLc.getCurrentCall();
-		if (call != null) call.enableCamera(true);
+		enableCamera(call, true);
 		return reinviteWithVideo();
 	}
 	
@@ -1169,7 +1175,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				String message) {
 			if (state==State.OutgoingInit || state==State.IncomingReceived) {
 				boolean sendCamera = shareMyCamera() && mLc.getConferenceSize() == 0;
-				call.enableCamera(sendCamera);
+				enableCamera(call, sendCamera);
 			}
 			if (state == State.CallEnd && mLc.getCallsNb() == 0) {
 				routeAudioToReceiver();

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="incall_notif_active">Audio call ongoing</string>
+    <string name="incall_notif_paused">Paused call ongoing</string>
+    <string name="incall_notif_video">Video capturing call ongoing</string>
+    
     <string name="not_ready_to_make_new_call">Not ready for a new call</string>
     <string name="bad_target_uri">Bad contact : %s</string>
     <string name="reset_sas_fmt">Reset validated %s</string>
