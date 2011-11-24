@@ -319,7 +319,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (Version.isVideoCapable()) {
 				boolean prefVideoEnable = isVideoEnabled();
 				int key = R.string.pref_video_initiate_call_with_video_key;
-				boolean prefInitiateWithVideo = mPref.getBoolean(mR.getString(key), false);
+				boolean prefInitiateWithVideo = getPrefBoolean(key, false);
 				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
 			} else {
 				CallManager.getInstance().inviteAddress(lAddress, false);
@@ -333,7 +333,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public void resetCameraFromPreferences() {
-		boolean useFrontCam = mPref.getBoolean(mR.getString(R.string.pref_video_use_front_camera_key), false);
+		boolean useFrontCam = getPrefBoolean(R.string.pref_video_use_front_camera_key, false);
 		
 		int camId = 0;
 		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
@@ -404,7 +404,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
 
-			mLc.enableIpv6(mPref.getBoolean(getString(R.string.pref_ipv6_key), false));
+			mLc.enableIpv6(getPrefBoolean(R.string.pref_ipv6_key, false));
 			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
 
 			mLc.setPlaybackGain(3);   
@@ -473,9 +473,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		return false;
 	}
-	
+
 	void initMediaEncryption(){
-		String pref = mPref.getString(getString(R.string.pref_media_encryption_key),
+		String pref = getPrefString(R.string.pref_media_encryption_key,
 				getString(R.string.pref_media_encryption_key_none));
 		MediaEncryption me=MediaEncryption.None;
 		if (pref.equals(getString(R.string.pref_media_encryption_key_srtp)))
@@ -530,23 +530,23 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean isVideoEnabled = isVideoEnabled();
 		mLc.enableVideo(isVideoEnabled, isVideoEnabled);
 		//1 read proxy config from preferences
-		String lUserName = mPref.getString(getString(R.string.pref_username_key), null);
+		String lUserName = getPrefString(R.string.pref_username_key, null);
 		if (lUserName == null || lUserName.length()==0) {
 			throw new LinphoneConfigException(getString(R.string.wrong_username));
 		}
 
-		String lPasswd = mPref.getString(getString(R.string.pref_passwd_key), null);
+		String lPasswd = getPrefString(R.string.pref_passwd_key, null);
 		// we have the right of having no password
 		//if (lPasswd == null || lPasswd.length()==0) {
 		//	throw new LinphoneConfigException(getString(R.string.wrong_passwd));
 		//}
 
-		String lDomain = mPref.getString(getString(R.string.pref_domain_key), null);
+		String lDomain = getPrefString(R.string.pref_domain_key, null);
 		if (lDomain == null || lDomain.length()==0) {
 			throw new LinphoneConfigException(getString(R.string.wrong_domain));
 		}
 
-		String lStun = mPref.getString(getString(R.string.pref_stun_server_key), null);
+		String lStun = getPrefString(R.string.pref_stun_server_key, null);
 
 		//stun server
 		mLc.setStunServer(lStun);
@@ -562,7 +562,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		//proxy
 		mLc.clearProxyConfigs();
-		String lProxy = mPref.getString(getString(R.string.pref_proxy_key),null);
+		String lProxy = getPrefString(R.string.pref_proxy_key,null);
 		if (lProxy == null || lProxy.length() == 0) {
 			lProxy = "sip:"+lDomain;
 		}
@@ -589,14 +589,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 			if (lDefaultProxyConfig !=null) {
 				//prefix      
-				String lPrefix = mPref.getString(getString(R.string.pref_prefix_key), null);
+				String lPrefix = getPrefString(R.string.pref_prefix_key, null);
 				if (lPrefix != null) {
 					lDefaultProxyConfig.setDialPrefix(lPrefix);
 				}
 				//escape +
-				lDefaultProxyConfig.setDialEscapePlus(mPref.getBoolean(getString(R.string.pref_escape_plus_key),false));
+				lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key,false));
 				//outbound proxy
-				if (mPref.getBoolean(getString(R.string.pref_enable_outbound_proxy_key), false)) {
+				if (getPrefBoolean(R.string.pref_enable_outbound_proxy_key, false)) {
 					lDefaultProxyConfig.setRoute(lProxy);
 				} else {
 					lDefaultProxyConfig.setRoute(null);
@@ -611,16 +611,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 	
-	private boolean getBool(int key, boolean defValue) {
-		return mPref.getBoolean(getString(key), defValue);
-	}
-
 	private void setSignalingTransportsFromConfiguration(Transports t) {
 		Transports ports = new Transports(t);
-		boolean useStandardPort = getBool(R.string.pref_transport_use_standard_ports_key, false);
+		boolean useStandardPort = getPrefBoolean(R.string.pref_transport_use_standard_ports_key, false);
 		int lPreviousPort = ports.tcp +ports.udp +ports.tls; // assume only one port is active 
 		
-		if (!getBool(R.string.pref_transport_tcp_key, false)) {
+		if (!getPrefBoolean(R.string.pref_transport_tcp_key, false)) {
 			ports.tcp = 0;
 		} else if (useStandardPort) {
 			ports.tcp = 5060;
@@ -628,7 +624,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			ports.tcp=lPreviousPort;
 		}
 
-		if (!getBool(R.string.pref_transport_udp_key, false)) {
+		if (!getPrefBoolean(R.string.pref_transport_udp_key, false)) {
 			ports.udp = 0;
 		} else if (useStandardPort) {
 			ports.udp = 5060;
@@ -636,7 +632,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			ports.udp = lPreviousPort;
 		}
 
-		if (!getBool(R.string.pref_transport_tls_key, false)) {
+		if (!getPrefBoolean(R.string.pref_transport_tls_key, false)) {
 			ports.tls = 0;
 		} else if (useStandardPort) {
 			ports.tls = 5061;
@@ -650,7 +646,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private void enableDisableAudioCodec(String codec, int rate, int key) throws LinphoneCoreException {
 		PayloadType pt = mLc.findPayloadType(codec, rate);
 		if (pt !=null) {
-			boolean enable= mPref.getBoolean(getString(key),false);
+			boolean enable= getPrefBoolean(key,false);
 			mLc.enablePayloadType(pt, enable);
 		}
 	}
@@ -679,7 +675,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			return;
 		}
 
-		boolean enable= mPref.getBoolean(getString(key),false);
+		boolean enable= getPrefBoolean(key,false);
 		mLc.enablePayloadType(videoCodec, enable);
 	}
 
@@ -703,23 +699,30 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String getString(int key) {
 		return mR.getString(key);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private boolean getPrefBoolean(int key, boolean value) {
+		return mPref.getBoolean(mR.getString(key), value);
+	}
+	private String getPrefString(int key, String value) {
+		return mPref.getString(mR.getString(key), value);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public interface EcCalibrationListener {
 		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
 	}
@@ -951,11 +954,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public boolean isVideoEnabled() {
-		return mPref.getBoolean(getString(R.string.pref_video_enable_key), false);
+		return getPrefBoolean(R.string.pref_video_enable_key, false);
 	}
 	
 	public boolean shareMyCamera() {
-		return isVideoEnabled() && mPref.getBoolean(getString(R.string.pref_video_automatically_share_my_video_key), false);
+		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_share_my_video_key, false);
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
