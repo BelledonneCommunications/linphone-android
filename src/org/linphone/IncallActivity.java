@@ -49,11 +49,11 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 /**
  * @author Guillaume Beraudo
@@ -96,11 +96,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 
 		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
 		findViewById(R.id.conf_simple_merge).setOnClickListener(this);
-		View transferView = findViewById(R.id.conf_simple_transfer);
-		transferView.setOnClickListener(this);
-		if (!mAllowTransfers) {
-			transferView.setVisibility(View.GONE);
-		}
+		findViewById(R.id.conf_simple_pause).setOnClickListener(this);
 
 		findViewById(R.id.incallHang).setOnClickListener(this);
 		mMultipleCallsLimit = lc().getMaxCalls();
@@ -212,7 +208,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		if (!lc().isMicMuted()) {
 			mUnMuteOnReturnFromUriPicker = true;
 			lc().muteMic(true);
-			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(true);
+			((Checkable) findViewById(R.id.toggleMuteMic)).setChecked(true);
 		}
 	}
 
@@ -248,7 +244,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			lc().terminateAllCalls();
 		}
 
-		// activity wille be closed automatically by LinphoneActivity when no more calls exist
+		// activity will be closed automatically by LinphoneActivity when no more calls exist
 	}
 
 	public void onClick(View v) {
@@ -269,12 +265,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		case R.id.conf_simple_merge:
 			lc().addAllToConference();
 			break;
-		case R.id.conf_simple_transfer:
-			LinphoneCall tCall = lc().getCurrentCall();
-			if (tCall != null) {
-				prepareForTransferingExistingOrNewCall(tCall);
+		case R.id.conf_simple_pause:
+			LinphoneCall call = lc().getCurrentCall();
+			if (call != null) {
+				lc().pauseCall(call);
 			} else {
-				Toast.makeText(this, R.string.conf_simple_no_current_call, Toast.LENGTH_SHORT).show();
+				((Checkable) v).setChecked(true);
 			}
 			break;
 		case R.id.conf_simple_video:
@@ -291,9 +287,17 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			// mic, speaker
 			super.onClick(v);
 		}
-
 	}
 
+	private void doTransfer() {
+		LinphoneCall tCall = lc().getCurrentCall();
+		if (tCall != null) {
+			prepareForTransferingExistingOrNewCall(tCall);
+		} else {
+			Toast.makeText(this, R.string.conf_simple_no_current_call, Toast.LENGTH_SHORT).show();
+		}
+	}
+	
 	private void prepareForTransferingExistingOrNewCall(final LinphoneCall call) {
 		// Include inconf calls
 		final List<LinphoneCall> existingCalls = LinphoneUtils.getLinphoneCalls(lc());
@@ -545,30 +549,26 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		return getString(id);
 	}
 
-	private void updateAdvancedButtons() {
-		LinphoneCall activeCall = lc().getCurrentCall();
-		View bar = findViewById(R.id.conf_advanced_buttons);
+	private void updatePauseMergeButtons() {
+		View controls = findViewById(R.id.incall_controls_layout);
 
-		if (activeCall == null) {
-			bar.setVisibility(GONE);
-			return;
+		int nbCalls = lc().getCallsNb();
+		View pauseView = controls.findViewById(R.id.conf_simple_pause);
+		View mergeView = controls.findViewById(R.id.conf_simple_merge);
+
+		if (nbCalls <= 1) {
+			((Checkable) pauseView).setChecked(lc().getCurrentCall() == null);
+			mergeView.setVisibility(GONE);
+			pauseView.setVisibility(VISIBLE);
+			
+		} else {
+			int nonConfCallsNb = LinphoneUtils.countNonConferenceCalls(lc());
+			boolean enableMerge = nonConfCallsNb >=2;
+			enableMerge |= nonConfCallsNb >=1 && lc().getConferenceSize() > 0;
+			mergeView.setEnabled(enableMerge);
+			pauseView.setVisibility(GONE);
+			mergeView.setVisibility(VISIBLE);
 		}
-		
-		int nonConfCallsNb = LinphoneUtils.countNonConferenceCalls(lc());
-		// in this part, we know nonConfCallsNb > 0 as the active call cannot be a conf call
-
-		View merge = bar.findViewById(R.id.conf_simple_merge);
-		boolean enableMerge = nonConfCallsNb >=2 || lc().getConferenceSize() > 0;
-		enableMerge = true;
-		merge.setEnabled(enableMerge);
-
-		View transfer = bar.findViewById(R.id.conf_simple_transfer);
-		boolean enableTransfer = mAllowTransfers && activeCall != null;
-		transfer.setEnabled(enableTransfer);
-
-		// video always enabled when a call active (though may not be shown)
-
-		bar.setVisibility(VISIBLE);
 	}
 
 	private void updateConfItem() {
@@ -586,7 +586,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	}
 
 	protected void updateUI() {
-		updateAdvancedButtons();
+		updatePauseMergeButtons();
 		updateCalleeImage();
 		updateSoundLock();
 		updateAddCallButton();
@@ -634,7 +634,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (mUnMuteOnReturnFromUriPicker) {
 			lc().muteMic(false);
-			((ToggleButton) findViewById(R.id.toggleMuteMic)).setChecked(false);
+			((Checkable) findViewById(R.id.toggleMuteMic)).setChecked(false);
 		}
 
 		String uri = null;
@@ -643,7 +643,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		}
 		if (resultCode != RESULT_OK || TextUtils.isEmpty(uri)) {
 			mCallToTransfer = null;
-			Toast.makeText(this, R.string.uri_picking_canceled, Toast.LENGTH_LONG).show();
 			eventuallyResumeConfOrCallOnPickerReturn(true);
 			return;
 		}

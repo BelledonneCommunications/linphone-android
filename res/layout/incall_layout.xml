@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-         android:orientation="vertical"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:paddingLeft="8dp"
-         android:paddingRight="8dp">
-
+ <RelativeLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:ui="http://schemas.android.com/apk/res/org.linphone"
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent"
+     android:orientation="vertical"
+     android:paddingLeft="8dp"
+     android:paddingRight="8dp" >
 
 	<LinearLayout android:id="@+id/conf_header" android:layout_alignParentTop="true"
 			android:orientation="vertical" android:layout_marginBottom="10dip"
@@ -21,57 +22,70 @@
 
 
 
-
-
-
-	<LinearLayout android:id="@+id/conf_speaker_mic_row" 
-			android:layout_alignParentBottom="true" 
-			android:layout_width="fill_parent" android:layout_height="wrap_content"> 
-	<ToggleButton android:id="@+id/toggleMuteMic" style="@style/conf_toggle_button" 
-		android:textOn="@string/mutemic_button_txt" android:textOff="@string/mutemic_button_txt" />
-	<ToggleButton android:id="@+id/toggleSpeaker" style="@style/conf_toggle_button"
-		android:textOn="@string/speaker_button_txt" android:textOff="@string/speaker_button_txt" />
-	<ToggleButton android:id="@+id/toggleBluetooth" style="@style/conf_toggle_button"  
-		android:textOn="@string/bluetooth_button_txt" android:textOff="@string/bluetooth_button_txt" 
-		android:visibility="gone"/>
-	</LinearLayout>
-
-	<LinearLayout android:id="@+id/conf_terminate_row"
-		android:layout_above="@id/conf_speaker_mic_row"
+	<LinearLayout android:id="@+id/incall_controls_layout"
+		android:layout_alignParentBottom="true" android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<Button android:text="@string/AddCallButtonText" android:id="@+id/addCall"
-			style="@style/conf_icon_text_button" android:drawableTop="@drawable/plus" />
 
-		<Button	android:id="@+id/incallHang" style="@style/conf_icon_text_button"
-			android:drawableTop="@drawable/stopcall_red" android:text="@string/hangup"/>
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<org.linphone.ui.ToggleImageButton android:id="@+id/toggleMuteMic"
+	            style="@style/incall_control"
+				ui:checked="@drawable/incall_micro_inverse"
+				ui:unchecked="@drawable/incall_micro"
+				ui:bgdrawables="true" />
 
-		<Button android:id="@+id/incallNumpadShow" style="@style/conf_icon_text_button"
-			android:text="@string/show_send_dtmfs_button" android:drawableTop="@drawable/numpad_big" />
+	        <ImageButton android:id="@+id/incallNumpadShow"
+	            style="@style/incall_control"
+				android:background="@drawable/incall_dialpad" />
+
+	        <org.linphone.ui.ToggleImageButton android:id="@+id/toggleSpeaker"
+	            style="@style/incall_control"
+				ui:checked="@drawable/incall_speaker_inverse"
+				ui:unchecked="@drawable/incall_speaker"
+				ui:bgdrawables="true" />
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<ImageButton android:id="@+id/addCall"
+			    style="@style/incall_control"
+			    android:background="@drawable/incall_add" />
+
+	        <ImageButton android:id="@+id/conf_simple_merge"
+	            style="@style/incall_control"
+	            android:visibility="gone"
+	            android:background="@drawable/incall_merge" />
+
+	        <org.linphone.ui.ToggleImageButton android:id="@+id/conf_simple_pause"
+	            style="@style/incall_control"
+	            ui:checked="@drawable/incall_pause_inverse"
+				ui:unchecked="@drawable/incall_pause"
+				ui:bgdrawables="true" />
+
+	        <ImageButton android:id="@+id/conf_simple_video"
+	            style="@style/incall_control"
+	            android:background="@drawable/incall_back" />
 	</LinearLayout>
 
-	<LinearLayout android:id="@+id/conf_advanced_buttons" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:layout_above="@id/conf_terminate_row">
-		<Button android:id="@+id/conf_simple_video" style="@style/conf_icon_text_button"
-			android:drawableTop="@drawable/conf_video" 
-		 	android:text="@string/conf_simple_video_bt_txt"/>
-		<Button android:id="@+id/conf_simple_merge" style="@style/conf_icon_text_button"
-			android:drawableTop="@drawable/conf_merge" 
-		 	android:text="@string/conf_simple_merge_bt_txt"/>
-		<Button android:id="@+id/conf_simple_transfer" style="@style/conf_icon_text_button"
-			android:drawableTop="@drawable/conf_transfer"
-			android:text="@string/conf_simple_transfer_bt_txt" />
-	</LinearLayout>
+	<ImageButton
+            android:id="@+id/incallHang"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/clavier_bg"
+            android:minHeight="60dip"
+            android:src="@drawable/stopcall_red" />
+</LinearLayout>
 
 
-
+	<RelativeLayout android:id="@+id/picture_wrapper"
+	    android:layout_height="wrap_content" android:layout_width="fill_parent" 
+		android:layout_above="@id/incall_controls_layout">
 	<ImageView android:id="@+id/incall_picture" android:visibility="gone"
+	    android:layout_centerInParent="true" android:paddingBottom="15px"
 		android:layout_height="wrap_content" android:layout_width="wrap_content" 
-		android:layout_centerInParent="true" 
 		android:layout_gravity="center" android:scaleType="fitCenter"
 		android:minWidth="192px" android:minHeight="192px"
-		android:paddingBottom="60px"
 	/>
+	</RelativeLayout>
 
      <ListView android:id="@android:id/list"
                android:layout_width="fill_parent"
@@ -80,7 +94,7 @@
                android:dividerHeight="10dip"
                android:divider="@android:color/transparent"
                android:layout_below="@id/conf_header"
-               android:layout_above="@id/conf_advanced_buttons"
+               android:layout_above="@id/picture_wrapper"
                android:layout_alignWithParentIfMissing="true"
                android:fadeScrollbars="false"
      />

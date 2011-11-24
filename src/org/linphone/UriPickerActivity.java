@@ -69,7 +69,7 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 
 
 		startActivityInTab("contact",
-				new Intent().setClass(this, Version.sdkAboveOrEqual(5) ?
+				new Intent().setClass(this, Version.sdkAboveOrEqual(Version.API05_ECLAIR_20) ?
 						ContactPickerActivityNew.class : ContactPickerActivityOld.class),
 						R.string.tab_contact, R.drawable.contact_orange);
 

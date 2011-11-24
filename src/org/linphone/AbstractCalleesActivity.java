@@ -39,9 +39,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Checkable;
 import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.ToggleButton;
 
 /**
  * @author Guillaume Beraudo
@@ -53,8 +53,8 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	private List<LinphoneCall> mSpecificCalls = Collections.emptyList();
 	private Handler mHandler = new Handler();
 
-	private ToggleButton mMuteMicButton;
-	private ToggleButton mSpeakerButton;
+	private Checkable mMuteMicButton;
+	private Checkable mSpeakerButton;
 
 	protected abstract boolean isActive();
 	protected abstract void setActive(boolean active);
@@ -70,10 +70,13 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	protected void onCreate(Bundle savedInstanceState) {
 		setListAdapter(mListAdapter = createCalleeListAdapter());
 
-		mMuteMicButton = (ToggleButton) findViewById(R.id.toggleMuteMic);
-		mMuteMicButton.setOnClickListener(this);
-		mSpeakerButton = (ToggleButton) findViewById(R.id.toggleSpeaker);
-		mSpeakerButton.setOnClickListener(this);
+		View muteMic = findViewById(R.id.toggleMuteMic);
+		muteMic.setOnClickListener(this);
+		mMuteMicButton = (Checkable) muteMic;
+
+		View speaker =  findViewById(R.id.toggleSpeaker);
+		speaker.setOnClickListener(this);
+		mSpeakerButton = (Checkable) speaker;
 		super.onCreate(savedInstanceState);
 	}
 
@@ -190,10 +193,10 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.toggleMuteMic:
-			lc().muteMic(((ToggleButton) v).isChecked());
+			lc().muteMic(((Checkable) v).isChecked());
 			break;
 		case R.id.toggleSpeaker:
-			if (((ToggleButton) v).isChecked()) {
+			if (((Checkable) v).isChecked()) {
 				LinphoneManager.getInstance().routeAudioToSpeaker();
 			} else {
 				LinphoneManager.getInstance().routeAudioToReceiver();
@@ -206,7 +209,7 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	@Override
 	public void onAudioStateChanged(final AudioState state) {
-		mSpeakerButton.post(new Runnable() {
+		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				switch (state) {

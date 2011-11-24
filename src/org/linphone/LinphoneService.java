@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
 import org.linphone.core.LinphoneCall.State;
@@ -268,7 +269,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNotif.when=System.currentTimeMillis();
 		String text = getString(textId);
 		if (text.contains("%s")) {
-			String id = LinphoneManager.getLc().getDefaultProxyConfig().getIdentity();
+			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+			String id = lpc != null ? lpc.getIdentity() : "";
 			text = String.format(text, id);
 		}
 		

@@ -486,7 +486,7 @@ public class LinphoneActivity extends TabActivity implements
 				startIncallActivity();
 			}
 		}
-		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable()) {
+		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable() && !call.isInConference()) {
 			boolean videoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
 			if (videoEnabled) {
 				startVideoActivity(call, 1000);

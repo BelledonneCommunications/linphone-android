@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Checkable;
 import android.widget.ImageButton;
 
 /**
@@ -35,18 +36,19 @@ import android.widget.ImageButton;
  * @author Guillaume Beraudo
  *
  */
-public class ToggleImageButton extends ImageButton implements OnClickListener {
-//	private static final String ns = "http://schemas.android.com/apk/res/linphone";
-	private static final String ns = null;
+public class ToggleImageButton extends ImageButton implements Checkable, OnClickListener {
+	private static final String ns = "http://schemas.android.com/apk/res/org.linphone";
 	private boolean checked;
 	private Drawable stateChecked;
 	private Drawable stateUnChecked;
+	private boolean drawablesForBackground;
 	private OnCheckedChangeListener onCheckedChangeListener;
 
 	public ToggleImageButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "checked", -1));
 		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "unchecked", -1));
+		drawablesForBackground = attrs.getAttributeBooleanValue(ns, "bgdrawables", false);
 		setBackgroundColor(Color.TRANSPARENT);
 
 		setOnClickListener(this);
@@ -66,7 +68,12 @@ public class ToggleImageButton extends ImageButton implements OnClickListener {
 
 
 	private void handleCheckChanged() {
-		setImageDrawable(checked?stateChecked:stateUnChecked);
+		Drawable d = checked? stateChecked : stateUnChecked;
+		if (drawablesForBackground) {
+			setBackgroundDrawable(d);
+		} else {
+			setImageDrawable(d);
+		}
 		requestLayout();
 		invalidate();
 		if (onCheckedChangeListener != null) onCheckedChangeListener.onCheckedChanged(this, checked);
@@ -82,7 +89,18 @@ public class ToggleImageButton extends ImageButton implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		checked = !checked;
-		handleCheckChanged();
+		toggle();
 	}
+
+
+	@Override
+	public void toggle() {
+		setChecked(!isChecked());
+	}
+
+    @Override
+    public boolean performClick() {
+        toggle();
+        return super.performClick();
+    }
 }

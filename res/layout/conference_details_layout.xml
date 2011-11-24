@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <LinearLayout
+         xmlns:android="http://schemas.android.com/apk/res/android"
+         xmlns:ui="http://schemas.android.com/apk/res/org.linphone"
          android:orientation="vertical"
          android:layout_width="fill_parent"
          android:layout_height="fill_parent"
@@ -19,15 +21,19 @@
      <View android:layout_weight="1" android:layout_width="0px" android:layout_height="0px" android:visibility="invisible"/>
      
 
-     <LinearLayout android:id="@+id/conf_speaker_mic_row" 
+     <LinearLayout android:id="@+id/conf_speaker_mic_row"
 			android:layout_alignParentBottom="true" 
 			android:layout_width="fill_parent" android:layout_height="wrap_content"> 
-		<ToggleButton android:id="@+id/toggleMuteMic" style="@style/conf_toggle_button" 
-			android:textOn="@string/mutemic_button_txt" android:textOff="@string/mutemic_button_txt" />
-		<ToggleButton android:id="@+id/toggleSpeaker" style="@style/conf_toggle_button"
-			android:textOn="@string/speaker_button_txt" android:textOff="@string/speaker_button_txt" />
-		<ToggleButton android:id="@+id/toggleBluetooth" style="@style/conf_toggle_button"  
-			android:textOn="@string/bluetooth_button_txt" android:textOff="@string/bluetooth_button_txt" 
-			android:visibility="gone"/>
+		<org.linphone.ui.ToggleImageButton android:id="@+id/toggleMuteMic"
+	            style="@style/incall_control"
+				ui:checked="@drawable/incall_micro_inverse"
+				ui:unchecked="@drawable/incall_micro"
+				ui:bgdrawables="true" />
+
+	        <org.linphone.ui.ToggleImageButton android:id="@+id/toggleSpeaker"
+	            style="@style/incall_control"
+				ui:checked="@drawable/incall_speaker_inverse"
+				ui:unchecked="@drawable/incall_speaker"
+				ui:bgdrawables="true" />
 	</LinearLayout>
  </LinearLayout>

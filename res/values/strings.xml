@@ -11,7 +11,6 @@
 	<string name="waiting_for_startup">Starting up...</string>
 	<string name="couldnt_accept_call">An error occurred while accepting call</string>
 
-	<string name="uri_picking_canceled">Canceled</string>
 	<string name="error_adding_new_call">Error adding new call</string>
 	<string name="transfer_started">Transfer initiated</string>
 	<string name="transfer_dialog_title">Transfer call to</string>

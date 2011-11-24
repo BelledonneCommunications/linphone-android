@@ -28,7 +28,6 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
@@ -158,7 +157,7 @@ public class ContactPickerActivityNew extends AbstractContactPickerActivityNew {
 			}
 		}
 
-		LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);
+		((ContactPicked) getParent()).goToDialer();
 	}
 
 

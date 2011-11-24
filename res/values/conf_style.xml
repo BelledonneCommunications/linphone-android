@@ -9,4 +9,27 @@
         <item name="android:paddingRight">15sp</item>
     </style>
 
+    <style name="incall_control" parent="@android:style/Widget.ImageButton">
+        <item name="android:height">104px</item>
+        <item name="android:width">164px</item>
+        <item name="android:layout_height">104px</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+   <declare-styleable name="ToggleImageButton">
+        <attr name="android:scaleType" />
+        <attr name="android:height" />
+        <attr name="android:width" />
+        <attr name="android:layout_width" />
+        <attr name="android:layout_height" />
+        <attr name="android:layout_weight" />
+        <attr name="android:id" />
+        <attr name="checked" format="integer" />
+        <attr name="unchecked" format="integer" />
+        <attr name="bgdrawables" format="boolean" />
+   </declare-styleable>
 </resources>
