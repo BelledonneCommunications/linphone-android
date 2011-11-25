@@ -125,6 +125,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		dumpInstalledLinphoneInformation();
 
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
 		mNotif = new Notification(R.drawable.status_level, "", System.currentTimeMillis());
 		mNotif.iconLevel=IC_LEVEL_ORANGE;
 		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
