@@ -87,12 +87,13 @@ public class CallManager {
 
 		// Check if video possible regarding bandwidth limitations
 		bm().updateWithProfileSettings(lc, params);
+
+		// Abort if not enough bandwidth...
 		if (!params.getVideoEnabled()) {
 			return false;
 		}
 
 		// Not yet in video call: try to re-invite with video
-		params.setVideoEnabled(true);
 		lc.updateCall(lCall, params);
 		return true;
 	}

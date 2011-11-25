@@ -59,7 +59,12 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	AndroidVideoWindowImpl androidVideoWindowImpl;
 	private Runnable mCallQualityUpdater;
 
-	public void onCreate(Bundle savedInstanceState) {		
+	public void onCreate(Bundle savedInstanceState) {
+		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
+			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			finish();
+			return;
+		}
 		Log.d("onCreate VideoCallActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.videocall);

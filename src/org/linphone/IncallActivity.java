@@ -89,6 +89,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		if (finishIfAutoRestartAfterACrash()) return;
 		setContentView(R.layout.incall_layout);
 
 		mAllowTransfers = getResources().getBoolean(R.bool.allow_transfers);

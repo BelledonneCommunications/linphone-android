@@ -95,6 +95,11 @@ public class LinphoneActivity extends TabActivity implements
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
+		if (!LinphoneManager.isInstanciated()) {
+			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			finish();
+			return;
+		}
 		instance = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
@@ -424,15 +429,20 @@ public class LinphoneActivity extends TabActivity implements
 	// Do not call if video activity already launched as it would cause a pause() of the launched one
 	// and a race condition with capture surfaceview leading to a crash
 	public void startVideoActivity(final LinphoneCall call, int delay) {
-		if (VideoCallActivity.launched || call == null) return;
+		if (VideoCallActivity.launched || call == null) {
+			return;
+		}
+
 		mHandler.postDelayed(new Runnable() {
 			public void run() {
-				LinphoneManager.getInstance().enableCamera(call, true);
 				if (VideoCallActivity.launched) return;
+				LinphoneManager.getInstance().enableCamera(call, true);
 				startActivityForResult(new Intent().setClass(
 						LinphoneActivity.this,
 						VideoCallActivity.class),
 						video_activity);
+				// Avoid two consecutive runs to enter the previous block
+				VideoCallActivity.launched = true;
 				}
 		}, delay);
 		LinphoneManager.getInstance().routeAudioToSpeaker();

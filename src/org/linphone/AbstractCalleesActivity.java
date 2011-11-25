@@ -28,6 +28,7 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 
 import android.app.ListActivity;
@@ -81,6 +82,15 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	}
 
 	protected abstract CalleeListAdapter createCalleeListAdapter();
+
+	protected final boolean finishIfAutoRestartAfterACrash() {
+		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
+			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			finish();
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	protected void onResume() {
