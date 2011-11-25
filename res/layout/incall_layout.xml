@@ -60,16 +60,16 @@
 				ui:unchecked="@drawable/incall_pause"
 				ui:bgdrawables="true" />
 
-	        <ImageButton android:id="@+id/conf_simple_video"
+	        <Button android:id="@+id/conf_simple_video"
 	            style="@style/incall_control"
-	            android:background="@drawable/incall_back" />
+	            android:text="@string/conf_simple_video_bt_txt"
+	            android:background="@drawable/clavier_bg" />
 	</LinearLayout>
 
 	<ImageButton
             android:id="@+id/incallHang"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@drawable/clavier_bg"
             android:minHeight="60dip"
             android:src="@drawable/stopcall_red" />
@@ -80,10 +80,10 @@
 	    android:layout_height="wrap_content" android:layout_width="fill_parent" 
 		android:layout_above="@id/incall_controls_layout">
 	<ImageView android:id="@+id/incall_picture" android:visibility="gone"
-	    android:layout_centerInParent="true" android:paddingBottom="15px"
+	    android:layout_centerInParent="true" android:paddingBottom="8dip"
 		android:layout_height="wrap_content" android:layout_width="wrap_content" 
 		android:layout_gravity="center" android:scaleType="fitCenter"
-		android:minWidth="192px" android:minHeight="192px"
+		android:minWidth="120dip" android:minHeight="120dip"
 	/>
 	</RelativeLayout>
 

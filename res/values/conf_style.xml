@@ -10,14 +10,10 @@
     </style>
 
     <style name="incall_control" parent="@android:style/Widget.ImageButton">
-        <item name="android:height">104px</item>
-        <item name="android:width">164px</item>
-        <item name="android:layout_height">104px</item>
+        <item name="android:layout_height">65dip</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:adjustViewBounds">true</item>
     </style>
 
    <declare-styleable name="ToggleImageButton">

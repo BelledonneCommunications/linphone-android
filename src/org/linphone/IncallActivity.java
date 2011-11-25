@@ -111,7 +111,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		if (mMayDoVideo) {
 			findViewById(R.id.conf_simple_video).setOnClickListener(this);
 		} else {
-			findViewById(R.id.conf_simple_video).setVisibility(GONE);
+			findViewById(R.id.conf_simple_video).setVisibility(View.GONE);
 		}
 		super.onCreate(savedInstanceState);
 	}
@@ -162,13 +162,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 
 		setCalleePicture(view, currentCall.getRemoteAddress());
 		view.setVisibility(VISIBLE);
-		if (Version.sdkStrictlyBelow(Version.API06_ECLAIR_201)) {
-			// Fix really big image on older devices
-			ViewGroup.LayoutParams layout = view.getLayoutParams();
-			layout.height = 96;
-			layout.width = 96;
-			view.setLayoutParams(layout);
-		}
 	}
 
 
@@ -280,8 +273,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				if (!LinphoneManager.getInstance().addVideo()) {
 					LinphoneActivity.instance().startVideoActivity(vCall, 0);
 				}
-			} else {
-				Toast.makeText(this, R.string.conf_simple_no_current_call, Toast.LENGTH_SHORT).show();
 			}
 			break;
 		default:
@@ -294,8 +285,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		LinphoneCall tCall = lc().getCurrentCall();
 		if (tCall != null) {
 			prepareForTransferingExistingOrNewCall(tCall);
-		} else {
-			Toast.makeText(this, R.string.conf_simple_no_current_call, Toast.LENGTH_SHORT).show();
 		}
 	}
 	

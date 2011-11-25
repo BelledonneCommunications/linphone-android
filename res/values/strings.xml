@@ -60,8 +60,8 @@
 	<string name="hangup">Hang up</string>
 	<string name="conf_simple_merge_bt_txt">Merge</string>
 	<string name="conf_simple_transfer_bt_txt">Transfer</string>
-	<string name="conf_simple_video_bt_txt">Add video</string>
-	<string name="conf_simple_no_current_call">No active call</string>
+	<string name="conf_simple_video_bt_txt">video</string>
+<!--	<string name="conf_simple_no_current_call">No active call</string>-->
 	<string name="show_send_dtmfs_button">Dialpad</string>
 
 	<string name="conf_conference">Conference</string>
