@@ -60,13 +60,14 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	private Runnable mCallQualityUpdater;
 
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
 			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			// super.onCreate called earlier
 			finish();
 			return;
 		}
-		Log.d("onCreate VideoCallActivity");
-		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.videocall);
 
 		SurfaceView videoView = (SurfaceView) findViewById(R.id.video_surface); 

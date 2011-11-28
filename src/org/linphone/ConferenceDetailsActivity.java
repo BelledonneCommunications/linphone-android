@@ -44,7 +44,9 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		if (finishIfAutoRestartAfterACrash()) return;
+		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
+			return;
+		}
 		setContentView(R.layout.conference_details_layout);
 		super.onCreate(savedInstanceState);
 	}

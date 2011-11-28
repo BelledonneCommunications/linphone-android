@@ -69,6 +69,9 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	 * Called by the child classes AFTER their own onCreate.
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
+		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
+			return;
+		}
 		setListAdapter(mListAdapter = createCalleeListAdapter());
 
 		View muteMic = findViewById(R.id.toggleMuteMic);
@@ -83,9 +86,10 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	protected abstract CalleeListAdapter createCalleeListAdapter();
 
-	protected final boolean finishIfAutoRestartAfterACrash() {
+	protected final boolean finishIfAutoRestartAfterACrash(Bundle savedInstanceState) {
 		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
 			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			super.onCreate(savedInstanceState);
 			finish();
 			return true;
 		}
