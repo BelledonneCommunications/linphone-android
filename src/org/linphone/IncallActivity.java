@@ -260,7 +260,9 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			showDialog(numpadDialogId);
 			break;
 		case R.id.conf_simple_merge:
-			lc().addAllToConference();
+			if (!lc().soundResourcesLocked()) {
+				lc().addAllToConference();
+			}
 			break;
 		case R.id.conf_simple_pause:
 			LinphoneCall call = lc().getCurrentCall();
@@ -497,6 +499,9 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if (lc().soundResourcesLocked()) {
+						return;
+					}
 					State actualState = call.getState();
 					if (State.StreamsRunning == actualState) {
 						lc().pauseCall(call);
