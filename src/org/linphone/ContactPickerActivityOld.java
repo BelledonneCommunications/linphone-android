@@ -68,12 +68,11 @@ public class ContactPickerActivityOld extends Activity {
                     if (!ContactHelper.testPhotoUri(getContentResolver(), pictureUri, android.provider.Contacts.Photos.DATA)) {
                     	pictureUri = null;
                     }
-                    // FIXME surprisingly all this picture stuff doesn't seem to work
-                    DialerActivity.instance().setContactAddress(lPhoneNo, lName, pictureUri);
+                    ((ContactPicked) getParent()).setAddressAndGoToDialer(lPhoneNo, lName, pictureUri);
                 }
             }
             	
-            	LinphoneActivity.instance().getTabHost().setCurrentTabByTag(LinphoneActivity.DIALER_TAB);	
+            ((ContactPicked) getParent()).goToDialer();
             }
         }
 
