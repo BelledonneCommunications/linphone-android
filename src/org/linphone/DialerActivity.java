@@ -230,18 +230,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		// Note2: Linphone service is in charge of instantiating LinphoneManager
 		mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
 
-		if (!IncallActivity.active && LinphoneManager.getLc().getCallsNb() > 0) {
-			Runnable r = new Runnable() {
-				@Override
-				public void run() {
-					if (IncallActivity.active || LinphoneManager.getLc().getCallsNb() == 0) {
-						return;
-					}
-					LinphoneActivity.instance().startIncallActivity();
-				}
-			};
-			mHandler.postDelayed(r, 1000);
-		}
 		super.onResume();
 	}
 
