@@ -161,8 +161,6 @@ public class LinphoneActivity extends TabActivity implements
 				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			}
 			break;
-		case incall_activity:
-			break;
 		default:
 			break;
 		}
@@ -456,11 +454,8 @@ public class LinphoneActivity extends TabActivity implements
 		if (IncallActivity.active) {
 			return;
 		}
-		startActivityForResult(new Intent().setClass(
-				LinphoneActivity.this,
-				IncallActivity.class),
-				incall_activity);
-		IncallActivity.active = true;
+		Intent intent = new Intent().setClass(this, IncallActivity.class);
+		startActivityForResult(intent, incall_activity);
 	}
 
 	public void startIncomingCallActivity(LinphoneCall pendingCall) {
@@ -532,7 +527,6 @@ public class LinphoneActivity extends TabActivity implements
 
 
 	private void exitIncallActivity() {
-		finishActivity(incall_activity);
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
 	}
 

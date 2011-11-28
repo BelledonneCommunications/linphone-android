@@ -99,21 +99,22 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	@Override
 	protected void onResume() {
 		mSpecificCalls = updateSpecificCallsList();
-		if (!finishOnEmptySpecificCallsWhileResuming() || mSpecificCalls.size() != 0) {
+		if (shouldFinishCalleeActivity()) {
+			finish();
+		} else {
 			setActive(true);
 			updateUI();
 			mSpeakerButton.setChecked(LinphoneManager.getInstance().isSpeakerOn());
 			mMuteMicButton.setChecked(LinphoneManager.getLc().isMicMuted());
 			LinphoneManager.addListener(this);
 			LinphoneManager.startProximitySensorForActivity(this);
-		} else {
-			finish();
 		}
 		super.onResume();
 	}
 
-	protected boolean finishOnEmptySpecificCallsWhileResuming() {
-		return false;
+	// Hook
+	protected boolean shouldFinishCalleeActivity() {
+		return mSpecificCalls.size() == 0;
 	}
 
 	@Override
@@ -132,7 +133,11 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 		mHandler.post(new Runnable() {
 			public void run() {
 				mSpecificCalls = updateSpecificCallsList();
-				updateUI();
+				if (shouldFinishCalleeActivity()) {
+					finish();
+				} else {
+					updateUI();
+				}
 			}
 		});
 	}

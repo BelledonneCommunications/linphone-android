@@ -55,11 +55,6 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 		return new ConfListAdapter();
 	}
 
-	@Override
-	protected boolean finishOnEmptySpecificCallsWhileResuming() {
-		return true;
-	}
-
 	private class ConfListAdapter extends CalleeListAdapter {
 		@Override
 		public View getView(int position, View v, ViewGroup parent) {

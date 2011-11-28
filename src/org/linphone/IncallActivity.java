@@ -119,7 +119,10 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		super.onCreate(savedInstanceState);
 	}
 
-	
+	@Override
+	protected boolean shouldFinishCalleeActivity() {
+		return lc().getCallsNb() == 0;
+	}
 	
 	@Override
 	protected CalleeListAdapter createCalleeListAdapter() {
