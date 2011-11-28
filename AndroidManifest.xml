@@ -72,9 +72,10 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-        <activity android:name="org.linphone.IncallActivity"
+<!--                    android:launchMode="singleTask"-->
+            <activity android:name="org.linphone.IncallActivity"
                     android:theme="@android:style/Theme.NoTitleBar"
-        			android:screenOrientation="portrait">
+                    android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

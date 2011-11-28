@@ -22,7 +22,6 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
-import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
@@ -458,10 +457,8 @@ public class LinphoneActivity extends TabActivity implements
 		startActivityForResult(intent, incall_activity);
 	}
 
-	public void startIncomingCallActivity(LinphoneCall pendingCall) {
-		Intent intent = new Intent()
-			.setClass(this, IncomingCallActivity.class)
-			.putExtra("stringUri", pendingCall.getRemoteAddress().asStringUriOnly());
+	public void startIncomingCallActivity() {
+		Intent intent = new Intent().setClass(this, IncomingCallActivity.class);
 		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 	}
 
@@ -476,7 +473,7 @@ public class LinphoneActivity extends TabActivity implements
 		}
 
 		if (state==State.IncomingReceived) {
-			startIncomingCallActivity(call);
+			startIncomingCallActivity();
 		}
 		if (state == State.OutgoingInit) {
 			startIncallActivity();
@@ -542,7 +539,7 @@ public class LinphoneActivity extends TabActivity implements
 		super.onResume();
 		LinphoneCall pendingCall = LinphoneManager.getInstance().getPendingIncomingCall();
 		if (pendingCall != null) {
-			startIncomingCallActivity(pendingCall);
+			startIncomingCallActivity();
 		} 
 	}
 
