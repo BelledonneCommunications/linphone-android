@@ -201,14 +201,15 @@ public class LinphoneActivity extends TabActivity implements
 			// Ex: incoming call received
 			if (LinphoneManager.getLc().getCallsNb() == 0) return;
 			if(LinphoneManager.getLc().isInComingInvitePending()) {
-				selectDialerTab();
+				startIncomingCallActivity();
 			} else {
 				startIncallActivity();
 			}
 			return;
 		}
 
-
+		Log.i("LinphoneActivity received an intent with data");
+		// Ex: calling from native phone
 		if (DialerActivity.instance() != null) {
 			DialerActivity.instance().newOutgoingCall(intent);
 		} else {
