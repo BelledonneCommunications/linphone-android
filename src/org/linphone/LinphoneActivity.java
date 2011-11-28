@@ -450,7 +450,7 @@ public class LinphoneActivity extends TabActivity implements
 		LinphoneManager.getInstance().routeAudioToSpeaker();
 	}
 
-	public void startIncallActivity() {
+	public synchronized void startIncallActivity() {
 		if (IncallActivity.active) {
 			return;
 		}
@@ -458,6 +458,7 @@ public class LinphoneActivity extends TabActivity implements
 				LinphoneActivity.this,
 				IncallActivity.class),
 				incall_activity);
+		IncallActivity.active = true;
 	}
 
 	public void startIncomingCallActivity(LinphoneCall pendingCall) {
