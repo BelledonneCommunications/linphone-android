@@ -6,7 +6,7 @@
     <ImageView android:id="@+id/picture" android:layout_width="wrap_content"
      android:src="@drawable/unknown_person" android:layout_height="wrap_content"
      android:layout_alignParentLeft="true" android:layout_centerVertical="true"
-     android:paddingRight="3sp"/>
+     android:paddingRight="5dp" android:paddingLeft="5dp"/>
     
     <LinearLayout android:id="@+id/callee_buttons" android:layout_alignParentRight="true" 
     android:layout_width="wrap_content" android:layout_height="fill_parent"
