@@ -4,9 +4,7 @@
          xmlns:ui="http://schemas.android.com/apk/res/org.linphone"
          android:orientation="vertical"
          android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:paddingLeft="8dp"
-         android:paddingRight="8dp">
+         android:layout_height="fill_parent">
 
      <ListView android:id="@android:id/list"
                android:layout_width="fill_parent"

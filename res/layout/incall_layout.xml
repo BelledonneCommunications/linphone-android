@@ -4,9 +4,7 @@
      xmlns:ui="http://schemas.android.com/apk/res/org.linphone"
      android:layout_width="match_parent"
      android:layout_height="fill_parent"
-     android:orientation="vertical"
-     android:paddingLeft="8dp"
-     android:paddingRight="8dp" >
+     android:orientation="vertical">
 
 	<LinearLayout android:id="@+id/conf_header" android:layout_alignParentTop="true"
 			android:orientation="vertical" android:layout_marginBottom="10dip"
