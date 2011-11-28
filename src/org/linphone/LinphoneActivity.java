@@ -197,8 +197,9 @@ public class LinphoneActivity extends TabActivity implements
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		if (intent.getData() == null) {
-			Log.i("LinphoneActivity received an intent without data, recreating GUI if needed");
-			if (!LinphoneManager.getLc().isIncall()) return;
+			Log.i("LinphoneActivity received an intent without data");
+			// Ex: incoming call received
+			if (LinphoneManager.getLc().getCallsNb() == 0) return;
 			if(LinphoneManager.getLc().isInComingInvitePending()) {
 				selectDialerTab();
 			} else {
