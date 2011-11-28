@@ -376,6 +376,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				return false;
 			}
 			int count = 0;
+			boolean aConfExists = lc().getConferenceSize() > 0;
 			for (LinphoneCall call : getSpecificCalls()) {
 				final LinphoneCall.State state = call.getState();
 				boolean connectionEstablished = state == State.StreamsRunning
@@ -383,7 +384,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 						|| state == State.PausedByRemote;
 				if (connectionEstablished)
 					count++;
-				if (count >= 2)
+				if ((aConfExists && count >= 1) || count >= 2)
 					return true;
 			}
 			return false;
@@ -439,8 +440,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			final boolean showMergeToConf = connectionEstablished && aConferenceIsPossible();
 			setVisibility(confButton, false);
 
-			final int numberOfCalls = getSpecificCalls().size();
-
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
 
@@ -467,7 +466,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					View content = getLayoutInflater().inflate(R.layout.conf_choices_dialog, null);
 					Dialog dialog = new AlertDialog.Builder(IncallActivity.this).setView(content).create();
 					OnClickListener l = new CallActionListener(call, dialog);
-					enableView(content, R.id.transfer_existing, l, mAllowTransfers && numberOfCalls >=2);
+					enableView(content, R.id.transfer_existing, l, mAllowTransfers && getSpecificCalls().size() >=2);
 					enableView(content, R.id.transfer_new, l, mAllowTransfers);
 					enableView(content, R.id.merge_to_conference, l, showMergeToConf);
 					enableView(content, R.id.terminate_call, l, true);
@@ -514,7 +513,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			});
 
 			ImageView pictureView = (ImageView) v.findViewById(R.id.picture);
-			if (numberOfCalls != 1) {
+			if (lc().getCallsNb() != 1) {
 				// May be greatly sped up using a drawable cache
 				setCalleePicture(pictureView, address);
 			} else {
