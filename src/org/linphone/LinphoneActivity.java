@@ -492,11 +492,6 @@ public class LinphoneActivity extends TabActivity implements
 			stopOrientationSensor();
 			finishActivity(INCOMING_CALL_ACTIVITY);
 		}
-		if (state==State.Connected) {
-			if (call.getDirection() == CallDirection.Incoming) {
-				startIncallActivity();
-			}
-		}
 		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable() && !call.isInConference()) {
 			boolean videoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
 			if (videoEnabled) {
