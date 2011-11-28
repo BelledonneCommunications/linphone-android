@@ -24,12 +24,9 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.mediastream.Version;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,19 +75,19 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 			((TextView) v.findViewById(R.id.name)).setText(mainText);
 			((TextView) v.findViewById(R.id.address)).setText("");
 
-			v.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					if (lc().soundResourcesLocked()) {
-						return;
-					}
-					View content = getLayoutInflater().inflate(R.layout.conf_details_participant_choices_dialog, null);
-					Dialog dialog = new AlertDialog.Builder(ConferenceDetailsActivity.this).setView(content).create();
-					OnClickListener l = new CallActionListener(call, dialog);
-					enableView(content, R.id.remove_from_conference, l, true);
-					enableView(content, R.id.terminate_call, l, true);
-					dialog.show();
-				}
-			});
+//			v.setOnClickListener(new OnClickListener() {
+//				public void onClick(View v) {
+//					if (lc().soundResourcesLocked()) {
+//						return;
+//					}
+//					View content = getLayoutInflater().inflate(R.layout.conf_details_participant_choices_dialog, null);
+//					Dialog dialog = new AlertDialog.Builder(ConferenceDetailsActivity.this).setView(content).create();
+//					OnClickListener l = new CallActionListener(call, dialog);
+//					enableView(content, R.id.remove_from_conference, l, true);
+//					enableView(content, R.id.terminate_call, l, true);
+//					dialog.show();
+//				}
+//			});
 
 			// May be greatly sped up using a drawable cache
 			ImageView pictureView = (ImageView) v.findViewById(R.id.picture);
@@ -102,30 +99,30 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 
 	}
 
-	private class CallActionListener implements OnClickListener {
-		private LinphoneCall call;
-		private Dialog dialog;
-		public CallActionListener(LinphoneCall call, Dialog dialog) {
-			this.call = call;
-			this.dialog = dialog;
-		}
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.terminate_call:
-				lc().terminateCall(call);
-				break;
-			case R.id.remove_from_conference:
-				lc().removeFromConference(call);
-				if (LinphoneUtils.countConferenceCalls(lc()) == 0) {
-					finish();
-				}
-				break;
-			default:
-				throw new RuntimeException("unknown id " + v.getId());
-			}
-			if (dialog != null) dialog.dismiss();
-		}
-	}
+//	private class CallActionListener implements OnClickListener {
+//		private LinphoneCall call;
+//		private Dialog dialog;
+//		public CallActionListener(LinphoneCall call, Dialog dialog) {
+//			this.call = call;
+//			this.dialog = dialog;
+//		}
+//		public void onClick(View v) {
+//			switch (v.getId()) {
+//			case R.id.terminate_call:
+//				lc().terminateCall(call);
+//				break;
+//			case R.id.remove_from_conference:
+//				lc().removeFromConference(call);
+//				if (LinphoneUtils.countConferenceCalls(lc()) == 0) {
+//					finish();
+//				}
+//				break;
+//			default:
+//				throw new RuntimeException("unknown id " + v.getId());
+//			}
+//			if (dialog != null) dialog.dismiss();
+//		}
+//	}
 
 
 	@Override
