@@ -88,7 +88,9 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	protected final boolean finishIfAutoRestartAfterACrash(Bundle savedInstanceState) {
 		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
-			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			if (!LinphoneManager.isInstanciated()) {
+				Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			}
 			super.onCreate(savedInstanceState);
 			finish();
 			return true;
