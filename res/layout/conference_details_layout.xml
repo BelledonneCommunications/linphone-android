@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout
+ <RelativeLayout
          xmlns:android="http://schemas.android.com/apk/res/android"
          xmlns:ui="http://schemas.android.com/apk/res/org.linphone"
          android:orientation="vertical"
@@ -16,8 +16,6 @@
      />
 
 
-     <View android:layout_weight="1" android:layout_width="0px" android:layout_height="0px" android:visibility="invisible"/>
-     
 
      <LinearLayout android:id="@+id/conf_speaker_mic_row"
 			android:layout_alignParentBottom="true" 
@@ -28,10 +26,11 @@
 				ui:unchecked="@drawable/incall_micro"
 				ui:bgdrawables="true" />
 
-	        <org.linphone.ui.ToggleImageButton android:id="@+id/toggleSpeaker"
+		<ImageView android:src="@android:color/darker_gray" style="@style/incall_control" />
+	    <org.linphone.ui.ToggleImageButton android:id="@+id/toggleSpeaker"
 	            style="@style/incall_control"
 				ui:checked="@drawable/incall_speaker_inverse"
 				ui:unchecked="@drawable/incall_speaker"
 				ui:bgdrawables="true" />
 	</LinearLayout>
- </LinearLayout>
+ </RelativeLayout>
