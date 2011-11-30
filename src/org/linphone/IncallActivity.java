@@ -273,6 +273,10 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				lc().pauseCall(call);
 			} else {
 				((Checkable) v).setChecked(true);
+				List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc(), Arrays.asList(State.Paused));
+				if (pausedCalls.size() == 1) {
+					lc().resumeCall(pausedCalls.get(0));
+				}
 			}
 			break;
 		case R.id.conf_simple_video:

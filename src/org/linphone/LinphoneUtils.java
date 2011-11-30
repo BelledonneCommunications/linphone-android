@@ -26,8 +26,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -177,15 +180,20 @@ public final class LinphoneUtils {
 		return false;
 	}
 
-	public static final List<LinphoneCall> getRunningOrPausedCalls(LinphoneCore lc) {
+	public static final List<LinphoneCall> getCallsInState(LinphoneCore lc, Collection<State> states) {
 		List<LinphoneCall> foundCalls = new ArrayList<LinphoneCall>();
 		for (LinphoneCall call : getLinphoneCalls(lc)) {
-			State state = call.getState();
-			if (state == State.Paused || state == State.PausedByRemote || state == State.StreamsRunning) {
+			if (states.contains(call.getState())) {
 				foundCalls.add(call);
 			}
 		}
 		return foundCalls;
+	}
+	public static final List<LinphoneCall> getRunningOrPausedCalls(LinphoneCore lc) {
+		return getCallsInState(lc, Arrays.asList(
+				State.Paused,
+				State.PausedByRemote,
+				State.StreamsRunning));
 	}
 
 	public static final int countConferenceCalls(LinphoneCore lc) {
