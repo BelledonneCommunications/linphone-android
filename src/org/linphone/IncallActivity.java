@@ -109,6 +109,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		mConferenceVirtualCallee = findViewById(R.id.conf_header);
 		mConferenceVirtualCallee.setOnClickListener(this);
 		mConferenceVirtualCallee.setOnLongClickListener(this);
+		enableView(mConferenceVirtualCallee, R.id.conf_header_details, this, true);
+
 
 		boolean mMayDoVideo = Version.isVideoCapable()
 		&& LinphoneManager.getInstance().isVideoEnabled();
@@ -216,7 +218,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	
 	@Override
 	public boolean onLongClick(View v) {
-		if (v.getId() == R.id.conf_header) {
+		if (v.getId() == R.id.conf_header || v.getId() == R.id.conf_header_details) {
+			if (!lc().isInConference()) {
+				// make sure we are in the conference
+				// especially due to the difficulty to aim at the detail button.
+				lc().enterConference();
+			}
 			LinphoneActivity.instance().startConferenceDetailsActivity();
 			return true;
 		}
@@ -259,6 +266,9 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		case R.id.conf_header:
 			boolean enterConf = !lc().isInConference();
 			enterConferenceAndVirtualConfView(enterConf);
+			break;
+		case R.id.conf_header_details:
+			onLongClick(v);
 			break;
 		case R.id.incallNumpadShow:
 			showDialog(numpadDialogId);
@@ -526,6 +536,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			}
 
 			registerCallDurationTimer(v, call);
+
+			enableView(v, R.id.callee_status_details, showCallActionsSimpleListener, true);
 
 			return v;
 		}

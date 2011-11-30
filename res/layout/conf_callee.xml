@@ -27,6 +27,7 @@
 		<ImageView android:id="@+id/callee_status_secured" style="@style/callee_status" android:src="@drawable/conf_secured" android:visibility="gone"/>
 		<ImageView android:id="@+id/callee_status_maybe_secured" style="@style/callee_status" android:src="@drawable/conf_maybe_secured" android:visibility="gone"/>
 		<ImageView android:id="@+id/callee_status_not_secured" style="@style/callee_status" android:src="@drawable/conf_not_secured" android:visibility="gone"/>
+      	<ImageView android:id="@+id/callee_status_details" style="@style/callee_status" android:src="@drawable/conf_details" android:visibility="gone"/>
 	</LinearLayout>
 
 

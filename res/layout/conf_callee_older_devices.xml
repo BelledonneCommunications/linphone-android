@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent" android:layout_height="52sp"
   android:background="@drawable/conf_callee_bg">
   
     <ImageView android:id="@+id/picture" android:layout_width="52sp"
      android:src="@drawable/unknown_person" android:layout_height="52sp"
-     android:paddingLeft="5px" android:scaleType="centerInside"/>
+     android:paddingRight="5dp" android:paddingLeft="5dp" android:scaleType="centerInside"/>
 
 
     <LinearLayout android:id="@+id/callee_block" android:orientation="vertical"
@@ -19,19 +19,16 @@
       </LinearLayout>
     </LinearLayout>
 
-	<View android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_weight="1"/>
 
 
-	<ImageButton android:id="@+id/addVideo" android:src="@drawable/conf_video"
-		android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	<ImageButton android:id="@+id/merge_to_conference"
-		android:src="@drawable/conf_merge" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+    <LinearLayout android:id="@+id/callee_statuses"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" android:gravity="center_vertical">
 
 	<TextView android:id="@+id/status_label" style="@style/callee_status"
 		android:layout_height="fill_parent" />
 	<ImageView android:id="@+id/callee_status_paused" style="@style/callee_status"
-		android:src="@drawable/conf_status_paused" />
+		android:src="@drawable/conf_status_paused" android:visibility="gone" />
 
 	<ImageView android:id="@+id/callee_status_secured" style="@style/callee_status"
 	    android:src="@drawable/conf_secured" android:visibility="gone"/>
@@ -39,4 +36,8 @@
 	    android:src="@drawable/conf_maybe_secured" android:visibility="gone"/>
 	<ImageView android:id="@+id/callee_status_not_secured" style="@style/callee_status"
 	     android:src="@drawable/conf_not_secured" android:visibility="gone"/>
-</LinearLayout>
+
+	<ImageButton android:id="@+id/callee_status_details" style="@style/callee_status"
+	     android:src="@drawable/conf_details" android:visibility="gone"/>
+	</LinearLayout>
+</RelativeLayout>
