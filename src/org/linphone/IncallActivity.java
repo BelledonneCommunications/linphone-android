@@ -22,6 +22,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -338,9 +339,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			this.call = call;
 			this.dialog = dialog;
 		}
-		public CallActionListener(LinphoneCall call) {
-			this.call = call;
-		}
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.merge_to_conference:
@@ -440,32 +438,14 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			}
 			v.setBackgroundResource(bgDrawableId);
 
-			boolean connectionEstablished = state == State.StreamsRunning
+			final boolean connectionEstablished = state == State.StreamsRunning
 					|| state == State.Paused
 					|| state == State.PausedByRemote;
-			View confButton = v.findViewById(R.id.merge_to_conference);
-			final boolean showMergeToConf = connectionEstablished && aConferenceIsPossible();
-			setVisibility(confButton, false);
 
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
 
-			final OnClickListener l = new CallActionListener(call);
-			confButton.setOnClickListener(l);
-
-			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-			if (MediaEncryption.None == mediaEncryption) {
-				setVisibility(v, R.id.callee_status_secured, false);
-				setVisibility(v, R.id.callee_status_maybe_secured, false);
-				setVisibility(v, R.id.callee_status_not_secured, false);
-			} else {
-				boolean reallySecured = !Version.hasZrtp() || call.isAuthenticationTokenVerified();
-				setVisibility(v, R.id.callee_status_secured, reallySecured);
-				setVisibility(v, R.id.callee_status_maybe_secured, !reallySecured);
-				setVisibility(v, R.id.callee_status_not_secured, false);
-			}
-
-			v.setOnLongClickListener(new OnLongClickListener() {
+			final OnLongClickListener showCallActionsLongListener = new OnLongClickListener() {
 				public boolean onLongClick(View v) {
 					if (lc().soundResourcesLocked()) {
 						return false;
@@ -475,33 +455,51 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					OnClickListener l = new CallActionListener(call, dialog);
 					enableView(content, R.id.transfer_existing, l, mAllowTransfers && getSpecificCalls().size() >=2);
 					enableView(content, R.id.transfer_new, l, mAllowTransfers);
+					boolean showMergeToConf = connectionEstablished && aConferenceIsPossible();
 					enableView(content, R.id.merge_to_conference, l, showMergeToConf);
 					enableView(content, R.id.terminate_call, l, true);
 
-					MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-					MediaEncryption supposedEncryption = LinphoneManager.getLc().getMediaEncryption();
-					if (mediaEncryption==MediaEncryption.None) {
-						setVisibility(content, R.id.unencrypted, supposedEncryption!=MediaEncryption.None);
-					} else{
+					if (call.getCurrentParamsCopy().getMediaEncryption()==MediaEncryption.ZRTP) {
+						boolean authVerified = call.isAuthenticationTokenVerified();
+						String fmt = getString(authVerified ? R.string.reset_sas_fmt : R.string.verify_sas_fmt);
 						TextView token = (TextView) content.findViewById(R.id.authentication_token);
-						if (mediaEncryption==MediaEncryption.ZRTP) {
-							boolean authVerified = call.isAuthenticationTokenVerified();
-							String fmt = getString(authVerified ? R.string.reset_sas_fmt : R.string.validate_sas_fmt);
-							token.setText(String.format(fmt, call.getAuthenticationToken()));
-							enableView(content, R.id.set_auth_token_not_verified, l, authVerified);
-							enableView(content, R.id.set_auth_token_verified, l, !authVerified);
-							enableView(content, R.id.encrypted, l, true);
-						} else {
-							setVisibility(content, R.id.encrypted, true);
-							token.setText(R.string.communication_encrypted);
-						}
+						token.setText(String.format(fmt, call.getAuthenticationToken()));
+						enableView(content, R.id.set_auth_token_not_verified, l, authVerified);
+						enableView(content, R.id.set_auth_token_verified, l, !authVerified);
+						enableView(content, R.id.encrypted, l, true);
+					} else {
+						setVisibility(content, R.id.encrypted, false);
 					}
-					
+
 					dialog.show();
 					return true;
 				}
-			});
-			
+			};
+			v.setOnLongClickListener(showCallActionsLongListener);
+
+			OnClickListener showCallActionsSimpleListener = new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showCallActionsLongListener.onLongClick(v);
+				}
+			};
+
+			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			if (MediaEncryption.None == mediaEncryption) {
+				setVisibility(v, R.id.callee_status_secured, false);
+				setVisibility(v, R.id.callee_status_maybe_secured, false);
+				setVisibility(v, R.id.callee_status_not_secured, false);
+			} else if (MediaEncryption.ZRTP == mediaEncryption ) {
+				boolean reallySecured = call.isAuthenticationTokenVerified();
+				enableView(v, R.id.callee_status_secured, showCallActionsSimpleListener, reallySecured);
+				enableView(v, R.id.callee_status_maybe_secured, showCallActionsSimpleListener, !reallySecured);
+				enableView(v, R.id.callee_status_not_secured, showCallActionsSimpleListener, false);
+			} else {
+				setVisibility(v, R.id.callee_status_secured, true);
+				setVisibility(v, R.id.callee_status_maybe_secured, false);
+				setVisibility(v, R.id.callee_status_not_secured, false);
+			}
+
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

@@ -18,13 +18,6 @@
 	    android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	</LinearLayout>
 	
-	<LinearLayout android:id="@+id/unencrypted" android:visibility="gone"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<ImageView android:src="@drawable/conf_not_secured" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	<TextView android:text="@string/not_encrypted"  android:layout_gravity="center_vertical"
-	    android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	</LinearLayout>
-
 	<LinearLayout android:id="@+id/transfer_new"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
 	<ImageButton android:src="@drawable/conf_transfer" android:clickable="false" 
