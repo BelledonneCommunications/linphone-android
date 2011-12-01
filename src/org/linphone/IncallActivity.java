@@ -23,6 +23,7 @@ import static android.view.View.VISIBLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -405,15 +406,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			return false;
 		}
 
-		private boolean highlightCall(LinphoneCall call) {
-			final State state = call.getState();
-			return state == State.StreamsRunning 
-			|| state == State.OutgoingRinging
-			|| state == State.OutgoingEarlyMedia
-			|| state == State.OutgoingInit
-			|| state == State.OutgoingProgress
-			;
-		}
+		private Collection<State> mStatesToHighlight = Arrays.asList(
+				State.StreamsRunning, 
+				State.OutgoingRinging,
+				State.OutgoingEarlyMedia,
+				State.OutgoingInit,
+				State.OutgoingProgress);
 
 		public View getView(int position, View v, ViewGroup parent) {
 			if (v == null) {
@@ -438,7 +436,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			((TextView) v.findViewById(R.id.address)).setText(statusLabel);
 
 
-			boolean highlighted = highlightCall(call);
+			boolean highlighted = mStatesToHighlight.contains(state);
 
 			int bgDrawableId = R.drawable.conf_callee_selector_normal;
 			if (state == State.IncomingReceived) {
@@ -513,16 +511,16 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (lc().soundResourcesLocked()) {
-						return;
-					}
 					State actualState = call.getState();
 					if (State.StreamsRunning == actualState) {
 						lc().pauseCall(call);
+					} else if (State.PausedByRemote == actualState) {
+						String msg = getString(R.string.cannot_resume_paused_by_remote_call);
+						Toast.makeText(IncallActivity.this, msg, Toast.LENGTH_SHORT).show();
+					} else if (lc().soundResourcesLocked()) {
+						return;
 					} else if (State.Paused == actualState) {
 						lc().resumeCall(call);
-					} else if (State.PausedByRemote == actualState) {
-						Toast.makeText(IncallActivity.this, getString(R.string.cannot_resume_paused_by_remote_call), Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
