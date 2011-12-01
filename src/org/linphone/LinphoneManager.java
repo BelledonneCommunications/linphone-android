@@ -158,6 +158,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
 		mRingSoundFile = basePath + "/oldphone_mono.wav"; 
 		mRingbackSoundFile = basePath + "/ringback.wav";
+		mPauseSoundFile = basePath + "/toy-mono.wav";
 
 		sLPref = LinphonePreferenceManager.getInstance(c);
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -167,7 +168,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 	}
-	
+
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
@@ -176,6 +177,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private final String mLinphoneConfigFile;
 	private final String mRingSoundFile; 
 	private final String mRingbackSoundFile;
+	private final String mPauseSoundFile;
 
 	private Timer mTimer = new Timer("Linphone scheduler");
 
@@ -414,6 +416,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setPlaybackGain(3);   
 			mLc.setRing(null);
 			mLc.setRootCA(mLinphoneRootCaFile);
+			mLc.setPlayFile(mPauseSoundFile);
 
 
 			try {
@@ -438,10 +441,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			Log.e(e,"Cannot start linphone");
 		}
 	}
-	
+
 	private void copyAssetsFromPackage() throws IOException {
 		copyIfNotExist(R.raw.oldphone_mono,mRingSoundFile);
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
+		copyIfNotExist(R.raw.toy,mPauseSoundFile);
 		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
 		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}

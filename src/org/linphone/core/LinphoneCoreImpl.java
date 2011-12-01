@@ -615,4 +615,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public boolean mediaEncryptionSupported(MediaEncryption menc) {
 		return mediaEncryptionSupported(nativePtr,menc.mValue);
 	}
+
+	private native void setPlayFile(long nativePtr, String path);
+	@Override
+	public void setPlayFile(String path) {
+		setPlayFile(nativePtr, path);
+	}
 }
