@@ -158,7 +158,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
 		mRingSoundFile = basePath + "/oldphone_mono.wav"; 
 		mRingbackSoundFile = basePath + "/ringback.wav";
-		mPauseSoundFile = basePath + "/toy-mono.wav";
+		mPauseSoundFile = basePath + "/toy_mono.wav";
 
 		sLPref = LinphonePreferenceManager.getInstance(c);
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -445,7 +445,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private void copyAssetsFromPackage() throws IOException {
 		copyIfNotExist(R.raw.oldphone_mono,mRingSoundFile);
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
-		copyIfNotExist(R.raw.toy,mPauseSoundFile);
+		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
 		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
 		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}
