@@ -62,7 +62,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
-			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			Log.e("No service running: avoid crash by finishing ", getClass().getName());
 			// super.onCreate called earlier
 			finish();
 			return;
@@ -78,9 +78,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		captureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
 		/* force surfaces Z ordering */
-		if (org.linphone.mediastream.Version.sdkAboveOrEqual(5)) {
-			fixZOrder(videoView, captureView);
-		}
+		fixZOrder(videoView, captureView);
 	
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(videoView, captureView);
 		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
@@ -107,13 +105,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		
 		androidVideoWindowImpl.init();
 		
-		// When changing phone orientation _DURING_ a call, VideoCallActivity is destroyed then recreated
-		// In this case, the following sequence happen:
-		//   * onDestroy -> sendStaticImage(true)  => destroy video graph
-		//   * onCreate  -> sendStaticImage(false) => recreate the video graph.
-		// Before creating the graph, the orientation must be known to LC => this is done here
-		LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
-
 		videoCall = LinphoneManager.getLc().getCurrentCall();
 		if (videoCall != null) {
 			updatePreview(videoCall.cameraEnabled());
@@ -287,7 +278,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 
 	@Override
 	protected void onPause() {
-		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(), ", changingConf:", getChangingConfigurations());
+		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(),")");
 		LinphoneManager.removeListener(this);
 		if (isFinishing()) {
 			videoCall = null; // release reference
@@ -302,11 +293,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		
 		LinphoneManager.getLc().setPreviewWindow(null);
 		
-		final LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
-		if (currentCall != null && getChangingConfigurations() != 0) {
-			LinphoneManager.getLc().setDeviceRotation(AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation()));
-			LinphoneManager.getLc().updateCall(currentCall, null);
-		}
 		if (mCallQualityUpdater!=null){
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater=null;

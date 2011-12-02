@@ -28,7 +28,6 @@ import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
@@ -37,10 +36,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,31 +45,26 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 	
-public class LinphoneActivity extends TabActivity implements
-		SensorEventListener
-		, ContactPicked
+public class LinphoneActivity extends TabActivity implements ContactPicked
 		, LinphoneOnCallStateChangedListener
 		{
 	public static final String DIALER_TAB = "dialer";
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
     private static final int video_activity = 100;
-    static final int FIRST_LOGIN_ACTIVITY = 101;
-    static final int INCOMING_CALL_ACTIVITY = 103;
+    private static final int FIRST_LOGIN_ACTIVITY = 101;
+    private static final int INCOMING_CALL_ACTIVITY = 103;
 	private static final int incall_activity = 104;
 	private static final int conferenceDetailsActivity = 105;
     private static final String PREF_CHECK_CONFIG = "pref_check_config";
 
 	private static LinphoneActivity instance;
-
-	private SensorManager mSensorManager;
-	private Sensor mAccelerometer;
-	private int previousRotation = -1;
-
+	private OrientationEventListener mOrientationHelper;
 	private Handler mHandler = new Handler();
 
 	// Customization
@@ -111,7 +101,6 @@ public class LinphoneActivity extends TabActivity implements
 		useMenuAbout = getResources().getBoolean(R.bool.useMenuAbout);
 		checkAccount = !useFirstLoginActivity;
 
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (!useFirstLoginActivity || pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
@@ -214,26 +203,6 @@ public class LinphoneActivity extends TabActivity implements
 		}
 	}
 	
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		
-	}
-	public void onSensorChanged(SensorEvent event) {
-		if (event==null || event.sensor == mAccelerometer) {
-			int rot;
-			
-			rot = AndroidVideoWindowImpl.rotationToAngle(getWindowManager().getDefaultDisplay().getOrientation());
-
-			if (rot != previousRotation) {
-				Log.d("New device rotation: ", rot);
-				// Returning rotation FROM ITS NATURAL ORIENTATION
-				LinphoneCore lc=LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				if (lc!=null) lc.setDeviceRotation(rot);
-				//else ignore, we are probably exiting.
-				previousRotation = rot;
-			}
-		}
-	}
-	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -295,24 +264,6 @@ public class LinphoneActivity extends TabActivity implements
 		startActivity(intent);
 	}
 
-
-	public synchronized void stopOrientationSensor() {
-		if (mSensorManager!=null)
-			mSensorManager.unregisterListener(this, mAccelerometer);
-	}
-
-
-	
-	public synchronized void startOrientationSensor() {
-		if (mSensorManager!=null) {
-			mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-			mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-		}
-		
-		/* init LC orientation value on orientation sensor startup */
-		previousRotation = -1;
-		onSensorChanged(null);
-	}
 
 	void showPreferenceErrorDialog(String message) {
 		if (!useMenuSettings) {
@@ -437,6 +388,7 @@ public class LinphoneActivity extends TabActivity implements
 		mHandler.postDelayed(new Runnable() {
 			public void run() {
 				if (VideoCallActivity.launched) return;
+				startOrientationSensor();
 				LinphoneManager.getInstance().enableCamera(call, true);
 				startActivityForResult(new Intent().setClass(
 						LinphoneActivity.this,
@@ -462,6 +414,42 @@ public class LinphoneActivity extends TabActivity implements
 		startActivityForResult(intent, INCOMING_CALL_ACTIVITY);
 	}
 
+	/**
+	 * Register a sensor to track phoneOrientation changes
+	 */
+	private synchronized void startOrientationSensor() {
+		if (mOrientationHelper == null) {
+			mOrientationHelper = new LocalOrientationEventListener(this);
+		}
+		mOrientationHelper.enable();
+	}
+
+	private int mAlwaysChangingPhoneAngle = -1;
+	private class LocalOrientationEventListener extends OrientationEventListener {
+		public LocalOrientationEventListener(Context context) {
+			super(context);
+		}
+		@Override
+		public void onOrientationChanged(final int o) {
+			if (o == OrientationEventListener.ORIENTATION_UNKNOWN) return;
+
+			int degrees=270;
+			if (o < 45 || o >315) degrees=0;
+			else if (o<135) degrees=90;
+			else if (o<225) degrees=180;
+
+			if (mAlwaysChangingPhoneAngle == degrees) return;
+			mAlwaysChangingPhoneAngle = degrees;
+
+			Log.d("Phone orientation changed to ", degrees);
+			int rotation = (360 - degrees) % 360;
+			LinphoneManager.getLc().setDeviceRotation(rotation);
+			LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+			if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParamsCopy().getVideoEnabled()) {
+				LinphoneManager.getLc().updateCall(currentCall, null);
+			}
+		}
+	}
 	
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state,
@@ -473,17 +461,14 @@ public class LinphoneActivity extends TabActivity implements
 		}
 
 		if (state==State.IncomingReceived) {
+			if (call.getCurrentParamsCopy().getVideoEnabled()) startOrientationSensor();
 			startIncomingCallActivity();
 		}
 		if (state == State.OutgoingInit) {
+			if (call.getCurrentParamsCopy().getVideoEnabled()) startOrientationSensor();
 			startIncallActivity();
 		}
-		if (state==State.OutgoingInit || state==State.IncomingReceived) {
-			startOrientationSensor();
-		} else if (state==State.Error || state==State.CallEnd){
-			stopOrientationSensor();
-			finishActivity(INCOMING_CALL_ACTIVITY);
-		}
+
 		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable() && !call.isInConference()) {
 			// call.cameraEnabled() contains the wish of the user
 			// set in LinphoneManager#onCallStateChanged(OutgoingInit||IncomingReceived)
@@ -505,8 +490,11 @@ public class LinphoneActivity extends TabActivity implements
 			showToast(R.string.call_error, message);
 		}
 		if (state==State.Error || state==State.CallEnd) {
+			finishActivity(INCOMING_CALL_ACTIVITY);
 			if (lc.getCallsNb() == 0){
 				exitIncallActivity();
+				// Might be possible to optimize by disabling it before
+				if (mOrientationHelper != null) mOrientationHelper.disable();
 			}
 			if (ConferenceDetailsActivity.active && lc.getConferenceSize() == 0) {
 				finishActivity(conferenceDetailsActivity);
@@ -527,12 +515,6 @@ public class LinphoneActivity extends TabActivity implements
 
 	private void exitIncallActivity() {
 		setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
-	}
-
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 
