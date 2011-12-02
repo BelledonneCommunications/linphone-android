@@ -324,7 +324,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNotif.iconLevel = level;
 		mNotif.when=System.currentTimeMillis();
 		String text = getString(textId);
-		if (text.contains("%s")) {
+		if (text.contains("%s") && LinphoneManager.getLc() != null) {
+			// Test for null lc is to avoid a NPE when Android mess up badly with the String resources.
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			String id = lpc != null ? lpc.getIdentity() : "";
 			text = String.format(text, id);
@@ -375,13 +376,16 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public void onGlobalStateChanged(final GlobalState state, final String message) {
 		if (state == GlobalState.GlobalOn) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
-			
-			mHandler.post(new Runnable() {
+
+			// Slightly delay the propagation of the state change.
+			// This is to let the linphonecore finish to be created
+			// in the java part.
+			mHandler.postDelayed(new Runnable() {
 				public void run() {
 					if (guiListener() != null)
 						guiListener().onGlobalStateChangedToOn(message);				
 				}
-			});
+			}, 50);
 		}
 	}
 
