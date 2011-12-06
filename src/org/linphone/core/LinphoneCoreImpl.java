@@ -546,9 +546,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		addToConference(nativePtr, getCallPtr(call));
 		
 	}
-	private native void removeFromConference(long nativePtr);
+	private native void removeFromConference(long nativePtr, long nativeCallPtr);
 	public synchronized void removeFromConference(LinphoneCall call) {
-		removeFromConference(getCallPtr(call));
+		removeFromConference(nativePtr,getCallPtr(call));
 	}
 
 	private long getCallPtr(LinphoneCall call) {
