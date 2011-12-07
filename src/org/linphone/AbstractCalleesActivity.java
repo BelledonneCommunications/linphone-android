@@ -203,9 +203,11 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 		}
 
 		protected final void registerCallDurationTimer(View v, LinphoneCall call) {
+			int callDuration = call.getDuration();
+			if (callDuration == 0 && call.getState() != State.StreamsRunning) return;
 			Chronometer timer = (Chronometer) v.findViewById(R.id.callee_duration);
 			if (timer == null) throw new IllegalArgumentException("no callee_duration view found");
-			timer.setBase(SystemClock.elapsedRealtime() - 1000 * call.getDuration());
+			timer.setBase(SystemClock.elapsedRealtime() - 1000 * callDuration);
 			timer.start();
 		}
 	}
