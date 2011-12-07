@@ -120,7 +120,7 @@ public class UriPickerActivity extends TabActivity implements ContactPicked {
 			addButton.setOnClickListener(this);
 			String type = getIntent().getStringExtra(EXTRA_PICKER_TYPE);
 			if (EXTRA_PICKER_TYPE_ADD.equals(type)) {
-				addButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.picker_plus, 0, 0);
+				addButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.incall_add_small, 0, 0);
 				addButton.setText(getString(R.string.AddCallButtonText));
 			} else if (EXTRA_PICKER_TYPE_TRANSFER.equals(type)) {
 				addButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.picker_transfer, 0, 0);

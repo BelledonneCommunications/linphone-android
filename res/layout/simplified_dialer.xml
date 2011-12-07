@@ -24,7 +24,7 @@
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:layout_weight="4" />
 
-	<Button android:id="@+id/AddCallButton" android:text="@string/AddCallButtonText"
+	<Button android:id="@+id/AddCallButton"
 		android:gravity="bottom|center_horizontal" android:layout_height="wrap_content"
 		android:layout_width="fill_parent" android:background="@drawable/clavier_bg" />
 
