@@ -81,8 +81,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 
 	private void pauseCurrentCallOrLeaveConference() {
 		LinphoneCall call = lc().getCurrentCall();
-		if (call != null) lc().pauseCall(call);
-		lc().leaveConference();
+		if (call != null && !call.isInConference()) {
+			lc().pauseCall(call);
+		} else {
+			lc().leaveConference();
+			updateConfItem();
+		}
 	}
 
 	private View mConferenceVirtualCallee;
