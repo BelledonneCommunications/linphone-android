@@ -200,7 +200,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mIncallNotif.when=System.currentTimeMillis();
 		mIncallNotif.flags &= Notification.FLAG_ONGOING_EVENT;
 		mIncallNotif.setLatestEventInfo(this, mNotificationTitle, getString(notificationTextId), mNotifContentIntent);
-		mNM.notify(INCALL_NOTIF_ID, mIncallNotif);
+		notifyWrapper(INCALL_NOTIF_ID, mIncallNotif);
 	}
 
 	public void refreshIncallIcon(LinphoneCall currentCall) {
@@ -267,7 +267,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			// continue
 		}
 
-		mNM.notify(id, notification);
+		notifyWrapper(id, notification);
 	}
 
 	/**
@@ -320,7 +320,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
-	private void sendNotification(int level, int textId) {
+	private synchronized void sendNotification(int level, int textId) {
 		mNotif.iconLevel = level;
 		mNotif.when=System.currentTimeMillis();
 		String text = getString(textId);
@@ -332,9 +332,22 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 		
 		mNotif.setLatestEventInfo(this, mNotificationTitle, text, mNotifContentIntent);
-		mNM.notify(NOTIF_ID, mNotif);
+		notifyWrapper(NOTIF_ID, mNotif);
 	}
 
+	/**
+	 * Wrap notifier to avoid setting the linphone icons while the service
+	 * is stopping. When the (rare) bug is triggered, the linphone icon is
+	 * present despite the service is not running. To trigger it one could
+	 * stop linphone as soon as it is started. Transport configured with TLS.
+	 */
+	private synchronized void notifyWrapper(int id, Notification notification) {
+		if (instance != null) {
+			mNM.notify(id, notification);
+		} else {
+			Log.i("Service not ready, discarding notification");
+		}
+	}
 
 
 
@@ -344,15 +357,16 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public synchronized void onDestroy() {
+		instance=null;
+		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Offline);
+		LinphoneManager.destroy();
+
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
 
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, null, OnlineStatus.Offline);
-		LinphoneManager.destroy();
-		instance=null;
+		super.onDestroy();
 	}
 
 	
@@ -392,6 +406,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	public void onRegistrationStateChanged(final RegistrationState state,
 			final String message) {
+		if (instance == null) {
+			Log.i("Service not ready, discarding registration state change to ",state.toString());
+			return;
+		}
 		if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 			sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 		}
@@ -412,6 +430,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 
 	public void onCallStateChanged(final LinphoneCall call, final State state, final String message) {
+		if (instance == null) {
+			Log.i("Service not ready, discarding call state change to ",state.toString());
+			return;
+		}
 		if (state == LinphoneCall.State.IncomingReceived) {
 			//wakeup linphone
 			startActivity(new Intent()
