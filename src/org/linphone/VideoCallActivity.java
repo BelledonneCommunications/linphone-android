@@ -274,7 +274,9 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 
 	@Override
 	protected void onDestroy() {
-		androidVideoWindowImpl.release();
+		if (androidVideoWindowImpl != null) { // Prevent linphone from crashing if correspondent hang up while you are rotating
+			androidVideoWindowImpl.release();
+		}
 		super.onDestroy();
 	}
 
