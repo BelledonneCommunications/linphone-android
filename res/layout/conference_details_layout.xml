@@ -26,8 +26,13 @@
 				ui:unchecked="@drawable/incall_micro"
 				ui:bgdrawables="true" />
 
-		<ImageView android:src="@android:color/darker_gray" style="@style/incall_control" />
-	    <org.linphone.ui.ToggleImageButton android:id="@+id/toggleSpeaker"
+		<ImageButton
+			android:id="@+id/incallHang"
+			style="@style/incall_control"
+			android:background="@drawable/clavier_bg"
+			android:src="@drawable/stopcall_red" />
+
+		<org.linphone.ui.ToggleImageButton android:id="@+id/toggleSpeaker"
 	            style="@style/incall_control"
 				ui:checked="@drawable/incall_speaker_inverse"
 				ui:unchecked="@drawable/incall_speaker"

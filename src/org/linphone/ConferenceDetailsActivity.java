@@ -51,6 +51,13 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 			return;
 		}
 		setContentView(R.layout.conference_details_layout);
+		View v=findViewById(R.id.incallHang);
+		v.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				lc().terminateConference();
+			}
+		});
 		super.onCreate(savedInstanceState);
 	}
 
