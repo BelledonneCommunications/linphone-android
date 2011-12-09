@@ -99,7 +99,9 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			}
 			
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				
+				// Remove references kept in jni code and restart camera
+				// LinphoneManager.getLc().setPreviewWindow(null);
+				// Commented to remove flicker.
 			}
 		});
 		
@@ -290,9 +292,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			 */
 			LinphoneManager.getLc().setVideoWindow(null);
 		}
-		
-		LinphoneManager.getLc().setPreviewWindow(null);
-		
+
 		if (mCallQualityUpdater!=null){
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater=null;
