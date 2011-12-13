@@ -153,10 +153,14 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 
 	public void newOutgoingCall(Intent intent) {
-		if (Intent.ACTION_CALL.equalsIgnoreCase(intent.getAction())) {
-			mAddress.setText(intent.getData().getSchemeSpecificPart());
-		} else if (Intent.ACTION_SENDTO.equals(intent.getAction())) {
+		String scheme = intent.getData().getScheme();
+		if (scheme.startsWith("imto")) {
 			mAddress.setText("sip:" + intent.getData().getLastPathSegment());
+		} else if (scheme.startsWith("call") || scheme.startsWith("sip")) {
+			mAddress.setText(intent.getData().getSchemeSpecificPart());
+		} else {
+			Log.e("Unknown scheme: ",scheme);
+			mAddress.setText(intent.getData().getSchemeSpecificPart());
 		}
 
 		mAddress.clearDisplayedName();
