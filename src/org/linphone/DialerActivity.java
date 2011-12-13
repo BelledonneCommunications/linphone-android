@@ -31,7 +31,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,15 +50,16 @@ import android.widget.Toast;
 public class DialerActivity extends Activity implements LinphoneGuiListener {
 	
 	private TextView mStatus;
-	private Handler mHandler;
 
 	private AddressText mAddress;
 	private CallButton mCall;
 
 	private static DialerActivity instance;
+	private boolean mPreventDoubleCallOnRotation;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
+	private static final String PREVENT_DOUBLE_CALL = "prevent_call_on_phone_rotation";
 
 	/**
 	 * @return null if not ready yet
@@ -70,8 +70,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.dialer);
-
-		mHandler = new Handler();
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
 		((EraseButton) findViewById(R.id.Erase)).setAddressWidget(mAddress);
@@ -89,8 +87,14 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		// call to super must be done after all fields are initialized
 		// because it may call this.enterIncallMode
 		super.onCreate(savedInstanceState);
-		
-		checkIfOutgoingCallIntentReceived();
+
+		mPreventDoubleCallOnRotation=savedInstanceState != null
+				&& savedInstanceState.getBoolean(PREVENT_DOUBLE_CALL, false);
+		if (mPreventDoubleCallOnRotation) {
+			Log.i("Prevent launching a new call on rotation");
+		} else {
+			checkIfOutgoingCallIntentReceived();
+		}
 
 		instance = this;
 		super.onCreate(savedInstanceState);
@@ -129,6 +133,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		savedInstanceState.putCharSequence(CURRENT_ADDRESS, mAddress.getText());
 		if (mAddress.getDisplayedName() != null)
 			savedInstanceState.putString(CURRENT_DISPLAYNAME,mAddress.getDisplayedName());
+		savedInstanceState.putBoolean(PREVENT_DOUBLE_CALL, mPreventDoubleCallOnRotation);
 	}
 	
 	@Override
@@ -165,6 +170,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 		mAddress.clearDisplayedName();
 		intent.setData(null);
+		// Setting data to null is no use when the activity is recreated
+		// as the intent is immutable.
+		// https://groups.google.com/forum/#!topic/android-developers/vrLdM5mKeoY
+		mPreventDoubleCallOnRotation=true;
+		setIntent(intent);
 
 		LinphoneManager.getInstance().newOutgoingCall(mAddress);
 	}
