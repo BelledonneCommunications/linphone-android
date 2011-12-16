@@ -617,8 +617,43 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 
 	private native void setPlayFile(long nativePtr, String path);
+
 	@Override
 	public void setPlayFile(String path) {
 		setPlayFile(nativePtr, path);
 	}
+
+
+	private native void tunnelAddServerAndMirror(long nativePtr, String host, int port, int mirror, int ms);
+	@Override
+	public void tunnelAddServerAndMirror(String host, int port, int mirror, int ms) {
+		tunnelAddServerAndMirror(nativePtr, host, port, mirror, ms);
+	}
+
+	private native void tunnelAutoDetect(long nativePtr);
+	@Override
+	public void tunnelAutoDetect() {
+		tunnelAutoDetect(nativePtr);
+	}
+
+	private native void tunnelCleanServers(long nativePtr);
+	@Override
+	public void tunnelCleanServers() {
+		tunnelCleanServers(nativePtr);
+	}
+
+	private native void tunnelEnable(long nativePtr, boolean enable);
+	@Override
+	public void tunnelEnable(boolean enable) {
+		tunnelEnable(nativePtr, enable);
+	}
+
+	private native void tunnelEnableLogs(long nativePtr, boolean enable);
+	@Override
+	public void tunnelEnableLogs(boolean enable) {
+		tunnelEnableLogs(nativePtr, enable);
+	}
+
+	@Override
+	public native boolean isTunnelAvailable();
 }

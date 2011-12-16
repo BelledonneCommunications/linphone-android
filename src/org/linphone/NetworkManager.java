@@ -51,11 +51,15 @@ public class NetworkManager extends BroadcastReceiver {
 		
 		if (lNoConnectivity | ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
 			LinphoneManager.getLc().setNetworkReachable(false);
-		 } else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
+		} else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
 			 LinphoneManager.getLc().setNetworkReachable(true);
-		 } else {
+		} else {
 			 // Other unhandled events
-		 }
+		}
+
+		NetworkInfo eventInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		LinphoneManager.getInstance().connectivityChanged(eventInfo, cm);
 	}
 
 }

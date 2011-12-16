@@ -63,6 +63,10 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/build/android/An
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tests/Android.mk
 
 
+ifeq ($(BUILD_TUNNEL), 1)
+include $(linphone-root-dir)/submodules/linphone/tunnel/Android.mk
+endif
+
 ifeq ($(BUILD_SILK), 1)
 $(info Build proprietary SILK plugin for mediastreamer2)
 include $(linphone-root-dir)/submodules/mssilk/Android.mk

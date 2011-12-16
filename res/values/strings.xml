@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="pref_tunnel">Tunnel</string>
+	<string name="pref_tunnel_host">Hostname</string>
+	<string name="pref_tunnel_port">Port</string>
+	<string name="pref_tunnel_mode">Mode</string>
+
+   	<!-- do not change order without changing corresponding entry_values in non_localizable_strings.xml -->
+	<string-array name="tunnel_mode_entries"> 
+		<item>disabled</item>
+		<item>3G only</item>
+		<item>always</item>
+		<item>auto</item>
+	</string-array> 
+
     <string name="incall_notif_active">Audio call ongoing</string>
     <string name="incall_notif_paused">Paused call ongoing</string>
     <string name="incall_notif_video">Video capturing call ongoing</string>

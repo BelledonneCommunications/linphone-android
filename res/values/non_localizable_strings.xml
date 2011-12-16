@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+   	<!-- Do not translate any of the strings below -->
+
+    <string name="pref_tunnel_key">pref_tunnel_key</string>
+	<string name="pref_tunnel_mode_key">pref_tunnel_mode_key</string>
+	<string name="tunnel_mode_entry_value_disabled">disabled</string>
+	<string name="tunnel_mode_entry_value_3G_only">3G_only</string>
+	<string name="tunnel_mode_entry_value_always">always</string>
+	<string-array name="tunnel_mode_entry_values">
+		<item>@string/tunnel_mode_entry_value_disabled</item>
+		<item >@string/tunnel_mode_entry_value_3G_only</item>
+		<item>@string/tunnel_mode_entry_value_always</item>
+	<item>@string/tunnel_mode_entry_value_auto</item>
+	</string-array> 
+		<string name="pref_tunnel_host_key">pref_tunnel_host_key</string>
+		<string name="pref_tunnel_port_key">pref_tunnel_port_key</string>
+	<string name="tunnel_mode_entry_value_auto">auto</string>
 
 	<string name="pref_audio_use_specific_mode_key">pref_audio_use_specific_mode_key</string>
 	<string name="pref_audio_hacks_use_galaxys_hack_key">pref_audio_hacks_use_galaxys_hack_key</string>
