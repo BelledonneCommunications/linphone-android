@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,9 +28,9 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
-import org.linphone.core.LinphoneCall.State;
 
 import android.app.ListActivity;
 import android.net.Uri;
@@ -64,8 +65,8 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	private Set<Chronometer> mChronometers = new HashSet<Chronometer>();
 	
-	private float oldQuality = 0;
-	private Runnable mCallQualityUpdater;
+	private Handler callqualityHandler;
+	private List<View> viewsToUpdateCallQuality;
 	@Override
 	/**
 	 * Called by the child classes AFTER their own onCreate.
@@ -213,24 +214,32 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 			timer.start();
 		}
 		
-		protected final void registerCallQualityListener(final View v, final LinphoneCall call) {
-			final Handler callqualityHandler = new Handler();
-			callqualityHandler.postDelayed(mCallQualityUpdater = new Runnable(){
+		protected final void initCallQualityListener() {
+			callqualityHandler = new Handler();
+			viewsToUpdateCallQuality = new ArrayList<View>();
+			callqualityHandler.postDelayed(new Runnable() {
 				public void run() {
-					if (call==null){
-						mCallQualityUpdater=null;
+					if (viewsToUpdateCallQuality == null) {
 						return;
 					}
 					
-					float newQuality = call.getCurrentQuality();
-					if ((int) newQuality != oldQuality){
+					for (View v : viewsToUpdateCallQuality) {
+						LinphoneCall call = (LinphoneCall) v.getTag();
+						float newQuality = call.getCurrentQuality();
 						updateQualityOfSignalIcon(v, newQuality);
-						oldQuality = newQuality;
 					}
 					
 					callqualityHandler.postDelayed(this, 1000);
 				}
 			},1000);
+		}
+		
+		protected final void registerCallQualityListener(final View v, final LinphoneCall call) {
+			if (viewsToUpdateCallQuality == null && callqualityHandler == null) {
+				initCallQualityListener();
+			}
+			v.setTag(call);
+			viewsToUpdateCallQuality.add(v);
 		}
 	}
 
