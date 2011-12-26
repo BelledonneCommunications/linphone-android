@@ -101,6 +101,8 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 			setCalleePicture(pictureView, address);
 
 			registerCallDurationTimer(v, call);
+			registerCallQualityListener(v, call);
+			
 			return v;
 		}
 

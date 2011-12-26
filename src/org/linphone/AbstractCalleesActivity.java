@@ -64,6 +64,8 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	private Set<Chronometer> mChronometers = new HashSet<Chronometer>();
 	
+	private float oldQuality = 0;
+	private Runnable mCallQualityUpdater;
 	@Override
 	/**
 	 * Called by the child classes AFTER their own onCreate.
@@ -210,6 +212,26 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 			timer.setBase(SystemClock.elapsedRealtime() - 1000 * callDuration);
 			timer.start();
 		}
+		
+		protected final void registerCallQualityListener(final View v, final LinphoneCall call) {
+			final Handler callqualityHandler = new Handler();
+			callqualityHandler.postDelayed(mCallQualityUpdater = new Runnable(){
+				public void run() {
+					if (call==null){
+						mCallQualityUpdater=null;
+						return;
+					}
+					
+					float newQuality = call.getCurrentQuality();
+					if ((int) newQuality != oldQuality){
+						updateQualityOfSignalIcon(v, newQuality);
+						oldQuality = newQuality;
+					}
+					
+					callqualityHandler.postDelayed(this, 1000);
+				}
+			},1000);
+		}
 	}
 
 	@Override
@@ -247,5 +269,30 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 				}
 			}
 		});
+	}
+	
+	void updateQualityOfSignalIcon(View v, float quality)
+	{
+		ImageView qos = (ImageView) v.findViewById(R.id.QoS);
+		if (quality >= 4) // Good Quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_4));
+		}
+		else if (quality >= 3) // Average quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_3));
+		}
+		else if (quality >= 2) // Low quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_2));
+		}
+		else if (quality >= 1) // Very low quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_1));
+		}
+		else // Worst quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_0));
+		}
 	}
 }
