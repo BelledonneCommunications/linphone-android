@@ -56,7 +56,9 @@ LOCAL_CFLAGS += \
 	-UHAVE_CONFIG_H \
 	-include $(LOCAL_PATH)/../build/exosip/libeXosip2_AndroidConfig.h \
 	-DOSIP_MT \
-	-DENABLE_TRACE
+	-DENABLE_TRACE \
+	-include $(LOCAL_PATH)/include/eXosip2/eXosip_transport_hook.h
+
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \

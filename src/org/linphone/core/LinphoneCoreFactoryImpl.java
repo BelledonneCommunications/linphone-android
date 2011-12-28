@@ -49,6 +49,9 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		loadOptionalLibrary("srtp");
 		loadOptionalLibrary("zrtpcpp"); // GPLv3+
 
+		// Tunnel
+		loadOptionalLibrary("tunnelclient");
+
 		//Main library
 		System.loadLibrary("linphone");
 

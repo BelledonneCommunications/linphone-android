@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
-      android:versionCode="1210" android:versionName="1.2.1"  android:installLocation="auto"> 
+      android:versionCode="1220" android:versionName="1.2.2"  android:installLocation="auto"> 
     <uses-sdk android:minSdkVersion="3" />
 
 
@@ -16,19 +16,6 @@
 		        <action android:name="android.intent.action.MAIN" />
 		        <category android:name="android.intent.category.LAUNCHER" />
 		    </intent-filter>
-		</activity>
-
-
-
-		<activity android:name="org.linphone.LinphoneActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.NoTitleBar"
-                  android:launchMode="singleTask"
-                  > <!-- android:alwaysRetainTaskState="true" clearTaskOnLaunch="false"-->
-                  
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
             
             <intent-filter>
                 <action android:name="android.intent.action.CALL" />
@@ -44,6 +31,20 @@
                 <data android:scheme="sip" /><!-- maybe one day -->
                 <data android:scheme="imto" />
 			 </intent-filter>
+		</activity>
+
+
+
+		<activity android:name="org.linphone.LinphoneActivity"
+                  android:label="@string/app_name"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:launchMode="singleTask"
+                  > <!-- android:alwaysRetainTaskState="true" clearTaskOnLaunch="false"-->
+                  
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+
         </activity>
 
         <activity android:name="org.linphone.IncomingCallActivity"

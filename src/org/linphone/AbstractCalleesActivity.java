@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,9 +28,9 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
-import org.linphone.core.LinphoneCall.State;
 
 import android.app.ListActivity;
 import android.net.Uri;
@@ -64,6 +65,8 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	private Set<Chronometer> mChronometers = new HashSet<Chronometer>();
 	
+	private Handler callqualityHandler;
+	private List<View> viewsToUpdateCallQuality;
 	@Override
 	/**
 	 * Called by the child classes AFTER their own onCreate.
@@ -210,6 +213,34 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 			timer.setBase(SystemClock.elapsedRealtime() - 1000 * callDuration);
 			timer.start();
 		}
+		
+		protected final void initCallQualityListener() {
+			callqualityHandler = new Handler();
+			viewsToUpdateCallQuality = new ArrayList<View>();
+			callqualityHandler.postDelayed(new Runnable() {
+				public void run() {
+					if (viewsToUpdateCallQuality == null) {
+						return;
+					}
+					
+					for (View v : viewsToUpdateCallQuality) {
+						LinphoneCall call = (LinphoneCall) v.getTag();
+						float newQuality = call.getCurrentQuality();
+						updateQualityOfSignalIcon(v, newQuality);
+					}
+					
+					callqualityHandler.postDelayed(this, 1000);
+				}
+			},1000);
+		}
+		
+		protected final void registerCallQualityListener(final View v, final LinphoneCall call) {
+			if (viewsToUpdateCallQuality == null && callqualityHandler == null) {
+				initCallQualityListener();
+			}
+			v.setTag(call);
+			viewsToUpdateCallQuality.add(v);
+		}
 	}
 
 	@Override
@@ -247,5 +278,30 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 				}
 			}
 		});
+	}
+	
+	void updateQualityOfSignalIcon(View v, float quality)
+	{
+		ImageView qos = (ImageView) v.findViewById(R.id.QoS);
+		if (quality >= 4) // Good Quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_4));
+		}
+		else if (quality >= 3) // Average quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_3));
+		}
+		else if (quality >= 2) // Low quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_2));
+		}
+		else if (quality >= 1) // Very low quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_1));
+		}
+		else // Worst quality
+		{
+			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_0));
+		}
 	}
 }

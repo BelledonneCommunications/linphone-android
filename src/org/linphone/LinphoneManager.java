@@ -403,6 +403,47 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
+
+	private boolean isTunnelNeeded(NetworkInfo info) {
+		if (info == null) {
+			Log.i("No connectivity: tunnel should be disabled");
+			return false;
+		}
+
+		String pref = getPrefString(R.string.pref_tunnel_mode_key, R.string.default_tunnel_mode_entry_value);
+
+		if (getString(R.string.tunnel_mode_entry_value_always).equals(pref)) {
+			return true;
+		}
+
+		if (info.getType() != ConnectivityManager.TYPE_WIFI
+				&& getString(R.string.tunnel_mode_entry_value_3G_only).equals(pref)) {
+			Log.i("need tunnel: 'no wifi' connection");
+			return true;
+		}
+
+		return false;
+	}
+
+	public void manageTunnelServer(NetworkInfo info) {
+		if (mLc == null) return;
+		if (!mLc.isTunnelAvailable()) return;
+
+		Log.i("Managing tunnel");
+		if (isTunnelNeeded(info)) {
+			Log.i("Tunnel need to be activated");
+			mLc.tunnelEnable(true);
+		} else {
+			Log.i("Tunnel should not be used");
+			String pref = getPrefString(R.string.pref_tunnel_mode_key, R.string.default_tunnel_mode_entry_value);
+			mLc.tunnelEnable(false);
+			if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
+				mLc.tunnelAutoDetect();
+			}
+		}
+	}
+
+
 	private synchronized void startLibLinphone() {
 		try {
 			copyAssetsFromPackage();
@@ -484,7 +525,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	void initMediaEncryption(){
 		String pref = getPrefString(R.string.pref_media_encryption_key,
-				getString(R.string.pref_media_encryption_key_none));
+				R.string.pref_media_encryption_key_none);
 		MediaEncryption me=MediaEncryption.None;
 		if (pref.equals(getString(R.string.pref_media_encryption_key_srtp)))
 			me=MediaEncryption.SRTP;
@@ -494,11 +535,26 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.setMediaEncryption(me);
 	}
 
+	private void initFromConfTunnel(){
+		if (!mLc.isTunnelAvailable()) return;
+		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+		mLc.tunnelEnableLogs(getPrefBoolean(R.string.pref_debug_key, false));
+		mLc.tunnelCleanServers();
+		String host = getString(R.string.tunnel_host);
+		if (host == null || host.length() == 0)
+			host = mPref.getString(getString(R.string.pref_tunnel_host_key), "");
+		int port = Integer.parseInt(getPrefString(R.string.pref_tunnel_port_key, "443"));
+		mLc.tunnelAddServerAndMirror(host, port, 12345,500);
+		manageTunnelServer(info);
+	}
+
 	public void initFromConf() throws LinphoneConfigException {
 		//traces
 		boolean lIsDebug = true;//mPref.getBoolean(getString(R.string.pref_debug_key), false);
 		LinphoneCoreFactory.instance().setDebugMode(lIsDebug);
-		
+
+		initFromConfTunnel();
+
 		if (initialTransports == null)
 			initialTransports = mLc.getSignalingTransportPorts();
 		
@@ -713,9 +769,32 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String getPrefString(int key, String value) {
 		return mPref.getString(mR.getString(key), value);
 	}
+	private String getPrefString(int key, int value) {
+		return mPref.getString(mR.getString(key), mR.getString(value));
+	}
 
 
 
+	/* Simple implementation as Android way seems very complicate:
+	For example: with wifi and mobile actives; when pulling mobile down:
+	I/Linphone( 8397): WIFI connected: setting network reachable
+	I/Linphone( 8397): new state [RegistrationProgress]
+	I/Linphone( 8397): mobile disconnected: setting network unreachable
+	I/Linphone( 8397): Managing tunnel
+	I/Linphone( 8397): WIFI connected: setting network reachable
+	*/
+	public void connectivityChanged(NetworkInfo eventInfo, ConnectivityManager cm) {
+		NetworkInfo activeInfo = cm.getActiveNetworkInfo();
+
+		if (eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
+			Log.i(eventInfo.getTypeName()," disconnected: setting network unreachable");
+			mLc.setNetworkReachable(false);
+		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
+			manageTunnelServer(activeInfo);
+			Log.i(eventInfo.getTypeName()," connected: setting network reachable");
+			mLc.setNetworkReachable(true);
+		}
+	}
 
 
 

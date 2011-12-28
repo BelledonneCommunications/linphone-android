@@ -21,7 +21,20 @@
 	</PreferenceCategory>
 
 
+    <PreferenceCategory android:key="@string/pref_tunnel_key" android:title="@string/pref_tunnel">
+            <EditTextPreference android:title="@string/pref_tunnel_host"
+                    android:key="@string/pref_tunnel_host_key"/>
 
+            <EditTextPreference android:title="@string/pref_tunnel_port"
+                    android:key="@string/pref_tunnel_port_key" android:defaultValue="443"/>
+
+            <ListPreference android:title="@string/pref_tunnel_mode"
+                    android:entries="@array/tunnel_mode_entries"
+                    android:entryValues="@array/tunnel_mode_entry_values"
+                    android:defaultValue="@string/default_tunnel_mode_entry_value"
+                    android:key="@string/pref_tunnel_mode_key" />
+    </PreferenceCategory>
+	    
 
 
 	<PreferenceCategory android:title="@string/pref_preferences">

@@ -87,9 +87,10 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		super.onCreate(savedInstanceState);
 
 		if (!LinphoneManager.isInstanciated()) {
-			Log.e("No service running: avoid crash by finishing ", this.getClass().getName());
+			Log.e("No service running: avoid crash by starting the launcher", this.getClass().getName());
 			// super.onCreate called earlier
 			finish();
+			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
 			return;
 		}
 		instance = this;

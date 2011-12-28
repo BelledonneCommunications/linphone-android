@@ -52,6 +52,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 
@@ -144,6 +145,15 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		
 		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
 
+		if (!LinphoneManager.getLc().isTunnelAvailable()){
+			hidePreferenceCategory(R.string.pref_tunnel_key);
+		}
+	}
+
+	private void hidePreferenceCategory(int key) {
+		PreferenceCategory p = (PreferenceCategory) findPreference(key);
+		p.removeAll();
+		p.setLayoutResource(R.layout.hidden);
 	}
 
 	private void doOnFirstLaunch() {
