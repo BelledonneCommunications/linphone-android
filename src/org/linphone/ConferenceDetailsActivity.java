@@ -95,6 +95,8 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 					dialog.show();
 				}
 			});
+			
+			setVisibility(v, R.id.callee_status_qos, true);
 
 			// May be greatly sped up using a drawable cache
 			ImageView pictureView = (ImageView) v.findViewById(R.id.picture);
@@ -102,6 +104,7 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 
 			registerCallDurationTimer(v, call);
 			registerCallQualityListener(v, call);
+			registerCallSpeakerListener();
 			
 			return v;
 		}

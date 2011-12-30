@@ -456,7 +456,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 
 			boolean statusPaused = state== State.Paused || state == State.PausedByRemote;
 			setVisibility(v, R.id.callee_status_paused, statusPaused);
-			setVisibility(v, R.id.QoS, !statusPaused);
+			setVisibility(v, R.id.callee_status_qos, !statusPaused);
 
 			final OnLongClickListener showCallActionsLongListener = new OnLongClickListener() {
 				public boolean onLongClick(View v) {
