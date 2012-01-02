@@ -102,6 +102,8 @@
         - help target
     -->
 
+    <property name="linphone.package.name" value="org.linphone" />
+
     <!-- ********** Overrideable Properties ********** -->
 
     <!-- You can override these values in your build.xml or build.properties.
@@ -129,7 +131,7 @@
     <property name="java.source" value="1.5" />
 
     <!-- Verbosity -->
-    <property name="verbose" value="false" />
+    <property name="verbose" value="true" />
 
     <!-- ********** Custom Tasks ********** -->
 
@@ -644,7 +646,7 @@
                     rfolder="${gen.absolute.dir}"
                     nonConstantId="${android.library}"
                     projectLibrariesResName="project.libraries.res"
-                    projectLibrariesPackageName="project.libraries.package">
+                    projectLibrariesPackageName="${linphone.package.name}">
                 <res path="${resource.absolute.dir}" />
             </aapt>
         </do-only-if-manifest-hasCode>
@@ -859,7 +861,7 @@
                     resourcefilename="${resource.package.file.name}"
                     resourcefilter="${aapt.resource.filter}"
                     projectLibrariesResName="project.libraries.res"
-                    projectLibrariesPackageName="project.libraries.package"
+                    projectLibrariesPackageName="${linphone.package.name}"
                     previousBuildType="${build.last.target}"
                     buildType="${build.target}">
                 <res path="${out.res.absolute.dir}" />
