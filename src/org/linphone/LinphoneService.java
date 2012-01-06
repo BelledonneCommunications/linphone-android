@@ -38,6 +38,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -48,6 +49,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.net.wifi.WifiManager.WifiLock;
+import android.net.wifi.WifiManager;
 
 /**
  * 
@@ -73,7 +76,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 //	private boolean mTestDelayElapsed; // add a timer for testing
 	private boolean mTestDelayElapsed = true; // no timer
-	
+	private WifiManager mWifiManager ;
+	private WifiLock mWifiLock ;
 	public static boolean isReady() {
 		return instance!=null && instance.mTestDelayElapsed;
 	}
@@ -136,8 +140,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		LinphoneManager.createAndStart(this, this);
 		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
+		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		mWifiLock = mWifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, this.getPackageName()+"-wifi-call-lock");
+		mWifiLock.setReferenceCounted(false);
 		instance = this; // instance is ready once linphone manager has been created
-
+		
 
 		// Retrieve methods to publish notification and keep Android
 		// from killing us and keep the audio quality high.
@@ -365,7 +372,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
-
+	    mWifiLock.release();
 		super.onDestroy();
 	}
 
@@ -444,10 +451,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if (state == State.StreamsRunning) {
 			// Workaround bug current call seems to be updated after state changed to streams running
 			refreshIncallIcon(call);
+			mWifiLock.acquire();
 		} else {
 			refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 		}
-
+		if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
+			mWifiLock.release();
+		}
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (guiListener() != null)

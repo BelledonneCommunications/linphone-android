@@ -147,4 +147,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	public String toString() {
 		return "Call " + nativePtr;
 	}
+
+	private native float getPlayVolume(long nativePtr);
+	public float getPlayVolume() {
+		return getPlayVolume(nativePtr);
+	}
 }

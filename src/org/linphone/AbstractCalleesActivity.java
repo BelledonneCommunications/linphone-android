@@ -67,6 +67,7 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	
 	private Handler callqualityHandler;
 	private List<View> viewsToUpdateCallQuality;
+	private boolean shouldDisplayWhoIsTalking = false;
 	@Override
 	/**
 	 * Called by the child classes AFTER their own onCreate.
@@ -215,6 +216,12 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 		}
 		
 		protected final void initCallQualityListener() {
+			final int timeToRefresh;
+			if (shouldDisplayWhoIsTalking)
+				timeToRefresh = 100;
+			else
+				timeToRefresh = 1000;
+			
 			callqualityHandler = new Handler();
 			viewsToUpdateCallQuality = new ArrayList<View>();
 			callqualityHandler.postDelayed(new Runnable() {
@@ -222,16 +229,24 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 					if (viewsToUpdateCallQuality == null) {
 						return;
 					}
-					
+
 					for (View v : viewsToUpdateCallQuality) {
 						LinphoneCall call = (LinphoneCall) v.getTag();
 						float newQuality = call.getCurrentQuality();
-						updateQualityOfSignalIcon(v, newQuality);
+							updateQualityOfSignalIcon(v, newQuality);
+						
+						// We also use this handler to display the ones who speaks
+						ImageView speaking = (ImageView) v.findViewById(R.id.callee_status_speeking);
+						if (shouldDisplayWhoIsTalking && call.getPlayVolume() >= -20) {
+							speaking.setVisibility(View.VISIBLE);
+						} else if (speaking.getVisibility() != View.GONE) {
+							speaking.setVisibility(View.GONE);
+						}
 					}
 					
-					callqualityHandler.postDelayed(this, 1000);
+					callqualityHandler.postDelayed(this, timeToRefresh);
 				}
-			},1000);
+			},timeToRefresh);
 		}
 		
 		protected final void registerCallQualityListener(final View v, final LinphoneCall call) {
@@ -240,6 +255,10 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 			}
 			v.setTag(call);
 			viewsToUpdateCallQuality.add(v);
+		}
+		
+		protected final void registerCallSpeakerListener() {
+			shouldDisplayWhoIsTalking = true;
 		}
 	}
 
@@ -282,7 +301,10 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 	
 	void updateQualityOfSignalIcon(View v, float quality)
 	{
-		ImageView qos = (ImageView) v.findViewById(R.id.QoS);
+		ImageView qos = (ImageView) v.findViewById(R.id.callee_status_qos);
+		if (!(qos.getVisibility() == View.VISIBLE)) {
+			qos.setVisibility(View.VISIBLE);
+		}
 		if (quality >= 4) // Good Quality
 		{
 			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_4));
