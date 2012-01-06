@@ -37,24 +37,26 @@ import java.util.List;
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.Log;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
@@ -62,6 +64,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private CheckBoxPreference elPref;
 	private CheckBoxPreference ecPref;
 	private ListPreference mencPref;
+	private int nbAccounts = 1;
+	private static final int ADD_SIP_ACCOUNT = 0x666;
 
 	private SharedPreferences prefs() {
 		return getPreferenceManager().getSharedPreferences();
@@ -84,6 +88,78 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		findPreference(id).setEnabled(LinphoneManager.getInstance().detectVideoCodec(mime));
 	}
 
+	private void createDynamicAccountsPreferences() {
+		PreferenceScreen root = getPreferenceScreen();
+		
+		// Get the good preference screen
+		final PreferenceCategory accounts = (PreferenceCategory) root.getPreference(0);
+		accounts.removeAll();
+		Preference addAccount = (Preference) root.getPreference(1);
+		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        public boolean onPreferenceClick(Preference preference) {
+	        	addExtraAccountPreferencesButton(accounts, nbAccounts, true);
+	        	Intent i = new Intent();
+				i.putExtra("Account",nbAccounts);
+	        	nbAccounts++;
+				i.setClass(LinphonePreferencesActivity.this, LinphonePreferencesSIPAccountActivity.class);
+				startActivityForResult(i, ADD_SIP_ACCOUNT);
+	        	return true;
+	        }
+        });
+		
+		// Get already configured extra accounts
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
+		for (int i = 0; i < nbAccounts; i++) {
+			// For each, add menus to configure it
+			addExtraAccountPreferencesButton(accounts, i, false);
+		}
+	}
+	
+	public int getNbAccountsExtra() {
+		return nbAccounts;
+	}
+	
+	private void addExtraAccountPreferencesButton(PreferenceCategory parent, final int n, boolean isNewAccount) {
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		if (isNewAccount) {
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putInt(getString(R.string.pref_extra_accounts), n+1);
+			editor.commit();
+		}
+		
+		Preference me = new Preference(LinphonePreferencesActivity.this);
+		String keyUsername = getString(R.string.pref_username_key);
+		String keyDomain = getString(R.string.pref_domain_key);
+		if (n > 0) {
+			keyUsername += n + "";
+			keyDomain += n + "";
+		}
+		if (prefs.getString(keyUsername, null) == null) {
+			me.setTitle(getString(R.string.pref_sipaccount));
+		} else {
+			me.setTitle(prefs.getString(keyUsername, "") + "@" + prefs.getString(keyDomain, ""));
+		}
+		
+		me.setOnPreferenceClickListener(new OnPreferenceClickListener() 
+		{
+			public boolean onPreferenceClick(Preference preference) {
+				Intent i = new Intent();
+				i.putExtra("Account", n);
+				i.setClass(LinphonePreferencesActivity.this, LinphonePreferencesSIPAccountActivity.class);
+				startActivityForResult(i, ADD_SIP_ACCOUNT);
+				return false;
+			}
+		});
+		parent.addPreference(me);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == ADD_SIP_ACCOUNT) {
+			createDynamicAccountsPreferences();
+		}
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +167,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 
+		createDynamicAccountsPreferences();
 		addTransportChecboxesListener();
 		
 		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);

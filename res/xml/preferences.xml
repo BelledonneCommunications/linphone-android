@@ -2,8 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-	<PreferenceCategory android:title="@string/pref_sipaccount">
-		<EditTextPreference android:title="@string/pref_username"
+	<PreferenceCategory android:title="@string/pref_sipaccounts">
+		<!--<EditTextPreference android:title="@string/pref_username"
 			android:key="@string/pref_username_key" android:inputType="text|textEmailAddress"></EditTextPreference>
 
 		<EditTextPreference android:title="@string/pref_passwd"
@@ -17,9 +17,10 @@
 
 		<CheckBoxPreference android:enabled="true"
 			android:selectable="true" android:key="@string/pref_enable_outbound_proxy_key"
-			android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>
+			android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>-->
 	</PreferenceCategory>
 
+	<Preference android:title="Add Account"></Preference>
 
     <PreferenceCategory android:key="@string/pref_tunnel_key" android:title="@string/pref_tunnel">
             <EditTextPreference android:title="@string/pref_tunnel_host"
@@ -48,7 +49,7 @@
 
 		<EditTextPreference android:title="@string/pref_stun_server"
 			android:key="@string/pref_stun_server_key"></EditTextPreference>
-</PreferenceCategory>
+	</PreferenceCategory>
 
 
 
@@ -91,45 +92,45 @@
 				android:title="@string/pref_codec_pcma"/>
 		</PreferenceScreen>
 	
-</PreferenceCategory>
+	</PreferenceCategory>
 
 
 
 
 	<PreferenceCategory android:title="@string/pref_video" android:dependency="@string/pref_video_enable_key" android:shouldDisableView="true">
-	<CheckBoxPreference android:key="@string/pref_video_use_front_camera_key"
-		android:title="@string/pref_video_use_front_camera_title"
-		android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
-
-	<CheckBoxPreference android:key="@string/pref_video_initiate_call_with_video_key"
-		android:defaultValue="true"
-		android:title="@string/pref_video_initiate_call_with_video_title"
-		android:summary="@string/pref_video_initiate_call_with_video"
-		android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
-
-	<CheckBoxPreference
-		android:key="@string/pref_video_automatically_share_my_video_key"
-		android:title="@string/pref_video_automatically_share_my_video_title"
-		android:defaultValue="true" android:summary="@string/pref_video_automatically_share_my_video"
-		android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
-
-		<PreferenceScreen android:dependency="@string/pref_video_enable_key"
-			android:shouldDisableView="true" android:key="@string/pref_video_codecs_key"
-			android:title="@string/pref_video_codecs_title">
-			<CheckBoxPreference android:key="@string/pref_video_codec_vp8_key"
-				android:title="@string/pref_video_codec_vp8_title"
-				android:defaultValue="true"></CheckBoxPreference>
-			<CheckBoxPreference android:key="@string/pref_video_codec_h264_key"
-				android:title="@string/pref_video_codec_h264_title"
-				android:defaultValue="false"></CheckBoxPreference>
-			<CheckBoxPreference android:key="@string/pref_video_codec_mpeg4_key"
-				android:title="@string/pref_video_codec_mpeg4_title"
-				android:defaultValue="false"></CheckBoxPreference>
- 			<CheckBoxPreference android:key="@string/pref_video_codec_h263_key"
-				android:title="@string/pref_video_codec_h263_title"
-				android:defaultValue="false" android:layout="@layout/hidden"></CheckBoxPreference>
-		</PreferenceScreen>
-</PreferenceCategory>
+		<CheckBoxPreference android:key="@string/pref_video_use_front_camera_key"
+			android:title="@string/pref_video_use_front_camera_title"
+			android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
+	
+		<CheckBoxPreference android:key="@string/pref_video_initiate_call_with_video_key"
+			android:defaultValue="true"
+			android:title="@string/pref_video_initiate_call_with_video_title"
+			android:summary="@string/pref_video_initiate_call_with_video"
+			android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
+	
+		<CheckBoxPreference
+			android:key="@string/pref_video_automatically_share_my_video_key"
+			android:title="@string/pref_video_automatically_share_my_video_title"
+			android:defaultValue="true" android:summary="@string/pref_video_automatically_share_my_video"
+			android:dependency="@string/pref_video_enable_key"></CheckBoxPreference>
+	
+			<PreferenceScreen android:dependency="@string/pref_video_enable_key"
+				android:shouldDisableView="true" android:key="@string/pref_video_codecs_key"
+				android:title="@string/pref_video_codecs_title">
+				<CheckBoxPreference android:key="@string/pref_video_codec_vp8_key"
+					android:title="@string/pref_video_codec_vp8_title"
+					android:defaultValue="true"></CheckBoxPreference>
+				<CheckBoxPreference android:key="@string/pref_video_codec_h264_key"
+					android:title="@string/pref_video_codec_h264_title"
+					android:defaultValue="false"></CheckBoxPreference>
+				<CheckBoxPreference android:key="@string/pref_video_codec_mpeg4_key"
+					android:title="@string/pref_video_codec_mpeg4_title"
+					android:defaultValue="false"></CheckBoxPreference>
+	 			<CheckBoxPreference android:key="@string/pref_video_codec_h263_key"
+					android:title="@string/pref_video_codec_h263_title"
+					android:defaultValue="false" android:layout="@layout/hidden"></CheckBoxPreference>
+			</PreferenceScreen>
+	</PreferenceCategory>
 
 
 

@@ -88,6 +88,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
+        <activity android:name="org.linphone.LinphonePreferencesSIPAccountActivity"></activity>
         <activity android:name="org.linphone.LinphonePreferencesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

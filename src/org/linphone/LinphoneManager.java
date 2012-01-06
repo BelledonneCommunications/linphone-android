@@ -47,14 +47,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.LinphoneCore.FirewallPolicy;
+import org.linphone.core.LinphoneCore.GlobalState;
+import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -62,18 +69,11 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.core.PayloadType;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCore.EcCalibratorStatus;
-import org.linphone.core.LinphoneCore.FirewallPolicy;
-import org.linphone.core.LinphoneCore.GlobalState;
-import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -93,8 +93,8 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.PowerManager;
-import android.os.Vibrator;
 import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -184,7 +184,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
 	private native void hackSpeakerState(boolean speakerOn);
-	@SuppressWarnings("unused")
 	private static void sRouteAudioToSpeakerHelperHelper(boolean speakerOn) {
 		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
 	}
@@ -623,7 +622,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.addAuthInfo(lAuthInfo);
 		}
 
-
 		//proxy
 		mLc.clearProxyConfigs();
 		String lProxy = getPrefString(R.string.pref_proxy_key,null);
@@ -640,7 +638,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (lDefaultProxyConfig == null) {
 				lDefaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(lIdentity, lProxy, null,true);
 				mLc.addProxyConfig(lDefaultProxyConfig);
-				mLc.setDefaultProxyConfig(lDefaultProxyConfig);
+				int defaultAccount = getPrefInt(R.string.pref_default_account, 0);
+				if (defaultAccount == 0 || defaultAccount >= getPrefInt(R.string.pref_extra_accounts, 0)) {
+					//outbound proxy
+					if (getPrefBoolean(R.string.pref_enable_outbound_proxy_key, false)) {
+						lDefaultProxyConfig.setRoute(lProxy);
+					} else {
+						lDefaultProxyConfig.setRoute(null);
+					}
+					mLc.setDefaultProxyConfig(lDefaultProxyConfig);
+				}
 
 			} else {
 				lDefaultProxyConfig.edit();
@@ -649,8 +656,43 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				lDefaultProxyConfig.enableRegister(true);
 				lDefaultProxyConfig.done();
 			}
+			
+			// Extra accounts
+			for (int i = 1; i < getPrefExtraAccountsNumber(); i++) {
+				lUserName = getPrefString(getString(R.string.pref_username_key) + i, null);
+				lPasswd = getPrefString(getString(R.string.pref_passwd_key) + i, null);
+				if (lUserName != null && lUserName.length() > 0) {
+					LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd, null);
+					mLc.addAuthInfo(lAuthInfo);
+					
+					lDomain = getPrefString(getString(R.string.pref_domain_key) + i, null);
+					if (lDomain != null && lDomain.length() > 0) {
+						lIdentity = "sip:"+lUserName+"@"+lDomain;
+						lProxy = getPrefString(getString(R.string.pref_proxy_key) + i, null);
+						if (lProxy == null || lProxy.length() == 0) {
+							lProxy = "sip:" + lDomain;
+						}
+						if (!lProxy.startsWith("sip:")) {
+							lProxy = "sip:" + lProxy;
+						}
+						lDefaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(lIdentity, lProxy, null, true);
+						mLc.addProxyConfig(lDefaultProxyConfig);
+						
+						//outbound proxy
+						if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, false)) {
+							lDefaultProxyConfig.setRoute(lProxy);
+						} else {
+							lDefaultProxyConfig.setRoute(null);
+						}
+						
+						if (i == getPrefInt(R.string.pref_default_account, 0)) {
+							mLc.setDefaultProxyConfig(lDefaultProxyConfig);
+						}
+					}
+				}
+			}
+			
 			lDefaultProxyConfig = mLc.getDefaultProxyConfig();
-
 			if (lDefaultProxyConfig !=null) {
 				//prefix      
 				String lPrefix = getPrefString(R.string.pref_prefix_key, null);
@@ -659,14 +701,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				}
 				//escape +
 				lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key,false));
-				//outbound proxy
-				if (getPrefBoolean(R.string.pref_enable_outbound_proxy_key, false)) {
-					lDefaultProxyConfig.setRoute(lProxy);
-				} else {
-					lDefaultProxyConfig.setRoute(null);
-				}
-				
 			}
+			
 			//init network state
 			NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
 			mLc.setNetworkReachable(networkInfo !=null? networkInfo.getState() == NetworkInfo.State.CONNECTED:false); 
@@ -766,13 +802,24 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private boolean getPrefBoolean(int key, boolean value) {
 		return mPref.getBoolean(mR.getString(key), value);
 	}
+	private boolean getPrefBoolean(String key, boolean value) {
+		return mPref.getBoolean(key, value);
+	}
 	private String getPrefString(int key, String value) {
 		return mPref.getString(mR.getString(key), value);
+	}
+	private int getPrefInt(int key, int value) {
+		return mPref.getInt(mR.getString(key), value);
 	}
 	private String getPrefString(int key, int value) {
 		return mPref.getString(mR.getString(key), mR.getString(value));
 	}
-
+	private String getPrefString(String key, String value) {
+		return mPref.getString(key, value);
+	}
+	private int getPrefExtraAccountsNumber() {
+		return mPref.getInt(getString(R.string.pref_extra_accounts), 0);
+	}
 
 
 	/* Simple implementation as Android way seems very complicate:
