@@ -27,6 +27,13 @@
 
 	<TextView android:id="@+id/status_label" style="@style/callee_status"
 		android:layout_height="fill_parent" />
+
+	<ImageView android:id="@+id/callee_status_speeking" style="@style/callee_status"
+	    android:src="@drawable/conf_speaking" android:visibility="gone"/>
+
+	<ImageView android:id="@+id/callee_status_qos" style="@style/callee_status"
+	    android:src="@drawable/stat_sys_signal_0" android:visibility="gone"/>
+
 	<ImageView android:id="@+id/callee_status_paused" style="@style/callee_status"
 		android:src="@drawable/conf_status_paused" android:visibility="gone" />
 
