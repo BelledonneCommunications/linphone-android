@@ -12,7 +12,7 @@
 	<bool name="show_full_remote_address_on_incoming_call">true</bool>
 	<bool name="show_only_username_in_history">false</bool>
 
-	<bool name="allow_transfers">false</bool>
+	<bool name="allow_transfers">true</bool>
 
 	<bool name="allow_edit_in_dialer">true</bool>
 	<color name="conf_active_bg_color">#191970</color>
