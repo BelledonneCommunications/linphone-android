@@ -49,3 +49,6 @@
 [submodule "submodules/mssilk"]
 	path = submodules/mssilk
 	url = git://git.linphone.org/mssilk.git
+[submodule "submodules/externals/vo-amrwbenc"]
+	path = submodules/externals/vo-amrwbenc
+	url = git://opencore-amr.git.sourceforge.net/gitroot/opencore-amr/vo-amrwbenc

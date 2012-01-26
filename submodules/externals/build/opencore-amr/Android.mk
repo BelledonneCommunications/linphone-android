@@ -8,16 +8,32 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := libopencoreamr
 
-LOCAL_SRC_FILES := \
-	amrnb/wrapper.cpp 
+_ADD_COMMON=0
+ifneq ($(BUILD_AMRWB),0)
+_ADD_COMMON=1
+endif
+ifeq ($(BUILD_AMRNB),full)
+_ADD_COMMON=1
+endif
 
-ifeq ($(BUILD_AMR),light)
+ifneq ($(BUILD_AMRNB),0)
+LOCAL_SRC_FILES += \
+	amrnb/wrapper.cpp 
+endif
+ifneq ($(BUILD_AMRWB),0)
+LOCAL_SRC_FILES += \
+	amrwb/wrapper.cpp 
+endif
+
+
+ifeq ($(BUILD_AMRNB),light)
 #in this mode we try to dynamically link against the opencore-amr provided by android
 LOCAL_CFLAGS += -include ../build/opencore-amr/stubs.h
 LOCAL_SRC_FILES += ../build/opencore-amr/stubs.cpp
-else
-#in the other mode (full) we build our own opencore-amr.
+endif
 
+ifeq ($(BUILD_AMRNB),full)
+#in the other mode (full) we build our own opencore-amr.
 
 #common files
 
@@ -178,12 +194,6 @@ LOCAL_SRC_FILES += \
  	opencore/codecs_v2/audio/gsm_amr/amr_nb/dec/src/sp_dec.cpp \
  	opencore/codecs_v2/audio/gsm_amr/amr_nb/dec/src/wmf_to_ets.cpp
 
-endif
-
-LOCAL_ARM_MODE := arm
-
-
-
 #for including config.h:
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/enc/include \
@@ -192,8 +202,70 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/enc/src \
 	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/common/include \
 	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/common/dec/include \
-	$(LOCAL_PATH)/amrnb \
+	$(LOCAL_PATH)/amrnb
+endif
+
+ifneq ($(BUILD_AMRWB),0)
+LOCAL_SRC_FILES += \
+	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/agc2_amr_wb.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/band_pass_6k_7k.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/dec_acelp_2p_in_64.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/dec_acelp_4p_in_64.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/dec_alg_codebook.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/dec_gain2_amr_wb.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/deemphasis_32.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/dtx_decoder_amr_wb.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/get_amr_wb_bits.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/highpass_400hz_at_12k8.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/highpass_50hz_at_12k8.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/homing_amr_wb_dec.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/interpolate_isp.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/isf_extrapolation.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/isp_az.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/isp_isf.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/lagconceal.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/low_pass_filt_7k.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/median5.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/mime_io.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/noise_gen_amrwb.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/normalize_amr_wb.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/oversamp_12k8_to_16k.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/phase_dispersion.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/pit_shrp.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/pred_lt4.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/preemph_amrwb_dec.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/pvamrwb_math_op.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/pvamrwbdecoder.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/q_gain2_tab.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/qisf_ns.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/qisf_ns_tab.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/qpisf_2s.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/qpisf_2s_tab.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/scale_signal.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/synthesis_amr_wb.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/voice_factor.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/wb_syn_filt.cpp \
+ 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/weight_amrwb_lpc.cpp
+
+#decoder files
+# 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/decoder_amr_wb.cpp \
+
+#for including config.h:
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/include \
+	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src \
+	$(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/common/dec/include \
+	$(LOCAL_PATH)/amrwb
+endif
+
+
+LOCAL_ARM_MODE := arm
+
+#Common
+ifeq ($(_ADD_COMMON),1)
+LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/oscl
+endif
 
 include $(BUILD_STATIC_LIBRARY)
 

@@ -1,8 +1,15 @@
 # script expect linphone-root-dir variable to be set by parent !
 
 #default values
-BUILD_AMR=light
+ifeq ($(BUILD_AMRNB),)
+BUILD_AMRNB=light
+endif
+ifeq ($(BUILD_AMRWB),)
+BUILD_AMRWB=0
+endif
+ifeq ($(BUILD_AMRWB),)
 BUILD_SRTP=1
+endif
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
@@ -11,7 +18,6 @@ else
 LINPHONE_VIDEO=0
 BUILD_X264=0
 endif
-
 
 
 ##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
@@ -112,7 +118,20 @@ endif
 
 include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
 
-ifneq ($(BUILD_AMR), 0)
+_BUILD_AMR=0
+ifneq ($(BUILD_AMRNB), 0)
+_BUILD_AMR=1
+endif
+
+ifneq ($(BUILD_AMRWB), 0)
+_BUILD_AMR=1
+endif
+
+ifneq ($(_BUILD_AMR), 0)
 include $(linphone-root-dir)/submodules/externals/build/opencore-amr/Android.mk
 include $(linphone-root-dir)/submodules/msamr/Android.mk
+endif
+
+ifneq ($(BUILD_AMRWB), 0)
+include $(linphone-root-dir)/submodules/externals/build/vo-amrwbenc/Android.mk
 endif

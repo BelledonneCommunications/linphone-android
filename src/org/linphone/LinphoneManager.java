@@ -27,6 +27,7 @@ import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 import static android.media.AudioManager.VIBRATE_TYPE_RINGER;
 import static org.linphone.R.string.pref_codec_amr_key;
+import static org.linphone.R.string.pref_codec_amrwb_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_codec_speex32_key;
@@ -572,6 +573,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
 			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
 			enableDisableAudioCodec("AMR", 8000, R.string.pref_codec_amr_key);
+            enableDisableAudioCodec("AMR-WB", 16000, R.string.pref_codec_amrwb_key);
 			enableDisableAudioCodec("SILK", 24000, R.string.pref_codec_silk24_key);
 			enableDisableAudioCodec("SILK", 16000, R.string.pref_codec_silk16_key);
 			enableDisableAudioCodec("SILK", 12000, R.string.pref_codec_silk12_key);
@@ -1120,6 +1122,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean amr = LinphoneService.isReady() && LinphoneManager.getLc()
 		.findPayloadType("AMR", 8000)!=null;
 		e.putBoolean(getString(pref_codec_amr_key), amr);
+
+        boolean amrwb = LinphoneService.isReady() && LinphoneManager.getLc()
+        .findPayloadType("AMR-WB", 16000)!=null;
+        e.putBoolean(getString(pref_codec_amrwb_key), amrwb);
 
 		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !Hacks.hasCamera()) {
 			e.putBoolean(getString(pref_video_enable_key), false);

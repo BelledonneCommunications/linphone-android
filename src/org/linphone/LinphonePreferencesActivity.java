@@ -22,6 +22,7 @@ package org.linphone;
 
 import static org.linphone.R.string.ec_calibrating;
 import static org.linphone.R.string.pref_codec_amr_key;
+import static org.linphone.R.string.pref_codec_amrwb_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
@@ -193,7 +194,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		initializeMediaEncryptionPreferences();
 	
-		detectAudioCodec(pref_codec_amr_key,"AMR",8000, false);
+		detectAudioCodec(pref_codec_amr_key,"AMR", 8000, false);
+        detectAudioCodec(pref_codec_amrwb_key,"AMR-WB", 16000, false);
 		//detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, true);
 		//detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, true);
 		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, true);

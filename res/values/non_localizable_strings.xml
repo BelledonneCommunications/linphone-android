@@ -55,6 +55,7 @@
     <string name="pref_codec_gsm_key">pref_codec_gsm_key</string>
     <string name="pref_codec_g722_key">pref_codec_g722_key</string>
     <string name="pref_codec_amr_key">pref_codec_amr_key</string>
+    <string name="pref_codec_amrwb_key">pref_codec_amrwb_key</string>
     <string name="pref_codec_ilbc_key">pref_codec_ilbc_key</string>
     <string name="pref_codec_speex8_key">pref_codec_speex8_key</string>
     <string name="pref_codec_speex16_key">pref_codec_speex16_key</string>
