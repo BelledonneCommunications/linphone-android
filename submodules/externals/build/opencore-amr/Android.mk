@@ -12,30 +12,37 @@ _ADD_COMMON=0
 ifneq ($(BUILD_AMRWB),0)
 _ADD_COMMON=1
 endif
-ifeq ($(BUILD_AMRNB),full)
+ifneq ($(BUILD_AMRNB),0)
 _ADD_COMMON=1
 endif
 
-ifneq ($(BUILD_AMRNB),0)
-LOCAL_SRC_FILES += \
-	amrnb/wrapper.cpp 
-endif
-ifneq ($(BUILD_AMRWB),0)
-LOCAL_SRC_FILES += \
-	amrwb/wrapper.cpp 
-endif
-
-
 ifeq ($(BUILD_AMRNB),light)
+LOCAL_SRC_FILES += \
+        amrnb/wrapper.cpp
+
+LOCAL_SRC_FILES += \
+	../build/opencore-amr/stubs.cpp
+
+#for including config.h:
+LOCAL_C_INCLUDES += \
+        $(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/enc/include \
+        $(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/dec/include \
+        $(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/dec/src \
+        $(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/enc/src \
+        $(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/amr_nb/common/include \
+        $(LOCAL_PATH)/opencore/codecs_v2/audio/gsm_amr/common/dec/include \
+        $(LOCAL_PATH)/amrnb
+
 #in this mode we try to dynamically link against the opencore-amr provided by android
 LOCAL_CFLAGS += -include ../build/opencore-amr/stubs.h
-LOCAL_SRC_FILES += ../build/opencore-amr/stubs.cpp
 endif
 
 ifeq ($(BUILD_AMRNB),full)
 #in the other mode (full) we build our own opencore-amr.
 
 #common files
+LOCAL_SRC_FILES += \
+        amrnb/wrapper.cpp
 
 LOCAL_SRC_FILES += \
 	opencore/codecs_v2/audio/gsm_amr/amr_nb/common/src/add.cpp \
@@ -206,6 +213,9 @@ LOCAL_C_INCLUDES += \
 endif
 
 ifneq ($(BUILD_AMRWB),0)
+LOCAL_SRC_FILES += \
+        amrwb/wrapper.cpp
+
 LOCAL_SRC_FILES += \
 	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/agc2_amr_wb.cpp \
  	opencore/codecs_v2/audio/gsm_amr/amr_wb/dec/src/band_pass_6k_7k.cpp \
