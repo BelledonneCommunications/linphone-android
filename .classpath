@@ -7,5 +7,6 @@
 	<classpathentry kind="src" path="submodules/linphone/coreapi/help/java"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="libs/aXMLRPC.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

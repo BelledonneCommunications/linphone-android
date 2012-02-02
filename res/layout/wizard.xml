@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <EditText
+            android:id="@+id/wizardUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPersonName" 
+            android:hint="@string/wizard_username_hint" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageView
+            android:id="@+id/wizardUsernameOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/notok" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+        	android:orientation="vertical"
+        	android:layout_weight="1">
+	
+	        <EditText
+	            android:id="@+id/wizardPassword"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="textPassword"
+            	android:hint="@string/wizard_password_hint" />
+	        
+
+	        <EditText
+	            android:id="@+id/wizardPasswordConfirm"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="textPassword"
+            	android:hint="@string/wizard_password_confirm_hint" />
+	
+	    </LinearLayout>
+        
+        <ImageView
+            android:id="@+id/wizardPasswordOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/notok" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <EditText
+            android:id="@+id/wizardEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textEmailAddress"
+            android:hint="@string/wizard_email_hint" />
+
+        <ImageView
+            android:id="@+id/wizardEmailOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/notok" />
+
+    </LinearLayout>
+    
+    <TextView 
+        android:id="@+id/wizardErrorMessage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FF0000"/>
+        
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        
+        	<Button 
+        	    android:id="@+id/wizardCancel"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/wizard_cancel"/>
+        	
+        	<Button 
+        	    android:id="@+id/wizardCreateAccount"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/wizard_create_account"/> 
+		        
+    </LinearLayout>
+    
+</LinearLayout>

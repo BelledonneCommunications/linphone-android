@@ -227,4 +227,20 @@
 <string name="pref_extra_accounts">pref_nb_accounts_extra</string>
 <string name="pref_default_account">pref_default_account</string>
 <string name="pref_sipaccounts">SIP Accounts</string>
+
+<string name="wizard_username_hint">Username</string>
+<string name="wizard_password_hint">Password</string>
+<string name="wizard_password_confirm_hint">Confirmation</string>
+<string name="wizard_email_hint">Email</string>
+<string name="wizard_title">Account Wizard</string>
+<string name="wizard_create_account">Create Account</string>
+<string name="wizard_cancel">Cancel</string>
+<string name="wizard_failed">An error occurred, try again later.</string>
+<string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
+<string name="wizard_username_unavailable">This username is already in use.</string>
+<string name="wizard_username_incorrect">Your username is not valid.</string>
+<string name="wizard_email_incorrect">Your email is not valid.</string>
+<string name="wizard_password_incorrect">Your password is not valid (6 characters min).</string>
+<string name="wizard_passwords_unmatched">Passwords entered are different.</string>
+<string name="wizard_need_activation">You need to activate your account with the link that was send to your email.</string>
 </resources>

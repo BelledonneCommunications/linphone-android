@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 package org.linphone;
 
-
 import static org.linphone.R.string.ec_calibrating;
 import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_amrwb_key;
@@ -31,6 +30,7 @@ import static org.linphone.R.string.pref_echo_limiter_key;
 import static org.linphone.R.string.pref_media_encryption_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +46,8 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,6 +60,20 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import de.timroes.axmlrpc.XMLRPCCallback;
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
+import de.timroes.axmlrpc.XMLRPCServerException;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
@@ -66,7 +82,18 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private CheckBoxPreference ecPref;
 	private ListPreference mencPref;
 	private int nbAccounts = 1;
+	
+	// Wizard fields
+	private boolean usernameOk = false;
+	private boolean passwordOk = false;
+	private boolean emailOk = false;
+	private AlertDialog wizardDialog;
+	private Button createAccount;
+	private TextView errorMessage;
+	private PreferenceCategory accounts;
+	
 	private static final int ADD_SIP_ACCOUNT = 0x666;
+	private static final int WIZARD_ID = 0x667;
 
 	private SharedPreferences prefs() {
 		return getPreferenceManager().getSharedPreferences();
@@ -93,7 +120,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		PreferenceScreen root = getPreferenceScreen();
 		
 		// Get the good preference screen
-		final PreferenceCategory accounts = (PreferenceCategory) root.getPreference(0);
+		accounts = (PreferenceCategory) root.getPreference(0);
 		accounts.removeAll();
 		Preference addAccount = (Preference) root.getPreference(1);
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -110,7 +137,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		
 		// Get already configured extra accounts
 		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
+		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
 		for (int i = 0; i < nbAccounts; i++) {
 			// For each, add menus to configure it
 			addExtraAccountPreferencesButton(accounts, i, false);
@@ -155,11 +182,295 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		parent.addPreference(me);
 	}
 	
+	private void fillLinphoneAccount(int i, String username, String password) {
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		SharedPreferences.Editor editor = prefs.edit();
+		
+		editor.putString(getString(R.string.pref_username_key) + i, username);
+		editor.putString(getString(R.string.pref_passwd_key) + i, password);
+		editor.putString(getString(R.string.pref_domain_key) + i, "sip.linphone.org");
+		editor.putString(getString(R.string.pref_proxy_key) + i, "");
+		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, false);
+		
+		editor.commit();
+	}
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ADD_SIP_ACCOUNT) {
 			createDynamicAccountsPreferences();
 		}
+	}
+	
+	private void addWizardAccount() {
+		Preference wizard = (Preference) getPreferenceScreen().getPreference(2);
+		wizard.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        public boolean onPreferenceClick(Preference preference) {
+	        	showDialog(WIZARD_ID);
+	        	return true;
+	        }
+        });
+	}
+	
+	protected Dialog onCreateDialog (int id) {
+		if (id == WIZARD_ID) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(LinphonePreferencesActivity.this);
+	    	LayoutInflater inflater = LayoutInflater.from(LinphonePreferencesActivity.this);
+	    	View v = inflater.inflate(R.layout.wizard, null);
+	    	builder.setView(v);
+	    	
+	    	final EditText username = (EditText) v.findViewById(R.id.wizardUsername);
+	    	ImageView usernameOkIV = (ImageView) v.findViewById(R.id.wizardUsernameOk);
+	    	addXMLRPCUsernameHandler(username, usernameOkIV);
+
+	    	final EditText password = (EditText) v.findViewById(R.id.wizardPassword);
+	    	EditText passwordConfirm = (EditText) v.findViewById(R.id.wizardPasswordConfirm);
+	    	ImageView passwordOkIV = (ImageView) v.findViewById(R.id.wizardPasswordOk);
+	    	addXMLRPCPasswordHandler(password, passwordConfirm, passwordOkIV);
+
+	    	final EditText email = (EditText) v.findViewById(R.id.wizardEmail);
+	    	ImageView emailOkIV = (ImageView) v.findViewById(R.id.wizardEmailOk);
+	    	addXMLRPCEmailHandler(email, emailOkIV);
+
+	    	errorMessage = (TextView) v.findViewById(R.id.wizardErrorMessage);
+	    	
+	    	Button cancel = (Button) v.findViewById(R.id.wizardCancel);
+	    	cancel.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					wizardDialog.dismiss();
+				}
+	    	});
+	    	
+	    	createAccount = (Button) v.findViewById(R.id.wizardCreateAccount);
+	    	createAccount.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					createAccount(username.getText().toString(), password.getText().toString(), email.getText().toString(), false);
+				}
+	    	});
+			createAccount.setEnabled(false);
+	    	
+	    	builder.setTitle(getString(R.string.wizard_title));
+	    	wizardDialog = builder.create();
+	    	return wizardDialog;
+		}
+		return null;
+	}
+	
+	private boolean isUsernameCorrect(String username) {
+		return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
+	}
+	
+	private void isUsernameRegistred(String username, final ImageView icon) {
+		final Runnable runNotReachable = new Runnable() {
+			public void run() {
+				errorMessage.setText(R.string.wizard_server_unavailable);
+				usernameOk = false;
+				icon.setImageResource(R.drawable.notok);
+				createAccount.setEnabled(usernameOk && passwordOk && emailOk);
+			}
+		};
+		
+		try {
+			XMLRPCClient client = new XMLRPCClient(new URL("https://www.linphone.org/wizard.php"));
+			
+			XMLRPCCallback listener = new XMLRPCCallback() {
+				Runnable runNotOk = new Runnable() {
+    				public void run() {
+    					errorMessage.setText(R.string.wizard_username_unavailable);
+    					usernameOk = false;
+						icon.setImageResource(R.drawable.notok);
+						createAccount.setEnabled(usernameOk && passwordOk && emailOk);
+					}
+	    		};
+	    		
+	    		Runnable runOk = new Runnable() {
+    				public void run() {
+    					errorMessage.setText("");
+    					icon.setImageResource(R.drawable.ok);
+						usernameOk = true;
+						createAccount.setEnabled(usernameOk && passwordOk && emailOk);
+					}
+	    		};
+				
+			    public void onResponse(long id, Object result) {
+			    	int answer = (Integer) result;
+			    	if (answer != 0) {
+			    		runOnUiThread(runNotOk);
+					}
+					else {
+						runOnUiThread(runOk);
+					}
+			    }
+			    
+			    public void onError(long id, XMLRPCException error) {
+			    	runOnUiThread(runNotReachable);
+			    }
+			   
+			    public void onServerError(long id, XMLRPCServerException error) {
+			    	runOnUiThread(runNotReachable);
+			    }
+			};
+
+		    client.callAsync(listener, "check_account", username);
+		} 
+		catch(Exception ex) {
+			runOnUiThread(runNotReachable);
+		}
+	}
+	
+	private boolean isEmailCorrect(String email) {
+		return email.matches("^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+	}
+	
+	private boolean isPasswordCorrect(String password) {
+		return password.length() >= 6;
+	}
+	
+	private void createAccount(final String username, final String password, String email, boolean suscribe) {
+		final Runnable runNotReachable = new Runnable() {
+			public void run() {
+				errorMessage.setText(R.string.wizard_server_unavailable);
+			}
+		};
+		
+		try {
+			XMLRPCClient client = new XMLRPCClient(new URL("https://www.linphone.org/wizard.php"));
+			
+			XMLRPCCallback listener = new XMLRPCCallback() {
+				Runnable runNotOk = new Runnable() {
+    				public void run() {
+    					errorMessage.setText(R.string.wizard_failed);
+					}
+	    		};
+	    		
+	    		Runnable runOk = new Runnable() {
+    				public void run() {
+			    		addExtraAccountPreferencesButton(accounts, nbAccounts, true);
+			    		fillLinphoneAccount(nbAccounts, username, password);
+			        	nbAccounts++;
+			    		createDynamicAccountsPreferences();
+			    		wizardDialog.dismiss();
+			    		
+			    		Toast.makeText(LinphonePreferencesActivity.this, R.string.wizard_need_activation, Toast.LENGTH_LONG).show();
+					}
+	    		};
+	    		
+			    public void onResponse(long id, Object result) {
+			    	int answer = (Integer) result;
+			    	if (answer != 0) {
+			    		runOnUiThread(runNotOk);
+			    	} else {
+			    		runOnUiThread(runOk);
+			    	}
+			    }
+			    
+			    public void onError(long id, XMLRPCException error) {
+			    	runOnUiThread(runNotReachable);
+			    }
+			   
+			    public void onServerError(long id, XMLRPCServerException error) {
+			    	runOnUiThread(runNotReachable);
+			    }
+			};
+
+		    client.callAsync(listener, "create_account", username, password, email, suscribe ? 1 : 0);
+		} 
+		catch(Exception ex) {
+			runOnUiThread(runNotReachable);
+		}
+	}
+	
+	private void addXMLRPCUsernameHandler(final EditText field, final ImageView icon) {
+		field.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable arg0) {
+				
+			}
+
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				
+			}
+
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) 
+			{
+				usernameOk = false;
+				if (isUsernameCorrect(field.getText().toString()))
+				{
+					isUsernameRegistred(field.getText().toString(), icon);
+				}
+				else {
+					errorMessage.setText(R.string.wizard_username_incorrect);
+					icon.setImageResource(R.drawable.notok);
+				}
+			}
+		});
+	}
+	
+	private void addXMLRPCEmailHandler(final EditText field, final ImageView icon) {
+		field.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable arg0) {
+				
+			}
+
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				
+			}
+
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) 
+			{
+				emailOk = false;
+				if (isEmailCorrect(field.getText().toString())) {
+					icon.setImageResource(R.drawable.ok);
+					emailOk = true;
+					errorMessage.setText("");
+				}
+				else {
+					errorMessage.setText(R.string.wizard_email_incorrect);
+					icon.setImageResource(R.drawable.notok);
+				}
+				createAccount.setEnabled(usernameOk && passwordOk && emailOk);
+			}
+		});
+	}
+	
+	private void addXMLRPCPasswordHandler(final EditText field1, final EditText field2, final ImageView icon) {
+		TextWatcher passwordListener = new TextWatcher() {
+			public void afterTextChanged(Editable arg0) {
+				
+			}
+
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				
+			}
+
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) 
+			{
+				passwordOk = false;
+				if (isPasswordCorrect(field1.getText().toString()) && field1.getText().toString().equals(field2.getText().toString())) {
+					passwordOk = true;
+					icon.setImageResource(R.drawable.ok);
+					errorMessage.setText("");
+				}
+				else {
+					if (isPasswordCorrect(field1.getText().toString())) {
+						errorMessage.setText(R.string.wizard_passwords_unmatched);
+					}
+					else {
+						errorMessage.setText(R.string.wizard_password_incorrect);
+					}
+					icon.setImageResource(R.drawable.notok);
+				}
+				createAccount.setEnabled(usernameOk && passwordOk && emailOk);
+			}
+		};
+		
+		field1.addTextChangedListener(passwordListener);
+		field2.addTextChangedListener(passwordListener);
 	}
 	
 	@Override
@@ -169,6 +480,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		addPreferencesFromResource(R.xml.preferences);
 
 		createDynamicAccountsPreferences();
+		addWizardAccount();
 		addTransportChecboxesListener();
 		
 		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
