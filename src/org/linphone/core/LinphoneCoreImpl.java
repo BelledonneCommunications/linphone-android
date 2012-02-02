@@ -88,6 +88,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native String getRing(long nativePtr);
 	private native void setRootCA(long nativePtr, String path);
 	private native long[] listVideoPayloadTypes(long nativePtr);
+	private native long[] getProxyConfigList(long nativePtr);
 	private native long[] listAudioPayloadTypes(long nativePtr);
 	private native void enableKeepAlive(long nativePtr,boolean enable);
 	private native boolean isKeepAliveEnabled(long nativePtr);
@@ -402,6 +403,19 @@ class LinphoneCoreImpl implements LinphoneCore {
 	
 	public synchronized void setRootCA(String path) {
 		setRootCA(nativePtr, path);
+	}
+	
+	public synchronized LinphoneProxyConfig[] getProxyConfigList() {
+		long[] typesPtr = getProxyConfigList(nativePtr);
+		if (typesPtr == null) return null;
+		
+		LinphoneProxyConfig[] proxies = new LinphoneProxyConfig[typesPtr.length];
+
+		for (int i=0; i < proxies.length; i++) {
+			proxies[i] = new LinphoneProxyConfigImpl(typesPtr[i]);
+		}
+
+		return proxies;
 	}
 	
 	public synchronized PayloadType[] getVideoCodecs() {
