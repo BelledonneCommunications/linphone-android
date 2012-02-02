@@ -69,7 +69,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.timroes.axmlrpc.XMLRPCCallback;
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
@@ -91,9 +90,11 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private Button createAccount;
 	private TextView errorMessage;
 	private PreferenceCategory accounts;
+	private String username;
 	
 	private static final int ADD_SIP_ACCOUNT = 0x666;
 	private static final int WIZARD_ID = 0x667;
+	private static final int CONFIRM_ID = 0x668;
 
 	private SharedPreferences prefs() {
 		return getPreferenceManager().getSharedPreferences();
@@ -253,11 +254,51 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	    	wizardDialog = builder.create();
 	    	return wizardDialog;
 		}
+		else if (id == CONFIRM_ID) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(LinphonePreferencesActivity.this);
+			builder.setTitle(R.string.wizard_confirmation);
+			
+			LayoutInflater inflater = LayoutInflater.from(LinphonePreferencesActivity.this);
+	    	View v = inflater.inflate(R.layout.wizard_confirm, null);
+	    	builder.setView(v);
+	    	
+	    	Button check = (Button) v.findViewById(R.id.wizardCheckAccount);
+	    	check.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if (isAccountVerified(username)) {
+						wizardDialog.dismiss();
+					}
+				}
+			});
+	    	
+	    	Button cancel = (Button) v.findViewById(R.id.wizardCancel);
+	    	cancel.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					wizardDialog.dismiss();
+				}
+			});
+	    	
+			wizardDialog = builder.create();
+			return wizardDialog;
+		}
 		return null;
 	}
 	
 	private boolean isUsernameCorrect(String username) {
 		return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
+	}
+	
+	private boolean isAccountVerified(String username) {
+		try {
+			XMLRPCClient client = new XMLRPCClient(new URL("https://www.linphone.org/wizard.php"));
+		    Object resultO = client.call("check_account_validated", "sip:" + username + "@sip.linphone.org");
+		    Integer result = Integer.parseInt(resultO.toString());
+		    
+		    return result == 1;
+		} catch(Exception ex) {
+
+		}
+		return false;
 	}
 	
 	private void isUsernameRegistred(String username, final ImageView icon) {
@@ -346,12 +387,13 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	    		Runnable runOk = new Runnable() {
     				public void run() {
 			    		addExtraAccountPreferencesButton(accounts, nbAccounts, true);
+			    		LinphonePreferencesActivity.this.username = username;
 			    		fillLinphoneAccount(nbAccounts, username, password);
 			        	nbAccounts++;
 			    		createDynamicAccountsPreferences();
 			    		wizardDialog.dismiss();
 			    		
-			    		Toast.makeText(LinphonePreferencesActivity.this, R.string.wizard_need_activation, Toast.LENGTH_LONG).show();
+			    		showDialog(CONFIRM_ID);
 					}
 	    		};
 	    		

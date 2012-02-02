@@ -243,4 +243,6 @@
 <string name="wizard_password_incorrect">Your password is not valid (6 characters min).</string>
 <string name="wizard_passwords_unmatched">Passwords entered are different.</string>
 <string name="wizard_need_activation">You need to activate your account with the link that was send to your email.</string>
+<string name="wizard_confirmation">Confirmation</string>
+<string name="wizard_verify_account">Check</string>
 </resources>
