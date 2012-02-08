@@ -95,19 +95,21 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	
 	private void displayRegisterStatus() {
 		ListView accounts = (ListView) findViewById(R.id.accounts);
-		accounts.setDividerHeight(0);
-		ArrayList<HashMap<String,String>> hashMapAccountsStateList = new ArrayList<HashMap<String,String>>();
-		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-			HashMap<String, String> entitiesHashMap = new HashMap<String, String>();
-			entitiesHashMap.put("Identity", lpc.getIdentity().split("sip:")[1]);
-			entitiesHashMap.put("State", getStatusIcon(lpc.getState()));
-			hashMapAccountsStateList.add(entitiesHashMap);
+		if (accounts != null) {
+			accounts.setDividerHeight(0);
+			ArrayList<HashMap<String,String>> hashMapAccountsStateList = new ArrayList<HashMap<String,String>>();
+			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+				HashMap<String, String> entitiesHashMap = new HashMap<String, String>();
+				entitiesHashMap.put("Identity", lpc.getIdentity().split("sip:")[1]);
+				entitiesHashMap.put("State", getStatusIcon(lpc.getState()));
+				hashMapAccountsStateList.add(entitiesHashMap);
+			}
+			Adapter adapterForList = new SimpleAdapter(this, hashMapAccountsStateList, R.layout.accounts,
+	                new String[] {"Identity", "State"},
+	                new int[] { R.id.Identity, R.id.State });
+			accounts.setAdapter((ListAdapter) adapterForList);
+			accounts.invalidate();
 		}
-		Adapter adapterForList = new SimpleAdapter(this, hashMapAccountsStateList, R.layout.accounts,
-                new String[] {"Identity", "State"},
-                new int[] { R.id.Identity, R.id.State });
-		accounts.setAdapter((ListAdapter) adapterForList);
-		accounts.invalidate();
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -123,15 +125,17 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		mStatus =  (TextView) findViewById(R.id.status_label);
 		
 		SlidingDrawer drawer = (SlidingDrawer) findViewById(R.id.drawer);
-		drawer.setOnDrawerScrollListener(new OnDrawerScrollListener() {
-			public void onScrollEnded() {
-				
-			}
-
-			public void onScrollStarted() {
-				displayRegisterStatus();
-			}
-		});
+		if (drawer != null) {
+			drawer.setOnDrawerScrollListener(new OnDrawerScrollListener() {
+				public void onScrollEnded() {
+					
+				}
+	
+				public void onScrollStarted() {
+					displayRegisterStatus();
+				}
+			});
+		}
 
 		AddressAware numpad = (AddressAware) findViewById(R.id.Dialer);
 		if (numpad != null)

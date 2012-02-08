@@ -144,7 +144,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
 	
 	private String getAccountNumber(int n) {
 		if (n > 0)
-			return n + "";
+			return Integer.toString(n);
 		else
 			return "";
 	}

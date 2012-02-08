@@ -15,20 +15,70 @@
 	</LinearLayout>
 
 	
-	<View android:layout_width="0px" android:visibility="invisible" android:layout_weight="1" android:layout_height="fill_parent" />
+	<FrameLayout
+		android:layout_height="fill_parent" 
+		android:layout_width="fill_parent">
+		
+		<LinearLayout
+			android:orientation="vertical" 
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_marginBottom="23sp">
 	
-
-	<LinearLayout android:id="@+id/CallControlRow" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="bottom">
-		<org.linphone.ui.CallButton android:id="@+id/Call"
-			android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/startcall_green"/>
-		<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent"
-			android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/stopcall_red"/>
-	</LinearLayout>
-
-	    <EditText android:id="@+id/status_label" android:layout_width="fill_parent" 
-		android:clickable="false" android:focusable="false"
-		android:cursorVisible="false" android:textSize="12sp" android:height="15sp"
-		android:background="@android:color/transparent" android:textColor="@android:color/white"
-		android:lines="1"  android:layout_height="wrap_content"></EditText>
-	
+			<View android:layout_width="0px" android:visibility="invisible" android:layout_weight="1" android:layout_height="fill_parent" />
+			
+			<LinearLayout android:id="@+id/CallControlRow" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="bottom">
+				<org.linphone.ui.CallButton android:id="@+id/Call"
+					android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/startcall_green"/>
+				<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent"
+					android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/stopcall_red"/>
+			</LinearLayout>
+			
+		</LinearLayout>
+		
+		<SlidingDrawer
+			android:id="@+id/drawer"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:handle="@+id/handle"
+			android:layout_weight="1"
+			android:content="@+id/accounts">
+			
+		    <LinearLayout
+		        android:id="@id/handle"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:background="#000000"
+				android:gravity="center_vertical">
+		        
+		        <EditText 
+				    android:id="@+id/status_label" 
+				    android:clickable="false" 
+				    android:focusable="false" 
+				    android:cursorVisible="false" 
+				    android:textSize="12sp" 
+					android:background="#000000"
+				    android:layout_height="wrap_content" 
+				    android:layout_width="fill_parent" 
+				    android:layout_weight="4"
+				    android:textColor="@android:color/white" />
+		        
+		        <ImageView
+				    android:layout_height="wrap_content" 
+				    android:layout_width="fill_parent"
+				    android:layout_weight="100"
+				    android:src="@drawable/conf_details"/>
+		        
+		    </LinearLayout>
+			
+			<ListView
+				android:id="@id/accounts"
+				android:background="#CC000000"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent" />
+			
+		</SlidingDrawer>
+		
+	</FrameLayout>
 </LinearLayout>

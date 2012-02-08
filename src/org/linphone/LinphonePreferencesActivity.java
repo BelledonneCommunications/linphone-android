@@ -123,6 +123,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		// Get the good preference screen
 		accounts = (PreferenceCategory) root.getPreference(0);
 		accounts.removeAll();
+		
 		Preference addAccount = (Preference) root.getPreference(1);
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
@@ -198,7 +199,20 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		
 		if (requestCode == ADD_SIP_ACCOUNT) {
+			//Verify if last created account is filled
+			SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+			int n = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
+			String keyUsername = getString(R.string.pref_username_key) + (n-1 == 0 ? "" : Integer.toString(n-1));
+			
+			if (prefs.getString(keyUsername, "").equals("")) {
+				//If not, we suppress it to not display a blank field
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putInt(getString(R.string.pref_extra_accounts), n-1);
+				editor.commit();
+			}
+			
 			createDynamicAccountsPreferences();
 		}
 	}
