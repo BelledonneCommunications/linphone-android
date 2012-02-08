@@ -36,6 +36,8 @@
     <string name="pref_domain_key">pref_domain_key</string>
     <string name="pref_passwd_key">pref_passwd_key</string>
     <string name="pref_username_key">pref_username_key</string>
+    <string name="pref_wizard_key">pref_wizard_key</string>
+    <string name="pref_activated_key">pref_activated_key</string>
     <string name="pref_debug_key">pref_debug_key</string>
     <string name="first_launch_suceeded_once_key">first_launch_suceeded_once_key</string>
 

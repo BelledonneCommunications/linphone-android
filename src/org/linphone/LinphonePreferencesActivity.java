@@ -184,7 +184,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		parent.addPreference(me);
 	}
 	
-	private void fillLinphoneAccount(int i, String username, String password) {
+	private void fillLinphoneAccount(int i, String username, String password, boolean createdByWizard) {
 		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		SharedPreferences.Editor editor = prefs.edit();
 		
@@ -192,6 +192,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		editor.putString(getString(R.string.pref_passwd_key) + i, password);
 		editor.putString(getString(R.string.pref_domain_key) + i, "sip.linphone.org");
 		editor.putString(getString(R.string.pref_proxy_key) + i, "");
+		editor.putBoolean(getString(R.string.pref_wizard_key) + i, createdByWizard);
+		editor.putBoolean(getString(R.string.pref_activated_key) + i, false);
 		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, false);
 		
 		editor.commit();
@@ -217,7 +219,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		}
 	}
 	
-	private void addWizardAccount() {
+	private void addWizardPreferenceButton() {
 		Preference wizard = (Preference) getPreferenceScreen().getPreference(2);
 		wizard.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
@@ -272,15 +274,21 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			AlertDialog.Builder builder = new AlertDialog.Builder(LinphonePreferencesActivity.this);
 			builder.setTitle(R.string.wizard_confirmation);
 			
-			LayoutInflater inflater = LayoutInflater.from(LinphonePreferencesActivity.this);
+			final LayoutInflater inflater = LayoutInflater.from(LinphonePreferencesActivity.this);
 	    	View v = inflater.inflate(R.layout.wizard_confirm, null);
 	    	builder.setView(v);
 	    	
 	    	Button check = (Button) v.findViewById(R.id.wizardCheckAccount);
 	    	check.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					wizardDialog.dismiss();
 					if (isAccountVerified(username)) {
-						wizardDialog.dismiss();
+						SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean(getString(R.string.pref_activated_key) + (nbAccounts - 1), true);
+						editor.commit();
+					} else {
+						showDialog(CONFIRM_ID);
 					}
 				}
 			});
@@ -302,7 +310,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
 	}
 	
-	private boolean isAccountVerified(String username) {
+	static boolean isAccountVerified(String username) {
 		try {
 			XMLRPCClient client = new XMLRPCClient(new URL("https://www.linphone.org/wizard.php"));
 		    Object resultO = client.call("check_account_validated", "sip:" + username + "@sip.linphone.org");
@@ -402,7 +410,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
     				public void run() {
 			    		addExtraAccountPreferencesButton(accounts, nbAccounts, true);
 			    		LinphonePreferencesActivity.this.username = username;
-			    		fillLinphoneAccount(nbAccounts, username, password);
+			    		fillLinphoneAccount(nbAccounts, username, password, true);
 			        	nbAccounts++;
 			    		createDynamicAccountsPreferences();
 			    		wizardDialog.dismiss();
@@ -529,6 +537,26 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		field2.addTextChangedListener(passwordListener);
 	}
 	
+	private void verifiyAccountsActivated() {
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		for (int i = 0; i < nbAccounts; i++) {
+			String key = (i == 0 ? "" : Integer.toString(i));
+			boolean createdByWizard = prefs.getBoolean(getString(R.string.pref_wizard_key) + key, false);
+			boolean activated = prefs.getBoolean(getString(R.string.pref_activated_key) + key, true);
+			if (createdByWizard && !activated) {
+				//Check if account has been activated since
+				activated = isAccountVerified(prefs.getString(getString(R.string.pref_username_key) + key, ""));
+				if (activated) {
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putBoolean(getString(R.string.pref_activated_key) + key, true);
+					editor.commit();
+				} else {
+					showDialog(CONFIRM_ID);
+				}
+			}
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -536,8 +564,10 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		addPreferencesFromResource(R.xml.preferences);
 
 		createDynamicAccountsPreferences();
-		addWizardAccount();
+		addWizardPreferenceButton();
 		addTransportChecboxesListener();
+		
+		verifiyAccountsActivated();
 		
 		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
 		ecCalibratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {

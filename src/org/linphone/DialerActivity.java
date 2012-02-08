@@ -33,11 +33,19 @@ import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -67,10 +75,16 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 	private static DialerActivity instance;
 	private boolean mPreventDoubleCallOnRotation;
+
+	private AlertDialog wizardDialog;
+	protected String username;
+	private String key;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
 	private static final String PREVENT_DOUBLE_CALL = "prevent_call_on_phone_rotation";
+	
+	private static final int CONFIRM_ID = 0x668;
 
 	/**
 	 * @return null if not ready yet
@@ -109,6 +123,68 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	                new int[] { R.id.Identity, R.id.State });
 			accounts.setAdapter((ListAdapter) adapterForList);
 			accounts.invalidate();
+		}
+	}
+	
+	protected Dialog onCreateDialog (int id) {
+		if (id == CONFIRM_ID) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.wizard_confirmation);
+			
+			final LayoutInflater inflater = LayoutInflater.from(this);
+	    	View v = inflater.inflate(R.layout.wizard_confirm, null);
+	    	builder.setView(v);
+	    	
+	    	Button check = (Button) v.findViewById(R.id.wizardCheckAccount);
+	    	check.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					wizardDialog.dismiss();
+					if (LinphonePreferencesActivity.isAccountVerified(username)) {
+						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DialerActivity.this);
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean(getString(R.string.pref_activated_key) + key, true);
+						editor.commit();
+					} else {
+						showDialog(CONFIRM_ID);
+					}
+				}
+			});
+	    	
+	    	Button cancel = (Button) v.findViewById(R.id.wizardCancel);
+	    	cancel.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					wizardDialog.dismiss();
+				}
+			});
+	    	
+			wizardDialog = builder.create();
+			return wizardDialog;
+		}
+		return null;
+	}
+	
+	private void verifiyAccountsActivated() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+		
+		for (int i = 0; i < nbAccounts; i++) {
+			String key = (i == 0 ? "" : Integer.toString(i));
+			boolean createdByWizard = prefs.getBoolean(getString(R.string.pref_wizard_key) + key, false);
+			boolean activated = prefs.getBoolean(getString(R.string.pref_activated_key) + key, true);
+			if (createdByWizard && !activated) {
+				//Check if account has been activated since
+				String username = prefs.getString(getString(R.string.pref_username_key) + key, "");
+				activated = LinphonePreferencesActivity.isAccountVerified(username);
+				if (activated) {
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putBoolean(getString(R.string.pref_activated_key) + key, true);
+					editor.commit();
+				} else {
+					this.username = username;
+					this.key = key;
+					showDialog(CONFIRM_ID);
+				}
+			}
 		}
 	}
 
@@ -155,6 +231,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 		instance = this;
 		super.onCreate(savedInstanceState);
+		
+		verifiyAccountsActivated();
+		
 		displayRegisterStatus();
 	}
 
