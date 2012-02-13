@@ -70,7 +70,7 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tests/Android.mk
 
 
 ifeq ($(BUILD_TUNNEL), 1)
-include $(linphone-root-dir)/submodules/linphone/tunnel/Android.mk
+include $(linphone-root-dir)/submodules/tunnel/Android.mk
 endif
 
 ifeq ($(BUILD_SILK), 1)
