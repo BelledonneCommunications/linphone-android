@@ -8,7 +8,10 @@ ifeq ($(BUILD_AMRWB),)
 BUILD_AMRWB=0
 endif
 ifeq ($(BUILD_AMRWB),)
-BUILD_SRTP=1
+BUILD_AMRWB=0
+endif
+ifeq ($(BUILD_G729),)
+BUILD_G729=0
 endif
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
@@ -134,4 +137,9 @@ endif
 
 ifneq ($(BUILD_AMRWB), 0)
 include $(linphone-root-dir)/submodules/externals/build/vo-amrwbenc/Android.mk
+endif
+
+ifneq ($(BUILD_G729), 0)
+include $(linphone-root-dir)/submodules/bcg729/Android.mk
+include $(linphone-root-dir)/submodules/bcg729/msbcg729/Android.mk
 endif

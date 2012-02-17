@@ -598,7 +598,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		//detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, true);
 		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, true);
 		detectAudioCodec(R.string.pref_codec_silk24_key,"SILK",24000, true);
-
+		detectAudioCodec(R.string.pref_codec_g729_key,"G729",8000, true);
+		
 		// No video
 		if (!Version.isVideoCapable()) {
 			uncheckAndDisableCheckbox(pref_video_enable_key);

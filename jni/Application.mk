@@ -42,6 +42,10 @@ ifeq ($(BUILD_SILK),1)
 APP_MODULES +=libmssilk
 endif
 
+ifeq ($(BUILD_G729),1)
+APP_MODULES +=libbcg729 libmsbcg729
+endif
+
 ifeq ($(RING),yes)
 APP_MODULES      += libring
 endif

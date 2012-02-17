@@ -570,6 +570,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
 			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
 			enableDisableAudioCodec("G722", 8000, R.string.pref_codec_g722_key);
+			enableDisableAudioCodec("G729", 8000, R.string.pref_codec_g729_key); 
 			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
 			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
 			enableDisableAudioCodec("AMR", 8000, R.string.pref_codec_amr_key);
@@ -1126,6 +1127,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
         boolean amrwb = LinphoneService.isReady() && LinphoneManager.getLc()
         .findPayloadType("AMR-WB", 16000)!=null;
         e.putBoolean(getString(pref_codec_amrwb_key), amrwb);
+        
+        boolean g729 = LinphoneService.isReady() && LinphoneManager.getLc()
+        .findPayloadType("G729", 8000)!=null;
+        e.putBoolean(getString(R.string.pref_codec_g729_key), g729);
 
 		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !Hacks.hasCamera()) {
 			e.putBoolean(getString(pref_video_enable_key), false);

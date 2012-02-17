@@ -78,6 +78,10 @@
 				android:title="@string/pref_codec_amr" 
 				android:defaultValue="true"
 				android:shouldDisableView="true"  />
+			<CheckBoxPreference android:key="@string/pref_codec_g729_key"
+                android:title="@string/pref_codec_g729"
+                android:defaultValue="true"
+                android:shouldDisableView="true"  />
             <CheckBoxPreference android:key="@string/pref_codec_amrwb_key"
                 android:title="@string/pref_codec_amrwb"
                 android:defaultValue="true"

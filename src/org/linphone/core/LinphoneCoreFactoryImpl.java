@@ -51,9 +51,12 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 		// Tunnel
 		loadOptionalLibrary("tunnelclient");
+		
+		// g729 A implementation
+		loadOptionalLibrary("bcg729");
 
 		//Main library
-		System.loadLibrary("linphone");
+		System.loadLibrary("linphone"); 
 
 		Version.dumpCapabilities();
 	}
