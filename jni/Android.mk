@@ -7,13 +7,10 @@ endif
 ifeq ($(BUILD_AMRWB),)
 BUILD_AMRWB=0
 endif
-ifeq ($(BUILD_AMRWB),)
-BUILD_AMRWB=0
-endif
 ifeq ($(BUILD_G729),)
 BUILD_G729=0
 endif
-
+BUILD_SRTP=1
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
 LINPHONE_VIDEO=1

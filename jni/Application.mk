@@ -9,7 +9,7 @@ endif
 ifeq ($(BUILD_AMRWB),)
 BUILD_AMRWB=0
 endif
-ifeq ($(BUILD_AMRWB),)
+ifeq ($(BUILD_SRTP),)
 BUILD_SRTP=1
 endif
 
