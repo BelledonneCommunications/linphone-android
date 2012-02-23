@@ -20,7 +20,7 @@ BUILD_AMRNB           0 (don't build amrnb codec), light (try to use amrnb codec
 BUILD_AMRWB           0 (don't build amrwb codec), 1 (build your own amrwb codec)                                                       |     1
 BUILD_GPLV3_ZRTP      0 (don't support ZRTP), 1 (support ZRTP and make the whole program GPLv3)
 BUILD_SILK            0 (don't build silk plugin), 1 (build silk) [silk is Skype nonfree patented audio codec]
-BUILD_G720            0 (don't build g729 plugin), 1 (build g729) [g729 is nonfree patented audio codec, contact Sipro lab for more details]
+BUILD_G729            0 (don't build g729 plugin), 1 (build g729) [g729 is nonfree patented audio codec, contact Sipro lab for more details]
 BUILD_TUNNEL          0 (don't build tunnel), 1 (build tunnel) [requires a tunnel implementation in submodules/linphone/tunnel]
 
 In order to use ZRTP you also need to define the media_encryption property to
