@@ -670,4 +670,26 @@ class LinphoneCoreImpl implements LinphoneCore {
 
 	@Override
 	public native boolean isTunnelAvailable();
+	
+	private native void acceptCallWithParams(long nativePtr, LinphoneCall aCall,
+			LinphoneCallParams params);
+	@Override
+	public void acceptCallWithParams(LinphoneCall aCall,
+			LinphoneCallParams params) throws LinphoneCoreException {
+		acceptCallWithParams(nativePtr, aCall, params);
+	}
+	
+	private native void acceptCallUpdate(long nativePtr, LinphoneCall aCall, LinphoneCallParams params);
+	@Override
+	public void acceptCallUpdate(LinphoneCall aCall, LinphoneCallParams params)
+			throws LinphoneCoreException {
+		acceptCallUpdate(nativePtr, aCall, params);		
+	}
+	
+	private native void deferCallUpdate(long nativePtr, LinphoneCall aCall, LinphoneCallParams params);
+	@Override
+	public void deferCallUpdate(LinphoneCall aCall, LinphoneCallParams params)
+			throws LinphoneCoreException {
+		deferCallUpdate(nativePtr, aCall, params);
+	}
 }

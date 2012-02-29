@@ -29,6 +29,7 @@ class LinphoneCallImpl implements LinphoneCall {
 	native private long getRemoteAddress(long nativePtr);
 	native private int getState(long nativePtr);
 	private native long getCurrentParamsCopy(long nativePtr);
+	private native long getRemoteParams(long nativePtr);
 	private native void enableCamera(long nativePtr, boolean enabled);
 	private native boolean cameraEnabled(long nativePtr);
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
@@ -74,7 +75,9 @@ class LinphoneCallImpl implements LinphoneCall {
 	public LinphoneCallParams getCurrentParamsCopy() {
 		return new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
 	}
-
+	public LinphoneCallParams getRemoteParams() {
+		return new LinphoneCallParamsImpl(getRemoteParams(nativePtr));
+	}
 	public void enableCamera(boolean enabled) {
 		enableCamera(nativePtr, enabled);
 	}
