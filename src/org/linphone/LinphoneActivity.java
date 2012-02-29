@@ -385,12 +385,11 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		if (VideoCallActivity.launched || call == null) {
 			return;
 		}
-
 		mHandler.postDelayed(new Runnable() {
 			public void run() {
 				if (VideoCallActivity.launched) return;
 				startOrientationSensor();
-				LinphoneManager.getInstance().enableCamera(call, true);
+				//LinphoneManager.getInstance().enableCamera(call, true);
 				startActivityForResult(new Intent().setClass(
 						LinphoneActivity.this,
 						VideoCallActivity.class),

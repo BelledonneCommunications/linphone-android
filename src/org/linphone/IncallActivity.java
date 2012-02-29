@@ -31,10 +31,10 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.Numpad;
 
@@ -48,9 +48,9 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.ImageView;
@@ -298,7 +298,11 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		case R.id.conf_simple_video:
 			LinphoneCall vCall = lc().getCurrentCall();
 			if (vCall != null) {
-				if (!LinphoneManager.getInstance().addVideo()) {
+				if (!vCall.cameraEnabled() && vCall.getCurrentParamsCopy().getVideoEnabled()) {
+					// NoWebcam mode, we let it this way
+					LinphoneActivity.instance().startVideoActivity(vCall, 0);
+				}
+				else if (!LinphoneManager.getInstance().addVideo()) {
 					LinphoneActivity.instance().startVideoActivity(vCall, 0);
 				}
 			}
@@ -370,7 +374,11 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				mCallToTransfer = call;	
 				break;
 			case R.id.addVideo:
-				if (!LinphoneManager.getInstance().addVideo()) {
+				if (!call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled()) {
+					// NoWebcam mode, we let it this way
+					LinphoneActivity.instance().startVideoActivity(call, 0);
+				}
+				else if (!LinphoneManager.getInstance().addVideo()) {
 					LinphoneActivity.instance().startVideoActivity(call, 0);
 				}
 				break;
