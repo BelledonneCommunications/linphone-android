@@ -1097,6 +1097,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public boolean shareMyCamera() {
 		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_share_my_video_key, false);
 	}
+	
+	public boolean autoAcceptCamera() {
+		return getPrefBoolean(R.string.pref_video_automatically_accept_video_key, false);
+	}
 
 	public void setAudioModeIncallForGalaxyS() {
 		mAudioManager.setMode(MODE_IN_CALL);

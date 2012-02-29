@@ -46,6 +46,7 @@
     <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
     <string name="pref_video_codec_h264_key">pref_video_codec_h264_key</string>
     <string name="pref_video_automatically_share_my_video_key">pref_video_automatically_share_my_video_key</string>
+    <string name="pref_video_automatically_accept_video_key">pref_video_automatically_accept_video_key</string>
     <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
     <string name="pref_video_enable_key">pref_video_enable_key</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
