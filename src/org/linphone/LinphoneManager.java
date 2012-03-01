@@ -458,7 +458,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setRing(null);
 			mLc.setRootCA(mLinphoneRootCaFile);
 			mLc.setPlayFile(mPauseSoundFile);
-
+			mLc.setVideoPolicy(isAutoInitiateVideoCalls(), isAutoAcceptCamera());
 
 			try {
 				initFromConf();
@@ -1098,8 +1098,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_share_my_video_key, false);
 	}
 	
-	public boolean autoAcceptCamera() {
+	public boolean isAutoAcceptCamera() {
 		return getPrefBoolean(R.string.pref_video_automatically_accept_video_key, false);
+	}
+	
+	public boolean isAutoInitiateVideoCalls() {
+		return getPrefBoolean(R.string.pref_video_initiate_call_with_video_key, false);
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
@@ -1325,6 +1329,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (state == State.CallEnd && mLc.getCallsNb() == 0) {
 				routeAudioToReceiver();
 			}
+			
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
 			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
 				l.onCallStateChanged(call, state, message);
