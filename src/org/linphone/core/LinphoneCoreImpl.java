@@ -686,11 +686,11 @@ class LinphoneCoreImpl implements LinphoneCore {
 		acceptCallUpdate(nativePtr, aCall, params);		
 	}
 	
-	private native void deferCallUpdate(long nativePtr, LinphoneCall aCall, LinphoneCallParams params);
+	private native void deferCallUpdate(long nativePtr, LinphoneCall aCall);
 	@Override
-	public void deferCallUpdate(LinphoneCall aCall, LinphoneCallParams params)
+	public void deferCallUpdate(LinphoneCall aCall)
 			throws LinphoneCoreException {
-		deferCallUpdate(nativePtr, aCall, params);
+		deferCallUpdate(nativePtr, aCall);
 	}
 	
 	private native void setVideoPolicy(long nativePtr, boolean autoInitiate, boolean autoAccept);
