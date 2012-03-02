@@ -22,6 +22,8 @@ cat > $D/.classpath <<EOF
         <classpathentry kind="src" path="submodules/linphone/coreapi/help/java"/>
         <classpathentry kind="src" path="submodules/linphone/java/common"/>
         <classpathentry kind="src" path="submodules/linphone/java/j2se"/>
+        <classpathentry kind="src" path="submodules/linphone/mediastreamer2/java/src"/>
+        <classpathentry excluding="org/linphone/mediastream/MediastreamerActivity.java" kind="src" path="submodules/linphone/mediastreamer2/java/src"/>
         <classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
         <classpathentry kind="output" path="bin"/>
 </classpath>
@@ -37,7 +39,7 @@ grep -R "org.linphone.R" . -l  | grep java | xargs sed -i 's/org\.linphone\.R/or
 cat > $D/AndroidManifest.xml <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.linphone.sdk" android:versionCode="1" android:versionName="1.0">
+      package="org.linphone" android:versionCode="1" android:versionName="1.0">
     <application>
     
     
@@ -130,8 +132,9 @@ rm -rf $D.zip $D
 copy submodules/linphone/coreapi/help/java $D
 copy libs $D
 copy src/org/linphone/core $D
-copy submodules/linphone/java/j2se/ $D
+copy submodules/linphone/java/j2se $D
 copy submodules/linphone/java/common $D
+copy submodules/linphone/mediastreamer2/java/src $D
 copy res/layout/hello_world.xml $D
 copy res/layout/videotest.xml $D
 
@@ -147,7 +150,16 @@ rm -rf $DBASE
 DBASE="liblinphone-android-javadoc"
 D="../$DBASE.zip"
 echo "Generating javadoc to $D"
-javadoc -quiet -d $DBASE  src/org/linphone/*.java src/org/linphone/ui/*.java src/org/linphone/core/*.java src/org/linphone/core/video/*.java src/org/linphone/core/tutorials/* submodules/linphone/java/common/org/linphone/core/*.java submodules/linphone/java/j2se/org/linphone/core/*.java
+javadoc -quiet -d $DBASE  src/org/linphone/*.java \
+src/org/linphone/ui/*.java \
+src/org/linphone/core/*.java \
+src/org/linphone/core/video/*.java \
+src/org/linphone/core/tutorials/* \
+submodules/linphone/java/common/org/linphone/core/*.java \
+submodules/linphone/java/j2se/org/linphone/core/*.java \
+submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/*.java \
+submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/video/capture/*.java \
+submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/video/display/*.java
 rm -rf $D
 zip -rq $D $DBASE
 rm -rf $DBASE
