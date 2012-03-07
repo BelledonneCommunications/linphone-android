@@ -63,6 +63,7 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -1099,11 +1100,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public boolean isAutoAcceptCamera() {
-		return getPrefBoolean(R.string.pref_video_automatically_accept_video_key, false);
+		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_accept_video_key, false);
 	}
 	
 	public boolean isAutoInitiateVideoCalls() {
-		return getPrefBoolean(R.string.pref_video_initiate_call_with_video_key, false);
+		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_initiate_call_with_video_key, false);
 	}
 
 	public void setAudioModeIncallForGalaxyS() {
