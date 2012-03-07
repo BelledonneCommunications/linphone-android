@@ -568,6 +568,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private long getCallPtr(LinphoneCall call) {
 		return ((LinphoneCallImpl)call).nativePtr;
 	}
+	
+	private long getCallParamsPtr(LinphoneCallParams callParams) {
+		return ((LinphoneCallParamsImpl)callParams).nativePtr;
+	}
 
 	private native int transferCall(long nativePtr, long callPtr, String referTo);
 	public synchronized void transferCall(LinphoneCall call, String referTo) {
@@ -671,26 +675,26 @@ class LinphoneCoreImpl implements LinphoneCore {
 	@Override
 	public native boolean isTunnelAvailable();
 	
-	private native void acceptCallWithParams(long nativePtr, LinphoneCall aCall,
-			LinphoneCallParams params);
+	private native void acceptCallWithParams(long nativePtr, long aCall,
+			long params);
 	@Override
 	public void acceptCallWithParams(LinphoneCall aCall,
 			LinphoneCallParams params) throws LinphoneCoreException {
-		acceptCallWithParams(nativePtr, aCall, params);
+		acceptCallWithParams(nativePtr, getCallPtr(aCall), getCallParamsPtr(params));
 	}
 	
-	private native void acceptCallUpdate(long nativePtr, LinphoneCall aCall, LinphoneCallParams params);
+	private native void acceptCallUpdate(long nativePtr, long aCall, long params);
 	@Override
 	public void acceptCallUpdate(LinphoneCall aCall, LinphoneCallParams params)
 			throws LinphoneCoreException {
-		acceptCallUpdate(nativePtr, aCall, params);		
+		acceptCallUpdate(nativePtr, getCallPtr(aCall), getCallParamsPtr(params));		
 	}
 	
-	private native void deferCallUpdate(long nativePtr, LinphoneCall aCall);
+	private native void deferCallUpdate(long nativePtr, long aCall);
 	@Override
 	public void deferCallUpdate(LinphoneCall aCall)
 			throws LinphoneCoreException {
-		deferCallUpdate(nativePtr, aCall);
+		deferCallUpdate(nativePtr, getCallPtr(aCall));
 	}
 	
 	private native void setVideoPolicy(long nativePtr, boolean autoInitiate, boolean autoAccept);
