@@ -814,6 +814,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		try {
 			LinphoneManager.getInstance().initFromConf();
+			lc.setVideoPolicy(LinphoneManager.getInstance().isAutoInitiateVideoCalls(), LinphoneManager.getInstance().isAutoAcceptCamera());
 		} catch (LinphoneException e) {
 			if (! (e instanceof LinphoneConfigException)) {
 				Log.e(e, "Cannot update config");
