@@ -25,13 +25,14 @@ import java.lang.reflect.Method;
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.GlobalState;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCore.GlobalState;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Version;
 
 import android.app.Notification;
@@ -45,12 +46,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.net.wifi.WifiManager.WifiLock;
-import android.net.wifi.WifiManager;
 
 /**
  * 
@@ -381,6 +382,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		return DialerActivity.instance();
 	}
 
+	private static final LinphoneOnCallStateChangedListener incallListener() {
+		return IncallActivity.instance();
+	}
 	
 	
 	
@@ -447,6 +451,23 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 					.setClass(this, LinphoneActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
+		
+		if (state == State.CallUpdatedByRemote) {
+			// If the correspondent proposes video while audio call
+			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
+			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
+			boolean autoAcceptCameraPolicy = LinphoneManager.getInstance().isAutoAcceptCamera();
+			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy) {
+				try {
+					LinphoneManager.getLc().deferCallUpdate(call);
+					
+					if (incallListener() != null)
+						incallListener().onCallStateChanged(call, state, message);
+				} catch (LinphoneCoreException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		if (state == State.StreamsRunning) {
 			// Workaround bug current call seems to be updated after state changed to streams running
@@ -461,7 +482,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (guiListener() != null)
-					guiListener().onCallStateChanged(call, state, message);			
+					guiListener().onCallStateChanged(call, state, message);
 			}
 		});
 	}

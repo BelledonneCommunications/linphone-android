@@ -589,21 +589,21 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return (LinphoneCall) findCallFromUri(nativePtr, uri);
 	}
 
-	public MediaEncryption getMediaEncryption() {
+	public synchronized MediaEncryption getMediaEncryption() {
 		return MediaEncryption.fromInt(getMediaEncryption(nativePtr));
 	}
-	public boolean isMediaEncryptionMandatory() {
+	public synchronized boolean isMediaEncryptionMandatory() {
 		return isMediaEncryptionMandatory(nativePtr);
 	}
-	public void setMediaEncryption(MediaEncryption menc) {
+	public synchronized void setMediaEncryption(MediaEncryption menc) {
 		setMediaEncryption(nativePtr, menc.mValue);	
 	}
-	public void setMediaEncryptionMandatory(boolean yesno) {
+	public synchronized void setMediaEncryptionMandatory(boolean yesno) {
 		setMediaEncryptionMandatory(nativePtr, yesno);
 	}
 
 	private native int getMaxCalls(long nativePtr);
-	public int getMaxCalls() {
+	public synchronized int getMaxCalls() {
 		return getMaxCalls(nativePtr);
 	}
 	@Override
@@ -614,61 +614,61 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 
 	private native boolean soundResourcesLocked(long nativePtr);
-	public boolean soundResourcesLocked() {
+	public synchronized boolean soundResourcesLocked() {
 		return soundResourcesLocked(nativePtr);
 	}
 
 	private native void setMaxCalls(long nativePtr, int max);
 	@Override
-	public void setMaxCalls(int max) {
+	public synchronized void setMaxCalls(int max) {
 		setMaxCalls(nativePtr, max);
 	}
 	private native boolean isEchoLimiterEnabled(long nativePtr);
 	@Override
-	public boolean isEchoLimiterEnabled() {
+	public synchronized boolean isEchoLimiterEnabled() {
 		return isEchoLimiterEnabled(nativePtr);
 	}
 	private native boolean mediaEncryptionSupported(long nativePtr, int menc);
 	@Override
-	public boolean mediaEncryptionSupported(MediaEncryption menc) {
+	public synchronized boolean mediaEncryptionSupported(MediaEncryption menc) {
 		return mediaEncryptionSupported(nativePtr,menc.mValue);
 	}
 
 	private native void setPlayFile(long nativePtr, String path);
 
 	@Override
-	public void setPlayFile(String path) {
+	public synchronized void setPlayFile(String path) {
 		setPlayFile(nativePtr, path);
 	}
 
 
 	private native void tunnelAddServerAndMirror(long nativePtr, String host, int port, int mirror, int ms);
 	@Override
-	public void tunnelAddServerAndMirror(String host, int port, int mirror, int ms) {
+	public synchronized void tunnelAddServerAndMirror(String host, int port, int mirror, int ms) {
 		tunnelAddServerAndMirror(nativePtr, host, port, mirror, ms);
 	}
 
 	private native void tunnelAutoDetect(long nativePtr);
 	@Override
-	public void tunnelAutoDetect() {
+	public synchronized void tunnelAutoDetect() {
 		tunnelAutoDetect(nativePtr);
 	}
 
 	private native void tunnelCleanServers(long nativePtr);
 	@Override
-	public void tunnelCleanServers() {
+	public synchronized void tunnelCleanServers() {
 		tunnelCleanServers(nativePtr);
 	}
 
 	private native void tunnelEnable(long nativePtr, boolean enable);
 	@Override
-	public void tunnelEnable(boolean enable) {
+	public synchronized void tunnelEnable(boolean enable) {
 		tunnelEnable(nativePtr, enable);
 	}
 
 	private native void tunnelEnableLogs(long nativePtr, boolean enable);
 	@Override
-	public void tunnelEnableLogs(boolean enable) {
+	public synchronized void tunnelEnableLogs(boolean enable) {
 		tunnelEnableLogs(nativePtr, enable);
 	}
 
@@ -678,27 +678,27 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void acceptCallWithParams(long nativePtr, long aCall,
 			long params);
 	@Override
-	public void acceptCallWithParams(LinphoneCall aCall,
+	public synchronized void acceptCallWithParams(LinphoneCall aCall,
 			LinphoneCallParams params) throws LinphoneCoreException {
 		acceptCallWithParams(nativePtr, getCallPtr(aCall), getCallParamsPtr(params));
 	}
 	
 	private native void acceptCallUpdate(long nativePtr, long aCall, long params);
 	@Override
-	public void acceptCallUpdate(LinphoneCall aCall, LinphoneCallParams params)
+	public synchronized void acceptCallUpdate(LinphoneCall aCall, LinphoneCallParams params)
 			throws LinphoneCoreException {
 		acceptCallUpdate(nativePtr, getCallPtr(aCall), getCallParamsPtr(params));		
 	}
 	
 	private native void deferCallUpdate(long nativePtr, long aCall);
 	@Override
-	public void deferCallUpdate(LinphoneCall aCall)
+	public synchronized void deferCallUpdate(LinphoneCall aCall)
 			throws LinphoneCoreException {
 		deferCallUpdate(nativePtr, getCallPtr(aCall));
 	}
 	
 	private native void setVideoPolicy(long nativePtr, boolean autoInitiate, boolean autoAccept);
-	public void setVideoPolicy(boolean autoInitiate, boolean autoAccept) {
+	public synchronized void setVideoPolicy(boolean autoInitiate, boolean autoAccept) {
 		setVideoPolicy(nativePtr, autoInitiate, autoAccept);
 	}
 }

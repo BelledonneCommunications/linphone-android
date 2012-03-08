@@ -227,6 +227,10 @@
 <string name="media_encryption_srtp">SRTP</string>
 <string name="media_encryption_zrtp">ZRTP</string>
 
+<string name="dynamic_video_asking">Your correspondent would like to switch to video</string>
+<string name="dynamic_video_accept">Accept video</string>
+<string name="dynamic_video_deny">Deny video</string>
+
 <string name="pref_extra_accounts">pref_nb_accounts_extra</string>
 <string name="pref_default_account">pref_default_account</string>
 <string name="pref_sipaccounts">SIP Accounts</string>

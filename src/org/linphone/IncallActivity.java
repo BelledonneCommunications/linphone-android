@@ -29,9 +29,11 @@ import java.util.List;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
@@ -44,6 +46,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -63,6 +66,7 @@ import android.widget.Toast;
  */
 public class IncallActivity extends AbstractCalleesActivity implements
 		LinphoneOnAudioChangedListener,
+		LinphoneOnCallStateChangedListener,
 		LinphoneOnCallEncryptionChangedListener,
 		Comparator<LinphoneCall>,
 		OnLongClickListener,
@@ -73,12 +77,23 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private static final int numpadDialogId = 1;
 	private static final int addCallId = 1;
 	private static final int transferCallId = 2;
+	private static final int promptVideoId = 3;
 
+	private static IncallActivity instance;
+	private CountDownTimer timer;
 	public static boolean active;
 	@Override protected void setActive(boolean a) {active = a;}
 	@Override protected boolean isActive() {return active;}
 
-
+	public static boolean isReady() {
+		return instance!=null;
+	}
+	
+	static IncallActivity instance()  {
+		if (isReady()) return instance;
+		return null;
+	}
+	
 	private void pauseCurrentCallOrLeaveConference() {
 		LinphoneCall call = lc().getCurrentCall();
 		if (call != null && !call.isInConference()) {
@@ -99,7 +114,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			return;
 		}
 		setContentView(R.layout.incall_layout);
-
+		instance = this;
+		
 		mAllowTransfers = getResources().getBoolean(R.bool.allow_transfers);
 
 		findViewById(R.id.addCall).setOnClickListener(this);
@@ -117,8 +133,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		enableView(mConferenceVirtualCallee, R.id.conf_header_details, this, true);
 
 
-		boolean mMayDoVideo = Version.isVideoCapable()
-		&& LinphoneManager.getInstance().isVideoEnabled();
+		boolean mMayDoVideo = Version.isVideoCapable() && LinphoneManager.getInstance().isVideoEnabled();
 		if (mMayDoVideo) {
 			findViewById(R.id.conf_simple_video).setOnClickListener(this);
 		} else {
@@ -178,22 +193,63 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		view.setVisibility(VISIBLE);
 	}
 
+	private void acceptCallUpdate(boolean accept, int id) {
+		 removeDialog(id);
+		 timer.cancel();
+		 
+		 LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		 if (call == null)
+			 return;
+		 
+		 LinphoneCallParams params = call.getCurrentParamsCopy();
+		 if (accept) {
+			 params.setVideoEnabled(true);
+			 LinphoneManager.getLc().enableVideo(true, true);
+		 }
+		 
+		 try {
+			LinphoneManager.getLc().acceptCallUpdate(call, params);
+		 } catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		 }
+		 
+		 updateUI();
+	}
 
 	@Override
+	//FIXME : Store texts into resources
 	protected Dialog onCreateDialog(final int id) {
 		switch (id) {
+		case promptVideoId:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.dynamic_video_asking);
+			builder.setNegativeButton(R.string.dynamic_video_deny, new
+					 DialogInterface.OnClickListener() {
+						 public void onClick(DialogInterface dialog, int whichButton)
+						 {
+							 acceptCallUpdate(false, id);
+						 }
+					 });
+			builder.setPositiveButton(R.string.dynamic_video_accept, new
+					 DialogInterface.OnClickListener() {
+						 public void onClick(DialogInterface dialog, int whichButton)
+						 {
+							 acceptCallUpdate(true, id);
+						 }
+					 });
+			return builder.create();
 		case numpadDialogId:
 			Numpad numpad = new Numpad(this, true);
 			return new AlertDialog.Builder(this).setView(numpad)
 			// .setIcon(R.drawable.logo_linphone_57x57)
 					// .setTitle("Send DTMFs")
-					 .setPositiveButton(getString(R.string.close_button_text), new
+					 .setPositiveButton(R.string.close_button_text, new
 					 DialogInterface.OnClickListener() {
-					 public void onClick(DialogInterface dialog, int whichButton)
-					 {
-					 dismissDialog(id);
-					 }
-					 })
+						 public void onClick(DialogInterface dialog, int whichButton)
+							 {
+							 	dismissDialog(id);
+							 }
+						 })
 					.create();
 		default:
 			throw new IllegalArgumentException("unkown dialog id " + id);
@@ -740,4 +796,29 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		});
 	}
 
+	@Override
+	public void onCallStateChanged(LinphoneCall call, final State state, String message) {
+		if (state == State.CallUpdatedByRemote) {
+			// If the correspondent proposes video while audio call
+			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
+			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
+			boolean autoAcceptCameraPolicy = LinphoneManager.getInstance().isAutoAcceptCamera();
+			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+				mHandler.post(new Runnable() {
+					public void run() {
+						showDialog(promptVideoId);
+						// We let 30 secs for the user to decide
+						timer = new CountDownTimer(30000, 1000) {
+							public void onTick(long millisUntilFinished) { }
+
+							public void onFinish() {
+								removeDialog(promptVideoId);
+					    	}
+						}.start();
+					}
+				});
+			}
+		}
+		super.onCallStateChanged(call, state, message);
+	}
 }
