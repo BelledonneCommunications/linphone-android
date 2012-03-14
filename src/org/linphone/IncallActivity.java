@@ -811,7 +811,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 							public void onTick(long millisUntilFinished) { }
 
 							public void onFinish() {
-								removeDialog(promptVideoId);
+								acceptCallUpdate(false, promptVideoId);
 					    	}
 						}.start();
 					}
