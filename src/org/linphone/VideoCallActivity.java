@@ -106,12 +106,16 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		});
 		
 		androidVideoWindowImpl.init();
-		
+
 		videoCall = LinphoneManager.getLc().getCurrentCall();
 		if (videoCall != null) {
+			LinphoneManager lm = LinphoneManager.getInstance();
+			if (!lm.shareMyCamera() && !lm.isVideoInitiator() && videoCall.cameraEnabled()) {
+				lm.sendStaticImage(true);
+			}
+			
 			updatePreview(videoCall.cameraEnabled());
 		}
-
 			
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);

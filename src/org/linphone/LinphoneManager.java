@@ -136,6 +136,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
+	private boolean videoInitiator = false;
 
 	private WakeLock mIncallWakeLock;
 
@@ -147,6 +148,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	public static void removeListener(LinphoneSimpleListener listener) {
 		simpleListeners.remove(listener);
+	}
+	
+	public boolean isVideoInitiator() {
+		return videoInitiator;
+	}
+	
+	public void setVideoInitiator(boolean b) {
+		videoInitiator = b;
 	}
 
 
@@ -1155,6 +1164,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public boolean addVideo() {
 		LinphoneCall call = mLc.getCurrentCall();
 		enableCamera(call, true);
+		setVideoInitiator(true);
 		return reinviteWithVideo();
 	}
 	
