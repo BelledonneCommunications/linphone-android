@@ -63,7 +63,6 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
-import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -1333,8 +1332,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		public void onCallStateChanged(LinphoneCall call, State state,
 				String message) {
-			if (state==State.OutgoingInit || state==State.IncomingReceived) {
-				boolean sendCamera = shareMyCamera() && mLc.getConferenceSize() == 0;
+			if (state == State.OutgoingInit || state == State.IncomingReceived) {
+				setVideoInitiator(state == State.OutgoingInit);
+				boolean sendCamera = mLc.getConferenceSize() == 0;
 				enableCamera(call, sendCamera);
 			}
 			if (state == State.CallEnd && mLc.getCallsNb() == 0) {

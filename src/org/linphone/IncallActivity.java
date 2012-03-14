@@ -115,7 +115,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		}
 		setContentView(R.layout.incall_layout);
 		instance = this;
-		LinphoneManager.getInstance().setVideoInitiator(false);
 		
 		mAllowTransfers = getResources().getBoolean(R.bool.allow_transfers);
 
