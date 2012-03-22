@@ -86,7 +86,7 @@ VP8_CX_SRCS += vp8/encoder/encodeframe.c
 VP8_CX_SRCS += vp8/encoder/encodeintra.c
 VP8_CX_SRCS += vp8/encoder/encodemb.c
 VP8_CX_SRCS += vp8/encoder/encodemv.c
-#VP8_CX_SRCS += vp8/encoder/ethreading.c
+VP8_CX_SRCS += vp8/encoder/ethreading.c #
 VP8_CX_SRCS += vp8/encoder/generic/csystemdependent.c
 VP8_CX_SRCS += vp8/encoder/lookahead.c
 VP8_CX_SRCS += vp8/encoder/mcomp.c
@@ -210,10 +210,10 @@ VP8_DX_SRCS += vp8/decoder/dequantize.c
 VP8_DX_SRCS += vp8/decoder/detokenize.c
 VP8_DX_SRCS += vp8/decoder/error_concealment.c
 VP8_DX_SRCS += vp8/decoder/generic/dsystemdependent.c
+VP8_DX_SRCS += vp8/decoder/reconintra_mt.c #
+VP8_DX_SRCS += vp8/decoder/threading.c #
 VP8_DX_SRCS += vp8/decoder/onyxd_if.c
-#VP8_DX_SRCS += vp8/decoder/threading.c
 VP8_DX_SRCS += vp8/decoder/idct_blk.c
-#VP8_DX_SRCS += vp8/decoder/reconintra_mt.c
 
 ### vpx_codec
 API_SRCS = vpx/src/vpx_decoder.c
@@ -235,7 +235,7 @@ LOCAL_MODULE_CLASS := STATIC_LIBRARIES
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH) \
-   $(LOCAL_PATH)/vpx_ports \
+   	$(LOCAL_PATH)/vpx_ports \
 	$(LOCAL_PATH)/vp8/common \
 	$(LOCAL_PATH)/vp8/encoder \
 	$(LOCAL_PATH)/vp8/decoder \

@@ -469,6 +469,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setPlayFile(mPauseSoundFile);
 			mLc.setVideoPolicy(isAutoInitiateVideoCalls(), isAutoAcceptCamera());
 
+			int availableCores = Runtime.getRuntime().availableProcessors();
+			Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
+			mLc.setCpuCount(availableCores);
+			
 			try {
 				initFromConf();
 			} catch (LinphoneException e) {

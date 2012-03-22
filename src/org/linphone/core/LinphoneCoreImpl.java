@@ -706,4 +706,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setUserAgent(String name, String version) {
 		setUserAgent(nativePtr,name,version);
 	}
+
+	private native void setCpuCountNative(int count);
+	public void setCpuCount(int count)
+	{
+		setCpuCountNative(count);
+	}
 }
