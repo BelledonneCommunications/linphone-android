@@ -11,7 +11,7 @@ fi
 
 cd $topdir/submodules/libilbc-rfc3951 && ./autogen.sh && ./configure && make || ( echo "iLBC prepare stage failed" ; exit 1 )
 
-cd $topdir/submodules/externals/build/libvpx && ./asm_conversion.sh && cp *.asm *.h ../../libvpx/ || ( echo "VP8 prepare stage failed." ; exit 1 )
+cd $topdir/submodules/externals/build/libvpx && ./configure --target=armv7-android-gcc --sdk-path=$1 && make asm_com_offsets.asm || ( echo "VP8 prepare stage failed." ; exit 1 )
 
 cd $topdir/submodules/mssilk && ./autogen.sh && ./configure --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " && cd sdk && make extract-sources || ( echo "SILK audio plugin prepare state failed." ; exit 1 )
 
