@@ -25,7 +25,6 @@ SCALE_SRCS += vpx_scale/arm/scalesystemdependent.c
 #neon
 SCALE_SRCS += vpx_scale/arm/neon/vp8_vpxyv12_copy_y_neon$(ASM).neon
 SCALE_SRCS += vpx_scale/arm/neon/vp8_vpxyv12_copyframe_func_neon$(ASM).neon
-SCALE_SRCS += vpx_scale/arm/neon/vp8_vpxyv12_copyframeyonly_neon$(ASM).neon
 SCALE_SRCS += vpx_scale/arm/neon/vp8_vpxyv12_copysrcframe_func_neon$(ASM).neon
 SCALE_SRCS += vpx_scale/arm/neon/vp8_vpxyv12_extendframeborders_neon$(ASM).neon
 SCALE_SRCS += vpx_scale/arm/neon/yv12extend_arm.c
