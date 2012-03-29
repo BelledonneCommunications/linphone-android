@@ -2,6 +2,12 @@
 
 topdir=`pwd`
 
+if [ $# -ne 1 ] 
+then
+	"Error : path to the ndk as parameter."
+	exit 65
+fi
+
 cd submodules/externals/ffmpeg
 if test -z "`git status | grep neon`" ; then
 	echo "Applying patch to ffmpeg"
