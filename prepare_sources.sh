@@ -28,10 +28,27 @@ fi
 
 cd $topdir/submodules/libilbc-rfc3951 && ./autogen.sh && ./configure && make || ( echo "iLBC prepare stage failed" ; exit 1 )
 
-cd $topdir/submodules/externals/build/libvpx && ./asm_conversion.sh && cp *.asm *.h ../../libvpx/
 cd $topdir/submodules/externals/libvpx && ./configure --target=armv7-android-gcc --sdk-path=$NDK_PATH --enable-error-concealment && make clean && make asm_com_offsets.asm || ( echo "VP8 prepare stage failed." ; exit 1 )
 
 cd $topdir/submodules/mssilk && ./autogen.sh && ./configure --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " && cd sdk && make extract-sources || ( echo "SILK audio plugin prepare state failed." ; exit 1 )
+
+cd $topdir/submodules/linphone/mediastreamer2/src/
+# extract rules to build shader files
+vs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.vs`
+fs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.fs`
+eval $vs_rule
+# verify vs file creation
+if ! [ -e yuv2rgb.vs.h ]
+then
+	echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; cd -; exit 1
+fi
+eval $fs_rule
+# verify fs file creation
+if ! [ -e yuv2rgb.fs.h ]
+then
+	echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; cd -; exit 1
+fi
+cd $topdir
 
 # As a memo, the config.h for zrtpcpp is generated using the command
 # cmake  -Denable-ccrtp=false submodules/externals/libzrtpcpp
