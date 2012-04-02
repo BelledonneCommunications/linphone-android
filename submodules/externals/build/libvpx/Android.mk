@@ -153,10 +153,12 @@ VP8_COMMON_SRCS += vp8/common/arm/armv6/iwalsh_v6$(ASM)
 VP8_COMMON_SRCS += vp8/common/arm/armv6/filter_v6$(ASM)
 VP8_COMMON_SRCS += vp8/common/arm/armv6/idct_v6$(ASM)
 VP8_COMMON_SRCS += vp8/common/arm/armv6/loopfilter_v6$(ASM)
-VP8_COMMON_SRCS += vp8/common/arm/armv6/recon_v6$(ASM)
+#VP8_COMMON_SRCS += vp8/common/arm/armv6/recon_v6$(ASM)
 VP8_COMMON_SRCS += vp8/common/arm/armv6/simpleloopfilter_v6$(ASM)
 VP8_COMMON_SRCS += vp8/common/arm/armv6/sixtappredict8x4_v6$(ASM)
 VP8_COMMON_SRCS += vp8/common/arm/armv6/idct_blk_v6.c
+VP8_COMMON_SRCS += vp8/common/arm/armv6/dequant_idct_v6$(ASM)
+VP8_COMMON_SRCS += vp8/common/arm/armv6/dequantize_v6$(ASM)
 
 # common (neon)
 VP8_COMMON_SRCS += vp8/common/arm/neon/bilinearpredict4x4_neon$(ASM).neon
@@ -172,16 +174,16 @@ VP8_COMMON_SRCS += vp8/common/arm/neon/loopfilter_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/loopfiltersimplehorizontaledge_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/loopfiltersimpleverticaledge_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/mbloopfilter_neon$(ASM).neon
-VP8_COMMON_SRCS += vp8/common/arm/neon/recon2b_neon$(ASM).neon
-VP8_COMMON_SRCS += vp8/common/arm/neon/recon4b_neon$(ASM).neon
-VP8_COMMON_SRCS += vp8/common/arm/neon/reconb_neon$(ASM).neon
-VP8_COMMON_SRCS += vp8/common/arm/neon/shortidct4x4llm_1_neon$(ASM).neon
+#VP8_COMMON_SRCS += vp8/common/arm/neon/recon2b_neon$(ASM).neon
+#VP8_COMMON_SRCS += vp8/common/arm/neon/recon4b_neon$(ASM).neon
+#VP8_COMMON_SRCS += vp8/common/arm/neon/reconb_neon$(ASM).neon
+#VP8_COMMON_SRCS += vp8/common/arm/neon/shortidct4x4llm_1_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/shortidct4x4llm_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/sixtappredict4x4_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/sixtappredict8x4_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/sixtappredict8x8_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/sixtappredict16x16_neon$(ASM).neon
-VP8_COMMON_SRCS += vp8/common/arm/neon/recon16x16mb_neon$(ASM).neon
+#VP8_COMMON_SRCS += vp8/common/arm/neon/recon16x16mb_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/buildintrapredictorsmby_neon$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/save_neon_reg$(ASM).neon
 VP8_COMMON_SRCS += vp8/common/arm/neon/dequant_idct_neon$(ASM).neon
@@ -194,9 +196,6 @@ VP8_COMMON_SRCS += vp8/common/arm/neon/idct_blk_neon.c.neon
 VP8_DX_SRCS = vp8/decoder/arm/arm_dsystemdependent.c
 
 #File list for armv6
-VP8_DX_SRCS += vp8/decoder/arm/armv6/dequant_dc_idct_v6$(ASM)
-VP8_DX_SRCS += vp8/decoder/arm/armv6/dequant_idct_v6$(ASM)
-VP8_DX_SRCS += vp8/decoder/arm/armv6/dequantize_v6$(ASM)
 
 
 ### vp8dx
