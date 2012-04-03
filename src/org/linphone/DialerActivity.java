@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
@@ -37,11 +39,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
@@ -79,6 +86,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	private AlertDialog wizardDialog;
 	protected String username;
 	private String key;
+
+	private SurfaceView mVideoCaptureViewReady;
+	private int mCurrentCameraId = 0;
+
+	private Camera mCamera;
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
@@ -194,11 +206,62 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
 		((EraseButton) findViewById(R.id.Erase)).setAddressWidget(mAddress);
 
-
 		mCall = (CallButton) findViewById(R.id.Call);
 		mCall.setAddressWidget(mAddress);
 
 		mStatus =  (TextView) findViewById(R.id.status_label);
+		
+		// For the tablet landscape
+		final int numberOfCameras = Camera.getNumberOfCameras();
+        CameraInfo cameraInfo = new CameraInfo();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+                mCurrentCameraId = i;
+            }
+        }
+        mCamera = Camera.open(mCurrentCameraId);
+        
+		mVideoCaptureViewReady = (SurfaceView) findViewById(R.id.video_background);
+		if (mVideoCaptureViewReady != null)
+		{
+			mVideoCaptureViewReady.getHolder().addCallback(new Callback() {
+				public void surfaceDestroyed(SurfaceHolder holder) {
+					if (mCamera != null) {
+			            mCamera.stopPreview();
+			        }
+				}
+				public void surfaceCreated(SurfaceHolder holder) {
+					try {
+			            if (mCamera != null) {
+			                mCamera.setPreviewDisplay(holder);
+			            }
+			        } catch (IOException exception) {
+			            Log.e("IOException caused by setPreviewDisplay()", exception);
+			        }
+				}
+				public void surfaceChanged(SurfaceHolder holder, int format, int width,
+						int height) {
+					Camera.Parameters parameters = mCamera.getParameters();
+			        parameters.setPreviewSize(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height());
+			        mVideoCaptureViewReady.requestLayout();
+
+			        mCamera.setParameters(parameters);
+			        mCamera.startPreview();
+				}
+			});
+		}
+		mCamera.startPreview();
+		
+		Button switchCamera = (Button) findViewById(R.id.switch_camera);
+		if (switchCamera != null)
+		{
+			switchCamera.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mCamera = Camera.open((mCurrentCameraId + 1) % numberOfCameras);
+				}
+			});
+		}
 		
 		SlidingDrawer drawer = (SlidingDrawer) findViewById(R.id.drawer);
 		if (drawer != null) {
@@ -256,7 +319,15 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 
 
-
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	
+    	if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
+    }
 
 
 	
@@ -380,7 +451,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		// Note1: We wait as long as possible before setting the last message.
 		// Note2: Linphone service is in charge of instantiating LinphoneManager
 		mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
-
+        
 		super.onResume();
 	}
 
