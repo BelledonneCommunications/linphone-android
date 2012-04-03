@@ -7,7 +7,7 @@ LOCAL_MODULE := libvpx
 LOCAL_CFLAGS := -O3 -fPIC -D_FORTIFY_SOURCE=0 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -Wall -Wdeclaration-after-statement -Wdisabled-optimization -Wpointer-arith -Wtype-limits -Wcast-qual -Wno-unused-function
 
 LOCAL_ARM_MODE := arm
-ASM := .s
+ASM := .asm.s
 
 
 ### vpx_mem.mk
@@ -239,4 +239,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/vp8 \
 	$(LOCAL_PATH)/vpx_codec
 
+LOCAL_STATIC_LIBRARIES += cpufeatures
+
 include $(BUILD_STATIC_LIBRARY)
+$(call import-module,android/cpufeatures)
