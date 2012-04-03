@@ -34,8 +34,8 @@ cd $topdir/submodules/mssilk && ./autogen.sh && ./configure --host=arm-linux MED
 
 cd $topdir/submodules/linphone/mediastreamer2/src/
 # extract rules to build shader files
-vs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.vs`
-fs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.fs`
+vs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/$$builddir/./'`
+fs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.fs | sed 's/$$builddir/./'`
 eval $vs_rule
 # verify vs file creation
 if ! [ -e yuv2rgb.vs.h ]
