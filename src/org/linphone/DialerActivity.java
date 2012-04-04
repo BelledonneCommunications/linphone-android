@@ -28,7 +28,6 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
@@ -453,6 +452,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
         
 		super.onResume();
+		
+		if (mVideoCaptureViewReady != null && mCamera == null)
+		{
+			mCamera = Camera.open(mCurrentCameraId);
+			mVideoCaptureViewReady.requestLayout();
+		}
 	}
 
 

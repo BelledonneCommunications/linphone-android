@@ -44,6 +44,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -108,11 +110,19 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private int mMultipleCallsLimit;
 	private boolean mAllowTransfers;
 
+	private boolean isXLargeScreen() 
+	{
+		return (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
 			return;
 		}
+		if (!isXLargeScreen())
+		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
 		setContentView(R.layout.incall_layout);
 		instance = this;
 		
@@ -650,6 +660,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			pauseView.setVisibility(GONE);
 			mergeView.setVisibility(VISIBLE);
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) 
+	{
+		// DO nothing to not recreate the activity on smartphone is screen is rotated
 	}
 
 	private void updateConfItem() {
