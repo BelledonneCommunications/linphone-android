@@ -665,7 +665,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) 
 	{
-		// DO nothing to not recreate the activity on smartphone is screen is rotated
+		if (!isXLargeScreen())
+		{
+			// Do nothing to not recreate the activity on smartphone is screen is rotated
+			return;
+		}
+		super.onConfigurationChanged(newConfig);
 	}
 
 	private void updateConfItem() {
