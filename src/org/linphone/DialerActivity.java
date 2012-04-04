@@ -40,16 +40,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -203,64 +207,16 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		setContentView(R.layout.dialer);
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
-		((EraseButton) findViewById(R.id.Erase)).setAddressWidget(mAddress);
+		EraseButton erase = (EraseButton) findViewById(R.id.Erase);
+		erase.setAddressWidget(mAddress);
+		erase.requestFocus();
 
 		mCall = (CallButton) findViewById(R.id.Call);
 		mCall.setAddressWidget(mAddress);
 
 		mStatus =  (TextView) findViewById(R.id.status_label);
-		
-		// For the tablet landscape
-		final int numberOfCameras = Camera.getNumberOfCameras();
-        CameraInfo cameraInfo = new CameraInfo();
-        for (int i = 0; i < numberOfCameras; i++) {
-            Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
-                mCurrentCameraId = i;
-            }
-        }
-        mCamera = Camera.open(mCurrentCameraId);
         
-		mVideoCaptureViewReady = (SurfaceView) findViewById(R.id.video_background);
-		if (mVideoCaptureViewReady != null)
-		{
-			mVideoCaptureViewReady.getHolder().addCallback(new Callback() {
-				public void surfaceDestroyed(SurfaceHolder holder) {
-					if (mCamera != null) {
-			            mCamera.stopPreview();
-			        }
-				}
-				public void surfaceCreated(SurfaceHolder holder) {
-					try {
-			            if (mCamera != null) {
-			                mCamera.setPreviewDisplay(holder);
-			            }
-			        } catch (IOException exception) {
-			            Log.e("IOException caused by setPreviewDisplay()", exception);
-			        }
-				}
-				public void surfaceChanged(SurfaceHolder holder, int format, int width,
-						int height) {
-					Camera.Parameters parameters = mCamera.getParameters();
-			        parameters.setPreviewSize(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height());
-			        mVideoCaptureViewReady.requestLayout();
-
-			        mCamera.setParameters(parameters);
-			        mCamera.startPreview();
-				}
-			});
-		}
-		mCamera.startPreview();
-		
-		Button switchCamera = (Button) findViewById(R.id.switch_camera);
-		if (switchCamera != null)
-		{
-			switchCamera.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mCamera = Camera.open((mCurrentCameraId + 1) % numberOfCameras);
-				}
-			});
-		}
+		tryToInitTablerUI();
 		
 		SlidingDrawer drawer = (SlidingDrawer) findViewById(R.id.drawer);
 		if (drawer != null) {
@@ -297,10 +253,89 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		verifiyAccountsActivated();
 		
 		displayRegisterStatus();
+		mCall.requestFocus();
 	}
 
 
-    private void checkIfOutgoingCallIntentReceived() {
+    private synchronized void tryToInitTablerUI() {
+		final int numberOfCameras = Camera.getNumberOfCameras();
+		
+        CameraInfo cameraInfo = new CameraInfo();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+                mCurrentCameraId = i;
+            }
+        }
+    	
+    	mVideoCaptureViewReady = (SurfaceView) findViewById(R.id.video_background);
+		if (mVideoCaptureViewReady != null)
+		{
+			if (mCamera == null)
+				mCamera = Camera.open(mCurrentCameraId);
+			
+			mVideoCaptureViewReady.getHolder().addCallback(new Callback() {
+				public void surfaceDestroyed(SurfaceHolder holder) {
+					if (mCamera != null) {
+			            mCamera.stopPreview();
+			        }
+				}
+				
+				public void surfaceCreated(SurfaceHolder holder) {
+					try {
+			            if (mCamera != null) {
+			                mCamera.setPreviewDisplay(holder);
+			            }
+			        } catch (IOException exception) {
+			            Log.e("IOException caused by setPreviewDisplay()", exception);
+			        }
+				}
+				
+				public void surfaceChanged(SurfaceHolder holder, int format, int width,
+						int height) {
+			        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+
+			        if(display.getRotation() == Surface.ROTATION_90)
+			        {
+			            mCamera.setDisplayOrientation(270);                        
+			        }
+			        else if(display.getRotation() == Surface.ROTATION_270)
+			        {
+			            mCamera.setDisplayOrientation(90);
+			        }
+			        else if (display.getRotation() == Surface.ROTATION_180)
+			        {
+			        	mCamera.setDisplayOrientation(180);
+			        }
+			        
+			        mVideoCaptureViewReady.requestLayout();
+			        mCamera.startPreview();
+				}
+				
+			});
+			mCamera.startPreview();
+		}
+		
+		Button switchCamera = (Button) findViewById(R.id.switch_camera);
+		if (switchCamera != null)
+		{
+			if (numberOfCameras == 1)
+				switchCamera.setVisibility(View.INVISIBLE);
+			
+			switchCamera.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					try {
+						mCamera.setPreviewDisplay(mVideoCaptureViewReady.getHolder());
+					} catch (IOException exception) { }
+					mCurrentCameraId = (mCurrentCameraId + 1) % numberOfCameras;
+					mCamera.release();
+					mCamera = Camera.open(mCurrentCameraId);
+				}
+			});
+		}
+	}
+
+	private void checkIfOutgoingCallIntentReceived() {
     	if (getIntent().getData() == null) return;
 
     	if (!LinphoneService.isReady() || LinphoneManager.getLc().isIncall()) {
@@ -321,7 +356,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
     @Override
     protected void onPause() {
     	super.onPause();
-    	
+
     	if (mCamera != null) {
             mCamera.release();
             mCamera = null;
@@ -457,6 +492,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		{
 			mCamera = Camera.open(mCurrentCameraId);
 			mVideoCaptureViewReady.requestLayout();
+            try {
+				mCamera.setPreviewDisplay(mVideoCaptureViewReady.getHolder());
+			} catch (IOException e) {
+			}
+			mCamera.startPreview();
 		}
 	}
 
