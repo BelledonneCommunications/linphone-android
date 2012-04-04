@@ -667,7 +667,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	{
 		if (!isXLargeScreen())
 		{
-			// Do nothing to not recreate the activity on smartphone is screen is rotated
+			// Do nothing to not recreate the activity on smartphone if screen is rotated
+			super.onConfigurationChanged(null);
 			return;
 		}
 		super.onConfigurationChanged(newConfig);
