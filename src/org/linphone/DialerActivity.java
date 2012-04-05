@@ -267,7 +267,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			if (mCamera == null) {
 				mCamera = Camera.open(mCurrentCameraId);
 			}
-			mVideoCaptureView.setCamera(mCamera);
+			mVideoCaptureView.setCamera(mCamera, mCurrentCameraId);
 			mCamera.startPreview();
 		}
 		
@@ -281,10 +281,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 				public void onClick(View v) {
 					mCurrentCameraId = (mCurrentCameraId + 1) % numberOfCameras;
 					mCamera.release();
-					mVideoCaptureView.setCamera(null);
+					mVideoCaptureView.setCamera(null, -1);
 					
 					mCamera = Camera.open(mCurrentCameraId);
-					mVideoCaptureView.switchCamera(mCamera);
+					mVideoCaptureView.switchCamera(mCamera, mCurrentCameraId);
 					mCamera.startPreview();
 				}
 			});
@@ -315,7 +315,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
     	if (mCamera != null) {
             mCamera.release();
-			mVideoCaptureView.setCamera(null);
+			mVideoCaptureView.setCamera(null, -1);
             mCamera = null;
         }
     }
@@ -448,7 +448,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
 		{
 			mCamera = Camera.open(mCurrentCameraId);
-			mVideoCaptureView.switchCamera(mCamera);
+			mVideoCaptureView.switchCamera(mCamera, mCurrentCameraId);
 			mCamera.startPreview();
 		}
 	}

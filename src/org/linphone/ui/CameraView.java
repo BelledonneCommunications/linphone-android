@@ -3,10 +3,9 @@ package org.linphone.ui;
 import java.io.IOException;
 import java.util.List;
 
-import org.linphone.core.Log;
-
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -46,17 +45,19 @@ public class CameraView extends ViewGroup implements SurfaceHolder.Callback {
     Size mPreviewSize;
     List<Size> mSupportedSizes;
     Camera mCamera;
+    int mCameraId;
 
-    public void setCamera(Camera camera) {
+    public void setCamera(Camera camera, int id) {
         mCamera = camera;
+        mCameraId = id;
         if (mCamera != null) {
             mSupportedSizes = mCamera.getParameters().getSupportedPreviewSizes();
             requestLayout();
         }
     }
 
-    public void switchCamera(Camera camera) {
-       setCamera(camera);
+    public void switchCamera(Camera camera, int id) {
+       setCamera(camera, id);
        try {
            camera.setPreviewDisplay(mHolder);
        } catch (IOException exception) {
@@ -77,13 +78,12 @@ public class CameraView extends ViewGroup implements SurfaceHolder.Callback {
         if (mSupportedSizes != null) {
         	mPreviewSize = getOptimalPreviewSize(mSupportedSizes, width, height);
         }
+        
         Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
     	if (display.getRotation() == Surface.ROTATION_90 || display.getRotation() == Surface.ROTATION_270) {
     		Size tempSize = mPreviewSize;
     		mPreviewSize.width = tempSize.height;
     		mPreviewSize.height = tempSize.width;
-    	} else {
-    		
     	}
     }
 
@@ -166,17 +166,26 @@ public class CameraView extends ViewGroup implements SurfaceHolder.Callback {
     	Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         Camera.Parameters parameters = mCamera.getParameters();
         
+        int rotation = 0;
         if(display.getRotation() == Surface.ROTATION_90) {
-            mCamera.setDisplayOrientation(270);              
+            rotation = 90;
         }
         else if(display.getRotation() == Surface.ROTATION_270) {
-	        mCamera.setDisplayOrientation(90);
+            rotation = 270;
         }
         else if (display.getRotation() == Surface.ROTATION_180) {
-        	mCamera.setDisplayOrientation(180);
+            rotation = 180;
         }
-        requestLayout();
         
+        CameraInfo cameraInfo = new CameraInfo();
+        Camera.getCameraInfo(mCameraId, cameraInfo);
+        if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
+        	mCamera.setDisplayOrientation((cameraInfo.orientation - rotation + 360) % 360);
+	    } else {
+	    	mCamera.setDisplayOrientation((cameraInfo.orientation + rotation) % 360);
+	    }
+        
+        requestLayout();        
         mCamera.setParameters(parameters);
         mCamera.startPreview();
     }
