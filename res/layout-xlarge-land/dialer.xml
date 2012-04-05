@@ -34,6 +34,7 @@
 			<org.linphone.ui.EraseButton 
 			    android:layout_height="wrap_content" 
 			    android:id="@+id/Erase"
+			    style="@style/DialerDigit"
 				android:layout_width="fill_parent" 
 				android:layout_weight="0.8"
 				android:text="&lt;"/>
