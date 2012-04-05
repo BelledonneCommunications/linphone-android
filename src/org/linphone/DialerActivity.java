@@ -309,7 +309,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			        }
 			        
 			        mVideoCaptureViewReady.requestLayout();
-			        mCamera.startPreview();
+			        if (mCamera != null)
+			        	mCamera.startPreview();
 				}
 				
 			});
@@ -488,7 +489,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
         
 		super.onResume();
 		
-		if (mVideoCaptureViewReady != null && mCamera == null)
+		if (mVideoCaptureViewReady != null && mCamera == null && !LinphoneManager.getLc().isIncall())
 		{
 			mCamera = Camera.open(mCurrentCameraId);
 			mVideoCaptureViewReady.requestLayout();
