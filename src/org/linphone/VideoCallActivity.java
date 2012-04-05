@@ -29,6 +29,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -318,5 +319,9 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			LinphoneManager.getInstance().resetCameraFromPreferences();
 			finish();
 		}
+	}
+	
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(null);
 	}
 }
