@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,6 +30,7 @@ import org.linphone.core.Log;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
+import org.linphone.ui.CameraView;
 import org.linphone.ui.EraseButton;
 
 import android.app.Activity;
@@ -40,20 +40,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Parameters;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -90,7 +83,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	protected String username;
 	private String key;
 
-	private SurfaceView mVideoCaptureViewReady;
+	private CameraView mVideoCaptureView;
 	private int mCurrentCameraId = 0;
 
 	private Camera mCamera;
@@ -268,52 +261,13 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
             }
         }
     	
-    	mVideoCaptureViewReady = (SurfaceView) findViewById(R.id.video_background);
-		if (mVideoCaptureViewReady != null)
+    	mVideoCaptureView = (CameraView) findViewById(R.id.video_background);
+		if (mVideoCaptureView != null)
 		{
-			if (mCamera == null)
+			if (mCamera == null) {
 				mCamera = Camera.open(mCurrentCameraId);
-			
-			mVideoCaptureViewReady.getHolder().addCallback(new Callback() {
-				public void surfaceDestroyed(SurfaceHolder holder) {
-					if (mCamera != null) {
-			            mCamera.stopPreview();
-			        }
-				}
-				
-				public void surfaceCreated(SurfaceHolder holder) {
-					try {
-			            if (mCamera != null) {
-			                mCamera.setPreviewDisplay(holder);
-			            }
-			        } catch (IOException exception) {
-			            Log.e("IOException caused by setPreviewDisplay()", exception);
-			        }
-				}
-				
-				public void surfaceChanged(SurfaceHolder holder, int format, int width,
-						int height) {
-			        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-
-			        if(display.getRotation() == Surface.ROTATION_90)
-			        {
-			            mCamera.setDisplayOrientation(270);                        
-			        }
-			        else if(display.getRotation() == Surface.ROTATION_270)
-			        {
-			            mCamera.setDisplayOrientation(90);
-			        }
-			        else if (display.getRotation() == Surface.ROTATION_180)
-			        {
-			        	mCamera.setDisplayOrientation(180);
-			        }
-			        
-			        mVideoCaptureViewReady.requestLayout();
-			        if (mCamera != null)
-			        	mCamera.startPreview();
-				}
-				
-			});
+			}
+			mVideoCaptureView.setCamera(mCamera);
 			mCamera.startPreview();
 		}
 		
@@ -325,12 +279,13 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			
 			switchCamera.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					try {
-						mCamera.setPreviewDisplay(mVideoCaptureViewReady.getHolder());
-					} catch (IOException exception) { }
 					mCurrentCameraId = (mCurrentCameraId + 1) % numberOfCameras;
 					mCamera.release();
+					mVideoCaptureView.setCamera(null);
+					
 					mCamera = Camera.open(mCurrentCameraId);
+					mVideoCaptureView.switchCamera(mCamera);
+					mCamera.startPreview();
 				}
 			});
 		}
@@ -360,6 +315,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
     	if (mCamera != null) {
             mCamera.release();
+			mVideoCaptureView.setCamera(null);
             mCamera = null;
         }
     }
@@ -489,14 +445,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
         
 		super.onResume();
 		
-		if (mVideoCaptureViewReady != null && mCamera == null && !LinphoneManager.getLc().isIncall())
+		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
 		{
 			mCamera = Camera.open(mCurrentCameraId);
-			mVideoCaptureViewReady.requestLayout();
-            try {
-				mCamera.setPreviewDisplay(mVideoCaptureViewReady.getHolder());
-			} catch (IOException e) {
-			}
+			mVideoCaptureView.switchCamera(mCamera);
 			mCamera.startPreview();
 		}
 	}
@@ -507,5 +459,4 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
 		return super.onKeyDown(keyCode, event);
 	}
-
 }

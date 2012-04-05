@@ -4,7 +4,7 @@
 	android:layout_height="fill_parent"
     android:gravity="bottom|center_horizontal">
  
-    <SurfaceView
+    <org.linphone.ui.CameraView
 	    android:id="@+id/video_background"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
