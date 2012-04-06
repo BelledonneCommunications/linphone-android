@@ -42,6 +42,7 @@ import org.linphone.ui.Numpad;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -109,18 +110,13 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private View mConferenceVirtualCallee;
 	private int mMultipleCallsLimit;
 	private boolean mAllowTransfers;
-
-	private boolean isXLargeScreen() 
-	{
-		return (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
 			return;
 		}
-		if (!isXLargeScreen())
+		if (!Version.isXLargeScreen(this))
 		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		setContentView(R.layout.incall_layout);
@@ -665,7 +661,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) 
 	{
-		if (!isXLargeScreen())
+		if (!Version.isXLargeScreen(this))
 		{
 			// Do nothing to not recreate the activity on smartphone if screen is rotated
 			super.onConfigurationChanged(null);

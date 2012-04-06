@@ -22,8 +22,9 @@ package org.linphone;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.Log;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
@@ -35,14 +36,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 
 /**
  * For Android SDK >= 5
@@ -121,7 +127,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
-		
 	}
 	
 	void updateQualityOfSignalIcon(float quality)
@@ -321,7 +326,33 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		}
 	}
 	
+	private void resizePreview() {
+		Display display = ((WindowManager) mVideoCaptureViewReady.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		int rotation = display.getRotation();
+		LayoutParams params;
+		
+		int w, h;
+		if (Version.isXLargeScreen(this)) {
+			w = 176;
+			h = 148;
+		} else {
+			w = 88;
+			h = 74;
+		}
+		
+		if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+			params = new LayoutParams(h, w);
+		} else {
+			params = new LayoutParams(w, h);
+		}
+		params.setMargins(0, 0, 15, 15);
+		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		mVideoCaptureViewReady.setLayoutParams(params);
+	}
+	
 	public void onConfigurationChanged(Configuration newConfig) {
+		resizePreview();
 		super.onConfigurationChanged(null);
 	}
 }
