@@ -20,6 +20,9 @@ package org.linphone;
 
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -27,9 +30,14 @@ import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.ui.Numpad;
+import org.linphone.ui.ToggleImageButton;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -38,15 +46,17 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.Checkable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -55,16 +65,20 @@ import android.widget.RelativeLayout.LayoutParams;
  * @author Guillaume Beraudo
  *
  */
-public class VideoCallActivity extends Activity implements LinphoneOnCallStateChangedListener {
+public class VideoCallActivity extends Activity implements LinphoneOnCallStateChangedListener, OnClickListener {
+	private final static int DELAY_BEFORE_HIDING_CONTROLS = 2000;
+	private static final int numpadDialogId = 1;
+	
 	private SurfaceView mVideoViewReady;
 	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
 	private LinphoneCall videoCall;
 	private WakeLock mWakeLock;
 	private Handler refreshHandler = new Handler();
-	
+	private Handler controlsHandler = new Handler();
 	AndroidVideoWindowImpl androidVideoWindowImpl;
-	private Runnable mCallQualityUpdater;
+	private Runnable mCallQualityUpdater, mControls;
+	private LinearLayout mControlsLayout;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,6 +141,38 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
 		mWakeLock.acquire();
+		
+		mControlsLayout = (LinearLayout) findViewById(R.id.incall_controls_layout);
+		videoView.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				if (mControlsLayout != null && mControlsLayout.getVisibility() == View.GONE)
+				{
+					mControlsLayout.setVisibility(View.VISIBLE);
+					controlsHandler.postDelayed(mControls = new Runnable(){
+						public void run() {
+							mControlsLayout.setVisibility(View.GONE);
+						}
+					},DELAY_BEFORE_HIDING_CONTROLS);
+					
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		((ToggleImageButton) findViewById(R.id.toggleSpeaker)).setChecked(LinphoneManager.getLc().isSpeakerEnabled());
+		
+		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
+			findViewById(R.id.switch_camera).setVisibility(View.GONE);
+		}
+			
+		findViewById(R.id.toggleMuteMic).setOnClickListener(this);
+		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
+		findViewById(R.id.incallHang).setOnClickListener(this);
+		findViewById(R.id.switch_camera).setOnClickListener(this);
+		findViewById(R.id.conf_simple_pause).setOnClickListener(this);
+		findViewById(R.id.conf_simple_video).setOnClickListener(this);
+		
 	}
 	
 	void updateQualityOfSignalIcon(float quality)
@@ -177,6 +223,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		super.onResume();
 		if (mVideoViewReady != null)
 			((GLSurfaceView)mVideoViewReady).onResume();
+		synchronized (androidVideoWindowImpl) {
+			LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
+		}
+		
 		launched=true;
 		LinphoneManager.addListener(this);
 		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
@@ -196,84 +246,9 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 				}else mCallQualityUpdater=null;
 			}
 		},1000);
-	}
-
-
-	private void rewriteToggleCameraItem(MenuItem item) {
-		if (LinphoneManager.getLc().getCurrentCall().cameraEnabled()) {
-			item.setTitle(getString(R.string.menu_videocall_toggle_camera_disable));
-		} else {
-			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
-		}
-	}
-
-
-	private void rewriteChangeResolutionItem(MenuItem item) {
-		if (BandwidthManager.getInstance().isUserRestriction()) {
-			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_low_resolution));
-		} else {
-			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_high_resolution));
-		}
-	}
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the currently selected menu XML resource.
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.videocall_activity_menu, menu);
-
-		rewriteToggleCameraItem(menu.findItem(R.id.videocall_menu_toggle_camera));
-		rewriteChangeResolutionItem(menu.findItem(R.id.videocall_menu_change_resolution));
-
-		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
-			menu.findItem(R.id.videocall_menu_switch_camera).setVisible(false);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.videocall_menu_back_to_dialer:
-			finish();
-			break;
-		case R.id.videocall_menu_change_resolution:
-			LinphoneManager.getInstance().changeResolution();
-			// previous call will cause graph reconstruction -> regive preview window
-			if (mVideoCaptureViewReady != null)
-				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
-			rewriteChangeResolutionItem(item);
-			break;
-		case R.id.videocall_menu_terminate_call:
-			LinphoneManager.getInstance().terminateCall();
-			break;
-		case R.id.videocall_menu_toggle_camera:
-			boolean camEnabled = LinphoneManager.getInstance().toggleEnableCamera(); 
-			updatePreview(camEnabled);
-			Log.e("winwow camera enabled: " + camEnabled);
-			rewriteToggleCameraItem(item);
-			// previous call will cause graph reconstruction -> regive preview window
-			if (camEnabled) {
-				if (mVideoCaptureViewReady != null)
-					LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
-			} else
-				LinphoneManager.getLc().setPreviewWindow(null);
-			break;
-		case R.id.videocall_menu_switch_camera:
-			int id = LinphoneManager.getLc().getVideoDevice();
-			id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-			LinphoneManager.getLc().setVideoDevice(id);
-			CallManager.getInstance().updateCall();
-			// previous call will cause graph reconstruction -> regive preview window
-			if (mVideoCaptureViewReady != null)
-				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
-			break;
-		default:
-			Log.e("Unknown menu item [",item,"]");
-			break;
-		} 
-		return true;
+		
+		if (mControlsLayout != null)
+			mControlsLayout.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -308,6 +283,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		if (mCallQualityUpdater!=null){
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater=null;
+		}
+		if (mControls != null) {
+			controlsHandler.removeCallbacks(mControls);
+			mControls = null;
 		}
 		
 		if (mWakeLock.isHeld())	mWakeLock.release();
@@ -354,5 +333,76 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	public void onConfigurationChanged(Configuration newConfig) {
 		resizePreview();
 		super.onConfigurationChanged(null);
+	}
+	
+	private void resetControlsLayoutExpiration() {
+		if (mControls != null) {
+			controlsHandler.removeCallbacks(mControls);
+		}
+		
+		controlsHandler.postDelayed(mControls = new Runnable(){
+			public void run() {
+				mControlsLayout.setVisibility(View.GONE);
+			}
+		},DELAY_BEFORE_HIDING_CONTROLS);
+	}
+
+	public void onClick(View v) {
+		resetControlsLayoutExpiration();
+		switch (v.getId()) {
+			case R.id.incallHang:
+				terminateCurrentCallOrConferenceOrAll();
+				break;
+			case R.id.incallNumpadShow:
+				showDialog(numpadDialogId);
+				break;
+			case R.id.toggleMuteMic:
+				LinphoneManager.getLc().muteMic(((Checkable) v).isChecked());
+				break;
+			case R.id.videocall_menu_switch_camera:
+				int id = LinphoneManager.getLc().getVideoDevice();
+				id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+				LinphoneManager.getLc().setVideoDevice(id);
+				CallManager.getInstance().updateCall();
+				// previous call will cause graph reconstruction -> regive preview window
+				if (mVideoCaptureViewReady != null)
+					LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
+				break;
+			case R.id.conf_simple_pause:
+				//TODO : pause call and launch audio call activity
+				break;
+			case R.id.conf_simple_video:
+				//TODO : stop video and launch audio call activity
+				break;	
+		}
+	}
+	
+	protected Dialog onCreateDialog(final int id) {
+		switch (id) {
+		case numpadDialogId:
+			Numpad numpad = new Numpad(this, true);
+			return new AlertDialog.Builder(this).setView(numpad)
+					 .setPositiveButton(R.string.close_button_text, new
+					 DialogInterface.OnClickListener() {
+						 public void onClick(DialogInterface dialog, int whichButton)
+							 {
+							 	dismissDialog(id);
+							 }
+						 })
+					.create();
+		default:
+			throw new IllegalArgumentException("unkown dialog id " + id);
+		}
+	}
+	
+	private void terminateCurrentCallOrConferenceOrAll() {
+		LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+		if (currentCall != null) {
+			LinphoneManager.getLc().terminateCall(currentCall);
+		} else if (LinphoneManager.getLc().isInConference()) {
+			LinphoneManager.getLc().terminateConference();
+		} else {
+			LinphoneManager.getLc().terminateAllCalls();
+		}
 	}
 }
