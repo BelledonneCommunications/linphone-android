@@ -162,6 +162,9 @@ public class CameraView extends ViewGroup implements SurfaceHolder.Callback {
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+    	if (mCamera == null)
+    		return;
+    	
     	mCamera.stopPreview();
     	Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         Camera.Parameters parameters = mCamera.getParameters();
