@@ -29,7 +29,6 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
-import org.linphone.ui.ToggleImageButton;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -119,8 +118,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
 				// Remove references kept in jni code and restart camera
-				// LinphoneManager.getLc().setPreviewWindow(null);
-				// Commented to remove flicker.
+				 LinphoneManager.getLc().setPreviewWindow(null);
 			}
 		});
 		
@@ -158,18 +156,19 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			}
 		});
 		
-		((ToggleImageButton) findViewById(R.id.toggleSpeaker)).setChecked(LinphoneManager.getLc().isSpeakerEnabled());
-		
 		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
 			findViewById(R.id.switch_camera).setVisibility(View.GONE);
 		}
 			
-		findViewById(R.id.toggleMuteMic).setOnClickListener(this);
-		findViewById(R.id.incallNumpadShow).setOnClickListener(this);
-		findViewById(R.id.incallHang).setOnClickListener(this);
-		findViewById(R.id.switch_camera).setOnClickListener(this);
-		findViewById(R.id.conf_simple_pause).setOnClickListener(this);
-		findViewById(R.id.conf_simple_video).setOnClickListener(this);
+		if (Version.isXLargeScreen(this))
+		{
+			findViewById(R.id.toggleMuteMic).setOnClickListener(this);
+			findViewById(R.id.incallNumpadShow).setOnClickListener(this);
+			findViewById(R.id.incallHang).setOnClickListener(this);
+			findViewById(R.id.switch_camera).setOnClickListener(this);
+			findViewById(R.id.conf_simple_pause).setOnClickListener(this);
+			findViewById(R.id.conf_simple_video).setOnClickListener(this);
+		}
 		
 	}
 	
