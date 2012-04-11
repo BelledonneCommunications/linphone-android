@@ -29,6 +29,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
+import org.linphone.ui.ToggleImageButton;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -163,11 +164,19 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		if (Version.isXLargeScreen(this))
 		{
 			findViewById(R.id.toggleMuteMic).setOnClickListener(this);
+			findViewById(R.id.toggleSpeaker).setOnClickListener(this);
 			findViewById(R.id.incallNumpadShow).setOnClickListener(this);
 			findViewById(R.id.incallHang).setOnClickListener(this);
 			findViewById(R.id.switch_camera).setOnClickListener(this);
 			findViewById(R.id.conf_simple_pause).setOnClickListener(this);
 			findViewById(R.id.conf_simple_video).setOnClickListener(this);
+			
+			if (LinphoneManager.getInstance().isSpeakerOn())
+			{
+				ToggleImageButton speaker = (ToggleImageButton) findViewById(R.id.toggleSpeaker);
+				speaker.setChecked(true);
+				speaker.setEnabled(false);
+			}
 		}
 		
 	}
@@ -349,6 +358,13 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		switch (v.getId()) {
 			case R.id.incallHang:
 				terminateCurrentCallOrConferenceOrAll();
+				break;
+			case R.id.toggleSpeaker:
+				if (((Checkable) v).isChecked()) {
+					LinphoneManager.getInstance().routeAudioToSpeaker();
+				} else {
+					LinphoneManager.getInstance().routeAudioToReceiver();
+				}
 				break;
 			case R.id.incallNumpadShow:
 				showDialog(numpadDialogId);
