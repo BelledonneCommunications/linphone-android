@@ -20,12 +20,10 @@ package org.linphone;
 
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
@@ -226,9 +224,9 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		synchronized (androidVideoWindowImpl) {
 			LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
 		}
-		
 		launched=true;
 		LinphoneManager.addListener(this);
+		
 		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
 			LinphoneCall mCurrentCall=LinphoneManager.getLc().getCurrentCall();
 			public void run() {
@@ -306,7 +304,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	}
 	
 	private void resizePreview() {
-		Display display = ((WindowManager) mVideoCaptureViewReady.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		int rotation = display.getRotation();
 		LayoutParams params;
 		
@@ -370,12 +368,14 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 				break;
 			case R.id.conf_simple_pause:
 				finish();
+				LinphoneActivity.instance().startIncallActivity();
 				LinphoneManager.getLc().pauseCall(videoCall);
 				//TODO Fix neon crash
 				break;
 			case R.id.conf_simple_video:
-				finish();
-				LinphoneActivity.instance().startIncallActivity();
+				LinphoneCallParams params = videoCall.getCurrentParamsCopy();
+				params.setVideoEnabled(false);
+				LinphoneManager.getLc().updateCall(videoCall, params);
 				break;	
 		}
 	}
