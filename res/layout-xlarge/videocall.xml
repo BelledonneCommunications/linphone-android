@@ -107,7 +107,7 @@
 		        <Button 
 		            android:id="@+id/conf_simple_video"
 		            style="@style/incall_control"
-		            android:text="@string/conf_simple_video_bt_txt"
+		            android:text="-Video"
 		            android:background="@drawable/clavier_bg" />
 			        
 			</LinearLayout>

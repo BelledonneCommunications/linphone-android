@@ -369,10 +369,13 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 					LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
 				break;
 			case R.id.conf_simple_pause:
-				//TODO : pause call and launch audio call activity
+				finish();
+				LinphoneManager.getLc().pauseCall(videoCall);
+				//TODO Fix neon crash
 				break;
 			case R.id.conf_simple_video:
-				//TODO : stop video and launch audio call activity
+				finish();
+				LinphoneActivity.instance().startIncallActivity();
 				break;	
 		}
 	}
