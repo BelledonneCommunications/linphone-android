@@ -487,7 +487,7 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 			boolean videoEnabled = call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled();
 			if (videoEnabled) {
 				finishActivity(incall_activity);
-				startVideoActivity(call, 1000);
+				startVideoActivity(call, 0);
 			} else {
 				finishActivity(video_activity);
 				startIncallActivity();
