@@ -166,6 +166,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			findViewById(R.id.toggleMuteMic).setOnClickListener(this);
 			findViewById(R.id.toggleSpeaker).setOnClickListener(this);
 			findViewById(R.id.incallNumpadShow).setOnClickListener(this);
+			findViewById(R.id.addCall).setOnClickListener(this);
 			findViewById(R.id.incallHang).setOnClickListener(this);
 			findViewById(R.id.switch_camera).setOnClickListener(this);
 			findViewById(R.id.conf_simple_pause).setOnClickListener(this);
@@ -256,10 +257,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		if (mControlsLayout != null)
 			mControlsLayout.setVisibility(View.GONE);
 	}
-
-	@Override
+	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -372,7 +373,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			case R.id.toggleMuteMic:
 				LinphoneManager.getLc().muteMic(((Checkable) v).isChecked());
 				break;
-			case R.id.videocall_menu_switch_camera:
+			case R.id.switch_camera:
 				int id = LinphoneManager.getLc().getVideoDevice();
 				id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
 				LinphoneManager.getLc().setVideoDevice(id);
@@ -392,6 +393,9 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 				params.setVideoEnabled(false);
 				LinphoneManager.getLc().updateCall(videoCall, params);
 				break;	
+			case R.id.addCall:
+				finish();
+				break;
 		}
 	}
 	

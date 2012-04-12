@@ -58,7 +58,7 @@
 				android:layout_weight="0.5" 
 			    android:layout_marginLeft="40dp"
 		    	android:orientation="vertical">
-		    
+					
 				<org.linphone.ui.CallButton 
 				    android:id="@+id/Call"
 					android:layout_height="fill_parent" 
@@ -67,12 +67,38 @@
 					android:background="@drawable/clavier_bg" 
 					android:src="@drawable/startcall_green" />
 				
+	            <LinearLayout
+				    android:id="@+id/InCallControls"
+					android:layout_height="fill_parent" 
+					android:layout_width="fill_parent" 
+					android:visibility="gone"
+					android:layout_weight="3" >
+					
+	                <Button 
+					    android:id="@+id/AddCall"
+					    style="@style/DialerDigit"
+						android:layout_height="fill_parent" 
+						android:layout_width="fill_parent" 
+						android:layout_weight="1" 
+						android:text="@string/AddCallButtonText" />
+	                
+					<Button 
+					    android:id="@+id/Back"
+					    style="@style/DialerDigit"
+						android:layout_height="fill_parent" 
+						android:layout_width="fill_parent" 
+						android:layout_weight="1" 
+						android:text="@string/CancelButtonText" />
+					
+				</LinearLayout>
+				
 				<Button 
-				    style="@style/DialerDigit"
 				    android:id="@+id/switch_camera"
+				    style="@style/DialerDigit"
 					android:layout_height="fill_parent" 
 					android:layout_width="fill_parent" 
 					android:layout_weight="5" 
+					android:visibility="invisible"
 					android:text="@string/menu_videocall_switch_camera_title" />
 				
 			    <EditText 

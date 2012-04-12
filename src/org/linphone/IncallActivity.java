@@ -324,7 +324,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.addCall:
-			openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_ADD, addCallId);
+			finish();
 			break;
 		case R.id.incallHang:
 			terminateCurrentCallOrConferenceOrAll();

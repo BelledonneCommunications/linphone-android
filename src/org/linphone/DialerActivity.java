@@ -25,8 +25,10 @@ import org.linphone.LinphoneService.LinphoneGuiListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
@@ -49,6 +51,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -75,6 +78,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 	private AddressText mAddress;
 	private CallButton mCall;
+	private Button mBack, mAddCall, mSwitchCamera;
+	private LinearLayout mInCallControls;
 
 	private static DialerActivity instance;
 	private boolean mPreventDoubleCallOnRotation;
@@ -87,6 +92,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	private int mCurrentCameraId = 0;
 
 	private Camera mCamera;
+
 	
 	private static final String CURRENT_ADDRESS = "org.linphone.current-address"; 
 	private static final String CURRENT_DISPLAYNAME = "org.linphone.current-displayname";
@@ -206,10 +212,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 		mCall = (CallButton) findViewById(R.id.Call);
 		mCall.setAddressWidget(mAddress);
-
+		mBack = (Button) findViewById(R.id.Back);
+		mAddCall = (Button) findViewById(R.id.AddCall);
+		mInCallControls = (LinearLayout) findViewById(R.id.InCallControls);
 		mStatus =  (TextView) findViewById(R.id.status_label);
         
-		tryToInitTablerUI();
+		tryToInitTabletUI();
 		
 		SlidingDrawer drawer = (SlidingDrawer) findViewById(R.id.drawer);
 		if (drawer != null) {
@@ -250,7 +258,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	}
 
 
-    private synchronized void tryToInitTablerUI() {
+    private synchronized void tryToInitTabletUI() {
 		final int numberOfCameras = Camera.getNumberOfCameras();
 		
         CameraInfo cameraInfo = new CameraInfo();
@@ -271,13 +279,13 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			mCamera.startPreview();
 		}
 		
-		Button switchCamera = (Button) findViewById(R.id.switch_camera);
-		if (switchCamera != null)
+		mSwitchCamera = (Button) findViewById(R.id.switch_camera);
+		if (mSwitchCamera != null)
 		{
-			if (numberOfCameras == 1)
-				switchCamera.setVisibility(View.INVISIBLE);
+			if (AndroidCameraConfiguration.hasSeveralCameras())
+				mSwitchCamera.setVisibility(View.VISIBLE);
 			
-			switchCamera.setOnClickListener(new OnClickListener() {
+			mSwitchCamera.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					mCurrentCameraId = (mCurrentCameraId + 1) % numberOfCameras;
 					mCamera.release();
@@ -289,6 +297,34 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 				}
 			});
 		}
+		
+		mBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+				if (call.getCurrentParamsCopy().getVideoEnabled())
+					LinphoneActivity.instance().startVideoActivity(call, 0);
+				else
+					LinphoneActivity.instance().startIncallActivity();
+			}
+		});
+		
+		mAddCall.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+				if (call != null && !call.isInConference()) {
+					LinphoneManager.getLc().pauseCall(call);
+				} else {
+					LinphoneManager.getLc().leaveConference();
+				}
+					
+				try {
+					LinphoneManager.getLc().invite(mAddress.getText().toString());
+				} catch (LinphoneCoreException e) {
+					Log.e(e);
+					Toast.makeText(DialerActivity.this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
+				}
+			}
+		});
 	}
 
 	private void checkIfOutgoingCallIntentReceived() {
@@ -423,7 +459,20 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	}
 
 	@Override
-	public void onCallStateChanged(LinphoneCall call, State s, String m) {}
+	public void onCallStateChanged(LinphoneCall call, State s, String m) {
+		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
+		{
+			mInCallControls.setVisibility(View.GONE);
+			mCall.setVisibility(View.VISIBLE);
+			
+			if (AndroidCameraConfiguration.hasSeveralCameras())
+				mSwitchCamera.setVisibility(View.VISIBLE);
+			
+			mCamera = Camera.open(mCurrentCameraId);
+			mVideoCaptureView.switchCamera(mCamera, mCurrentCameraId);
+			mCamera.startPreview();
+		}
+	}
 	
 	public void onGlobalStateChangedToOn(String message) {
 		mCall.setEnabled(!LinphoneManager.getLc().isIncall());
@@ -445,11 +494,21 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
         
 		super.onResume();
 		
+		mInCallControls.setVisibility(View.GONE);
+		mCall.setVisibility(View.VISIBLE);
+		if (AndroidCameraConfiguration.hasSeveralCameras())
+			mSwitchCamera.setVisibility(View.VISIBLE);
+		
 		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
 		{
 			mCamera = Camera.open(mCurrentCameraId);
 			mVideoCaptureView.switchCamera(mCamera, mCurrentCameraId);
 			mCamera.startPreview();
+		} else if (LinphoneManager.getLc().isIncall())
+		{
+			mInCallControls.setVisibility(View.VISIBLE);
+			mCall.setVisibility(View.GONE);
+			mSwitchCamera.setVisibility(View.INVISIBLE);
 		}
 	}
 

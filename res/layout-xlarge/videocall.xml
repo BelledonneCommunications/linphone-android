@@ -57,7 +57,8 @@
 			android:orientation="vertical">
 	        
 	        <Button 
-			    style="@style/incall_control"
+	            style="@style/incall_control"
+	            android:background="@drawable/clavier_bg"
 			    android:id="@+id/switch_camera"
 				android:layout_height="wrap_content" 
 				android:layout_width="fill_parent" 
