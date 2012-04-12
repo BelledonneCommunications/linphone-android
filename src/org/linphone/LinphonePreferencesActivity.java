@@ -618,7 +618,12 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
-
+		if (!Version.hasNeon())
+		{
+			findPreference(R.string.pref_video_codec_h264_key).setEnabled(false);
+			findPreference(R.string.pref_video_codec_mpeg4_key).setEnabled(false);
+		}
+		
 		addEchoPrefsListener();
 		
 		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
