@@ -28,6 +28,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -40,6 +41,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.net.Uri;
@@ -203,6 +205,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
+		if (Version.isXLargeScreen(this)) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
 		setContentView(R.layout.dialer);
 
 		mAddress = (AddressText) findViewById(R.id.SipUri); 
@@ -298,33 +303,37 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			});
 		}
 		
-		mBack.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-				if (call.getCurrentParamsCopy().getVideoEnabled())
-					LinphoneActivity.instance().startVideoActivity(call, 0);
-				else
-					LinphoneActivity.instance().startIncallActivity();
-			}
-		});
+		if (mBack != null) {
+			mBack.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+					if (call.getCurrentParamsCopy().getVideoEnabled())
+						LinphoneActivity.instance().startVideoActivity(call, 0);
+					else
+						LinphoneActivity.instance().startIncallActivity();
+				}
+			});
+		}
 		
-		mAddCall.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-				if (call != null && !call.isInConference()) {
-					LinphoneManager.getLc().pauseCall(call);
-				} else {
-					LinphoneManager.getLc().leaveConference();
+		if (mAddCall != null) {
+			mAddCall.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+					if (call != null && !call.isInConference()) {
+						LinphoneManager.getLc().pauseCall(call);
+					} else {
+						LinphoneManager.getLc().leaveConference();
+					}
+						
+					try {
+						LinphoneManager.getLc().invite(mAddress.getText().toString());
+					} catch (LinphoneCoreException e) {
+						Log.e(e);
+						Toast.makeText(DialerActivity.this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
+					}
 				}
-					
-				try {
-					LinphoneManager.getLc().invite(mAddress.getText().toString());
-				} catch (LinphoneCoreException e) {
-					Log.e(e);
-					Toast.makeText(DialerActivity.this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
-				}
-			}
-		});
+			});
+		}
 	}
 
 	private void checkIfOutgoingCallIntentReceived() {
@@ -462,10 +471,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	public void onCallStateChanged(LinphoneCall call, State s, String m) {
 		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
 		{
-			mInCallControls.setVisibility(View.GONE);
+			if (mInCallControls != null)
+				mInCallControls.setVisibility(View.GONE);
 			mCall.setVisibility(View.VISIBLE);
 			
-			if (AndroidCameraConfiguration.hasSeveralCameras())
+			if (AndroidCameraConfiguration.hasSeveralCameras() && mSwitchCamera != null)
 				mSwitchCamera.setVisibility(View.VISIBLE);
 			
 			mCamera = Camera.open(mCurrentCameraId);
@@ -494,9 +504,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
         
 		super.onResume();
 		
-		mInCallControls.setVisibility(View.GONE);
+		if (mInCallControls != null)
+			mInCallControls.setVisibility(View.GONE);
 		mCall.setVisibility(View.VISIBLE);
-		if (AndroidCameraConfiguration.hasSeveralCameras())
+		
+		if (AndroidCameraConfiguration.hasSeveralCameras() && mSwitchCamera != null)
 			mSwitchCamera.setVisibility(View.VISIBLE);
 		
 		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
@@ -506,9 +518,12 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			mCamera.startPreview();
 		} else if (LinphoneManager.getLc().isIncall())
 		{
-			mInCallControls.setVisibility(View.VISIBLE);
+			if (mInCallControls != null)
+				mInCallControls.setVisibility(View.VISIBLE);
 			mCall.setVisibility(View.GONE);
-			mSwitchCamera.setVisibility(View.INVISIBLE);
+			
+			if (mSwitchCamera != null)
+				mSwitchCamera.setVisibility(View.INVISIBLE);
 		}
 	}
 

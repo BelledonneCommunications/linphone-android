@@ -23,10 +23,10 @@ import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 
 import android.app.AlertDialog;
@@ -46,10 +46,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.TabSpec;
 	
 public class LinphoneActivity extends TabActivity implements ContactPicked
 		, LinphoneOnCallStateChangedListener

@@ -77,6 +77,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 	AndroidVideoWindowImpl androidVideoWindowImpl;
 	private Runnable mCallQualityUpdater, mControls;
 	private LinearLayout mControlsLayout;
+	private boolean shouldRestartVideoOnResume = false;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -256,6 +257,11 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		
 		if (mControlsLayout != null)
 			mControlsLayout.setVisibility(View.GONE);
+		
+		if (shouldRestartVideoOnResume) {
+			LinphoneManager.getLc().getCurrentCall().enableCamera(true);
+			shouldRestartVideoOnResume = false;
+		}
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -278,6 +284,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		LinphoneManager.removeListener(this);
 		if (isFinishing()) {
 			videoCall = null; // release reference
+		} else {
+			// Send NoWebcam since Android 4.0 can't get the video from the webcam if the activity is not in foreground
+			shouldRestartVideoOnResume = true;
+			LinphoneManager.getLc().getCurrentCall().enableCamera(false);
 		}
 		launched=false;
 		synchronized (androidVideoWindowImpl) {
