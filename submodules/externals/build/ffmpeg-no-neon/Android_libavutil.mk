@@ -2,7 +2,7 @@
 LOCAL_PATH:= $(call my-dir)/../../ffmpeg/
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libavutil
+LOCAL_MODULE := libavutilnoneon
 
 
 LOCAL_SRC_FILES = \

@@ -600,6 +600,11 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					} else if (lc().soundResourcesLocked()) {
 						return;
 					} else if (State.Paused == actualState) {
+						if (call != null && call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled())
+						{
+							finish();
+							LinphoneActivity.instance().startVideoActivity(call, 0);
+						}
 						lc().resumeCall(call);
 					}
 				}

@@ -20,8 +20,11 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.linphone.mediastream.Version;
+
+import android.util.Log;
 
 public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
@@ -35,10 +38,17 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 	static {
 		// FFMPEG (audio/video)
-		loadOptionalLibrary("avutil");
-		loadOptionalLibrary("swscale");
-		loadOptionalLibrary("avcore");
-		loadOptionalLibrary("avcodec");
+		if (!hasNeonInCpuFeatures()) {
+			loadOptionalLibrary("avutilnoneon");
+			loadOptionalLibrary("swscalenoneon");
+			loadOptionalLibrary("avcorenoneon");
+			loadOptionalLibrary("avcodecnoneon");
+		} else {
+			loadOptionalLibrary("avutil");
+			loadOptionalLibrary("swscale");
+			loadOptionalLibrary("avcore");
+			loadOptionalLibrary("avcodec");
+		}
  
 		// OPENSSL (cryptography)
 		// lin prefix avoids collision with libs in /system/lib
@@ -56,7 +66,11 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		loadOptionalLibrary("bcg729");
 
 		//Main library
-		System.loadLibrary("linphone"); 
+		if (!hasNeonInCpuFeatures()) {
+			System.loadLibrary("linphonenoneon"); 
+		} else {
+			System.loadLibrary("linphone"); 
+		}
 
 		Version.dumpCapabilities();
 	}
@@ -120,5 +134,29 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 	@Override
 	public LinphoneFriend createLinphoneFriend() {
 		return createLinphoneFriend(null);
+	}
+
+	public static boolean hasNeonInCpuFeatures()
+	{
+		ProcessBuilder cmd;
+		boolean result = false;
+		
+		try {
+			String[] args = {"/system/bin/cat", "/proc/cpuinfo"};
+			cmd = new ProcessBuilder(args);
+	
+		   Process process = cmd.start();
+		   InputStream in = process.getInputStream();
+		   byte[] re = new byte[1024];
+		   while(in.read(re) != -1){
+			   String line = new String(re);
+			   if (line.startsWith("Features"))
+				   result = line.contains("neon");
+		   }
+		   in.close();
+		} catch(IOException ex){
+			ex.printStackTrace();
+		}
+		return result;
 	}
 }

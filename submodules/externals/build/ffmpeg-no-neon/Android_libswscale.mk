@@ -2,7 +2,7 @@
 LOCAL_PATH:= $(call my-dir)/../../ffmpeg/libswscale/
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libswscale
+LOCAL_MODULE := libswscalenoneon
 
 LOCAL_SRC_FILES = \
 	options.c \
@@ -20,7 +20,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../build/ffmpeg-no-neon  \
 					$(LOCAL_PATH)/ \
 					$(LOCAL_PATH)/../
 
-LOCAL_SHARED_LIBRARIES := libavutil
+LOCAL_SHARED_LIBRARIES := libavutilnoneon
 
 include $(BUILD_SHARED_LIBRARY)
 

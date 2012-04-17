@@ -93,7 +93,7 @@ endif
 endif
 
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ffmpeg.mk),)
-#include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg-no-neon/Android.mk
 else
 include $(linphone-root-dir)/submodules/externals/prebuilts/ffmpeg.mk
@@ -118,6 +118,7 @@ endif
 
 
 include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
+include $(linphone-root-dir)/submodules/linphone/build/android/Android-no-neon.mk
 
 _BUILD_AMR=0
 ifneq ($(BUILD_AMRNB), 0)

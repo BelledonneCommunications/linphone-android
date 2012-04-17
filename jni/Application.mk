@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2 liblinphone
+APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2 liblinphone liblinphonenoneon
 APP_STL := stlport_static
 
 #default values
@@ -14,8 +14,9 @@ BUILD_SRTP=1
 endif
 
 ifeq ($(LINPHONE_VIDEO),1)
-APP_MODULES += libavutil libavcore libavcodec libswscale libvpx
-APP_MODULES += libavutil-no-neon libavcore-no-neon libavcodec-no-neon libswscale-no-neon
+APP_MODULES += libavutil libavcore libavcodec libswscale
+APP_MODULES += libavutilnoneon libavcorenoneon libavcodecnoneon libswscalenoneon
+APP_MODULES += libvpx
 endif
 
 _BUILD_AMR=0
