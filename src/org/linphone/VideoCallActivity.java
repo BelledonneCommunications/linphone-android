@@ -126,7 +126,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		
 		androidVideoWindowImpl.init();
 
-		videoCall = LinphoneManager.getLc().getCurrentCall();
+		videoCall = LinphoneManager.getLc().getCurrentCall();		
 		if (videoCall != null) {
 			LinphoneManager lm = LinphoneManager.getInstance();
 			if (!lm.shareMyCamera() && !lm.isVideoInitiator() && videoCall.cameraEnabled()) {
@@ -288,6 +288,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			// Send NoWebcam since Android 4.0 can't get the video from the webcam if the activity is not in foreground
 			shouldRestartVideoOnResume = true;
 			LinphoneManager.getLc().getCurrentCall().enableCamera(false);
+			
 		}
 		launched=false;
 		synchronized (androidVideoWindowImpl) {
@@ -396,7 +397,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 				finish();
 				LinphoneActivity.instance().startIncallActivity();
 				LinphoneManager.getLc().pauseCall(videoCall);
-				//TODO Fix neon crash
 				break;
 			case R.id.conf_simple_video:
 				LinphoneCallParams params = videoCall.getCurrentParamsCopy();

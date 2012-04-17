@@ -15,6 +15,7 @@ endif
 
 ifeq ($(LINPHONE_VIDEO),1)
 APP_MODULES += libavutil libavcore libavcodec libswscale libvpx
+APP_MODULES += libavutil-no-neon libavcore-no-neon libavcodec-no-neon libswscale-no-neon
 endif
 
 _BUILD_AMR=0

@@ -620,7 +620,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
 		if (!Version.hasNeon())
 		{
-			findPreference(R.string.pref_video_codec_h264_key).setEnabled(false);
+			// Android without neon doesn't support H264
 			findPreference(R.string.pref_video_codec_mpeg4_key).setEnabled(false);
 		}
 		
