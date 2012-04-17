@@ -352,7 +352,13 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				((Checkable) v).setChecked(true);
 				List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc(), Arrays.asList(State.Paused));
 				if (pausedCalls.size() == 1) {
-					lc().resumeCall(pausedCalls.get(0));
+					LinphoneCall callToResume = pausedCalls.get(0);
+					if (callToResume != null && callToResume.cameraEnabled() && callToResume.getCurrentParamsCopy().getVideoEnabled())
+					{
+						finish();
+						LinphoneActivity.instance().startVideoActivity(callToResume, 0);
+					}
+					lc().resumeCall(callToResume);
 				}
 			}
 			break;
