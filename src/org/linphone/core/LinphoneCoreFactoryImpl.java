@@ -150,8 +150,10 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		   byte[] re = new byte[1024];
 		   while(in.read(re) != -1){
 			   String line = new String(re);
-			   if (line.startsWith("Features"))
+			   if (line.startsWith("Features")) {
 				   result = line.contains("neon");
+				   break;
+			   }
 		   }
 		   in.close();
 		} catch(IOException ex){
