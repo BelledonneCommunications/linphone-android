@@ -502,6 +502,11 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 				startIncallActivity();
 			}
 		}
+		
+		if (state == LinphoneCall.State.PausedByRemote) {
+			finishActivity(video_activity);
+			startIncallActivity();
+		}
 
 		if (state==State.Error){
 			showToast(R.string.call_error, message);
