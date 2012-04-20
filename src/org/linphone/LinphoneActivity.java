@@ -486,7 +486,7 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable() && !call.isInConference()) {
 			// call.cameraEnabled() contains the wish of the user
 			// set in LinphoneManager#onCallStateChanged(OutgoingInit||IncomingReceived)
-			boolean videoEnabled = call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled();
+			boolean videoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
 			if (videoEnabled) {
 				finishActivity(incall_activity);
 				startVideoActivity(call, 0);

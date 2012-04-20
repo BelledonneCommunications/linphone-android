@@ -353,11 +353,6 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc(), Arrays.asList(State.Paused));
 				if (pausedCalls.size() == 1) {
 					LinphoneCall callToResume = pausedCalls.get(0);
-					if (callToResume != null && callToResume.cameraEnabled() && callToResume.getCurrentParamsCopy().getVideoEnabled())
-					{
-						finish();
-						LinphoneActivity.instance().startVideoActivity(callToResume, 0);
-					}
 					lc().resumeCall(callToResume);
 				}
 			}

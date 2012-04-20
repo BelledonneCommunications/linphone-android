@@ -181,6 +181,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			}
 		}
 		
+		// Hack to force the redraw of the preview
+		// Camera will be re-enabled in onResume just after anyway
+		shouldRestartVideoOnResume = true;
+		LinphoneManager.getLc().getCurrentCall().enableCamera(false);
 	}
 	
 	void updateQualityOfSignalIcon(float quality)
@@ -288,7 +292,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			// Send NoWebcam since Android 4.0 can't get the video from the webcam if the activity is not in foreground
 			shouldRestartVideoOnResume = true;
 			LinphoneManager.getLc().getCurrentCall().enableCamera(false);
-			
 		}
 		launched=false;
 		synchronized (androidVideoWindowImpl) {
@@ -436,5 +439,6 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		} else {
 			LinphoneManager.getLc().terminateAllCalls();
 		}
+		finish();
 	}
 }
