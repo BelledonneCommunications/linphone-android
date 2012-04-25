@@ -542,9 +542,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		terminateAllCalls(nativePtr);
 	}
 	private native Object getCall(long nativePtr, int position);
-	@SuppressWarnings("unchecked") public synchronized List getCalls() {
+	@SuppressWarnings("unchecked") public synchronized Vector getCalls() {
 		int size = getCallsNb(nativePtr);
-		List<LinphoneCall> calls = new ArrayList<LinphoneCall>(size);
+		Vector<LinphoneCall> calls = new Vector<LinphoneCall>(size);
 		for (int i=0; i < size; i++) {
 			calls.add((LinphoneCall)getCall(nativePtr, i));
 		}
