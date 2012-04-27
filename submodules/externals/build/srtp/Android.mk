@@ -4,6 +4,7 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
 	 	 srtp/srtp.c \
+		 srtp/ekt.c \
 	 	 crypto/ae_xfm/xfm.c \
 	 	 crypto/cipher/aes.c \
 	 	 crypto/cipher/aes_cbc.c \

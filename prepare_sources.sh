@@ -32,6 +32,8 @@ cd $topdir/submodules/externals/libvpx && ./configure --target=armv7-android-gcc
 
 cd $topdir/submodules/mssilk && ./autogen.sh && ./configure --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " && cd sdk && make extract-sources || ( echo "SILK audio plugin prepare state failed." ; exit 1 )
 
+cd $topdir/submodules/externals/srtp/ && cp ../build/srtp/config.h . || ( echo "SRTP prepare state failed." ; exit 1 )
+
 cd $topdir/submodules/linphone/mediastreamer2/src/
 # extract rules to build shader files
 vs_rule=`cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/$$builddir/./'`
