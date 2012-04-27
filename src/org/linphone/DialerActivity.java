@@ -518,9 +518,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			mCamera.startPreview();
 		} else if (LinphoneManager.getLc().isIncall())
 		{
-			if (mInCallControls != null)
+			if (mInCallControls != null) {
 				mInCallControls.setVisibility(View.VISIBLE);
-			mCall.setVisibility(View.GONE);
+				mCall.setVisibility(View.GONE);
+			}
 			
 			if (mSwitchCamera != null)
 				mSwitchCamera.setVisibility(View.INVISIBLE);

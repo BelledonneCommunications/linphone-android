@@ -18,8 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone;
 
-
-
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -44,6 +42,9 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -60,13 +61,15 @@ import android.widget.RelativeLayout.LayoutParams;
 
 /**
  * For Android SDK >= 5
+ * 
  * @author Guillaume Beraudo
- *
+ * 
  */
-public class VideoCallActivity extends Activity implements LinphoneOnCallStateChangedListener, OnClickListener {
+public class VideoCallActivity extends Activity implements
+		LinphoneOnCallStateChangedListener, OnClickListener {
 	private final static int DELAY_BEFORE_HIDING_CONTROLS = 2000;
 	private static final int numpadDialogId = 1;
-	
+
 	private SurfaceView mVideoViewReady;
 	private SurfaceView mVideoCaptureViewReady;
 	public static boolean launched = false;
@@ -81,8 +84,10 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc().getCallsNb() == 0) {
-			Log.e("No service running: avoid crash by finishing ", getClass().getName());
+		if (!LinphoneManager.isInstanciated()
+				|| LinphoneManager.getLc().getCallsNb() == 0) {
+			Log.e("No service running: avoid crash by finishing ", getClass()
+					.getName());
 			// super.onCreate called earlier
 			finish();
 			return;
@@ -90,80 +95,90 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 
 		setContentView(R.layout.videocall);
 
-		SurfaceView videoView = (SurfaceView) findViewById(R.id.video_surface); 
+		SurfaceView videoView = (SurfaceView) findViewById(R.id.video_surface);
 
-		//((FrameLayout) findViewById(R.id.video_frame)).bringChildToFront(findViewById(R.id.imageView1));
-		
+		// ((FrameLayout)
+		// findViewById(R.id.video_frame)).bringChildToFront(findViewById(R.id.imageView1));
+
 		SurfaceView captureView = (SurfaceView) findViewById(R.id.video_capture_surface);
-		captureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		captureView.getHolder()
+				.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
 		/* force surfaces Z ordering */
 		fixZOrder(videoView, captureView);
-	
-		androidVideoWindowImpl = new AndroidVideoWindowImpl(videoView, captureView);
-		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
-			
-			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				LinphoneManager.getLc().setVideoWindow(vw);
-				mVideoViewReady = surface;
-			}
-			
-			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				Log.d("VIDEO WINDOW destroyed!\n");
-				LinphoneManager.getLc().setVideoWindow(null);
-			}
-			
-			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				mVideoCaptureViewReady = surface;
-				LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
-			}
-			
-			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				// Remove references kept in jni code and restart camera
-				 LinphoneManager.getLc().setPreviewWindow(null);
-			}
-		});
-		
+
+		androidVideoWindowImpl = new AndroidVideoWindowImpl(videoView,
+				captureView);
+		androidVideoWindowImpl
+				.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
+
+					public void onVideoRenderingSurfaceReady(
+							AndroidVideoWindowImpl vw, SurfaceView surface) {
+						LinphoneManager.getLc().setVideoWindow(vw);
+						mVideoViewReady = surface;
+					}
+
+					public void onVideoRenderingSurfaceDestroyed(
+							AndroidVideoWindowImpl vw) {
+						Log.d("VIDEO WINDOW destroyed!\n");
+						LinphoneManager.getLc().setVideoWindow(null);
+					}
+
+					public void onVideoPreviewSurfaceReady(
+							AndroidVideoWindowImpl vw, SurfaceView surface) {
+						mVideoCaptureViewReady = surface;
+						LinphoneManager.getLc().setPreviewWindow(
+								mVideoCaptureViewReady);
+					}
+
+					public void onVideoPreviewSurfaceDestroyed(
+							AndroidVideoWindowImpl vw) {
+						// Remove references kept in jni code and restart camera
+						LinphoneManager.getLc().setPreviewWindow(null);
+					}
+				});
+
 		androidVideoWindowImpl.init();
 
-		videoCall = LinphoneManager.getLc().getCurrentCall();		
+		videoCall = LinphoneManager.getLc().getCurrentCall();
 		if (videoCall != null) {
 			LinphoneManager lm = LinphoneManager.getInstance();
-			if (!lm.shareMyCamera() && !lm.isVideoInitiator() && videoCall.cameraEnabled()) {
+			if (!lm.shareMyCamera() && !lm.isVideoInitiator()
+					&& videoCall.cameraEnabled()) {
 				lm.sendStaticImage(true);
 			}
-			
+
 			updatePreview(videoCall.cameraEnabled());
 		}
-			
-		PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,Log.TAG);
+
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
+				| PowerManager.ON_AFTER_RELEASE, Log.TAG);
 		mWakeLock.acquire();
-		
+
 		mControlsLayout = (LinearLayout) findViewById(R.id.incall_controls_layout);
 		videoView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if (mControlsLayout != null && mControlsLayout.getVisibility() == View.GONE)
-				{
+				if (mControlsLayout != null
+						&& mControlsLayout.getVisibility() == View.GONE) {
 					mControlsLayout.setVisibility(View.VISIBLE);
-					controlsHandler.postDelayed(mControls = new Runnable(){
+					controlsHandler.postDelayed(mControls = new Runnable() {
 						public void run() {
 							mControlsLayout.setVisibility(View.GONE);
 						}
-					},DELAY_BEFORE_HIDING_CONTROLS);
-					
+					}, DELAY_BEFORE_HIDING_CONTROLS);
+
 					return true;
 				}
 				return false;
 			}
 		});
-		
+
 		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
 			findViewById(R.id.switch_camera).setVisibility(View.GONE);
 		}
-			
-		if (Version.isXLargeScreen(this))
-		{
+
+		if (Version.isXLargeScreen(this)) {
 			findViewById(R.id.toggleMuteMic).setOnClickListener(this);
 			findViewById(R.id.toggleSpeaker).setOnClickListener(this);
 			findViewById(R.id.incallNumpadShow).setOnClickListener(this);
@@ -172,111 +187,206 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			findViewById(R.id.switch_camera).setOnClickListener(this);
 			findViewById(R.id.conf_simple_pause).setOnClickListener(this);
 			findViewById(R.id.conf_simple_video).setOnClickListener(this);
-			
-			if (LinphoneManager.getInstance().isSpeakerOn())
-			{
+
+			if (LinphoneManager.getInstance().isSpeakerOn()) {
 				ToggleImageButton speaker = (ToggleImageButton) findViewById(R.id.toggleSpeaker);
 				speaker.setChecked(true);
 				speaker.setEnabled(false);
 			}
 		}
-		
+
 		// Hack to force the redraw of the preview
 		// Camera will be re-enabled in onResume just after anyway
 		shouldRestartVideoOnResume = true;
 		LinphoneManager.getLc().getCurrentCall().enableCamera(false);
 	}
-	
-	void updateQualityOfSignalIcon(float quality)
-	{
+
+	void updateQualityOfSignalIcon(float quality) {
 		ImageView qos = (ImageView) findViewById(R.id.QoS);
 		if (quality >= 4) // Good Quality
 		{
-			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_4));
-		}
-		else if (quality >= 3) // Average quality
+			qos.setImageDrawable(getResources().getDrawable(
+					R.drawable.stat_sys_signal_4));
+		} else if (quality >= 3) // Average quality
 		{
-			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_3));
-		}
-		else if (quality >= 2) // Low quality
+			qos.setImageDrawable(getResources().getDrawable(
+					R.drawable.stat_sys_signal_3));
+		} else if (quality >= 2) // Low quality
 		{
-			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_2));
-		}
-		else if (quality >= 1) // Very low quality
+			qos.setImageDrawable(getResources().getDrawable(
+					R.drawable.stat_sys_signal_2));
+		} else if (quality >= 1) // Very low quality
 		{
-			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_1));
-		}
-		else // Worst quality
+			qos.setImageDrawable(getResources().getDrawable(
+					R.drawable.stat_sys_signal_1));
+		} else // Worst quality
 		{
-			qos.setImageDrawable(getResources().getDrawable(R.drawable.stat_sys_signal_0));
+			qos.setImageDrawable(getResources().getDrawable(
+					R.drawable.stat_sys_signal_0));
 		}
 	}
-	
+
+	private void rewriteToggleCameraItem(MenuItem item) {
+		if (LinphoneManager.getLc().getCurrentCall().cameraEnabled()) {
+			item.setTitle(getString(R.string.menu_videocall_toggle_camera_disable));
+		} else {
+			item.setTitle(getString(R.string.menu_videocall_toggle_camera_enable));
+		}
+	}
+
+	private void rewriteChangeResolutionItem(MenuItem item) {
+		if (BandwidthManager.getInstance().isUserRestriction()) {
+			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_low_resolution));
+		} else {
+			item.setTitle(getString(R.string.menu_videocall_change_resolution_when_high_resolution));
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (Version.isXLargeScreen(this))
+			return false;
+		
+		// Inflate the currently selected menu XML resource.
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.videocall_activity_menu, menu);
+
+		rewriteToggleCameraItem(menu
+				.findItem(R.id.videocall_menu_toggle_camera));
+		rewriteChangeResolutionItem(menu
+				.findItem(R.id.videocall_menu_change_resolution));
+
+		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
+			menu.findItem(R.id.videocall_menu_switch_camera).setVisible(false);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.videocall_menu_back_to_dialer:
+			finish();
+			LinphoneActivity.instance().startIncallActivity();
+			break;
+		case R.id.videocall_menu_change_resolution:
+			LinphoneManager.getInstance().changeResolution();
+			// previous call will cause graph reconstruction -> regive preview
+			// window
+			if (mVideoCaptureViewReady != null)
+				LinphoneManager.getLc()
+						.setPreviewWindow(mVideoCaptureViewReady);
+			rewriteChangeResolutionItem(item);
+			break;
+		case R.id.videocall_menu_terminate_call:
+			LinphoneManager.getInstance().terminateCall();
+			break;
+		case R.id.videocall_menu_toggle_camera:
+			boolean camEnabled = LinphoneManager.getInstance()
+					.toggleEnableCamera();
+			updatePreview(camEnabled);
+			Log.e("winwow camera enabled: " + camEnabled);
+			rewriteToggleCameraItem(item);
+			// previous call will cause graph reconstruction -> regive preview
+			// window
+			if (camEnabled) {
+				if (mVideoCaptureViewReady != null)
+					LinphoneManager.getLc().setPreviewWindow(
+							mVideoCaptureViewReady);
+			} else
+				LinphoneManager.getLc().setPreviewWindow(null);
+			break;
+		case R.id.videocall_menu_switch_camera:
+			int id = LinphoneManager.getLc().getVideoDevice();
+			id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+			LinphoneManager.getLc().setVideoDevice(id);
+			CallManager.getInstance().updateCall();
+			// previous call will cause graph reconstruction -> regive preview
+			// window
+			if (mVideoCaptureViewReady != null)
+				LinphoneManager.getLc()
+						.setPreviewWindow(mVideoCaptureViewReady);
+			break;
+		default:
+			Log.e("Unknown menu item [", item, "]");
+			break;
+		}
+		return true;
+	}
+
 	void updatePreview(boolean cameraCaptureEnabled) {
 		mVideoCaptureViewReady = null;
 		if (cameraCaptureEnabled) {
 			findViewById(R.id.imageView1).setVisibility(View.INVISIBLE);
-			findViewById(R.id.video_capture_surface).setVisibility(View.VISIBLE);
+			findViewById(R.id.video_capture_surface)
+					.setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.video_capture_surface).setVisibility(View.INVISIBLE);
+			findViewById(R.id.video_capture_surface).setVisibility(
+					View.INVISIBLE);
 			findViewById(R.id.imageView1).setVisibility(View.VISIBLE);
 		}
 		findViewById(R.id.video_frame).requestLayout();
 	}
-	
+
 	void fixZOrder(SurfaceView video, SurfaceView preview) {
 		video.setZOrderOnTop(false);
 		preview.setZOrderOnTop(true);
 	}
 
- 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		if (mVideoViewReady != null)
-			((GLSurfaceView)mVideoViewReady).onResume();
+			((GLSurfaceView) mVideoViewReady).onResume();
 		synchronized (androidVideoWindowImpl) {
 			LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
 		}
-		launched=true;
+		launched = true;
 		LinphoneManager.addListener(this);
-		
-		refreshHandler.postDelayed(mCallQualityUpdater=new Runnable(){
-			LinphoneCall mCurrentCall=LinphoneManager.getLc().getCurrentCall();
+
+		refreshHandler.postDelayed(mCallQualityUpdater = new Runnable() {
+			LinphoneCall mCurrentCall = LinphoneManager.getLc()
+					.getCurrentCall();
+
 			public void run() {
-				if (mCurrentCall==null){
-					mCallQualityUpdater=null;
+				if (mCurrentCall == null) {
+					mCallQualityUpdater = null;
 					return;
 				}
 				int oldQuality = 0;
 				float newQuality = mCurrentCall.getCurrentQuality();
-				if ((int) newQuality != oldQuality){
+				if ((int) newQuality != oldQuality) {
 					updateQualityOfSignalIcon(newQuality);
 				}
-				if (launched){
+				if (launched) {
 					refreshHandler.postDelayed(this, 1000);
-				}else mCallQualityUpdater=null;
+				} else
+					mCallQualityUpdater = null;
 			}
-		},1000);
-		
+		}, 1000);
+
 		if (mControlsLayout != null)
 			mControlsLayout.setVisibility(View.GONE);
-		
+
 		if (shouldRestartVideoOnResume) {
 			LinphoneManager.getLc().getCurrentCall().enableCamera(true);
 			shouldRestartVideoOnResume = false;
 		}
 	}
-	
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
-		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
+		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode))
+			return true;
+		if (Version.isXLargeScreen(this) && LinphoneUtils.onKeyBackGoHome(this, keyCode, event))
+			return true;
 		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (androidVideoWindowImpl != null) { // Prevent linphone from crashing if correspondent hang up while you are rotating
+		if (androidVideoWindowImpl != null) { // Prevent linphone from crashing
+												// if correspondent hang up
+												// while you are rotating
 			androidVideoWindowImpl.release();
 		}
 		super.onDestroy();
@@ -284,36 +394,40 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 
 	@Override
 	protected void onPause() {
-		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(), ", inCall:", LinphoneManager.getLc().isIncall(),")");
+		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(),
+				", inCall:", LinphoneManager.getLc().isIncall(), ")");
 		LinphoneManager.removeListener(this);
 		if (isFinishing()) {
 			videoCall = null; // release reference
 		} else {
-			// Send NoWebcam since Android 4.0 can't get the video from the webcam if the activity is not in foreground
+			// Send NoWebcam since Android 4.0 can't get the video from the
+			// webcam if the activity is not in foreground
 			shouldRestartVideoOnResume = true;
 			LinphoneManager.getLc().getCurrentCall().enableCamera(false);
 		}
-		launched=false;
+		launched = false;
 		synchronized (androidVideoWindowImpl) {
-			/* this call will destroy native opengl renderer
-			 * which is used by androidVideoWindowImpl
+			/*
+			 * this call will destroy native opengl renderer which is used by
+			 * androidVideoWindowImpl
 			 */
 			LinphoneManager.getLc().setVideoWindow(null);
 		}
 
-		if (mCallQualityUpdater!=null){
+		if (mCallQualityUpdater != null) {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
-			mCallQualityUpdater=null;
+			mCallQualityUpdater = null;
 		}
 		if (mControls != null) {
 			controlsHandler.removeCallbacks(mControls);
 			mControls = null;
 		}
-		
-		if (mWakeLock.isHeld())	mWakeLock.release();
+
+		if (mWakeLock.isHeld())
+			mWakeLock.release();
 		super.onPause();
 		if (mVideoViewReady != null)
-			((GLSurfaceView)mVideoViewReady).onPause();
+			((GLSurfaceView) mVideoViewReady).onPause();
 	}
 
 	@Override
@@ -325,12 +439,13 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			finish();
 		}
 	}
-	
+
 	private void resizePreview() {
-		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
+				.getDefaultDisplay();
 		int rotation = display.getRotation();
 		LayoutParams params;
-		
+
 		int w, h;
 		if (Version.isXLargeScreen(this)) {
 			w = 176;
@@ -339,7 +454,7 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 			w = 88;
 			h = 74;
 		}
-		
+
 		if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
 			params = new LayoutParams(h, w);
 		} else {
@@ -350,86 +465,88 @@ public class VideoCallActivity extends Activity implements LinphoneOnCallStateCh
 		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		mVideoCaptureViewReady.setLayoutParams(params);
 	}
-	
+
 	public void onConfigurationChanged(Configuration newConfig) {
 		resizePreview();
 		super.onConfigurationChanged(null);
 	}
-	
+
 	private void resetControlsLayoutExpiration() {
 		if (mControls != null) {
 			controlsHandler.removeCallbacks(mControls);
 		}
-		
-		controlsHandler.postDelayed(mControls = new Runnable(){
+
+		controlsHandler.postDelayed(mControls = new Runnable() {
 			public void run() {
 				mControlsLayout.setVisibility(View.GONE);
 			}
-		},DELAY_BEFORE_HIDING_CONTROLS);
+		}, DELAY_BEFORE_HIDING_CONTROLS);
 	}
 
 	public void onClick(View v) {
 		resetControlsLayoutExpiration();
 		switch (v.getId()) {
-			case R.id.incallHang:
-				terminateCurrentCallOrConferenceOrAll();
-				break;
-			case R.id.toggleSpeaker:
-				if (((Checkable) v).isChecked()) {
-					LinphoneManager.getInstance().routeAudioToSpeaker();
-				} else {
-					LinphoneManager.getInstance().routeAudioToReceiver();
-				}
-				break;
-			case R.id.incallNumpadShow:
-				showDialog(numpadDialogId);
-				break;
-			case R.id.toggleMuteMic:
-				LinphoneManager.getLc().muteMic(((Checkable) v).isChecked());
-				break;
-			case R.id.switch_camera:
-				int id = LinphoneManager.getLc().getVideoDevice();
-				id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-				LinphoneManager.getLc().setVideoDevice(id);
-				CallManager.getInstance().updateCall();
-				// previous call will cause graph reconstruction -> regive preview window
-				if (mVideoCaptureViewReady != null)
-					LinphoneManager.getLc().setPreviewWindow(mVideoCaptureViewReady);
-				break;
-			case R.id.conf_simple_pause:
-				finish();
-				LinphoneActivity.instance().startIncallActivity();
-				LinphoneManager.getLc().pauseCall(videoCall);
-				break;
-			case R.id.conf_simple_video:
-				LinphoneCallParams params = videoCall.getCurrentParamsCopy();
-				params.setVideoEnabled(false);
-				LinphoneManager.getLc().updateCall(videoCall, params);
-				break;	
-			case R.id.addCall:
-				finish();
-				break;
+		case R.id.incallHang:
+			terminateCurrentCallOrConferenceOrAll();
+			break;
+		case R.id.toggleSpeaker:
+			if (((Checkable) v).isChecked()) {
+				LinphoneManager.getInstance().routeAudioToSpeaker();
+			} else {
+				LinphoneManager.getInstance().routeAudioToReceiver();
+			}
+			break;
+		case R.id.incallNumpadShow:
+			showDialog(numpadDialogId);
+			break;
+		case R.id.toggleMuteMic:
+			LinphoneManager.getLc().muteMic(((Checkable) v).isChecked());
+			break;
+		case R.id.switch_camera:
+			int id = LinphoneManager.getLc().getVideoDevice();
+			id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+			LinphoneManager.getLc().setVideoDevice(id);
+			CallManager.getInstance().updateCall();
+			// previous call will cause graph reconstruction -> regive preview
+			// window
+			if (mVideoCaptureViewReady != null)
+				LinphoneManager.getLc()
+						.setPreviewWindow(mVideoCaptureViewReady);
+			break;
+		case R.id.conf_simple_pause:
+			finish();
+			LinphoneActivity.instance().startIncallActivity();
+			LinphoneManager.getLc().pauseCall(videoCall);
+			break;
+		case R.id.conf_simple_video:
+			LinphoneCallParams params = videoCall.getCurrentParamsCopy();
+			params.setVideoEnabled(false);
+			LinphoneManager.getLc().updateCall(videoCall, params);
+			break;
+		case R.id.addCall:
+			finish();
+			break;
 		}
 	}
-	
+
 	protected Dialog onCreateDialog(final int id) {
 		switch (id) {
 		case numpadDialogId:
 			Numpad numpad = new Numpad(this, true);
-			return new AlertDialog.Builder(this).setView(numpad)
-					 .setPositiveButton(R.string.close_button_text, new
-					 DialogInterface.OnClickListener() {
-						 public void onClick(DialogInterface dialog, int whichButton)
-							 {
-							 	dismissDialog(id);
-							 }
-						 })
-					.create();
+			return new AlertDialog.Builder(this)
+					.setView(numpad)
+					.setPositiveButton(R.string.close_button_text,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									dismissDialog(id);
+								}
+							}).create();
 		default:
 			throw new IllegalArgumentException("unkown dialog id " + id);
 		}
 	}
-	
+
 	private void terminateCurrentCallOrConferenceOrAll() {
 		LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
 		if (currentCall != null) {
