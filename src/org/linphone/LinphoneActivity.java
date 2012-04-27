@@ -23,10 +23,10 @@ import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 
 import android.app.AlertDialog;
@@ -46,10 +46,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.TabSpec;
 	
 public class LinphoneActivity extends TabActivity implements ContactPicked
 		, LinphoneOnCallStateChangedListener
@@ -190,7 +190,16 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 			if(LinphoneManager.getLc().isInComingInvitePending()) {
 				startIncomingCallActivity();
 			} else {
-				startIncallActivity();
+				LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+				if (currentCall == null)
+					return;
+				
+				if (currentCall.getCurrentParamsCopy().getVideoEnabled()) {
+					currentCall.enableCamera(true);
+					startVideoActivity(currentCall, 0);
+				}
+				else
+					startIncallActivity();
 			}
 			return;
 		}
@@ -461,29 +470,42 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		}
 
 		if (state==State.IncomingReceived) {
-			if (call.getCurrentParamsCopy().getVideoEnabled()) startOrientationSensor();
+			if (call.getCurrentParamsCopy().getVideoEnabled()) 
+				startOrientationSensor();
 			startIncomingCallActivity();
 		}
 		if (state == State.OutgoingInit) {
-			if (call.getCurrentParamsCopy().getVideoEnabled()) startOrientationSensor();
-			startIncallActivity();
+			if (call.getCurrentParamsCopy().getVideoEnabled()) {
+				startOrientationSensor();
+				startVideoActivity(call, 0);
+			} else {
+				startIncallActivity();
+			}
 		}
 
 		if (state == LinphoneCall.State.StreamsRunning && Version.isVideoCapable() && !call.isInConference()) {
 			// call.cameraEnabled() contains the wish of the user
 			// set in LinphoneManager#onCallStateChanged(OutgoingInit||IncomingReceived)
-			boolean videoEnabled = call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled();
+			boolean videoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
 			if (videoEnabled) {
-				startVideoActivity(call, 1000);
+				finishActivity(incall_activity);
+				startVideoActivity(call, 0);
 			} else {
 				finishActivity(video_activity);
+				startIncallActivity();
 			}
 		}
 
 		if (state == LinphoneCall.State.CallUpdatedByRemote && Version.isVideoCapable()) {
 			if (VideoCallActivity.launched && !call.getCurrentParamsCopy().getVideoEnabled()) {
 				finishActivity(video_activity);
+				startIncallActivity();
 			}
+		}
+		
+		if (state == LinphoneCall.State.PausedByRemote) {
+			finishActivity(video_activity);
+			startIncallActivity();
 		}
 
 		if (state==State.Error){

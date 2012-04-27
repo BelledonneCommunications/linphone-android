@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
       android:versionCode="1220" android:versionName="1.2.2"  android:installLocation="auto"> 
-    <uses-sdk android:minSdkVersion="3" />
+    <uses-sdk android:minSdkVersion="3"/>
 
 
 
@@ -39,6 +39,7 @@
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:launchMode="singleTask"
+                  android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
                   > <!-- android:alwaysRetainTaskState="true" clearTaskOnLaunch="false"-->
                   
             <intent-filter>
@@ -76,7 +77,7 @@
 <!--                    android:launchMode="singleTask"-->
             <activity android:name="org.linphone.IncallActivity"
                     android:theme="@android:style/Theme.NoTitleBar"
-                    android:screenOrientation="portrait">
+                    android:configChanges="keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -94,14 +95,16 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-        <activity android:name="org.linphone.DialerActivity">
+        <activity android:name="org.linphone.DialerActivity"
+                  android:configChanges="keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
          <activity android:name="org.linphone.VideoCallActivity"
           android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-          android:launchMode="singleTop">
+          android:launchMode="singleTop"
+          android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

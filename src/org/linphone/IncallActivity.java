@@ -42,8 +42,11 @@ import org.linphone.ui.Numpad;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -107,12 +110,15 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private View mConferenceVirtualCallee;
 	private int mMultipleCallsLimit;
 	private boolean mAllowTransfers;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
 			return;
 		}
+		if (!Version.isXLargeScreen(this))
+		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
 		setContentView(R.layout.incall_layout);
 		instance = this;
 		
@@ -318,7 +324,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.addCall:
-			openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_ADD, addCallId);
+			finish();
 			break;
 		case R.id.incallHang:
 			terminateCurrentCallOrConferenceOrAll();
@@ -346,7 +352,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				((Checkable) v).setChecked(true);
 				List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc(), Arrays.asList(State.Paused));
 				if (pausedCalls.size() == 1) {
-					lc().resumeCall(pausedCalls.get(0));
+					LinphoneCall callToResume = pausedCalls.get(0);
+					lc().resumeCall(callToResume);
 				}
 			}
 			break;
@@ -588,6 +595,11 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					} else if (lc().soundResourcesLocked()) {
 						return;
 					} else if (State.Paused == actualState) {
+						if (call != null && call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled())
+						{
+							finish();
+							LinphoneActivity.instance().startVideoActivity(call, 0);
+						}
 						lc().resumeCall(call);
 					}
 				}
@@ -650,6 +662,18 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			pauseView.setVisibility(GONE);
 			mergeView.setVisibility(VISIBLE);
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) 
+	{
+		if (!Version.isXLargeScreen(this))
+		{
+			// Do nothing to not recreate the activity on smartphone if screen is rotated
+			super.onConfigurationChanged(null);
+			return;
+		}
+		super.onConfigurationChanged(newConfig);
 	}
 
 	private void updateConfItem() {

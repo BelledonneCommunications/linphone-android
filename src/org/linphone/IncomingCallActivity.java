@@ -141,7 +141,10 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 			// the above method takes care of Samsung Galaxy S
 			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG);
 		} else {
-			LinphoneActivity.instance().startIncallActivity();
+			if (mCall.getCurrentParamsCopy().getVideoEnabled())
+				LinphoneActivity.instance().startVideoActivity(mCall, 0);
+			else
+				LinphoneActivity.instance().startIncallActivity();
 		}
 	}
 	@Override

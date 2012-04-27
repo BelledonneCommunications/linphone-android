@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:ui="http://schemas.android.com/apk/res/org.linphone"
+  android:id="@+id/video_frame"
+  android:layout_height="fill_parent" android:layout_width="fill_parent">
+  
+	<org.linphone.mediastream.video.display.GL2JNIView 
+	    android:visibility="visible" 
+	    android:layout_height="fill_parent" 
+	    android:layout_width="fill_parent" 
+	    android:id="@+id/video_surface">
+	</org.linphone.mediastream.video.display.GL2JNIView>
+	
+	<SurfaceView 
+		android:layout_height="148dip" 
+		android:layout_width="176dip" 
+		android:id="@+id/video_capture_surface" 
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_marginBottom="15dip"
+		android:layout_marginRight="15dip" >
+	</SurfaceView>
+	
+	<ImageView 
+		android:layout_width="88dip"
+		android:layout_height="72dip" 
+		android:id="@+id/imageView1" 
+		android:src="@drawable/video_muted" 
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_marginBottom="15dip"
+		android:layout_marginRight="15dip" >
+	</ImageView>
+	 
+	<ImageView 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:id="@+id/QoS" 
+		android:src="@drawable/stat_sys_signal_0" 
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true" >
+	</ImageView> 
+
+	<LinearLayout 
+	    android:id="@+id/incall_controls_layout"
+	    android:visibility="gone"
+		android:layout_alignParentBottom="true" 
+		android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+    	android:gravity="bottom|center_horizontal">
+
+	    <LinearLayout
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content"
+			android:orientation="vertical">
+	        
+	        <Button 
+	            style="@style/incall_control"
+	            android:background="@drawable/clavier_bg"
+			    android:id="@+id/switch_camera"
+				android:layout_height="wrap_content" 
+				android:layout_width="fill_parent" 
+				android:text="@string/menu_videocall_switch_camera_title" />
+	        
+	        <LinearLayout 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content">
+		    
+				<org.linphone.ui.ToggleImageButton 
+				    android:id="@+id/toggleMuteMic"
+		            style="@style/incall_control"
+					ui:checked="@drawable/incall_micro_inverse"
+					ui:unchecked="@drawable/incall_micro"
+					ui:bgdrawables="true" />
+	
+		        <ImageButton 
+		            android:id="@+id/incallNumpadShow"
+		            style="@style/incall_control"
+					android:background="@drawable/incall_dialpad" />
+	
+		        <org.linphone.ui.ToggleImageButton
+		            android:id="@+id/toggleSpeaker"
+		            style="@style/incall_control"
+					ui:checked="@drawable/incall_speaker_inverse"
+					ui:unchecked="@drawable/incall_speaker"
+					ui:bgdrawables="true" />
+		        
+			</LinearLayout>
+		
+			<LinearLayout 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content">
+			        
+				<ImageButton 
+				    android:id="@+id/addCall"
+				    style="@style/incall_control"
+				    android:background="@drawable/incall_add" />
+		
+		        <org.linphone.ui.ToggleImageButton 
+		            android:id="@+id/conf_simple_pause"
+		            style="@style/incall_control"
+		            ui:checked="@drawable/incall_pause_inverse"
+					ui:unchecked="@drawable/incall_pause"
+					ui:bgdrawables="true" />
+		
+		        <Button 
+		            android:id="@+id/conf_simple_video"
+		            style="@style/incall_control"
+		            android:text="-Video"
+		            android:background="@drawable/clavier_bg" />
+			        
+			</LinearLayout>
+	
+			<ImageButton
+			    android:id="@+id/incallHang"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/clavier_bg"
+			    android:minHeight="60dip"
+			    android:src="@drawable/stopcall_red" />
+			
+		</LinearLayout>
+		
+	</LinearLayout>
+
+</RelativeLayout>
