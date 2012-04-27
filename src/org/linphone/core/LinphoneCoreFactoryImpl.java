@@ -68,6 +68,7 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		//Main library
 		if (!hasNeonInCpuFeatures()) {
 			System.loadLibrary("linphonenoneon"); 
+			Log.w("linphone", "No-neon liblinphone loaded");
 		} else {
 			System.loadLibrary("linphone"); 
 		}
@@ -150,7 +151,7 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		   byte[] re = new byte[1024];
 		   while(in.read(re) != -1){
 			   String line = new String(re);
-			   if (line.startsWith("Features")) {
+			   if (line.contains("Features")) {
 				   result = line.contains("neon");
 				   break;
 			   }

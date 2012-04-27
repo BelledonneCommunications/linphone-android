@@ -35,11 +35,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -439,6 +441,13 @@ public class VideoCallActivity extends Activity implements
 			finish();
 		}
 	}
+	
+	private int dpToPixels(int dp){
+        Resources r = getResources();
+        int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, 
+        r.getDisplayMetrics());
+        return px;
+	}
 
 	private void resizePreview() {
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
@@ -451,14 +460,14 @@ public class VideoCallActivity extends Activity implements
 			w = 176;
 			h = 148;
 		} else {
-			w = 88;
-			h = 74;
+			w = 74;
+			h = 88;
 		}
 
 		if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
-			params = new LayoutParams(h, w);
+			params = new LayoutParams(dpToPixels(h), dpToPixels(w));
 		} else {
-			params = new LayoutParams(w, h);
+			params = new LayoutParams(dpToPixels(w), dpToPixels(h));
 		}
 		params.setMargins(0, 0, 15, 15);
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
