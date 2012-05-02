@@ -23,8 +23,10 @@ import org.linphone.core.Log;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 
 
 
@@ -52,7 +54,13 @@ public class NetworkManager extends BroadcastReceiver {
 		if (lNoConnectivity | ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
 			LinphoneManager.getLc().setNetworkReachable(false);
 		} else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
-			 LinphoneManager.getLc().setNetworkReachable(true);
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+			boolean wifiOnly = pref.getBoolean(context.getString(R.string.pref_wifi_only_key), false);
+			if (lNetworkInfo.getTypeName().equals("WIFI") || (lNetworkInfo.getTypeName().equals("mobile") && !wifiOnly)) {
+				LinphoneManager.getLc().setNetworkReachable(true);
+			} else {
+				LinphoneManager.getLc().setNetworkReachable(false);
+			}
 		} else {
 			 // Other unhandled events
 		}

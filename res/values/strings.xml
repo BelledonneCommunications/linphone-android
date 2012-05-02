@@ -235,6 +235,8 @@
 <string name="pref_default_account">pref_default_account</string>
 <string name="pref_sipaccounts">SIP Accounts</string>
 
+<string name="pref_wifi_only">Use wifi only</string>
+
 <string name="wizard_username_hint">Username</string>
 <string name="wizard_password_hint">Password</string>
 <string name="wizard_password_confirm_hint">Confirmation</string>
