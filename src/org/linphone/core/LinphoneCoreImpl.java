@@ -195,11 +195,11 @@ class LinphoneCoreImpl implements LinphoneCore {
 		acceptCall(nativePtr,((LinphoneCallImpl)aCall).nativePtr);
 		
 	}
-	public synchronized Vector<LinphoneCallLog> getCallLogs() {
+	public synchronized LinphoneCallLog[] getCallLogs() {
 		isValid();
-		Vector<LinphoneCallLog> logs = new Vector<LinphoneCallLog>(); 
+		LinphoneCallLog[] logs = new LinphoneCallLog[getNumberOfCallLogs(nativePtr)]; 
 		for (int i=0;i < getNumberOfCallLogs(nativePtr);i++) {
-			logs.add(new LinphoneCallLogImpl(getCallLog(nativePtr, i)));
+			logs[i] = new LinphoneCallLogImpl(getCallLog(nativePtr, i));
 		}
 		return logs;
 	}
@@ -540,11 +540,11 @@ class LinphoneCoreImpl implements LinphoneCore {
 		terminateAllCalls(nativePtr);
 	}
 	private native Object getCall(long nativePtr, int position);
-	@SuppressWarnings("unchecked") public synchronized Vector getCalls() {
+	public synchronized LinphoneCall[] getCalls() {
 		int size = getCallsNb(nativePtr);
-		Vector<LinphoneCall> calls = new Vector<LinphoneCall>(size);
+		LinphoneCall[] calls = new LinphoneCall[size];
 		for (int i=0; i < size; i++) {
-			calls.add((LinphoneCall)getCall(nativePtr, i));
+			calls[i]=((LinphoneCall)getCall(nativePtr, i));
 		}
 		return calls;
 	}

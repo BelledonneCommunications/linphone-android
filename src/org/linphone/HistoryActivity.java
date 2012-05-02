@@ -20,6 +20,8 @@ package org.linphone;
 
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.core.CallDirection;
@@ -110,9 +112,8 @@ public class HistoryActivity extends ListActivity {
 	class CallHistoryAdapter extends  BaseAdapter {
 		final List<LinphoneCallLog> mLogs; 
 
-		@SuppressWarnings("unchecked")
 		CallHistoryAdapter(Context aContext) {
-			mLogs = LinphoneManager.getLc().getCallLogs();
+			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		}
 		public int getCount() {
 			return mLogs.size();

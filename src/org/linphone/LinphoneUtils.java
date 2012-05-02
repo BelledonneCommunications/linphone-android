@@ -166,9 +166,8 @@ public final class LinphoneUtils {
 		return calls;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
-		return (List<LinphoneCall>) lc.getCalls();
+		return (List<LinphoneCall>) Arrays.asList(lc.getCalls());
 	}
 
 	public static final boolean hasExistingResumeableCall(LinphoneCore lc) {
