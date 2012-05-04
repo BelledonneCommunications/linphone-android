@@ -40,7 +40,7 @@ ec_framesize=128
 el_type=mic
 el_thres=0.03
 el_force=100000
-el_sustain=400
+el_sustain=600
 el_transmit_thres=1.7
 ng_floorgain=0.01
 

@@ -585,10 +585,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000, false);
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
-			findPreference(pref_echo_cancellation_key).setEnabled(true);
-		}else{
-			findPreference(pref_echo_limiter_key).setEnabled(true);
 		}
+		findPreference(pref_echo_limiter_key).setEnabled(true);
 
 		initializeMediaEncryptionPreferences();
 	
