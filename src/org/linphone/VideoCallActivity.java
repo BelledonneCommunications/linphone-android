@@ -177,7 +177,8 @@ public class VideoCallActivity extends Activity implements
 		});
 
 		if (!AndroidCameraConfiguration.hasSeveralCameras()) {
-			findViewById(R.id.switch_camera).setVisibility(View.GONE);
+			View v=findViewById(R.id.switch_camera);
+			if (v!=null) v.setVisibility(View.GONE);
 		}
 
 		if (Version.isXLargeScreen(this)) {

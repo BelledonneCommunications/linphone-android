@@ -452,10 +452,13 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 
 			Log.d("Phone orientation changed to ", degrees);
 			int rotation = (360 - degrees) % 360;
-			LinphoneManager.getLc().setDeviceRotation(rotation);
-			LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
-			if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParamsCopy().getVideoEnabled()) {
-				LinphoneManager.getLc().updateCall(currentCall, null);
+			LinphoneCore lc=LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc!=null){
+				lc.setDeviceRotation(rotation);
+				LinphoneCall currentCall = lc.getCurrentCall();
+				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParamsCopy().getVideoEnabled()) {
+					lc.updateCall(currentCall, null);
+				}
 			}
 		}
 	}
