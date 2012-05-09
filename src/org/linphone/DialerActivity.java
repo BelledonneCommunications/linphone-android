@@ -222,7 +222,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		mInCallControls = (LinearLayout) findViewById(R.id.InCallControls);
 		mStatus =  (TextView) findViewById(R.id.status_label);
         
-		tryToInitTabletUI();
+		if (Version.isXLargeScreen(this)) {
+			tryToInitTabletUI();
+		}
 		
 		SlidingDrawer drawer = (SlidingDrawer) findViewById(R.id.drawer);
 		if (drawer != null) {
