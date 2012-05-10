@@ -382,7 +382,7 @@ public class VideoCallActivity extends Activity implements
 			return true;
 		if (Version.isXLargeScreen(this) && LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 			return true;
-		} else if (!Version.isXLargeScreen(this)) {
+		} else if (!Version.isXLargeScreen(this) && keyCode == KeyEvent.KEYCODE_BACK) {
 			LinphoneActivity.instance().startIncallActivity();
 			finish();
 			return true;
