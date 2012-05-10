@@ -28,21 +28,30 @@ import android.util.Log;
 
 public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
-	private static void loadOptionalLibrary(String s) {
+	private static boolean loadOptionalLibrary(String s) {
 		try {
 			System.loadLibrary(s);
+			return true;
 		} catch (Throwable e) {
 			Log.w("Unable to load optional library lib", s);
 		}
+		return false;
 	}
 
 	static {
 		// FFMPEG (audio/video)
 		if (!hasNeonInCpuFeatures()) {
-			loadOptionalLibrary("avutilnoneon");
-			loadOptionalLibrary("swscalenoneon");
-			loadOptionalLibrary("avcorenoneon");
-			loadOptionalLibrary("avcodecnoneon");
+			boolean noNeonLibrariesLoaded = true;
+			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("avutilnoneon");
+			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("swscalenoneon");
+			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("avcorenoneon");
+			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("avcodecnoneon");
+			if (!noNeonLibrariesLoaded) {
+				loadOptionalLibrary("avutil");
+				loadOptionalLibrary("swscale");
+				loadOptionalLibrary("avcore");
+				loadOptionalLibrary("avcodec");
+			}
 		} else {
 			loadOptionalLibrary("avutil");
 			loadOptionalLibrary("swscale");
@@ -67,8 +76,13 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 		//Main library
 		if (!hasNeonInCpuFeatures()) {
-			System.loadLibrary("linphonenoneon"); 
-			Log.w("linphone", "No-neon liblinphone loaded");
+			try {
+				System.loadLibrary("linphonenoneon"); 
+				Log.w("linphone", "No-neon liblinphone loaded");
+			} catch (UnsatisfiedLinkError ule) {
+				Log.w("linphone", "Failed to load no-neon liblinphone, loading neon liblinphone");
+				System.loadLibrary("linphone"); 
+			}
 		} else {
 			System.loadLibrary("linphone"); 
 		}
