@@ -5,11 +5,18 @@ To build liblinphone for Android, you must:
 1) download the Android ndk (>=r5c) from google.
 2) install the autotools: autoconf, automake, aclocal, libtoolize pkgconfig
 3) run the ./prepare_sources.sh script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
-
 	$ ./prepare_sources.sh
 
 4) finally from directory linphone-android, just execute command:
 	$ ${my google ndk directory}/ndk-build
+
+
+To create an apk with a different package name, you need to use the ant script:
+1) first you have to generate first the local.properties file using android sdk
+	$ ${my google sdk directory}/tools/android update project --path ${my project path}
+2) change inside the build.xml file the value of the property "linphone.package.name"
+3) run the ant script
+	$ ant debug
 
 Some options can be passed to ndk-build, like "ndk-build SOME_OPTION=SOME_VALUE"
 
