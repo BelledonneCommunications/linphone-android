@@ -86,10 +86,8 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 		View speaker =  findViewById(R.id.toggleSpeaker);
 		speaker.setOnClickListener(this);
 		mSpeakerButton = (Checkable) speaker;
-		if (LinphoneManager.getInstance().isSpeakerOn())
-		{
+		if (LinphoneManager.getInstance().isSpeakerOn()) {
 			((ToggleImageButton) speaker).setChecked(true);
-			speaker.setEnabled(false);
 		}
 		super.onCreate(savedInstanceState);
 	}
