@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="LinphoneLauncherActivity" default="debug">
+<project name="Linphone" default="debug">
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
@@ -638,17 +638,26 @@
 
             <echo>----------</echo>
             <echo>Handling Resources...</echo>
-            <aapt executable="${aapt}"
-                    command="package"
-                    verbose="${verbose}"
-                    manifest="AndroidManifest.xml"
-                    androidjar="${android.jar}"
-                    rfolder="${gen.absolute.dir}"
-                    nonConstantId="${android.library}"
-                    projectLibrariesResName="project.libraries.res"
-                    projectLibrariesPackageName="${linphone.package.name}">
-                <res path="${resource.absolute.dir}" />
-            </aapt>
+            <exec executable="${aapt}" failonerror="true">
+		  <arg value="package" />
+		  <arg value="-f" />
+		  <arg value="-v" />
+		  <arg value="--version-code" />
+		  <arg value="${version.code}" />
+		  <arg value="--debug-mode" />
+		  <arg value="-M" />
+		  <arg path="AndroidManifest.xml" />
+		  <arg value="-I" />
+		  <arg path="${android.jar}" />
+		  <arg value="-F" />
+		  <arg path="${out.absolute.dir}/${resource.package.file.name}" />
+		  <arg value="-S" />
+		  <arg path="${resource.absolute.dir}" />
+		  <arg value="--rename-manifest-package"/> 
+		  <arg value="${linphone.package.name}"/> 
+		  <arg value="--custom-package" />
+		  <arg value="${linphone.package.name}"/> 
+	    </exec> 
         </do-only-if-manifest-hasCode>
     </target>
 
@@ -845,30 +854,29 @@
          Some custom apk with specific configuration have been
          declared in default.properties.
          -->
-    <target name="-package-resources" depends="-crunch">
+    <target name="-package-resources">
         <!-- only package resources if *not* a library project -->
         <do-only-if-not-library elseText="Library project: do not package resources..." >
-            <aapt executable="${aapt}"
-                    command="package"
-                    versioncode="${version.code}"
-                    versionname="${version.name}"
-                    debug="${build.is.packaging.debug}"
-                    manifest="AndroidManifest.xml"
-                    assets="${asset.absolute.dir}"
-                    androidjar="${android.jar}"
-                    apkfolder="${out.absolute.dir}"
-                    nocrunch="${build.packaging.nocrunch}"
-                    resourcefilename="${resource.package.file.name}"
-                    resourcefilter="${aapt.resource.filter}"
-                    projectLibrariesResName="project.libraries.res"
-                    projectLibrariesPackageName="${linphone.package.name}"
-                    previousBuildType="${build.last.target}"
-                    buildType="${build.target}">
-                <res path="${out.res.absolute.dir}" />
-                <res path="${resource.absolute.dir}" />
-                <!-- <nocompress /> forces no compression on any files in assets or res/raw -->
-                <!-- <nocompress extension="xml" /> forces no compression on specific file extensions in assets and res/raw -->
-            </aapt>
+	<exec executable="${aapt}" failonerror="true">
+	  <arg value="package" />
+	  <arg value="-f" />
+	  <arg value="-v" />
+	  <arg value="--version-code" />
+	  <arg value="${version.code}" />
+	  <arg value="--debug-mode" />
+	  <arg value="-M" />
+	  <arg path="AndroidManifest.xml" />
+	  <arg value="-I" />
+	  <arg path="${android.jar}" />
+	  <arg value="-F" />
+	  <arg path="${out.absolute.dir}/${resource.package.file.name}" />
+	  <arg value="-S" />
+	  <arg path="${resource.absolute.dir}" />
+	  <arg value="--rename-manifest-package"/> 
+	  <arg value="${linphone.package.name}"/> 
+	  <arg value="--custom-package" />
+	  <arg value="${linphone.package.name}"/> 
+	</exec> 
         </do-only-if-not-library>
     </target>
 
@@ -937,29 +945,32 @@
     </target>
 
     <target name="init" description="copy linphone java files into right directories.">
-        <mkdir dir="src/org/linphone/mediastream"/>
-        <copy includeemptydirs="false" todir="src/org/linphone/mediastream">
+        <mkdir dir="src/temp"/>
+        <copy includeemptydirs="false" todir="src/temp">
             <fileset dir="submodules/linphone/mediastreamer2/java/src">
                 <exclude name="org/linphone/mediastream/MediastreamerActivity.java"/>
             </fileset>
         </copy>
-        <copy includeemptydirs="false" todir="src/org/linphone/core">
+        <copy includeemptydirs="false" todir="src/temp">
             <fileset dir="submodules/linphone/java/j2se">
             </fileset>
         </copy>
-        <copy includeemptydirs="false" todir="src/org/linphone/core">
+        <copy includeemptydirs="false" todir="src/temp">
             <fileset dir="submodules/linphone/java/common">
             </fileset>
         </copy>
-        <mkdir dir="src/org/linphone/core/tutorials"/>
-        <copy includeemptydirs="false" todir="src/org/linphone/core/tutorials">
+        <copy includeemptydirs="false" todir="src/temp">
             <fileset dir="submodules/linphone/coreapi/help/java">
             </fileset>
         </copy>
     </target>
 
+    <target name="delete-temp" description="remove linphone java files into right directories.">
+        <delete dir="src/temp"/>
+    </target>
+
     <!-- Builds debug output package -->
-    <target name="debug" depends="init, -set-debug-files, -do-debug"
+    <target name="debug" depends="init, -set-debug-files, -do-debug, delete-temp"
                 description="Builds the application and signs it with a debug key.">
         
         <record-build-info />
