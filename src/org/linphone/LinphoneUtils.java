@@ -147,23 +147,23 @@ public final class LinphoneUtils {
 	}
 
 	public static final List<LinphoneCall> getLinphoneCallsNotInConf(LinphoneCore lc) {
-		List<LinphoneCall> calls = getLinphoneCalls(lc);
-		Iterator<LinphoneCall> iterator = calls.iterator();
-		while (iterator.hasNext()) {
-			LinphoneCall call = iterator.next();
-			if (call.isInConference()) iterator.remove();
+		List<LinphoneCall> l=new ArrayList<LinphoneCall>();
+		for(LinphoneCall c : lc.getCalls()){
+			if (!c.isInConference()){
+				l.add(c);
+			}
 		}
-		return calls;
+		return l;
 	}
 
 	public static final List<LinphoneCall> getLinphoneCallsInConf(LinphoneCore lc) {
-		List<LinphoneCall> calls = getLinphoneCalls(lc);
-		Iterator<LinphoneCall> iterator = calls.iterator();
-		while (iterator.hasNext()) {
-			LinphoneCall call = iterator.next();
-			if (!call.isInConference()) iterator.remove();
+		List<LinphoneCall> l=new ArrayList<LinphoneCall>();
+		for(LinphoneCall c : lc.getCalls()){
+			if (c.isInConference()){
+				l.add(c);
+			}
 		}
-		return calls;
+		return l;
 	}
 	
 	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
