@@ -645,6 +645,8 @@
 		  <arg value="--version-code" />
 		  <arg value="${version.code}" />
 		  <arg value="--debug-mode" />
+		  <arg value="-J" />
+ 		  <arg path="${gen.absolute.dir}" />
 		  <arg value="-M" />
 		  <arg path="AndroidManifest.xml" />
 		  <arg value="-I" />
@@ -864,6 +866,8 @@
 	  <arg value="--version-code" />
 	  <arg value="${version.code}" />
 	  <arg value="--debug-mode" />
+	  <arg value="-J" />
+	  <arg path="${gen.absolute.dir}" />
 	  <arg value="-M" />
 	  <arg path="AndroidManifest.xml" />
 	  <arg value="-I" />
