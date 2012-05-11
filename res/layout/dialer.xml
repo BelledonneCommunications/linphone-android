@@ -47,6 +47,32 @@
 				    android:src="@drawable/startcall_green" 
 				    android:background="@drawable/clavier_bg" />
 				
+				<LinearLayout
+				    android:id="@+id/InCallControls"
+					android:layout_height="fill_parent" 
+					android:layout_width="fill_parent"
+					android:orientation="horizontal" 
+					android:visibility="gone"
+					android:layout_weight="3" >
+					
+	                <Button 
+					    android:id="@+id/AddCall"
+					    style="@style/DialerDigit"
+						android:layout_height="fill_parent" 
+						android:layout_width="fill_parent" 
+						android:layout_weight="1" 
+						android:text="@string/AddCallButtonText" />
+	                
+					<Button 
+					    android:id="@+id/Back"
+					    style="@style/DialerDigit"
+						android:layout_height="fill_parent" 
+						android:layout_width="fill_parent" 
+						android:layout_weight="1" 
+						android:text="@string/CancelButtonText" />
+					
+				</LinearLayout>
+				
 			</LinearLayout>
 			
 		</LinearLayout>

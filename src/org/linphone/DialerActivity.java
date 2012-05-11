@@ -222,6 +222,38 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		mInCallControls = (LinearLayout) findViewById(R.id.InCallControls);
 		mStatus =  (TextView) findViewById(R.id.status_label);
         
+		if (mBack != null) {
+			mBack.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+					if (call.getCurrentParamsCopy().getVideoEnabled())
+						LinphoneActivity.instance().startVideoActivity(call, 0);
+					else
+						LinphoneActivity.instance().startIncallActivity();
+				}
+			});
+		}
+		
+		if (mAddCall != null) {
+			mAddCall.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+					if (call != null && !call.isInConference()) {
+						LinphoneManager.getLc().pauseCall(call);
+					} else {
+						LinphoneManager.getLc().leaveConference();
+					}
+						
+					try {
+						LinphoneManager.getLc().invite(mAddress.getText().toString());
+					} catch (LinphoneCoreException e) {
+						Log.e(e);
+						Toast.makeText(DialerActivity.this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
+					}
+				}
+			});
+		}
+		
 		if (Version.isXLargeScreen(this)) {
 			tryToInitTabletUI();
 		}
@@ -301,38 +333,6 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 					mCamera = Camera.open(mCurrentCameraId);
 					mVideoCaptureView.switchCamera(mCamera, mCurrentCameraId);
 					mCamera.startPreview();
-				}
-			});
-		}
-		
-		if (mBack != null) {
-			mBack.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-					if (call.getCurrentParamsCopy().getVideoEnabled())
-						LinphoneActivity.instance().startVideoActivity(call, 0);
-					else
-						LinphoneActivity.instance().startIncallActivity();
-				}
-			});
-		}
-		
-		if (mAddCall != null) {
-			mAddCall.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-					if (call != null && !call.isInConference()) {
-						LinphoneManager.getLc().pauseCall(call);
-					} else {
-						LinphoneManager.getLc().leaveConference();
-					}
-						
-					try {
-						LinphoneManager.getLc().invite(mAddress.getText().toString());
-					} catch (LinphoneCoreException e) {
-						Log.e(e);
-						Toast.makeText(DialerActivity.this, R.string.error_adding_new_call, Toast.LENGTH_LONG).show();
-					}
 				}
 			});
 		}

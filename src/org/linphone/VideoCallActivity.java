@@ -201,7 +201,9 @@ public class VideoCallActivity extends Activity implements
 		// Hack to force the redraw of the preview
 		// Camera will be re-enabled in onResume just after anyway
 		shouldRestartVideoOnResume = true;
-		LinphoneManager.getLc().getCurrentCall().enableCamera(false);
+		LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+		if (currentCall != null)
+			currentCall.enableCamera(false);
 	}
 
 	void updateQualityOfSignalIcon(float quality) {

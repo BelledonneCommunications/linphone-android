@@ -105,7 +105,7 @@ public class Digit extends Button implements AddressAware {
 				mIsDtmfStarted =false;
 				if (lc.isIncall()) {
 					lc.sendDtmf(mKeyCode.charAt(0));
-					return;
+//					return;
 				}
 			}
 			
