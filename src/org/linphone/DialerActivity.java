@@ -227,7 +227,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			mBack.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-					if (call.getCurrentParamsCopy().getVideoEnabled())
+					if (call != null && call.getCurrentParamsCopy().getVideoEnabled())
 						LinphoneActivity.instance().startVideoActivity(call, 0);
 					else
 						LinphoneActivity.instance().startIncallActivity();
