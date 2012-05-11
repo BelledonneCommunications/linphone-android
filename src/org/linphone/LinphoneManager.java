@@ -314,7 +314,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
-			if (mLc.isMyself(lAddress.asStringUriOnly())) {
+			if (mR.getBoolean(R.bool.forbid_self_call) && mLc.isMyself(lAddress.asStringUriOnly())) {
 				mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 				return;
 			}
@@ -673,9 +673,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				lDefaultProxyConfig.enableRegister(true);
 				lDefaultProxyConfig.done();
 			}
-			
+
 			// Extra accounts
 			for (int i = 1; i < getPrefExtraAccountsNumber(); i++) {
+				if (getPrefBoolean(getString(R.string.pref_disable_account_key) + i, false)) {
+					continue;
+				}
 				lUserName = getPrefString(getString(R.string.pref_username_key) + i, null);
 				lPasswd = getPrefString(getString(R.string.pref_passwd_key) + i, null);
 				if (lUserName != null && lUserName.length() > 0) {

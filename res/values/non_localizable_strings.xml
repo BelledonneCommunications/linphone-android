@@ -2,6 +2,8 @@
 <resources>
    	<!-- Do not translate any of the strings below -->
 
+	<string name="pref_disable_account_key">pref_disable_account_key</string>
+
     <string name="pref_tunnel_key">pref_tunnel_key</string>
 	<string name="pref_tunnel_mode_key">pref_tunnel_mode_key</string>
 	<string name="tunnel_mode_entry_value_disabled">disabled</string>

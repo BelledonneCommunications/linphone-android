@@ -17,6 +17,7 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<color name="conf_active_bg_color">#191970</color>
 
+	<bool name="forbid_self_call">false</bool>
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>
  

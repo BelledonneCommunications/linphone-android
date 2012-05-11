@@ -57,6 +57,8 @@ LOCAL_CFLAGS += \
 	-include $(LOCAL_PATH)/../build/exosip/libeXosip2_AndroidConfig.h \
 	-DOSIP_MT \
 	-DENABLE_TRACE \
+	-DSOCKET_TIMEOUT=50 \
+	-DSOCKET_PROGRESS_TIMEOUT=300 \
 	-include $(LOCAL_PATH)/include/eXosip2/eXosip_transport_hook.h
 
 
