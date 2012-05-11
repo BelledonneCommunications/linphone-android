@@ -84,6 +84,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	private LinearLayout mInCallControls;
 
 	private static DialerActivity instance;
+	public boolean mVisible;
 	private boolean mPreventDoubleCallOnRotation;
 
 	private AlertDialog wizardDialog;
@@ -359,6 +360,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
     @Override
     protected void onPause() {
     	super.onPause();
+    	mVisible = false;
 
     	if (mCamera != null) {
             mCamera.release();
@@ -502,6 +504,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		// and set to the to be destroyed Dialer.
 		// Note1: We wait as long as possible before setting the last message.
 		// Note2: Linphone service is in charge of instantiating LinphoneManager
+		mVisible = true;
 		mStatus.setText(LinphoneManager.getInstance().getLastLcStatusMessage());
         
 		super.onResume();
@@ -534,6 +537,11 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		if (keyCode == KeyEvent.KEYCODE_BACK && LinphoneManager.getLc().isIncall()) {
+			// If we are in call on dialer, we go back to the incall view
+			LinphoneActivity.instance().startIncallActivity();
+			return true;
+		}
 		return super.onKeyDown(keyCode, event);
 	}
 }

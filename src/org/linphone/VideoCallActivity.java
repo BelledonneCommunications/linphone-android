@@ -480,7 +480,8 @@ public class VideoCallActivity extends Activity implements
 		params.setMargins(0, 0, 15, 15);
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		mVideoCaptureViewReady.setLayoutParams(params);
+		if (mVideoViewReady != null)
+			mVideoCaptureViewReady.setLayoutParams(params);
 	}
 
 	public void onConfigurationChanged(Configuration newConfig) {
