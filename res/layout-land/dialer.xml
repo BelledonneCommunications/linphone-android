@@ -28,10 +28,39 @@
 			<View android:layout_width="0px" android:visibility="invisible" android:layout_weight="1" android:layout_height="fill_parent" />
 			
 			<LinearLayout android:id="@+id/CallControlRow" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="bottom">
-				<org.linphone.ui.CallButton android:id="@+id/Call"
-					android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/startcall_green"/>
-				<org.linphone.ui.HangCallButton android:id="@+id/Decline" android:layout_height="fill_parent" android:layout_width="fill_parent"
-					android:layout_weight="1" android:background="@drawable/clavier_bg" android:src="@drawable/stopcall_red"/>
+				<org.linphone.ui.CallButton 
+				    android:id="@+id/Call"
+					android:layout_height="fill_parent" 
+					android:layout_width="fill_parent" 
+					android:layout_weight="1" 
+					android:background="@drawable/clavier_bg" 
+					android:src="@drawable/startcall_green"/>
+				
+				<LinearLayout
+				    android:id="@+id/InCallControls"
+					android:layout_height="fill_parent" 
+					android:layout_width="fill_parent"
+					android:orientation="horizontal" 
+					android:visibility="gone"
+					android:layout_weight="3" >
+					
+	                <Button 
+					    android:id="@+id/AddCall"
+					    style="@style/DialerDigit"
+						android:layout_height="fill_parent" 
+						android:layout_width="fill_parent" 
+						android:layout_weight="1" 
+						android:text="@string/AddCallButtonText" />
+	                
+					<Button 
+					    android:id="@+id/Back"
+					    style="@style/DialerDigit"
+						android:layout_height="fill_parent" 
+						android:layout_width="fill_parent" 
+						android:layout_weight="1" 
+						android:text="@string/CancelButtonText" />
+					
+				</LinearLayout>
 			</LinearLayout>
 			
 		</LinearLayout>
