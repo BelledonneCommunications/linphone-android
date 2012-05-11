@@ -516,13 +516,14 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		if (AndroidCameraConfiguration.hasSeveralCameras() && mSwitchCamera != null)
 			mSwitchCamera.setVisibility(View.VISIBLE);
 		
-		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall())
-		{
+		boolean isInCall = LinphoneManager.getLc().isIncall();
+		isInCall = isInCall || LinphoneManager.getLc().getCallsNb() > 0;
+		
+		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall()) {
 			mCamera = Camera.open(mCurrentCameraId);
 			mVideoCaptureView.switchCamera(mCamera, mCurrentCameraId);
 			mCamera.startPreview();
-		} else if (LinphoneManager.getLc().isIncall())
-		{
+		} else if (isInCall) {
 			if (mInCallControls != null) {
 				mInCallControls.setVisibility(View.VISIBLE);
 				mCall.setVisibility(View.GONE);
@@ -537,7 +538,9 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
-		if (keyCode == KeyEvent.KEYCODE_BACK && LinphoneManager.getLc().isIncall()) {
+		boolean isInCall = LinphoneManager.getLc().isIncall();
+		isInCall = isInCall || LinphoneManager.getLc().getCallsNb() > 0;
+		if (keyCode == KeyEvent.KEYCODE_BACK && isInCall) {
 			// If we are in call on dialer, we go back to the incall view
 			LinphoneActivity.instance().startIncallActivity();
 			return true;
