@@ -314,7 +314,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
-			if (mLc.isMyself(lAddress.asStringUriOnly())) {
+			if (mR.getBoolean(R.bool.forbid_self_call) && mLc.isMyself(lAddress.asStringUriOnly())) {
 				mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 				return;
 			}
