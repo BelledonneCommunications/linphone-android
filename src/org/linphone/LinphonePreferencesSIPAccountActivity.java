@@ -77,7 +77,12 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	outboundProxy.setTitle(getString(R.string.pref_enable_outbound_proxy));
     	outboundProxy.setPersistent(true);
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n));
-    	
+   
+    	CheckBoxPreference disable = new CheckBoxPreference(this);
+    	disable.setTitle(getString(R.string.pref_disable_account));
+    	disable.setPersistent(true);
+    	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
+
     	final Preference delete = new Preference(this);
     	delete.setTitle("Delete this account");
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -91,6 +96,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
 	        		editor.putString(getString(R.string.pref_domain_key) + i, prefs.getString(getString(R.string.pref_domain_key) + (i+1), null));
 	        		editor.putString(getString(R.string.pref_proxy_key) + i, prefs.getString(getString(R.string.pref_proxy_key) + (i+1), null));
 	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + (i+1), false));
+	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + i, prefs.getBoolean(getString(R.string.pref_disable_account_key) + (i+1), false));
 	        	}
 	        	
 	        	int lastAccount = nbAccounts - 1;
@@ -99,6 +105,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
         		editor.putString(getString(R.string.pref_domain_key) + lastAccount, null);
         		editor.putString(getString(R.string.pref_proxy_key) + lastAccount, null);
         		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + lastAccount, false);
+        		editor.putBoolean(getString(R.string.pref_disable_account_key) + lastAccount, false);
         		
         		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account), 0);
         		if (defaultAccount > n) {
@@ -138,6 +145,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	category.addPreference(domain);
     	category.addPreference(proxy);
     	category.addPreference(outboundProxy);
+    	category.addPreference(disable);
     	category.addPreference(mainAccount);
     	category.addPreference(delete);
 	}

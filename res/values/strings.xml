@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="pref_disable_account">Disable</string>
+    
     <string name="pref_tunnel">Tunnel</string>
 	<string name="pref_tunnel_host">Hostname</string>
 	<string name="pref_tunnel_port">Port</string>
