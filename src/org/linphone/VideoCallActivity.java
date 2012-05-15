@@ -373,7 +373,7 @@ public class VideoCallActivity extends Activity implements
 		if (mControlsLayout != null)
 			mControlsLayout.setVisibility(View.GONE);
 
-		if (shouldRestartVideoOnResume) {
+		if (shouldRestartVideoOnResume && LinphoneManager.getLc().getCurrentCall() != null) {
 			LinphoneManager.getLc().getCurrentCall().enableCamera(true);
 			shouldRestartVideoOnResume = false;
 		}
