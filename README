@@ -17,6 +17,8 @@ To create an apk with a different package name, you need to use the ant script:
 2) change inside the build.xml file the value of the property "linphone.package.name"
 3) run the ant script
 	$ ant debug
+4) to install the newly created apk, run the following command
+	$ ant installd
 
 Some options can be passed to ndk-build, like "ndk-build SOME_OPTION=SOME_VALUE"
 
