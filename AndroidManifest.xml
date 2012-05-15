@@ -39,7 +39,6 @@
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:launchMode="singleTask"
-                  android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
                   > <!-- android:alwaysRetainTaskState="true" clearTaskOnLaunch="false"-->
                   
             <intent-filter>
