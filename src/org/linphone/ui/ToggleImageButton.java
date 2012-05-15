@@ -19,7 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.ui;
 
 
+import org.linphone.R;
+
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -37,7 +40,6 @@ import android.widget.ImageButton;
  *
  */
 public class ToggleImageButton extends ImageButton implements Checkable, OnClickListener {
-	private static final String ns = "http://schemas.android.com/apk/res/org.linphone";
 	private boolean checked;
 	private Drawable stateChecked;
 	private Drawable stateUnChecked;
@@ -46,9 +48,11 @@ public class ToggleImageButton extends ImageButton implements Checkable, OnClick
 
 	public ToggleImageButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		stateChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "checked", -1));
-		stateUnChecked = getResources().getDrawable(attrs.getAttributeResourceValue(ns, "unchecked", -1));
-		drawablesForBackground = attrs.getAttributeBooleanValue(ns, "bgdrawables", false);
+		
+		TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ToggleImageButton);
+		stateChecked = getResources().getDrawable(array.getResourceId(R.styleable.ToggleImageButton_checked, -1));
+		stateUnChecked = getResources().getDrawable(array.getResourceId(R.styleable.ToggleImageButton_unchecked, -1));
+		drawablesForBackground = array.getBoolean(R.styleable.ToggleImageButton_bgdrawables, false);
 		setBackgroundColor(Color.TRANSPARENT);
 
 		setOnClickListener(this);

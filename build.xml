@@ -638,28 +638,18 @@
 
             <echo>----------</echo>
             <echo>Handling Resources...</echo>
-            <exec executable="${aapt}" failonerror="true">
-		  <arg value="package" />
-		  <arg value="-f" />
-		  <arg value="-v" />
-		  <arg value="--version-code" />
-		  <arg value="${version.code}" />
-		  <arg value="--debug-mode" />
-		  <arg value="-J" />
- 		  <arg path="${gen.absolute.dir}" />
-		  <arg value="-M" />
-		  <arg path="AndroidManifest.xml" />
-		  <arg value="-I" />
-		  <arg path="${android.jar}" />
-		  <arg value="-F" />
-		  <arg path="${out.absolute.dir}/${resource.package.file.name}" />
-		  <arg value="-S" />
-		  <arg path="${resource.absolute.dir}" />
-		  <arg value="--rename-manifest-package"/> 
-		  <arg value="${linphone.package.name}"/> 
-		  <arg value="--custom-package" />
-		  <arg value="${linphone.package.name}"/> 
-	    </exec> 
+            <aapt executable="${aapt}"
+                    command="package"
+                    verbose="${verbose}"
+                    manifest="AndroidManifest.xml"
+                    androidjar="${android.jar}"
+                    rfolder="${gen.absolute.dir}"
+                    nonConstantId="${android.library}"
+                    projectLibrariesResName="project.libraries.res"
+                    projectLibrariesPackageName="project.libraries.package">
+                <res path="${out.res.absolute.dir}" />
+                <res path="${resource.absolute.dir}" />
+            </aapt>
         </do-only-if-manifest-hasCode>
     </target>
 
@@ -866,8 +856,10 @@
 	  <arg value="--version-code" />
 	  <arg value="${version.code}" />
 	  <arg value="--debug-mode" />
+	  <arg value="-m" />
+	  <arg value="-u" />
 	  <arg value="-J" />
-	  <arg path="${gen.absolute.dir}" />
+ 	  <arg path="${gen.absolute.dir}" />
 	  <arg value="-M" />
 	  <arg path="AndroidManifest.xml" />
 	  <arg value="-I" />
