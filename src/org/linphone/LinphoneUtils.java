@@ -167,7 +167,8 @@ public final class LinphoneUtils {
 	}
 	
 	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
-		return (List<LinphoneCall>) Arrays.asList(lc.getCalls());
+		// return a modifiable list
+		return new ArrayList<LinphoneCall>(Arrays.asList(lc.getCalls()));
 	}
 
 	public static final boolean hasExistingResumeableCall(LinphoneCore lc) {
