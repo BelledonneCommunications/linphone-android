@@ -420,13 +420,13 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		if (IncallActivity.instance() != null && IncallActivity.instance().isActive()) {
 			return;
 		}
-		mHandler.postDelayed(new Runnable() {
+		mHandler.post(new Runnable() {
 			public void run() {
 				if (IncallActivity.instance() != null && IncallActivity.instance().isActive()) return;
 				Intent intent = new Intent().setClass(LinphoneActivity.this, IncallActivity.class);
 				startActivityForResult(intent, incall_activity);
 			}
-		}, 0);
+		});
 	}
 
 	public void startIncomingCallActivity() {

@@ -85,8 +85,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private static IncallActivity instance;
 	private CountDownTimer timer;
 	public static boolean active;
-	@Override protected void setActive(boolean a) {active = a;}
-	@Override protected boolean isActive() {return active;}
+	@Override protected synchronized void setActive(boolean a) {active = a;}
+	@Override protected synchronized boolean isActive() {return active;}
 
 	public static boolean isReady() {
 		return instance!=null;
@@ -112,10 +112,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private boolean mAllowTransfers;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {		
 		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
 			return;
 		}
+		setActive(true);
+		
 		if (!Version.isXLargeScreen(this))
 		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
@@ -146,6 +148,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			findViewById(R.id.conf_simple_video).setVisibility(View.GONE);
 		}
 		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	protected void onPause() {
+		IncallActivity.active = false;
+		super.onPause();
 	}
 
 	@Override
