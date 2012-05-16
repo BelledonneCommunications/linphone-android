@@ -417,11 +417,16 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 	}
 
 	public synchronized void startIncallActivity() {
-		if (IncallActivity.active) {
+		if (IncallActivity.instance() != null && IncallActivity.instance().isActive()) {
 			return;
 		}
-		Intent intent = new Intent().setClass(this, IncallActivity.class);
-		startActivityForResult(intent, incall_activity);
+		mHandler.postDelayed(new Runnable() {
+			public void run() {
+				if (IncallActivity.instance() != null && IncallActivity.instance().isActive()) return;
+				Intent intent = new Intent().setClass(LinphoneActivity.this, IncallActivity.class);
+				startActivityForResult(intent, incall_activity);
+			}
+		}, 0);
 	}
 
 	public void startIncomingCallActivity() {
