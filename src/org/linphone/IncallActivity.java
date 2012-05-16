@@ -112,11 +112,13 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	private boolean mAllowTransfers;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {		
+	protected void onCreate(Bundle savedInstanceState) {	
+		setActive(true);	
+		
 		if (finishIfAutoRestartAfterACrash(savedInstanceState)) {
+			setActive(false);
 			return;
 		}
-		setActive(true);
 		
 		if (!Version.isXLargeScreen(this))
 		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -153,6 +155,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	@Override
 	protected void onPause() {
 		setActive(false);
+		instance = null;
 		super.onPause();
 	}
 

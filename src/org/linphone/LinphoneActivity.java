@@ -425,7 +425,6 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 				if (IncallActivity.active) return;
 				Intent intent = new Intent().setClass(LinphoneActivity.this, IncallActivity.class);
 				startActivityForResult(intent, incall_activity);
-				IncallActivity.active = true;
 			}
 		});
 	}
