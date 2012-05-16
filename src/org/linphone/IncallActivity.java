@@ -152,7 +152,7 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	
 	@Override
 	protected void onPause() {
-		IncallActivity.active = false;
+		setActive(false);
 		super.onPause();
 	}
 
