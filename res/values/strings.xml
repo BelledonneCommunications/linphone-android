@@ -117,6 +117,8 @@
 	<string name="no_phone_numbers">No phone numbers found for %s</string>
 	<string name="filter_contacts">Filter contacts</string>
 	<string name="title_numbers_dialog">%s\'s phone numbers</string>
+    <string name="pref_delete_account">Delete this account</string>
+    <string name="pref_default_account_title">Use as default</string>
     <string name="pref_echo_canceller_calibration">Echo canceller calibration</string>
     <string name="pref_echo_limiter">Echo limiter</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>

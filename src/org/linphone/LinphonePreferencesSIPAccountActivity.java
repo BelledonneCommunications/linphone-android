@@ -18,8 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.linphone.core.Log;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -78,13 +76,13 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	outboundProxy.setPersistent(true);
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n));
    
-    	CheckBoxPreference disable = new CheckBoxPreference(this);
+    	final CheckBoxPreference disable = new CheckBoxPreference(this);
     	disable.setTitle(getString(R.string.pref_disable_account));
     	disable.setPersistent(true);
     	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
 
     	final Preference delete = new Preference(this);
-    	delete.setTitle("Delete this account");
+    	delete.setTitle(R.string.pref_delete_account);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
@@ -109,7 +107,6 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
         		
         		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account), 0);
         		if (defaultAccount > n) {
-        			Log.e("Default Account : ", defaultAccount + " => " + (defaultAccount - 1));
         			editor.putInt(getString(R.string.pref_default_account), defaultAccount - 1);
         		}
         		
@@ -121,7 +118,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
         });
     	
     	CheckBoxPreference mainAccount = new CheckBoxPreference(this);
-    	mainAccount.setTitle("Use as default");
+    	mainAccount.setTitle(R.string.pref_default_account_title);
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
 			public boolean onPreferenceClick(Preference preference) {
@@ -130,6 +127,8 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
 				editor.putInt(getString(R.string.pref_default_account), n);
 				editor.commit();
 				delete.setEnabled(false);
+				disable.setEnabled(false);
+				disable.setChecked(false);
 				preference.setEnabled(false);
 				return true;
 			}
@@ -138,6 +137,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	mainAccount.setChecked(prefs.getInt(getString(R.string.pref_default_account), 0) == n);
     	mainAccount.setEnabled(!mainAccount.isChecked());
     	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
+    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
     	
     	parent.addPreference(category);
     	category.addPreference(username);
