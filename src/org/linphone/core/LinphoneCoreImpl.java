@@ -664,12 +664,6 @@ class LinphoneCoreImpl implements LinphoneCore {
 		tunnelEnable(nativePtr, enable);
 	}
 
-	private native void tunnelEnableLogs(long nativePtr, boolean enable);
-	@Override
-	public synchronized void tunnelEnableLogs(boolean enable) {
-		tunnelEnableLogs(nativePtr, enable);
-	}
-
 	@Override
 	public native boolean isTunnelAvailable();
 	

@@ -554,7 +554,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private void initFromConfTunnel(){
 		if (!mLc.isTunnelAvailable()) return;
 		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
-		mLc.tunnelEnableLogs(getPrefBoolean(R.string.pref_debug_key, false));
 		mLc.tunnelCleanServers();
 		String host = getString(R.string.tunnel_host);
 		if (host == null || host.length() == 0)

@@ -169,5 +169,5 @@ public class AboutActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-
+	
 }
