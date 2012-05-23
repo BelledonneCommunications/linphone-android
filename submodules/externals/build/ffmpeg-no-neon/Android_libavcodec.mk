@@ -103,7 +103,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/ \
 	$(LOCAL_PATH)/libavutil 
 
-LOCAL_SHARED_LIBRARIES := libavutilnoneon libavcorenoneon
+LOCAL_SHARED_LIBRARIES := libavutil libavcore
 
 include $(BUILD_SHARED_LIBRARY)
 

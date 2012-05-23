@@ -40,22 +40,16 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 
 	static {
 		// FFMPEG (audio/video)
+		loadOptionalLibrary("avutil");
+		loadOptionalLibrary("swscale");
+		loadOptionalLibrary("avcore");
+		
 		if (!hasNeonInCpuFeatures()) {
-			boolean noNeonLibrariesLoaded = true;
-			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("avutilnoneon");
-			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("swscalenoneon");
-			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("avcorenoneon");
-			noNeonLibrariesLoaded = noNeonLibrariesLoaded && loadOptionalLibrary("avcodecnoneon");
+			boolean noNeonLibrariesLoaded = loadOptionalLibrary("avcodecnoneon");
 			if (!noNeonLibrariesLoaded) {
-				loadOptionalLibrary("avutil");
-				loadOptionalLibrary("swscale");
-				loadOptionalLibrary("avcore");
 				loadOptionalLibrary("avcodec");
 			}
 		} else {
-			loadOptionalLibrary("avutil");
-			loadOptionalLibrary("swscale");
-			loadOptionalLibrary("avcore");
 			loadOptionalLibrary("avcodec");
 		}
  
@@ -77,7 +71,11 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		//Main library
 		if (!hasNeonInCpuFeatures()) {
 			try {
-				System.loadLibrary("linphonenoneon"); 
+				if (isArmv5()) {
+					System.loadLibrary("linphonearmv5"); 
+				} else {
+					System.loadLibrary("linphonenoneon"); 
+				}
 				Log.w("linphone", "No-neon liblinphone loaded");
 			} catch (UnsatisfiedLinkError ule) {
 				Log.w("linphone", "Failed to load no-neon liblinphone, loading neon liblinphone");
@@ -175,5 +173,10 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 			ex.printStackTrace();
 		}
 		return result;
+	}
+	
+	public static boolean isArmv5()
+	{
+		return System.getProperty("os.arch").contains("armv5");
 	}
 }
