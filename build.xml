@@ -1049,6 +1049,18 @@
             </else>
         </if>
     </target>
+    
+    <target name="run">
+	    <exec executable="adb">
+	        <arg value="shell"/>
+	        <arg value="am"/>
+	        <arg value="start"/>
+	        <arg value="-a"/>
+	        <arg value="android.intent.action.MAIN"/>
+	        <arg value="-n"/>
+	        <arg value="${linphone.package.name}/.LinphoneLauncherActivity"/>
+	    </exec>
+	</target>
 
     <!-- This runs -package-release and -release-nosign first and then runs
          only if release-sign is true (set in -release-check,

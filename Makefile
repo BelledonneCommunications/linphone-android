@@ -4,7 +4,7 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo)
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 
-all: prepare-sources generate-libs generate-apk install-apk
+all: prepare-sources generate-libs generate-apk install-apk run-linphone
 
 prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
@@ -56,6 +56,9 @@ generate-apk:
 
 install-apk: generate-apk
 	ant installd
+
+run-linphone:
+	ant run
 
 clean:
 	$(NDK_PATH)/ndk-build clean
