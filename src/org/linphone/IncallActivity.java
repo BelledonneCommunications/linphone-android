@@ -42,7 +42,6 @@ import org.linphone.ui.Numpad;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -386,12 +385,12 @@ public class IncallActivity extends AbstractCalleesActivity implements
 		}
 	}
 
-	private void doTransfer() {
-		LinphoneCall tCall = lc().getCurrentCall();
-		if (tCall != null) {
-			prepareForTransferingExistingOrNewCall(tCall);
-		}
-	}
+//	private void doTransfer() {
+//		LinphoneCall tCall = lc().getCurrentCall();
+//		if (tCall != null) {
+//			prepareForTransferingExistingOrNewCall(tCall);
+//		}
+//	}
 	
 	private void prepareForTransferingExistingOrNewCall(final LinphoneCall call) {
 		// Include inconf calls

@@ -76,7 +76,7 @@
 <!--                    android:launchMode="singleTask"-->
             <activity android:name="org.linphone.IncallActivity"
                     android:theme="@android:style/Theme.NoTitleBar"
-                    android:launchMode="singleInstance"
+                    android:launchMode="singleTask"
                     android:configChanges="keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
