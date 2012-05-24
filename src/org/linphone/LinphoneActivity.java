@@ -35,7 +35,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -101,6 +100,16 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		}
 		instance = this;
 		setContentView(R.layout.main);
+		
+		int rotation = getWindowManager().getDefaultDisplay().getRotation() * 90;
+		// Inverse landscape rotation to initiate linphoneCore correctly
+		if (rotation == 270)
+			rotation = 90;
+		else if (rotation == 90)
+			rotation = 270;
+		
+		LinphoneManager.getLc().setDeviceRotation(rotation);
+		mAlwaysChangingPhoneAngle = rotation;
 
 		LinphonePreferenceManager.getInstance(this);
 		useFirstLoginActivity = getResources().getBoolean(R.bool.useFirstLoginActivity);
