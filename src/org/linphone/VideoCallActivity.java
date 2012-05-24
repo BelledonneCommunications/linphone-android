@@ -340,6 +340,9 @@ public class VideoCallActivity extends Activity implements
 
 	@Override
 	protected void onResume() {
+		if (!LinphoneManager.getLc().isIncall())
+			finish();
+		
 		super.onResume();
 		if (mVideoViewReady != null)
 			((GLSurfaceView) mVideoViewReady).onResume();
