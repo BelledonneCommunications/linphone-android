@@ -5,7 +5,7 @@
 	<string name="default_domain">test.linphone.org</string>
 
 	<bool name="use_android_contact_picker">true</bool>
-    
+    <bool name="disable_dialer_sliding_drawer">false</bool>
 	<bool name="useFirstLoginActivity">false</bool>
 	<bool name="useMenuSettings">true</bool>
 	<bool name="useMenuAbout">true</bool>

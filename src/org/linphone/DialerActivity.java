@@ -262,15 +262,21 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		
 		SlidingDrawer drawer = (SlidingDrawer) findViewById(R.id.drawer);
 		if (drawer != null) {
-			drawer.setOnDrawerScrollListener(new OnDrawerScrollListener() {
-				public void onScrollEnded() {
-					
-				}
-	
-				public void onScrollStarted() {
-					displayRegisterStatus();
-				}
-			});
+			boolean disable_sliding_drawer = getResources().getBoolean(R.bool.disable_dialer_sliding_drawer);
+			
+			if (disable_sliding_drawer) {
+				drawer.lock();
+			} else {
+				drawer.setOnDrawerScrollListener(new OnDrawerScrollListener() {
+					public void onScrollEnded() {
+						
+					}
+		
+					public void onScrollStarted() {
+						displayRegisterStatus();
+					}
+				});
+			}
 		}
 
 		AddressAware numpad = (AddressAware) findViewById(R.id.Dialer);
