@@ -82,7 +82,6 @@ public class VideoCallActivity extends Activity implements
 	AndroidVideoWindowImpl androidVideoWindowImpl;
 	private Runnable mCallQualityUpdater, mControls;
 	private LinearLayout mControlsLayout;
-	private boolean shouldRestartVideoOnResume = false;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -145,8 +144,7 @@ public class VideoCallActivity extends Activity implements
 		videoCall = LinphoneManager.getLc().getCurrentCall();
 		if (videoCall != null) {
 			LinphoneManager lm = LinphoneManager.getInstance();
-			if (!lm.shareMyCamera() && !lm.isVideoInitiator()
-					&& videoCall.cameraEnabled()) {
+			if (!lm.shareMyCamera()	&& videoCall.cameraEnabled()) {
 				lm.sendStaticImage(true);
 			}
 
@@ -369,9 +367,9 @@ public class VideoCallActivity extends Activity implements
 		if (mControlsLayout != null)
 			mControlsLayout.setVisibility(View.GONE);
 
-		if (shouldRestartVideoOnResume && LinphoneManager.getLc().getCurrentCall() != null) {
-			LinphoneManager.getLc().getCurrentCall().enableCamera(true);
-			shouldRestartVideoOnResume = false;
+		if (videoCall != null && LinphoneManager.getInstance().shareMyCamera()) {
+			videoCall.enableCamera(true);
+			updatePreview(videoCall.cameraEnabled());
 		}
 	}
 
@@ -403,13 +401,14 @@ public class VideoCallActivity extends Activity implements
 		Log.d("onPause VideoCallActivity (isFinishing:", isFinishing(),
 				", inCall:", LinphoneManager.getLc().isIncall(), ")");
 		LinphoneManager.removeListener(this);
+		
+		// Send NoWebcam since Android 4.0 can't get the video from the
+		// webcam if the activity is not in foreground
+		if (videoCall != null)
+			videoCall.enableCamera(false);
+		
 		if (isFinishing()) {
 			videoCall = null; // release reference
-		} else {
-			// Send NoWebcam since Android 4.0 can't get the video from the
-			// webcam if the activity is not in foreground
-			shouldRestartVideoOnResume = true;
-			LinphoneManager.getLc().getCurrentCall().enableCamera(false);
 		}
 		launched = false;
 		synchronized (androidVideoWindowImpl) {
