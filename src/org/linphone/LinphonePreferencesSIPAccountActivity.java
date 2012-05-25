@@ -85,25 +85,25 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	delete.setTitle(R.string.pref_delete_account);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
-	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
         		SharedPreferences.Editor editor = prefs.edit();
         		
 	        	for (int i = n; i < nbAccounts - 1; i++) {
-	        		editor.putString(getString(R.string.pref_username_key) + i, prefs.getString(getString(R.string.pref_username_key) + (i+1), null));
-	        		editor.putString(getString(R.string.pref_passwd_key) + i, prefs.getString(getString(R.string.pref_passwd_key) + (i+1), null));
-	        		editor.putString(getString(R.string.pref_domain_key) + i, prefs.getString(getString(R.string.pref_domain_key) + (i+1), null));
-	        		editor.putString(getString(R.string.pref_proxy_key) + i, prefs.getString(getString(R.string.pref_proxy_key) + (i+1), null));
-	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + (i+1), false));
-	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + i, prefs.getBoolean(getString(R.string.pref_disable_account_key) + (i+1), false));
+	        		editor.putString(getString(R.string.pref_username_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_username_key) + getAccountNumber(i+1), null));
+	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_passwd_key) + getAccountNumber(i+1), null));
+	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_domain_key) + getAccountNumber(i+1), null));
+	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_proxy_key) + getAccountNumber(i+1), null));
+	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i+1), false));
+	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i+1), false));
 	        	}
 	        	
 	        	int lastAccount = nbAccounts - 1;
-	        	editor.putString(getString(R.string.pref_username_key) + lastAccount, null);
-        		editor.putString(getString(R.string.pref_passwd_key) + lastAccount, null);
-        		editor.putString(getString(R.string.pref_domain_key) + lastAccount, null);
-        		editor.putString(getString(R.string.pref_proxy_key) + lastAccount, null);
-        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + lastAccount, false);
-        		editor.putBoolean(getString(R.string.pref_disable_account_key) + lastAccount, false);
+	        	editor.putString(getString(R.string.pref_username_key) + getAccountNumber(lastAccount), null);
+        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(lastAccount), null);
+        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(lastAccount), null);
+        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(lastAccount), null);
+        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(lastAccount), false);
+        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(lastAccount), false);
         		
         		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account), 0);
         		if (defaultAccount > n) {
