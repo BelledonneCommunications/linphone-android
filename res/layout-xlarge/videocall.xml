@@ -94,9 +94,9 @@
 			    android:layout_height="wrap_content">
 			        
 				<ImageButton 
-				    android:id="@+id/addCall"
+				    android:id="@+id/back"
 				    style="@style/incall_control"
-				    android:background="@drawable/incall_add" />
+				    android:background="@drawable/incall_back" />
 		
 		        <org.linphone.ui.ToggleImageButton 
 		            android:id="@+id/conf_simple_pause"

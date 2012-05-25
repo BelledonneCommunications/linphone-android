@@ -185,7 +185,7 @@ public class VideoCallActivity extends Activity implements
 			findViewById(R.id.toggleMuteMic).setOnClickListener(this);
 			findViewById(R.id.toggleSpeaker).setOnClickListener(this);
 			findViewById(R.id.incallNumpadShow).setOnClickListener(this);
-			findViewById(R.id.addCall).setOnClickListener(this);
+			findViewById(R.id.back).setOnClickListener(this);
 			findViewById(R.id.incallHang).setOnClickListener(this);
 			findViewById(R.id.switch_camera).setOnClickListener(this);
 			findViewById(R.id.conf_simple_pause).setOnClickListener(this);
@@ -544,8 +544,9 @@ public class VideoCallActivity extends Activity implements
 			params.setVideoEnabled(false);
 			LinphoneManager.getLc().updateCall(videoCall, params);
 			break;
-		case R.id.addCall:
+		case R.id.back:
 			finish();
+			LinphoneActivity.instance().startIncallActivity();
 			break;
 		}
 	}
