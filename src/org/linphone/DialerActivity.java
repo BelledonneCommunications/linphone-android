@@ -543,10 +543,10 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 	private boolean isCallEstablished()
 	{
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		if (call == null)
+		if (LinphoneManager.getLc().getCalls().length == 0)
 			return false;
 		
+		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 		LinphoneCall.State state = call.getState();
 		
 		return state == LinphoneCall.State.Connected ||
