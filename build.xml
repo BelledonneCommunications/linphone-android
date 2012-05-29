@@ -966,7 +966,7 @@
     </target>
 
     <!-- Builds debug output package -->
-    <target name="debug" depends="init, -set-debug-files, -do-debug, delete-temp"
+    <target name="debug" depends="clean, init, -set-debug-files, -do-debug, delete-temp"
                 description="Builds the application and signs it with a debug key.">
         
         <record-build-info />
