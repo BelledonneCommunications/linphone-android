@@ -523,8 +523,8 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		if (AndroidCameraConfiguration.hasSeveralCameras() && mSwitchCamera != null)
 			mSwitchCamera.setVisibility(View.VISIBLE);
 		
-		boolean isInCall = LinphoneManager.getLc().isIncall();
-		isInCall = isInCall || LinphoneManager.getLc().getCallsNb() > 0;
+		boolean callEstablished = isCallEstablished();
+		boolean isInCall = LinphoneManager.getLc().getCallsNb() > 1 || (LinphoneManager.getLc().getCallsNb() == 1 && callEstablished);
 		
 		if (mVideoCaptureView != null && mCamera == null && !LinphoneManager.getLc().isIncall()) {
 			mCamera = Camera.open(mCurrentCameraId);
@@ -541,6 +541,23 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 		}
 	}
 
+	private boolean isCallEstablished()
+	{
+		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		if (call == null)
+			return false;
+		
+		LinphoneCall.State state = call.getState();
+		
+		return state == LinphoneCall.State.Connected ||
+				state == LinphoneCall.State.CallUpdated ||
+				state == LinphoneCall.State.CallUpdatedByRemote ||
+				state == LinphoneCall.State.Paused ||
+				state == LinphoneCall.State.PausedByRemote ||
+				state == LinphoneCall.State.StreamsRunning ||
+				state == LinphoneCall.State.Pausing ||
+				state == LinphoneCall.State.Resuming;
+	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
