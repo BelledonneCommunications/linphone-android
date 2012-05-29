@@ -442,6 +442,8 @@ public class VideoCallActivity extends Activity implements
 			BandwidthManager.getInstance().setUserRestriction(false);
 			LinphoneManager.getInstance().resetCameraFromPreferences();
 			finish();
+		} else if (!call.getCurrentParamsCopy().getVideoEnabled()) {
+			finish();
 		}
 	}
 	
