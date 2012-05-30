@@ -580,6 +580,11 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			// Hide add account button if accounts are hidden
 			Preference addAccount = (Preference) getPreferenceScreen().getPreference(ADD_ACCOUNT_SETTINGS_ID);
 			addAccount.setLayoutResource(R.layout.hidden);
+			
+			// Hide category
+			PreferenceCategory accounts = (PreferenceCategory) getPreferenceScreen().getPreference(ACCOUNTS_SETTINGS_ID);
+			accounts.removeAll();
+			accounts.setLayoutResource(R.layout.hidden);
 		}
 		
 		if (getResources().getBoolean(R.bool.hide_wizard)) {
