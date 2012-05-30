@@ -95,6 +95,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private static final int ADD_SIP_ACCOUNT = 0x666;
 	private static final int WIZARD_ID = 0x667;
 	private static final int CONFIRM_ID = 0x668;
+	private static final int ACCOUNTS_SETTINGS_ID = 0;
+	private static final int ADD_ACCOUNT_SETTINGS_ID = 1;
 	private static final int WIZARD_SETTINGS_ID = 2;
 	private static final int CAMERA_SETTINGS_ID = 6;
 
@@ -120,13 +122,20 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	}
 
 	private void createDynamicAccountsPreferences() {
-		PreferenceScreen root = getPreferenceScreen();
-		
-		// Get the good preference screen
-		accounts = (PreferenceCategory) root.getPreference(0);
+		accounts = (PreferenceCategory) getPreferenceScreen().getPreference(ACCOUNTS_SETTINGS_ID);
 		accounts.removeAll();
 		
-		Preference addAccount = (Preference) root.getPreference(1);
+		// Get already configured extra accounts
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+		for (int i = 0; i < nbAccounts; i++) {
+			// For each, add menus to configure it
+			addExtraAccountPreferencesButton(accounts, i, false);
+		}
+	}
+	
+	private void createAddAccountButton() {
+		Preference addAccount = (Preference) getPreferenceScreen().getPreference(ADD_ACCOUNT_SETTINGS_ID);
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	addExtraAccountPreferencesButton(accounts, nbAccounts, true);
@@ -138,14 +147,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	        	return true;
 	        }
         });
-		
-		// Get already configured extra accounts
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
-		for (int i = 0; i < nbAccounts; i++) {
-			// For each, add menus to configure it
-			addExtraAccountPreferencesButton(accounts, i, false);
-		}
 	}
 	
 	public int getNbAccountsExtra() {
@@ -565,19 +566,31 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 
-		createDynamicAccountsPreferences();
+		if (!getResources().getBoolean(R.bool.hide_accounts)) {
+			createDynamicAccountsPreferences();
+			
+			// Accounts have to be displayed to show add account button
+			if (getResources().getBoolean(R.bool.hide_add_account_button)) {
+				Preference addAccount = (Preference) getPreferenceScreen().getPreference(ADD_ACCOUNT_SETTINGS_ID);
+				addAccount.setLayoutResource(R.layout.hidden);
+			} else {
+				createAddAccountButton();
+			}
+		} else {
+			// Hide add account button if accounts are hidden
+			Preference addAccount = (Preference) getPreferenceScreen().getPreference(ADD_ACCOUNT_SETTINGS_ID);
+			addAccount.setLayoutResource(R.layout.hidden);
+		}
 		
 		if (getResources().getBoolean(R.bool.hide_wizard)) {
-			PreferenceScreen screen = getPreferenceScreen();
-			Preference wizard = (Preference) screen.getPreference(WIZARD_SETTINGS_ID);
+			Preference wizard = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
 			wizard.setLayoutResource(R.layout.hidden);
 		} else {
 			addWizardPreferenceButton();
+			verifiyAccountsActivated();
 		}
 		
 		addTransportChecboxesListener();
-		
-		verifiyAccountsActivated();
 		
 		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
 		ecCalibratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
