@@ -95,6 +95,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	private static final int ADD_SIP_ACCOUNT = 0x666;
 	private static final int WIZARD_ID = 0x667;
 	private static final int CONFIRM_ID = 0x668;
+	private static final int WIZARD_SETTINGS_ID = 2;
+	private static final int CAMERA_SETTINGS_ID = 6;
 
 	private SharedPreferences prefs() {
 		return getPreferenceManager().getSharedPreferences();
@@ -220,7 +222,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	}
 	
 	private void addWizardPreferenceButton() {
-		Preference wizard = (Preference) getPreferenceScreen().getPreference(2);
+		Preference wizard = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
 		wizard.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	showDialog(WIZARD_ID);
@@ -564,7 +566,15 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		addPreferencesFromResource(R.xml.preferences);
 
 		createDynamicAccountsPreferences();
-		addWizardPreferenceButton();
+		
+		if (getResources().getBoolean(R.bool.hide_wizard)) {
+			PreferenceScreen screen = getPreferenceScreen();
+			Preference wizard = (Preference) screen.getPreference(WIZARD_SETTINGS_ID);
+			wizard.setLayoutResource(R.layout.hidden);
+		} else {
+			addWizardPreferenceButton();
+		}
+		
 		addTransportChecboxesListener();
 		
 		verifiyAccountsActivated();
@@ -629,6 +639,16 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		if (!LinphoneManager.getLc().isTunnelAvailable()){
 			hidePreferenceCategory(R.string.pref_tunnel_key);
+		}
+		
+		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
+			PreferenceScreen screen = getPreferenceScreen();
+			PreferenceCategory videoSettings = (PreferenceCategory) screen.getPreference(CAMERA_SETTINGS_ID);
+			videoSettings.removeAll();
+			videoSettings.setLayoutResource(R.layout.hidden);
+			
+			CheckBoxPreference enableVideo = (CheckBoxPreference) findPreference(R.string.pref_video_enable_key);
+			enableVideo.setLayoutResource(R.layout.hidden);
 		}
 	}
 
