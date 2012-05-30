@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -65,24 +66,34 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	domain.setPersistent(true);
     	domain.setKey(getString(R.string.pref_domain_key) + getAccountNumber(n));
     	
-    	EditTextPreference proxy = new EditTextPreference(this);
+    	CheckBoxPreference advanced = new CheckBoxPreference(this);
+    	advanced.setTitle(getString(R.string.pref_advanced));
+    	advanced.setTitle(getString(R.string.pref_advanced_key));
+    	advanced.setDefaultValue(false);
+    	domain.setPersistent(true);
+    	
+    	final EditTextPreference proxy = new EditTextPreference(this);
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	proxy.setTitle(getString(R.string.pref_proxy));
     	proxy.setPersistent(true);
     	proxy.setKey(getString(R.string.pref_proxy_key) + getAccountNumber(n));
+    	proxy.setLayoutResource(R.layout.hidden);
     	
-    	CheckBoxPreference outboundProxy = new CheckBoxPreference(this);
+    	final CheckBoxPreference outboundProxy = new CheckBoxPreference(this);
     	outboundProxy.setTitle(getString(R.string.pref_enable_outbound_proxy));
     	outboundProxy.setPersistent(true);
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n));
+    	outboundProxy.setLayoutResource(R.layout.hidden);
    
     	final CheckBoxPreference disable = new CheckBoxPreference(this);
     	disable.setTitle(getString(R.string.pref_disable_account));
     	disable.setPersistent(true);
     	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
+    	disable.setLayoutResource(R.layout.hidden);
 
     	final Preference delete = new Preference(this);
     	delete.setTitle(R.string.pref_delete_account);
+    	delete.setLayoutResource(R.layout.hidden);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
@@ -117,7 +128,8 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
 	        }
         });
     	
-    	CheckBoxPreference mainAccount = new CheckBoxPreference(this);
+    	final CheckBoxPreference mainAccount = new CheckBoxPreference(this);
+    	mainAccount.setLayoutResource(R.layout.hidden);
     	mainAccount.setTitle(R.string.pref_default_account_title);
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
@@ -139,10 +151,31 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
     	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
     	
+    	advanced.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference p, Object value) {
+				boolean activated = (Boolean) value;
+				if (activated) {
+					proxy.setLayoutResource(R.layout.visible);
+					outboundProxy.setLayoutResource(R.layout.visible);
+					disable.setLayoutResource(R.layout.visible);
+					delete.setLayoutResource(R.layout.visible);
+					mainAccount.setLayoutResource(R.layout.visible);
+				} else {
+					proxy.setLayoutResource(R.layout.hidden);
+					outboundProxy.setLayoutResource(R.layout.hidden);
+					disable.setLayoutResource(R.layout.hidden);
+					delete.setLayoutResource(R.layout.hidden);
+					mainAccount.setLayoutResource(R.layout.hidden);					
+				}
+				return true;
+			}
+    	});
+    	
     	parent.addPreference(category);
     	category.addPreference(username);
     	category.addPreference(password);
     	category.addPreference(domain);
+    	category.addPreference(advanced);
     	category.addPreference(proxy);
     	category.addPreference(outboundProxy);
     	category.addPreference(disable);
