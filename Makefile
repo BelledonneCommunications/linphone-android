@@ -38,8 +38,8 @@ prepare-srtp:
 
 prepare-mediastreamer2:
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/src/ && \
-	cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/$$builddir/./' && \
-	cat Makefile.am | grep xxd | grep yuv2rgb.fs | sed 's/$$builddir/./' && \
+	eval `cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/$$$$builddir/./'` && \
+	eval `cat Makefile.am | grep xxd | grep yuv2rgb.fs | sed 's/$$$$builddir/./'` && \
 	if ! [ -e yuv2rgb.vs.h ]; then echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi && \
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
