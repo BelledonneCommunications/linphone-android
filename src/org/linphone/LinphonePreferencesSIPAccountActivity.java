@@ -42,17 +42,24 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
 		addExtraAccountPreferencesFields(screen, n);
 	}
 	
+	OnPreferenceChangeListener preferenceChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
+	
 	private void addExtraAccountPreferencesFields(PreferenceScreen parent, final int n) {
     	final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-    	
-		PreferenceCategory category = new PreferenceCategory(this);
-		category.setTitle(getString(R.string.pref_sipaccount));
 		
     	EditTextPreference username = new EditTextPreference(this);
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	username.setTitle(getString(R.string.pref_username));
     	username.setPersistent(true);
+    	username.setDialogMessage("Example: toto if your account is toto@sip.linphone.org");
     	username.setKey(getString(R.string.pref_username_key) + getAccountNumber(n));
+    	username.setOnPreferenceChangeListener(preferenceChangedListener);
     	
     	EditTextPreference password = new EditTextPreference(this);
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -64,36 +71,29 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	domain.setTitle(getString(R.string.pref_domain));
     	domain.setPersistent(true);
+    	domain.setDialogMessage("Example: sip.linphone.org if your account is toto@sip.linphone.org");
     	domain.setKey(getString(R.string.pref_domain_key) + getAccountNumber(n));
+    	domain.setOnPreferenceChangeListener(preferenceChangedListener);
     	
-    	CheckBoxPreference advanced = new CheckBoxPreference(this);
-    	advanced.setTitle(getString(R.string.pref_advanced));
-    	advanced.setTitle(getString(R.string.pref_advanced_key));
-    	advanced.setDefaultValue(false);
-    	domain.setPersistent(true);
-    	
-    	final EditTextPreference proxy = new EditTextPreference(this);
+    	EditTextPreference proxy = new EditTextPreference(this);
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	proxy.setTitle(getString(R.string.pref_proxy));
     	proxy.setPersistent(true);
     	proxy.setKey(getString(R.string.pref_proxy_key) + getAccountNumber(n));
-    	proxy.setLayoutResource(R.layout.hidden);
+    	proxy.setOnPreferenceChangeListener(preferenceChangedListener);
     	
-    	final CheckBoxPreference outboundProxy = new CheckBoxPreference(this);
+    	CheckBoxPreference outboundProxy = new CheckBoxPreference(this);
     	outboundProxy.setTitle(getString(R.string.pref_enable_outbound_proxy));
     	outboundProxy.setPersistent(true);
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n));
-    	outboundProxy.setLayoutResource(R.layout.hidden);
    
     	final CheckBoxPreference disable = new CheckBoxPreference(this);
     	disable.setTitle(getString(R.string.pref_disable_account));
     	disable.setPersistent(true);
     	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
-    	disable.setLayoutResource(R.layout.hidden);
 
     	final Preference delete = new Preference(this);
     	delete.setTitle(R.string.pref_delete_account);
-    	delete.setLayoutResource(R.layout.hidden);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
@@ -128,8 +128,7 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
 	        }
         });
     	
-    	final CheckBoxPreference mainAccount = new CheckBoxPreference(this);
-    	mainAccount.setLayoutResource(R.layout.hidden);
+    	CheckBoxPreference mainAccount = new CheckBoxPreference(this);
     	mainAccount.setTitle(R.string.pref_default_account_title);
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
@@ -151,36 +150,26 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
     	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
     	
-    	advanced.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference p, Object value) {
-				boolean activated = (Boolean) value;
-				if (activated) {
-					proxy.setLayoutResource(R.layout.visible);
-					outboundProxy.setLayoutResource(R.layout.visible);
-					disable.setLayoutResource(R.layout.visible);
-					delete.setLayoutResource(R.layout.visible);
-					mainAccount.setLayoutResource(R.layout.visible);
-				} else {
-					proxy.setLayoutResource(R.layout.hidden);
-					outboundProxy.setLayoutResource(R.layout.hidden);
-					disable.setLayoutResource(R.layout.hidden);
-					delete.setLayoutResource(R.layout.hidden);
-					mainAccount.setLayoutResource(R.layout.hidden);					
-				}
-				return true;
-			}
-    	});
-    	
+		PreferenceCategory category = new PreferenceCategory(this);
+		category.setTitle(getString(R.string.pref_sipaccount));
     	parent.addPreference(category);
     	category.addPreference(username);
     	category.addPreference(password);
     	category.addPreference(domain);
-    	category.addPreference(advanced);
+    	
+    	category = new PreferenceCategory(this);
+		category.setTitle(getString(R.string.pref_advanced));
+		parent.addPreference(category);
     	category.addPreference(proxy);
     	category.addPreference(outboundProxy);
     	category.addPreference(disable);
     	category.addPreference(mainAccount);
     	category.addPreference(delete);
+    	
+    	username.setSummary(username.getText());
+    	domain.setSummary(domain.getText());
+    	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
+    	outboundProxy.setSummary(getString(R.string.pref_help_outbound_proxy));
 	}
 	
 	private String getAccountNumber(int n) {

@@ -258,4 +258,7 @@
 <string name="wizard_need_activation">You need to activate your account with the link that was send to your email.</string>
 <string name="wizard_confirmation">Confirmation</string>
 <string name="wizard_verify_account">Check</string>
+
+<string name="pref_help_proxy">Redirect registrar packets to this server</string>
+<string name="pref_help_outbound_proxy">Redirect all traffic to proxy server</string>
 </resources>
