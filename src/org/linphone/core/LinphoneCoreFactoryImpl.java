@@ -71,7 +71,7 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		//Main library
 		if (!hasNeonInCpuFeatures()) {
 			try {
-				if (isArmv5()) {
+				if (!isArmv7()) {
 					System.loadLibrary("linphonearmv5"); 
 				} else {
 					System.loadLibrary("linphonenoneon"); 
@@ -175,8 +175,8 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		return result;
 	}
 	
-	public static boolean isArmv5()
+	public static boolean isArmv7()
 	{
-		return System.getProperty("os.arch").contains("armv5");
+		return System.getProperty("os.arch").contains("armv7");
 	}
 }
