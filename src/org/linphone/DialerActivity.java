@@ -49,7 +49,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
@@ -265,6 +267,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 			boolean disable_sliding_drawer = getResources().getBoolean(R.bool.disable_dialer_sliding_drawer);
 			
 			if (disable_sliding_drawer) {
+				drawer.close();
 				drawer.lock();
 			} else {
 				drawer.setOnDrawerScrollListener(new OnDrawerScrollListener() {
