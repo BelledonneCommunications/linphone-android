@@ -3,6 +3,8 @@ SDK_PATH=$(shell dirname `which android`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo)
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
+KEYSTORE=bc-android.keystore
+KEYALIAS=nw8000
 
 all: prepare-sources generate-libs generate-apk install-apk run-linphone
 
@@ -46,16 +48,22 @@ prepare-mediastreamer2:
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
 generate-libs: 
-	$(NDK_PATH)/ndk-build -j$(NUMCPUS)
+	$(NDK_PATH)/ndk-build BUILD_SILK=1 -j$(NUMCPUS)
+	rm $(TOPDIR)/libs/armeabi/liblinphone.so
 
 update-project:
 	$(SDK_PATH)/android update project --path .
+	echo "key.store=$(KEYSTORE)" > ant.properties
+	echo "key.alias=$(KEYALIAS)" >> ant.properties
 
 generate-apk:
-	ant clean debug
+	ant debug
 
 install-apk: generate-apk
 	ant installd
+
+release: update-project
+	ant release
 
 run-linphone:
 	ant run

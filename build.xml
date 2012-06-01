@@ -1066,7 +1066,7 @@
          only if release-sign is true (set in -release-check,
          called by -release-no-sign)-->
     <target name="release"
-                depends="-set-release-mode, -release-obfuscation-check, -package, -release-prompt-for-password, -release-nosign"
+                depends="clean, init, -set-release-mode, -release-obfuscation-check, -package, -release-prompt-for-password, -release-nosign"
                 if="has.keystore"
                 description="Builds the application. The generated apk file must be signed before
                             it is published.">
