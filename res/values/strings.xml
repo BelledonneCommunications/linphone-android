@@ -259,6 +259,6 @@
 <string name="wizard_confirmation">Confirmation</string>
 <string name="wizard_verify_account">Check</string>
 
-<string name="pref_help_proxy">Redirect registrar packets to this server</string>
-<string name="pref_help_outbound_proxy">Redirect all traffic to proxy server</string>
+<string name="pref_help_proxy">SIP proxy hostname or ip address (optional)</string>
+<string name="pref_help_outbound_proxy">Route all calls through SIP proxy</string>
 </resources>

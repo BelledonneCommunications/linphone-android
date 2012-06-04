@@ -57,7 +57,8 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	username.setTitle(getString(R.string.pref_username));
     	username.setPersistent(true);
-    	username.setDialogMessage("Example: toto if your account is toto@sip.linphone.org");
+    	//TODO make it translatable, use john instead of toto.
+    	//username.setDialogMessage("Example: toto if your account is toto@sip.linphone.org");
     	username.setKey(getString(R.string.pref_username_key) + getAccountNumber(n));
     	username.setOnPreferenceChangeListener(preferenceChangedListener);
     	
@@ -71,7 +72,8 @@ public class LinphonePreferencesSIPAccountActivity extends PreferenceActivity {
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	domain.setTitle(getString(R.string.pref_domain));
     	domain.setPersistent(true);
-    	domain.setDialogMessage("Example: sip.linphone.org if your account is toto@sip.linphone.org");
+    	//TODO make it translatable, use john instead of toto.
+    	//domain.setDialogMessage("Example: sip.linphone.org if your account is toto@sip.linphone.org");
     	domain.setKey(getString(R.string.pref_domain_key) + getAccountNumber(n));
     	domain.setOnPreferenceChangeListener(preferenceChangedListener);
     	
