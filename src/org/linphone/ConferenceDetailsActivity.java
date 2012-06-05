@@ -119,17 +119,17 @@ public class ConferenceDetailsActivity extends AbstractCalleesActivity  {
 			this.dialog = dialog;
 		}
 		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.terminate_call:
+			int id = v.getId();
+			if (id == R.id.terminate_call) {
 				lc().terminateCall(call);
-				break;
-			case R.id.remove_from_conference:
+			}
+			else if (id == R.id.remove_from_conference) {
 				lc().removeFromConference(call);
 				if (LinphoneUtils.countConferenceCalls(lc()) == 0) {
 					finish();
 				}
-				break;
-			default:
+			}
+			else {
 				throw new RuntimeException("unknown id " + v.getId());
 			}
 			if (dialog != null) dialog.dismiss();

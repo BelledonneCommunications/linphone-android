@@ -263,21 +263,22 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_settings:
+		int id = item.getItemId();
+		if (id == R.id.menu_settings) {
 			startprefActivity();
 			return true;
-		case R.id.menu_exit:
+		}
+		else if (id == R.id.menu_exit) {
 			finish();
 			stopService(new Intent(ACTION_MAIN)
 				.setClass(this, LinphoneService.class));
-			break;
-		case R.id.menu_about:
+		}
+		else if (id == R.id.menu_about) {
 			startActivity(new Intent(ACTION_MAIN)
 				.setClass(this, AboutActivity.class));
-		default:
+		}
+		else {
 			Log.e("Unknown menu item [",item,"]");
-			break;
 		}
 
 		return false;

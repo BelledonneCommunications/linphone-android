@@ -260,12 +260,12 @@ public class VideoCallActivity extends Activity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.videocall_menu_back_to_dialer:
+		int id = item.getItemId();
+		if (id == R.id.videocall_menu_back_to_dialer) {
 			finish();
 			LinphoneActivity.instance().startIncallActivity();
-			break;
-		case R.id.videocall_menu_change_resolution:
+		}
+		else if (id == R.id.videocall_menu_change_resolution) {
 			LinphoneManager.getInstance().changeResolution();
 			// previous call will cause graph reconstruction -> regive preview
 			// window
@@ -273,11 +273,11 @@ public class VideoCallActivity extends Activity implements
 				LinphoneManager.getLc()
 						.setPreviewWindow(mVideoCaptureViewReady);
 			rewriteChangeResolutionItem(item);
-			break;
-		case R.id.videocall_menu_terminate_call:
+		}
+		else if (id == R.id.videocall_menu_terminate_call) {
 			LinphoneManager.getInstance().terminateCall();
-			break;
-		case R.id.videocall_menu_toggle_camera:
+		}
+		else if (id == R.id.videocall_menu_toggle_camera) {
 			boolean camEnabled = LinphoneManager.getInstance()
 					.toggleEnableCamera();
 			updatePreview(camEnabled);
@@ -291,21 +291,20 @@ public class VideoCallActivity extends Activity implements
 							mVideoCaptureViewReady);
 			} else
 				LinphoneManager.getLc().setPreviewWindow(null);
-			break;
-		case R.id.videocall_menu_switch_camera:
-			int id = LinphoneManager.getLc().getVideoDevice();
-			id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-			LinphoneManager.getLc().setVideoDevice(id);
+		}
+		else if (id == R.id.videocall_menu_switch_camera) {
+			int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
+			videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+			LinphoneManager.getLc().setVideoDevice(videoDeviceId);
 			CallManager.getInstance().updateCall();
 			// previous call will cause graph reconstruction -> regive preview
 			// window
 			if (mVideoCaptureViewReady != null)
 				LinphoneManager.getLc()
 						.setPreviewWindow(mVideoCaptureViewReady);
-			break;
-		default:
+		}
+		else {
 			Log.e("Unknown menu item [", item, "]");
-			break;
 		}
 		return true;
 	}
@@ -500,48 +499,47 @@ public class VideoCallActivity extends Activity implements
 
 	public void onClick(View v) {
 		resetControlsLayoutExpiration();
-		switch (v.getId()) {
-		case R.id.incallHang:
+		int id = v.getId();
+		if (id == R.id.incallHang) {
 			terminateCurrentCallOrConferenceOrAll();
-			break;
-		case R.id.toggleSpeaker:
+		}
+		else if (id == R.id.toggleSpeaker) {
 			if (((Checkable) v).isChecked()) {
 				LinphoneManager.getInstance().routeAudioToSpeaker();
 			} else {
 				LinphoneManager.getInstance().routeAudioToReceiver();
 			}
-			break;
-		case R.id.incallNumpadShow:
+		}
+		else if (id == R.id.incallNumpadShow) {
 			showDialog(numpadDialogId);
-			break;
-		case R.id.toggleMuteMic:
+		}
+		else if (id == R.id.toggleMuteMic) {
 			LinphoneManager.getLc().muteMic(((Checkable) v).isChecked());
-			break;
-		case R.id.switch_camera:
-			int id = LinphoneManager.getLc().getVideoDevice();
-			id = (id + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-			LinphoneManager.getLc().setVideoDevice(id);
+		}
+		else if (id == R.id.switch_camera) {
+			int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
+			videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+			LinphoneManager.getLc().setVideoDevice(videoDeviceId);
 			CallManager.getInstance().updateCall();
 			// previous call will cause graph reconstruction -> regive preview
 			// window
 			if (mVideoCaptureViewReady != null)
 				LinphoneManager.getLc()
 						.setPreviewWindow(mVideoCaptureViewReady);
-			break;
-		case R.id.conf_simple_pause:
+		}
+		else if (id == R.id.conf_simple_pause) {
 			finish();
 			LinphoneActivity.instance().startIncallActivity();
 			LinphoneManager.getLc().pauseCall(videoCall);
-			break;
-		case R.id.conf_simple_video:
+		}
+		else if (id == R.id.conf_simple_video) {
 			LinphoneCallParams params = videoCall.getCurrentParamsCopy();
 			params.setVideoEnabled(false);
 			LinphoneManager.getLc().updateCall(videoCall, params);
-			break;
-		case R.id.back:
+		}
+		else if (id == R.id.back) {
 			finish();
 			LinphoneActivity.instance().startIncallActivity();
-			break;
 		}
 	}
 

@@ -332,29 +332,29 @@ public class IncallActivity extends AbstractCalleesActivity implements
 	}
 
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.addCall:
+		int id = v.getId();
+		if (id == R.id.addCall) {
 			finish();
-			break;
-		case R.id.incallHang:
+		}
+		else if (id == R.id.incallHang) {
 			terminateCurrentCallOrConferenceOrAll();
-			break;
-		case R.id.conf_header:
+		}
+		else if (id == R.id.conf_header) {
 			boolean enterConf = !lc().isInConference();
 			enterConferenceAndVirtualConfView(enterConf);
-			break;
-		case R.id.conf_header_details:
+		}
+		else if (id == R.id.conf_header_details) {
 			onLongClick(v);
-			break;
-		case R.id.incallNumpadShow:
+		}
+		else if (id == R.id.incallNumpadShow) {
 			showDialog(numpadDialogId);
-			break;
-		case R.id.conf_simple_merge:
+		}
+		else if (id == R.id.conf_simple_merge) {
 			if (!lc().soundResourcesLocked()) {
 				lc().addAllToConference();
 			}
-			break;
-		case R.id.conf_simple_pause:
+		}
+		else if (id == R.id.conf_simple_pause) {
 			LinphoneCall call = lc().getCurrentCall();
 			if (call != null) {
 				lc().pauseCall(call);
@@ -366,8 +366,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					lc().resumeCall(callToResume);
 				}
 			}
-			break;
-		case R.id.conf_simple_video:
+		}
+		else if (id == R.id.conf_simple_video) {
 			LinphoneCall vCall = lc().getCurrentCall();
 			if (vCall != null) {
 				if (!vCall.cameraEnabled() && vCall.getCurrentParamsCopy().getVideoEnabled()) {
@@ -378,8 +378,8 @@ public class IncallActivity extends AbstractCalleesActivity implements
 					LinphoneActivity.instance().startVideoActivity(vCall, 0);
 				}
 			}
-			break;
-		default:
+		}
+		else {
 			// mic, speaker
 			super.onClick(v);
 		}
@@ -431,21 +431,21 @@ public class IncallActivity extends AbstractCalleesActivity implements
 			this.dialog = dialog;
 		}
 		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.merge_to_conference:
+			int id =v.getId();
+			if (id == R.id.merge_to_conference) {
 				lc().addToConference(call);
-				break;
-			case R.id.terminate_call:
+			}
+			else if (id == R.id.terminate_call) {
 				lc().terminateCall(call);
-				break;
-			case R.id.transfer_existing:
+			}
+			else if (id == R.id.transfer_existing) {
 				prepareForTransferingExistingOrNewCall(call);
-				break;
-			case R.id.transfer_new:
+			}
+			else if (id == R.id.transfer_new) {
 				openUriPicker(UriPickerActivity.EXTRA_PICKER_TYPE_TRANSFER, transferCallId);
 				mCallToTransfer = call;	
-				break;
-			case R.id.addVideo:
+			}
+			else if (id == R.id.addVideo) {
 				if (!call.cameraEnabled() && call.getCurrentParamsCopy().getVideoEnabled()) {
 					// NoWebcam mode, we let it this way
 					LinphoneActivity.instance().startVideoActivity(call, 0);
@@ -453,17 +453,17 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				else if (!LinphoneManager.getInstance().addVideo()) {
 					LinphoneActivity.instance().startVideoActivity(call, 0);
 				}
-				break;
-			case R.id.set_auth_token_verified:
+			}
+			else if (id == R.id.set_auth_token_verified) {
 				call.setAuthenticationTokenVerified(true);
-				break;
-			case R.id.set_auth_token_not_verified:
+			}
+			else if (id == R.id.set_auth_token_not_verified) {
 				call.setAuthenticationTokenVerified(false);
-				break;
-			case R.id.encrypted:
+			}
+			else if (id == R.id.encrypted) {
 				call.setAuthenticationTokenVerified(!call.isAuthenticationTokenVerified());
-				break;
-			default:
+			}
+			else {
 				throw new RuntimeException("unknown id " + v.getId());
 			}
 			if (dialog != null) dialog.dismiss();
