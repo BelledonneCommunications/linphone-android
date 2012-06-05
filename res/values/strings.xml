@@ -261,4 +261,6 @@
 
 <string name="pref_help_proxy">SIP proxy hostname or ip address (optional)</string>
 <string name="pref_help_outbound_proxy">Route all calls through SIP proxy</string>
+<string name="pref_help_username">Example: john if your account is john@sip.linphone.org</string>
+<string name="pref_help_domain">sip.linphone.org if your account is john@sip.linphone.org</string>
 </resources>
