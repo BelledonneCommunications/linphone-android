@@ -443,6 +443,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {
 		incomingReceivedActivity = activity;
+		
+		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
+		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
 	}
 	
 	protected void onIncomingReceived() {
