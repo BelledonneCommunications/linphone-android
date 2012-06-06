@@ -1050,11 +1050,21 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 
 	private boolean isRinging;
+	private boolean disableRinging = false;
+	
+	public void disableRinging() {
+		disableRinging = true;
+	}
+	
 	private synchronized void startRinging()  {
+		if (disableRinging ) {
+			return;
+		}
+		
 		if (Hacks.needGalaxySAudioHack()) {
 			mAudioManager.setMode(MODE_RINGTONE);
 		}
-
+		
 		try {
 			if (mAudioManager.shouldVibrate(VIBRATE_TYPE_RINGER) && mVibrator !=null) {
 				long[] patern = {0,1000,1000};
