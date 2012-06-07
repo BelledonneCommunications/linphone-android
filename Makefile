@@ -49,7 +49,6 @@ prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-sr
 
 generate-libs: 
 	$(NDK_PATH)/ndk-build BUILD_SILK=1 -j$(NUMCPUS)
-	rm $(TOPDIR)/libs/armeabi/liblinphone.so
 
 update-project:
 	$(SDK_PATH)/android update project --path .
