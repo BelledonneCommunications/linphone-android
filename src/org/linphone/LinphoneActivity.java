@@ -101,7 +101,8 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		instance = this;
 		setContentView(R.layout.main);
 		
-		int rotation = getWindowManager().getDefaultDisplay().getRotation() * 90;
+		@SuppressWarnings("deprecation")
+		int rotation = getWindowManager().getDefaultDisplay().getOrientation();
 		// Inverse landscape rotation to initiate linphoneCore correctly
 		if (rotation == 270)
 			rotation = 90;

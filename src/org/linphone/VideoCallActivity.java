@@ -456,7 +456,7 @@ public class VideoCallActivity extends Activity implements
 	private void resizePreview() {
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
 				.getDefaultDisplay();
-		int rotation = display.getRotation();
+		int rotation = display.getOrientation();
 		LayoutParams params;
 
 		int w, h;
