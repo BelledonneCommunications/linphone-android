@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
@@ -456,7 +457,8 @@ public class VideoCallActivity extends Activity implements
 	private void resizePreview() {
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
 				.getDefaultDisplay();
-		int rotation = display.getOrientation();
+		
+		int rotation = Compatibility.getRotation(display);
 		LayoutParams params;
 
 		int w, h;

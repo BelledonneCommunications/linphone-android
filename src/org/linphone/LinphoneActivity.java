@@ -22,6 +22,7 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
@@ -102,7 +103,7 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		setContentView(R.layout.main);
 		
 		@SuppressWarnings("deprecation")
-		int rotation = getWindowManager().getDefaultDisplay().getOrientation();
+		int rotation = Compatibility.getRotation(getWindowManager().getDefaultDisplay());
 		// Inverse landscape rotation to initiate linphoneCore correctly
 		if (rotation == 270)
 			rotation = 90;
