@@ -704,4 +704,25 @@ class LinphoneCoreImpl implements LinphoneCore {
 	{
 		setCpuCountNative(count);
 	}
+	private native void tunnelSetHttpProxyNative(long nativePtr, String proxy_host, int port, String username, String password);
+	@Override
+	public void tunnelSetHttpProxy(String proxy_host, int port,
+			String username, String password) {
+		tunnelSetHttpProxyNative(nativePtr,proxy_host, port, username, password);
+	}
+	@Override
+	public void removeCallLog(LinphoneCallLog log) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int getMissedCallsCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void resetMissedCallsCount() {
+		// TODO Auto-generated method stub
+		
+	}
 }
