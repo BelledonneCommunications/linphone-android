@@ -263,4 +263,40 @@
 <string name="pref_help_outbound_proxy">Route all calls through SIP proxy</string>
 <string name="pref_help_username">Example: john if your account is john@sip.linphone.org</string>
 <string name="pref_help_domain">sip.linphone.org if your account is john@sip.linphone.org</string>
+
+<string name="chat">Chat</string>
+<string name="add_to_contacts">Add to contacts</string>
+<string name="status_connected">CONNECTED</string>
+<string name="status_not_connected">NOT CONNECTED</string>
+
+<!-- Used by Android to help blind people by describing them images -->
+<string name="content_description_add_contact">Add to contacts button</string>
+<string name="content_description_chat"></string>
+<string name="content_description_dial_back"></string>
+<string name="content_description_contact_picture"></string>
+<string name="content_description_send_message"></string>
+<string name="content_description_detail"></string>
+<string name="content_description_delete"></string>
+<string name="content_description_new_discussion"></string>
+<string name="content_description_edit"></string>
+<string name="content_description_validate"></string>
+<string name="content_description_all_contacts"></string>
+<string name="content_description_linphone_contacts"></string>
+<string name="content_description_call_direction"></string>
+<string name="content_description_all_calls"></string>
+<string name="content_description_missed_calls"></string>
+<string name="content_description_switch_video"></string>
+<string name="content_description_toggle_speaker"></string>
+<string name="content_description_toggle_micro"></string>
+<string name="content_description_add_call"></string>
+<string name="content_description_pause"></string>
+<string name="content_description_hang_up"></string>
+<string name="content_description_numpad"></string>
+<string name="content_description_settings"></string>
+<string name="content_description_dialer"></string>
+<string name="content_description_history"></string>
+<string name="content_description_contacts"></string>
+<string name="content_description_led"></string>
+<string name="content_description_call_quality"></string>
+<string name="content_description_encryption"></string>
 </resources>

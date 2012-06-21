@@ -26,10 +26,13 @@ class LinphoneCallLogImpl implements LinphoneCallLog {
 	private native long getFrom(long nativePtr);
 	private native long getTo(long nativePtr);
 	private native boolean isIncoming(long nativePtr);
+	private native int getStatus(long nativePtr);
+	private native String getStartDate(long nativePtr);
+	private native int getCallDuration(long nativePtr);
+	
 	LinphoneCallLogImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
 	}
-	
 	
 	public CallDirection getDirection() {
 		return isIncoming(nativePtr)?CallDirection.Incoming:CallDirection.Outgoing;
@@ -43,7 +46,18 @@ class LinphoneCallLogImpl implements LinphoneCallLog {
 		return new LinphoneAddressImpl(getTo(nativePtr));
 	}
 	public CallStatus getStatus() {
-		throw new RuntimeException("not implemented yet");
+		return LinphoneCallLog.CallStatus.fromInt(getStatus(nativePtr));
 	}
 
+	public long getNativePtr() {
+		return nativePtr;
+	}
+
+	public String getStartDate() {
+		return getStartDate(nativePtr);
+	}
+
+	public int getCallDuration() {
+		return getCallDuration(nativePtr);
+	}
 }

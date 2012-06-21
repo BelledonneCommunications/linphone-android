@@ -96,9 +96,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	private final static int NOTIF_ID=1;
 	private final static int INCALL_NOTIF_ID=2;
+	private final static int MESSAGE_NOTIF_ID=3;
 
 	private Notification mNotif;
 	private Notification mIncallNotif;
+	private Notification mMsgNotif;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 
@@ -230,6 +232,20 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
+	public void displayMessageNotification(String from, String message) {
+		if (mMsgNotif == null) {
+			mMsgNotif = new Notification();
+			
+			mMsgNotif.icon = R.drawable.chaticon;
+			mMsgNotif.iconLevel = 0;
+			mMsgNotif.when=System.currentTimeMillis();
+			mMsgNotif.flags &= Notification.FLAG_ONGOING_EVENT;
+			
+			String title = "New message from %s :".replace("%s", from);
+			mMsgNotif.setLatestEventInfo(this, title, message, mNotifContentIntent);
+			notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+		}
+	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
 	private static final Class<?>[] mStartFgSign = new Class[] {
@@ -381,11 +397,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	
 	private static final LinphoneGuiListener guiListener() {
-		return DialerActivity.instance();
+		return null;
 	}
 
 	private static final LinphoneOnCallStateChangedListener incallListener() {
-		return IncallActivity.instance();
+		return InCallActivity.instance();
 	}
 	
 	

@@ -20,12 +20,10 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 
 class LinphoneCoreImpl implements LinphoneCore {
 
-	@SuppressWarnings("unused")
 	private final  LinphoneCoreListener mListener; //to make sure to keep a reference on this object
 	private long nativePtr = 0;
 	private native long newLinphoneCore(LinphoneCoreListener listener,String userConfig,String factoryConfig,Object  userdata);
@@ -108,7 +106,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setMediaEncryption(long nativePtr, int menc);
 	private native boolean isMediaEncryptionMandatory(long nativePtr);
 	private native void setMediaEncryptionMandatory(long nativePtr, boolean yesno);
-	
+	private native void removeCallLog(long nativePtr, long callLogPtr);
+	private native int getMissedCallsCount(long nativePtr);
+	private native void resetMissedCallsCount(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -703,5 +703,17 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setCpuCount(int count)
 	{
 		setCpuCountNative(count);
+	}
+	
+	public int getMissedCallsCount() {
+		return getMissedCallsCount(nativePtr);
+	}
+	
+	public void removeCallLog(LinphoneCallLog log) {
+		removeCallLog(nativePtr, log.getNativePtr());
+	}
+
+	public void resetMissedCallsCount() {
+		resetMissedCallsCount(nativePtr);
 	}
 }

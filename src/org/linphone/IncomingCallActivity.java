@@ -23,8 +23,8 @@ import java.util.List;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.Log;
 import org.linphone.ui.SlidingTab;
 import org.linphone.ui.SlidingTab.OnTriggerListener;
 
@@ -100,7 +100,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		LinphoneAddress address = mCall.getRemoteAddress();
 		// May be greatly sped up using a drawable cache
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
-		LinphoneUtils.setImagePictureFromUri(this, mPictureView, uri, R.drawable.unknown_person);
+		LinphoneUtils.setImagePictureFromUri(this, mPictureView, uri, R.drawable.unknown_small);
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
 		mNameView.setText(address.getDisplayName());
@@ -142,9 +142,9 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG);
 		} else {
 			if (mCall.getCurrentParamsCopy().getVideoEnabled())
-				LinphoneActivity.instance().startVideoActivity(mCall, 0);
+				LinphoneActivity.instance().startVideoActivity(mCall);
 			else
-				LinphoneActivity.instance().startIncallActivity();
+				LinphoneActivity.instance().startIncallActivity(mCall);
 		}
 	}
 	@Override

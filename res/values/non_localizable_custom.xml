@@ -4,23 +4,17 @@
 
 	<string name="default_domain">test.linphone.org</string>
 
-	<bool name="use_android_contact_picker">true</bool>
-    <bool name="disable_dialer_sliding_drawer">false</bool>
+	<!-- Interface settings -->
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
     <bool name="hide_add_account_button">false</bool> <!-- Accounts have to be displayed to show add account button -->
 	<bool name="useFirstLoginActivity">false</bool>
-	<bool name="useMenuSettings">true</bool>
-	<bool name="useMenuAbout">true</bool>
+	<bool name="disable_animations">false</bool>
 	<bool name="show_full_remote_address_on_incoming_call">true</bool>
-	<bool name="show_only_username_in_history">false</bool>
 
 	<bool name="allow_transfers">true</bool>
-
 	<bool name="allow_edit_in_dialer">true</bool>
-	<color name="conf_active_bg_color">#191970</color>
-
 	<bool name="forbid_self_call">false</bool>
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>

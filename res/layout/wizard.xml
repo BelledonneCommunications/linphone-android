@@ -25,7 +25,7 @@
             android:id="@+id/wizardUsernameOk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/notok" />
+            android:src="@drawable/wizard_notok" />
 
     </LinearLayout>
 
@@ -62,7 +62,7 @@
             android:id="@+id/wizardPasswordOk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/notok" />
+            android:src="@drawable/wizard_notok" />
 
     </LinearLayout>
 
@@ -83,7 +83,7 @@
             android:id="@+id/wizardEmailOk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/notok" />
+            android:src="@drawable/wizard_notok" />
 
     </LinearLayout>
     

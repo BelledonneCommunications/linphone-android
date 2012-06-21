@@ -62,7 +62,7 @@ public class AddressText extends EditText implements AddressType {
 	protected void onTextChanged(CharSequence text, int start, int before,
 			int after) {
 		clearDisplayedName();
-		pictureUri=null;
+		pictureUri = null;
 		super.onTextChanged(text, start, before, after);
 	}
 

@@ -33,12 +33,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 
 /**
  * A special widget containing two Sliders and a threshold for each.  Moving either slider beyond
@@ -52,7 +52,6 @@ import android.widget.ImageView.ScaleType;
 public class SlidingTab extends ViewGroup {
     private static final String LOG_TAG = "SlidingTab";
     private static final int HORIZONTAL = 0; // as defined in attrs.xml
-    private static final int VERTICAL = 1;
 
     // TODO: Make these configurable
     private static final float THRESHOLD = 2.0f / 3.0f;
@@ -450,13 +449,13 @@ public class SlidingTab extends ViewGroup {
         mOrientation = a.getInt(org.linphone.R.styleable.SlidingTab_orientation, HORIZONTAL);
         a.recycle();
         mLeftSlider = new Slider(this,
-                R.drawable.startcall_green,
+                R.drawable.startcall,
                 R.drawable.jog_tab_left_answer,
                 R.drawable.jog_tab_bar_left_answer,
                 R.drawable.jog_tab_target_green
                 );
         mRightSlider = new Slider(this,
-                R.drawable.stopcall_red,
+                R.drawable.endcall,
                 R.drawable.jog_tab_right_decline,
                 R.drawable.jog_tab_bar_right_decline,
                 R.drawable.jog_tab_target_red
