@@ -101,6 +101,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
+         
+        <activity android:name=".setup.SetupActivity"
+		    android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
 
 	    <service android:name="org.linphone.LinphoneService" />
 	        

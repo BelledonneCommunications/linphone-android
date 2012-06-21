@@ -710,10 +710,18 @@ class LinphoneCoreImpl implements LinphoneCore {
 	}
 	
 	public void removeCallLog(LinphoneCallLog log) {
-		removeCallLog(nativePtr, log.getNativePtr());
+		removeCallLog(nativePtr, ((LinphoneCallLogImpl) log).getNativePtr());
 	}
 
 	public void resetMissedCallsCount() {
 		resetMissedCallsCount(nativePtr);
+	}
+	
+	private native void tunnelSetHttpProxy(long nativePtr, String proxy_host, int port,
+			String username, String password);
+	@Override
+	public void tunnelSetHttpProxy(String proxy_host, int port,
+			String username, String password) {
+		tunnelSetHttpProxy(nativePtr, proxy_host, port, username, password);
 	}
 }

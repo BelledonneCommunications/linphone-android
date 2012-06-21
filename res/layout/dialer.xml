@@ -12,6 +12,7 @@
         android:textColor="@android:color/white"
         android:textSize="22dp"
         android:background="@drawable/champ_saisie_numero"
+        android:inputType="textEmailAddress"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:layout_weight="0.4"

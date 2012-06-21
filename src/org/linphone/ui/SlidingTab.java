@@ -188,7 +188,7 @@ public class SlidingTab extends ViewGroup {
             tab = new ImageView(parent.getContext());
             tab.setImageResource(iconId);
             tab.setBackgroundResource(tabId);
-            tab.setScaleType(ScaleType.CENTER);
+            tab.setScaleType(ScaleType.FIT_CENTER);
             tab.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT));
 
@@ -449,13 +449,13 @@ public class SlidingTab extends ViewGroup {
         mOrientation = a.getInt(org.linphone.R.styleable.SlidingTab_orientation, HORIZONTAL);
         a.recycle();
         mLeftSlider = new Slider(this,
-                R.drawable.startcall,
+                R.drawable.call_answer_default,
                 R.drawable.jog_tab_left_answer,
                 R.drawable.jog_tab_bar_left_answer,
                 R.drawable.jog_tab_target_green
                 );
         mRightSlider = new Slider(this,
-                R.drawable.endcall,
+                R.drawable.call_refused_icon,
                 R.drawable.jog_tab_right_decline,
                 R.drawable.jog_tab_bar_right_decline,
                 R.drawable.jog_tab_target_red

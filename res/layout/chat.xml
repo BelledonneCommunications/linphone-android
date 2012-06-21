@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@drawable/numpad_background"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+	    android:layout_weight="0.4"
+	    android:gravity="center"
+	    android:orientation="horizontal">
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_contact_picture"
+            android:id="@+id/contactPicture"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:src="@drawable/unknown_small" />
+	        
+        <TextView
+            android:id="@+id/contactName"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+	    	android:textColor="@android:color/black" />
+        
+    </LinearLayout>
+    
+    <ScrollView 
+        android:id="@+id/chatScrollView"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="0.2" >
+    
+        <RelativeLayout
+	        android:id="@+id/messages"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="10dp"
+		    android:paddingRight="10dp">
+            
+        </RelativeLayout>
+        
+    </ScrollView>
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="0.45"
+	    android:gravity="center"
+	    android:orientation="horizontal">
+        
+        <EditText
+            android:id="@+id/message"
+            android:inputType="textMultiLine"
+            android:textColor="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:background="@drawable/chat_message_background"
+            android:padding="15dp"/>
+                
+        <ImageView
+            android:contentDescription="@string/content_description_send_message"
+            android:id="@+id/sendMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:scaleType="fitXY"
+            android:src="@drawable/chat_send_message" />
+        
+    </LinearLayout>
+</LinearLayout>

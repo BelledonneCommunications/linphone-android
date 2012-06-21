@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="2dp"
+	android:gravity="center_vertical"
+	android:padding="10dp">
+   
+   	<TextView 
+   	    android:id="@+id/numeroOrAddress"
+ 		android:layout_width="match_parent"
+ 		android:layout_height="wrap_content"
+ 		android:layout_weight="0.5"
+		android:textColor="@android:color/black"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="left" />
+   	
+   	<ImageView
+   	    android:id="@+id/dial"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="match_parent"
+   	    android:layout_weight="1"
+   	    android:contentDescription="@string/content_description_dial_back"
+   	    android:gravity="right"
+   	    android:paddingLeft="5dp"
+   	    android:paddingRight="5dp"
+   	    android:scaleType="fitCenter"
+   	    android:src="@drawable/call" />
+   	
+   	<ImageView
+   	    android:id="@+id/chat"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="match_parent"
+   	    android:layout_weight="1"
+   	    android:contentDescription="@string/content_description_chat"
+   	    android:gravity="right"
+   	    android:paddingLeft="5dp"
+   	    android:paddingRight="5dp"
+   	    android:scaleType="fitCenter"
+   	    android:src="@drawable/chat_icon_over" />
+  
+  </TableRow>

@@ -36,12 +36,15 @@ import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.Log;
+import org.linphone.setup.SetupActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.app.FragmentActivity;
@@ -62,6 +65,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 										LinphoneOnRegistrationStateChangedListener {
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
+    private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int callActivity = 19;
 	private static LinphoneActivity instance;
 	private StatusFragment statusFragment;
@@ -86,8 +90,27 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        
+        if (!LinphoneManager.isInstanciated()) {
+			Log.e("No service running: avoid crash by starting the launcher", this.getClass().getName());
+			// super.onCreate called earlier
+			finish();
+			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
+			return;
+		}
+        
+        boolean useFirstLoginActivity = getResources().getBoolean(R.bool.useFirstLoginActivity);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if (useFirstLoginActivity && !pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+			startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
+		}
+
         setContentView(R.layout.main);
-        instance = this;        
+        initButtons();    
+        
+        if (LinphoneManager.isInstanciated()) {
+			LinphoneManager.addListener(this);
+		}
         
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState != null) {
@@ -99,16 +122,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragmentContainer, dialerFragment).commit();
             currentFragment = FragmentsAvailable.DIALER;
-            
-            initButtons();
         }
-        
-        if (LinphoneManager.isInstanciated()) {
-			LinphoneManager.addListener(this);
-		}
         
         int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
+		
+        instance = this;    
 	}
 	
 	private void initButtons() {
@@ -179,7 +198,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
 		if (currentFragment.shouldAddToBackStack()) {
-			if (!getResources().getBoolean(R.bool.disable_animations)) {
+			if (!getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
 				transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 			}
 			transaction.addToBackStack("Add to back stack");
@@ -334,6 +353,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
+		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+			statusFragment.registrationStateChanged(LinphoneManager.getLc().getDefaultProxyConfig().getState());
+		}
 	}
 
 	public ArrayList<String> getChatList() {
@@ -344,23 +366,28 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public List<ChatMessage> getChatMessages(String correspondent) {
-		if (chatStorage != null) {
-			return chatStorage.getMessages(correspondent);
+		if (chatStorage == null) {
+			chatStorage = new ChatStorage(this);
 		}
-		return null;
+		
+		return chatStorage.getMessages(correspondent);
 	}
 	
 	public void removeFromChatList(String sipUri) {
-		if (chatStorage != null) {
-			chatStorage.removeDiscussion(sipUri);
+		if (chatStorage == null) {
+			chatStorage = new ChatStorage(this);
 		}
+		
+		chatStorage.removeDiscussion(sipUri);
 	}
 	
 	@Override
 	public void onMessageReceived(LinphoneAddress from, String message) {
-		if (chatStorage != null) {
-			chatStorage.saveMessage(from.asStringUriOnly(), "", message);
+		if (chatStorage == null) {
+			chatStorage = new ChatStorage(this);
 		}
+		
+		chatStorage.saveMessage(from.asStringUriOnly(), "", message);
 		
 		Log.d("Message received from " + from + ": " + message);
 		if (messageListenerFragment != null && messageListenerFragment.isVisible()) {
@@ -369,14 +396,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		if (LinphoneService.isReady()) {
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
-			LinphoneService.instance().displayMessageNotification(from.getDisplayName(), message);
+			LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
 		}
 	}
 	
 	public void onMessageSent(String to, String message) {
-		if (chatStorage != null) {
-			chatStorage.saveMessage("", to, message);
+		if (chatStorage == null) {
+			chatStorage = new ChatStorage(this);
 		}
+		
+		chatStorage.saveMessage("", to, message);
 		Log.d("Message sent to " + to + ": " + message);
 	}
 
@@ -519,6 +548,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	protected void onResume() {
 		super.onResume();
 		
+		if (chatStorage != null) {
+			chatStorage.close();
+		}
 		chatStorage = new ChatStorage(this);
 	}
 	
@@ -527,6 +559,19 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		super.onPause();
 		
 		chatStorage.close();
+		chatStorage = null;
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		
+		Bundle extras = intent.getExtras();
+		if (extras != null && extras.getBoolean("GoToChat", false)) {
+			LinphoneService.instance().removeMessageNotification();
+			String sipUri = extras.getString("ChatContactSipUri");
+			displayChat(sipUri);
+		}
 	}
 }
 

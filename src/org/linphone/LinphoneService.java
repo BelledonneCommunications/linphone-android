@@ -101,6 +101,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Notification mNotif;
 	private Notification mIncallNotif;
 	private Notification mMsgNotif;
+	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 
@@ -139,7 +140,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
 
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
-		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
 
 		LinphoneManager.createAndStart(this, this);
@@ -232,19 +233,41 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
-	public void displayMessageNotification(String from, String message) {
+	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
+		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		notifIntent.putExtra("GoToChat", true);
+		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
+		
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
 		if (mMsgNotif == null) {
+			mMsgNotifCount = 1;
 			mMsgNotif = new Notification();
 			
-			mMsgNotif.icon = R.drawable.chaticon;
+			mMsgNotif.icon = R.drawable.chat_icon_over;
 			mMsgNotif.iconLevel = 0;
-			mMsgNotif.when=System.currentTimeMillis();
+			mMsgNotif.when = System.currentTimeMillis();
 			mMsgNotif.flags &= Notification.FLAG_ONGOING_EVENT;
 			
-			String title = "New message from %s :".replace("%s", from);
-			mMsgNotif.setLatestEventInfo(this, title, message, mNotifContentIntent);
-			notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+			mMsgNotif.defaults |= Notification.DEFAULT_VIBRATE;
+			mMsgNotif.defaults |= Notification.DEFAULT_SOUND;
+			mMsgNotif.defaults |= Notification.DEFAULT_LIGHTS;
+			
+			String title = "New message from %s :".replace("%s", fromName);
+			mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
+		} else {
+			mMsgNotifCount++;
+			mMsgNotif.when = System.currentTimeMillis();
+			
+			String title = mMsgNotifCount + " new messages from %s".replace("%s", fromName);
+			mMsgNotif.setLatestEventInfo(this, title, "", notifContentIntent);
 		}
+		
+		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+	}
+	
+	public void removeMessageNotification() {
+		mNM.cancel(MESSAGE_NOTIF_ID);
 	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
@@ -391,6 +414,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
+	    mNM.cancel(MESSAGE_NOTIF_ID);
 	    mWifiLock.release();
 		super.onDestroy();
 	}

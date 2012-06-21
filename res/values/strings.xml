@@ -245,7 +245,7 @@
 <string name="wizard_password_hint">Password</string>
 <string name="wizard_password_confirm_hint">Confirmation</string>
 <string name="wizard_email_hint">Email</string>
-<string name="wizard_title">Account Wizard</string>
+<string name="wizard_title">Account Setup Assistant</string>
 <string name="wizard_create_account">Create Account</string>
 <string name="wizard_cancel">Cancel</string>
 <string name="wizard_failed">An error occurred, try again later.</string>
@@ -299,4 +299,18 @@
 <string name="content_description_led"></string>
 <string name="content_description_call_quality"></string>
 <string name="content_description_encryption"></string>
+<string name="content_description_switch_camera"></string>
+<string name="content_description_welcome"></string>
+<string name="content_description_cancel"></string>
+<string name="content_description_next"></string>
+<string name="content_description_back"></string>
+
+<string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>
+<string name="setup_create_account">Create an account on linphone.org</string>
+<string name="setup_login_linphone">I already have a linphone.org account</string>
+<string name="setup_login_generic">I already have a SIP account</string>
+<string name="setup_linphone_account_hint">Enter your linphone.org username and password</string>
+<string name="setup_apply">Apply</string>
+<string name="setup_username_hint">username</string>
+<string name="setup_password_hint">password</string>
 </resources>
