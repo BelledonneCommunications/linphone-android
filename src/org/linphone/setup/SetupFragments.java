@@ -24,6 +24,7 @@ public enum SetupFragments {
 	WELCOME,
 	MENU,
 	WIZARD,
+	WIZARD_CONFIRM,
 	LINPHONE_LOGIN,
 	GENERIC_LOGIN;
 }

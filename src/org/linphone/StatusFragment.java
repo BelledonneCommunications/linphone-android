@@ -77,6 +77,12 @@ public class StatusFragment extends Fragment {
 		}
 	}
 	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		isAttached = false;
+	}
+	
 	public void registrationStateChanged(final RegistrationState state) {
 		if (!isAttached)
 			return;
@@ -84,12 +90,16 @@ public class StatusFragment extends Fragment {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				if (state == RegistrationState.RegistrationOk) {
-					statusLed.setImageResource(R.drawable.connected_led);
-					statusText.setText(getString(R.string.status_connected));
-				} else {
-					statusLed.setImageResource(R.drawable.not_connected_led);
-					statusText.setText(getString(R.string.status_not_connected));
+				try {
+					if (state == RegistrationState.RegistrationOk) {
+						statusLed.setImageResource(R.drawable.connected_led);
+						statusText.setText(getString(R.string.status_connected));
+					} else {
+						statusLed.setImageResource(R.drawable.not_connected_led);
+						statusText.setText(getString(R.string.status_not_connected));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});

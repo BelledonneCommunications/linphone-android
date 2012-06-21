@@ -313,4 +313,8 @@
 <string name="setup_apply">Apply</string>
 <string name="setup_username_hint">username</string>
 <string name="setup_password_hint">password</string>
+<string name="setup_password_confirm_hint">confirm password</string>
+<string name="setup_email_hint">email</string>
+<string name="setup_create">Create Account</string>
+<string name="setup_validate_account">Waiting for account activation</string>
 </resources>

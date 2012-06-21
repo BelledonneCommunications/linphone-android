@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -80,8 +79,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private void changeFragment(Fragment newFragment) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		
-		transaction.addToBackStack("Add to back stack");
-		getSupportFragmentManager().popBackStack("Add to back stack", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//		transaction.addToBackStack("");
 		transaction.replace(R.id.fragmentContainer, newFragment);
 		
 		transaction.commitAllowingStateLoss();
@@ -94,12 +92,16 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		if (id == R.id.setup_cancel) {
 			finish();
 		} else if (id == R.id.setup_next) {
-			MenuFragment fragment = new MenuFragment();
-			changeFragment(fragment);
-			currentFragment = SetupFragments.MENU;
-			
-			next.setVisibility(View.GONE);
-			back.setVisibility(View.VISIBLE);
+			if (currentFragment == SetupFragments.WELCOME) {
+				MenuFragment fragment = new MenuFragment();
+				changeFragment(fragment);
+				currentFragment = SetupFragments.MENU;
+				
+				next.setVisibility(View.GONE);
+				back.setVisibility(View.VISIBLE);
+			} else if (currentFragment == SetupFragments.WIZARD_CONFIRM) {
+				finish();
+			}
 		} else if (id == R.id.setup_back) {
 			if (currentFragment == SetupFragments.MENU) {
 				WelcomeFragment fragment = new WelcomeFragment();
@@ -120,11 +122,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 
-		writePreference(R.string.pref_username_key, username);
-		writePreference(R.string.pref_passwd_key, password);
-		writePreference(R.string.pref_domain_key, domain);
-		writePreference(R.string.pref_extra_accounts, 1);
-
+        saveCreatedAccount(username, password, domain);
 		LinphoneManager.getInstance().initializePayloads();
 
 		try {
@@ -142,6 +140,10 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	
 	private void writePreference(int key, String value) {
 		mPref.edit().putString(getString(key), value).commit();
+	}
+	
+	private void writePreference(String key, String value) {
+		mPref.edit().putString(key, value).commit();
 	}
 	
 	private void writePreference(int key, int value) {
@@ -168,5 +170,30 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		WizardFragment fragment = new WizardFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragments.WIZARD;
+	}
+	
+	public void saveCreatedAccount(String username, String password, String domain) {
+		int newAccountId = mPref.getInt(getString(R.string.pref_extra_accounts), 0);
+		writePreference(R.string.pref_extra_accounts, newAccountId+1);
+		
+		if (newAccountId == 0) {
+			writePreference(R.string.pref_username_key, username);
+			writePreference(R.string.pref_passwd_key, password);
+			writePreference(R.string.pref_domain_key, domain);
+		} else {
+			writePreference(getString(R.string.pref_username_key) + newAccountId, username);
+			writePreference(getString(R.string.pref_passwd_key) + newAccountId, password);
+			writePreference(getString(R.string.pref_domain_key) + newAccountId, domain);
+		}
+	}
+
+	public void displayWizardConfirm() {
+		WizardConfirmFragment fragment = new WizardConfirmFragment();
+		changeFragment(fragment);
+		currentFragment = SetupFragments.WIZARD_CONFIRM;
+
+		next.setVisibility(View.VISIBLE);
+		next.setEnabled(false);
+		back.setVisibility(View.GONE);
 	}
 }
