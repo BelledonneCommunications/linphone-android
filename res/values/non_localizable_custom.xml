@@ -9,7 +9,6 @@
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
-    <bool name="hide_add_account_button">false</bool> <!-- Accounts have to be displayed to show add account button -->
 	<bool name="useFirstLoginActivity">true</bool>
 	<bool name="disable_animations">false</bool>
 	<bool name="show_full_remote_address_on_incoming_call">true</bool>

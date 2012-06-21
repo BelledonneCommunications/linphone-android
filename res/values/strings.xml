@@ -241,13 +241,6 @@
 
 <string name="pref_wifi_only">Use wifi only</string>
 
-<string name="wizard_username_hint">Username</string>
-<string name="wizard_password_hint">Password</string>
-<string name="wizard_password_confirm_hint">Confirmation</string>
-<string name="wizard_email_hint">Email</string>
-<string name="wizard_title">Account Setup Assistant</string>
-<string name="wizard_create_account">Create Account</string>
-<string name="wizard_cancel">Cancel</string>
 <string name="wizard_failed">An error occurred, try again later.</string>
 <string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
 <string name="wizard_username_unavailable">This username is already in use.</string>
@@ -255,9 +248,6 @@
 <string name="wizard_email_incorrect">Your email is not valid.</string>
 <string name="wizard_password_incorrect">Your password is not valid (6 characters min).</string>
 <string name="wizard_passwords_unmatched">Passwords entered are different.</string>
-<string name="wizard_need_activation">You need to activate your account with the link that was send to your email.</string>
-<string name="wizard_confirmation">Confirmation</string>
-<string name="wizard_verify_account">Check</string>
 
 <string name="pref_help_proxy">SIP proxy hostname or ip address (optional)</string>
 <string name="pref_help_outbound_proxy">Route all calls through SIP proxy</string>
@@ -305,6 +295,7 @@
 <string name="content_description_next"></string>
 <string name="content_description_back"></string>
 
+<string name="wizard_title">Account Setup Assistant</string>
 <string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>
 <string name="setup_create_account">Create an account on linphone.org</string>
 <string name="setup_login_linphone">I already have a linphone.org account</string>
