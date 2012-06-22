@@ -381,7 +381,7 @@ public class InCallActivity extends FragmentActivity implements
 	public void onCallEncryptionChanged(LinphoneCall call, boolean encrypted,
 			String authenticationToken) {
 		if (status != null) {
-			status.setEncryption(true);
+			status.refreshEncryptionIcon();
 		}
 	}
 	

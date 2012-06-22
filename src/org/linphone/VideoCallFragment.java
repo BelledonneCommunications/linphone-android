@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 
-//FIXME : preview gone after coming back from audio only
 /**
  * @author Sylvain Berfini
  */

@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.app.Activity;
@@ -66,7 +67,6 @@ public class StatusFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		isAttached = true;
 		
 		if (activity instanceof LinphoneActivity) {
 			((LinphoneActivity) activity).updateStatusFragment(this);
@@ -75,6 +75,8 @@ public class StatusFragment extends Fragment {
 			((InCallActivity) activity).updateStatusFragment(this);
 			isInCall = true;
 		}
+		
+		isAttached = true;
 	}
 	
 	@Override
@@ -161,6 +163,11 @@ public class StatusFragment extends Fragment {
 		
 		if (isInCall) {
 			startCallQuality();
+			refreshEncryptionIcon();
+			
+			// We are obviously connected
+			statusLed.setImageResource(R.drawable.connected_led);
+			statusText.setText(getString(R.string.status_connected));
 		}
 	}
 	
@@ -174,9 +181,20 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
-	public void setEncryption(boolean b) {
+	public void refreshEncryptionIcon() {
 		if (encryption != null) {
-			//TODO
+			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			
+			encryption.setVisibility(View.VISIBLE);
+			
+			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
+				encryption.setImageResource(R.drawable.secure);
+			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
+				encryption.setImageResource(R.drawable.maybe_secure);
+			} else {
+				encryption.setImageResource(R.drawable.not_secure);
+			}
 		}
 	}
 }
