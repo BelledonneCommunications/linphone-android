@@ -57,6 +57,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private int lastKnownPosition;
 	private Cursor cursor;
 	private List<Contact> contacts;
+	private Thread contactsHandler;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -111,16 +112,17 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		super.onCreate(savedInstanceState);
 		
 		cursor = Compatibility.getContactsCursor(getActivity().getContentResolver());
-		contacts = new ArrayList<Contact>();
-		new Thread(new Runnable() {
+		contactsHandler = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				contacts = new ArrayList<Contact>();
 				for (int i = 0; i < cursor.getCount(); i++) {
 					Contact contact = getContact(i);
 					contacts.add(contact);
 				}
 			}
-		}).start();
+		});
+		contactsHandler.start();
 	}
 	
 	@Override
@@ -138,28 +140,39 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
+	@Override
+	public void onPause() {
+		contactsHandler.interrupt();		
+		super.onPause();
+	}
+	
 	private Contact getContact(int position) {
-		cursor.moveToFirst();
-		boolean success = cursor.move(position);
-		if (!success)
-			return null;
-		
-		String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-    	String name = Compatibility.getContactDisplayName(cursor);
-        Uri photo = Compatibility.getContactPictureUri(cursor, id);
-        InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), id);
-        
-        Contact contact;
-        if (input == null) {
-        	contact = new Contact(id, name);
-        }
-        else {
-        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
-        }
-        
-        contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
-        
-        return contact;
+		try {
+			cursor.moveToFirst();
+			boolean success = cursor.move(position);
+			if (!success)
+				return null;
+			
+			String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+	    	String name = Compatibility.getContactDisplayName(cursor);
+	        Uri photo = Compatibility.getContactPictureUri(cursor, id);
+	        InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), id);
+	        
+	        Contact contact;
+	        if (input == null) {
+	        	contact = new Contact(id, name);
+	        }
+	        else {
+	        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
+	        }
+	        
+	        contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
+	        
+	        return contact;
+		} catch (Exception e) {
+			
+		}
+		return null;
 	}
 	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
