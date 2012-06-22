@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.linphone.R;
 
 import android.content.Context;
@@ -32,7 +35,7 @@ import android.widget.TextView;
 public class BubbleChat {
 	private RelativeLayout view;
 	
-	public BubbleChat(Context context, int id, String message, boolean isIncoming, int previousID) {
+	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, int previousID) {
 		view = new RelativeLayout(context);
     	
     	LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -50,7 +53,8 @@ public class BubbleChat {
     		layoutParams.addRule(RelativeLayout.BELOW, previousID);
     	}
 
-		TextView messageView = new TextView(context);    	
+		TextView messageView = new TextView(context);
+		messageView.setId(id);
     	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     	messageView.setText(message);
     	messageView.setTextColor(Color.BLACK);
@@ -58,9 +62,27 @@ public class BubbleChat {
     	view.setId(id);
     	view.setLayoutParams(layoutParams);	
     	view.addView(messageView);
+    	
+    	if (context.getResources().getBoolean(R.bool.display_messages_time)) {
+	    	TextView timeView = new TextView(context);
+	    	LayoutParams timeParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	    	timeParams.addRule(RelativeLayout.BELOW, id);
+	    	timeView.setLayoutParams(timeParams);
+	    	timeView.setText(timestampToHumanDate(context, time));
+	    	timeView.setTextColor(Color.GRAY);
+	    	timeView.setTextSize(12);
+	    	view.addView(timeView);
+    	}
 	}
 	
 	public View getView() {
 		return view;
+	}
+	
+	private String timestampToHumanDate(Context context, String timestamp) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.messages_date_format));
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(Long.parseLong(timestamp));
+		return dateFormat.format(cal.getTime());
 	}
 }

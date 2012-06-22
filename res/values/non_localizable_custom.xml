@@ -12,6 +12,7 @@
 	<bool name="useFirstLoginActivity">true</bool>
 	<bool name="disable_animations">false</bool>
 	<bool name="show_full_remote_address_on_incoming_call">true</bool>
+	<bool name="display_messages_time">true</bool> <!-- Used to show the time of each message arrival -->
 
 	<bool name="allow_transfers">true</bool>
 	<bool name="allow_edit_in_dialer">true</bool>

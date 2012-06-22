@@ -79,7 +79,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
         
         previousMessageID = -1;
         for (ChatMessage msg : messagesList) {
-        	displayMessage(msg.getId(), msg.getMessage(), msg.isIncoming(), messagesLayout);
+        	displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), messagesLayout);
         }
         
         LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -89,11 +89,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 		return view;
     }
 	
-	private void displayMessage(final int id, final String message, final boolean isIncoming, final RelativeLayout layout) {
+	private void displayMessage(final int id, final String message, final String time, final boolean isIncoming, final RelativeLayout layout) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				BubbleChat bubble = new BubbleChat(layout.getContext(), id, message, isIncoming, previousMessageID);
+				BubbleChat bubble = new BubbleChat(layout.getContext(), id, message, time, isIncoming, previousMessageID);
 				previousMessageID = id;
 				layout.addView(bubble.getView());
 			}
@@ -107,6 +107,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
 			LinphoneActivity.instance().updateChatFragment(this);
 		}
+		scrollToEnd();
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
 			}
 			
-			displayMessage(previousMessageID + 1, messageToSend, false, messagesLayout);
+			displayMessage(previousMessageID + 1, messageToSend, "", false, messagesLayout);
 			scrollToEnd();
 		}
 	}
@@ -137,7 +138,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 
 	@Override
 	public void onMessageReceived(LinphoneAddress from, String message) {
-		displayMessage(previousMessageID + 1, message, true, messagesLayout);
+		displayMessage(previousMessageID + 1, message, "", true, messagesLayout);
 		scrollToEnd();
 	}
 }

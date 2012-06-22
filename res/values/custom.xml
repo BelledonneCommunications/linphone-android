@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
+	<string name="messages_date_format">HH:mm:ss d MMM</string>
+    
 	<string name="app_name">Linphone 2</string>
 	<string name="notification_title">Linphone</string>
 	<string name="wait_dialog_text">Starting up</string>
