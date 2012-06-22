@@ -106,7 +106,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 
         setContentView(R.layout.main);
-        initButtons();    
+        initButtons();
         
         if (LinphoneManager.isInstanciated()) {
 			LinphoneManager.addListener(this);
@@ -353,9 +353,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
+		
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			statusFragment.registrationStateChanged(LinphoneManager.getLc().getDefaultProxyConfig().getState());
 		}
+	}
+	
+	public StatusFragment getStatusFragment() {
+		return statusFragment;
 	}
 
 	public ArrayList<String> getChatList() {
@@ -470,8 +475,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(FragmentsAvailable.DIALER, null);
 	}
 
-	public void onRegistrationStateChanged(RegistrationState state,
-			String message) {
+	public void onRegistrationStateChanged(RegistrationState state, String message) {
 		if (statusFragment != null) {
 			statusFragment.registrationStateChanged(state);
 		}

@@ -471,14 +471,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
 		}
 
-		if (state == RegistrationState.RegistrationOk || state == RegistrationState.RegistrationFailed) {
-			mHandler.post(new Runnable() {
-				public void run() {
-					if (LinphoneActivity.isInstanciated())
-							LinphoneActivity.instance().onRegistrationStateChanged(state, message);
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (LinphoneActivity.isInstanciated()) {
+					LinphoneActivity.instance().onRegistrationStateChanged(state, message);
 				}
-			});
-		}
+			}
+		});
 	}
 	
 	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {

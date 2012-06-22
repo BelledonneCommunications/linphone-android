@@ -67,6 +67,7 @@ public class StatusFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		isAttached = true;
 		
 		if (activity instanceof LinphoneActivity) {
 			((LinphoneActivity) activity).updateStatusFragment(this);
@@ -75,8 +76,6 @@ public class StatusFragment extends Fragment {
 			((InCallActivity) activity).updateStatusFragment(this);
 			isInCall = true;
 		}
-		
-		isAttached = true;
 	}
 	
 	@Override
@@ -93,7 +92,7 @@ public class StatusFragment extends Fragment {
 			@Override
 			public void run() {
 				try {
-					if (state == RegistrationState.RegistrationOk) {
+					if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 						statusLed.setImageResource(R.drawable.connected_led);
 						statusText.setText(getString(R.string.status_connected));
 					} else {
