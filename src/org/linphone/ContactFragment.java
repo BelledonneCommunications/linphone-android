@@ -41,7 +41,7 @@ public class ContactFragment extends Fragment {
 		
 		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		if (contact.getPhoto() != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhoto(), R.drawable.unknown_small);
+        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), R.drawable.unknown_small);
         }
 		
 		chatListener = getChatListener();
@@ -81,7 +81,7 @@ public class ContactFragment extends Fragment {
 		return new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneActivity.instance().setAddressAndGoToDialer(v.getTag().toString(), contact.getName(), contact.getPhoto());
+				LinphoneActivity.instance().setAddressAndGoToDialer(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
 			}
 		};
 	}

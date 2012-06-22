@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentUris;
 import android.content.Intent;
@@ -53,6 +55,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private boolean onlyDisplayLinphoneCalls;
 	private int lastKnownPosition;
 	private Cursor cursor;
+	private List<Contact> contacts;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -114,8 +117,43 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			contactsList.setAdapter(new ContactsListAdapter());
 			contactsList.setFastScrollEnabled(true);
 		}
+		contacts = new ArrayList<Contact>();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < cursor.getCount(); i++) {
+					Contact contact = getContact(i);
+					contacts.add(contact);
+				}
+			}
+		}).start();
 		
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
+	}
+	
+	private Contact getContact(int position) {
+		cursor.moveToFirst();
+		boolean success = cursor.move(position);
+		if (!success)
+			return null;
+		
+		String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+    	String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+    	Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
+        Uri photo = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        
+        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(getActivity().getContentResolver(), person);
+        Contact contact;
+        if (input == null) {
+        	contact = new Contact(id, name);
+        }
+        else {
+        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
+        }
+        
+        contact.setNumerosOrAddresses(ContactHelper.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
+        
+        return contact;
 	}
 	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
@@ -134,28 +172,11 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 
 		public Object getItem(int position) {
-			cursor.moveToFirst();
-			boolean success = cursor.move(position);
-			if (!success)
-				return null;
-			
-			String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-	    	String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-	    	Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
-	        Uri photo = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-	        
-	        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(getActivity().getContentResolver(), person);
-	        Contact contact;
-	        if (input == null) {
-	        	contact = new Contact(id, name);
-	        }
-	        else {
-	        	contact = new Contact(id, name, photo);
-	        }
-	        
-	        contact.setNumerosOrAddresses(ContactHelper.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
-	        
-	        return contact;
+			if (position >= contacts.size()) {
+				return getContact(position);
+			} else {
+				return contacts.get(position);
+			}
 		}
 
 		public long getItemId(int position) {
@@ -171,7 +192,10 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 				view = mInflater.inflate(R.layout.contact_cell, parent, false);
 			}
 			
-			Contact contact = (Contact) getItem(position);
+			Contact contact = null;
+			do {
+				contact = (Contact) getItem(position);
+			} while (contact == null);
 			
 			TextView name = (TextView) view.findViewById(R.id.name);
 			name.setText(contact.getName());
@@ -189,7 +213,9 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			
 			ImageView icon = (ImageView) view.findViewById(R.id.icon);
 			if (contact.getPhoto() != null) {
-				icon.setImageURI(contact.getPhoto());
+				icon.setImageBitmap(contact.getPhoto());
+			} else if (contact.getPhotoUri() != null) {
+				icon.setImageURI(contact.getPhotoUri());
 			} else {
 				icon.setImageBitmap(bitmapUnknown);
 			}

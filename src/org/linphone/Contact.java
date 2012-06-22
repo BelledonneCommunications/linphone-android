@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.Serializable;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 /**
@@ -30,21 +31,31 @@ public class Contact implements Serializable {
 	
 	private String id;
 	private String name;
-	private transient Uri photo;
+	private transient Uri photoUri;
+	private transient Bitmap photo;
 	private List<String> numerosOrAddresses;
 	
 	public Contact(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.photo = null;
+		this.photoUri = null;
 	}
 	
 	public Contact(String id, String name, Uri photo) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.photo = photo;
+		this.photoUri = photo;
+		this.photo = null;
+	}
+	
+	public Contact(String id, String name, Uri photo, Bitmap picture) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.photoUri = photo;
+		this.photo = picture;
 	}
 	
 	public String getID() {
@@ -55,7 +66,11 @@ public class Contact implements Serializable {
 		return name;
 	}
 
-	public Uri getPhoto() {
+	public Uri getPhotoUri() {
+		return photoUri;
+	}
+	
+	public Bitmap getPhoto() {
 		return photo;
 	}
 
