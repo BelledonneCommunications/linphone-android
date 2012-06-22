@@ -53,8 +53,7 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.setup_apply) {
-			if (login.getText() == null || login.length() == 0
-					|| password.getText() == null || password.length() == 0) {
+			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
 				Toast.makeText(getActivity().getApplicationContext(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
 				return;
 			}

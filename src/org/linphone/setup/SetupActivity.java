@@ -187,13 +187,23 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-	public void displayWizardConfirm() {
+	public void displayWizardConfirm(String username) {
 		WizardConfirmFragment fragment = new WizardConfirmFragment();
+		
+		Bundle extras = new Bundle();
+		extras.putString("Username", username);
+		fragment.setArguments(extras);
 		changeFragment(fragment);
+		
 		currentFragment = SetupFragments.WIZARD_CONFIRM;
 
 		next.setVisibility(View.VISIBLE);
 		next.setEnabled(false);
 		back.setVisibility(View.GONE);
+	}
+	
+	public void isAccountVerified() {
+		next.setEnabled(true);
+		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
 	}
 }

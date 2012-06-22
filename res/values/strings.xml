@@ -307,5 +307,8 @@
 <string name="setup_password_confirm_hint">confirm password</string>
 <string name="setup_email_hint">email</string>
 <string name="setup_create">Create Account</string>
-<string name="setup_validate_account">Waiting for account activation</string>
+<string name="setup_validate_account">An email has been sent to the address you gave. In order to activate your account, you need to click on the link inside it. Once it is done, come back here and click on the button above.</string>
+<string name="setup_check_account_validation">Check</string>
+<string name="setup_account_not_validated">Your account has not been validated yet.</string>
+<string name="setup_account_validated">Your account has been validated.</string>
 </resources>

@@ -172,7 +172,7 @@ public class WizardFragment extends Fragment {
 	    		Runnable runOk = new Runnable() {
     				public void run() {
     					SetupActivity.instance().saveCreatedAccount(username, password, getString(R.string.default_domain));
-    					SetupActivity.instance().displayWizardConfirm();
+    					SetupActivity.instance().displayWizardConfirm(username);
 					}
 	    		};
 	    		
@@ -194,7 +194,7 @@ public class WizardFragment extends Fragment {
 			    }
 			};
 
-		    client.callAsync(listener, "create_account", username, password, email, suscribe ? 1 : 0);
+		    client.callAsync(listener, "create_account_with_useragent", username, password, email, "linphone-wizard-android");
 		} 
 		catch(Exception ex) {
 			mHandler.post(runNotReachable);
