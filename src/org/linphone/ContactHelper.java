@@ -18,29 +18,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.AddressText;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.Contacts.Data;
-import android.provider.ContactsContract.Intents.Insert;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 public final class ContactHelper {
-
 	private String username;
 	private String domain;
 	private ContentResolver resolver;
@@ -78,28 +70,7 @@ public final class ContactHelper {
 	}
 
 	public static Intent prepareAddContactIntent(AddressText address) {
-		return prepareAddContactIntent(address.getDisplayedName(), address.getText().toString());
-	}
-	
-	 //FIXME : Require API 5+
-	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
-		Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
-		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
-		
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			ArrayList<ContentValues> data = new ArrayList<ContentValues>();
-			ContentValues sipAddressRow = new ContentValues();
-			sipAddressRow.put(Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
-			sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
-			data.add(sipAddressRow);
-			intent.putParcelableArrayListExtra(Insert.DATA, data);
-		} else {
-			// VoIP field not available, we store the address in the IM field
-			intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, sipUri);
-			intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
-		}
-		  
-		return intent;
+		return Compatibility.prepareAddContactIntent(address.getDisplayedName(), address.getText().toString());
 	}
 	
 	public static Intent prepareEditContactIntent(int id) {
@@ -272,49 +243,5 @@ public final class ContactHelper {
 			c.close();
 			return false;
 		}
-	}
-	
-	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
-		List<String> list = new ArrayList<String>();
-
-		Uri uri = ContactsContract.Data.CONTENT_URI;
-		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
-
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			String selection = new StringBuilder()
-				.append(ContactsContract.Data.CONTACT_ID)
-				.append(" = ? AND ")
-				.append(ContactsContract.Data.MIMETYPE)
-				.append(" = '")
-				.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-				.append("'")
-				.toString();
-			projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
-			Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
-
-			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
-			while (c.moveToNext()) {
-				list.add("sip:" + c.getString(nbId)); 
-			}
-			c.close();
-		} else {
-			String selection = new StringBuilder()
-				.append(ContactsContract.Data.CONTACT_ID).append(" =  ? AND ")
-				.append(ContactsContract.Data.MIMETYPE).append(" = '")
-				.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
-				.append("' AND lower(")
-				.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
-				.append(") = 'sip'")
-				.toString();
-			Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
-
-			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
-			while (c.moveToNext()) {
-				list.add("sip:" + c.getString(nbId)); 
-			}
-			c.close();
-		}
-
-		return list;
 	}
 }

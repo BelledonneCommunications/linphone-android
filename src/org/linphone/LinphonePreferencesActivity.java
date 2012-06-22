@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import org.linphone.compatibility.Compatibility;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -112,13 +114,12 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 		}
 	}
 	
-	//FIXME : Require API 5+
 	private void finishWithCustomAnimation(FragmentsAvailable newFragment) {
 		finish();
 		if (FragmentsAvailable.SETTINGS.isRightOf(newFragment)) {
-			overridePendingTransition(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+			Compatibility.overridePendingTransition(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 		} else {
-			overridePendingTransition(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+			Compatibility.overridePendingTransition(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 		}
 	}
 	

@@ -21,7 +21,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentUris;
+import org.linphone.compatibility.Compatibility;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -94,7 +95,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			onlyDisplayLinphoneCalls = true;
 		} 
 		else if (id == R.id.newContact) {
-			Intent intent = ContactHelper.prepareAddContactIntent(null, null);
+			Intent intent = Compatibility.prepareAddContactIntent(null, null);
 			startActivity(intent);
 		} 
 	}
@@ -111,23 +112,24 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
 		}
-
-		cursor = getActivity().getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts.DISPLAY_NAME + " IS NOT NULL", null, ContactsContract.Contacts.DISPLAY_NAME + " ASC");
+		
 		if (contactsList.getAdapter() == null) {
+			cursor = Compatibility.getContactsCursor(getActivity().getContentResolver());
 			contactsList.setAdapter(new ContactsListAdapter());
 			contactsList.setFastScrollEnabled(true);
-		}
-		contacts = new ArrayList<Contact>();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				for (int i = 0; i < cursor.getCount(); i++) {
-					Contact contact = getContact(i);
-					contacts.add(contact);
+			
+			contacts = new ArrayList<Contact>();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int i = 0; i < cursor.getCount(); i++) {
+						Contact contact = getContact(i);
+						contacts.add(contact);
+					}
 				}
-			}
-		}).start();
-		
+			}).start();
+		}
+
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
@@ -138,11 +140,10 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			return null;
 		
 		String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-    	String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-    	Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
-        Uri photo = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+    	String name = Compatibility.getContactDisplayName(cursor);
+        Uri photo = Compatibility.getContactPictureUri(cursor, id);
+        InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), id);
         
-        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(getActivity().getContentResolver(), person);
         Contact contact;
         if (input == null) {
         	contact = new Contact(id, name);
@@ -151,7 +152,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
         }
         
-        contact.setNumerosOrAddresses(ContactHelper.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
+        contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
         
         return contact;
 	}
@@ -162,7 +163,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		private Bitmap bitmapUnknown;
 		
 		ContactsListAdapter() {
-			indexer = new AlphabetIndexer(cursor, cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			indexer = new AlphabetIndexer(cursor, Compatibility.getCursorDisplayNameColumnIndex(cursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 			margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 			bitmapUnknown = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
 		}

@@ -161,21 +161,6 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 		parent.addPreference(me);
 	}
 	
-	private void fillLinphoneAccount(int i, String username, String password, boolean createdByWizard) {
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		SharedPreferences.Editor editor = prefs.edit();
-		
-		editor.putString(getString(R.string.pref_username_key) + i, username);
-		editor.putString(getString(R.string.pref_passwd_key) + i, password);
-		editor.putString(getString(R.string.pref_domain_key) + i, "sip.linphone.org");
-		editor.putString(getString(R.string.pref_proxy_key) + i, "");
-		editor.putBoolean(getString(R.string.pref_wizard_key) + i, createdByWizard);
-		editor.putBoolean(getString(R.string.pref_activated_key) + i, false);
-		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, false);
-		
-		editor.commit();
-	}
-	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ADD_SIP_ACCOUNT) {
 			//Verify if last created account is filled
