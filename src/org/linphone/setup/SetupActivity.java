@@ -28,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -103,21 +104,27 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				finish();
 			}
 		} else if (id == R.id.setup_back) {
-			if (currentFragment == SetupFragments.MENU) {
-				WelcomeFragment fragment = new WelcomeFragment();
-				changeFragment(fragment);
-				currentFragment = SetupFragments.WELCOME;
-				
-				next.setVisibility(View.VISIBLE);
-				back.setVisibility(View.GONE);
-			} else if (currentFragment == SetupFragments.GENERIC_LOGIN || currentFragment == SetupFragments.LINPHONE_LOGIN || currentFragment == SetupFragments.WIZARD) {
-				MenuFragment fragment = new MenuFragment();
-				changeFragment(fragment);
-				currentFragment = SetupFragments.MENU;
-			}
+			handleBackEvent();
 		}
 	}
 	
+	private void handleBackEvent() {
+		if (currentFragment == SetupFragments.MENU) {
+			WelcomeFragment fragment = new WelcomeFragment();
+			changeFragment(fragment);
+			currentFragment = SetupFragments.WELCOME;
+			
+			next.setVisibility(View.VISIBLE);
+			back.setVisibility(View.GONE);
+		} else if (currentFragment == SetupFragments.GENERIC_LOGIN || currentFragment == SetupFragments.LINPHONE_LOGIN || currentFragment == SetupFragments.WIZARD) {
+			MenuFragment fragment = new MenuFragment();
+			changeFragment(fragment);
+			currentFragment = SetupFragments.MENU;
+		} else if (currentFragment == SetupFragments.WELCOME) {
+			finish();
+		}
+	}
+
 	public void logIn(String username, String password, String domain) {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
@@ -205,5 +212,13 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	public void isAccountVerified() {
 		next.setEnabled(true);
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			handleBackEvent();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
