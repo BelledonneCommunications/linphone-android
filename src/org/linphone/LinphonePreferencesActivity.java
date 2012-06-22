@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -87,7 +88,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 			Intent intent = new Intent();
 			intent.putExtra("FragmentToDisplay", newFragment);
 			setResult(RESULT_FIRST_USER, intent);
-			finish();
+			finishWithCustomAnimation(newFragment);
 		}
 	}
 	
@@ -109,5 +110,22 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 		} else {
 			missedCalls.setVisibility(View.GONE);
 		}
+	}
+	
+	private void finishWithCustomAnimation(FragmentsAvailable newFragment) {
+		finish();
+		if (FragmentsAvailable.SETTINGS.isRightOf(newFragment)) {
+			overridePendingTransition(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+		} else {
+			overridePendingTransition(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+		}
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			finishWithCustomAnimation(LinphoneActivity.instance().getCurrentFragment());
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

@@ -32,17 +32,35 @@ public enum FragmentsAvailable {
 	CHAT;
 	
 	public boolean shouldAddToBackStack() {
-		return this == HISTORY_DETAIL ||
-				this == HISTORY || 
-				this == CONTACT || 
-				this == CONTACTS || 
-				this == CHATLIST || 
-				this == CHAT;
+		return true;
 	}
 
 	public boolean shouldAnimate() {
-		return this == HISTORY_DETAIL ||
-				this == CONTACT || 
-				this == CHAT;
+		return true;
+	}
+
+	public boolean isRightOf(FragmentsAvailable fragment) {
+		switch (this) {
+		case HISTORY:
+		case HISTORY_DETAIL:
+			return fragment == UNKNOW;
+			
+		case CONTACTS:
+		case CONTACT:
+			return HISTORY.isRightOf(fragment) || fragment == HISTORY || fragment == HISTORY_DETAIL;
+			
+		case DIALER:
+			return CONTACTS.isRightOf(fragment) || fragment == CONTACT || fragment == CONTACTS;
+			
+		case SETTINGS:
+			return DIALER.isRightOf(fragment) || fragment == DIALER;
+			
+		case CHAT:
+		case CHATLIST:
+			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
+			
+		default:
+			return false;
+		}
 	}
 }
