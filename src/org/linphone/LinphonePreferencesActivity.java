@@ -117,9 +117,9 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 	private void finishWithCustomAnimation(FragmentsAvailable newFragment) {
 		finish();
 		if (FragmentsAvailable.SETTINGS.isRightOf(newFragment)) {
-			Compatibility.overridePendingTransition(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+			Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 		} else {
-			Compatibility.overridePendingTransition(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+			Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 		}
 	}
 	

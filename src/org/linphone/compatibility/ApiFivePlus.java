@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.linphone.mediastream.Version;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -40,8 +41,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @author Sylvain Berfini
  */
 public class ApiFivePlus {
-	public static void overridePendingTransition(int idAnimIn, int idAnimOut) {
-		overridePendingTransition(idAnimIn, idAnimOut);
+	public static void overridePendingTransition(Activity activity, int idAnimIn, int idAnimOut) {
+		activity.overridePendingTransition(idAnimIn, idAnimOut);
 	}
 	
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {

@@ -303,9 +303,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				intent.setClass(this, PreferencesActivity.class);
 				startActivityForResult(intent, SETTINGS_ACTIVITY);
 				if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
-					Compatibility.overridePendingTransition(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+					Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 				} else {
-					Compatibility.overridePendingTransition(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+					Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 				}
 //			}
 		}
