@@ -25,14 +25,13 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.Log;
-import org.linphone.ui.SlidingTab;
-import org.linphone.ui.SlidingTab.OnTriggerListener;
+import org.linphone.ui.LinphoneSliders;
+import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,13 +43,13 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements LinphoneOnCallStateChangedListener, OnTriggerListener {
+public class IncomingCallActivity extends Activity implements LinphoneOnCallStateChangedListener, LinphoneSliderTriggered {
 
 	private TextView mNameView;
 	private TextView mNumberView;
 	private ImageView mPictureView;
 	private LinphoneCall mCall;
-	private SlidingTab mIncomingCallWidget;
+	private LinphoneSliders mIncomingCallWidget;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +66,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 
 
         // "Dial-to-answer" widget for incoming calls.
-        mIncomingCallWidget = (SlidingTab) findViewById(R.id.sliding_widget);
-
-        // For now, we only need to show two states: answer and decline.
-        // TODO: make left hint work
-//        mIncomingCallWidget.setLeftHintText(R.string.slide_to_answer_hint);
-//        mIncomingCallWidget.setRightHintText(R.string.slide_to_decline_hint);
-
+        mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
         mIncomingCallWidget.setOnTriggerListener(this);
 
 
@@ -147,24 +140,16 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 				LinphoneActivity.instance().startIncallActivity(mCall);
 		}
 	}
+
 	@Override
-	public void onGrabbedStateChange(View v, int grabbedState) {
+	public void onLeftHandleTriggered() {
+		answer();
+		finish();
 	}
 
 	@Override
-	public void onTrigger(View v, int whichHandle) {
-		switch (whichHandle) {
-		case OnTriggerListener.LEFT_HANDLE:
-			answer();
-			finish();
-			break;
-		case OnTriggerListener.RIGHT_HANDLE:
-			decline();
-			finish();
-			break;
-		default:
-			break;
-		}
+	public void onRightHandleTriggered() {
+		decline();
+		finish();
 	}
-
 }

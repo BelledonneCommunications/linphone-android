@@ -49,12 +49,11 @@
 		
 	</LinearLayout>
 
-    <org.linphone.ui.SlidingTab
+    <org.linphone.ui.LinphoneSliders
         android:id="@+id/sliding_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dip"
-        />
+        android:layout_marginBottom="80dip" />
 
 </RelativeLayout>

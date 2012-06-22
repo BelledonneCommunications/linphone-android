@@ -62,7 +62,7 @@
             android:textColor="@android:color/black"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_weight="0.21"
             android:background="@drawable/chat_message_background"
             android:padding="15dp"/>
                 
@@ -71,7 +71,7 @@
             android:id="@+id/sendMessage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
+            android:layout_weight="0.79"
             android:scaleType="fitXY"
             android:src="@drawable/chat_send_message" />
         
