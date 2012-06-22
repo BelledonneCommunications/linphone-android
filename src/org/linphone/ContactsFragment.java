@@ -107,6 +107,23 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		cursor = Compatibility.getContactsCursor(getActivity().getContentResolver());
+		contacts = new ArrayList<Contact>();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < cursor.getCount(); i++) {
+					Contact contact = getContact(i);
+					contacts.add(contact);
+				}
+			}
+		}).start();
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
 		if (LinphoneActivity.isInstanciated()) {
@@ -114,20 +131,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 		
 		if (contactsList.getAdapter() == null) {
-			cursor = Compatibility.getContactsCursor(getActivity().getContentResolver());
 			contactsList.setAdapter(new ContactsListAdapter());
 			contactsList.setFastScrollEnabled(true);
-			
-			contacts = new ArrayList<Contact>();
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					for (int i = 0; i < cursor.getCount(); i++) {
-						Contact contact = getContact(i);
-						contacts.add(contact);
-					}
-				}
-			}).start();
 		}
 
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);

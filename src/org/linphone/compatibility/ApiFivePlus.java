@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Data;
@@ -71,6 +72,7 @@ public class ApiFivePlus {
 		Uri uri = ContactsContract.Data.CONTENT_URI;
 		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
 
+		// SIP addresses
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
 			String selection = new StringBuilder()
 				.append(ContactsContract.Data.CONTACT_ID)
@@ -105,6 +107,14 @@ public class ApiFivePlus {
 			}
 			c.close();
 		}
+		
+		// Phone Numbers
+		Cursor c = cr.query(Phone.CONTENT_URI, null, Phone.CONTACT_ID + " = " + id, null, null);
+        while (c.moveToNext()) {
+            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+            list.add(number); 
+        }
+        c.close();
 
 		return list;
 	}
