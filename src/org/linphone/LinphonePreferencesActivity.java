@@ -112,6 +112,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 		}
 	}
 	
+	//FIXME : Require API 5+
 	private void finishWithCustomAnimation(FragmentsAvailable newFragment) {
 		finish();
 		if (FragmentsAvailable.SETTINGS.isRightOf(newFragment)) {

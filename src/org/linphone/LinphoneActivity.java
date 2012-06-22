@@ -301,6 +301,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				Intent intent = new Intent(ACTION_MAIN);
 				intent.setClass(this, PreferencesActivity.class);
 				startActivityForResult(intent, SETTINGS_ACTIVITY);
+				//FIXME : Require API 5+
 				if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
 					overridePendingTransition(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 				} else {

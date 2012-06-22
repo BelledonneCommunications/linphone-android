@@ -42,12 +42,16 @@ public enum FragmentsAvailable {
 	public boolean isRightOf(FragmentsAvailable fragment) {
 		switch (this) {
 		case HISTORY:
-		case HISTORY_DETAIL:
 			return fragment == UNKNOW;
+
+		case HISTORY_DETAIL:
+			return HISTORY.isRightOf(fragment) || fragment == HISTORY;
 			
 		case CONTACTS:
+			return HISTORY_DETAIL.isRightOf(fragment) || fragment == HISTORY_DETAIL;
+			
 		case CONTACT:
-			return HISTORY.isRightOf(fragment) || fragment == HISTORY || fragment == HISTORY_DETAIL;
+			return CONTACTS.isRightOf(fragment) || fragment == CONTACTS;
 			
 		case DIALER:
 			return CONTACTS.isRightOf(fragment) || fragment == CONTACT || fragment == CONTACTS;
@@ -55,9 +59,11 @@ public enum FragmentsAvailable {
 		case SETTINGS:
 			return DIALER.isRightOf(fragment) || fragment == DIALER;
 			
-		case CHAT:
 		case CHATLIST:
 			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
+			
+		case CHAT:
+			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
 			
 		default:
 			return false;
