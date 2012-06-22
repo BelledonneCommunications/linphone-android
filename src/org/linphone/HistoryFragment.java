@@ -27,6 +27,8 @@ import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -133,8 +135,10 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 	}
 	
 	class CallHistoryAdapter extends  BaseAdapter {
-
+		private Bitmap missedCall, outgoingCall, incomingCall;
+		
 		CallHistoryAdapter(Context aContext) {
+			missedCall = BitmapFactory.decodeResource(getResources(), R.drawable.missed_call);
 			
 			if (onlyDisplayMissedCalls) {
 				List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
@@ -144,6 +148,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 					}
 				}
 				mLogs = missedCalls;
+			} else {
+				outgoingCall = BitmapFactory.decodeResource(getResources(), R.drawable.outgoing_call);
+				incomingCall = BitmapFactory.decodeResource(getResources(), R.drawable.incoming_call);
 			}
 		}
 		public int getCount() {
@@ -151,11 +158,10 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		}
 
 		public Object getItem(int position) {
-			return position;
+			return mLogs.get(position);
 		}
 
 		public long getItemId(int position) {
-			
 			return position;
 		}
 
@@ -179,13 +185,13 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			if (log.getDirection() == CallDirection.Incoming) {
 				address = log.getFrom();
 				if (log.getStatus() == CallStatus.Missed) {
-					callDirection.setImageResource(R.drawable.missed_call);
+					callDirection.setImageBitmap(missedCall);
 				} else {
-					callDirection.setImageResource(R.drawable.incoming_call);
+					callDirection.setImageBitmap(incomingCall);
 				}
 			} else {
 				address = log.getTo();
-				callDirection.setImageResource(R.drawable.outgoing_call);
+				callDirection.setImageBitmap(outgoingCall);
 			}
 			
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
