@@ -24,15 +24,42 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class GenericLoginFragment extends Fragment {
+public class GenericLoginFragment extends Fragment implements OnClickListener {
+	private EditText login, password, domain;
+	private ImageView apply;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.setup_generic_login, container, false);
 		
+		login = (EditText) view.findViewById(R.id.setup_username);
+		password = (EditText) view.findViewById(R.id.setup_password);
+		domain = (EditText) view.findViewById(R.id.setup_domain);
+		apply = (ImageView) view.findViewById(R.id.setup_apply);
+		apply.setOnClickListener(this);
+		
 		return view;
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		
+		if (id == R.id.setup_apply) {
+			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0 || domain.getText() == null || domain.length() == 0) {
+				Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			SetupActivity.instance().logIn(login.getText().toString(), password.getText().toString(), domain.getText().toString());
+		}
 	}
 }

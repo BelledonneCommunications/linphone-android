@@ -21,7 +21,7 @@
 			android:title="@string/pref_enable_outbound_proxy"></CheckBoxPreference>-->
 	</PreferenceCategory>
 
-	<Preference android:title="@string/wizard_title"></Preference>
+	<Preference android:title="@string/setup_title"></Preference>
 
     <PreferenceCategory android:key="@string/pref_tunnel_key" android:title="@string/pref_tunnel">
             <EditTextPreference android:title="@string/pref_tunnel_host"

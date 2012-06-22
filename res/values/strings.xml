@@ -295,7 +295,7 @@
 <string name="content_description_next"></string>
 <string name="content_description_back"></string>
 
-<string name="wizard_title">Account Setup Assistant</string>
+<string name="setup_title">Account Setup Assistant</string>
 <string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>
 <string name="setup_create_account">Create an account on linphone.org</string>
 <string name="setup_login_linphone">I already have a linphone.org account</string>
@@ -304,6 +304,7 @@
 <string name="setup_apply">Apply</string>
 <string name="setup_username_hint">username</string>
 <string name="setup_password_hint">password</string>
+<string name="setup_domain_hint">domain</string>
 <string name="setup_password_confirm_hint">confirm password</string>
 <string name="setup_email_hint">email</string>
 <string name="setup_create">Create Account</string>
