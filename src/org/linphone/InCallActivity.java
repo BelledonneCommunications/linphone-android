@@ -56,9 +56,10 @@ public class InCallActivity extends FragmentActivity implements
 	private Handler mHandler = new Handler();
 	private Handler controlsHandler = new Handler();
 	private Runnable mControls;
-	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer;
+	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
+	private VideoCallFragment videoCallFragment;
 	private boolean isSpeakerEnabled, isMicMuted, isVideoEnabled;
 	private LinearLayout mControlsLayout;
 	
@@ -89,9 +90,12 @@ public class InCallActivity extends FragmentActivity implements
             Fragment callFragment;            
             if (isVideoEnabled) {
             	callFragment = new VideoCallFragment();
+            	videoCallFragment = (VideoCallFragment) callFragment;
+        		switchCamera.setVisibility(View.VISIBLE);
             } else {
             	callFragment = new AudioCallFragment();
             	audioCallFragment = (AudioCallFragment) callFragment;
+        		switchCamera.setVisibility(View.GONE);
             }
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commit();
@@ -115,6 +119,9 @@ public class InCallActivity extends FragmentActivity implements
 		hangUp.setOnClickListener(this);
 		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
+		
+        switchCamera = (ImageView) findViewById(R.id.switchCamera);
+        switchCamera.setOnClickListener(this);
 		
 		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
 		
@@ -164,6 +171,11 @@ public class InCallActivity extends FragmentActivity implements
 		else if (id == R.id.dialer) {
 			
 		}
+		else if (id == R.id.switchCamera) {
+			if (videoCallFragment != null) {
+				videoCallFragment.switchCamera();
+			}
+		}
 	}
 
 	
@@ -207,11 +219,12 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void replaceFragmentAudioByVideo() {
-		VideoCallFragment videoCallFragment = new VideoCallFragment();
+		switchCamera.setVisibility(View.VISIBLE);
+		videoCallFragment = new VideoCallFragment();
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, videoCallFragment);
-		transaction.commitAllowingStateLoss();	
+		transaction.commitAllowingStateLoss();
 	}
 	
 	private void toogleMicro() {
@@ -270,12 +283,14 @@ public class InCallActivity extends FragmentActivity implements
 			if (mControlsLayout.getVisibility() == View.GONE) {
 				if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
 					mControlsLayout.setVisibility(View.VISIBLE);
+					switchCamera.setVisibility(View.VISIBLE);
 				} else {
 					Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
 					animation.setAnimationListener(new AnimationListener() {
 						@Override
 						public void onAnimationStart(Animation animation) {
 							mControlsLayout.setVisibility(View.VISIBLE);
+							switchCamera.setVisibility(View.VISIBLE);
 						}
 						
 						@Override
@@ -287,6 +302,7 @@ public class InCallActivity extends FragmentActivity implements
 						}
 					});
 					mControlsLayout.startAnimation(animation);
+					switchCamera.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_top_to_bottom));
 				}
 			}
 			
@@ -298,6 +314,7 @@ public class InCallActivity extends FragmentActivity implements
 				public void run() {
 					if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
 						mControlsLayout.setVisibility(View.GONE);
+						switchCamera.setVisibility(View.GONE);
 					} else {					
 						Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
 						animation.setAnimationListener(new AnimationListener() {
@@ -312,9 +329,11 @@ public class InCallActivity extends FragmentActivity implements
 							@Override
 							public void onAnimationEnd(Animation animation) {
 								mControlsLayout.setVisibility(View.GONE);
+								switchCamera.setVisibility(View.GONE);
 							}
 						});
 						mControlsLayout.startAnimation(animation);
+						switchCamera.startAnimation(AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_bottom_to_top));
 					}
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);
@@ -328,6 +347,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		
 		mControlsLayout.setVisibility(View.VISIBLE);
+		switchCamera.setVisibility(View.GONE);
 	}
 	
 	private boolean isCallRunning(LinphoneCall call)

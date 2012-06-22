@@ -16,14 +16,5 @@
 	    android:layout_height="145dp"
 	    android:layout_alignParentBottom="true"
 	    android:layout_alignParentRight="true" />
-    
-    <ImageView
-        android:id="@+id/switchCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/content_description_switch_camera"
-        android:src="@drawable/switch_camera" />
 
 </RelativeLayout>

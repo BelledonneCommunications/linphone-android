@@ -33,10 +33,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 //FIXME : preview gone after coming back from audio only
 /**
@@ -47,7 +45,6 @@ public class VideoCallFragment extends Fragment {
 	private WakeLock mWakeLock;
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
-	private ImageView switchCamera;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 	
 	@Override
@@ -55,14 +52,6 @@ public class VideoCallFragment extends Fragment {
         Bundle savedInstanceState) {
 		instance = this;
         View view = inflater.inflate(R.layout.video, container, false);
-				
-        switchCamera = (ImageView) view.findViewById(R.id.switchCamera);
-        switchCamera.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				switchCamera();
-			}
-		});
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
 		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
@@ -124,7 +113,7 @@ public class VideoCallFragment extends Fragment {
 		preview.setZOrderMediaOverlay(true); // Needed to be able to display control layout over
 	}
 	
-	private void switchCamera() {
+	public void switchCamera() {
 		int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
 		videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
 		LinphoneManager.getLc().setVideoDevice(videoDeviceId);
