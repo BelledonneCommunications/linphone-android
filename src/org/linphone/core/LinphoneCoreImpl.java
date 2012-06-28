@@ -20,7 +20,6 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 
 class LinphoneCoreImpl implements LinphoneCore {
@@ -710,19 +709,24 @@ class LinphoneCoreImpl implements LinphoneCore {
 			String username, String password) {
 		tunnelSetHttpProxyNative(nativePtr,proxy_host, port, username, password);
 	}
-	@Override
+
+	private native void removeCallLog(long nativePtr, LinphoneCallLog log);
 	public void removeCallLog(LinphoneCallLog log) {
-		// TODO Auto-generated method stub
-		
+		removeCallLog(nativePtr, log);
 	}
-	@Override
+
+	private native int getMissedCallsCount(long nativePtr);
 	public int getMissedCallsCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return getMissedCallsCount(nativePtr);
 	}
-	@Override
+
+	private native void resetMissedCallsCount(long nativePtr);
 	public void resetMissedCallsCount() {
-		// TODO Auto-generated method stub
-		
+		resetMissedCallsCount(nativePtr);
+	}
+	
+	private native void refreshRegisters(long nativePtr);
+	public void refreshRegisters() {
+		refreshRegisters(nativePtr);
 	}
 }
