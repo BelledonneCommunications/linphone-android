@@ -724,4 +724,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 			String username, String password) {
 		tunnelSetHttpProxy(nativePtr, proxy_host, port, username, password);
 	}
+	
+	private native void refreshRegisters(long nativePtr);
+	public void refreshRegisters() {
+		refreshRegisters(nativePtr);
+	}
 }

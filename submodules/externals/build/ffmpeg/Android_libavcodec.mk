@@ -70,6 +70,7 @@ LOCAL_SRC_FILES = \
 	libavcodec/jrevdct.c \
 	libavcodec/mjpeg.c.arm \
 	libavcodec/mjpegdec.c.arm \
+	libavcodec/mjpegenc.c.arm \
 	libavcodec/motion_est.c.arm \
 	libavcodec/mpeg12data.c \
 	libavcodec/mpeg4video.c.arm \
