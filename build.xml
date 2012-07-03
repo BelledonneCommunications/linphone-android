@@ -1188,8 +1188,8 @@
     <!-- This runs -package-release and -release-nosign first and then runs
          only if release-sign is true (set in -release-check,
          called by -release-no-sign)-->
-    <target name="release"
-                depends="-set-release-mode, -release-obfuscation-check, -package, -post-package, -release-prompt-for-password, -release-nosign, -release-sign, -post-build"
+   <target name="release"
+                depends="clean, init, -set-release-mode, -release-obfuscation-check, -package, -post-package, -release-prompt-for-password, -release-nosign, -release-sign, -post-build, delete-temp"
                 description="Builds the application in release mode.">
     </target>
 
