@@ -52,7 +52,9 @@ public class LinphoneLauncherActivity extends Activity {
 		}
 	}
 
-	private void onServiceReady() {
+	protected void onServiceReady() {
+		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
+		
 		startActivity(new Intent()
 		.setClass(this, LinphoneActivity.class)
 		.setData(getIntent().getData()));

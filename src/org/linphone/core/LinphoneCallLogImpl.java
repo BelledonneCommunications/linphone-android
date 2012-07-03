@@ -45,5 +45,15 @@ class LinphoneCallLogImpl implements LinphoneCallLog {
 	public CallStatus getStatus() {
 		throw new RuntimeException("not implemented yet");
 	}
+	@Override
+	public String getStartDate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public int getCallDuration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }

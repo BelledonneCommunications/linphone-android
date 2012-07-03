@@ -95,15 +95,13 @@ public class HistoryActivity extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_clear_history:
+		int id = item.getItemId();
+		if (id == R.id.menu_clear_history) {
 			LinphoneManager.getLc().clearCallLogs();
 			setListAdapter(new CallHistoryAdapter(this));
-			
-			break;
-		default:
+		}
+		else {
 			Log.e("Unknown menu item [",item,"]");
-			break;
 		}
 
 		return false;

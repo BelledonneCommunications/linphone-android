@@ -20,7 +20,6 @@ package org.linphone.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 
 class LinphoneCoreImpl implements LinphoneCore {
@@ -703,5 +702,31 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void setCpuCount(int count)
 	{
 		setCpuCountNative(count);
+	}
+	private native void tunnelSetHttpProxyNative(long nativePtr, String proxy_host, int port, String username, String password);
+	@Override
+	public void tunnelSetHttpProxy(String proxy_host, int port,
+			String username, String password) {
+		tunnelSetHttpProxyNative(nativePtr,proxy_host, port, username, password);
+	}
+
+	private native void removeCallLog(long nativePtr, LinphoneCallLog log);
+	public void removeCallLog(LinphoneCallLog log) {
+		removeCallLog(nativePtr, log);
+	}
+
+	private native int getMissedCallsCount(long nativePtr);
+	public int getMissedCallsCount() {
+		return getMissedCallsCount(nativePtr);
+	}
+
+	private native void resetMissedCallsCount(long nativePtr);
+	public void resetMissedCallsCount() {
+		resetMissedCallsCount(nativePtr);
+	}
+	
+	private native void refreshRegisters(long nativePtr);
+	public void refreshRegisters() {
+		refreshRegisters(nativePtr);
 	}
 }

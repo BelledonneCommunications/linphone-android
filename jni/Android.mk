@@ -116,8 +116,9 @@ ifeq ($(BUILD_SRTP), 1)
 include $(linphone-root-dir)/submodules/externals/build/srtp/Android.mk
 endif
 
-
+ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
 include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
+endif
 include $(linphone-root-dir)/submodules/linphone/build/android/Android-no-neon.mk
 
 _BUILD_AMR=0

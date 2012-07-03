@@ -35,6 +35,7 @@ import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
 import org.linphone.mediastream.Version;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -86,7 +87,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	/**
 	 * @throws RuntimeException service not instantiated
 	 */
-	static LinphoneService instance()  {
+	public static LinphoneService instance()  {
 		if (isReady()) return instance;
 
 		throw new RuntimeException("LinphoneService not instantiated yet");
@@ -242,6 +243,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Object[] mSetForegroundArgs = new Object[1];
 	private Object[] mStartForegroundArgs = new Object[2];
 	private Object[] mStopForegroundArgs = new Object[1];
+	private Class<? extends Activity> incomingReceivedActivity = LinphoneActivity.class;
 
 	void invokeMethod(Method method, Object[] args) {
 		try {
@@ -438,7 +440,21 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			});
 		}
 	}
-
+	
+	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {
+		incomingReceivedActivity = activity;
+		
+		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
+		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
+	}
+	
+	protected void onIncomingReceived() {
+		//wakeup linphone
+		startActivity(new Intent()
+				.setClass(this, incomingReceivedActivity)
+				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+	}
 
 	public void onCallStateChanged(final LinphoneCall call, final State state, final String message) {
 		if (instance == null) {
@@ -446,10 +462,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			return;
 		}
 		if (state == LinphoneCall.State.IncomingReceived) {
-			//wakeup linphone
-			startActivity(new Intent()
-					.setClass(this, LinphoneActivity.class)
-					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			onIncomingReceived();
 		}
 		
 		if (state == State.CallUpdatedByRemote) {

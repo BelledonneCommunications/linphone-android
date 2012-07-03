@@ -268,19 +268,16 @@ public abstract class AbstractCalleesActivity extends ListActivity implements Li
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.toggleMuteMic:
+		int id = v.getId();
+		if (id == R.id.toggleMuteMic) {
 			lc().muteMic(((Checkable) v).isChecked());
-			break;
-		case R.id.toggleSpeaker:
+		}
+		else if (id == R.id.toggleSpeaker) {
 			if (((Checkable) v).isChecked()) {
 				LinphoneManager.getInstance().routeAudioToSpeaker();
 			} else {
 				LinphoneManager.getInstance().routeAudioToReceiver();
 			}
-			break;
-		default:
-			break;
 		}
 	}
 
