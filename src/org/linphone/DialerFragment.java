@@ -59,7 +59,7 @@ public class DialerFragment extends Fragment {
 		if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().isInCallLayout()) {
 			mCall.setImageResource(R.drawable.plus);
 		} else {
-			mCall.setImageResource(R.drawable.appeler);
+			mCall.setImageResource(R.drawable.call);
 		}
 		
 		AddressAware numpad = (AddressAware) view.findViewById(R.id.Dialer);
@@ -122,7 +122,7 @@ public class DialerFragment extends Fragment {
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			mCall.setImageResource(R.drawable.appeler);
+			mCall.setImageResource(R.drawable.call);
 			mAddContact.setImageResource(R.drawable.add_contact);
 			mAddContact.setOnClickListener(addContactListener);
 		}

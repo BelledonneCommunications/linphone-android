@@ -49,14 +49,14 @@
 	                android:layout_height="match_parent"
 	                android:layout_weight="0.25"
 	                android:scaleType="fitXY"
-	                android:src="@drawable/video_on" />
+	                android:src="@drawable/video_off" />
 	            
 	            <ImageView 
             		android:contentDescription="@string/content_description_toggle_micro"
 	                android:id="@+id/micro"
 				    android:layout_width="match_parent"
 				    android:layout_height="match_parent"
-				    android:src="@drawable/micro_on"
+				    android:src="@drawable/micro_off"
 	                android:scaleType="fitXY"
 				    android:layout_weight="0.25"/>
 	            
@@ -91,7 +91,7 @@
 	                android:id="@+id/pause"
 				    android:layout_width="match_parent"
 				    android:layout_height="match_parent"
-				    android:src="@drawable/pause"
+				    android:src="@drawable/pause_off"
 	                android:scaleType="fitXY"
 				    android:layout_weight="0.3"/>
 	            
@@ -100,7 +100,7 @@
 	                android:id="@+id/hangUp"
 				    android:layout_width="match_parent"
 				    android:layout_height="match_parent"
-				    android:src="@drawable/raccrocher"
+				    android:src="@drawable/hangup"
 	                android:scaleType="fitXY"
 				    android:layout_weight="0.3"/>
 	            

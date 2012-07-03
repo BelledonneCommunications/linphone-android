@@ -3,7 +3,7 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/chat_over" />
     <item android:state_selected="true"
-        android:drawable="@drawable/chat_selectionne" />
+        android:drawable="@drawable/chat_selected" />
     <item
-         android:drawable="@drawable/chat_actif" />
+         android:drawable="@drawable/chat_default" />
 </selector>

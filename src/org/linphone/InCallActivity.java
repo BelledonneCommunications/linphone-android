@@ -254,13 +254,13 @@ public class InCallActivity extends FragmentActivity implements
 		LinphoneCall call = lc.getCurrentCall();
 		if (call != null && isCallRunning(call)) {
 			lc.pauseCall(call);
-			pause.setImageResource(R.drawable.play);
+			pause.setImageResource(R.drawable.pause_on);
 		} else {
 			List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc, Arrays.asList(State.Paused));
 			if (pausedCalls.size() == 1) {
 				LinphoneCall callToResume = pausedCalls.get(0);
 				lc.resumeCall(callToResume);
-				pause.setImageResource(R.drawable.pause);
+				pause.setImageResource(R.drawable.pause_off);
 			}
 		}
 	}

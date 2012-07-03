@@ -3,5 +3,5 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/add_call_over" />
     <item
-         android:drawable="@drawable/add_call_actif" />
+         android:drawable="@drawable/add_call_default" />
 </selector>

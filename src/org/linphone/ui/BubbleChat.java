@@ -24,6 +24,7 @@ import org.linphone.R;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -60,6 +61,7 @@ public class BubbleChat {
     	messageView.setTextColor(Color.BLACK);
 
     	view.setId(id);
+    	layoutParams.setMargins(0, pixelsToDpi(context, 10), 0, 0);
     	view.setLayoutParams(layoutParams);	
     	view.addView(messageView);
     	
@@ -80,9 +82,17 @@ public class BubbleChat {
 	}
 	
 	private String timestampToHumanDate(Context context, String timestamp) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.messages_date_format));
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(Long.parseLong(timestamp));
-		return dateFormat.format(cal.getTime());
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.messages_date_format));
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(Long.parseLong(timestamp));
+			return dateFormat.format(cal.getTime());
+		} catch (NumberFormatException nfe) {
+			return timestamp;
+		}
+	}
+	
+	private int pixelsToDpi(Context context, int pixels) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) pixels, context.getResources().getDisplayMetrics());
 	}
 }

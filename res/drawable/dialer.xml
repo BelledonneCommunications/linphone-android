@@ -3,7 +3,7 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/dialer_over" />
     <item android:state_selected="true"
-        android:drawable="@drawable/dialer_selectionne" />
+        android:drawable="@drawable/dialer_selected" />
     <item
-         android:drawable="@drawable/dialer_actif" />
+         android:drawable="@drawable/dialer_default" />
 </selector>

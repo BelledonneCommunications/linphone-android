@@ -34,6 +34,7 @@
     
     <ScrollView 
         android:id="@+id/chatScrollView"
+        android:paddingTop="10dp"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_weight="0.2" >

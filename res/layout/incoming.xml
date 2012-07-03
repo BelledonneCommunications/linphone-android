@@ -14,7 +14,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:layout_weight="0.9"
-		    android:background="@drawable/champ_saisie_numero"
+		    android:background="@drawable/dialer_address_background"
 		    android:gravity="center_vertical"
         	android:paddingLeft="20dp"
 		    android:textColor="@android:color/white"

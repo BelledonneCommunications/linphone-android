@@ -3,6 +3,6 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/ok_over" />
     <item
-         android:drawable="@drawable/ok_actif" />
+         android:drawable="@drawable/ok_default" />
 </selector>
 

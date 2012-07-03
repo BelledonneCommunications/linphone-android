@@ -3,7 +3,7 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/contacts_over" />
     <item android:state_selected="true"
-        android:drawable="@drawable/contacts_selectionne" />
+        android:drawable="@drawable/contacts_selected" />
     <item
-         android:drawable="@drawable/contacts_actif" />
+         android:drawable="@drawable/contacts_default" />
 </selector>

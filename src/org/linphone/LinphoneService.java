@@ -240,6 +240,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
+		if (fromName == null) {
+			fromName = fromSipUri;
+		}
+		
 		if (mMsgNotif == null) {
 			mMsgNotifCount = 1;
 			mMsgNotif = new Notification();

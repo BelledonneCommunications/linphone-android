@@ -3,7 +3,7 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/settings_over" />
     <item android:state_selected="true"
-        android:drawable="@drawable/settings_selectionne" />
+        android:drawable="@drawable/settings_selected" />
     <item
-         android:drawable="@drawable/settings_actif" />
+         android:drawable="@drawable/settings_default" />
 </selector>

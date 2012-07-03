@@ -14,7 +14,7 @@
         <ImageView 
             android:contentDescription="@string/content_description_all_calls"
             android:id="@+id/allCalls"
-            android:src="@drawable/all_call"
+            android:src="@drawable/history_all"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:layout_weight="1"/>
@@ -22,7 +22,7 @@
         <ImageView 
             android:contentDescription="@string/content_description_missed_calls"
             android:id="@+id/missedCalls"
-            android:src="@drawable/missed"
+            android:src="@drawable/history_missed"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:layout_weight="1"/>
@@ -30,7 +30,7 @@
         <ImageView 
             android:contentDescription="@string/content_description_edit"
             android:id="@+id/edit"
-            android:src="@drawable/edit"
+            android:src="@drawable/history_edit"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:layout_weight="1"/>

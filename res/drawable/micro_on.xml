@@ -3,5 +3,5 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/micro_on_over" />
     <item
-         android:drawable="@drawable/micro_on_actif" />
+         android:drawable="@drawable/micro_on_default" />
 </selector>

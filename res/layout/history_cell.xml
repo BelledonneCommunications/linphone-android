@@ -11,7 +11,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_weight="0.9"
-	    android:src="@drawable/incoming_call"
+	    android:src="@drawable/call_status_incoming"
 	    android:layout_marginLeft="10dp"/>
 	    
 	<TextView 
@@ -30,7 +30,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_weight="0.9"
-	    android:src="@drawable/detail"
+	    android:src="@drawable/list_detail"
 	    android:layout_marginLeft="10dp"
 	    android:layout_marginRight="10dp" />
 	
@@ -41,7 +41,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_weight="0.9"
 	    android:visibility="gone"
-	    android:src="@drawable/delete"
+	    android:src="@drawable/list_delete"
 	    android:layout_marginLeft="10dp"
 	    android:layout_marginRight="10dp" />
     

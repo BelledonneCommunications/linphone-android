@@ -3,8 +3,8 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/add_contact_over" />
     <item android:state_enabled="false"
-        android:drawable="@drawable/add_contact_inactif" />
+        android:drawable="@drawable/add_contact_disabled" />
     <item
-         android:drawable="@drawable/add_contact_actif" />
+         android:drawable="@drawable/add_contact_default" />
 </selector>
 

@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:textColor="@android:color/white"
         android:textSize="22dp"
-        android:background="@drawable/champ_saisie_numero"
+        android:background="@drawable/dialer_address_background"
         android:inputType="textEmailAddress"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@drawable/appeler" />
+            android:src="@drawable/call" />
         
         <org.linphone.ui.EraseButton
             android:id="@+id/Erase"

@@ -3,7 +3,7 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/history_over" />
     <item android:state_selected="true"
-        android:drawable="@drawable/history_selectionne" />
+        android:drawable="@drawable/history_selected" />
     <item
-         android:drawable="@drawable/history_actif" />
+         android:drawable="@drawable/history_default" />
 </selector>

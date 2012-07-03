@@ -5,5 +5,5 @@
     <item android:state_enabled="false" 
         android:drawable="@drawable/new_contact_over" />
     <item
-         android:drawable="@drawable/new_contact_actif" />
+         android:drawable="@drawable/new_contact_default" />
 </selector>

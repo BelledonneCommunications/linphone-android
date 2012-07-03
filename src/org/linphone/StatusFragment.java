@@ -93,10 +93,10 @@ public class StatusFragment extends Fragment {
 			public void run() {
 				try {
 					if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
-						statusLed.setImageResource(R.drawable.connected_led);
+						statusLed.setImageResource(R.drawable.led_connected);
 						statusText.setText(getString(R.string.status_connected));
 					} else {
-						statusLed.setImageResource(R.drawable.not_connected_led);
+						statusLed.setImageResource(R.drawable.led_disconnected);
 						statusText.setText(getString(R.string.status_not_connected));
 					}
 				} catch (Exception e) {
@@ -136,23 +136,23 @@ public class StatusFragment extends Fragment {
 		if (quality >= 4) // Good Quality
 		{
 			callQuality.setImageResource(
-					R.drawable.quality_call_3);
+					R.drawable.call_quality_indicator_3);
 		} else if (quality >= 3) // Average quality
 		{
 			callQuality.setImageResource(
-					R.drawable.quality_call_2);
+					R.drawable.call_quality_indicator_2);
 		} else if (quality >= 2) // Low quality
 		{
 			callQuality.setImageResource(
-					R.drawable.quality_call_1);
+					R.drawable.call_quality_indicator_1);
 		} else if (quality >= 1) // Very low quality
 		{
 			callQuality.setImageResource(
-					R.drawable.quality_call_1);
+					R.drawable.call_quality_indicator_1);
 		} else // Worst quality
 		{
 			callQuality.setImageResource(
-					R.drawable.quality_call_0);
+					R.drawable.call_quality_indicator_0);
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class StatusFragment extends Fragment {
 			refreshEncryptionIcon();
 			
 			// We are obviously connected
-			statusLed.setImageResource(R.drawable.connected_led);
+			statusLed.setImageResource(R.drawable.led_connected);
 			statusText.setText(getString(R.string.status_connected));
 		}
 	}
@@ -188,11 +188,11 @@ public class StatusFragment extends Fragment {
 			encryption.setVisibility(View.VISIBLE);
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
-				encryption.setImageResource(R.drawable.secure);
+				encryption.setImageResource(R.drawable.security_ok);
 			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
-				encryption.setImageResource(R.drawable.maybe_secure);
+				encryption.setImageResource(R.drawable.security_pending);
 			} else {
-				encryption.setImageResource(R.drawable.not_secure);
+				encryption.setImageResource(R.drawable.security_ko);
 			}
 		}
 	}

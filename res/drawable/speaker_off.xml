@@ -3,5 +3,5 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/speaker_off_over" />
     <item
-         android:drawable="@drawable/speaker_off_actif" />
+         android:drawable="@drawable/speaker_off_default" />
 </selector>

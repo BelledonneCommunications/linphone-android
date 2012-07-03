@@ -138,7 +138,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		private Bitmap missedCall, outgoingCall, incomingCall;
 		
 		CallHistoryAdapter(Context aContext) {
-			missedCall = BitmapFactory.decodeResource(getResources(), R.drawable.missed_call);
+			missedCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_missed);
 			
 			if (onlyDisplayMissedCalls) {
 				List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
@@ -149,8 +149,8 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 				}
 				mLogs = missedCalls;
 			} else {
-				outgoingCall = BitmapFactory.decodeResource(getResources(), R.drawable.outgoing_call);
-				incomingCall = BitmapFactory.decodeResource(getResources(), R.drawable.incoming_call);
+				outgoingCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_outgoing);
+				incomingCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_incoming);
 			}
 		}
 		public int getCount() {
