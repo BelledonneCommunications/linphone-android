@@ -3,6 +3,6 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/numpad_two_over" />
     <item
-         android:drawable="@drawable/numpad_two_actif" />
+         android:drawable="@drawable/numpad_two_default" />
 </selector>
 

@@ -3,6 +3,6 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/numpad_five_over" />
     <item
-         android:drawable="@drawable/numpad_five_actif" />
+         android:drawable="@drawable/numpad_five_default" />
 </selector>
 
