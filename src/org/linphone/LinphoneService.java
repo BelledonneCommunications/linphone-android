@@ -96,9 +96,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	private final static int NOTIF_ID=1;
 	private final static int INCALL_NOTIF_ID=2;
+	private final static int CUSTOM_NOTIF_ID=3;
 
 	private Notification mNotif;
 	private Notification mIncallNotif;
+	private Notification mMsgNotif;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 
@@ -230,6 +232,26 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
+	public void addNotification(Intent onClickIntent, int iconResourceID, String title, String message) {
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		if (mMsgNotif == null) {
+			mMsgNotif = new Notification();
+		}
+			
+		mMsgNotif.icon = iconResourceID;
+		mMsgNotif.iconLevel = 0;
+		mMsgNotif.when = System.currentTimeMillis();
+		mMsgNotif.flags &= Notification.FLAG_ONGOING_EVENT;
+		
+		mMsgNotif.defaults |= Notification.DEFAULT_VIBRATE;
+		mMsgNotif.defaults |= Notification.DEFAULT_SOUND;
+		mMsgNotif.defaults |= Notification.DEFAULT_LIGHTS;
+		
+		mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
+		
+		notifyWrapper(CUSTOM_NOTIF_ID, mMsgNotif);
+	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
 	private static final Class<?>[] mStartFgSign = new Class[] {
