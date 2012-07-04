@@ -30,6 +30,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 import org.linphone.ui.ToggleImageButton;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -68,6 +69,7 @@ import android.widget.RelativeLayout.LayoutParams;
  * @author Guillaume Beraudo
  * 
  */
+@TargetApi(5)
 public class VideoCallActivity extends Activity implements
 		LinphoneOnCallStateChangedListener, OnClickListener {
 	private final static int DELAY_BEFORE_HIDING_CONTROLS = 2000;
