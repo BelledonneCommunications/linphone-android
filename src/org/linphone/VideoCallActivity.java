@@ -374,7 +374,7 @@ public class VideoCallActivity extends Activity implements
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode))
+		if (LinphoneUtils.onKeyVolumeAdjust(keyCode))
 			return true;
 		if (Version.isXLargeScreen(this) && LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 			return true;

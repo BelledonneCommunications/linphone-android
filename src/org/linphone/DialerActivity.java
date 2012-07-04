@@ -564,7 +564,7 @@ public class DialerActivity extends Activity implements LinphoneGuiListener {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (LinphoneUtils.onKeyVolumeSoftAdjust(keyCode)) return true;
+		if (LinphoneUtils.onKeyVolumeAdjust(keyCode)) return true;
 		boolean isInCall = LinphoneManager.getLc().isIncall();
 		isInCall = isInCall || LinphoneManager.getLc().getCallsNb() > 0;
 		if (keyCode == KeyEvent.KEYCODE_BACK && isInCall) {
