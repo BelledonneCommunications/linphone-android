@@ -23,7 +23,8 @@
 	<string name="pref_audio_hacks_use_galaxys_hack_key">pref_audio_hacks_use_galaxys_hack_key</string>
 	<string name="pref_audio_hacks_use_routing_api_key">pref_audio_hacks_use_routing_api_key</string>
 	<string name="pref_audio_soft_volume_key">pref_audio_soft_volume_key</string>
-
+	<string name="pref_audio_ringtone">pref_audio_ringtone</string>
+	
 	<string name="pref_ipv6_key">pref_ipv6_key</string>
 
 	<string name="pref_transport_udp_key">pref_transport_udp_key</string>

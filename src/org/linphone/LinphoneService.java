@@ -532,9 +532,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 
 	public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
-		final Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+		String uriString = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_audio_ringtone), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE).toString());
+		Uri uri = Uri.parse(uriString);
 		try {
-			mRingerPlayer.setDataSource(getApplicationContext(), ringtoneUri);
+			mRingerPlayer.setDataSource(this, uri);
 		} catch (IOException e) {
 			Log.e(e, "cannot set ringtone");
 		}
