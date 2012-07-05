@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -402,4 +403,11 @@ public class InCallActivity extends FragmentActivity implements
 		
 		setCallControlsVisibleAndRemoveCallbacks();
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (LinphoneUtils.onKeyVolumeAdjust(keyCode)) return true;
+ 		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
+ 		return super.onKeyDown(keyCode, event);
+ 	}
 }

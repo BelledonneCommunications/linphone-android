@@ -93,6 +93,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
@@ -905,8 +906,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneAddress from, String message) {
-		//TODO : Remove
-		Log.e("LinphoneManager, Message received from " + from + ": " + message);
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
 			((LinphoneActivity) listener).onMessageReceived(from, message);
 		}
@@ -998,7 +997,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		if (state == State.Connected) {
 			if (Hacks.needSoftvolume() || sLPref.useSoftvolume()) {
-				adjustSoftwareVolume(0); // Synchronize
+				adjustVolume(0); // Synchronize
 			}
 		}
 
@@ -1227,15 +1226,19 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return extractADisplayName(r, linphoneAddress);
 	}
 
-	public void adjustSoftwareVolume(int i) {
-		int oldVolume = mAudioManager.getStreamVolume(LINPHONE_VOLUME_STREAM);
-		int maxVolume = mAudioManager.getStreamMaxVolume(LINPHONE_VOLUME_STREAM);
+	public void adjustVolume(int i) {
+		if (Build.VERSION.SDK_INT<15) {
+			int oldVolume = mAudioManager.getStreamVolume(LINPHONE_VOLUME_STREAM);
+			int maxVolume = mAudioManager.getStreamMaxVolume(LINPHONE_VOLUME_STREAM);
 
-		int nextVolume = oldVolume +i;
-		if (nextVolume > maxVolume) nextVolume = maxVolume;
-		if (nextVolume < 0) nextVolume = 0;
+			int nextVolume = oldVolume +i;
+			if (nextVolume > maxVolume) nextVolume = maxVolume;
+			if (nextVolume < 0) nextVolume = 0;
 
-		mLc.adjustSoftwareVolume((nextVolume - maxVolume)* dbStep);
+			mLc.adjustSoftwareVolume((nextVolume - maxVolume)* dbStep);
+		} else
+			// starting from ICS, volume must be adjusted by the application, at least for STREAM_VOICE_CALL volume stream
+			mAudioManager.adjustStreamVolume(LINPHONE_VOLUME_STREAM, i<0?AudioManager.ADJUST_LOWER:AudioManager.ADJUST_RAISE, 0);
 	}
 
 	public static Boolean isProximitySensorNearby(final SensorEvent event) {

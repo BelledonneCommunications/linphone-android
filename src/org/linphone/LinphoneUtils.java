@@ -28,15 +28,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
-import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -47,6 +45,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,9 +73,9 @@ public final class LinphoneUtils {
 		return true;
 	}
 
-	public static boolean onKeyVolumeSoftAdjust(int keyCode) {
+	public static boolean onKeyVolumeAdjust(int keyCode) {
 		if (!((keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
-				&& Hacks.needSoftvolume())) {
+				&& (Hacks.needSoftvolume())|| Build.VERSION.SDK_INT >= 15)) {
 			return false; // continue
 		}
 
@@ -84,9 +83,9 @@ public final class LinphoneUtils {
 			Log.i("Couldn't change softvolume has service is not running");
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-			LinphoneManager.getInstance().adjustSoftwareVolume(1);
+			LinphoneManager.getInstance().adjustVolume(1);
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-			LinphoneManager.getInstance().adjustSoftwareVolume(-1);
+			LinphoneManager.getInstance().adjustVolume(-1);
 		}
 		return preventVolumeBarToDisplay;
 	}
