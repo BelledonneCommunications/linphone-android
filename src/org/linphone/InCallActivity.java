@@ -61,7 +61,7 @@ public class InCallActivity extends FragmentActivity implements
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
-	private boolean isSpeakerEnabled, isMicMuted, isVideoEnabled;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled = false;
 	private LinearLayout mControlsLayout;
 	
 	static final boolean isInstanciated() {
@@ -82,10 +82,6 @@ public class InCallActivity extends FragmentActivity implements
             if (savedInstanceState != null) {
                 return;
             }
-
-            isSpeakerEnabled = LinphoneManager.getInstance().isSpeakerOn();
-            isMicMuted = LinphoneManager.getLc().isMicMuted();
-            isVideoEnabled = getIntent().getBooleanExtra("VideoEnabled", false);
             initUI();
             
             Fragment callFragment;            
@@ -108,33 +104,61 @@ public class InCallActivity extends FragmentActivity implements
 	private void initUI() {
 		video = (ImageView) findViewById(R.id.video);
 		video.setOnClickListener(this);
+		video.setEnabled(false);
 		micro = (ImageView) findViewById(R.id.micro);
 		micro.setOnClickListener(this);
+		micro.setEnabled(false);
 		speaker = (ImageView) findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
+		speaker.setEnabled(false);
 		addCall = (ImageView) findViewById(R.id.addCall);
 		addCall.setOnClickListener(this);
+		addCall.setEnabled(false);
 		pause = (ImageView) findViewById(R.id.pause);
 		pause.setOnClickListener(this);
+		pause.setEnabled(false);
 		hangUp = (ImageView) findViewById(R.id.hangUp);
 		hangUp.setOnClickListener(this);
 		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
+		dialer.setEnabled(false);
 		
         switchCamera = (ImageView) findViewById(R.id.switchCamera);
         switchCamera.setOnClickListener(this);
 		
 		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
-		
-		if (isVideoEnabled) {
-        	video.setImageResource(R.drawable.video_off);
-		}
-		if (isSpeakerEnabled) {
-			speaker.setImageResource(R.drawable.speaker_off_over);
-		}
-		if (isMicMuted) {
-			micro.setImageResource(R.drawable.micro_on);
-		}
+	}
+	
+	private void enableAndRefreshInCallActions() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				video.setEnabled(true);
+				micro.setEnabled(true);
+				speaker.setEnabled(true);
+				addCall.setEnabled(true);
+				pause.setEnabled(true);
+				dialer.setEnabled(true);
+				
+				if (isVideoEnabled) {
+		        	video.setImageResource(R.drawable.video_on);
+				} else {
+					video.setImageResource(R.drawable.video_off);
+				}
+				
+				if (isSpeakerEnabled) {
+					speaker.setImageResource(R.drawable.speaker_on);
+				} else {
+					speaker.setImageResource(R.drawable.speaker_off);
+				}
+				
+				if (isMicMuted) {
+					micro.setImageResource(R.drawable.micro_off);
+				} else {
+					micro.setImageResource(R.drawable.micro_on);
+				}
+			}
+		});
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -216,7 +240,11 @@ public class InCallActivity extends FragmentActivity implements
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, audioCallFragment);
-		transaction.commit();
+		try {
+			transaction.commitAllowingStateLoss();
+		} catch (Exception e) {
+			transaction.commit();
+		}
 	}
 	
 	private void replaceFragmentAudioByVideo() {
@@ -225,7 +253,11 @@ public class InCallActivity extends FragmentActivity implements
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, videoCallFragment);
-		transaction.commitAllowingStateLoss();
+		try {
+			transaction.commitAllowingStateLoss();
+		} catch (Exception e) {
+			transaction.commit();
+		}
 	}
 	
 	private void toogleMicro() {
@@ -233,9 +265,9 @@ public class InCallActivity extends FragmentActivity implements
 		isMicMuted = !isMicMuted;
 		lc.muteMic(isMicMuted);
 		if (isMicMuted) {
-			micro.setImageResource(R.drawable.micro_on);
-		} else {
 			micro.setImageResource(R.drawable.micro_off);
+		} else {
+			micro.setImageResource(R.drawable.micro_on);
 		}
 	}
 	
@@ -243,10 +275,10 @@ public class InCallActivity extends FragmentActivity implements
 		isSpeakerEnabled = !isSpeakerEnabled;
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
-			speaker.setImageResource(R.drawable.speaker_off);
+			speaker.setImageResource(R.drawable.speaker_on);
 		} else {
 			LinphoneManager.getInstance().routeAudioToReceiver();
-			speaker.setImageResource(R.drawable.speaker_on);
+			speaker.setImageResource(R.drawable.speaker_off);
 		}
 	}
 	
@@ -369,12 +401,16 @@ public class InCallActivity extends FragmentActivity implements
 			finish();
 		}
 		
-		if (state == State.StreamsRunning) {
+		if (state == State.StreamsRunning) {     
 			boolean isVideoEnabledInCall = call.getCurrentParamsCopy().getVideoEnabled();
 			if (isVideoEnabledInCall != isVideoEnabled) {
 				isVideoEnabled = isVideoEnabledInCall;
 				switchVideo(isVideoEnabled);
 			}
+			
+			isMicMuted = LinphoneManager.getLc().isMicMuted();
+			isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
+			enableAndRefreshInCallActions();
 		}
 	}
 

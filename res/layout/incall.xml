@@ -56,7 +56,7 @@
 	                android:id="@+id/micro"
 				    android:layout_width="match_parent"
 				    android:layout_height="match_parent"
-				    android:src="@drawable/micro_off"
+				    android:src="@drawable/micro_on"
 	                android:scaleType="fitXY"
 				    android:layout_weight="0.25"/>
 	            
