@@ -141,17 +141,19 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 	}
 	
 	private void scrollToEnd() {
-		mHandler.post(new Runnable() {
+		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				messagesScrollView.fullScroll(View.FOCUS_DOWN);
 			}
-		});
+		}, 100);
 	}
 
 	@Override
 	public void onMessageReceived(LinphoneAddress from, String message) {
-		displayMessage(previousMessageID + 1, message, getString(R.string.now_date_format), true, messagesLayout);
-		scrollToEnd();
+		if (from.asStringUriOnly().equals(sipUri))  {
+			displayMessage(previousMessageID + 1, message, getString(R.string.now_date_format), true, messagesLayout);
+			scrollToEnd();
+		}
 	}
 }
