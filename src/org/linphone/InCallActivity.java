@@ -42,7 +42,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-//FIXME : Speaker
 //FIXME : Chronometer for calls
 /**
  * @author Sylvain Berfini
@@ -219,6 +218,10 @@ public class InCallActivity extends FragmentActivity implements
 					LinphoneManager.getLc().updateCall(call, params);
 					replaceFragmentVideoByAudio();
 					
+					isSpeakerEnabled = false;
+					LinphoneManager.getInstance().routeAudioToReceiver();
+					speaker.setImageResource(R.drawable.speaker_off);
+					
 					video.setImageResource(R.drawable.video_on);
 					setCallControlsVisibleAndRemoveCallbacks();
 					
@@ -227,10 +230,15 @@ public class InCallActivity extends FragmentActivity implements
 						LinphoneManager.getInstance().addVideo();
 					}
 					
+					isSpeakerEnabled = true;
+					LinphoneManager.getInstance().routeAudioToSpeaker();
+					speaker.setImageResource(R.drawable.speaker_on);
+					
 					replaceFragmentAudioByVideo();
 					video.setImageResource(R.drawable.video_off);
 					displayVideoCallControlsIfHidden();
 				}
+				LinphoneManager.getLc().enableSpeaker(true);
 			}
 		});
 	}
@@ -243,7 +251,6 @@ public class InCallActivity extends FragmentActivity implements
 		try {
 			transaction.commitAllowingStateLoss();
 		} catch (Exception e) {
-			transaction.commit();
 		}
 	}
 	
@@ -256,7 +263,6 @@ public class InCallActivity extends FragmentActivity implements
 		try {
 			transaction.commitAllowingStateLoss();
 		} catch (Exception e) {
-			transaction.commit();
 		}
 	}
 	
@@ -280,6 +286,7 @@ public class InCallActivity extends FragmentActivity implements
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			speaker.setImageResource(R.drawable.speaker_off);
 		}
+		LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 	}
 	
 	private void pause() {
@@ -409,7 +416,6 @@ public class InCallActivity extends FragmentActivity implements
 			}
 			
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
-			isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
 			enableAndRefreshInCallActions();
 		}
 	}
