@@ -2,6 +2,8 @@
 <resources>
 
 	<string name="messages_date_format">HH:mm:ss d MMM</string>
+	<string name="now_date_format">few seconds ago</string>
+	<string name="today_date_format">HH:mm:ss</string>
     
 	<string name="app_name">Linphone 2</string>
 	<string name="notification_title">Linphone</string>
