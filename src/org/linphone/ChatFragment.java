@@ -61,7 +61,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
         View view = inflater.inflate(R.layout.chat, container, false);
         
         TextView contactName = (TextView) view.findViewById(R.id.contactName);
-        contactName.setText(name == null ? sipUri : name);
+        if (name == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+        	contactName.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+		} else if (name == null) {
+			contactName.setText(sipUri);
+		}
+        else {
+			contactName.setText(name);
+		}
         
         ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
         if (pictureUri != null) {

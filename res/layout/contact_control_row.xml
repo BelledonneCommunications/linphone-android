@@ -8,18 +8,18 @@
    
    	<TextView 
    	    android:id="@+id/numeroOrAddress"
- 		android:layout_width="match_parent"
+ 		android:layout_width="0dp"
  		android:layout_height="wrap_content"
- 		android:layout_weight="0.5"
+ 		android:layout_weight="1"
 		android:textColor="@android:color/black"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:gravity="left" />
    	
    	<ImageView
    	    android:id="@+id/dial"
-   	    android:layout_width="match_parent"
+   	    android:layout_width="0dp"
    	    android:layout_height="match_parent"
-   	    android:layout_weight="1"
+   	    android:layout_weight="0.2"
    	    android:contentDescription="@string/content_description_dial_back"
    	    android:gravity="right"
    	    android:paddingLeft="5dp"
@@ -29,9 +29,9 @@
    	
    	<ImageView
    	    android:id="@+id/chat"
-   	    android:layout_width="match_parent"
+   	    android:layout_width="0dp"
    	    android:layout_height="match_parent"
-   	    android:layout_weight="1"
+   	    android:layout_weight="0.2"
    	    android:contentDescription="@string/content_description_chat"
    	    android:gravity="right"
    	    android:paddingLeft="5dp"

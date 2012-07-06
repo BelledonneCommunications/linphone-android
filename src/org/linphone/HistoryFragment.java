@@ -199,9 +199,17 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			String sipUri = address.asStringUriOnly();
 
 			if (displayName == null) {
-				contact.setText(sipUri);
+				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+					contact.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+				} else {
+					contact.setText(sipUri);
+				}
 			} else {
-				contact.setText(displayName);
+				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(address.getDisplayName())) {
+					contact.setText(LinphoneUtils.getUsernameFromAddress(address.getDisplayName()));
+				} else {
+					contact.setText(displayName);
+				}
 			}
 			view.setTag(sipUri);
 			

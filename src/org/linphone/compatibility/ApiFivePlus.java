@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.linphone.mediastream.Version;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -41,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /**
  * @author Sylvain Berfini
  */
+@TargetApi(5)
 public class ApiFivePlus {
 	public static void overridePendingTransition(Activity activity, int idAnimIn, int idAnimOut) {
 		activity.overridePendingTransition(idAnimIn, idAnimOut);

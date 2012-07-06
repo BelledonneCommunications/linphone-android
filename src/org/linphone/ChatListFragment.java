@@ -141,6 +141,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
+			
+			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(address.getDisplayName())) {
+				address.setDisplayName(LinphoneUtils.getUsernameFromAddress(address.getDisplayName()));
+			} else if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(contact)) {
+				contact = LinphoneUtils.getUsernameFromAddress(contact);
+			} 
+			
 			sipUri.setText(address.getDisplayName() == null ? contact : address.getDisplayName());
 			
 			ImageView delete, detail;

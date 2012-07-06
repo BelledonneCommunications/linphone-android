@@ -52,16 +52,20 @@ public class ContactFragment extends Fragment {
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		
-		for (String numeroOrAddress : contact.getNumerosOrAddresses()) {
+		for (String numberOrAddress : contact.getNumerosOrAddresses()) {
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
-			((TextView) v.findViewById(R.id.numeroOrAddress)).setText(numeroOrAddress);
+			((TextView) v.findViewById(R.id.numeroOrAddress)).setText(numberOrAddress);
 			
 			v.findViewById(R.id.dial).setOnClickListener(dialListener);
-			v.findViewById(R.id.dial).setTag(numeroOrAddress);
+			v.findViewById(R.id.dial).setTag(numberOrAddress);
 
-			v.findViewById(R.id.chat).setOnClickListener(chatListener);
-			v.findViewById(R.id.chat).setTag(numeroOrAddress);
+			if (LinphoneUtils.isSipAddress(numberOrAddress)) {
+				v.findViewById(R.id.chat).setOnClickListener(chatListener);
+				v.findViewById(R.id.chat).setTag(numberOrAddress);
+			} else {
+				v.findViewById(R.id.chat).setVisibility(View.INVISIBLE);
+			}
 			
 			controls.addView(v);
 		}

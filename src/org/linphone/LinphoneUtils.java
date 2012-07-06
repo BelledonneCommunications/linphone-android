@@ -62,6 +62,20 @@ public final class LinphoneUtils {
 
 	private static boolean preventVolumeBarToDisplay = false;
 
+	public static boolean isSipAddress(String numberOrAddress) {
+		return numberOrAddress != null && numberOrAddress.matches("^(sip:)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+	}
+	
+	public static String getUsernameFromAddress(String address) {
+		if (address.contains("sip:"))
+			address = address.replace("sip:", "");
+		
+		if (address.contains("@"))
+			address = address.split("@")[0];
+		
+		return address;
+	}
+	
 	public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
 		if (!(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)) {
 			return false; // continue

@@ -65,6 +65,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		addToContacts.setOnClickListener(this);
 		
 		contactName = (TextView) view.findViewById(R.id.contactName);
+		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
+		}
 		contactName.setText(displayName == null ? sipUri : displayName);
 		
 		dialBackUri = (TextView) view.findViewById(R.id.dialBackUri);
