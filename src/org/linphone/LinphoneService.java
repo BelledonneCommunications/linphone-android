@@ -138,7 +138,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNotif.iconLevel=IC_LEVEL_ORANGE;
 		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
 
-		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
 		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
 
