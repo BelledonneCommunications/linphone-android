@@ -181,8 +181,8 @@ public class StatusFragment extends Fragment {
 	}
 
 	public void refreshEncryptionIcon() {
-		if (encryption != null) {
-			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		if (call != null && encryption != null) {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 			
 			encryption.setVisibility(View.VISIBLE);

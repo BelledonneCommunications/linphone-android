@@ -18,8 +18,8 @@
         <ImageView 
             android:contentDescription="@string/content_description_contact_picture"
             android:id="@+id/contactPicture"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+		    android:layout_width="100dp"
+		    android:layout_height="100dp"
 		    android:src="@drawable/unknown_small" />
 	        
         <TextView

@@ -1,46 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent" 
 	android:layout_height="match_parent"
-	android:orientation="vertical"
 	android:background="@drawable/numpad_background">
     
-    <TableLayout 
+    <LinearLayout 
+        android:id="@+id/calls"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:background="@drawable/dialer_address_background"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
 	    android:gravity="center_vertical"
-	    android:stretchColumns="0"
-	    android:shrinkColumns="0"
-	    android:layout_weight="0.9">
+		android:orientation="vertical">
     
-        <TableRow
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content">
-		    <TextView
-			    android:id="@+id/contactNameOrNumber"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-	        	android:paddingLeft="20dp"
-	        	android:gravity="left"
-			    android:textColor="@android:color/white"
-			    android:textSize="22dp" />
-		    
-		    <Chronometer
-			    android:id="@+id/callTimer"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-	        	android:paddingRight="20dp"
-	        	android:gravity="right"
-			    android:textColor="@android:color/white"
-			    android:textSize="22dp" />
-	    </TableRow>
-
-    </TableLayout>
+    </LinearLayout>
     
 	<LinearLayout 
 	    android:layout_width="match_parent"
-		android:layout_height="match_parent" 
-	    android:layout_weight="0.1"
+		android:layout_height="match_parent"
+		android:layout_below="@id/calls"
 		android:orientation="vertical"
 		android:paddingTop="30dip">
 		
@@ -58,4 +35,4 @@
 
 	</LinearLayout>
 	
-</LinearLayout>
+</RelativeLayout>

@@ -98,7 +98,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.dialBack) {
-			LinphoneActivity.instance().setAddressAndGoToDialer(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
+			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
 		} else if (id == R.id.addToContacts) {

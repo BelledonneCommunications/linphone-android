@@ -83,6 +83,15 @@ public class InCallActivity extends FragmentActivity implements
             }
             initUI();
             
+            if (LinphoneManager.getLc().getCallsNb() > 0) {
+            	LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+
+            	if (isCallEstablished(call)) {
+	    			enableAndRefreshInCallActions();
+	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
+            	}
+            }
+            
             Fragment callFragment;            
             if (isVideoEnabled) {
             	callFragment = new VideoCallFragment();
@@ -400,12 +409,22 @@ public class InCallActivity extends FragmentActivity implements
 				state == LinphoneCall.State.StreamsRunning ||
 				state == LinphoneCall.State.Resuming;
 	}
+	
+	private boolean isCallEstablished(LinphoneCall call) {
+		LinphoneCall.State state = call.getState();
+		
+		return isCallRunning(call) || 
+				state == LinphoneCall.State.Paused ||
+				state == LinphoneCall.State.PausedByRemote ||
+				state == LinphoneCall.State.Pausing;
+	}
 
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state,
 			String message) {
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
 			finish();
+			return;
 		}
 		
 		if (state == State.StreamsRunning) {     
@@ -417,6 +436,17 @@ public class InCallActivity extends FragmentActivity implements
 			
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
 			enableAndRefreshInCallActions();
+		}
+		
+		if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
+			if (audioCallFragment != null) {
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						audioCallFragment.refreshCallList(getResources());
+					}
+				});
+			}
 		}
 	}
 
@@ -452,4 +482,8 @@ public class InCallActivity extends FragmentActivity implements
  		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
  		return super.onKeyDown(keyCode, event);
  	}
+
+	public void bindAudioFragment(AudioCallFragment fragment) {
+		audioCallFragment = fragment;
+	}
 }

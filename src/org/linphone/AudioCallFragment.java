@@ -22,13 +22,13 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCoreFactory;
 
 import android.app.Activity;
-import android.net.Uri;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -36,41 +36,60 @@ import android.widget.TextView;
  */
 public class AudioCallFragment extends Fragment {
 	private static AudioCallFragment instance;
-//	private Chronometer timer;
+	private LinearLayout callsList;
+	private LayoutInflater inflater;
+	private ViewGroup container;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
 		instance = this;
+		this.inflater = inflater;
+		this.container = container;
+		
         View view = inflater.inflate(R.layout.audio, container, false);
-//        timer = (Chronometer) view.findViewById(R.id.callTimer);
+        callsList = (LinearLayout) view.findViewById(R.id.calls);
         
-        LinphoneCall currentCall;
-        do {
-        	currentCall = LinphoneManager.getLc().getCurrentCall();
-        } while (currentCall == null);
-        
-        String sipUri = currentCall.getRemoteAddress().asStringUriOnly();
-        LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-        Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
-		
-		TextView contact = (TextView) view.findViewById(R.id.contactNameOrNumber);
-		contact.setText(lAddress.getDisplayName() == null ? sipUri : lAddress.getDisplayName());
-		
-		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
-		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
-        }
-		
         return view;
     }
+	
+	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call) {
+		String sipUri = call.getRemoteAddress().asStringUriOnly();
+        LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+//        Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, callView.getContext().getContentResolver());
+		
+		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
+		if (lAddress.getDisplayName() == null) {
+	        if (resources.getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+	        	contact.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+			} else {
+				contact.setText(sipUri);
+			}
+		} else {
+			contact.setText(lAddress.getDisplayName());
+		}
+		
+//		ImageView contactPicture = (ImageView) callView.findViewById(R.id.contactPicture);
+//		if (pictureUri != null) {
+//        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture, Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
+//        }
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		InCallActivity.instance().bindAudioFragment(this);
 		
 		// Just to be sure we have incall controls
 		InCallActivity.instance().setCallControlsVisibleAndRemoveCallbacks();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		// Add calls
+		refreshCallList(getResources());
 	}
 	
 	/**
@@ -78,5 +97,25 @@ public class AudioCallFragment extends Fragment {
 	 */
 	public static AudioCallFragment instance() { 
 		return instance;
+	}
+	
+	public void refreshCallList(Resources resources) {
+		callsList.removeAllViews();
+		
+		boolean first = true;
+        for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
+        	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call, container, false);
+        	displayCall(resources, callView, call);
+        	
+        	if (first) {
+        		callView.setBackgroundResource(R.drawable.sel_call_first);
+        		first = false;
+        	} else {
+        		callView.setBackgroundResource(R.drawable.sel_call);
+        	}
+        	
+        	callsList.addView(callView);
+        }
+        callsList.invalidate();
 	}
 }

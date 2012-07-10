@@ -22,6 +22,7 @@ import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import android.view.ViewGroup;
 /**
  * @author Sylvain Berfini
  */
+@TargetApi(5)
 public class VideoCallFragment extends Fragment {
 	private static VideoCallFragment instance;
 	private WakeLock mWakeLock;
@@ -113,15 +115,19 @@ public class VideoCallFragment extends Fragment {
 	}
 	
 	public void switchCamera() {
-		int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
-		videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-		LinphoneManager.getLc().setVideoDevice(videoDeviceId);
-		CallManager.getInstance().updateCall();
-		
-		// previous call will cause graph reconstruction -> regive preview
-		// window
-		if (mCaptureView != null) {
-			LinphoneManager.getLc().setPreviewWindow(mCaptureView);
+		try {
+			int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
+			videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
+			LinphoneManager.getLc().setVideoDevice(videoDeviceId);
+			CallManager.getInstance().updateCall();
+			
+			// previous call will cause graph reconstruction -> regive preview
+			// window
+			if (mCaptureView != null) {
+				LinphoneManager.getLc().setPreviewWindow(mCaptureView);
+			}
+		} catch (ArithmeticException ae) {
+			Log.e("Cannot swtich camera : no camera");
 		}
 	}
 	

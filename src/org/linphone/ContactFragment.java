@@ -85,7 +85,7 @@ public class ContactFragment extends Fragment {
 		return new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneActivity.instance().setAddressAndGoToDialer(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
+				LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
 			}
 		};
 	}

@@ -119,6 +119,7 @@ public class DialerFragment extends Fragment {
 	public void resetLayout() {
 		if (LinphoneActivity.instance().isInCallLayout()) {
 			mCall.setImageResource(R.drawable.plus);
+			mAddress.setText("");
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {

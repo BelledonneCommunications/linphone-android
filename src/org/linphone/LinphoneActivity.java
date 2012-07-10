@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.linphone.LinphoneManager.AddressType;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceived;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
@@ -38,6 +39,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.Log;
 import org.linphone.setup.SetupActivity;
+import org.linphone.ui.AddressText;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -466,12 +468,17 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	@Override
-	public void setAddressAndGoToDialer(String number, String name, Uri photo) {
+	public void setAddresGoToDialerAndCall(String number, String name, Uri photo) {
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", number);
 		extras.putString("DisplayName", name);
 		extras.putString("Photo", photo == null ? null : photo.toString());
 		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
+		
+		AddressType address = new AddressText(this, null);
+		address.setDisplayedName(name);
+		address.setText(number);
+		LinphoneManager.getInstance().newOutgoingCall(address);
 	}
 	
 	public void setAddressAndGoToDialer(String number) {
@@ -603,6 +610,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 }
 
 interface ContactPicked {
-	void setAddressAndGoToDialer(String number, String name, Uri photo);
+	void setAddresGoToDialerAndCall(String number, String name, Uri photo);
 	void goToDialer();
 }
