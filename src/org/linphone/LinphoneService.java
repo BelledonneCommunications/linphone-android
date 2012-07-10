@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,6 +43,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaPlayer;
@@ -530,12 +532,17 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		void onCallStateChanged(LinphoneCall call, State state, String message);
 	}
 
+	public void changeRingtone(String ringtone) {
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		editor.putString(getString(R.string.pref_audio_ringtone), ringtone);
+		editor.commit();
+	}
 
 	public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
 		String uriString = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_audio_ringtone), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE).toString());
-		Uri uri = Uri.parse(uriString);
 		try {
-			mRingerPlayer.setDataSource(this, uri);
+			FileInputStream fis = new FileInputStream(uriString);
+			mRingerPlayer.setDataSource(fis.getFD());
 		} catch (IOException e) {
 			Log.e(e, "cannot set ringtone");
 		}
