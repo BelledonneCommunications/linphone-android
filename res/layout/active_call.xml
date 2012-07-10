@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@drawable/sel_call_first"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     
-    <TextView
-        android:id="@+id/contactNameOrNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        android:gravity="left"
-        android:paddingLeft="20dp"
-        android:textColor="@android:color/white"
-        android:textSize="22dp" />
-    
-    <Chronometer
-	    android:id="@+id/callTimer"
+	<LinearLayout
+	    android:id="@+id/row"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
-       	android:paddingRight="20dp"
-       	android:gravity="right"
-	    android:textColor="@android:color/white"
-	    android:textSize="22dp" />
-    
+	    android:layout_height="50dp"
+	    android:background="@drawable/sel_call_first"
+	    android:gravity="center_vertical">
+	    
+	    <TextView
+	        android:id="@+id/contactNameOrNumber"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.3"
+	        android:gravity="left"
+	        android:paddingLeft="20dp"
+	        android:textColor="@android:color/white"
+	        android:textSize="22dp" />
+	    
+	    <Chronometer
+		    android:id="@+id/callTimer"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+	       	android:paddingRight="20dp"
+	       	android:gravity="right"
+		    android:textColor="@android:color/white"
+		    android:textSize="22dp" />
+	    
+	</LinearLayout>
+	
+	<ImageView
+	    android:id="@+id/contactPicture"
+	    android:layout_width="100dp"
+	    android:layout_height="100dp"
+	    android:layout_gravity="center"
+	    android:contentDescription="@string/content_description_contact_picture"
+	    android:paddingBottom="10sp"
+	    android:scaleType="fitCenter"
+	    android:src="@drawable/unknown_small" />
+
 </LinearLayout>

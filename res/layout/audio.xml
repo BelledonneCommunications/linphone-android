@@ -1,38 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent" 
-	android:layout_height="match_parent"
-	android:background="@drawable/numpad_background">
-    
-    <LinearLayout 
+	android:layout_height="match_parent">
+	
+	<LinearLayout 
         android:id="@+id/calls"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentTop="true"
-	    android:gravity="center_vertical"
-		android:orientation="vertical">
-    
-    </LinearLayout>
-    
-	<LinearLayout 
-	    android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/calls"
-		android:orientation="vertical"
-		android:paddingTop="30dip">
-		
-		<ImageView 
-            android:contentDescription="@string/content_description_contact_picture"
-		    android:id="@+id/contactPicture"
-		    android:src="@drawable/unknown_small"
-			android:layout_height="wrap_content" 
-			android:layout_width="wrap_content" 
-			android:layout_gravity="center" 
-			android:scaleType="fitCenter"
-			android:minWidth="128dp" 
-			android:minHeight="128dp"
-			android:paddingBottom="10sp" />
-
-	</LinearLayout>
+	    android:gravity="top"
+		android:background="@drawable/numpad_background"
+		android:orientation="vertical" />
 	
-</RelativeLayout>
+</ScrollView>
