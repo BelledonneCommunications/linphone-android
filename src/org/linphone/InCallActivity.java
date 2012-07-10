@@ -438,15 +438,13 @@ public class InCallActivity extends FragmentActivity implements
 			enableAndRefreshInCallActions();
 		}
 		
-		if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
-			if (audioCallFragment != null) {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						audioCallFragment.refreshCallList(getResources());
-					}
-				});
-			}
+		if (audioCallFragment != null) {
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					audioCallFragment.refreshCallList(getResources());
+				}
+			});
 		}
 	}
 

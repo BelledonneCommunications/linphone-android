@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCoreFactory;
 
 import android.app.Activity;
@@ -69,6 +70,13 @@ public class AudioCallFragment extends Fragment {
 			}
 		} else {
 			contact.setText(lAddress.getDisplayName());
+		}
+		
+		ImageView callState = (ImageView) callView.findViewById(R.id.callStatus);
+		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote) {
+			callState.setImageResource(R.drawable.pause_default);
+		} else {
+			callState.setImageResource(R.drawable.play_default);
 		}
 		
 		ImageView contactPicture = (ImageView) callView.findViewById(R.id.contactPicture);
