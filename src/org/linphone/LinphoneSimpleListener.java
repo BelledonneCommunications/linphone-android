@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore.GlobalState;
@@ -56,6 +57,10 @@ public interface LinphoneSimpleListener {
 	public static interface LinphoneOnAudioChangedListener extends LinphoneSimpleListener {
 		public enum AudioState {EARPIECE, SPEAKER}
 		void onAudioStateChanged(AudioState state);
+	}
+	
+	public static interface LinphoneOnTextReceivedListener extends LinphoneSimpleListener {
+		void onTextReceived(LinphoneAddress from, String message);
 	}
 
 }

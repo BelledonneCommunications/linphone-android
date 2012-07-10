@@ -49,6 +49,7 @@ import java.util.TimerTask;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneOnTextReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -894,7 +895,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private MediaPlayer mRingerPlayer;
 	private Vibrator mVibrator;
 
-	
+	private LinphoneOnTextReceivedListener textReceivedListener;
+	public void setOnTextReceivedListener(LinphoneOnTextReceivedListener listener) {
+		textReceivedListener = listener;
+	}
 
 	public void displayWarning(LinphoneCore lc, String message) {}
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) {}
@@ -904,7 +908,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void newSubscriptionRequest(LinphoneCore lc,LinphoneFriend lf,String url) {}
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {}
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
-			LinphoneAddress from, String message) {}
+			LinphoneAddress from, String message) {
+		if (textReceivedListener != null)
+			textReceivedListener.onTextReceived(from, message);
+	}
 
 
 	public String getLastLcStatusMessage() {
