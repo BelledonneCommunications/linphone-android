@@ -35,6 +35,7 @@
          the emulator. -->
          
     <loadproperties srcFile="local.properties" />
+    <loadproperties srcFile="default.properties" />
     <property file="ant.properties" />
     <loadproperties srcFile="project.properties" />
     <!-- version-tag: custom -->
