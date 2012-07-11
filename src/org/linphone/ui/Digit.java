@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.ui;
 
-import org.linphone.DialerActivity;
+import org.linphone.DialerFragment;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -104,7 +104,7 @@ public class Digit extends Button implements AddressAware {
 				LinphoneCore lc = LinphoneManager.getLc();
 				lc.stopDtmf();
 				mIsDtmfStarted =false;
-				if (lc.isIncall() && !DialerActivity.instance().mVisible) {
+				if (lc.isIncall() && !DialerFragment.instance().mVisible) {
 					lc.sendDtmf(mKeyCode.charAt(0));
 				}
 			}

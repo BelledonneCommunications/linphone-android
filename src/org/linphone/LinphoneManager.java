@@ -49,7 +49,6 @@ import java.util.TimerTask;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
-import org.linphone.LinphoneSimpleListener.LinphoneOnTextReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -199,6 +198,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private static void sRouteAudioToSpeakerHelperHelper(boolean speakerOn) {
 		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
 	}
+	@SuppressWarnings("deprecation")
 	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
 		boolean different = isSpeakerOn() ^ speakerOn;
 		if (!different) {
@@ -295,8 +295,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return getInstance().mLc;
 	}
 
-
-	
+	@SuppressWarnings("deprecation")
 	public boolean isSpeakerOn() {
 		if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
 			return mAudioManager.getRouting(MODE_NORMAL) == ROUTE_SPEAKER;
@@ -895,11 +894,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private MediaPlayer mRingerPlayer;
 	private Vibrator mVibrator;
 
-	private LinphoneOnTextReceivedListener textReceivedListener;
-	public void setOnTextReceivedListener(LinphoneOnTextReceivedListener listener) {
-		textReceivedListener = listener;
-	}
-
 	public void displayWarning(LinphoneCore lc, String message) {}
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) {}
 	public void byeReceived(LinphoneCore lc, String from) {}
@@ -907,10 +901,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void show(LinphoneCore lc) {}
 	public void newSubscriptionRequest(LinphoneCore lc,LinphoneFriend lf,String url) {}
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {}
+	
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneAddress from, String message) {
-		if (textReceivedListener != null)
-			textReceivedListener.onTextReceived(from, message);
+		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
+			((LinphoneActivity) listener).onMessageReceived(from, message);
+		}
 	}
 
 
@@ -1224,13 +1220,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public static String extractIncomingRemoteName(Resources r, LinphoneAddress linphoneAddress) {
-		if (!r.getBoolean(R.bool.show_full_remote_address_on_incoming_call))
-			return extractADisplayName(r, linphoneAddress);
-
-		if (linphoneAddress != null)
-			return linphoneAddress.asStringUriOnly();
-
-		return r.getString(R.string.unknown_incoming_call_name);
+		return extractADisplayName(r, linphoneAddress);
 	}
 
 	public void adjustVolume(int i) {
@@ -1394,6 +1384,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		public void onRegistrationStateChanged(RegistrationState state,
 				String message) {
 			if (serviceListener != null) serviceListener.onRegistrationStateChanged(state, message);
+			for (LinphoneOnRegistrationStateChangedListener listener : getSimpleListeners(LinphoneActivity.class)) {
+				listener.onRegistrationStateChanged(state);
+			}
 		}
 
 		public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {

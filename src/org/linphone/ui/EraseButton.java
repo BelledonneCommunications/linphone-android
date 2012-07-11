@@ -23,9 +23,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.widget.Button;
+import android.widget.ImageView;
 
-public class EraseButton extends Button implements AddressAware, OnClickListener, OnLongClickListener{
+public class EraseButton extends ImageView implements AddressAware, OnClickListener, OnLongClickListener{
 
 	private AddressText address;
 

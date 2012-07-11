@@ -28,15 +28,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
-import org.linphone.core.LinphoneCall.State;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -64,6 +62,20 @@ public final class LinphoneUtils {
 
 	private static boolean preventVolumeBarToDisplay = false;
 
+	public static boolean isSipAddress(String numberOrAddress) {
+		return numberOrAddress != null && numberOrAddress.matches("^(sip:)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+	}
+	
+	public static String getUsernameFromAddress(String address) {
+		if (address.contains("sip:"))
+			address = address.replace("sip:", "");
+		
+		if (address.contains("@"))
+			address = address.split("@")[0];
+		
+		return address;
+	}
+	
 	public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
 		if (!(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)) {
 			return false; // continue
@@ -77,7 +89,7 @@ public final class LinphoneUtils {
 
 	public static boolean onKeyVolumeAdjust(int keyCode) {
 		if (!((keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
-				&& (Hacks.needSoftvolume())|| Build.VERSION.SDK_INT>=15)) {
+				&& (Hacks.needSoftvolume())|| Build.VERSION.SDK_INT >= 15)) {
 			return false; // continue
 		}
 

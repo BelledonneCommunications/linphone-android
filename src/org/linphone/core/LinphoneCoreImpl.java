@@ -24,7 +24,6 @@ import java.io.IOException;
 
 class LinphoneCoreImpl implements LinphoneCore {
 
-	@SuppressWarnings("unused")
 	private final  LinphoneCoreListener mListener; //to make sure to keep a reference on this object
 	private long nativePtr = 0;
 	private native long newLinphoneCore(LinphoneCoreListener listener,String userConfig,String factoryConfig,Object  userdata);
@@ -107,7 +106,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void setMediaEncryption(long nativePtr, int menc);
 	private native boolean isMediaEncryptionMandatory(long nativePtr);
 	private native void setMediaEncryptionMandatory(long nativePtr, boolean yesno);
-	
+	private native void removeCallLog(long nativePtr, long callLogPtr);
+	private native int getMissedCallsCount(long nativePtr);
+	private native void resetMissedCallsCount(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -703,26 +704,25 @@ class LinphoneCoreImpl implements LinphoneCore {
 	{
 		setCpuCountNative(count);
 	}
-	private native void tunnelSetHttpProxyNative(long nativePtr, String proxy_host, int port, String username, String password);
-	@Override
-	public void tunnelSetHttpProxy(String proxy_host, int port,
-			String username, String password) {
-		tunnelSetHttpProxyNative(nativePtr,proxy_host, port, username, password);
-	}
-
-	private native void removeCallLog(long nativePtr, LinphoneCallLog log);
-	public void removeCallLog(LinphoneCallLog log) {
-		removeCallLog(nativePtr, log);
-	}
-
-	private native int getMissedCallsCount(long nativePtr);
+	
 	public int getMissedCallsCount() {
 		return getMissedCallsCount(nativePtr);
 	}
+	
+	public void removeCallLog(LinphoneCallLog log) {
+		removeCallLog(nativePtr, ((LinphoneCallLogImpl) log).getNativePtr());
+	}
 
-	private native void resetMissedCallsCount(long nativePtr);
 	public void resetMissedCallsCount() {
 		resetMissedCallsCount(nativePtr);
+	}
+	
+	private native void tunnelSetHttpProxy(long nativePtr, String proxy_host, int port,
+			String username, String password);
+	@Override
+	public void tunnelSetHttpProxy(String proxy_host, int port,
+			String username, String password) {
+		tunnelSetHttpProxy(nativePtr, proxy_host, port, username, password);
 	}
 	
 	private native void refreshRegisters(long nativePtr);

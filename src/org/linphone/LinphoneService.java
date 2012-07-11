@@ -98,11 +98,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	private final static int NOTIF_ID=1;
 	private final static int INCALL_NOTIF_ID=2;
-	private final static int CUSTOM_NOTIF_ID=3;
+	private final static int MESSAGE_NOTIF_ID=3;
+	private final static int CUSTOM_NOTIF_ID=4;
 
 	private Notification mNotif;
 	private Notification mIncallNotif;
 	private Notification mMsgNotif;
+	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 
@@ -141,7 +143,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
 
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
-		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
 
 		LinphoneManager.createAndStart(this, this);
@@ -253,6 +255,47 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
 		
 		notifyWrapper(CUSTOM_NOTIF_ID, mMsgNotif);
+	}
+	
+	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
+		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		notifIntent.putExtra("GoToChat", true);
+		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
+		
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		if (fromName == null) {
+			fromName = fromSipUri;
+		}
+		
+		if (mMsgNotif == null) {
+			mMsgNotifCount = 1;
+			mMsgNotif = new Notification();
+			
+			mMsgNotif.icon = R.drawable.chat_icon_over;
+			mMsgNotif.iconLevel = 0;
+			mMsgNotif.when = System.currentTimeMillis();
+			mMsgNotif.flags &= Notification.FLAG_ONGOING_EVENT;
+			
+			mMsgNotif.defaults |= Notification.DEFAULT_VIBRATE;
+			mMsgNotif.defaults |= Notification.DEFAULT_SOUND;
+			mMsgNotif.defaults |= Notification.DEFAULT_LIGHTS;
+			
+			String title = "New message from %s :".replace("%s", fromName);
+			mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
+		} else {
+			mMsgNotifCount++;
+			mMsgNotif.when = System.currentTimeMillis();
+			
+			String title = mMsgNotifCount + " new messages from %s".replace("%s", fromName);
+			mMsgNotif.setLatestEventInfo(this, title, "", notifContentIntent);
+		}
+		
+		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+	}
+	
+	public void removeMessageNotification() {
+		mNM.cancel(MESSAGE_NOTIF_ID);
 	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
@@ -399,17 +442,18 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
+	    mNM.cancel(MESSAGE_NOTIF_ID);
 	    mWifiLock.release();
 		super.onDestroy();
 	}
 
 	
 	private static final LinphoneGuiListener guiListener() {
-		return DialerActivity.instance();
+		return null;
 	}
 
 	private static final LinphoneOnCallStateChangedListener incallListener() {
-		return IncallActivity.instance();
+		return InCallActivity.instance();
 	}
 	
 	
@@ -455,14 +499,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
 		}
 
-		if (state == RegistrationState.RegistrationOk || state == RegistrationState.RegistrationFailed) {
-			mHandler.post(new Runnable() {
-				public void run() {
-					if (LinphoneActivity.isInstanciated())
-							LinphoneActivity.instance().onRegistrationStateChanged(state, message);
+		mHandler.post(new Runnable() {
+			public void run() {
+				if (LinphoneActivity.isInstanciated()) {
+					LinphoneActivity.instance().onRegistrationStateChanged(state, message);
 				}
-			});
-		}
+			}
+		});
 	}
 	
 	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {

@@ -59,8 +59,11 @@ public interface LinphoneSimpleListener {
 		void onAudioStateChanged(AudioState state);
 	}
 	
-	public static interface LinphoneOnTextReceivedListener extends LinphoneSimpleListener {
-		void onTextReceived(LinphoneAddress from, String message);
+	public static interface LinphoneOnMessageReceivedListener extends LinphoneSimpleListener {
+		void onMessageReceived(LinphoneAddress from, String message);
 	}
 
+	public static interface LinphoneOnRegistrationStateChangedListener extends LinphoneSimpleListener {
+		void onRegistrationStateChanged(RegistrationState state);
+	}
 }

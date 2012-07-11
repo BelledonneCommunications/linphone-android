@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="0.87"
+	    android:orientation="horizontal">
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_all_contacts"
+            android:id="@+id/allContacts"
+            android:src="@drawable/all_contacts"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1"/>
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_linphone_contacts"
+            android:id="@+id/linphoneContacts"
+            android:src="@drawable/linphone_contacts"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1"/>
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_add_contact"
+            android:id="@+id/newContact"
+            android:src="@drawable/new_contact"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1"/>
+        
+    </LinearLayout>
+    
+    <ListView 
+        android:id="@+id/contactsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/darker_gray"
+	    android:layout_weight="0.13"
+	    android:scrollingCache="false"
+        android:dividerHeight="1dp" />
+
+</LinearLayout>

@@ -18,22 +18,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
+import org.linphone.ui.AddressText;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract.Contacts;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 public final class ContactHelper {
-
 	private String username;
 	private String domain;
 	private ContentResolver resolver;
-
 
 	private Uri foundPhotoUri;
 	public Uri getUri() {
@@ -55,7 +57,7 @@ public final class ContactHelper {
 
 	public boolean query() {
 		boolean succeeded;
-		if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			ContactHelperNew helper = new ContactHelperNew();
 			succeeded = helper.queryNewContactAPI();
 		} else {
@@ -67,7 +69,17 @@ public final class ContactHelper {
 		return succeeded;
 	}
 
-
+	public static Intent prepareAddContactIntent(AddressText address) {
+		return Compatibility.prepareAddContactIntent(address.getDisplayedName(), address.getText().toString());
+	}
+	
+	public static Intent prepareEditContactIntent(int id) {
+		Intent intent = new Intent(Intent.ACTION_EDIT, Contacts.CONTENT_URI);
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
+		intent.setData(contactUri);
+		
+		return intent;
+	}
 
 	public static boolean testPhotoUri(Cursor c) {
 		if (c == null) return false;
@@ -95,7 +107,6 @@ public final class ContactHelper {
     	Cursor cursor = resolver.query(photoUriToTest, new String[]{photoCol}, null, null, null);
     	return testPhotoUriAndCloseCursor(cursor);
     }
-
 
 	// OLD API
 	@SuppressWarnings("deprecation")
@@ -128,22 +139,10 @@ public final class ContactHelper {
 
 	// END OLD API
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// START NEW CONTACT API
 
 	private class ContactHelperNew {
-		
-		
-		
+
 		private final boolean checkPhotosUris(ContentResolver resolver, Cursor c, String idCol, String nameCol) {
 			if (c == null) return false;
 			while (c.moveToNext()) {
@@ -175,6 +174,24 @@ public final class ContactHelper {
 			String[] projection = {
 					android.provider.ContactsContract.Data.CONTACT_ID,
 					android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+
+			// Then using custom SIP field
+			if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+				String selection = new StringBuilder()
+					.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
+					.append(" = ? AND ")
+					.append(android.provider.ContactsContract.Data.MIMETYPE)
+					.append(" = '")
+					.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
+					.append("'")
+					.toString();
+				Cursor c = resolver.query(uri, projection, selection, new String[] {sipUri}, null);
+				boolean valid = checkPhotosUris(resolver, c,
+						android.provider.ContactsContract.Data.CONTACT_ID,
+						android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+				if (valid) return true;
+			}
+			
 			String selection = new StringBuilder()
 				.append(android.provider.ContactsContract.CommonDataKinds.Im.DATA).append(" =  ? AND ")
 				.append(android.provider.ContactsContract.Data.MIMETYPE)
@@ -188,24 +205,6 @@ public final class ContactHelper {
 					android.provider.ContactsContract.Data.CONTACT_ID,
 					android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
 			if (valid) return true;
-
-
-			// Then using custom SIP field
-			if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-				selection = new StringBuilder()
-					.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
-					.append(" = ? AND ")
-					.append(android.provider.ContactsContract.Data.MIMETYPE)
-					.append(" = '")
-					.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-					.append("'")
-					.toString();
-				c = resolver.query(uri, projection, selection, new String[] {sipUri}, null);
-				valid = checkPhotosUris(resolver, c,
-						android.provider.ContactsContract.Data.CONTACT_ID,
-						android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-				if (valid) return true;
-			}
 
 			// Finally using phone number
 			String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
@@ -244,14 +243,5 @@ public final class ContactHelper {
 			c.close();
 			return false;
 		}
-
-
 	}
-	
-	
-	
-	
-	
-	
-	
 }

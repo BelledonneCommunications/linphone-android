@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+	<LinearLayout
+	    android:id="@+id/row"
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp"
+	    android:background="@drawable/sel_call_first"
+	    android:gravity="center_vertical">
+	    
+	    <TextView
+	        android:id="@+id/contactNameOrNumber"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.4"
+	        android:gravity="center_vertical|left"
+	        android:paddingLeft="20dp"
+	        android:textColor="@android:color/white"
+	        android:textSize="22dp" />
+	    
+	    <ImageView
+	        android:id="@+id/callStatus"
+	        android:layout_width="35dp"
+	        android:layout_height="35dp"
+	        android:gravity="center_vertical"
+	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp"
+	        android:scaleType="fitCenter"
+	        android:src="@drawable/pause_default" />
+	    
+	    <Chronometer
+		    android:id="@+id/callTimer"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+	       	android:paddingRight="20dp"
+	       	android:gravity="center_vertical|right"
+		    android:textColor="@android:color/white"
+		    android:textSize="22dp" />
+	    
+	</LinearLayout>
+	
+	<ImageView
+	    android:id="@+id/contactPicture"
+	    android:layout_width="100dp"
+	    android:layout_height="100dp"
+	    android:layout_gravity="center"
+	    android:contentDescription="@string/content_description_contact_picture"
+	    android:paddingBottom="10sp"
+	    android:scaleType="fitCenter"
+	    android:src="@drawable/unknown_small" />
+
+</LinearLayout>

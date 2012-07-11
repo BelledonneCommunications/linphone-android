@@ -26,14 +26,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
  * @author Guillaume Beraudo
- *
  */
-public class CallButton extends ImageButton implements OnClickListener, AddressAware {
+public class CallButton extends ImageView implements OnClickListener, AddressAware {
 
 	private AddressText mAddress;
 	public void setAddressWidget(AddressText a) {mAddress = a;}
@@ -49,7 +48,7 @@ public class CallButton extends ImageButton implements OnClickListener, AddressA
 	public void onClick(View v) {
 		try {
 			if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
-				if (mAddress.getText().length() >0) { 
+				if (mAddress.getText().length() > 0) { 
 					LinphoneManager.getInstance().newOutgoingCall(mAddress);
 				}
 			}

@@ -241,13 +241,6 @@
 
 <string name="pref_wifi_only">Use wifi only</string>
 
-<string name="wizard_username_hint">Username</string>
-<string name="wizard_password_hint">Password</string>
-<string name="wizard_password_confirm_hint">Confirmation</string>
-<string name="wizard_email_hint">Email</string>
-<string name="wizard_title">Account Wizard</string>
-<string name="wizard_create_account">Create Account</string>
-<string name="wizard_cancel">Cancel</string>
 <string name="wizard_failed">An error occurred, try again later.</string>
 <string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
 <string name="wizard_username_unavailable">This username is already in use.</string>
@@ -255,12 +248,68 @@
 <string name="wizard_email_incorrect">Your email is not valid.</string>
 <string name="wizard_password_incorrect">Your password is not valid (6 characters min).</string>
 <string name="wizard_passwords_unmatched">Passwords entered are different.</string>
-<string name="wizard_need_activation">You need to activate your account with the link that was send to your email.</string>
-<string name="wizard_confirmation">Confirmation</string>
-<string name="wizard_verify_account">Check</string>
 
 <string name="pref_help_proxy">SIP proxy hostname or ip address (optional)</string>
 <string name="pref_help_outbound_proxy">Route all calls through SIP proxy</string>
 <string name="pref_help_username">Example: john if your account is john@sip.linphone.org</string>
 <string name="pref_help_domain">sip.linphone.org if your account is john@sip.linphone.org</string>
+
+<string name="chat">Chat</string>
+<string name="add_to_contacts">Add to contacts</string>
+<string name="status_connected">CONNECTED</string>
+<string name="status_not_connected">NOT CONNECTED</string>
+
+<!-- Used by Android to help blind people by describing them images -->
+<string name="content_description_add_contact">Add to contacts button</string>
+<string name="content_description_chat"></string>
+<string name="content_description_dial_back"></string>
+<string name="content_description_contact_picture"></string>
+<string name="content_description_send_message"></string>
+<string name="content_description_detail"></string>
+<string name="content_description_delete"></string>
+<string name="content_description_new_discussion"></string>
+<string name="content_description_edit"></string>
+<string name="content_description_validate"></string>
+<string name="content_description_all_contacts"></string>
+<string name="content_description_linphone_contacts"></string>
+<string name="content_description_call_direction"></string>
+<string name="content_description_all_calls"></string>
+<string name="content_description_missed_calls"></string>
+<string name="content_description_switch_video"></string>
+<string name="content_description_toggle_speaker"></string>
+<string name="content_description_toggle_micro"></string>
+<string name="content_description_add_call"></string>
+<string name="content_description_pause"></string>
+<string name="content_description_hang_up"></string>
+<string name="content_description_numpad"></string>
+<string name="content_description_settings"></string>
+<string name="content_description_dialer"></string>
+<string name="content_description_history"></string>
+<string name="content_description_contacts"></string>
+<string name="content_description_led"></string>
+<string name="content_description_call_quality"></string>
+<string name="content_description_encryption"></string>
+<string name="content_description_switch_camera"></string>
+<string name="content_description_welcome"></string>
+<string name="content_description_cancel"></string>
+<string name="content_description_next"></string>
+<string name="content_description_back"></string>
+
+<string name="setup_title">Account Setup Assistant</string>
+<string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>
+<string name="setup_create_account">Create an account on linphone.org</string>
+<string name="setup_login_linphone">I already have a linphone.org account</string>
+<string name="setup_login_generic">I already have a SIP account</string>
+<string name="setup_linphone_account_hint">Enter your linphone.org username and password</string>
+<string name="setup_apply">Apply</string>
+<string name="setup_username_hint">username</string>
+<string name="setup_password_hint">password</string>
+<string name="setup_domain_hint">domain</string>
+<string name="setup_password_confirm_hint">confirm password</string>
+<string name="setup_email_hint">email</string>
+<string name="setup_create">Create Account</string>
+<string name="setup_validate_account">An email has been sent to the address you gave. In order to activate your account, you need to click on the link inside it. Once it is done, come back here and click on the button above.</string>
+<string name="setup_check_account_validation">Check</string>
+<string name="setup_account_not_validated">Your account has not been validated yet.</string>
+<string name="setup_account_validated">Your account has been validated.</string>
 </resources>

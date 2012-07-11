@@ -3,14 +3,10 @@
     <style name="DialerDigit" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:background">@drawable/clavier_bg</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/transparent</item>
         <item name="android:textSize">20sp</item>
         <item name="android:layout_weight">1</item>
     </style>
-
-
 
 	<declare-styleable name="Numpad">
 		<attr name="play_dtmf">

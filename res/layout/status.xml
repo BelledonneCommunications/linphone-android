@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    
+    <TextView 
+        android:id="@+id/statusText" 
+        android:text="@string/status_not_connected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
+    <ImageView 
+        android:contentDescription="@string/content_description_led"
+        android:id="@+id/statusLed"
+        android:paddingLeft="5dp"
+        android:src="@drawable/led_disconnected"
+        android:layout_toRightOf="@id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
+    <ImageView
+        android:contentDescription="@string/content_description_call_quality"
+        android:id="@+id/callQuality"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:src="@drawable/call_quality_indicator_0" 
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+    
+    <ImageView
+        android:contentDescription="@string/content_description_encryption"
+        android:id="@+id/encryption"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:src="@drawable/security_pending" 
+        android:visibility="gone"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

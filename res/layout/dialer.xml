@@ -1,125 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@drawable/background"
+    android:orientation="vertical" >
     
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:linphone="http://schemas.android.com/apk/res/linphone"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-
-	<LinearLayout android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:id="@+id/Addresslayout">
-		
-		<org.linphone.ui.AddressText android:id="@+id/SipUri" android:background="@drawable/clavier_bg_grey" android:hint="sip:" android:layout_width="fill_parent"
-			android:singleLine="true"  android:lines="1" android:layout_weight="0.2" android:layout_height="fill_parent" android:padding="10px" android:maxLines="1" android:editable="@bool/allow_edit_in_dialer"/>
-		
-		<org.linphone.ui.EraseButton android:layout_height="fill_parent" android:background="@drawable/clavier_bg" android:id="@+id/Erase"
-			android:layout_width="fill_parent" android:layout_weight="0.8" android:textSize="20sp"
-			android:textStyle="bold" android:text="&lt;" android:layout_gravity="top" android:textColor="@android:color/black"/>
-		
-	</LinearLayout>
-		
-	<FrameLayout
-		android:layout_height="fill_parent" 
-		android:layout_width="fill_parent">
+    <org.linphone.ui.AddressText
+        android:id="@+id/Adress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@android:color/white"
+        android:textSize="22dp"
+        android:background="@drawable/dialer_address_background"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_weight="0.4"
+       	android:layout_gravity="center" />
 	
-	    <LinearLayout
-			android:orientation="vertical" 
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:layout_marginBottom="23sp">
-			
-			<org.linphone.ui.Numpad 
-			    android:id="@+id/Dialer" 
-			    android:layout_width="fill_parent" 
-			    android:layout_height="fill_parent" 
-			    android:layout_weight="0.2" />
-		
-			<LinearLayout 
-			    android:layout_height="fill_parent" 
-			    android:orientation="vertical" 
-			    android:layout_width="fill_parent" 
-			    android:layout_weight="1">
-			    
-				<org.linphone.ui.CallButton 
-				    android:id="@+id/Call" 
-				    android:layout_height="fill_parent" 
-				    android:layout_width="fill_parent" 
-				    android:src="@drawable/startcall_green" 
-				    android:background="@drawable/clavier_bg" />
-				
-				<LinearLayout
-				    android:id="@+id/InCallControls"
-					android:layout_height="fill_parent" 
-					android:layout_width="fill_parent"
-					android:orientation="horizontal"
-					android:visibility="gone"  >
-					
-	                <Button 
-					    android:id="@+id/AddCall"
-					    style="@style/DialerDigit"
-						android:layout_height="fill_parent" 
-						android:layout_width="fill_parent" 
-						android:layout_weight="1" 
-						android:text="@string/AddCallButtonText" />
-	                
-					<Button 
-					    android:id="@+id/Back"
-					    style="@style/DialerDigit"
-						android:layout_height="fill_parent" 
-						android:layout_width="fill_parent" 
-						android:layout_weight="1" 
-						android:text="@string/CancelButtonText" />
-					
-				</LinearLayout>
-				
-			</LinearLayout>
-			
-		</LinearLayout>
-	
-		<org.linphone.ui.LockableSlidingDrawer
-			android:id="@+id/drawer"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:handle="@+id/handle"
-			android:layout_weight="1"
-			android:content="@+id/accounts">
-			
-		    <LinearLayout
-		        android:id="@id/handle"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:background="#000000"
-				android:gravity="center_vertical">
-		        
-		        <EditText 
-				    android:id="@+id/status_label" 
-				    android:clickable="false" 
-				    android:focusable="false" 
-				    android:cursorVisible="false" 
-				    android:textSize="12sp" 
-					android:background="#000000"
-				    android:layout_height="wrap_content" 
-				    android:layout_width="fill_parent" 
-				    android:layout_weight="4"
-				    android:textColor="@android:color/white" />
-		        
-		        <ImageView
-				    android:layout_height="wrap_content" 
-				    android:layout_width="fill_parent"
-				    android:layout_weight="100"
-				    android:src="@drawable/conf_details"/>
-		        
-		    </LinearLayout>
-			
-			<ListView
-				android:id="@id/accounts"
-				android:background="#CC000000"
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent" />
-			
-		</org.linphone.ui.LockableSlidingDrawer>
-	
-	</FrameLayout>
+    <org.linphone.ui.Numpad 
+	    android:id="@+id/Dialer" 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4" >
+        
+        <ImageView
+            android:contentDescription="@string/content_description_add_contact"
+            android:id="@+id/addContact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/add_contact" />
+        
+        <org.linphone.ui.CallButton
+            android:id="@+id/Call"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/call" />
+        
+        <org.linphone.ui.EraseButton
+            android:id="@+id/Erase"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/backspace" />
+        
+    </LinearLayout>
 	
 </LinearLayout>
