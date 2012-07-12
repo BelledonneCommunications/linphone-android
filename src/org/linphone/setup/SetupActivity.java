@@ -210,8 +210,19 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void isAccountVerified() {
-		next.setEnabled(true);
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
+		
+		LinphoneManager.getInstance().initializePayloads();
+
+		try {
+			LinphoneManager.getInstance().initFromConf();
+		} catch (Throwable e) {
+			Log.e(e, "Error while initializing from config in first login activity");
+			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
+		}
+		
+		writePreference(R.string.first_launch_suceeded_once_key, true);
+		finish();
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
