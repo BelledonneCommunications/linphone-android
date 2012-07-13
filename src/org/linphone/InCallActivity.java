@@ -18,7 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
@@ -28,8 +30,10 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -39,6 +43,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -62,6 +67,7 @@ public class InCallActivity extends FragmentActivity implements
 	private VideoCallFragment videoCallFragment;
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled = false;
 	private LinearLayout mControlsLayout;
+	private Set<Chronometer> mChronometers = new HashSet<Chronometer>();
 	
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -147,11 +153,15 @@ public class InCallActivity extends FragmentActivity implements
 				addCall.setEnabled(true);
 				pause.setEnabled(true);
 				dialer.setEnabled(true);
-				
-				if (isVideoEnabled) {
-		        	video.setImageResource(R.drawable.video_on);
+
+				if (!isVideoActivatedInSettings()) {
+					video.setEnabled(false);
 				} else {
-					video.setImageResource(R.drawable.video_off);
+					if (isVideoEnabled) {
+			        	video.setImageResource(R.drawable.video_on);
+					} else {
+						video.setImageResource(R.drawable.video_off);
+					}
 				}
 				
 				if (isSpeakerEnabled) {
@@ -171,6 +181,12 @@ public class InCallActivity extends FragmentActivity implements
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
 		status = statusFragment;
+	}
+	
+	private boolean isVideoActivatedInSettings() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean settingsVideoEnabled = prefs.getBoolean(getString(R.string.pref_video), false);
+		return settingsVideoEnabled;
 	}
 
 	@Override

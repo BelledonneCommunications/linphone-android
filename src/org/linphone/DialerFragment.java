@@ -124,6 +124,7 @@ public class DialerFragment extends Fragment {
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
 			mCall.setImageResource(R.drawable.call);
+			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.add_contact);
 			mAddContact.setOnClickListener(addContactListener);
 		}

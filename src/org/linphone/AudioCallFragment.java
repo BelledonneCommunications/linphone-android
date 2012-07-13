@@ -26,10 +26,12 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -92,6 +94,23 @@ public class AudioCallFragment extends Fragment {
     	} else {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call);
     	}
+		
+		registerCallDurationTimer(callView, call);
+	}
+	
+	private void registerCallDurationTimer(View v, LinphoneCall call) {
+		int callDuration = call.getDuration();
+		if (callDuration == 0 && call.getState() != State.StreamsRunning) {
+			return;
+		}
+		
+		Chronometer timer = (Chronometer) v.findViewById(R.id.callTimer);
+		if (timer == null) {
+			throw new IllegalArgumentException("no callee_duration view found");
+		}
+		
+		timer.setBase(SystemClock.elapsedRealtime() - 1000 * callDuration);
+		timer.start();
 	}
 
 	@Override
@@ -119,6 +138,10 @@ public class AudioCallFragment extends Fragment {
 	}
 	
 	public void refreshCallList(Resources resources) {
+		if (callsList == null) {
+			return;
+		}
+
 		callsList.removeAllViews();
 		int callsNb = LinphoneManager.getLc().getCallsNb();
 		int index = 0;
