@@ -74,7 +74,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private static final int callActivity = 19;
 	private static LinphoneActivity instance;
 	private StatusFragment statusFragment;
-	private TextView missedCalls;
+	private TextView missedCalls, missedChats;
 	private ImageView history, contacts, dialer, settings, chat;
 	private FragmentsAvailable currentFragment;
 	private Fragment dialerFragment, messageListenerFragment;
@@ -148,6 +148,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
         chat = (ImageView) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 		missedCalls = (TextView) findViewById(R.id.missedCalls);
+		missedChats = (TextView) findViewById(R.id.missedChats);
 	}
 	
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
@@ -275,6 +276,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			extras.putString("DisplayName", lAddress.getDisplayName());
 			extras.putString("PictureUri", uri.toString());
 		}
+		
+		LinphoneService.instance().resetMessageNotifCount();
+		displayMissedChats(0);
 		changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 	}
 
@@ -415,6 +419,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		if (LinphoneService.isReady()) {
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
 			LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
+			displayMissedChats(LinphoneService.instance().getMessageNotifCount());
 		}
 	}
 	
@@ -441,10 +446,30 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				if (missedCallsCount > 0) {
 					missedCalls.setText(missedCallsCount + "");
 					missedCalls.setVisibility(View.VISIBLE);
-					missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
+					if (!getResources().getBoolean(R.bool.disable_animations)) {
+						missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
+					}
 				} else {
 					missedCalls.clearAnimation();
 					missedCalls.setVisibility(View.GONE);
+				}
+			}
+		});
+	}
+	
+	private void displayMissedChats(final int missedChatCount) {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (missedChatCount > 0) {
+					missedChats.setText(missedChatCount + "");
+					missedChats.setVisibility(View.VISIBLE);
+					if (!getResources().getBoolean(R.bool.disable_animations)) {
+						missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
+					}
+				} else {
+					missedChats.clearAnimation();
+					missedChats.setVisibility(View.GONE);
 				}
 			}
 		});

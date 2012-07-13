@@ -48,7 +48,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
@@ -115,8 +114,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private static final int IC_LEVEL_OFFLINE=3;
 
 	
+	public int getMessageNotifCount() {
+		return mMsgNotifCount;
+	}
 	
-	
+	public void resetMessageNotifCount() {
+		mMsgNotifCount = 0;
+	}
 
 	@Override
 	public void onCreate() {

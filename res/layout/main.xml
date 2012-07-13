@@ -91,14 +91,32 @@
 			        android:scaleType="fitXY"
 			        android:src="@drawable/settings" />
 		
-				<ImageView
-            		android:contentDescription="@string/content_description_chat"
-				    android:id="@+id/chat"
+			    <RelativeLayout
 				    android:layout_width="match_parent"
-				    android:layout_height="match_parent"
-				    android:layout_weight="0.2"
-				    android:scaleType="fitXY"
-				    android:src="@drawable/chat" />
+				    android:layout_height="wrap_content"
+			        android:layout_weight="0.2">
+			        
+					<ImageView
+	            		android:contentDescription="@string/content_description_chat"
+					    android:id="@+id/chat"
+					    android:layout_width="match_parent"
+					    android:layout_height="match_parent"
+					    android:layout_weight="0.2"
+					    android:scaleType="fitXY"
+					    android:src="@drawable/chat" />
+				    
+				    <TextView 
+				        android:id="@+id/missedChats"
+				        android:layout_width="25dp"
+				        android:layout_height="25dp"
+				        android:gravity="center"
+				        android:textSize="20dp"
+				        android:visibility="gone"
+				        android:layout_alignParentTop="true"
+				        android:layout_alignParentRight="true"
+				        android:background="@drawable/missed_calls_bg" />
+			    
+			    </RelativeLayout>
 			    
 			</LinearLayout>
 		
