@@ -57,6 +57,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -440,7 +441,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				if (missedCallsCount > 0) {
 					missedCalls.setText(missedCallsCount + "");
 					missedCalls.setVisibility(View.VISIBLE);
+					missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
 				} else {
+					missedCalls.clearAnimation();
 					missedCalls.setVisibility(View.GONE);
 				}
 			}
