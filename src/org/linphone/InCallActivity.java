@@ -18,9 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
@@ -43,11 +41,9 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-//FIXME : Chronometer for calls
 /**
  * @author Sylvain Berfini
  */
@@ -67,7 +63,6 @@ public class InCallActivity extends FragmentActivity implements
 	private VideoCallFragment videoCallFragment;
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled = false;
 	private LinearLayout mControlsLayout;
-	private Set<Chronometer> mChronometers = new HashSet<Chronometer>();
 	
 	static final boolean isInstanciated() {
 		return instance != null;

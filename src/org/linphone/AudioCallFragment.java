@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,9 +42,12 @@ import android.widget.TextView;
  */
 public class AudioCallFragment extends Fragment {
 	private static AudioCallFragment instance;
-	private LinearLayout callsList;
+	private FrameLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
+	private static final int rowHeight = 75; // Value set in active_call.xml
+	private static final int rowThickRatio = 85; // Ratio dependent from the image
+	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -53,12 +57,12 @@ public class AudioCallFragment extends Fragment {
 		this.container = container;
 		
         View view = inflater.inflate(R.layout.audio, container, false);
-        callsList = (LinearLayout) view.findViewById(R.id.calls);
+        callsList = (FrameLayout) view.findViewById(R.id.calls);
         
         return view;
     }
 	
-	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call, boolean first, boolean hide) {
+	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call, int index, boolean hide) {
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
         LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
         Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, callView.getContext().getContentResolver());
@@ -88,11 +92,12 @@ public class AudioCallFragment extends Fragment {
 		if (hide) {
 			contactPicture.setVisibility(View.GONE);
 		}
-		
-		if (first) {
+
+		if (index == 0) {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call_first);
     	} else {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call);
+    		callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMargin * index), 0, 0);
     	}
 		
 		registerCallDurationTimer(callView, call);
@@ -148,7 +153,7 @@ public class AudioCallFragment extends Fragment {
 		
         for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
         	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call, container, false);
-        	displayCall(resources, callView, call, index == 0, index != callsNb - 1);
+        	displayCall(resources, callView, call, index, index != callsNb - 1);
         	callsList.addView(callView);
         	index++;
         }
