@@ -95,6 +95,12 @@ public class StatusFragment extends Fragment {
 					if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 						statusLed.setImageResource(R.drawable.led_connected);
 						statusText.setText(getString(R.string.status_connected));
+					} else if (state == RegistrationState.RegistrationProgress) {
+						statusLed.setImageResource(R.drawable.led_inprogress);
+						statusText.setText(getString(R.string.status_in_progress));
+					} else if (state == RegistrationState.RegistrationFailed) {
+						statusLed.setImageResource(R.drawable.led_error);
+						statusText.setText(getString(R.string.status_error));
 					} else {
 						statusLed.setImageResource(R.drawable.led_disconnected);
 						statusText.setText(getString(R.string.status_not_connected));

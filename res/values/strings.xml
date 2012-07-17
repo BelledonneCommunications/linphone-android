@@ -258,6 +258,8 @@
 <string name="add_to_contacts">Add to contacts</string>
 <string name="status_connected">CONNECTED</string>
 <string name="status_not_connected">NOT CONNECTED</string>
+<string name="status_in_progress">CONNECTING</string>
+<string name="status_error">ERROR</string>
 
 <!-- Used by Android to help blind people by describing them images -->
 <string name="content_description_add_contact">Add to contacts button</string>
