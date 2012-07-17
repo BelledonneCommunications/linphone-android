@@ -152,6 +152,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
+		changeCurrentFragment(newFragmentType, extras, false);
+	}
+	
+	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {
 		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
 			return;
 		}
@@ -195,15 +199,15 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		if (newFragment != null) {
 			newFragment.setArguments(extras);
-			changeFragment(newFragment, newFragmentType);
+			changeFragment(newFragment, newFragmentType, withoutAnimation);
 		}
 	}
 	
-	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType) {
+	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
 		if (currentFragment.shouldAddToBackStack()) {
-			if (!getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
+			if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
 				if (newFragmentType.isRightOf(currentFragment)) {
 					transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 				} else {
@@ -583,7 +587,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			} else {
 				FragmentsAvailable newFragment = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
-				changeCurrentFragment(newFragment, null);
+				changeCurrentFragment(newFragment, null, true);
 				selectMenu(newFragment);
 			}
 		}
