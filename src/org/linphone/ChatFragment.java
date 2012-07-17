@@ -29,7 +29,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -102,6 +105,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 		return view;
     }
 	
+	private void invalidate() {
+		messagesLayout.removeAllViews();		
+		List<ChatMessage> messagesList = LinphoneActivity.instance().getChatMessages(sipUri);
+		
+		previousMessageID = -1;
+        for (ChatMessage msg : messagesList) {
+        	displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), messagesLayout);
+        }
+        
+        scrollToEnd();
+	}
+	
 	private void displayMessage(final int id, final String message, final String time, final boolean isIncoming, final RelativeLayout layout) {
 		mHandler.post(new Runnable() {
 			@Override
@@ -109,8 +124,22 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 				BubbleChat bubble = new BubbleChat(layout.getContext(), id, message, time, isIncoming, previousMessageID);
 				previousMessageID = id;
 				layout.addView(bubble.getView());
+				registerForContextMenu(bubble.getView());
 			}
 		});
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, v.getId(), 0, getString(R.string.delete));
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		LinphoneActivity.instance().deleteMessage(item.getItemId());
+		invalidate();
+		return true;
 	}
 	
 	@Override

@@ -31,11 +31,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -60,6 +64,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
         
         historyList = (ListView) view.findViewById(R.id.historyList);
         historyList.setOnItemClickListener(this);
+        registerForContextMenu(historyList);
         
         allCalls = (ImageView) view.findViewById(R.id.allCalls);
         allCalls.setOnClickListener(this);
@@ -83,6 +88,22 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
         historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, v.getId(), 0, getString(R.string.delete));
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		LinphoneCallLog log = mLogs.get(info.position);
+		LinphoneManager.getLc().removeCallLog(log);
+		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+        historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		return true;
 	}
 
 	@Override

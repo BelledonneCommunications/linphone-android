@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.core.Log;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -101,6 +103,11 @@ public class ChatStorage {
 		}
 		
 		return chatList;
+	}
+
+	public void deleteMessage(int id) {
+		db.delete(TABLE_NAME, "id LIKE " + id, null);
+		Log.d("db.delete(TABLE_NAME, \"id LIKE \" + " + id + ", null);");
 	}
 
 	class ChatHelper extends SQLiteOpenHelper {

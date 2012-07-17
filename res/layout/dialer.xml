@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
   	android:background="@drawable/background"
-    android:orientation="vertical" >
+    android:orientation="vertical">
     
     <org.linphone.ui.AddressText
         android:id="@+id/Adress"
@@ -19,7 +19,7 @@
        	android:layout_gravity="center" />
 	
     <org.linphone.ui.Numpad 
-	    android:id="@+id/Dialer" 
+	    android:id="@+id/Dialer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.15" />

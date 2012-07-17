@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.ui;
 
-import org.linphone.DialerFragment;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -49,7 +48,9 @@ public class Digit extends Button implements AddressAware {
 			int after) {
 		super.onTextChanged(text, start, before, after);
 		
-		if (text == null || text.length() < 1) return;
+		if (text == null || text.length() < 1) {
+			return;
+		}
 
 		DialKeyListener lListener = new DialKeyListener();
 		setOnClickListener(lListener);
@@ -57,11 +58,9 @@ public class Digit extends Button implements AddressAware {
 		
 		if ("0+".equals(text)) {
 			setOnLongClickListener(lListener);
-
 		}
 	}
 	
-
 	public Digit(Context context, AttributeSet attrs, int style) {
 		super(context, attrs, style);
 		setLongClickable(true);
@@ -70,16 +69,12 @@ public class Digit extends Button implements AddressAware {
 	public Digit(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setLongClickable(true);
-
 	}
 
 	public Digit(Context context) {
 		super(context);
 		setLongClickable(true);
 	}
-
-
-
 
 	private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
 		final CharSequence mKeyCode;
@@ -104,7 +99,7 @@ public class Digit extends Button implements AddressAware {
 				LinphoneCore lc = LinphoneManager.getLc();
 				lc.stopDtmf();
 				mIsDtmfStarted =false;
-				if (lc.isIncall() && !DialerFragment.instance().mVisible) {
+				if (lc.isIncall()) {
 					lc.sendDtmf(mKeyCode.charAt(0));
 				}
 			}

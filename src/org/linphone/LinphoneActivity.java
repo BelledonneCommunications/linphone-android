@@ -579,6 +579,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		return currentFragment;
 	}
 	
+	public void deleteMessage(int id) {
+		if (chatStorage == null) {
+			return;
+		}
+		
+		chatStorage.deleteMessage(id);
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {

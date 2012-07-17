@@ -24,11 +24,15 @@ import org.linphone.core.LinphoneCoreFactory;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -53,6 +57,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		View view = inflater.inflate(R.layout.chatlist, container, false);
 		chatList = (ListView) view.findViewById(R.id.chatList);
 		chatList.setOnItemClickListener(this);
+		registerForContextMenu(chatList);
 		
 		edit = (ImageView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
@@ -73,6 +78,23 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		mConversations = LinphoneActivity.instance().getChatList();
 		chatList.setAdapter(new ChatListAdapter());
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, v.getId(), 0, getString(R.string.delete));
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		String sipUri = (String) info.targetView.getTag();
+		
+		LinphoneActivity.instance().removeFromChatList(sipUri);
+		mConversations = LinphoneActivity.instance().getChatList();
+		chatList.setAdapter(new ChatListAdapter());
+		return true;
 	}
 	
 	@Override
