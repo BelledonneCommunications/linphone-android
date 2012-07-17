@@ -214,7 +214,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 					transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 				}
 			}
-			transaction.addToBackStack("Add to back stack");
+			getSupportFragmentManager().popBackStack(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			transaction.addToBackStack(newFragmentType.toString());
 		}
 		else {
 			try {
