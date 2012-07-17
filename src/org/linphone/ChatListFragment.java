@@ -114,7 +114,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			chatList.setAdapter(new ChatListAdapter());
 		}
 		else if (id == R.id.newDiscussion) {
-			//TODO : Create a new conversation
+			LinphoneActivity.instance().displayContacts();
 		}
 	}
 

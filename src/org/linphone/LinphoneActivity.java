@@ -270,6 +270,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(FragmentsAvailable.CONTACT, extras);
 	}
 	
+	public void displayContacts() {
+		changeCurrentFragment(FragmentsAvailable.CONTACTS, null);
+	}
+	
 	public void displayChat(String sipUri) {
 		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
