@@ -22,6 +22,7 @@
 	    
 	    <ImageView
 	        android:id="@+id/switchCamera"
+            android:visibility="gone"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
@@ -62,6 +63,7 @@
 	                
 	            <ImageView 
 	                android:id="@+id/transfer"
+	                android:visibility="gone"
 				    android:layout_width="match_parent"
 				    android:layout_height="75dp"
 				    android:src="@drawable/options_transfer"
@@ -96,6 +98,7 @@
 	                
 	            <ImageView 
 	                android:id="@+id/addCall"
+	                android:visibility="gone"
 				    android:layout_width="match_parent"
 				    android:layout_height="75dp"
 				    android:src="@drawable/options_add_call"

@@ -26,6 +26,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -61,7 +62,7 @@ public class InCallActivity extends FragmentActivity implements
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled = false;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled;
 	private LinearLayout mControlsLayout;
 	
 	static final boolean isInstanciated() {
@@ -77,6 +78,8 @@ public class InCallActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.incall);
         instance = this;      
+        
+        isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
         
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState != null) {
@@ -97,7 +100,10 @@ public class InCallActivity extends FragmentActivity implements
             if (isVideoEnabled) {
             	callFragment = new VideoCallFragment();
             	videoCallFragment = (VideoCallFragment) callFragment;
-        		switchCamera.setVisibility(View.VISIBLE);
+            	
+            	if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+            		switchCamera.setVisibility(View.VISIBLE); 
+            	}
             } else {
             	callFragment = new AudioCallFragment();
             	audioCallFragment = (AudioCallFragment) callFragment;
@@ -188,7 +194,7 @@ public class InCallActivity extends FragmentActivity implements
 	
 	private boolean isVideoActivatedInSettings() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean settingsVideoEnabled = prefs.getBoolean(getString(R.string.pref_video), false);
+		boolean settingsVideoEnabled = prefs.getBoolean(getString(R.string.pref_video_enable_key), false);
 		return settingsVideoEnabled;
 	}
 
@@ -252,10 +258,6 @@ public class InCallActivity extends FragmentActivity implements
 					LinphoneManager.getLc().updateCall(call, params);
 					replaceFragmentVideoByAudio();
 					
-					isSpeakerEnabled = false;
-					LinphoneManager.getInstance().routeAudioToReceiver();
-					speaker.setImageResource(R.drawable.speaker_off);
-					
 					video.setImageResource(R.drawable.video_on);
 					setCallControlsVisibleAndRemoveCallbacks();
 					
@@ -272,7 +274,6 @@ public class InCallActivity extends FragmentActivity implements
 					video.setImageResource(R.drawable.video_off);
 					displayVideoCallControlsIfHidden();
 				}
-				LinphoneManager.getLc().enableSpeaker(true);
 			}
 		});
 	}
@@ -289,7 +290,6 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void replaceFragmentAudioByVideo() {
-		switchCamera.setVisibility(View.VISIBLE);
 		videoCallFragment = new VideoCallFragment();
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -298,6 +298,10 @@ public class InCallActivity extends FragmentActivity implements
 			transaction.commitAllowingStateLoss();
 		} catch (Exception e) {
 		}
+		
+		if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+    		switchCamera.setVisibility(View.VISIBLE);
+    	}
 	}
 	
 	private void toogleMicro() {
@@ -380,13 +384,15 @@ public class InCallActivity extends FragmentActivity implements
 				}
 			}
 			
-			if (mControls != null) {
+			if (controlsHandler != null && mControls != null) {
 				controlsHandler.removeCallbacks(mControls);
 			}
 			
 			controlsHandler.postDelayed(mControls = new Runnable() {
 				public void run() {
 					if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
+						transfer.setVisibility(View.GONE);
+						addCall.setVisibility(View.GONE);
 						mControlsLayout.setVisibility(View.GONE);
 						switchCamera.setVisibility(View.GONE);
 					} else {					
@@ -394,6 +400,7 @@ public class InCallActivity extends FragmentActivity implements
 						animation.setAnimationListener(new AnimationListener() {
 							@Override
 							public void onAnimationStart(Animation animation) {
+								video.setEnabled(false); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
 							}
 							
 							@Override
@@ -402,6 +409,9 @@ public class InCallActivity extends FragmentActivity implements
 							
 							@Override
 							public void onAnimationEnd(Animation animation) {
+								video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
+								transfer.setVisibility(View.GONE);
+								addCall.setVisibility(View.GONE);
 								mControlsLayout.setVisibility(View.GONE);
 								switchCamera.setVisibility(View.GONE);
 							}
@@ -427,8 +437,8 @@ public class InCallActivity extends FragmentActivity implements
 	private void hideOrDisplayCallOptions() {
 		if (addCall.getVisibility() == View.VISIBLE) {
 			if (getResources().getBoolean(R.bool.disable_animations)) {
-				transfer.setVisibility(View.INVISIBLE);
-				addCall.setVisibility(View.INVISIBLE);
+				transfer.setVisibility(View.GONE);
+				addCall.setVisibility(View.GONE);
 			} else {
 				final Animation animAddCall = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
 				animAddCall.setAnimationListener(new AnimationListener() {
@@ -444,7 +454,7 @@ public class InCallActivity extends FragmentActivity implements
 					
 					@Override
 					public void onAnimationEnd(Animation animation) {
-						addCall.setVisibility(View.INVISIBLE);
+						addCall.setVisibility(View.GONE);
 					}
 				});
 				
@@ -462,7 +472,7 @@ public class InCallActivity extends FragmentActivity implements
 					
 					@Override
 					public void onAnimationEnd(Animation animation) {
-						transfer.setVisibility(View.INVISIBLE);
+						transfer.setVisibility(View.GONE);
 						addCall.startAnimation(animAddCall);
 					}
 				});
