@@ -32,7 +32,7 @@
 	    <LinearLayout
 		    android:id="@+id/menu"
 		    android:layout_width="match_parent"
-		    android:layout_height="150dp"
+		    android:layout_height="wrap_content"
 			android:layout_alignParentBottom="true"
 		    android:orientation="vertical">
     
@@ -40,13 +40,81 @@
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:orientation="horizontal"
-	               android:layout_weight="0.5">
+	            android:layout_weight="0.5">
+			    
+	            <View
+	                android:layout_width="match_parent"
+	                android:layout_height="75dp"
+	                android:layout_weight="0.25"
+	                android:visibility="invisible"/>
+	            
+	           <View
+	                android:layout_width="match_parent"
+	                android:layout_height="75dp"
+	                android:layout_weight="0.25"
+	                android:visibility="invisible"/>
+	            
+	            <View
+	                android:layout_width="match_parent"
+	                android:layout_height="75dp"
+	                android:layout_weight="0.25"
+	                android:visibility="invisible"/>
+	                
+	            <ImageView 
+	                android:id="@+id/transfer"
+				    android:layout_width="match_parent"
+				    android:layout_height="75dp"
+				    android:src="@drawable/options_transfer"
+	                android:scaleType="fitXY"
+				    android:layout_weight="0.25" />
+	            
+	    	</LinearLayout>
+	    	
+	        <LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="horizontal"
+	            android:layout_weight="0.5">
+			    
+	            <View
+	                android:layout_width="match_parent"
+	                android:layout_height="75dp"
+	                android:layout_weight="0.25"
+	                android:visibility="invisible"/>
+	            
+	           <View
+	                android:layout_width="match_parent"
+	                android:layout_height="75dp"
+	                android:layout_weight="0.25"
+	                android:visibility="invisible"/>
+	            
+	            <View
+	                android:layout_width="match_parent"
+	                android:layout_height="75dp"
+	                android:layout_weight="0.25"
+	                android:visibility="invisible"/>
+	                
+	            <ImageView 
+	                android:id="@+id/addCall"
+				    android:layout_width="match_parent"
+				    android:layout_height="75dp"
+				    android:src="@drawable/options_add_call"
+	                android:scaleType="fitXY"
+				    android:layout_weight="0.25" />
+	            
+	    	</LinearLayout>
+	    	
+	        <LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="horizontal"
+	            android:layout_weight="0.5">
 			    
 	            <ImageView
             		android:contentDescription="@string/content_description_switch_video"
 	                android:id="@+id/video"
 	                android:layout_width="match_parent"
-	                android:layout_height="match_parent"
+	                android:layout_height="75dp"
 	                android:layout_weight="0.25"
 	                android:scaleType="fitXY"
 	                android:src="@drawable/video_off" />
@@ -55,7 +123,7 @@
             		android:contentDescription="@string/content_description_toggle_micro"
 	                android:id="@+id/micro"
 				    android:layout_width="match_parent"
-				    android:layout_height="match_parent"
+				    android:layout_height="75dp"
 				    android:src="@drawable/micro_on"
 	                android:scaleType="fitXY"
 				    android:layout_weight="0.25"/>
@@ -64,27 +132,26 @@
             		android:contentDescription="@string/content_description_toggle_speaker"
 	                android:id="@+id/speaker"
 				    android:layout_width="match_parent"
-				    android:layout_height="match_parent"
+				    android:layout_height="75dp"
 				    android:src="@drawable/speaker_off"
 	                android:scaleType="fitXY"
 				    android:layout_weight="0.25"/>
-	            
+	                
 	            <ImageView 
-            		android:contentDescription="@string/content_description_add_call"
-	                android:id="@+id/addCall"
+	                android:id="@+id/options"
 				    android:layout_width="match_parent"
-				    android:layout_height="match_parent"
-				    android:src="@drawable/add_call"
+				    android:layout_height="75dp"
+				    android:src="@drawable/options"
 	                android:scaleType="fitXY"
-				    android:layout_weight="0.25"/>
+				    android:layout_weight="0.25" />
 	            
 	    	</LinearLayout>
 	    	
 	        <LinearLayout
 			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
+			    android:layout_height="75dp"
 			    android:orientation="horizontal"
-	               android:layout_weight="0.5">
+	            android:layout_weight="0.5">
 			    
 	            <ImageView 
             		android:contentDescription="@string/content_description_pause"

@@ -57,7 +57,7 @@ public class InCallActivity extends FragmentActivity implements
 	private Handler mHandler = new Handler();
 	private Handler controlsHandler = new Handler();
 	private Runnable mControls;
-	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera;
+	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera, options, transfer;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
@@ -123,6 +123,12 @@ public class InCallActivity extends FragmentActivity implements
 		addCall = (ImageView) findViewById(R.id.addCall);
 		addCall.setOnClickListener(this);
 		addCall.setEnabled(false);
+		transfer = (ImageView) findViewById(R.id.transfer);
+		transfer.setOnClickListener(this);
+		transfer.setEnabled(false);
+		options = (ImageView) findViewById(R.id.options);
+		options.setOnClickListener(this);
+		options.setEnabled(false);
 		pause = (ImageView) findViewById(R.id.pause);
 		pause.setOnClickListener(this);
 		pause.setEnabled(false);
@@ -142,10 +148,12 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
+				options.setEnabled(true);
 				video.setEnabled(true);
 				micro.setEnabled(true);
 				speaker.setEnabled(true);
 				addCall.setEnabled(true);
+				transfer.setEnabled(true);
 				pause.setEnabled(true);
 				dialer.setEnabled(true);
 
@@ -220,6 +228,12 @@ public class InCallActivity extends FragmentActivity implements
 				videoCallFragment.switchCamera();
 			}
 		}
+		else if (id == R.id.transfer) {
+			
+		}
+		else if (id == R.id.options) {
+			hideOrDisplayCallOptions();
+		} 
 	}
 
 	
@@ -408,6 +422,94 @@ public class InCallActivity extends FragmentActivity implements
 		
 		mControlsLayout.setVisibility(View.VISIBLE);
 		switchCamera.setVisibility(View.GONE);
+	}
+	
+	private void hideOrDisplayCallOptions() {
+		if (addCall.getVisibility() == View.VISIBLE) {
+			if (getResources().getBoolean(R.bool.disable_animations)) {
+				transfer.setVisibility(View.INVISIBLE);
+				addCall.setVisibility(View.INVISIBLE);
+			} else {
+				final Animation animAddCall = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
+				animAddCall.setAnimationListener(new AnimationListener() {
+					@Override
+					public void onAnimationStart(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						addCall.setVisibility(View.INVISIBLE);
+					}
+				});
+				
+				Animation animTransfer = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
+				animTransfer.setAnimationListener(new AnimationListener() {
+					@Override
+					public void onAnimationStart(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						transfer.setVisibility(View.INVISIBLE);
+						addCall.startAnimation(animAddCall);
+					}
+				});
+				transfer.startAnimation(animTransfer);
+			}
+		} else {		
+			if (getResources().getBoolean(R.bool.disable_animations)) {
+				transfer.setVisibility(View.VISIBLE);
+				addCall.setVisibility(View.VISIBLE);
+			} else {
+				final Animation animTransfer = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
+				animTransfer.setAnimationListener(new AnimationListener() {
+					@Override
+					public void onAnimationStart(Animation animation) {
+						transfer.setVisibility(View.VISIBLE);
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation animation) {
+					}
+				});
+				
+				Animation animAddCall = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
+				animAddCall.setAnimationListener(new AnimationListener() {
+					@Override
+					public void onAnimationStart(Animation animation) {
+						addCall.setVisibility(View.VISIBLE);
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						transfer.startAnimation(animTransfer);
+					}
+				});
+				addCall.startAnimation(animAddCall);
+			}
+		}
 	}
 	
 	private boolean isCallRunning(LinphoneCall call)

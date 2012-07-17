@@ -32,9 +32,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -42,12 +42,14 @@ import android.widget.TextView;
  */
 public class AudioCallFragment extends Fragment {
 	private static AudioCallFragment instance;
-	private FrameLayout callsList;
+	private RelativeLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
 	private static final int rowHeight = 75; // Value set in active_call.xml
+	private static final int rowImageHeight = 100; // Value set in active_call.xml
 	private static final int rowThickRatio = 85; // Ratio dependent from the image
 	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
+	private static final int topMarginWithImage = topMargin + rowImageHeight;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -57,16 +59,24 @@ public class AudioCallFragment extends Fragment {
 		this.container = container;
 		
         View view = inflater.inflate(R.layout.audio, container, false);
-        callsList = (FrameLayout) view.findViewById(R.id.calls);
+        callsList = (RelativeLayout) view.findViewById(R.id.calls);
         
         return view;
     }
 	
-	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call, int index, boolean hide) {
+	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call, int index) {
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
         LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
         Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, callView.getContext().getContentResolver());
-		
+
+		setContactName(callView, lAddress, sipUri, resources);
+		boolean hide = displayCallStatusIconAndReturnCallPaused(callView, call);
+		displayOrHideContactPicture(callView, pictureUri, hide);
+		setRowBackgroundAndPadding(callView, resources, index);
+		registerCallDurationTimer(callView, call);
+	}
+	
+	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
 		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
 		if (lAddress.getDisplayName() == null) {
 	        if (resources.getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
@@ -77,14 +87,25 @@ public class AudioCallFragment extends Fragment {
 		} else {
 			contact.setText(lAddress.getDisplayName());
 		}
-		
+	}
+	
+	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
+		boolean isCallPaused;
 		ImageView callState = (ImageView) callView.findViewById(R.id.callStatus);
-		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote) {
+		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote || call.getState() == State.Pausing) {
 			callState.setImageResource(R.drawable.pause_default);
+			isCallPaused = true;
+		} else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {
+			callState.setImageResource(R.drawable.call_state_ringing_default);
+			isCallPaused = false;
 		} else {
 			callState.setImageResource(R.drawable.play_default);
+			isCallPaused = false;
 		}
-		
+		return isCallPaused;
+	}
+	
+	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, boolean hide) {
 		ImageView contactPicture = (ImageView) callView.findViewById(R.id.contactPicture);
 		if (pictureUri != null) {
         	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture, Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
@@ -92,15 +113,15 @@ public class AudioCallFragment extends Fragment {
 		if (hide) {
 			contactPicture.setVisibility(View.GONE);
 		}
-
+	}
+	
+	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index) {
 		if (index == 0) {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call_first);
     	} else {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call);
     		callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMargin * index), 0, 0);
     	}
-		
-		registerCallDurationTimer(callView, call);
 	}
 	
 	private void registerCallDurationTimer(View v, LinphoneCall call) {
@@ -148,12 +169,11 @@ public class AudioCallFragment extends Fragment {
 		}
 
 		callsList.removeAllViews();
-		int callsNb = LinphoneManager.getLc().getCallsNb();
 		int index = 0;
 		
         for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
         	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call, container, false);
-        	displayCall(resources, callView, call, index, index != callsNb - 1);
+        	displayCall(resources, callView, call, index);
         	callsList.addView(callView);
         	index++;
         }

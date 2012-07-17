@@ -80,9 +80,8 @@ public class DialerFragment extends Fragment {
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		};
-		mAddContact.setOnClickListener(addContactListener);
-		
 		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneActivity.instance().isInCallLayout()));
+		resetLayout();
 		
 		if (getArguments() != null) {
 			String number = getArguments().getString("SipUri");
