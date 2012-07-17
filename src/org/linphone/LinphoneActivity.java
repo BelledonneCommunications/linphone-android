@@ -286,8 +286,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 		
 		LinphoneService.instance().resetMessageNotifCount();
-		displayMissedChats(0);
+		LinphoneService.instance().removeMessageNotification();
 		changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+		displayMissedChats(chatStorage.getUnreadMessageCount());
 	}
 
 	@Override
@@ -427,8 +428,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		if (LinphoneService.isReady()) {
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
 			LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
-			displayMissedChats(LinphoneService.instance().getMessageNotifCount());
+			displayMissedChats(chatStorage.getUnreadMessageCount());
 		}
+	}
+	
+	public void updateMissedChatCount() {
+		if (chatStorage == null) {
+			chatStorage = new ChatStorage(this);
+		}
+		
+		displayMissedChats(chatStorage.getUnreadMessageCount());
 	}
 	
 	public void onMessageSent(String to, String message) {
@@ -583,12 +592,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		return currentFragment;
 	}
 	
-	public void deleteMessage(int id) {
-		if (chatStorage == null) {
-			return;
-		}
-		
-		chatStorage.deleteMessage(id);
+	public ChatStorage getChatStorage() {
+		return chatStorage;
 	}
 	
 	@Override
@@ -621,6 +626,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			chatStorage.close();
 		}
 		chatStorage = new ChatStorage(this);
+		
+		updateMissedChatCount();
+		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 	}
 	
 	@Override

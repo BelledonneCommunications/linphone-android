@@ -83,7 +83,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
         message = (EditText) view.findViewById(R.id.message);
         
         messagesLayout = (RelativeLayout) view.findViewById(R.id.messages);
-        List<ChatMessage> messagesList = LinphoneActivity.instance().getChatMessages(sipUri);
         
         messagesScrollView = (ScrollView) view.findViewById(R.id.chatScrollView);
         messagesScrollView.post(new Runnable() {
@@ -93,10 +92,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
             }
         });
         
-        previousMessageID = -1;
-        for (ChatMessage msg : messagesList) {
-        	displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), messagesLayout);
-        }
+        invalidate();
         
         LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null)
@@ -110,9 +106,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 		List<ChatMessage> messagesList = LinphoneActivity.instance().getChatMessages(sipUri);
 		
 		previousMessageID = -1;
+		ChatStorage chatStorage = LinphoneActivity.instance().getChatStorage();
         for (ChatMessage msg : messagesList) {
         	displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), messagesLayout);
+        	chatStorage.markMessageAsRead(msg.getId());
         }
+        LinphoneActivity.instance().updateMissedChatCount();
         
         scrollToEnd();
 	}
@@ -137,7 +136,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		LinphoneActivity.instance().deleteMessage(item.getItemId());
+		LinphoneActivity.instance().getChatStorage().deleteMessage(item.getItemId());
 		invalidate();
 		return true;
 	}
