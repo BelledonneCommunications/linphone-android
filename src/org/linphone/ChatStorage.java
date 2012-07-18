@@ -48,7 +48,7 @@ public class ChatStorage {
 		db.close();
 	}
 	
-	public void saveMessage(String from, String to, String message) {
+	public int saveMessage(String from, String to, String message) {
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);
@@ -62,7 +62,7 @@ public class ChatStorage {
 		values.put("message", message);
 		values.put("read", NOT_READ);
 		values.put("time", System.currentTimeMillis());
-		db.insert(TABLE_NAME, null, values);
+		return (int) db.insert(TABLE_NAME, null, values);
 	}
 	
 	public List<ChatMessage> getMessages(String correspondent) {

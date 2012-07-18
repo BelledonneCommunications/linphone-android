@@ -180,8 +180,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 	@Override
 	public void onMessageReceived(LinphoneAddress from, String message) {
 		if (from.asStringUriOnly().equals(sipUri))  {
-			displayMessage(previousMessageID + 1, message, getString(R.string.now_date_format), true, messagesLayout);
+			int id = previousMessageID + 1;
+			displayMessage(id, message, getString(R.string.now_date_format), true, messagesLayout);
 			scrollToEnd();
 		}
+	}
+	
+	public String getSipUri() {
+		return sipUri;
 	}
 }

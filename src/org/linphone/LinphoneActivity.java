@@ -415,14 +415,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			chatStorage = new ChatStorage(this);
 		}
 		
-		chatStorage.saveMessage(from.asStringUriOnly(), "", message);
+		int id = chatStorage.saveMessage(from.asStringUriOnly(), "", message);
 		
-		Log.d("Message received from " + from + ": " + message);
-		if (messageListenerFragment != null && messageListenerFragment.isVisible()) {
-			((ChatFragment) messageListenerFragment).onMessageReceived(from, message);
-		}
-		
-		if (LinphoneService.isReady()) {
+		ChatFragment chatFragment = ((ChatFragment) messageListenerFragment);
+		if (messageListenerFragment != null && messageListenerFragment.isVisible() && chatFragment.getSipUri().equals(from.asStringUriOnly())) {
+			chatFragment.onMessageReceived(from, message);
+			chatStorage.markMessageAsRead(id);
+		} else if (LinphoneService.isReady()) {
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
 			LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
 			displayMissedChats(chatStorage.getUnreadMessageCount());
@@ -443,7 +442,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 		
 		chatStorage.saveMessage("", to, message);
-		Log.d("Message sent to " + to + ": " + message);
 	}
 
 	@Override
