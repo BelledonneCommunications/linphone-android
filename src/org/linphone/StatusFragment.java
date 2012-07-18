@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.ui.SlidingDrawer;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText;
 	private ImageView statusLed, callQuality, encryption;
+	private SlidingDrawer drawer;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
 	
@@ -53,6 +55,8 @@ public class StatusFragment extends Fragment {
 		statusLed = (ImageView) view.findViewById(R.id.statusLed);
 		callQuality = (ImageView) view.findViewById(R.id.callQuality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
+		
+		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
 		
         return view;
     }
@@ -82,6 +86,18 @@ public class StatusFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		isAttached = false;
+	}
+	
+	public void openOrCloseStatusBar() {
+		if (getResources().getBoolean(R.bool.lock_statusbar)) {
+			return;
+		}
+		
+		if (getResources().getBoolean(R.bool.disable_animations)) {
+			drawer.toggle();
+		} else {
+			drawer.animateToggle();
+		}
 	}
 	
 	public void registrationStateChanged(final RegistrationState state) {
@@ -173,6 +189,14 @@ public class StatusFragment extends Fragment {
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
 			statusText.setText(getString(R.string.status_connected));
+			
+			if (drawer != null) {
+				drawer.lock();
+			}
+		} else {
+			if (drawer != null && !getResources().getBoolean(R.bool.lock_statusbar)) {
+				drawer.unlock();
+			}
 		}
 	}
 	

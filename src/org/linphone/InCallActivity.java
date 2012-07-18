@@ -436,30 +436,13 @@ public class InCallActivity extends FragmentActivity implements
 	
 	private void hideOrDisplayCallOptions() {
 		if (addCall.getVisibility() == View.VISIBLE) {
+			options.setImageResource(R.drawable.options);
 			if (getResources().getBoolean(R.bool.disable_animations)) {
 				transfer.setVisibility(View.GONE);
 				addCall.setVisibility(View.GONE);
 			} else {
-				final Animation animAddCall = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
-				animAddCall.setAnimationListener(new AnimationListener() {
-					@Override
-					public void onAnimationStart(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						addCall.setVisibility(View.GONE);
-					}
-				});
-				
-				Animation animTransfer = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
-				animTransfer.setAnimationListener(new AnimationListener() {
+				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_left_to_right);
+				anim.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
 						
@@ -473,21 +456,23 @@ public class InCallActivity extends FragmentActivity implements
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						transfer.setVisibility(View.GONE);
-						addCall.startAnimation(animAddCall);
+						addCall.setVisibility(View.GONE);
 					}
 				});
-				transfer.startAnimation(animTransfer);
+				transfer.startAnimation(anim);
+				addCall.startAnimation(anim);
 			}
 		} else {		
 			if (getResources().getBoolean(R.bool.disable_animations)) {
 				transfer.setVisibility(View.VISIBLE);
 				addCall.setVisibility(View.VISIBLE);
+				options.setImageResource(R.drawable.options_alt);
 			} else {
-				final Animation animTransfer = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
-				animTransfer.setAnimationListener(new AnimationListener() {
+				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_right_to_left);
+				anim.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
-						transfer.setVisibility(View.VISIBLE);
+						
 					}
 					
 					@Override
@@ -497,27 +482,13 @@ public class InCallActivity extends FragmentActivity implements
 					
 					@Override
 					public void onAnimationEnd(Animation animation) {
-					}
-				});
-				
-				Animation animAddCall = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
-				animAddCall.setAnimationListener(new AnimationListener() {
-					@Override
-					public void onAnimationStart(Animation animation) {
+						options.setImageResource(R.drawable.options_alt);
+						transfer.setVisibility(View.VISIBLE);
 						addCall.setVisibility(View.VISIBLE);
 					}
-					
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						transfer.startAnimation(animTransfer);
-					}
 				});
-				addCall.startAnimation(animAddCall);
+				transfer.startAnimation(anim);
+				addCall.startAnimation(anim);
 			}
 		}
 	}

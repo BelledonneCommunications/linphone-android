@@ -206,24 +206,20 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-		if (currentFragment.shouldAddToBackStack()) {
-			if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
-				if (newFragmentType.isRightOf(currentFragment)) {
-					transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
-				} else {
-					transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
-				}
+		if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
+			if (newFragmentType.isRightOf(currentFragment)) {
+				transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+			} else {
+				transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 			}
+		}
+		try {
 			getSupportFragmentManager().popBackStack(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			transaction.addToBackStack(newFragmentType.toString());
+		} catch (java.lang.IllegalStateException e) {
+			
 		}
-		else {
-			try {
-				getSupportFragmentManager().popBackStack("Add to back stack", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			} catch (java.lang.IllegalStateException e) {
-				
-			}
-		}
+		
+		transaction.addToBackStack(newFragmentType.toString());
 		transaction.replace(R.id.fragmentContainer, newFragment);
 
 		transaction.commitAllowingStateLoss();
@@ -657,6 +653,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 				return true;
 			}
+		}
+		if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
+			statusFragment.openOrCloseStatusBar();
 		}
 		return super.onKeyDown(keyCode, event);
 	}

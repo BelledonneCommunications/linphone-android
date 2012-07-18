@@ -1,127 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
-    <!-- <ImageView 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:id="@+id/tutorial"/> -->
-    
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" 
-	    android:weightSum="6"
-	    android:orientation="vertical">
-		
-	    <fragment android:name="org.linphone.StatusFragment"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+    <FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true">
+	       
+		<LinearLayout
+		    android:id="@+id/fragmentContainer"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:paddingTop="20dp"
+		    android:paddingBottom="75dp"
+		    android:orientation="horizontal" />
+   	
+	   	<fragment android:name="org.linphone.StatusFragment"
 			android:id="@+id/status"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
-		    
+	
+	</FrameLayout>
+    
+	<LinearLayout
+	    android:id="@+id/menu"
+	    android:layout_width="match_parent"
+	    android:layout_height="90dp"
+	    android:layout_alignParentBottom="true"
+	    android:orientation="horizontal">
 	    
 	    <RelativeLayout
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent">
+		    android:layout_height="wrap_content"
+	        android:layout_weight="0.2">
 	        
-			<LinearLayout
-			    android:id="@+id/fragmentContainer"
+		    <ImageView
+          			android:contentDescription="@string/content_description_history"
+		        android:id="@+id/history"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:scaleType="fitXY"
+		        android:src="@drawable/history" />
+		    
+		    <TextView 
+		        android:id="@+id/missedCalls"
+		        android:layout_width="25dp"
+		        android:layout_height="25dp"
+		        android:gravity="center"
+		        android:textSize="20dp"
+		        android:visibility="gone"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentRight="true"
+		        android:background="@drawable/missed_calls_bg" />
+	    
+	    </RelativeLayout>
+	    
+	    <ImageView
+          		android:contentDescription="@string/content_description_contacts"
+	        android:id="@+id/contacts"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.2"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/contacts" />
+
+	    <ImageView
+          		android:contentDescription="@string/content_description_dialer"
+	        android:id="@+id/dialer"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.2"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/dialer" />
+
+	    <ImageView
+          		android:contentDescription="@string/content_description_settings"
+	        android:id="@+id/settings"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.2"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/settings" />
+
+	    <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:layout_weight="0.2">
+	        
+			<ImageView
+           		android:contentDescription="@string/content_description_chat"
+			    android:id="@+id/chat"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
-			    android:paddingBottom="75dp"
-			    android:orientation="horizontal" />
+			    android:layout_weight="0.2"
+			    android:scaleType="fitXY"
+			    android:src="@drawable/chat" />
 		    
-			<LinearLayout
-			    android:id="@+id/menu"
-			    android:layout_width="match_parent"
-			    android:layout_height="90dp"
-			    android:layout_alignParentBottom="true"
-			    android:orientation="horizontal">
-			    
-			    <RelativeLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-			        android:layout_weight="0.2">
-			        
-				    <ImageView
-            			android:contentDescription="@string/content_description_history"
-				        android:id="@+id/history"
-				        android:layout_width="match_parent"
-				        android:layout_height="wrap_content"
-				        android:scaleType="fitXY"
-				        android:src="@drawable/history" />
-				    
-				    <TextView 
-				        android:id="@+id/missedCalls"
-				        android:layout_width="25dp"
-				        android:layout_height="25dp"
-				        android:gravity="center"
-				        android:textSize="20dp"
-				        android:visibility="gone"
-				        android:layout_alignParentTop="true"
-				        android:layout_alignParentRight="true"
-				        android:background="@drawable/missed_calls_bg" />
-			    
-			    </RelativeLayout>
-			    
-			    <ImageView
-            		android:contentDescription="@string/content_description_contacts"
-			        android:id="@+id/contacts"
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent"
-			        android:layout_weight="0.2"
-			        android:scaleType="fitXY"
-			        android:src="@drawable/contacts" />
-		
-			    <ImageView
-            		android:contentDescription="@string/content_description_dialer"
-			        android:id="@+id/dialer"
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent"
-			        android:layout_weight="0.2"
-			        android:scaleType="fitXY"
-			        android:src="@drawable/dialer" />
-		
-			    <ImageView
-            		android:contentDescription="@string/content_description_settings"
-			        android:id="@+id/settings"
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent"
-			        android:layout_weight="0.2"
-			        android:scaleType="fitXY"
-			        android:src="@drawable/settings" />
-		
-			    <RelativeLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-			        android:layout_weight="0.2">
-			        
-					<ImageView
-	            		android:contentDescription="@string/content_description_chat"
-					    android:id="@+id/chat"
-					    android:layout_width="match_parent"
-					    android:layout_height="match_parent"
-					    android:layout_weight="0.2"
-					    android:scaleType="fitXY"
-					    android:src="@drawable/chat" />
-				    
-				    <TextView 
-				        android:id="@+id/missedChats"
-				        android:layout_width="25dp"
-				        android:layout_height="25dp"
-				        android:gravity="center"
-				        android:textSize="20dp"
-				        android:visibility="gone"
-				        android:layout_alignParentTop="true"
-				        android:layout_alignParentRight="true"
-				        android:background="@drawable/missed_calls_bg" />
-			    
-			    </RelativeLayout>
-			    
-			</LinearLayout>
-		
-		</RelativeLayout>
-			    
+		    <TextView 
+		        android:id="@+id/missedChats"
+		        android:layout_width="25dp"
+		        android:layout_height="25dp"
+		        android:gravity="center"
+		        android:textSize="20dp"
+		        android:visibility="gone"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentRight="true"
+		        android:background="@drawable/missed_calls_bg" />
+	    
+	    </RelativeLayout>
+	    
 	</LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>
