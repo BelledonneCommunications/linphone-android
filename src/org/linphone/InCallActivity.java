@@ -395,6 +395,7 @@ public class InCallActivity extends FragmentActivity implements
 						addCall.setVisibility(View.GONE);
 						mControlsLayout.setVisibility(View.GONE);
 						switchCamera.setVisibility(View.GONE);
+						options.setImageResource(R.drawable.options);
 					} else {					
 						Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
 						animation.setAnimationListener(new AnimationListener() {
@@ -414,6 +415,7 @@ public class InCallActivity extends FragmentActivity implements
 								addCall.setVisibility(View.GONE);
 								mControlsLayout.setVisibility(View.GONE);
 								switchCamera.setVisibility(View.GONE);
+								options.setImageResource(R.drawable.options);
 							}
 						});
 						mControlsLayout.startAnimation(animation);
