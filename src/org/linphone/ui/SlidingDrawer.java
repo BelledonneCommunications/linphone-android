@@ -417,13 +417,13 @@ public class SlidingDrawer extends ViewGroup {
 			mVelocityTracker.addMovement(event);
 		}
 
-		return true;
+		return onTouchEvent(event);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (mLocked) {
-			return true;
+			return false;
 		}
 
 		if (mTracking) {
@@ -534,7 +534,7 @@ public class SlidingDrawer extends ViewGroup {
 			}
 		}
 
-		return mTracking || mAnimating || super.onTouchEvent(event);
+		return false;
 	}
 
 	private void animateClose(int position) {

@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,6 +58,12 @@ public class StatusFragment extends Fragment {
 		encryption = (ImageView) view.findViewById(R.id.encryption);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
+		view.findViewById(R.id.exit).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LinphoneActivity.instance().exit();
+			}
+		});
 		
         return view;
     }
@@ -194,7 +201,9 @@ public class StatusFragment extends Fragment {
 				drawer.lock();
 			}
 		} else {
-			if (drawer != null && !getResources().getBoolean(R.bool.lock_statusbar)) {
+			if (drawer != null && getResources().getBoolean(R.bool.lock_statusbar)) {
+				drawer.lock();
+			} else if (drawer != null) {
 				drawer.unlock();
 			}
 		}

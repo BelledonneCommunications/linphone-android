@@ -593,12 +593,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		return chatStorage;
 	}
 	
+	public void exit() {
+		finish();
+		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
-				finish();
-				stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+				exit();
 			} else {
 				FragmentsAvailable newFragment = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
 				changeCurrentFragment(newFragment, null, true);
