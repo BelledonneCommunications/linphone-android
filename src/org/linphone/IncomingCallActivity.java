@@ -97,10 +97,10 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
 		mNameView.setText(address.getDisplayName());
-		if (getResources().getBoolean(R.bool.show_full_remote_address_on_incoming_call)) {
-			mNumberView.setText(address.asStringUriOnly());
-		} else {
+		if (getResources().getBoolean(R.bool.only_display_username_if_unknown)) {
 			mNumberView.setText(address.getUserName());
+		} else {
+			mNumberView.setText(address.asStringUriOnly());
 		}
 	}
 	
