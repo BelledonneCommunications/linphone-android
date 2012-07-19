@@ -47,7 +47,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
@@ -586,12 +586,17 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 	public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
-		String uriString = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_audio_ringtone), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE).toString());
+		String uriString = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_audio_ringtone), 
+				android.provider.Settings.System.DEFAULT_RINGTONE_URI.toString());
 		try {
-			FileInputStream fis = new FileInputStream(uriString);
-			mRingerPlayer.setDataSource(fis.getFD());
+			if (uriString.startsWith("content://")) {
+				mRingerPlayer.setDataSource(this, Uri.parse(uriString));
+			} else {
+				FileInputStream fis = new FileInputStream(uriString);
+				mRingerPlayer.setDataSource(fis.getFD());
+			}
 		} catch (IOException e) {
-			Log.e(e, "cannot set ringtone");
+			Log.e(e, "Cannot set ringtone");
 		}
 	}
 
