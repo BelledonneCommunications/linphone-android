@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.linphone.Contact;
 import org.linphone.core.LinphoneAddress;
-import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 
 import android.annotation.TargetApi;
@@ -137,7 +136,6 @@ public class ApiFivePlus {
 		return list;
 	}
 	
-	@TargetApi(11)
 	public static Cursor getContactsCursor(ContentResolver cr) {
 		String req = Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
                 + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL";
@@ -261,7 +259,6 @@ public class ApiFivePlus {
 		String username = address.getUserName();
 		String domain = address.getDomain();
 		String sipUri = username + "@" + domain;
-		Log.e("Looking for " + sipUri);
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
 		Contact contact = getContact(cr, cursor, 0);

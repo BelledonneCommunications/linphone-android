@@ -969,7 +969,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			} 
 		}
 
-		if (state == IncomingReceived || (state == state.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
+		if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			WakeLock wl = mPowerManager.newWakeLock(
 					PowerManager.ACQUIRE_CAUSES_WAKEUP

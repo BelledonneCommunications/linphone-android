@@ -40,7 +40,7 @@ public class StatusFragment extends Fragment {
 	private static StatusFragment instance;
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText;
+	private TextView statusText, exit;
 	private ImageView statusLed, callQuality, encryption;
 	private SlidingDrawer drawer;
 	private Runnable mCallQualityUpdater;
@@ -58,7 +58,8 @@ public class StatusFragment extends Fragment {
 		encryption = (ImageView) view.findViewById(R.id.encryption);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
-		view.findViewById(R.id.exit).setOnClickListener(new OnClickListener() {
+		exit = (TextView) view.findViewById(R.id.exit);
+		exit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				LinphoneActivity.instance().exit();
@@ -191,7 +192,7 @@ public class StatusFragment extends Fragment {
 		
 		if (isInCall) {
 			startCallQuality();
-			refreshEncryptionIcon();
+			refreshStatusItems();
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
@@ -219,11 +220,12 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
-	public void refreshEncryptionIcon() {
+	public void refreshStatusItems() {
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call != null && encryption != null) {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-			
+
+			exit.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
@@ -233,6 +235,8 @@ public class StatusFragment extends Fragment {
 			} else {
 				encryption.setImageResource(R.drawable.security_ko);
 			}
+		} else {
+			exit.setVisibility(View.VISIBLE);
 		}
 	}
 }
