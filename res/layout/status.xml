@@ -9,7 +9,7 @@
     <org.linphone.ui.SlidingDrawer
 		android:id="@+id/statusBar"
 		linphone:direction="topToBottom"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:layout_height="80dp"
 		linphone:handle="@+id/handle"
 		linphone:content="@+id/content">
