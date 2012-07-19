@@ -54,6 +54,7 @@ update-project:
 	$(SDK_PATH)/android update project --path .
 	echo "key.store=$(KEYSTORE)" > ant.properties
 	echo "key.alias=$(KEYALIAS)" >> ant.properties
+	touch default.properties
 
 generate-apk:
 	ant debug

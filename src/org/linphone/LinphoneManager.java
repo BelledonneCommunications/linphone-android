@@ -735,7 +735,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		Transports ports = new Transports(t);
 		boolean useStandardPort = getPrefBoolean(R.string.pref_transport_use_standard_ports_key, false);
 		int lPreviousPort = ports.tcp +ports.udp +ports.tls; // assume only one port is active 
-		
+		if (lPreviousPort>0xFFFF) {
+			Log.e("Bad port number ["+lPreviousPort+"] using random instead");
+			lPreviousPort=(0xDFFF & (int)Math.random())+1024;
+		}
 		if (!getPrefBoolean(R.string.pref_transport_tcp_key, false)) {
 			ports.tcp = 0;
 		} else if (useStandardPort) {
