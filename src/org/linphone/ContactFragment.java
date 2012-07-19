@@ -17,6 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.io.InputStream;
+
+import org.linphone.compatibility.Compatibility;
+
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,8 +45,11 @@ public class ContactFragment extends Fragment {
 		View view = inflater.inflate(R.layout.contact, container, false);
 		
 		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
-		if (contact.getPhoto() != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), R.drawable.unknown_small);
+		if (contact.getPhotoUri() != null) {
+			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
+			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
+        } else {
+        	contactPicture.setImageResource(R.drawable.unknown_small);
         }
 		
 		chatListener = getChatListener();

@@ -2,8 +2,11 @@ package org.linphone.compatibility;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.linphone.Contact;
 import org.linphone.mediastream.Version;
 
 import android.annotation.TargetApi;
@@ -13,12 +16,15 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.Contacts.Data;
+import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents.Insert;
 
 /*
@@ -55,7 +61,7 @@ public class ApiFivePlus {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
 			ArrayList<ContentValues> data = new ArrayList<ContentValues>();
 			ContentValues sipAddressRow = new ContentValues();
-			sipAddressRow.put(Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
+			sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
 			sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
 			data.add(sipAddressRow);
 			intent.putParcelableArrayListExtra(Insert.DATA, data);
@@ -71,15 +77,15 @@ public class ApiFivePlus {
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
 		List<String> list = new ArrayList<String>();
 
-		Uri uri = ContactsContract.Data.CONTENT_URI;
+		Uri uri = Data.CONTENT_URI;
 		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
 
 		// SIP addresses
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
 			String selection = new StringBuilder()
-				.append(ContactsContract.Data.CONTACT_ID)
+				.append(Data.CONTACT_ID)
 				.append(" = ? AND ")
-				.append(ContactsContract.Data.MIMETYPE)
+				.append(Data.MIMETYPE)
 				.append(" = '")
 				.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
 				.append("'")
@@ -94,8 +100,8 @@ public class ApiFivePlus {
 			c.close();
 		} else {
 			String selection = new StringBuilder()
-				.append(ContactsContract.Data.CONTACT_ID).append(" =  ? AND ")
-				.append(ContactsContract.Data.MIMETYPE).append(" = '")
+				.append(Data.CONTACT_ID).append(" =  ? AND ")
+				.append(Data.MIMETYPE).append(" = '")
 				.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
 				.append("' AND lower(")
 				.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
@@ -111,7 +117,7 @@ public class ApiFivePlus {
 		}
 		
 		// Phone Numbers
-		Cursor c = cr.query(Phone.CONTENT_URI, null, Phone.CONTACT_ID + " = " + id, null, null);
+		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
         while (c.moveToNext()) {
             String number = c.getString(c.getColumnIndex(Phone.NUMBER));
             list.add(number); 
@@ -121,25 +127,105 @@ public class ApiFivePlus {
 		return list;
 	}
 	
+	@TargetApi(11)
 	public static Cursor getContactsCursor(ContentResolver cr) {
-		return cr.query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts.DISPLAY_NAME + " IS NOT NULL", null, ContactsContract.Contacts.DISPLAY_NAME + " ASC");
+		String req = Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+                + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL";
+		
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			req += " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
+					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL)";
+        } else {
+        	req += " OR (" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                    + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
+        }
+		
+		return getGeneralContactCursor(cr, req);
+	}
+
+	public static Cursor getSIPContactsCursor(ContentResolver cr) {
+		String req = null;
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
+					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL";
+        } else {
+        	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                    + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
+        }
+		
+		return getGeneralContactCursor(cr, req);
 	}
 	
-	public static String getContactDisplayName(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-	}
-	
-	public static Uri getContactPictureUri(Cursor cursor, String id) {
-		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
-        return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-	}
-	
-	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
-		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
-		return ContactsContract.Contacts.openContactPhotoInputStream(cr, person);
+	private static Cursor getGeneralContactCursor(ContentResolver cr, String select) {
+		
+		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
+		
+		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + select + ")";
+		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, Data.DISPLAY_NAME + " ASC");
+		
+		MatrixCursor result = new MatrixCursor(cursor.getColumnNames());
+		Set<String> groupBy = new HashSet<String>();
+		while (cursor.moveToNext()) {
+		    String name = cursor.getString(getCursorDisplayNameColumnIndex(cursor));
+		    if (!groupBy.contains(name)) {
+		    	groupBy.add(name);
+		    	Object[] newRow = new Object[cursor.getColumnCount()];
+		    	
+		    	int contactID = cursor.getColumnIndex(Data.CONTACT_ID);
+		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME);
+		    	
+		    	newRow[contactID] = cursor.getString(contactID);
+		    	newRow[displayName] = cursor.getString(displayName);
+		    	
+		        result.addRow(newRow);
+	    	}
+	    }
+		return result;
 	}
 	
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {
-		return cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+		return cursor.getColumnIndex(Data.DISPLAY_NAME);
+	}
+
+	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
+		try {
+			cursor.moveToFirst();
+			boolean success = cursor.move(position);
+			if (!success)
+				return null;
+			
+			String id = cursor.getString(cursor.getColumnIndex(Data.CONTACT_ID));
+	    	String name = getContactDisplayName(cursor);
+	        Uri photo = getContactPictureUri(id);
+	        InputStream input = getContactPictureInputStream(cr, id);
+	        
+	        Contact contact;
+	        if (input == null) {
+	        	contact = new Contact(id, name);
+	        }
+	        else {
+	        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
+	        }
+	        
+	        contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), cr));
+	        
+	        return contact;
+		} catch (Exception e) {
+			
+		}
+		return null;
+	}
+	
+	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
+		Uri person = getContactPictureUri(id);
+		return Contacts.openContactPhotoInputStream(cr, person);
+	}
+	
+	private static String getContactDisplayName(Cursor cursor) {
+		return cursor.getString(cursor.getColumnIndex(Data.DISPLAY_NAME));
+	}
+	
+	private static Uri getContactPictureUri(String id) {
+		return ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
 	}
 }

@@ -20,13 +20,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.InputStream;
 import java.util.List;
 
+import org.linphone.Contact;
 import org.linphone.mediastream.Version;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 /**
  * @author Sylvain Berfini
  */
@@ -64,27 +64,9 @@ public class Compatibility {
 		return null;
 	}
 	
-	public static String getContactDisplayName(Cursor cursor) {
+	public static Cursor getSIPContactsCursor(ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(5)) {
-			return ApiFivePlus.getContactDisplayName(cursor);
-		} else {
-			//TODO
-		}
-		return null;
-	}
-	
-	public static Uri getContactPictureUri(Cursor cursor, String id) {
-		if (Version.sdkAboveOrEqual(5)) {
-			return ApiFivePlus.getContactPictureUri(cursor, id);
-		} else {
-			//TODO
-		}
-		return null;
-	}
-	
-	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
-		if (Version.sdkAboveOrEqual(5)) {
-			return ApiFivePlus.getContactPictureInputStream(cr, id);
+			return ApiFivePlus.getSIPContactsCursor(cr);
 		} else {
 			//TODO
 		}
@@ -98,5 +80,23 @@ public class Compatibility {
 			//TODO
 		}
 		return -1;
+	}
+
+	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
+		if (Version.sdkAboveOrEqual(5)) {
+			return ApiFivePlus.getContact(cr, cursor, position);
+		} else {
+			//TODO
+		}
+		return null;
+	}
+
+	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
+		if (Version.sdkAboveOrEqual(5)) {
+			return ApiFivePlus.getContactPictureInputStream(cr, id);
+		} else {
+			//TODO
+		}
+		return null;
 	}
 }

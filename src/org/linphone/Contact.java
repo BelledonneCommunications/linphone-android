@@ -31,7 +31,7 @@ public class Contact implements Serializable {
 	
 	private String id;
 	private String name;
-	private transient Uri photoUri;
+	private Uri photoUri;
 	private transient Bitmap photo;
 	private List<String> numerosOrAddresses;
 	

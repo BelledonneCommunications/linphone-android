@@ -44,6 +44,7 @@ import org.linphone.ui.AddressText;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -82,6 +83,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private ChatStorage chatStorage;
 	private Handler mHandler = new Handler();
 	private boolean isInCallLayout = false;
+	private List<Contact> contactList, sipContactList;
+	private Cursor contactCursor, sipContactCursor;
 	
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -103,6 +106,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
 			return;
 		}
+        
+        prepareContactsInBackground();
         
         boolean useFirstLoginActivity = getResources().getBoolean(R.bool.useFirstLoginActivity);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -552,6 +557,52 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public void showPreferenceErrorDialog(String message) {
 		
+	}
+	
+	public List<Contact> getAllContacts() {
+		return contactList;
+	}
+	
+	public List<Contact> getSIPContacts() {
+		return sipContactList;
+	}
+
+	public Cursor getAllContactsCursor() {
+		return contactCursor;
+	}
+	
+	public Cursor getSIPContactsCursor() {
+		return sipContactCursor;
+	}
+	
+	private void prepareContactsInBackground() {
+		contactCursor = Compatibility.getContactsCursor(getContentResolver());
+		sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
+		contactList = new ArrayList<Contact>();
+		sipContactList = new ArrayList<Contact>();
+		Thread sipContactsHandler = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				
+				for (int i = 0; i < sipContactCursor.getCount(); i++) {
+					Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
+					sipContactList.add(contact);
+				}
+			}
+		});
+		sipContactsHandler.start();
+		
+		Thread contactsHandler = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				
+				for (int i = 0; i < contactCursor.getCount(); i++) {
+					Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
+					contactList.add(contact);
+				}
+			}
+		});
+		contactsHandler.start();
 	}
 	
 	private void initInCallMenuLayout() {

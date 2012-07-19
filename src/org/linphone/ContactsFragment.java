@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
@@ -27,11 +25,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,11 +48,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private ImageView allContacts, linphoneContacts, newContact;
-	private boolean onlyDisplayLinphoneCalls;
+	private boolean onlyDisplayLinphoneContacts;
 	private int lastKnownPosition;
-	private Cursor cursor;
-	private List<Contact> contacts;
-	private Thread contactsHandler;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -72,11 +64,12 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         allContacts.setOnClickListener(this);
         linphoneContacts = (ImageView) view.findViewById(R.id.linphoneContacts);
         linphoneContacts.setOnClickListener(this);
-        allContacts.setEnabled(false);
-        onlyDisplayLinphoneCalls = false;
         newContact = (ImageView) view.findViewById(R.id.newContact);
         newContact.setOnClickListener(this);
         newContact.setEnabled(!LinphoneActivity.instance().isInCallLayout());
+        
+        allContacts.setEnabled(onlyDisplayLinphoneContacts);
+        linphoneContacts.setEnabled(!allContacts.isEnabled());
         
 		return view;
     }
@@ -88,12 +81,14 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		if (id == R.id.allContacts) {
 			allContacts.setEnabled(false);
 			linphoneContacts.setEnabled(true);
-			onlyDisplayLinphoneCalls = false;
+			onlyDisplayLinphoneContacts = false;
+			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), LinphoneActivity.instance().getAllContactsCursor()));
 		} 
 		else if (id == R.id.linphoneContacts) {
 			allContacts.setEnabled(true);
 			linphoneContacts.setEnabled(false);
-			onlyDisplayLinphoneCalls = true;
+			onlyDisplayLinphoneContacts = true;
+			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), LinphoneActivity.instance().getSIPContactsCursor()));
 		} 
 		else if (id == R.id.newContact) {
 			Intent intent = Compatibility.prepareAddContactIntent(null, null);
@@ -108,24 +103,6 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		cursor = Compatibility.getContactsCursor(getActivity().getContentResolver());
-		contactsHandler = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				contacts = new ArrayList<Contact>();
-				for (int i = 0; i < cursor.getCount(); i++) {
-					Contact contact = getContact(i);
-					contacts.add(contact);
-				}
-			}
-		});
-		contactsHandler.start();
-	}
-	
-	@Override
 	public void onResume() {
 		super.onResume();
 		if (LinphoneActivity.isInstanciated()) {
@@ -133,56 +110,30 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 		
 		if (contactsList.getAdapter() == null) {
-			contactsList.setAdapter(new ContactsListAdapter());
+			if (onlyDisplayLinphoneContacts) {
+				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), LinphoneActivity.instance().getSIPContactsCursor()));
+			} else {
+				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), LinphoneActivity.instance().getAllContactsCursor()));
+			}
 			contactsList.setFastScrollEnabled(true);
 		}
 
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
-	@Override
-	public void onPause() {
-		contactsHandler.interrupt();		
-		super.onPause();
-	}
-	
-	private Contact getContact(int position) {
-		try {
-			cursor.moveToFirst();
-			boolean success = cursor.move(position);
-			if (!success)
-				return null;
-			
-			String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-	    	String name = Compatibility.getContactDisplayName(cursor);
-	        Uri photo = Compatibility.getContactPictureUri(cursor, id);
-	        InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), id);
-	        
-	        Contact contact;
-	        if (input == null) {
-	        	contact = new Contact(id, name);
-	        }
-	        else {
-	        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
-	        }
-	        
-	        contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
-	        
-	        return contact;
-		} catch (Exception e) {
-			
-		}
-		return null;
-	}
-	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
 		private AlphabetIndexer indexer;
 		private int margin;
 		private Bitmap bitmapUnknown;
+		private List<Contact> contacts;
+		private Cursor cursor;
 		
-		ContactsListAdapter() {
+		ContactsListAdapter(List<Contact> contactsList, Cursor c) {
+			contacts = contactsList;
+			cursor = c;
+			
 			indexer = new AlphabetIndexer(cursor, Compatibility.getCursorDisplayNameColumnIndex(cursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-			margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+			margin = LinphoneUtils.pixelsToDpi(getResources(), 10);
 			bitmapUnknown = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
 		}
 		
@@ -192,7 +143,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 
 		public Object getItem(int position) {
 			if (position >= contacts.size()) {
-				return getContact(position);
+				return Compatibility.getContact(getActivity().getContentResolver(), cursor, position);
 			} else {
 				return contacts.get(position);
 			}
@@ -204,17 +155,16 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
+			Contact contact = null;
+			do {
+				contact = (Contact) getItem(position);
+			} while (contact == null);
 			
 			if (convertView != null) {
 				view = convertView;
 			} else {
 				view = mInflater.inflate(R.layout.contact_cell, parent, false);
 			}
-			
-			Contact contact = null;
-			do {
-				contact = (Contact) getItem(position);
-			} while (contact == null);
 			
 			TextView name = (TextView) view.findViewById(R.id.name);
 			name.setText(contact.getName());
