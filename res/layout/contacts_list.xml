@@ -48,6 +48,7 @@
 	        android:layout_height="match_parent"
 	        android:divider="@android:color/darker_gray"
 		    android:fastScrollAlwaysVisible="true"
+		    android:fastScrollEnabled="true"
 	        android:dividerHeight="1dp" />
         
     </RelativeLayout>

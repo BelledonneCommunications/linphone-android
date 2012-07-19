@@ -50,6 +50,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private ImageView allContacts, linphoneContacts, newContact;
 	private boolean onlyDisplayLinphoneContacts;
 	private int lastKnownPosition;
+	private AlphabetIndexer indexer;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -62,8 +63,10 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         
         allContacts = (ImageView) view.findViewById(R.id.allContacts);
         allContacts.setOnClickListener(this);
+        
         linphoneContacts = (ImageView) view.findViewById(R.id.linphoneContacts);
         linphoneContacts.setOnClickListener(this);
+        
         newContact = (ImageView) view.findViewById(R.id.newContact);
         newContact.setOnClickListener(this);
         newContact.setEnabled(!LinphoneActivity.instance().isInCallLayout());
@@ -82,18 +85,32 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			allContacts.setEnabled(false);
 			linphoneContacts.setEnabled(true);
 			onlyDisplayLinphoneContacts = false;
-			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), LinphoneActivity.instance().getAllContactsCursor()));
+			changeContactsAdapter();
 		} 
 		else if (id == R.id.linphoneContacts) {
 			allContacts.setEnabled(true);
 			linphoneContacts.setEnabled(false);
 			onlyDisplayLinphoneContacts = true;
-			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), LinphoneActivity.instance().getSIPContactsCursor()));
+			changeContactsAdapter();
+			
 		} 
 		else if (id == R.id.newContact) {
 			Intent intent = Compatibility.prepareAddContactIntent(null, null);
 			startActivity(intent);
 		} 
+	}
+	
+	private void changeContactsAdapter() {
+		Cursor allContactsCursor = LinphoneActivity.instance().getAllContactsCursor();
+		Cursor sipContactsCursor = LinphoneActivity.instance().getSIPContactsCursor();
+		
+		if (onlyDisplayLinphoneContacts) {
+			indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), sipContactsCursor));
+		} else {
+			indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), allContactsCursor));
+		}
 	}
 
 	@Override
@@ -110,19 +127,13 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 		
 		if (contactsList.getAdapter() == null) {
-			if (onlyDisplayLinphoneContacts) {
-				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), LinphoneActivity.instance().getSIPContactsCursor()));
-			} else {
-				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), LinphoneActivity.instance().getAllContactsCursor()));
-			}
-			contactsList.setFastScrollEnabled(true);
+			changeContactsAdapter();
 		}
 
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
-		private AlphabetIndexer indexer;
 		private int margin;
 		private Bitmap bitmapUnknown;
 		private List<Contact> contacts;
@@ -131,8 +142,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		ContactsListAdapter(List<Contact> contactsList, Cursor c) {
 			contacts = contactsList;
 			cursor = c;
-			
-			indexer = new AlphabetIndexer(cursor, Compatibility.getCursorDisplayNameColumnIndex(cursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
 			margin = LinphoneUtils.pixelsToDpi(getResources(), 10);
 			bitmapUnknown = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
 		}
