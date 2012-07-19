@@ -51,14 +51,14 @@ LOCAL_SRC_FILES += \
 	src/eXrefer_api.c \
 	src/jpublish.c \
 	src/sdp_offans.c
-
+#SOCKET_PROGRESS_TIMEOUT=1000  to take care of edge network
 LOCAL_CFLAGS += \
 	-UHAVE_CONFIG_H \
 	-include $(LOCAL_PATH)/../build/exosip/libeXosip2_AndroidConfig.h \
 	-DOSIP_MT \
 	-DENABLE_TRACE \
 	-DSOCKET_TIMEOUT=50 \
-	-DSOCKET_PROGRESS_TIMEOUT=300 \
+	-DSOCKET_PROGRESS_TIMEOUT=1000 \
 	-include $(LOCAL_PATH)/include/eXosip2/eXosip_transport_hook.h
 
 
