@@ -21,12 +21,14 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.linphone.Contact;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 /**
  * @author Sylvain Berfini
  */
@@ -40,6 +42,15 @@ public class Compatibility {
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.prepareAddContactIntent(displayName, sipUri);
+		} else {
+			//TODO
+		}
+		return null;
+	}
+	
+	public static Intent prepareEditContactIntent(int id) {
+		if (Version.sdkAboveOrEqual(5)) {
+			return ApiFivePlus.prepareEditContactIntent(id);
 		} else {
 			//TODO
 		}
@@ -94,6 +105,15 @@ public class Compatibility {
 	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.getContactPictureInputStream(cr, id);
+		} else {
+			//TODO
+		}
+		return null;
+	}
+	
+	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
+		if (Version.sdkAboveOrEqual(5)) {
+			return ApiFivePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
 		} else {
 			//TODO
 		}

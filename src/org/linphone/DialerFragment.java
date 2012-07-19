@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
@@ -70,7 +71,7 @@ public class DialerFragment extends Fragment {
 		addContactListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = ContactHelper.prepareAddContactIntent(mAddress);
+				Intent intent = Compatibility.prepareAddContactIntent(mAddress.getDisplayedName(), mAddress.getText().toString());
 				startActivity(intent);
 			}
 		};

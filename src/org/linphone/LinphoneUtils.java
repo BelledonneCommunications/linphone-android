@@ -115,16 +115,14 @@ public final class LinphoneUtils {
 	 * @param contact sip uri
 	 * @return url/uri of the resource
 	 */
+//	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
+//		return Compatibility.findUriPictureOfContactAndSetDisplayName(address, resolver);
+//	}
+	
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
 		ContactHelper helper = new ContactHelper(address, resolver);
 		helper.query();
 		return helper.getUri();
-	}
-	
-	public static String findDisplayNameOfContact(LinphoneAddress address, ContentResolver resolver) {
-		ContactHelper helper = new ContactHelper(address, resolver);
-		helper.query();
-		return helper.getDisplayName();
 	}
 	
 	public static Bitmap downloadBitmap(Uri uri) {

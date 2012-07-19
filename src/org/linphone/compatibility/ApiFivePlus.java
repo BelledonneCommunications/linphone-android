@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.linphone.Contact;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 
 import android.annotation.TargetApi;
@@ -71,6 +73,14 @@ public class ApiFivePlus {
 			intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
 		}
 		  
+		return intent;
+	}
+	
+	public static Intent prepareEditContactIntent(int id) {
+		Intent intent = new Intent(Intent.ACTION_EDIT, Contacts.CONTENT_URI);
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
+		intent.setData(contactUri);
+		
 		return intent;
 	}
 	
@@ -140,7 +150,7 @@ public class ApiFivePlus {
                     + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
         }
 		
-		return getGeneralContactCursor(cr, req);
+		return getGeneralContactCursor(cr, req, true);
 	}
 
 	public static Cursor getSIPContactsCursor(ContentResolver cr) {
@@ -153,15 +163,33 @@ public class ApiFivePlus {
                     + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
         }
 		
-		return getGeneralContactCursor(cr, req);
+		return getGeneralContactCursor(cr, req, true);
 	}
 	
-	private static Cursor getGeneralContactCursor(ContentResolver cr, String select) {
+	private static Cursor getSIPContactCursor(ContentResolver cr, String id) {
+		String req = null;
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
+					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " LIKE '" + id + "'";
+        } else {
+        	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                    + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
+                    + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
+        }
+		
+		return getGeneralContactCursor(cr, req, false);
+	}
+	
+	private static Cursor getGeneralContactCursor(ContentResolver cr, String select, boolean shouldGroupBy) {
 		
 		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
 		
 		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + select + ")";
 		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, Data.DISPLAY_NAME + " ASC");
+		
+		if (!shouldGroupBy) {
+			return cursor;
+		}
 		
 		MatrixCursor result = new MatrixCursor(cursor.getColumnNames());
 		Set<String> groupBy = new HashSet<String>();
@@ -227,5 +255,21 @@ public class ApiFivePlus {
 	
 	private static Uri getContactPictureUri(String id) {
 		return ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
+	}
+	
+	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
+		String username = address.getUserName();
+		String domain = address.getDomain();
+		String sipUri = username + "@" + domain;
+		Log.e("Looking for " + sipUri);
+		
+		Cursor cursor = getSIPContactCursor(cr, sipUri);
+		Contact contact = getContact(cr, cursor, 0);
+		if (contact != null && contact.getNumerosOrAddresses().contains(sipUri)) {
+			address.setDisplayName(contact.getName());
+			return contact.getPhotoUri();
+		}
+		
+		return null;
 	}
 }
