@@ -558,12 +558,6 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	@Override
-	protected void onDestroy() {
-		instance = null;
-		super.onDestroy();
-	}
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
 		

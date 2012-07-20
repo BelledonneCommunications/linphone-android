@@ -276,7 +276,7 @@ public class StatusFragment extends Fragment {
 			mCallQualityUpdater = null;
 		}
 	}
-
+	
 	public void refreshStatusItems() {
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call != null && encryption != null) {

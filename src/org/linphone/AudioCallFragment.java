@@ -153,12 +153,6 @@ public class AudioCallFragment extends Fragment {
 	}
 	
 	@Override
-	public void onDestroy() {
-		instance = null;
-		super.onDestroy();
-	}
-	
-	@Override
 	public void onResume() {
 		super.onResume();
 		

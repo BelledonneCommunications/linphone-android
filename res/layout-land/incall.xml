@@ -44,44 +44,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/transfer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options_transfer"
                 android:visibility="gone" />
@@ -89,14 +89,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="horizontal" >
 
             <View
@@ -108,32 +108,32 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/addCall"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options_add_call_alt"
                 android:visibility="gone" />
@@ -141,21 +141,21 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/pause"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:contentDescription="@string/content_description_pause"
                 android:scaleType="fitXY"
                 android:src="@drawable/pause_off" />
@@ -164,7 +164,7 @@
                 android:id="@+id/video"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:contentDescription="@string/content_description_switch_video"
                 android:scaleType="fitXY"
                 android:src="@drawable/video_off" />
@@ -173,7 +173,7 @@
                 android:id="@+id/micro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:contentDescription="@string/content_description_toggle_micro"
                 android:scaleType="fitXY"
                 android:src="@drawable/micro_on" />
@@ -182,7 +182,7 @@
                 android:id="@+id/hangUp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:contentDescription="@string/content_description_hang_up"
                 android:scaleType="fitXY"
                 android:src="@drawable/hangup" />
@@ -191,7 +191,7 @@
                 android:id="@+id/speaker"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:contentDescription="@string/content_description_toggle_speaker"
                 android:scaleType="fitXY"
                 android:src="@drawable/speaker_off" />
@@ -200,7 +200,7 @@
                 android:id="@+id/options"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options" />
 
@@ -208,7 +208,7 @@
                 android:id="@+id/dialer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:contentDescription="@string/content_description_numpad"
                 android:scaleType="fitXY"
                 android:src="@drawable/dialer_alt" />
