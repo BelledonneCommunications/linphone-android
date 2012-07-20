@@ -50,8 +50,6 @@
 			 </intent-filter>
 		</activity>
 
-
-
 		<activity android:name="org.linphone.LinphoneActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar"
@@ -65,7 +63,7 @@
 
         <activity android:name="org.linphone.IncomingCallActivity"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-			android:launchMode="singleInstance"
+			android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,17 +80,18 @@
 
         <activity android:name="org.linphone.InCallActivity"
            android:theme="@android:style/Theme.NoTitleBar"
-           android:launchMode="singleTask">
+           android:noHistory="true"
+           android:launchMode="singleTop">
 		<intent-filter>
                <action android:name="android.intent.action.MAIN" />
            </intent-filter>
         </activity>
         
- 
         <activity android:name=".AccountPreferencesActivity"
 		    android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait">
         </activity>
+        
         <activity android:name=".PreferencesActivity"
 		    android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait">
