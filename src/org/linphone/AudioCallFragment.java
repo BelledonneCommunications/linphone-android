@@ -142,10 +142,20 @@ public class AudioCallFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		if (InCallActivity.instance() == null) {
+			return;
+		}
+		
 		InCallActivity.instance().bindAudioFragment(this);
 		
 		// Just to be sure we have incall controls
 		InCallActivity.instance().setCallControlsVisibleAndRemoveCallbacks();
+	}
+	
+	@Override
+	public void onDestroy() {
+		instance = null;
+		super.onDestroy();
 	}
 	
 	@Override

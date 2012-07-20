@@ -83,8 +83,8 @@
         <activity android:name="org.linphone.InCallActivity"
            android:theme="@android:style/Theme.NoTitleBar"
            android:launchMode="singleTask"
-           android:screenOrientation="portrait">
-           <intent-filter>
+           android:configChanges="orientation">
+		<intent-filter>
                <action android:name="android.intent.action.MAIN" />
            </intent-filter>
         </activity>

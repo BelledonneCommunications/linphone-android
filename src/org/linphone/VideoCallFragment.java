@@ -153,6 +153,8 @@ public class VideoCallFragment extends Fragment {
 			// Prevent linphone from crashing if correspondent hang up while you are rotating
 			androidVideoWindowImpl.release();
 		}
+		instance = null;
+		
 		super.onDestroy();
 	}
 	

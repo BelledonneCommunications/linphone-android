@@ -76,15 +76,12 @@ public class InCallActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.incall);
         instance = this;      
+        setContentView(R.layout.incall);
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
         
         if (findViewById(R.id.fragmentContainer) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
             initUI();
             
             if (LinphoneManager.getLc().getCallsNb() > 0) {
@@ -112,7 +109,7 @@ public class InCallActivity extends FragmentActivity implements
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commit();
         }
-		
+
         LinphoneManager.addListener(this);
 	}
 	
@@ -497,6 +494,10 @@ public class InCallActivity extends FragmentActivity implements
 	
 	private boolean isCallRunning(LinphoneCall call)
 	{
+		if (call == null) {
+			return false;
+		}
+		
 		LinphoneCall.State state = call.getState();
 		
 		return state == LinphoneCall.State.Connected ||
@@ -507,6 +508,10 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private boolean isCallEstablished(LinphoneCall call) {
+		if (call == null) {
+			return false;
+		}
+		
 		LinphoneCall.State state = call.getState();
 		
 		return isCallRunning(call) || 
@@ -553,6 +558,12 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	@Override
+	protected void onDestroy() {
+		instance = null;
+		super.onDestroy();
+	}
+	
+	@Override
 	protected void onResume() {
 		super.onResume();
 		
@@ -561,13 +572,6 @@ public class InCallActivity extends FragmentActivity implements
 		} else {
 			setCallControlsVisibleAndRemoveCallbacks();
 		}
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		setCallControlsVisibleAndRemoveCallbacks();
 	}
 	
 	@Override
