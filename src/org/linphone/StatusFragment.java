@@ -48,7 +48,6 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class StatusFragment extends Fragment {
-	private static StatusFragment instance;
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit;
@@ -61,7 +60,6 @@ public class StatusFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
-		instance = this;
 		View view = inflater.inflate(R.layout.status, container, false);
 		
 		statusText = (TextView) view.findViewById(R.id.statusText);
@@ -81,13 +79,6 @@ public class StatusFragment extends Fragment {
 		
         return view;
     }
-
-	/**
-	 * @return null if not ready yet
-	 */
-	public static StatusFragment instance() { 
-		return instance;
-	}
 	
 	@Override
 	public void onAttach(Activity activity) {

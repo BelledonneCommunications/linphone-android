@@ -54,7 +54,6 @@ public class InCallActivity extends FragmentActivity implements
 									OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
 	
-	private static InCallActivity instance;
 	private Handler mHandler = new Handler();
 	private Handler controlsHandler = new Handler();
 	private Runnable mControls;
@@ -65,18 +64,9 @@ public class InCallActivity extends FragmentActivity implements
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled;
 	private LinearLayout mControlsLayout;
 	
-	static final boolean isInstanciated() {
-		return instance != null;
-	}
-	
-	public static final InCallActivity instance() {
-		return instance;
-	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        instance = this;      
         setContentView(R.layout.incall);
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
@@ -107,7 +97,7 @@ public class InCallActivity extends FragmentActivity implements
         		switchCamera.setVisibility(View.GONE);
             }
             callFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
         }
 
         LinphoneManager.addListener(this);
@@ -567,15 +557,21 @@ public class InCallActivity extends FragmentActivity implements
 			setCallControlsVisibleAndRemoveCallbacks();
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeAdjust(keyCode)) return true;
- 		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
+// 		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
  		return super.onKeyDown(keyCode, event);
  	}
 
 	public void bindAudioFragment(AudioCallFragment fragment) {
 		audioCallFragment = fragment;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		LinphoneManager.removeListener(this);
+		super.onDestroy();
 	}
 }

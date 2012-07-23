@@ -430,8 +430,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
-
-
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -450,19 +448,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    mWifiLock.release();
 		super.onDestroy();
 	}
-
 	
 	private static final LinphoneGuiListener guiListener() {
 		return null;
-	}
-
-	private static final LinphoneOnCallStateChangedListener incallListener() {
-		return InCallActivity.instance();
-	}
-	
-	
-	
-	
+	}	
 
 	public void onDisplayStatus(final String message) {
 		mHandler.post(new Runnable() {
@@ -487,7 +476,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			}, 50);
 		}
 	}
-
 
 	public void onRegistrationStateChanged(final RegistrationState state,
 			final String message) {
@@ -545,8 +533,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 				try {
 					LinphoneManager.getLc().deferCallUpdate(call);
 					
-					if (incallListener() != null)
-						incallListener().onCallStateChanged(call, state, message);
+//					if (incallListener() != null)
+//						incallListener().onCallStateChanged(call, state, message);
 				} catch (LinphoneCoreException e) {
 					e.printStackTrace();
 				}

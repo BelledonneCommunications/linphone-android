@@ -23,7 +23,7 @@
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     
     <!-- Don't remove the space after android:debuggable: it prevents ndk-build to try including gdbserver and crash gcc -->
-    <application android:label="@string/app_name" android:debuggable ="true" android:icon="@drawable/logo_linphone_57x57">
+    <application android:label="@string/app_name" android:debuggable ="true" android:icon="@drawable/logo_linphone_57x57" android:largeHeap="true">
 
 		<activity android:name="org.linphone.LinphoneLauncherActivity"
 		    android:label="@string/app_name"
@@ -54,7 +54,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -63,7 +63,7 @@
 
         <activity android:name="org.linphone.IncomingCallActivity"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-			android:launchMode="singleTop"
+			android:launchMode="singleInstance"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -81,7 +81,7 @@
         <activity android:name="org.linphone.InCallActivity"
            android:theme="@android:style/Theme.NoTitleBar"
            android:noHistory="true"
-           android:launchMode="singleTop">
+           android:launchMode="singleInstance">
 		<intent-filter>
                <action android:name="android.intent.action.MAIN" />
            </intent-filter>
@@ -108,7 +108,7 @@
             </intent-filter>
          </activity>
 
-	    <service android:name="org.linphone.LinphoneService" />
+	    <service android:name="org.linphone.LinphoneService" android:stopWithTask="false"/>
 	        
 		<receiver android:name="org.linphone.NetworkManager">
 			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>

@@ -23,6 +23,7 @@ import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -42,16 +43,15 @@ import android.view.ViewGroup;
  */
 @TargetApi(5)
 public class VideoCallFragment extends Fragment {
-	private static VideoCallFragment instance;
 	private WakeLock mWakeLock;
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
+	private InCallActivity inCallActivity;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
-		instance = this;
         View view = inflater.inflate(R.layout.video, container, false);
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
@@ -93,7 +93,7 @@ public class VideoCallFragment extends Fragment {
 		
 		mVideoView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				InCallActivity.instance().displayVideoCallControlsIfHidden();
+				inCallActivity.displayVideoCallControlsIfHidden();
 				return false;
 			}
 		});
@@ -101,11 +101,10 @@ public class VideoCallFragment extends Fragment {
 		return view;
     }
 
-	/**
-	 * @return null if not ready yet
-	 */
-	public static VideoCallFragment instance() { 
-		return instance;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		inCallActivity = (InCallActivity) activity;
 	}
 
 	private void fixZOrder(SurfaceView video, SurfaceView preview) {

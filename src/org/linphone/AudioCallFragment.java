@@ -41,20 +41,20 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class AudioCallFragment extends Fragment {
-	private static AudioCallFragment instance;
-	private RelativeLayout callsList;
-	private LayoutInflater inflater;
-	private ViewGroup container;
 	private static final int rowHeight = 75; // Value set in active_call.xml
 	private static final int rowImageHeight = 100; // Value set in active_call.xml
 	private static final int rowThickRatio = 85; // Ratio dependent from the image
 	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
 	private static final int topMarginWithImage = topMargin + rowImageHeight;
 	
+	private RelativeLayout callsList;
+	private LayoutInflater inflater;
+	private ViewGroup container;
+	private InCallActivity inCallActivity;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
-		instance = this;
 		this.inflater = inflater;
 		this.container = container;
 		
@@ -142,14 +142,20 @@ public class AudioCallFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (InCallActivity.instance() == null) {
+		inCallActivity = (InCallActivity) activity;
+		
+		inCallActivity.bindAudioFragment(this);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (inCallActivity == null) {
 			return;
 		}
 		
-		InCallActivity.instance().bindAudioFragment(this);
-		
 		// Just to be sure we have incall controls
-		InCallActivity.instance().setCallControlsVisibleAndRemoveCallbacks();
+		inCallActivity.setCallControlsVisibleAndRemoveCallbacks();
 	}
 	
 	@Override
@@ -158,13 +164,6 @@ public class AudioCallFragment extends Fragment {
 		
 		// Add calls
 		refreshCallList(getResources());
-	}
-	
-	/**
-	 * @return null if not ready yet
-	 */
-	public static AudioCallFragment instance() { 
-		return instance;
 	}
 	
 	public void refreshCallList(Resources resources) {

@@ -73,7 +73,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private static final int SETTINGS_ACTIVITY = 123;
     private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int callActivity = 19;
+	
 	private static LinphoneActivity instance;
+	
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
 	private ImageView history, contacts, dialer, settings, chat;
