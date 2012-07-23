@@ -85,7 +85,7 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options_transfer"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="1"
                 android:visibility="invisible" />
 
             <View
@@ -137,7 +137,7 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options_add_call_alt"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <View
                 android:layout_width="match_parent"

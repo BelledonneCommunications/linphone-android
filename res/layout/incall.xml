@@ -74,7 +74,7 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options_transfer"
-                android:visibility="gone" />
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
@@ -108,7 +108,7 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:src="@drawable/options_add_call_alt"
-                android:visibility="gone" />
+                android:visibility="invisible" />
             
         </LinearLayout>
 
