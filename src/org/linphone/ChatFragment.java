@@ -23,6 +23,7 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 
 import android.net.Uri;
@@ -73,9 +74,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 			contactName.setText(name);
 		}
         
-        ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
+        AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
         if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, Uri.parse(pictureUri), R.drawable.unknown_small);
+        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
         }
         
         ImageView sendMessage = (ImageView) view.findViewById(R.id.sendMessage);

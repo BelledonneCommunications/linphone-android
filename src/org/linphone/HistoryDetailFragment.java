@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.compatibility.Compatibility;
+import org.linphone.ui.AvatarWithShadow;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -34,7 +35,8 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
-	private ImageView contactPicture, dialBack, chat, addToContacts;
+	private ImageView dialBack, chat, addToContacts;
+	private AvatarWithShadow contactPicture;
 	private TextView contactName, callDirection, time, date, dialBackUri;
 	private String sipUri, displayName, pictureUri;
 	
@@ -50,9 +52,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		View view = inflater.inflate(R.layout.history_detail, container, false);
 		
-		contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
+		contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, Uri.parse(pictureUri), R.drawable.unknown_small);
+        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
         }
 		
 		dialBack = (ImageView) view.findViewById(R.id.dialBack);

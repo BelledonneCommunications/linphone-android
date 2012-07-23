@@ -21,6 +21,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.ui.AvatarWithShadow;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -106,9 +107,9 @@ public class AudioCallFragment extends Fragment {
 	}
 	
 	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, boolean hide) {
-		ImageView contactPicture = (ImageView) callView.findViewById(R.id.contactPicture);
+		AvatarWithShadow contactPicture = (AvatarWithShadow) callView.findViewById(R.id.contactPicture);
 		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture, Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
+        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
         }
 		if (hide) {
 			contactPicture.setVisibility(View.GONE);

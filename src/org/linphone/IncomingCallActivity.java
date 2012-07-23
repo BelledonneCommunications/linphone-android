@@ -25,6 +25,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.Log;
+import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.LinphoneSliders;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
@@ -33,7 +34,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +47,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 
 	private TextView mNameView;
 	private TextView mNumberView;
-	private ImageView mPictureView;
+	private AvatarWithShadow mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneSliders mIncomingCallWidget;
 
@@ -57,7 +57,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
-		mPictureView = (ImageView) findViewById(R.id.incoming_picture);
+		mPictureView = (AvatarWithShadow) findViewById(R.id.incoming_picture);
 
         // set this flag so this activity will stay in front of the keyguard
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
@@ -93,7 +93,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		LinphoneAddress address = mCall.getRemoteAddress();
 		// May be greatly sped up using a drawable cache
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
-		LinphoneUtils.setImagePictureFromUri(this, mPictureView, uri, R.drawable.unknown_small);
+		LinphoneUtils.setImagePictureFromUri(this, mPictureView.getView(), uri, R.drawable.unknown_small);
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
 		mNameView.setText(address.getDisplayName());
@@ -132,7 +132,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	private void answer() {
 		if (!LinphoneManager.getInstance().acceptCall(mCall)) {
 			// the above method takes care of Samsung Galaxy S
-			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG);
+			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
 		} else {
 			if (mCall.getCurrentParamsCopy().getVideoEnabled())
 				LinphoneActivity.instance().startVideoActivity(mCall);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -15,7 +16,7 @@
 	        android:id="@+id/contactNameOrNumber"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="0.4"
+	        android:layout_weight="0.5"
 	        android:gravity="center_vertical|left"
 	        android:paddingLeft="20dp"
 	        android:textColor="@android:color/white"
@@ -23,8 +24,8 @@
 	    
 	    <ImageView
 	        android:id="@+id/callStatus"
-	        android:layout_width="35dp"
-	        android:layout_height="35dp"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
 	        android:gravity="center_vertical"
 	        android:paddingLeft="10dp"
 	        android:paddingRight="10dp"
@@ -43,14 +44,12 @@
 	    
 	</LinearLayout>
 	
-	<ImageView
+	<org.linphone.ui.AvatarWithShadow
 	    android:id="@+id/contactPicture"
-	    android:layout_width="100dp"
-	    android:layout_height="100dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    linphone:picture="@drawable/unknown_small"
 	    android:layout_gravity="center"
-	    android:contentDescription="@string/content_description_contact_picture"
-	    android:paddingBottom="10sp"
-	    android:scaleType="fitCenter"
-	    android:src="@drawable/unknown_small" />
+	    android:paddingBottom="10sp" />
 
 </LinearLayout>

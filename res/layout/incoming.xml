@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent" 
 	android:layout_height="match_parent"
   	android:background="@drawable/background">
@@ -27,12 +28,11 @@
 			android:orientation="vertical"
 			android:paddingTop="30dip">
 			
-			<ImageView 
-            	android:contentDescription="@string/content_description_contact_picture"
+		    <org.linphone.ui.AvatarWithShadow
 			    android:id="@+id/incoming_picture"
-				android:layout_height="wrap_content" 
-				android:layout_width="wrap_content" 
-				android:layout_gravity="center" 
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    linphone:picture="@drawable/unknown_small"
 				android:scaleType="fitCenter"
 				android:minWidth="128dp" 
 				android:minHeight="128dp"

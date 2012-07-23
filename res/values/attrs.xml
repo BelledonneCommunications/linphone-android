@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
     <attr name="direction">
         <enum name="rightToLeft" value="0" />
         <enum name="bottomToTop" value="1" />
@@ -12,4 +13,9 @@
         <attr name="content" format="reference" />
         <attr name="direction" />
     </declare-styleable>
+    
+    <declare-styleable name="AvatarWithShadow">
+        <attr name="picture" format="reference" />
+    </declare-styleable>
+    
 </resources>

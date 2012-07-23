@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.InputStream;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.ui.AvatarWithShadow;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -28,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -44,12 +44,12 @@ public class ContactFragment extends Fragment {
 		contact = (Contact) getArguments().getSerializable("Contact");
 		View view = inflater.inflate(R.layout.contact, container, false);
 		
-		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
+		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		if (contact.getPhotoUri() != null) {
 			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
 			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
-        	contactPicture.setImageResource(R.drawable.unknown_small);
+        	contactPicture.setBackgroundResource(R.drawable.unknown_small);
         }
 		
 		chatListener = getChatListener();
