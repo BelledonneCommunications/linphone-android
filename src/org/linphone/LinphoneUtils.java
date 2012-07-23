@@ -241,5 +241,33 @@ public final class LinphoneUtils {
 	public static int pixelsToDpi(Resources res, int pixels) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) pixels, res.getDisplayMetrics());
 	}
+	
+	public static boolean isCallRunning(LinphoneCall call)
+	{
+		if (call == null) {
+			return false;
+		}
+		
+		LinphoneCall.State state = call.getState();
+		
+		return state == LinphoneCall.State.Connected ||
+				state == LinphoneCall.State.CallUpdated ||
+				state == LinphoneCall.State.CallUpdatedByRemote ||
+				state == LinphoneCall.State.StreamsRunning ||
+				state == LinphoneCall.State.Resuming;
+	}
+	
+	public static boolean isCallEstablished(LinphoneCall call) {
+		if (call == null) {
+			return false;
+		}
+		
+		LinphoneCall.State state = call.getState();
+		
+		return isCallRunning(call) || 
+				state == LinphoneCall.State.Paused ||
+				state == LinphoneCall.State.PausedByRemote ||
+				state == LinphoneCall.State.Pausing;
+	}
 }
 

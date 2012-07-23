@@ -77,7 +77,7 @@ public class InCallActivity extends FragmentActivity implements
             if (LinphoneManager.getLc().getCallsNb() > 0) {
             	LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 
-            	if (isCallEstablished(call)) {
+            	if (LinphoneUtils.isCallEstablished(call)) {
 	    			enableAndRefreshInCallActions();
 	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
             	}
@@ -204,8 +204,7 @@ public class InCallActivity extends FragmentActivity implements
 			toogleSpeaker();
 		} 
 		else if (id == R.id.addCall) {
-			setResult(Activity.RESULT_FIRST_USER);
-			finish();
+			goBackToDialer();
 		} 
 		else if (id == R.id.pause) {
 			pause();
@@ -317,7 +316,7 @@ public class InCallActivity extends FragmentActivity implements
 	private void pause() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall call = lc.getCurrentCall();
-		if (call != null && isCallRunning(call)) {
+		if (call != null && LinphoneUtils.isCallRunning(call)) {
 			lc.pauseCall(call);
 			pause.setImageResource(R.drawable.pause_on);
 		} else {
@@ -482,32 +481,9 @@ public class InCallActivity extends FragmentActivity implements
 		}
 	}
 	
-	private boolean isCallRunning(LinphoneCall call)
-	{
-		if (call == null) {
-			return false;
-		}
-		
-		LinphoneCall.State state = call.getState();
-		
-		return state == LinphoneCall.State.Connected ||
-				state == LinphoneCall.State.CallUpdated ||
-				state == LinphoneCall.State.CallUpdatedByRemote ||
-				state == LinphoneCall.State.StreamsRunning ||
-				state == LinphoneCall.State.Resuming;
-	}
-	
-	private boolean isCallEstablished(LinphoneCall call) {
-		if (call == null) {
-			return false;
-		}
-		
-		LinphoneCall.State state = call.getState();
-		
-		return isCallRunning(call) || 
-				state == LinphoneCall.State.Paused ||
-				state == LinphoneCall.State.PausedByRemote ||
-				state == LinphoneCall.State.Pausing;
+	public void goBackToDialer() {
+		setResult(Activity.RESULT_FIRST_USER);
+		finish();
 	}
 
 	@Override

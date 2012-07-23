@@ -173,6 +173,11 @@ public class AudioCallFragment extends Fragment {
 
 		callsList.removeAllViews();
 		int index = 0;
+        
+        if (LinphoneManager.getLc().getCallsNb() == 0) {
+        	inCallActivity.goBackToDialer();
+        	return;
+        }
 		
         for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
         	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call, container, false);

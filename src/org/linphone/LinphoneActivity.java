@@ -495,11 +495,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	@Override
-	public void onCallStateChanged(LinphoneCall call, State state,
-			String message) {
+	public void onCallStateChanged(LinphoneCall call, State state, String message) {
 		if (state == State.IncomingReceived) {
-			Intent intent = new Intent(this, IncomingCallActivity.class);
-			startActivity(intent);
+			startActivity(new Intent(this, IncomingCallActivity.class));
 		} else if (state == State.OutgoingInit) {
 			if (call.getCurrentParamsCopy().getVideoEnabled()) {
 				startVideoActivity(call);
@@ -681,14 +679,21 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		updateMissedChatCount();
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
+		
+		if (LinphoneManager.getLc().getCalls().length > 0) {
+			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+			LinphoneCall.State callState = call.getState();
+			if (callState == State.IncomingReceived) {
+				startActivity(new Intent(this, IncomingCallActivity.class));
+			}
+		}
 	}
 	
 	@Override
-	protected void onPause() {
-		super.onPause();
-		
+	protected void onDestroy() {
 		chatStorage.close();
 		chatStorage = null;
+		super.onDestroy();
 	}
 	
 	@Override
