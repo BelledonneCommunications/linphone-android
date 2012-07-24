@@ -23,6 +23,7 @@ import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,7 +58,7 @@ public class DialerFragment extends Fragment {
 		
 		mCall = (CallButton) view.findViewById(R.id.Call);
 		mCall.setAddressWidget(mAddress);
-		if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().isInCallLayout()) {
+		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			mCall.setImageResource(R.drawable.plus);
 		} else {
 			mCall.setImageResource(R.drawable.call);
@@ -81,7 +82,7 @@ public class DialerFragment extends Fragment {
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		};
-		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneActivity.instance().isInCallLayout()));
+		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
 		resetLayout();
 		
 		if (getArguments() != null) {
@@ -108,16 +109,23 @@ public class DialerFragment extends Fragment {
 	}
 	
 	@Override
-	public void onResume() {
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		LinphoneActivity.instance().updateDialerFragment(this);
+	}
+	
+	@Override
+	public void onResume() {		
 		super.onResume();
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
 		}
+		resetLayout();
 	}
 	
 	public void resetLayout() {
-		if (LinphoneActivity.instance().isInCallLayout()) {
+		if (LinphoneManager.getLc().getCallsNb() > 0) {
 			mCall.setImageResource(R.drawable.plus);
 			mAddress.setText("");
 			mAddContact.setImageResource(R.drawable.cancel);

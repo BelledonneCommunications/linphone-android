@@ -77,11 +77,11 @@ public class Digit extends Button implements AddressAware {
 	}
 
 	private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
-		final CharSequence mKeyCode;
+		final char mKeyCode;
 		boolean mIsDtmfStarted;
 
 		DialKeyListener() {
-			mKeyCode = Digit.this.getText().subSequence(0, 1);
+			mKeyCode = Digit.this.getText().subSequence(0, 1).charAt(0);
 		}
 
 		private boolean linphoneServiceReady() {
@@ -100,7 +100,7 @@ public class Digit extends Button implements AddressAware {
 				lc.stopDtmf();
 				mIsDtmfStarted =false;
 				if (lc.isIncall()) {
-					lc.sendDtmf(mKeyCode.charAt(0));
+					lc.sendDtmf(mKeyCode);
 				}
 			}
 			
@@ -110,7 +110,7 @@ public class Digit extends Button implements AddressAware {
 					lBegin = mAddress.length();
 				}
 				if (lBegin >=0) {
-					mAddress.getEditableText().insert(lBegin,mKeyCode);
+					mAddress.getEditableText().insert(lBegin,String.valueOf(mKeyCode));
 				}
 			}
 		}
@@ -121,7 +121,7 @@ public class Digit extends Button implements AddressAware {
 
 			LinphoneCore lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
-				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode.charAt(0));
+				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
 				mIsDtmfStarted=true;
 			} else {
 				if (event.getAction() == MotionEvent.ACTION_UP) {

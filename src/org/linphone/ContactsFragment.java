@@ -69,7 +69,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         
         newContact = (ImageView) view.findViewById(R.id.newContact);
         newContact.setOnClickListener(this);
-        newContact.setEnabled(!LinphoneActivity.instance().isInCallLayout());
+        newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
         
         allContacts.setEnabled(onlyDisplayLinphoneContacts);
         linphoneContacts.setEnabled(!allContacts.isEnabled());

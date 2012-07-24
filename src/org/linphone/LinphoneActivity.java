@@ -84,7 +84,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private SavedState dialerSavedState;
 	private ChatStorage chatStorage;
 	private Handler mHandler = new Handler();
-	private boolean isInCallLayout = false;
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
 	
@@ -606,16 +605,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void initInCallMenuLayout() {
-		isInCallLayout = true;
 		selectMenu(FragmentsAvailable.DIALER);
-		((DialerFragment) dialerFragment).resetLayout();
+		if (dialerFragment != null) {
+			((DialerFragment) dialerFragment).resetLayout();
+		}
 	}
 	
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				isInCallLayout = false;
 				if (dialerFragment != null) {
 					((DialerFragment) dialerFragment).resetLayout();
 				}
@@ -630,10 +629,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				}
 			}
 		});
-	}
-	
-	public boolean isInCallLayout() {
-		return isInCallLayout;
 	}
 	
 	public FragmentsAvailable getCurrentFragment() {
