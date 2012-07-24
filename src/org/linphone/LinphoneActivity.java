@@ -616,7 +616,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			@Override
 			public void run() {
 				isInCallLayout = false;
-				((DialerFragment) dialerFragment).resetLayout();
+				if (dialerFragment != null) {
+					((DialerFragment) dialerFragment).resetLayout();
+				}
 				
 				if (LinphoneManager.getLc().getCallsNb() > 0) {
 					LinphoneCall call = LinphoneManager.getLc().getCalls()[0];

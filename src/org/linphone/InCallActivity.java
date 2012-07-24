@@ -61,7 +61,7 @@ public class InCallActivity extends FragmentActivity implements
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isTransferAllowed;
 	private LinearLayout mControlsLayout;
 	
 	@Override
@@ -70,6 +70,7 @@ public class InCallActivity extends FragmentActivity implements
         setContentView(R.layout.incall);
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
+        isTransferAllowed = getResources().getBoolean(R.bool.allow_transfers);
         
         if (findViewById(R.id.fragmentContainer) != null) {
             initUI();
@@ -135,6 +136,10 @@ public class InCallActivity extends FragmentActivity implements
         switchCamera.setOnClickListener(this);
 		
 		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
+		
+        if (!isTransferAllowed) {
+        	addCall.setImageResource(R.drawable.options_add_call);
+        }
 	}
 	
 	private void enableAndRefreshInCallActions() {
@@ -426,7 +431,9 @@ public class InCallActivity extends FragmentActivity implements
 		if (addCall.getVisibility() == View.VISIBLE) {
 			options.setImageResource(R.drawable.options);
 			if (getResources().getBoolean(R.bool.disable_animations)) {
-				transfer.setVisibility(View.GONE);
+				if (isTransferAllowed) {
+					transfer.setVisibility(View.GONE);
+				}
 				addCall.setVisibility(View.GONE);
 			} else {
 				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_left_to_right);
@@ -443,16 +450,22 @@ public class InCallActivity extends FragmentActivity implements
 					
 					@Override
 					public void onAnimationEnd(Animation animation) {
-						transfer.setVisibility(View.GONE);
+						if (isTransferAllowed) {
+							transfer.setVisibility(View.GONE);
+						}
 						addCall.setVisibility(View.GONE);
 					}
 				});
-				transfer.startAnimation(anim);
+				if (isTransferAllowed) {
+					transfer.startAnimation(anim);
+				}
 				addCall.startAnimation(anim);
 			}
 		} else {		
 			if (getResources().getBoolean(R.bool.disable_animations)) {
-				transfer.setVisibility(View.VISIBLE);
+				if (isTransferAllowed) {
+					transfer.setVisibility(View.VISIBLE);
+				}
 				addCall.setVisibility(View.VISIBLE);
 				options.setImageResource(R.drawable.options_alt);
 			} else {
@@ -471,11 +484,15 @@ public class InCallActivity extends FragmentActivity implements
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						options.setImageResource(R.drawable.options_alt);
-						transfer.setVisibility(View.VISIBLE);
+						if (isTransferAllowed) {
+							transfer.setVisibility(View.VISIBLE);
+						}
 						addCall.setVisibility(View.VISIBLE);
 					}
 				});
-				transfer.startAnimation(anim);
+				if (isTransferAllowed) {
+					transfer.startAnimation(anim);
+				}
 				addCall.startAnimation(anim);
 			}
 		}

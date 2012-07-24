@@ -21,12 +21,13 @@
 		    android:textColor="@android:color/white"
 		    android:textSize="22dp" />
 	
-		<LinearLayout 
+		<LinearLayout
 		    android:layout_width="match_parent"
-			android:layout_height="match_parent" 
+		    android:layout_height="match_parent"
 		    android:layout_weight="0.1"
-			android:orientation="vertical"
-			android:paddingTop="30dip">
+		    android:gravity="center_horizontal"
+		    android:orientation="vertical"
+		    android:paddingTop="30dip" >
 			
 		    <org.linphone.ui.AvatarWithShadow
 			    android:id="@+id/incoming_picture"
