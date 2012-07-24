@@ -22,15 +22,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
@@ -46,6 +50,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -54,6 +60,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 
 /**
  * 
@@ -81,6 +88,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private boolean mTestDelayElapsed = true; // no timer
 	private WifiManager mWifiManager ;
 	private WifiLock mWifiLock ;
+	private List<Notification> messagesNotifications;
 	public static boolean isReady() {
 		return instance!=null && instance.mTestDelayElapsed;
 	}
@@ -103,6 +111,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Notification mNotif;
 	private Notification mIncallNotif;
 	private Notification mMsgNotif;
+	private Notification mCustomNotif;
 	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
@@ -192,33 +201,45 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private synchronized void setIncallIcon(IncallIconState state) {
 		if (state == mCurrentIncallIconState) return;
 		mCurrentIncallIconState = state;
-		if (mIncallNotif == null) mIncallNotif = new Notification();
 
 		int notificationTextId = 0;
+		int inconId = 0;
+		
 		switch (state) {
 		case IDLE:
 			mNM.cancel(INCALL_NOTIF_ID);
 			return;
 		case INCALL:
-			mIncallNotif.icon = R.drawable.conf_unhook;
+			inconId = R.drawable.conf_unhook;
 			notificationTextId = R.string.incall_notif_active;
 			break;
 		case PAUSE:
-			mIncallNotif.icon = R.drawable.conf_status_paused;
+			inconId = R.drawable.conf_status_paused;
 			notificationTextId = R.string.incall_notif_paused;
 			break;
 		case VIDEO:
-			mIncallNotif.icon = R.drawable.conf_video;
+			inconId = R.drawable.conf_video;
 			notificationTextId = R.string.incall_notif_video;
 			break;	
 		default:
 			throw new IllegalArgumentException("Unknown state " + state);
 		}
+		
+		String userName = LinphoneManager.getLc().getCurrentCall().getRemoteAddress().getUserName();
+		String domain = LinphoneManager.getLc().getCurrentCall().getRemoteAddress().getDomain();
+		String displayName = LinphoneManager.getLc().getCurrentCall().getRemoteAddress().getDisplayName();
+		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress("sip:" + userName + "@" + domain);
+		address.setDisplayName(displayName);
 
-		mIncallNotif.iconLevel = 0;
-		mIncallNotif.when=System.currentTimeMillis();
-		mIncallNotif.flags &= Notification.FLAG_ONGOING_EVENT;
-		mIncallNotif.setLatestEventInfo(this, mNotificationTitle, getString(notificationTextId), mNotifContentIntent);
+		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
+		Bitmap bm = null;
+		try {
+			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+		} catch (Exception e) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+		}
+		mIncallNotif = Compatibility.createInCallNotification(getApplicationContext(), mNotificationTitle, getString(notificationTextId), inconId, bm, mNotifContentIntent);
+
 		notifyWrapper(INCALL_NOTIF_ID, mIncallNotif);
 	}
 
@@ -243,22 +264,22 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public void addNotification(Intent onClickIntent, int iconResourceID, String title, String message) {
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
-		if (mMsgNotif == null) {
-			mMsgNotif = new Notification();
+		if (mCustomNotif == null) {
+			mCustomNotif = new Notification();
 		}
 			
-		mMsgNotif.icon = iconResourceID;
-		mMsgNotif.iconLevel = 0;
-		mMsgNotif.when = System.currentTimeMillis();
-		mMsgNotif.flags &= Notification.FLAG_ONGOING_EVENT;
+		mCustomNotif.icon = iconResourceID;
+		mCustomNotif.iconLevel = 0;
+		mCustomNotif.when = System.currentTimeMillis();
+		mCustomNotif.flags &= Notification.FLAG_ONGOING_EVENT;
 		
-		mMsgNotif.defaults |= Notification.DEFAULT_VIBRATE;
-		mMsgNotif.defaults |= Notification.DEFAULT_SOUND;
-		mMsgNotif.defaults |= Notification.DEFAULT_LIGHTS;
+		mCustomNotif.defaults |= Notification.DEFAULT_VIBRATE;
+		mCustomNotif.defaults |= Notification.DEFAULT_SOUND;
+		mCustomNotif.defaults |= Notification.DEFAULT_LIGHTS;
 		
-		mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
+		mCustomNotif.setLatestEventInfo(this, title, message, notifContentIntent);
 		
-		notifyWrapper(CUSTOM_NOTIF_ID, mMsgNotif);
+		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
 	
 	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
@@ -274,26 +295,18 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		
 		if (mMsgNotif == null) {
 			mMsgNotifCount = 1;
-			mMsgNotif = new Notification();
-			
-			mMsgNotif.icon = R.drawable.chat_icon_over;
-			mMsgNotif.iconLevel = 0;
-			mMsgNotif.when = System.currentTimeMillis();
-			mMsgNotif.flags &= Notification.FLAG_ONGOING_EVENT;
-			
-			mMsgNotif.defaults |= Notification.DEFAULT_VIBRATE;
-			mMsgNotif.defaults |= Notification.DEFAULT_SOUND;
-			mMsgNotif.defaults |= Notification.DEFAULT_LIGHTS;
-			
-			String title = "New message from %s :".replace("%s", fromName);
-			mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
 		} else {
 			mMsgNotifCount++;
-			mMsgNotif.when = System.currentTimeMillis();
-			
-			String title = mMsgNotifCount + " new messages from %s".replace("%s", fromName);
-			mMsgNotif.setLatestEventInfo(this, title, "", notifContentIntent);
 		}
+		
+		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactoryImpl.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+		Bitmap bm = null;
+		try {
+			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+		} catch (Exception e) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+		}
+		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
 		
 		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
 	}

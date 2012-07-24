@@ -21,13 +21,18 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.linphone.Contact;
+import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 /**
  * @author Sylvain Berfini
@@ -118,5 +123,48 @@ public class Compatibility {
 			//TODO
 		}
 		return null;
+	}
+	
+	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
+		Notification notif = null;
+		String title;
+		if (msgCount == 1) {
+			title = "Unread message from %s".replace("%s", msgSender);
+		} else {
+			title = "%i unread messages".replace("%i", String.valueOf(msgCount));
+		}
+		
+		if (Version.sdkAboveOrEqual(16)) {
+			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
+		} else {
+			notif = new Notification();
+			notif.icon = R.drawable.chat_icon_over;
+			notif.iconLevel = 0;
+			notif.when = System.currentTimeMillis();
+			notif.flags &= Notification.FLAG_ONGOING_EVENT;
+			
+			notif.defaults |= Notification.DEFAULT_VIBRATE;
+			notif.defaults |= Notification.DEFAULT_SOUND;
+			notif.defaults |= Notification.DEFAULT_LIGHTS;
+			
+			notif.setLatestEventInfo(context, title, msg, intent);
+		}
+		return notif;
+	}
+	
+	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, PendingIntent intent) {
+		Notification notif = null;
+		
+		if (Version.sdkAboveOrEqual(16)) {
+			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, intent);
+		} else {
+			notif = new Notification();
+			notif.iconLevel = 0;
+			notif.when=System.currentTimeMillis();
+			notif.flags &= Notification.FLAG_ONGOING_EVENT;
+			
+			notif.setLatestEventInfo(context, title, msg, intent);
+		}
+		return notif;
 	}
 }

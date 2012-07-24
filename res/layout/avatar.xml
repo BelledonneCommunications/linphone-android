@@ -12,13 +12,13 @@
         android:src="@drawable/avatar_shadow_left" />
 	
     <ImageView
-	    android:id="@+id/picture"
-	    android:layout_width="100dp"
-	    android:layout_height="100dp"
-	    android:layout_gravity="center"
-	    android:contentDescription="@string/content_description_contact_picture"
-	    android:src="@drawable/unknown_small"
-	    android:scaleType="fitCenter" />
+        android:id="@+id/picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/content_description_contact_picture"
+        android:scaleType="fitEnd"
+        android:src="@drawable/unknown_small" />
     
     <ImageView
         android:layout_width="25dp"
