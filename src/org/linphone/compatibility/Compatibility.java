@@ -152,11 +152,11 @@ public class Compatibility {
 		return notif;
 	}
 	
-	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, PendingIntent intent) {
+	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 		Notification notif = null;
 		
 		if (Version.sdkAboveOrEqual(16)) {
-			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, intent);
+			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else {
 			notif = new Notification();
 			notif.iconLevel = 0;
