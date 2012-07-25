@@ -7,8 +7,7 @@
     
     <LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="0.87"
+	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
         
         <ImageView 
@@ -17,6 +16,8 @@
             android:src="@drawable/all_contacts"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
         <ImageView 
@@ -25,6 +26,8 @@
             android:src="@drawable/linphone_contacts"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
         <ImageView 
@@ -33,14 +36,15 @@
             android:src="@drawable/new_contact"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
     </LinearLayout>
     
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-	    android:layout_weight="0.13">
+        android:layout_height="match_parent">
         
 	    <ListView 
 	        android:id="@+id/contactsList"

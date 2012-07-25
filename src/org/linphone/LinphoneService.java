@@ -226,9 +226,14 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			throw new IllegalArgumentException("Unknown state " + state);
 		}
 		
-		String userName = LinphoneManager.getLc().getCurrentCall().getRemoteAddress().getUserName();
-		String domain = LinphoneManager.getLc().getCurrentCall().getRemoteAddress().getDomain();
-		String displayName = LinphoneManager.getLc().getCurrentCall().getRemoteAddress().getDisplayName();
+		if (LinphoneManager.getLc().getCallsNb() == 0) {
+			return;
+		}
+		
+		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+		String userName = call.getRemoteAddress().getUserName();
+		String domain = call.getRemoteAddress().getDomain();
+		String displayName = call.getRemoteAddress().getDisplayName();
 		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress("sip:" + userName + "@" + domain);
 		address.setDisplayName(displayName);
 

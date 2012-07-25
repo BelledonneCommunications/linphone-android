@@ -14,29 +14,29 @@
 	    
 	    <TextView
 	        android:id="@+id/contactNameOrNumber"
-	        android:layout_width="match_parent"
+	        android:layout_width="0dip"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5"
+	        android:layout_weight="1"
 	        android:gravity="center_vertical|left"
 	        android:paddingLeft="20dp"
+	       	android:paddingRight="10dp"
 	        android:textColor="@android:color/white"
 	        android:textSize="22dp" />
 	    
 	    <ImageView
 	        android:id="@+id/callStatus"
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
+	        android:layout_width="30dp"
+	        android:layout_height="30dp"
 	        android:gravity="center_vertical"
-	        android:paddingLeft="10dp"
-	        android:paddingRight="10dp"
 	        android:scaleType="fitCenter"
+	        android:adjustViewBounds="true"
 	        android:src="@drawable/pause_default" />
 	    
 	    <Chronometer
 		    android:id="@+id/callTimer"
-		    android:layout_width="match_parent"
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
+	        android:paddingLeft="10dp"
 	       	android:paddingRight="20dp"
 	       	android:gravity="center_vertical|right"
 		    android:textColor="@android:color/white"

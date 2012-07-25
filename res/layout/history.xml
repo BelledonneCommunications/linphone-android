@@ -7,8 +7,7 @@
     
     <LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="0.87"
+	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
         
         <ImageView 
@@ -17,6 +16,8 @@
             android:src="@drawable/history_all"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
         <ImageView 
@@ -25,6 +26,8 @@
             android:src="@drawable/history_missed"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
         <ImageView 
@@ -33,6 +36,8 @@
             android:src="@drawable/history_edit"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
         <ImageView 
@@ -42,6 +47,8 @@
             android:visibility="gone"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
     </LinearLayout>
@@ -51,7 +58,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-	    android:layout_weight="0.13" />
+        android:dividerHeight="1dp" />
 
 </LinearLayout>
