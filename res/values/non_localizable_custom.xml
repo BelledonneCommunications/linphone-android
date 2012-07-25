@@ -12,7 +12,7 @@
 	<bool name="useFirstLoginActivity">false</bool>
 	<bool name="disable_animations">false</bool>
 	<bool name="lock_statusbar">false</bool>
-	<bool name="emoticons_in_messages">false</bool>
+	<bool name="emoticons_in_messages">true</bool>
 	<bool name="only_display_username_if_unknown">true</bool>
 	<bool name="display_messages_time">true</bool> <!-- Used to show the time of each message arrival -->
 

@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.core.Log;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -75,7 +76,7 @@ public class BubbleChat {
 	
 	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, int previousID) {
 		view = new RelativeLayout(context);
-    	
+		
     	LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	
     	if (isIncoming) {
