@@ -19,12 +19,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.TypedValue;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -34,6 +39,38 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class BubbleChat {
+	private static final HashMap<String, Integer> emoticons = new HashMap<String, Integer>();
+	static {
+	    emoticons.put(":)", R.drawable.emo_im_happy);
+	    emoticons.put(":-)", R.drawable.emo_im_happy);
+	    emoticons.put(":(", R.drawable.emo_im_sad);
+	    emoticons.put(":-(", R.drawable.emo_im_sad);
+	    emoticons.put(":-P", R.drawable.emo_im_tongue_sticking_out);
+	    emoticons.put(":P", R.drawable.emo_im_tongue_sticking_out);
+	    emoticons.put(";-)", R.drawable.emo_im_winking);
+	    emoticons.put(";)", R.drawable.emo_im_winking);
+	    emoticons.put(":-D", R.drawable.emo_im_laughing);
+	    emoticons.put(":D", R.drawable.emo_im_laughing);
+	    emoticons.put("8-)", R.drawable.emo_im_cool);
+	    emoticons.put("8)", R.drawable.emo_im_cool);
+	    emoticons.put("O:)", R.drawable.emo_im_angel);
+	    emoticons.put("O:-)", R.drawable.emo_im_angel);
+	    emoticons.put(":-*", R.drawable.emo_im_kissing);
+	    emoticons.put(":*", R.drawable.emo_im_kissing);
+	    emoticons.put(":-/", R.drawable.emo_im_undecided);
+	    emoticons.put(":/", R.drawable.emo_im_undecided);
+	    emoticons.put(":-\\", R.drawable.emo_im_undecided);
+	    emoticons.put(":\\", R.drawable.emo_im_undecided);
+	    emoticons.put(":-O", R.drawable.emo_im_surprised);
+	    emoticons.put(":O", R.drawable.emo_im_surprised);
+	    emoticons.put(":-@", R.drawable.emo_im_yelling);
+	    emoticons.put(":@", R.drawable.emo_im_yelling);
+	    emoticons.put("O.o", R.drawable.emo_im_wtf);
+	    emoticons.put("o.O", R.drawable.emo_im_wtf);
+	    emoticons.put(":'(", R.drawable.emo_im_crying);
+	    emoticons.put("$.$", R.drawable.emo_im_money_mouth);
+	}
+	
 	private RelativeLayout view;
 	
 	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, int previousID) {
@@ -57,11 +94,11 @@ public class BubbleChat {
 		TextView messageView = new TextView(context);
 		messageView.setId(id);
     	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    	messageView.setText(message);
+    	messageView.setText(getSmiledText(context, message));
     	messageView.setTextColor(Color.BLACK);
 
     	view.setId(id);
-    	layoutParams.setMargins(0, pixelsToDpi(context, 10), 0, 0);
+    	layoutParams.setMargins(0, LinphoneUtils.pixelsToDpi(context.getResources(), 10), 0, 0);
     	view.setLayoutParams(layoutParams);	
     	view.addView(messageView);
     	
@@ -113,7 +150,23 @@ public class BubbleChat {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 	
-	private int pixelsToDpi(Context context, int pixels) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) pixels, context.getResources().getDisplayMetrics());
+	public static Spannable getSmiledText(Context context, String text) {
+		SpannableStringBuilder builder = new SpannableStringBuilder(text);
+		int index;
+
+		for (index = 0; index < builder.length(); index++) {
+		    for (Entry<String, Integer> entry : emoticons.entrySet()) {
+		        int length = entry.getKey().length();
+		        if (index + length > builder.length())
+		            continue;
+		        if (builder.subSequence(index, index + length).toString().equals(entry.getKey())) {
+		            builder.setSpan(new ImageSpan(context, entry.getValue()), index, index + length,
+		            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		            index += length - 1;
+		            break;
+		        }
+		    }
+		}
+		return builder;
 	}
 }

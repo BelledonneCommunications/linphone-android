@@ -26,6 +26,7 @@ import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.ui.SlidingDrawer;
+import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -68,6 +69,12 @@ public class StatusFragment extends Fragment {
 		encryption = (ImageView) view.findViewById(R.id.encryption);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
+		drawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
+			@Override
+			public void onDrawerOpened() {
+				populateSliderContent();
+			}
+		});
 		sliderContent = (RelativeLayout) view.findViewById(R.id.content);
 		exit = (TextView) view.findViewById(R.id.exit);
 		exit.setOnClickListener(new OnClickListener() {
@@ -128,7 +135,7 @@ public class StatusFragment extends Fragment {
 			hashMapAccountsStateList.add(entitiesHashMap);
 		}
 		Adapter adapterForList = new SimpleAdapter(getActivity(), hashMapAccountsStateList, R.layout.accounts,
-                new String[] {"Identity", "State"},
+                new String[] {"Identity", "State" },
                 new int[] { R.id.Identity, R.id.State });
 		accounts.setAdapter((ListAdapter) adapterForList);
 
