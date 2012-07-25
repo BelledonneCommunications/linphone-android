@@ -428,10 +428,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			chatFragment.onMessageReceived(from, message);
 			chatStorage.markMessageAsRead(id);
 		} else if (LinphoneService.isReady()) {
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
-			LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
 			displayMissedChats(chatStorage.getUnreadMessageCount());
 		}
+		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
+		LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
 	}
 	
 	public void updateMissedChatCount() {

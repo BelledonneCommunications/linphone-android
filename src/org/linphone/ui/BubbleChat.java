@@ -94,7 +94,11 @@ public class BubbleChat {
 		TextView messageView = new TextView(context);
 		messageView.setId(id);
     	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    	messageView.setText(getSmiledText(context, message));
+    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+    		messageView.setText(getSmiledText(context, message));
+    	} else {
+    		messageView.setText(message);
+    	}
     	messageView.setTextColor(Color.BLACK);
 
     	view.setId(id);
