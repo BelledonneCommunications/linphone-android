@@ -42,6 +42,8 @@ public class ContactFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		contact = (Contact) getArguments().getSerializable("Contact");
+		contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
+		
 		View view = inflater.inflate(R.layout.contact, container, false);
 		
 		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);

@@ -233,8 +233,6 @@ public class ApiFivePlus {
 	        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
 	        }
 	        
-	        contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), cr));
-	        
 	        return contact;
 		} catch (Exception e) {
 			

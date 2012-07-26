@@ -108,8 +108,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			return;
 		}
         
-        prepareContactsInBackground();
-        
         boolean useFirstLoginActivity = getResources().getBoolean(R.bool.useFirstLoginActivity);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         if (useFirstLoginActivity && !pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
@@ -668,6 +666,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	@Override
 	protected void onResume() {
 		super.onResume();
+        
+        prepareContactsInBackground();
 		
 		if (chatStorage != null) {
 			chatStorage.close();
