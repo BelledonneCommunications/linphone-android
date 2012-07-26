@@ -154,7 +154,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 
 	@Override
 	public void onClick(View v) {
-		if (chatRoom != null && message != null) {
+		if (chatRoom != null && message != null && message.getText().length() > 0) {
 			String messageToSend = message.getText().toString();
 			message.setText("");
 			
@@ -164,7 +164,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
 			}
 			
-			displayMessage(previousMessageID + 2, messageToSend, getString(R.string.now_date_format), false, messagesLayout);
+			displayMessage(previousMessageID + 2, messageToSend, String.valueOf(System.currentTimeMillis()), false, messagesLayout);
 			scrollToEnd();
 		}
 	}
@@ -182,7 +182,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 	public void onMessageReceived(LinphoneAddress from, String message) {
 		if (from.asStringUriOnly().equals(sipUri))  {
 			int id = previousMessageID + 2;
-			displayMessage(id, message, getString(R.string.now_date_format), true, messagesLayout);
+			displayMessage(id, message, String.valueOf(System.currentTimeMillis()), true, messagesLayout);
 			scrollToEnd();
 		}
 	}

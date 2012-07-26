@@ -18,7 +18,7 @@
         <org.linphone.ui.AvatarWithShadow
 		    android:id="@+id/contactPicture"
 		    android:layout_width="wrap_content"
-		    android:layout_height="100dp"
+		    android:layout_height="wrap_content"
 		    linphone:picture="@drawable/unknown_small" />
 	        
         <TextView
@@ -51,13 +51,13 @@
     
     <LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="80dp"
+	    android:layout_height="60dp"
 	    android:gravity="center"
 	    android:orientation="horizontal">
         
         <EditText
             android:id="@+id/message"
-            android:inputType="textMultiLine"
+            android:inputType="textShortMessage"
             android:textColor="@android:color/black"
         	android:layout_weight="1"
             android:layout_width="0dip"

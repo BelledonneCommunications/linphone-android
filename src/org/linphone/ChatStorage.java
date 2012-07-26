@@ -54,13 +54,14 @@ public class ChatStorage {
 			values.put("localContact", from);
 			values.put("remoteContact", to);
 			values.put("direction", OUTGOING);
+			values.put("read", READ);
 		} else if (to.equals("")) {
 			values.put("localContact", to);
 			values.put("remoteContact", from);
 			values.put("direction", INCOMING);
+			values.put("read", NOT_READ);
 		}
 		values.put("message", message);
-		values.put("read", NOT_READ);
 		values.put("time", System.currentTimeMillis());
 		return (int) db.insert(TABLE_NAME, null, values);
 	}

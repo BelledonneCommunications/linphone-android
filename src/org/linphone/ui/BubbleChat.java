@@ -24,14 +24,15 @@ import java.util.Map.Entry;
 
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.core.Log;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -77,7 +78,7 @@ public class BubbleChat {
 	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, int previousID) {
 		view = new RelativeLayout(context);
 		
-    	LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	
     	if (isIncoming) {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -92,30 +93,63 @@ public class BubbleChat {
     		layoutParams.addRule(RelativeLayout.BELOW, previousID);
     	}
 
-		TextView messageView = new TextView(context);
-		messageView.setId(id);
-    	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-    		messageView.setText(getSmiledText(context, message));
-    	} else {
-    		messageView.setText(message);
-    	}
-    	messageView.setTextColor(Color.BLACK);
-
     	view.setId(id);
     	layoutParams.setMargins(0, LinphoneUtils.pixelsToDpi(context.getResources(), 10), 0, 0);
     	view.setLayoutParams(layoutParams);	
-    	view.addView(messageView);
     	
     	if (context.getResources().getBoolean(R.bool.display_messages_time)) {
-	    	TextView timeView = new TextView(context);
-	    	LayoutParams timeParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-	    	timeParams.addRule(RelativeLayout.BELOW, id);
-	    	timeView.setLayoutParams(timeParams);
-	    	timeView.setText(timestampToHumanDate(context, time));
-	    	timeView.setTextColor(Color.GRAY);
-	    	timeView.setTextSize(12);
-	    	view.addView(timeView);
+	    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
+		    	LinearLayout layout;
+		    	if (isIncoming) {
+		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_incoming, null);
+		    	} else {
+		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_outgoing, null);
+		    	}
+		    	
+		    	TextView msgView = (TextView) layout.findViewById(R.id.message);
+		    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+		    		msgView.setText(getSmiledText(context, message));
+		    	} else {
+		    		msgView.setText(message);
+		    	}
+		    	
+		    	TextView timeView = (TextView) layout.findViewById(R.id.time);
+		    	timeView.setText(timestampToHumanDate(context, time));
+		    	
+		    	view.addView(layout);
+	    	} else {
+		    	LinearLayout layout;
+	    		if (isIncoming) {
+		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
+		    	} else {
+		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
+		    	}
+		    	
+		    	TextView msgView = (TextView) layout.findViewById(R.id.message);
+		    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+		    		msgView.setText(getSmiledText(context, message));
+		    	} else {
+		    		msgView.setText(message);
+		    	}
+		    	
+		    	TextView timeView = (TextView) layout.findViewById(R.id.time);
+		    	timeView.setText(timestampToHumanDate(context, time));
+		    	
+		    	view.addView(layout);
+	    	}
+    	} else {
+    		TextView messageView = new TextView(context);
+    		messageView.setId(id);
+        	messageView.setTextColor(Color.BLACK);
+        	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        	
+        	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+        		messageView.setText(getSmiledText(context, message));
+        	} else {
+        		messageView.setText(message);
+        	}
+        	
+        	view.addView(messageView);
     	}
 	}
 	
