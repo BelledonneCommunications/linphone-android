@@ -479,6 +479,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			public void run() {
 				if (missedChatCount > 0) {
 					missedChats.setText(missedChatCount + "");
+					if (missedChatCount > 99) {
+						missedChats.setTextSize(12);
+					} else {
+						missedChats.setTextSize(20);
+					}
 					missedChats.setVisibility(View.VISIBLE);
 					if (!getResources().getBoolean(R.bool.disable_animations)) {
 						missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
