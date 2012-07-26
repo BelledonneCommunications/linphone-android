@@ -128,6 +128,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneActivity.instance().removeFromChatList(sipUri);
 			mConversations = LinphoneActivity.instance().getChatList();
 			chatList.setAdapter(new ChatListAdapter());
+			LinphoneActivity.instance().updateMissedChatCount();
 		}
 	}
 	
