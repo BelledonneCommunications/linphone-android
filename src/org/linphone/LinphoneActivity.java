@@ -208,6 +208,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
+		if (statusFragment != null) {
+			statusFragment.closeStatusBar();
+		}
+		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
 		if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {

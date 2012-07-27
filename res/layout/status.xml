@@ -19,12 +19,14 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:stackFromBottom="true"
+		    android:paddingBottom="10dp"
 		    android:background="@android:color/black"/>
         
 		<RelativeLayout
 			android:id="@id/handle"
 		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content">
+		    android:layout_height="wrap_content"
+		    android:paddingBottom="10dp">
     
 		    <ImageView 
 		        android:layout_width="match_parent"
@@ -46,6 +48,14 @@
 		        android:layout_toRightOf="@id/statusText"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content" />
+		    
+		    <LinearLayout 
+		        android:id="@+id/moreStatusLed"
+		        android:paddingLeft="5dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="10dp"
+		        android:orientation="horizontal"
+		        android:layout_toRightOf="@id/statusLed"/>
 		    
 		    <ImageView
 		        android:contentDescription="@string/content_description_call_quality"

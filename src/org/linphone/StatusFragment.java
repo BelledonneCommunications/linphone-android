@@ -40,9 +40,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -56,6 +56,7 @@ public class StatusFragment extends Fragment {
 	private ImageView statusLed, callQuality, encryption;
 	private ListView sliderContent;
 	private SlidingDrawer drawer;
+	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
 	
@@ -68,6 +69,7 @@ public class StatusFragment extends Fragment {
 		statusLed = (ImageView) view.findViewById(R.id.statusLed);
 		callQuality = (ImageView) view.findViewById(R.id.callQuality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
+		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
 		drawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
@@ -76,7 +78,9 @@ public class StatusFragment extends Fragment {
 				populateSliderContent();
 			}
 		});
+		
 		sliderContent = (ListView) view.findViewById(R.id.content);
+		
 		exit = (TextView) view.findViewById(R.id.exit);
 		exit.setOnClickListener(new OnClickListener() {
 			@Override
@@ -113,11 +117,22 @@ public class StatusFragment extends Fragment {
 			return;
 		}
 
-		populateSliderContent();
 		if (getResources().getBoolean(R.bool.disable_animations)) {
 			drawer.toggle();
 		} else {
 			drawer.animateToggle();
+		}
+	}
+	
+	public void closeStatusBar() {
+		if (getResources().getBoolean(R.bool.lock_statusbar)) {
+			return;
+		}
+
+		if (getResources().getBoolean(R.bool.disable_animations)) {
+			drawer.close();
+		} else {
+			drawer.animateClose();
 		}
 	}
 	
@@ -134,15 +149,32 @@ public class StatusFragment extends Fragment {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				statusLed.setImageResource(getStatusIconResource(state));
+				statusLed.setImageResource(getStatusIconResource(state, true));
 				statusText.setText(getStatusIconText(state));
+				setMiniLedsForEachAccount();
 			}
 		});
 	}
 	
-	private int getStatusIconResource(LinphoneCore.RegistrationState state) {
+	private void setMiniLedsForEachAccount() {
+		if (allAccountsLed == null)
+			return;
+		
+		allAccountsLed.removeAllViews();
+		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+			ImageView led = new ImageView(getActivity());
+			LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			led.setLayoutParams(params);
+			led.setAdjustViewBounds(true);
+			led.setImageResource(getStatusIconResource(lpc.getState(), false));
+			allAccountsLed.addView(led);
+		}
+	}
+	
+	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
 		try {
-			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+			boolean defaultAccountConnected = (isDefaultAccount && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
+			if (state == RegistrationState.RegistrationOk && defaultAccountConnected) {
 				return R.drawable.led_connected;
 			} else if (state == RegistrationState.RegistrationProgress) {
 				return R.drawable.led_inprogress;
@@ -291,21 +323,26 @@ public class StatusFragment extends Fragment {
 			checkboxes = new ArrayList<CheckBox>();
 		}
 		
-		private OnCheckedChangeListener defaultListener = new OnCheckedChangeListener() {
+		private OnClickListener defaultListener = new OnClickListener() {
+			
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
+			public void onClick(View v) {
+				CheckBox checkBox = (CheckBox) v;
+				if (checkBox.isChecked()) {
 					SharedPreferences.Editor editor = prefs.edit();
-					editor.putInt(getString(R.string.pref_default_account), (Integer) buttonView.getTag());
+					int selectedPosition = (Integer) checkBox.getTag();
+					editor.putInt(getString(R.string.pref_default_account), selectedPosition);
 					editor.commit();
-					sliderContent.invalidate();
 
 					for (CheckBox cb : checkboxes) {
 						cb.setChecked(false);
 						cb.setEnabled(true);
 					}
-					buttonView.setChecked(true);
-					buttonView.setEnabled(false);
+					checkBox.setChecked(true);
+					checkBox.setEnabled(false);
+					
+					LinphoneManager.getLc().setDefaultProxyConfig(accounts[selectedPosition]);
+					LinphoneManager.getLc().refreshRegisters();
 				}
 			}
 		};
@@ -333,13 +370,13 @@ public class StatusFragment extends Fragment {
 			LinphoneProxyConfig lpc = (LinphoneProxyConfig) getItem(position);
 			
 			ImageView status = (ImageView) view.findViewById(R.id.State);
-			status.setImageResource(getStatusIconResource(lpc.getState()));
 			
 			TextView identity = (TextView) view.findViewById(R.id.Identity);
 			identity.setText(lpc.getIdentity().split("sip:")[1]);
 			
 			CheckBox isDefault = (CheckBox) view.findViewById(R.id.Default);
 			checkboxes.add(isDefault);
+			
 			isDefault.setTag(position);
 			isDefault.setChecked(false);
 			isDefault.setEnabled(true);
@@ -347,8 +384,11 @@ public class StatusFragment extends Fragment {
 			if (prefs.getInt(getString(R.string.pref_default_account), 0) == position) {
 				isDefault.setChecked(true);
 				isDefault.setEnabled(false);
+				status.setImageResource(getStatusIconResource(lpc.getState(), true));
+			} else {
+				status.setImageResource(getStatusIconResource(lpc.getState(), false));
 			}
-			isDefault.setOnCheckedChangeListener(defaultListener);
+			isDefault.setOnClickListener(defaultListener);
 			
 			return view;
 		}
