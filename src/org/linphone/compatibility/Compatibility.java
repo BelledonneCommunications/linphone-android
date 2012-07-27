@@ -167,4 +167,13 @@ public class Compatibility {
 		}
 		return notif;
 	}
+
+	public static String refreshContactName(ContentResolver cr, String id) {
+		if (Version.sdkAboveOrEqual(5)) {
+			return ApiFivePlus.refreshContactName(cr, id);
+		} else {
+			//TODO
+		}
+		return null;
+	}
 }

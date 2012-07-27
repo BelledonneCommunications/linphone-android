@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.Serializable;
 import java.util.List;
 
+import org.linphone.compatibility.Compatibility;
+
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -80,5 +83,10 @@ public class Contact implements Serializable {
 
 	public void setNumerosOrAddresses(List<String> numerosOrAddresses) {
 		this.numerosOrAddresses = numerosOrAddresses;
+	}
+	
+	public void refresh(ContentResolver cr) {
+		this.numerosOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		this.name = Compatibility.refreshContactName(cr, id);
 	}
 }

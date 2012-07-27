@@ -22,6 +22,7 @@ import java.io.InputStream;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.AvatarWithShadow;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,23 +30,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
  * @author Sylvain Berfini
  */
-public class ContactFragment extends Fragment {
+public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
+	private ImageView back, editContact, newContact;
 	private OnClickListener dialListener, chatListener;
+	private LayoutInflater inflater;
+	private View view;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		contact = (Contact) getArguments().getSerializable("Contact");
-		contact.setNumerosOrAddresses(Compatibility.extractContactNumbersAndAddresses(contact.getID(), getActivity().getContentResolver()));
 		
-		View view = inflater.inflate(R.layout.contact, container, false);
+		this.inflater = inflater;
+		view = inflater.inflate(R.layout.contact, container, false);
 		
+		back = (ImageView) view.findViewById(R.id.back);
+		back.setOnClickListener(this);
+		editContact = (ImageView) view.findViewById(R.id.editContact);
+		editContact.setOnClickListener(this);
+		newContact = (ImageView) view.findViewById(R.id.newContact);
+		newContact.setOnClickListener(this);
+		
+		chatListener = getChatListener();
+		dialListener = getDialListener();
+		
+		return view;
+	}
+	
+	private void displayContact(LayoutInflater inflater, View view) {
 		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		if (contact.getPhotoUri() != null) {
 			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
@@ -54,14 +73,11 @@ public class ContactFragment extends Fragment {
         	contactPicture.setBackgroundResource(R.drawable.unknown_small);
         }
 		
-		chatListener = getChatListener();
-		dialListener = getDialListener();
-		
 		TextView contactName = (TextView) view.findViewById(R.id.contactName);
 		contactName.setText(contact.getName());	
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
-		
+		controls.removeAllViews();
 		for (String numberOrAddress : contact.getNumerosOrAddresses()) {
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
@@ -79,8 +95,6 @@ public class ContactFragment extends Fragment {
 			
 			controls.addView(v);
 		}
-		
-		return view;
 	}
 	
 	@Override
@@ -89,6 +103,8 @@ public class ContactFragment extends Fragment {
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT);
 		}
+		contact.refresh(getActivity().getContentResolver());
+		displayContact(inflater, view);
 	}
 
 	public OnClickListener getDialListener() {
@@ -107,5 +123,27 @@ public class ContactFragment extends Fragment {
 				LinphoneActivity.instance().displayChat(v.getTag().toString());
 			}
 		};
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		Intent intent;
+			
+		switch (id) {
+		case R.id.back:
+			LinphoneActivity.instance().onBackPressed();
+			break;
+			
+		case R.id.editContact:
+			intent = Compatibility.prepareEditContactIntent(Integer.parseInt(contact.getID()));
+			startActivity(intent);
+			break;
+			
+		case R.id.newContact:
+			intent = Compatibility.prepareAddContactIntent("", "");
+			startActivity(intent);
+			break;
+		}
 	}
 }

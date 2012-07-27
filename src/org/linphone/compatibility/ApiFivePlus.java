@@ -267,4 +267,12 @@ public class ApiFivePlus {
 		
 		return null;
 	}
+
+	public static String refreshContactName(ContentResolver cr, String id) {
+		Cursor c = getGeneralContactCursor(cr, Data.CONTACT_ID + " = '" + id + "'", false);
+		if (c.moveToFirst()) {
+			return getContactDisplayName(c);
+		}
+		return null;
+	}
 }
