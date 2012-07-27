@@ -40,6 +40,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -158,6 +159,16 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 				return false;
 			}
 		});
+		
+		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+			if (lpc.getIdentity().contains(prefs.getString(keyUsername, "")) && lpc.getIdentity().contains(prefs.getString(keyDomain, ""))) {
+				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk)
+					me.setWidgetLayoutResource(R.layout.preference_led_connected);
+				else
+					me.setWidgetLayoutResource(R.layout.preference_led_not_connected);
+			}
+		}
+		
 		parent.addPreference(me);
 	}
 	

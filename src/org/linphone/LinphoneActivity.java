@@ -331,6 +331,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 //			}
 		}
 		else if (id == R.id.chat) {
+			if (chatStorage == null) {
+				chatStorage = new ChatStorage(this);
+			}
 			changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
 			chat.setSelected(true);
 		}
