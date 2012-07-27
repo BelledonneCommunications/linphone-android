@@ -18,7 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
@@ -29,20 +29,21 @@ import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 /**
@@ -53,7 +54,7 @@ public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit;
 	private ImageView statusLed, callQuality, encryption;
-	private RelativeLayout sliderContent;
+	private ListView sliderContent;
 	private SlidingDrawer drawer;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
@@ -75,7 +76,7 @@ public class StatusFragment extends Fragment {
 				populateSliderContent();
 			}
 		});
-		sliderContent = (RelativeLayout) view.findViewById(R.id.content);
+		sliderContent = (ListView) view.findViewById(R.id.content);
 		exit = (TextView) view.findViewById(R.id.exit);
 		exit.setOnClickListener(new OnClickListener() {
 			@Override
@@ -121,25 +122,9 @@ public class StatusFragment extends Fragment {
 	}
 	
 	private void populateSliderContent() {
-		sliderContent.removeAllViews();
-		
-		ListView accounts = new ListView(getActivity());
-		accounts.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
-		accounts.setDividerHeight(0);
-		ArrayList<HashMap<String,String>> hashMapAccountsStateList = new ArrayList<HashMap<String,String>>();
-		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-			HashMap<String, String> entitiesHashMap = new HashMap<String, String>();
-			entitiesHashMap.put("Identity", lpc.getIdentity().split("sip:")[1]);
-			entitiesHashMap.put("State", Integer.toString(getStatusIconResource(lpc.getState())));
-			hashMapAccountsStateList.add(entitiesHashMap);
-		}
-		Adapter adapterForList = new SimpleAdapter(getActivity(), hashMapAccountsStateList, R.layout.accounts,
-                new String[] {"Identity", "State" },
-                new int[] { R.id.Identity, R.id.State });
-		accounts.setAdapter((ListAdapter) adapterForList);
-
-		sliderContent.addView(accounts);
+		sliderContent.setDividerHeight(0);
+		AccountsListAdapter adapter = new AccountsListAdapter(LinphoneManager.getLc().getProxyConfigList());
+		sliderContent.setAdapter(adapter);
 	}
 	
 	public void registrationStateChanged(final RegistrationState state) {
@@ -292,6 +277,80 @@ public class StatusFragment extends Fragment {
 			}
 		} else {
 			exit.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	class AccountsListAdapter extends BaseAdapter {
+		private LinphoneProxyConfig[] accounts;
+		private SharedPreferences prefs;
+		private List<CheckBox> checkboxes;
+		
+		AccountsListAdapter(LinphoneProxyConfig[] lpcs) {
+			accounts = lpcs;
+			prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			checkboxes = new ArrayList<CheckBox>();
+		}
+		
+		private OnCheckedChangeListener defaultListener = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putInt(getString(R.string.pref_default_account), (Integer) buttonView.getTag());
+					editor.commit();
+					sliderContent.invalidate();
+
+					for (CheckBox cb : checkboxes) {
+						cb.setChecked(false);
+						cb.setEnabled(true);
+					}
+					buttonView.setChecked(true);
+					buttonView.setEnabled(false);
+				}
+			}
+		};
+		
+		public int getCount() {
+			return accounts.length;
+		}
+
+		public Object getItem(int position) {
+			return accounts[position];
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			View view = null;			
+			if (convertView != null) {
+				view = convertView;
+			} else {
+				view = LayoutInflater.from(getActivity()).inflate(R.layout.accounts, parent, false);
+			}
+
+			LinphoneProxyConfig lpc = (LinphoneProxyConfig) getItem(position);
+			
+			ImageView status = (ImageView) view.findViewById(R.id.State);
+			status.setImageResource(getStatusIconResource(lpc.getState()));
+			
+			TextView identity = (TextView) view.findViewById(R.id.Identity);
+			identity.setText(lpc.getIdentity().split("sip:")[1]);
+			
+			CheckBox isDefault = (CheckBox) view.findViewById(R.id.Default);
+			checkboxes.add(isDefault);
+			isDefault.setTag(position);
+			isDefault.setChecked(false);
+			isDefault.setEnabled(true);
+			
+			if (prefs.getInt(getString(R.string.pref_default_account), 0) == position) {
+				isDefault.setChecked(true);
+				isDefault.setEnabled(false);
+			}
+			isDefault.setOnCheckedChangeListener(defaultListener);
+			
+			return view;
 		}
 	}
 }

@@ -257,7 +257,7 @@ public class SlidingDrawer extends ViewGroup {
 					- mTopOffset;
 			mContent.measure(MeasureSpec.makeMeasureSpec(widthSpecSize,
 					MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height,
-					MeasureSpec.EXACTLY));
+					MeasureSpec.AT_MOST));
 		} else {
 			int width = widthSpecSize - handle.getMeasuredWidth() - mTopOffset;
 			mContent.measure(MeasureSpec.makeMeasureSpec(width,
@@ -266,6 +266,10 @@ public class SlidingDrawer extends ViewGroup {
 		}
 
 		setMeasuredDimension(widthSpecSize, heightSpecSize);
+	}
+	
+	private int getCustomBottom() {
+		return mContent.getBottom() + mHandleHeight;
 	}
 
 	@Override
@@ -282,7 +286,7 @@ public class SlidingDrawer extends ViewGroup {
 				if (isVertical) {
 					if (mInvert) {
 						canvas.drawBitmap(cache, 0, handle.getTop()
-								- (getBottom() - getTop()) + mHandleHeight,
+								- (getCustomBottom() - getTop()) + mHandleHeight,
 								null);
 					} else {
 						canvas.drawBitmap(cache, 0, handle.getBottom(), null);
@@ -340,7 +344,7 @@ public class SlidingDrawer extends ViewGroup {
 			handleLeft = (width - handleWidth) / 2;
 			if (mInvert) {
 				Log.d(LOG_TAG, "content.layout(1)");
-				handleTop = mExpanded ? height - mBottomOffset - handleHeight
+				handleTop = mExpanded ? getCustomBottom() - mBottomOffset - handleHeight
 						: mTopOffset;
 				content.layout(0, mTopOffset, content.getMeasuredWidth(),
 						mTopOffset + content.getMeasuredHeight());
@@ -483,7 +487,7 @@ public class SlidingDrawer extends ViewGroup {
 					boolean c4;
 
 					if (mInvert) {
-						c1 = (mExpanded && (getBottom() - handleBottom) < mTapThreshold
+						c1 = (mExpanded && (getCustomBottom() - handleBottom) < mTapThreshold
 								+ mBottomOffset);
 						c2 = (!mExpanded && handleTop < mTopOffset
 								+ mHandleHeight - mTapThreshold);
@@ -495,7 +499,7 @@ public class SlidingDrawer extends ViewGroup {
 						c1 = (mExpanded && handleTop < mTapThreshold
 								+ mTopOffset);
 						c2 = (!mExpanded && handleTop > mBottomOffset
-								+ getBottom() - getTop() - mHandleHeight
+								+ getCustomBottom() - getTop() - mHandleHeight
 								- mTapThreshold);
 						c3 = (mExpanded && handleLeft < mTapThreshold
 								+ mTopOffset);
@@ -556,7 +560,7 @@ public class SlidingDrawer extends ViewGroup {
 		boolean c3;
 
 		if (mExpanded) {
-			int bottom = mVertical ? getBottom() : getRight();
+			int bottom = mVertical ? getCustomBottom() + mHandleHeight : getRight();
 			int handleHeight = mVertical ? mHandleHeight : mHandleWidth;
 
 			Log.d(LOG_TAG, "position: " + position + ", velocity: " + velocity
@@ -688,7 +692,7 @@ public class SlidingDrawer extends ViewGroup {
 		if (mVertical) {
 			if (position == EXPANDED_FULL_OPEN) {
 				if (mInvert)
-					handle.offsetTopAndBottom(mBottomOffset + getBottom()
+					handle.offsetTopAndBottom(mBottomOffset + getCustomBottom()
 							- getTop() - mHandleHeight);
 				else
 					handle.offsetTopAndBottom(mTopOffset - handle.getTop());
@@ -697,7 +701,7 @@ public class SlidingDrawer extends ViewGroup {
 				if (mInvert) {
 					handle.offsetTopAndBottom(mTopOffset - handle.getTop());
 				} else {
-					handle.offsetTopAndBottom(mBottomOffset + getBottom()
+					handle.offsetTopAndBottom(mBottomOffset + getCustomBottom()
 							- getTop() - mHandleHeight - handle.getTop());
 				}
 				invalidate();
@@ -706,9 +710,9 @@ public class SlidingDrawer extends ViewGroup {
 				int deltaY = position - top;
 				if (position < mTopOffset) {
 					deltaY = mTopOffset - top;
-				} else if (deltaY > mBottomOffset + getBottom() - getTop()
+				} else if (deltaY > mBottomOffset + getCustomBottom() - getTop()
 						- mHandleHeight - top) {
-					deltaY = mBottomOffset + getBottom() - getTop()
+					deltaY = mBottomOffset + getCustomBottom() - getTop()
 							- mHandleHeight - top;
 				}
 
@@ -785,7 +789,7 @@ public class SlidingDrawer extends ViewGroup {
 				int height = getBottom() - getTop() - handleHeight - mTopOffset;
 				content.measure(MeasureSpec.makeMeasureSpec(getRight()
 						- getLeft(), MeasureSpec.EXACTLY), MeasureSpec
-						.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+						.makeMeasureSpec(height, MeasureSpec.AT_MOST));
 
 				Log.d(LOG_TAG, "content.layout(2)");
 

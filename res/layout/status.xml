@@ -10,17 +10,16 @@
 		android:id="@+id/statusBar"
 		linphone:direction="topToBottom"
 		android:layout_width="match_parent"
-		android:layout_height="80dp"
+		android:layout_height="wrap_content"
 		linphone:handle="@+id/handle"
 		linphone:content="@+id/content">
 	
-        <RelativeLayout
+        <ListView
 			android:id="@id/content"
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:background="@android:color/black">
-            
-        </RelativeLayout>
+		    android:layout_height="wrap_content"
+		    android:stackFromBottom="true"
+		    android:background="@android:color/black"/>
         
 		<RelativeLayout
 			android:id="@id/handle"
