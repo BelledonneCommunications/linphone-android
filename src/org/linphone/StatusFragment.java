@@ -137,9 +137,10 @@ public class StatusFragment extends Fragment {
 	}
 	
 	private void populateSliderContent() {
-		sliderContent.setDividerHeight(0);
-		AccountsListAdapter adapter = new AccountsListAdapter(LinphoneManager.getLc().getProxyConfigList());
-		sliderContent.setAdapter(adapter);
+		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
+			AccountsListAdapter adapter = new AccountsListAdapter(LinphoneManager.getLc().getProxyConfigList());
+			sliderContent.setAdapter(adapter);
+		}
 	}
 	
 	public void registrationStateChanged(final RegistrationState state) {
@@ -160,14 +161,16 @@ public class StatusFragment extends Fragment {
 		if (allAccountsLed == null)
 			return;
 		
-		allAccountsLed.removeAllViews();
-		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-			ImageView led = new ImageView(getActivity());
-			LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-			led.setLayoutParams(params);
-			led.setAdjustViewBounds(true);
-			led.setImageResource(getStatusIconResource(lpc.getState(), false));
-			allAccountsLed.addView(led);
+		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
+			allAccountsLed.removeAllViews();
+			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+				ImageView led = new ImageView(getActivity());
+				LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+				led.setLayoutParams(params);
+				led.setAdjustViewBounds(true);
+				led.setImageResource(getStatusIconResource(lpc.getState(), false));
+				allAccountsLed.addView(led);
+			}
 		}
 	}
 	

@@ -48,7 +48,7 @@ prepare-mediastreamer2:
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
 generate-libs: 
-	$(NDK_PATH)/ndk-build BUILD_SILK=1 -j$(NUMCPUS)
+	$(NDK_PATH)/ndk-build BUILD_SILK=1 BUILD_AMRNB=full -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path .
