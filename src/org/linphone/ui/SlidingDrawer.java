@@ -29,7 +29,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.VelocityTracker;
@@ -333,7 +332,6 @@ public class SlidingDrawer extends ViewGroup {
 		int handleWidth = handle.getMeasuredWidth();
 		int handleHeight = handle.getMeasuredHeight();
 
-		Log.d(LOG_TAG, "handleHeight: " + handleHeight);
 
 		int handleLeft;
 		int handleTop;
@@ -343,9 +341,7 @@ public class SlidingDrawer extends ViewGroup {
 		if (mVertical) {
 			handleLeft = (width - handleWidth) / 2;
 			if (mInvert) {
-				Log.d(LOG_TAG, "content.layout(1)");
-				handleTop = mExpanded ? getCustomBottom() - mBottomOffset - handleHeight
-						: mTopOffset;
+				handleTop = mExpanded ? content.getMeasuredHeight() - mBottomOffset	: mTopOffset;
 				content.layout(0, mTopOffset, content.getMeasuredWidth(),
 						mTopOffset + content.getMeasuredHeight());
 			} else {
@@ -508,9 +504,6 @@ public class SlidingDrawer extends ViewGroup {
 								- mTapThreshold);
 					}
 
-					Log.d(LOG_TAG, "ACTION_UP: " + "c1: " + c1 + ", c2: " + c2
-							+ ", c3: " + c3 + ", c4: " + c4);
-
 					if (vertical ? c1 || c2 : c3 || c4) {
 
 						if (mAllowSingleTap) {
@@ -563,8 +556,6 @@ public class SlidingDrawer extends ViewGroup {
 			int bottom = mVertical ? getCustomBottom() + mHandleHeight : getRight();
 			int handleHeight = mVertical ? mHandleHeight : mHandleWidth;
 
-			Log.d(LOG_TAG, "position: " + position + ", velocity: " + velocity
-					+ ", mMaximumMajorVelocity: " + mMaximumMajorVelocity);
 			c1 = mInvert ? velocity < mMaximumMajorVelocity
 					: velocity > mMaximumMajorVelocity;
 			c2 = mInvert ? (bottom - (position + handleHeight)) + mBottomOffset > handleHeight
@@ -572,8 +563,6 @@ public class SlidingDrawer extends ViewGroup {
 							+ (mVertical ? mHandleHeight : mHandleWidth);
 			c3 = mInvert ? velocity < -mMaximumMajorVelocity
 					: velocity > -mMaximumMajorVelocity;
-			Log.d(LOG_TAG, "EXPANDED. c1: " + c1 + ", c2: " + c2 + ", c3: "
-					+ c3);
 			if (always || (c1 || (c2 && c3))) {
 				// We are expanded, So animate to CLOSE!
 				mAnimatedAcceleration = mMaximumAcceleration;
@@ -612,12 +601,6 @@ public class SlidingDrawer extends ViewGroup {
 					: (position > (mVertical ? getHeight() : getWidth()) / 2);
 			c3 = mInvert ? velocity < -mMaximumMajorVelocity
 					: velocity > -mMaximumMajorVelocity;
-
-			Log.d(LOG_TAG, "COLLAPSED. position: " + position + ", velocity: "
-					+ velocity + ", mMaximumMajorVelocity: "
-					+ mMaximumMajorVelocity);
-			Log.d(LOG_TAG, "COLLAPSED. always: " + always + ", c1: " + c1
-					+ ", c2: " + c2 + ", c3: " + c3);
 
 			if (!always && (c1 || (c2 && c3))) {
 				mAnimatedAcceleration = mMaximumAcceleration;
@@ -790,8 +773,6 @@ public class SlidingDrawer extends ViewGroup {
 				content.measure(MeasureSpec.makeMeasureSpec(getRight()
 						- getLeft(), MeasureSpec.EXACTLY), MeasureSpec
 						.makeMeasureSpec(height, MeasureSpec.AT_MOST));
-
-				Log.d(LOG_TAG, "content.layout(2)");
 
 				if (mInvert)
 					content.layout(0, mTopOffset, content.getMeasuredWidth(),
@@ -967,6 +948,10 @@ public class SlidingDrawer extends ViewGroup {
 	 * @see #toggle()
 	 */
 	public void animateClose() {
+		if (!isOpened()) {
+			return;
+		}
+		
 		prepareContent();
 		final OnDrawerScrollListener scrollListener = mOnDrawerScrollListener;
 		if (scrollListener != null) {

@@ -41,8 +41,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -56,7 +54,7 @@ public class StatusFragment extends Fragment {
 	private ImageView statusLed, callQuality, encryption;
 	private ListView sliderContent;
 	private SlidingDrawer drawer;
-	private LinearLayout allAccountsLed;
+//	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
 	
@@ -69,7 +67,7 @@ public class StatusFragment extends Fragment {
 		statusLed = (ImageView) view.findViewById(R.id.statusLed);
 		callQuality = (ImageView) view.findViewById(R.id.callQuality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
-		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
+//		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
 		drawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
@@ -152,27 +150,27 @@ public class StatusFragment extends Fragment {
 			public void run() {
 				statusLed.setImageResource(getStatusIconResource(state, true));
 				statusText.setText(getStatusIconText(state));
-				setMiniLedsForEachAccount();
+//				setMiniLedsForEachAccount();
 			}
 		});
 	}
 	
-	private void setMiniLedsForEachAccount() {
-		if (allAccountsLed == null)
-			return;
-		
-		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
-			allAccountsLed.removeAllViews();
-			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-				ImageView led = new ImageView(getActivity());
-				LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-				led.setLayoutParams(params);
-				led.setAdjustViewBounds(true);
-				led.setImageResource(getStatusIconResource(lpc.getState(), false));
-				allAccountsLed.addView(led);
-			}
-		}
-	}
+//	private void setMiniLedsForEachAccount() {
+//		if (allAccountsLed == null)
+//			return;
+//		
+//		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
+//			allAccountsLed.removeAllViews();
+//			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+//				ImageView led = new ImageView(getActivity());
+//				LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+//				led.setLayoutParams(params);
+//				led.setAdjustViewBounds(true);
+//				led.setImageResource(getStatusIconResource(lpc.getState(), false));
+//				allAccountsLed.addView(led);
+//			}
+//		}
+//	}
 	
 	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
 		try {
