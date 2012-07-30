@@ -39,6 +39,7 @@ import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
@@ -162,10 +163,14 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 		
 		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
 			if (lpc.getIdentity().contains(prefs.getString(keyUsername, "")) && lpc.getIdentity().contains(prefs.getString(keyDomain, ""))) {
-				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk)
+				while (lpc.getState() == RegistrationState.RegistrationProgress || lpc.getState() == RegistrationState.RegistrationNone) 
+				{};
+				
+				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
 					me.setWidgetLayoutResource(R.layout.preference_led_connected);
-				else
+				} else {
 					me.setWidgetLayoutResource(R.layout.preference_led_not_connected);
+				}
 			}
 		}
 		
@@ -186,6 +191,11 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 				editor.commit();
 			}
 			
+			try {
+				LinphoneManager.getInstance().initAccounts();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			createDynamicAccountsPreferences();
 		}
 		
@@ -473,7 +483,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 	private void writeBoolean(int key, boolean value) {
 		prefs().edit().putBoolean(getString(key), value).commit();
 	}
-
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -499,5 +509,4 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 			LinphoneActivity.instance().showPreferenceErrorDialog(e.getMessage());
 		}
 	}
-
 }

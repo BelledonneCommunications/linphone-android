@@ -563,8 +563,28 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.tunnelAddServerAndMirror(host, port, 12345,500);
 		manageTunnelServer(info);
 	}
+	
+	public void initAccounts() throws LinphoneCoreException {
+		for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
+			if (getPrefBoolean(getString(R.string.pref_disable_account_key) + i, false)) {
+				continue;
+			}
+			initAccount(i == 0 ? "" : String.valueOf(i), i == 0, i == getPrefInt(R.string.pref_default_account, 0));
+		}
+		
+		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
+		if (lDefaultProxyConfig !=null) {
+			//prefix      
+			String lPrefix = getPrefString(R.string.pref_prefix_key, null);
+			if (lPrefix != null) {
+				lDefaultProxyConfig.setDialPrefix(lPrefix);
+			}
+			//escape +
+			lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key,false));
+		}
+	}
 
-	public void initAccount(String key, boolean cleanBefore, boolean defaultAccount) throws LinphoneCoreException {
+	private void initAccount(String key, boolean cleanBefore, boolean defaultAccount) throws LinphoneCoreException {
 		if (cleanBefore) {
 			mLc.clearAuthInfos();
 			mLc.clearProxyConfigs();
@@ -657,23 +677,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		//accounts
 		try {
-			for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
-				if (getPrefBoolean(getString(R.string.pref_disable_account_key) + i, false)) {
-					continue;
-				}
-				initAccount(i == 0 ? "" : String.valueOf(i), i == 0, i == getPrefInt(R.string.pref_default_account, 0));
-			}
-			
-			LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
-			if (lDefaultProxyConfig !=null) {
-				//prefix      
-				String lPrefix = getPrefString(R.string.pref_prefix_key, null);
-				if (lPrefix != null) {
-					lDefaultProxyConfig.setDialPrefix(lPrefix);
-				}
-				//escape +
-				lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key,false));
-			}
+			initAccounts();
 			
 			//init network state
 			NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
