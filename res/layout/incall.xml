@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -34,7 +34,16 @@
         android:contentDescription="@string/content_description_switch_camera"
         android:paddingTop="20dp"
         android:src="@drawable/switch_camera"
-        android:visibility="gone" />
+        android:visibility="invisible" />
+    
+    <org.linphone.ui.Numpad
+        android:id="@+id/numpad"
+        android:background="@drawable/dialer_alt_background"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:layout_below="@id/switchCamera"
+        android:layout_marginBottom="150dp" />
 
     <LinearLayout
         android:id="@+id/menu"
@@ -187,6 +196,7 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/dialer_alt" />
         </LinearLayout>
+        
     </LinearLayout>
 
 </RelativeLayout>

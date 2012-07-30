@@ -564,6 +564,46 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		manageTunnelServer(info);
 	}
 
+	public void initAccount(String key, boolean cleanBefore, boolean defaultAccount) throws LinphoneCoreException {
+		if (cleanBefore) {
+			mLc.clearAuthInfos();
+			mLc.clearProxyConfigs();
+		}
+		
+		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
+		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
+		if (username != null && username.length() > 0) {
+			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
+			mLc.addAuthInfo(lAuthInfo);
+			
+			String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
+			if (domain != null && domain.length() > 0) {
+				String identity = "sip:" + username +"@" + domain;
+				String proxy = getPrefString(getString(R.string.pref_proxy_key) + key, null);
+				if (proxy == null || proxy.length() == 0) {
+					proxy = "sip:" + domain;
+				}
+				if (!proxy.startsWith("sip:")) {
+					proxy = "sip:" + proxy;
+				}
+				LinphoneProxyConfig defaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
+				mLc.addProxyConfig(defaultProxyConfig);
+				
+				//outbound proxy
+				if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false)) {
+					defaultProxyConfig.setRoute(proxy);
+				} else {
+					defaultProxyConfig.setRoute(null);
+				}
+				defaultProxyConfig.done();
+				
+				if (defaultAccount) {
+					mLc.setDefaultProxyConfig(defaultProxyConfig);
+				}
+			}
+		}
+	}
+
 	public void initFromConf() throws LinphoneConfigException {
 
 
@@ -609,110 +649,22 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		boolean isVideoEnabled = isVideoEnabled();
 		mLc.enableVideo(isVideoEnabled, isVideoEnabled);
-		//1 read proxy config from preferences
-		String lUserName = getPrefString(R.string.pref_username_key, null);
-		if (lUserName == null || lUserName.length()==0) {
-			throw new LinphoneConfigException(getString(R.string.wrong_username));
-		}
-
-		String lPasswd = getPrefString(R.string.pref_passwd_key, null);
-		// we have the right of having no password
-		//if (lPasswd == null || lPasswd.length()==0) {
-		//	throw new LinphoneConfigException(getString(R.string.wrong_passwd));
-		//}
-
-		String lDomain = getPrefString(R.string.pref_domain_key, null);
-		if (lDomain == null || lDomain.length()==0) {
-			throw new LinphoneConfigException(getString(R.string.wrong_domain));
-		}
-
-		String lStun = getPrefString(R.string.pref_stun_server_key, null);
-
+		
 		//stun server
+		String lStun = getPrefString(R.string.pref_stun_server_key, null);
 		mLc.setStunServer(lStun);
 		mLc.setFirewallPolicy((lStun!=null && lStun.length()>0) ? FirewallPolicy.UseStun : FirewallPolicy.NoFirewall);
 		
-		//auth
-		mLc.clearAuthInfos();
-		if (lPasswd!=null && lPasswd.length()>0){
-			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd,null);
-			mLc.addAuthInfo(lAuthInfo);
-		}
-
-		//proxy
-		mLc.clearProxyConfigs();
-		String lProxy = getPrefString(R.string.pref_proxy_key,null);
-		if (lProxy == null || lProxy.length() == 0) {
-			lProxy = "sip:"+lDomain;
-		}
-		if (!lProxy.startsWith("sip:")) {
-			lProxy = "sip:"+lProxy;
-		}
-		//get Default proxy if any
-		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
-		String lIdentity = "sip:"+lUserName+"@"+lDomain;
+		//accounts
 		try {
-			if (lDefaultProxyConfig == null) {
-				lDefaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(lIdentity, lProxy, null,true);
-				mLc.addProxyConfig(lDefaultProxyConfig);
-				int defaultAccount = getPrefInt(R.string.pref_default_account, 0);
-				if (defaultAccount == 0 || defaultAccount >= getPrefInt(R.string.pref_extra_accounts, 0)) {
-					//outbound proxy
-					if (getPrefBoolean(R.string.pref_enable_outbound_proxy_key, false)) {
-						lDefaultProxyConfig.setRoute(lProxy);
-					} else {
-						lDefaultProxyConfig.setRoute(null);
-					}
-					mLc.setDefaultProxyConfig(lDefaultProxyConfig);
-				}
-
-			} else {
-				lDefaultProxyConfig.edit();
-				lDefaultProxyConfig.setIdentity(lIdentity);
-				lDefaultProxyConfig.setProxy(lProxy);
-				lDefaultProxyConfig.enableRegister(true);
-				lDefaultProxyConfig.done();
-			}
-
-			// Extra accounts
-			for (int i = 1; i < getPrefExtraAccountsNumber(); i++) {
+			for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
 				if (getPrefBoolean(getString(R.string.pref_disable_account_key) + i, false)) {
 					continue;
 				}
-				lUserName = getPrefString(getString(R.string.pref_username_key) + i, null);
-				lPasswd = getPrefString(getString(R.string.pref_passwd_key) + i, null);
-				if (lUserName != null && lUserName.length() > 0) {
-					LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(lUserName, lPasswd, null);
-					mLc.addAuthInfo(lAuthInfo);
-					
-					lDomain = getPrefString(getString(R.string.pref_domain_key) + i, null);
-					if (lDomain != null && lDomain.length() > 0) {
-						lIdentity = "sip:"+lUserName+"@"+lDomain;
-						lProxy = getPrefString(getString(R.string.pref_proxy_key) + i, null);
-						if (lProxy == null || lProxy.length() == 0) {
-							lProxy = "sip:" + lDomain;
-						}
-						if (!lProxy.startsWith("sip:")) {
-							lProxy = "sip:" + lProxy;
-						}
-						lDefaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(lIdentity, lProxy, null, true);
-						mLc.addProxyConfig(lDefaultProxyConfig);
-						
-						//outbound proxy
-						if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + i, false)) {
-							lDefaultProxyConfig.setRoute(lProxy);
-						} else {
-							lDefaultProxyConfig.setRoute(null);
-						}
-						
-						if (i == getPrefInt(R.string.pref_default_account, 0)) {
-							mLc.setDefaultProxyConfig(lDefaultProxyConfig);
-						}
-					}
-				}
+				initAccount(i == 0 ? "" : String.valueOf(i), i == 0, i == getPrefInt(R.string.pref_default_account, 0));
 			}
 			
-			lDefaultProxyConfig = mLc.getDefaultProxyConfig();
+			LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
 			if (lDefaultProxyConfig !=null) {
 				//prefix      
 				String lPrefix = getPrefString(R.string.pref_prefix_key, null);

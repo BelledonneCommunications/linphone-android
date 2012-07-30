@@ -27,6 +27,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.ui.Numpad;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -48,6 +49,7 @@ import android.widget.LinearLayout;
 /**
  * @author Sylvain Berfini
  */
+//TODO Prevent controls from being hidden while user is using numpad
 public class InCallActivity extends FragmentActivity implements
 									LinphoneOnCallStateChangedListener,
 									LinphoneOnCallEncryptionChangedListener,
@@ -63,6 +65,7 @@ public class InCallActivity extends FragmentActivity implements
 	private VideoCallFragment videoCallFragment;
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isTransferAllowed;
 	private LinearLayout mControlsLayout;
+	private Numpad numpad;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +98,7 @@ public class InCallActivity extends FragmentActivity implements
             } else {
             	callFragment = new AudioCallFragment();
             	audioCallFragment = (AudioCallFragment) callFragment;
-        		switchCamera.setVisibility(View.GONE);
+        		switchCamera.setVisibility(View.INVISIBLE);
             }
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
@@ -131,6 +134,7 @@ public class InCallActivity extends FragmentActivity implements
 		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
 		dialer.setEnabled(false);
+		numpad = (Numpad) findViewById(R.id.numpad);
 		
         switchCamera = (ImageView) findViewById(R.id.switchCamera);
         switchCamera.setOnClickListener(this);
@@ -218,7 +222,7 @@ public class InCallActivity extends FragmentActivity implements
 			hangUp();
 		} 
 		else if (id == R.id.dialer) {
-			
+			hideOrDisplayNumpad();
 		}
 		else if (id == R.id.switchCamera) {
 			if (videoCallFragment != null) {
@@ -226,7 +230,7 @@ public class InCallActivity extends FragmentActivity implements
 			}
 		}
 		else if (id == R.id.transfer) {
-			
+			//TODO Call Transfer
 		}
 		else if (id == R.id.options) {
 			hideOrDisplayCallOptions();
@@ -381,11 +385,13 @@ public class InCallActivity extends FragmentActivity implements
 			
 			controlsHandler.postDelayed(mControls = new Runnable() {
 				public void run() {
+					hideNumpad();
+					
 					if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
 						transfer.setVisibility(View.GONE);
 						addCall.setVisibility(View.GONE);
 						mControlsLayout.setVisibility(View.GONE);
-						switchCamera.setVisibility(View.GONE);
+						switchCamera.setVisibility(View.INVISIBLE);
 						options.setImageResource(R.drawable.options);
 					} else {					
 						Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
@@ -405,7 +411,7 @@ public class InCallActivity extends FragmentActivity implements
 								transfer.setVisibility(View.GONE);
 								addCall.setVisibility(View.GONE);
 								mControlsLayout.setVisibility(View.GONE);
-								switchCamera.setVisibility(View.GONE);
+								switchCamera.setVisibility(View.INVISIBLE);
 								options.setImageResource(R.drawable.options);
 							}
 						});
@@ -424,7 +430,67 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		
 		mControlsLayout.setVisibility(View.VISIBLE);
-		switchCamera.setVisibility(View.GONE);
+		switchCamera.setVisibility(View.INVISIBLE);
+	}
+	
+	private void hideNumpad() {
+		if (numpad.getVisibility() != View.VISIBLE) {
+			return;
+		}
+			
+		dialer.setImageResource(R.drawable.dialer_alt);
+		if (getResources().getBoolean(R.bool.disable_animations)) {
+			numpad.setVisibility(View.GONE);
+		} else {
+			Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
+			anim.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					numpad.setVisibility(View.GONE);
+				}
+			});
+			numpad.startAnimation(anim);
+		}
+	}
+	
+	private void hideOrDisplayNumpad() {
+		if (numpad.getVisibility() == View.VISIBLE) {
+			hideNumpad();
+		} else {	
+			dialer.setImageResource(R.drawable.dialer_alt_back);	
+			if (getResources().getBoolean(R.bool.disable_animations)) {
+				numpad.setVisibility(View.VISIBLE);
+			} else {
+				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
+				anim.setAnimationListener(new AnimationListener() {
+					@Override
+					public void onAnimationStart(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						numpad.setVisibility(View.VISIBLE);
+					}
+				});
+				numpad.startAnimation(anim);
+			}
+		}
 	}
 	
 	private void hideOrDisplayCallOptions() {
