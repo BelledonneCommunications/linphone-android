@@ -1,6 +1,6 @@
 NDK_PATH=$(shell dirname `which ndk-build`)
 SDK_PATH=$(shell dirname `which android`)
-NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo)
+NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 KEYSTORE=bc-android.keystore
