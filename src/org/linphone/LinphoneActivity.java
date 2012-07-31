@@ -83,6 +83,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private Fragment dialerFragment, messageListenerFragment;
 	private SavedState dialerSavedState;
 	private ChatStorage chatStorage;
+	private boolean preferLinphoneContacts = false;
 	private Handler mHandler = new Handler();
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
@@ -582,6 +583,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	public Cursor getSIPContactsCursor() {
 		return sipContactCursor;
+	}
+	
+	public void setLinphoneContactsPrefered(boolean isPrefered) {
+		preferLinphoneContacts = isPrefered;
+	}
+	
+	public boolean isLinphoneContactsPrefered() {
+		return preferLinphoneContacts;
 	}
 	
 	private void prepareContactsInBackground() {

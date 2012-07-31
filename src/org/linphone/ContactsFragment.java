@@ -82,14 +82,10 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		int id = v.getId();
 		
 		if (id == R.id.allContacts) {
-			allContacts.setEnabled(false);
-			linphoneContacts.setEnabled(true);
 			onlyDisplayLinphoneContacts = false;
 			changeContactsAdapter();
 		} 
 		else if (id == R.id.linphoneContacts) {
-			allContacts.setEnabled(true);
-			linphoneContacts.setEnabled(false);
 			onlyDisplayLinphoneContacts = true;
 			changeContactsAdapter();
 			
@@ -101,6 +97,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	private void changeContactsAdapter() {
+		changeContactsToggle();
+		
 		Cursor allContactsCursor = LinphoneActivity.instance().getAllContactsCursor();
 		Cursor sipContactsCursor = LinphoneActivity.instance().getSIPContactsCursor();
 		
@@ -110,6 +108,17 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		} else {
 			indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), allContactsCursor));
+		}
+		LinphoneActivity.instance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
+	}
+	
+	private void changeContactsToggle() {
+		if (onlyDisplayLinphoneContacts) {
+			allContacts.setEnabled(true);
+			linphoneContacts.setEnabled(false);
+		} else {
+			allContacts.setEnabled(false);
+			linphoneContacts.setEnabled(true);
 		}
 	}
 
@@ -124,6 +133,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		super.onResume();
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
+			onlyDisplayLinphoneContacts = LinphoneActivity.instance().isLinphoneContactsPrefered();
 		}
 		
 		if (contactsList.getAdapter() == null) {
