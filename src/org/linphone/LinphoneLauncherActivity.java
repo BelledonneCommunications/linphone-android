@@ -19,8 +19,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
+
+import org.linphone.mediastream.Version;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -40,6 +44,14 @@ public class LinphoneLauncherActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.launcher);
+		
+		// Hack to avoid to draw twice LinphoneActivity on tablets
+        if (Version.isXLargeScreen(this)) {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        
 		mHandler = new Handler();
 
 		if (LinphoneService.isReady()) {

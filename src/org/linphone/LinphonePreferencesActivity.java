@@ -38,6 +38,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		// Hack to allow custom view in preferences, in this case the bottom menu
 		setContentView(R.layout.settings);
 		

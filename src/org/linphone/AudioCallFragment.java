@@ -43,10 +43,10 @@ import android.widget.TextView;
  */
 public class AudioCallFragment extends Fragment {
 	private static final int rowHeight = 75; // Value set in active_call.xml
-	private static final int rowImageHeight = 100; // Value set in active_call.xml
+//	private static final int rowImageHeight = 100; // Value set in active_call.xml
 	private static final int rowThickRatio = 85; // Ratio dependent from the image
 	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
-	private static final int topMarginWithImage = topMargin + rowImageHeight;
+//	private static final int topMarginWithImage = topMargin + rowImageHeight;
 	
 	private RelativeLayout callsList;
 	private LayoutInflater inflater;

@@ -69,4 +69,20 @@ public enum FragmentsAvailable {
 			return false;
 		}
 	}
+
+	public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
+		switch (this) {
+		case HISTORY_DETAIL:
+			return fragment == HISTORY;
+			
+		case CONTACT:
+			return fragment == CONTACTS;
+			
+		case CHAT:
+			return fragment == CHATLIST;
+			
+		default:
+			return false;
+		}
+	}
 }

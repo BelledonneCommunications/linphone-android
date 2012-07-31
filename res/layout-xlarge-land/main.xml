@@ -2,20 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true" >
 
         <LinearLayout
-            android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingBottom="75dp"
-            android:paddingTop="20dp" />
+            android:paddingBottom="70dp"
+            android:paddingTop="20dp">
+        
+	        <LinearLayout
+	            android:id="@+id/fragmentContainer"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight="0.67" />
+	        
+	        <LinearLayout
+	            android:id="@+id/fragmentContainer2"
+	            android:visibility="gone"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight="0.33" />
+        
+        </LinearLayout>
 
         <fragment
             android:id="@+id/status"
@@ -30,12 +44,12 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2">
+            android:layout_weight="0.2" >
 
             <ImageView
                 android:id="@+id/history"
@@ -70,9 +84,10 @@
             android:id="@+id/dialer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.25"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_dialer"
-            android:scaleType="fitXY"
+            android:scaleType="fitEnd"
             android:src="@drawable/dialer" />
 
         <ImageView
@@ -87,7 +102,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2">
+            android:layout_weight="0.2" >
 
             <ImageView
                 android:id="@+id/chat"
@@ -109,7 +124,6 @@
                 android:textSize="20dp"
                 android:visibility="gone" />
         </RelativeLayout>
-        
     </LinearLayout>
 
 </RelativeLayout>
