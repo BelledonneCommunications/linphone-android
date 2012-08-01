@@ -760,8 +760,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onDestroy() {
-		chatStorage.close();
-		chatStorage = null;
+		if (chatStorage != null) {
+			chatStorage.close();
+			chatStorage = null;
+		}
 		super.onDestroy();
 	}
 	

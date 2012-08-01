@@ -21,19 +21,34 @@
 		    android:layout_height="wrap_content"
 		    linphone:picture="@drawable/unknown_small" />
 	        
-        <TextView
-            android:id="@+id/contactName"
-            android:paddingLeft="10dp"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-	    	android:textColor="@android:color/black" />
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+            
+	        <TextView
+	            android:id="@+id/contactName"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceLarge"
+		    	android:textColor="@android:color/black" />
+	        
+	        <TextView
+	            android:id="@+id/contactAddress"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceSmall"
+		    	android:textColor="@android:color/black" />
+        
+        </LinearLayout>
         
     </LinearLayout>
     
     <RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:id="@+id/logRow"
 	    android:paddingTop="20dp">
         
         <TextView
@@ -65,32 +80,31 @@
         
     </RelativeLayout>
     
-    <LinearLayout 
+    <RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:paddingTop="20dp"
-	    android:gravity="center"
-	    android:orientation="vertical">
+	    android:paddingTop="20dp">
         
         <RelativeLayout
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:layout_weight="0.7"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+		    android:layout_height="wrap_content"
+		    android:id="@+id/callBackRow"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
             
 	        <ImageView
 	            android:contentDescription="@string/content_description_dial_back"
 	            android:id="@+id/dialBack"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
 	            android:src="@drawable/button"
 		    	android:layout_centerInParent="true" />
 	        
 	        <TextView 
-	            android:id="@+id/dialBackUri"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
+			    android:text="@string/call"
 		    	android:textColor="@android:color/black"
 		    	android:layout_centerInParent="true" />
         
@@ -98,16 +112,19 @@
         
         <RelativeLayout
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:layout_weight="0.7"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+		    android:layout_height="wrap_content"
+		    android:id="@+id/chatRow"
+		    android:layout_below="@id/callBackRow"
+	    	android:layout_marginTop="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
             
 	        <ImageView
 	            android:contentDescription="@string/content_description_chat"
 	            android:id="@+id/chat"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
 	            android:src="@drawable/button"
 		    	android:layout_centerInParent="true" />
 	        
@@ -122,16 +139,19 @@
         
         <RelativeLayout
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:layout_weight="0.7"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+		    android:layout_height="wrap_content"
+		    android:id="@+id/addContactRow"
+		    android:layout_below="@id/chatRow"
+	    	android:layout_marginTop="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
             
 	        <ImageView
 	            android:contentDescription="@string/content_description_add_contact"
 	            android:id="@+id/addToContacts"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
 	            android:src="@drawable/button"
 		    	android:layout_centerInParent="true" />
 	        
@@ -144,13 +164,6 @@
         
         </RelativeLayout>
         
-        <View
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:layout_weight="0.5"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
-        
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

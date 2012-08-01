@@ -2,6 +2,7 @@
 			****************************
 
 To build liblinphone for Android, you must:
+0) download the Android sdk with platform-tools >= 13, tools >= 20 and sdk platform >= 16
 1) download the Android ndk (>=r5c) from google.
 2) install the autotools: autoconf, automake, aclocal, libtoolize pkgconfig
 3) run the ./prepare_sources.sh script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
@@ -34,8 +35,3 @@ BUILD_TUNNEL          0 (don't build tunnel), 1 (build tunnel) [requires a tunne
 
 In order to use ZRTP you also need to define the media_encryption property to
 "zrtp" in the sip section of linphonerc file.
-
-
-
-
-

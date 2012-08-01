@@ -43,7 +43,6 @@ public class LinphoneLauncherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.launcher);
 		
 		// Hack to avoid to draw twice LinphoneActivity on tablets
         if (Version.isXLargeScreen(this)) {
@@ -51,6 +50,7 @@ public class LinphoneLauncherActivity extends Activity {
         } else {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+		setContentView(R.layout.launcher);
         
 		mHandler = new Handler();
 

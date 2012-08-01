@@ -50,11 +50,10 @@
 			 </intent-filter>
 		</activity>
 
-		 <!-- Behind : Hack to force the portrait on phones and landscape on tablets thanks to a hack in LinphoneLauncherActivity -->
 		<activity android:name="org.linphone.LinphoneActivity"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind"
-            android:launchMode="singleTask">
+            android:screenOrientation="nosensor"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -64,7 +63,7 @@
         <activity android:name="org.linphone.IncomingCallActivity"
             android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTop"
-            android:screenOrientation="behind">
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -80,13 +79,11 @@
         </activity>
         
         <activity android:name=".AccountPreferencesActivity"
-		    android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind">
+		    android:theme="@android:style/Theme.NoTitleBar">
         </activity>
         
         <activity android:name=".PreferencesActivity"
-		    android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind">
+		    android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -94,7 +91,7 @@
          
         <activity android:name=".setup.SetupActivity"
 		    android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind">
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

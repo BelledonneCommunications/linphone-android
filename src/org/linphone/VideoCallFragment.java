@@ -30,6 +30,9 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnDoubleTapListener;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -42,17 +45,22 @@ import android.view.ViewGroup;
  * @author Sylvain Berfini
  */
 @TargetApi(5)
-public class VideoCallFragment extends Fragment {
+public class VideoCallFragment extends Fragment implements OnGestureListener, OnDoubleTapListener {
 	private WakeLock mWakeLock;
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 	private InCallActivity inCallActivity;
+	private GestureDetector mGestureDetector;
+	private float mZoomFactor;
+	private float mZoomCenterX, mZoomCenterY;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.video, container, false);
+        
+		mGestureDetector = new GestureDetector(this); 
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
 		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
@@ -94,7 +102,7 @@ public class VideoCallFragment extends Fragment {
 		mVideoView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				inCallActivity.displayVideoCallControlsIfHidden();
-				return false;
+				return mGestureDetector.onTouchEvent(event);
 			}
 		});
 		
@@ -147,16 +155,6 @@ public class VideoCallFragment extends Fragment {
 	}
 	
 	@Override
-	public void onDestroy() {
-		if (androidVideoWindowImpl != null) { 
-			// Prevent linphone from crashing if correspondent hang up while you are rotating
-			androidVideoWindowImpl.release();
-		}
-		
-		super.onDestroy();
-	}
-	
-	@Override
 	public void onPause() {		
 		synchronized (androidVideoWindowImpl) {
 			/*
@@ -173,5 +171,97 @@ public class VideoCallFragment extends Fragment {
 		
 		if (mVideoView != null)
 			((GLSurfaceView) mVideoView).onPause();
+	}
+	
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return true; // Needed to make the GestureDetector working
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+		if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
+			if (mZoomFactor > 1) {
+				// Video is zoomed, slide is used to change center of zoom
+				if (distanceX > 0 && mZoomCenterX < 1) {
+					mZoomCenterX += 0.01;
+				} else if(distanceX < 0 && mZoomCenterX > 0) {
+					mZoomCenterX -= 0.01;
+				}
+				
+				if (mZoomCenterX > 1)
+					mZoomCenterX = 1;
+				if (mZoomCenterX < 0)
+					mZoomCenterX = 0;
+				
+				LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onDoubleTap(MotionEvent e) {
+		if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
+			if (mZoomFactor == 1) {
+				// Zoom to make the video fill the screen in height
+				mZoomFactor = mVideoView.getHeight() / LinphoneManager.getLc().getPreferredVideoSize().height;
+			}
+			else {
+				resetZoom();
+			}
+			
+			LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+			return true;
+		}
+		
+		return false;
+	}
+
+	private void resetZoom() {
+		mZoomFactor = 1;
+		mZoomCenterX = mZoomCenterY = 0.5f;
+	}
+
+	@Override
+	public boolean onDoubleTapEvent(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onSingleTapConfirmed(MotionEvent e) {
+		return false;
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (androidVideoWindowImpl != null) { 
+			// Prevent linphone from crashing if correspondent hang up while you are rotating
+			androidVideoWindowImpl.release();
+		}
+		super.onDestroy();
 	}
 }

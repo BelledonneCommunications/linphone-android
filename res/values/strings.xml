@@ -255,6 +255,7 @@
 
 <string name="delete">Delete</string>
 <string name="chat">Chat</string>
+<string name="call">Call</string>
 <string name="add_to_contacts">Add to contacts</string>
 <string name="status_connected">CONNECTED</string>
 <string name="status_not_connected">NOT CONNECTED</string>

@@ -38,7 +38,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts;
 	private AvatarWithShadow contactPicture;
 	private View view;
-	private TextView contactName, callDirection, time, date, dialBackUri;
+	private TextView contactName, contactAddress, callDirection, time, date;
 	private String sipUri, displayName, pictureUri;
 	
 	@Override
@@ -69,7 +69,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
 		}
 		
-		dialBackUri = (TextView) view.findViewById(R.id.dialBackUri);
+		contactAddress = (TextView) view.findViewById(R.id.contactAddress);
 		
 		callDirection = (TextView) view.findViewById(R.id.callDirection);
 		
@@ -87,7 +87,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         }
 		
 		contactName.setText(displayName == null ? sipUri : displayName);
-		dialBackUri.setText(sipUri);
+		contactAddress.setText(sipUri);
 		callDirection.setText(status);
 		time.setText(callTime == null ? "" : callTime);
 		date.setText(callDate == null ? "" : callDate);

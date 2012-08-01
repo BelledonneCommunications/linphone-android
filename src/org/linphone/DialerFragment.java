@@ -111,7 +111,9 @@ public class DialerFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		LinphoneActivity.instance().updateDialerFragment(this);
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().updateDialerFragment(this);
+		}
 	}
 	
 	@Override
@@ -125,9 +127,10 @@ public class DialerFragment extends Fragment {
 	}
 	
 	public void resetLayout() {
-		if (LinphoneManager.getLc().getCallsNb() > 0) {
+		if (LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() > 0) {
 			mCall.setImageResource(R.drawable.plus);
 			mAddress.setText("");
+			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {

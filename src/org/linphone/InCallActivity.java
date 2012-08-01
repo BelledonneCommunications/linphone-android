@@ -86,8 +86,13 @@ public class InCallActivity extends FragmentActivity implements
 	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
             	}
             }
+            LinphoneManager.addListener(this);
             
-            Fragment callFragment;            
+            if (savedInstanceState != null) {
+            	return;
+            }
+            
+            Fragment callFragment;
             if (isVideoEnabled) {
             	callFragment = new VideoCallFragment();
             	videoCallFragment = (VideoCallFragment) callFragment;
@@ -104,7 +109,6 @@ public class InCallActivity extends FragmentActivity implements
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
         }
 
-        LinphoneManager.addListener(this);
 	}
 	
 	private void initUI() {
@@ -434,7 +438,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void hideNumpad() {
-		if (numpad.getVisibility() != View.VISIBLE) {
+		if (numpad == null || numpad.getVisibility() != View.VISIBLE) {
 			return;
 		}
 			
@@ -616,7 +620,7 @@ public class InCallActivity extends FragmentActivity implements
 			setCallControlsVisibleAndRemoveCallbacks();
 		}
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneUtils.onKeyVolumeAdjust(keyCode)) return true;

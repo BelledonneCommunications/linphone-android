@@ -163,7 +163,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 		
 		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
 			if (lpc.getIdentity().contains(prefs.getString(keyUsername, "")) && lpc.getIdentity().contains(prefs.getString(keyDomain, ""))) {
-				while (lpc.getState() == RegistrationState.RegistrationProgress || lpc.getState() == RegistrationState.RegistrationNone)
+				while ((lpc.getState() == RegistrationState.RegistrationProgress || lpc.getState() == RegistrationState.RegistrationNone) && (LinphoneManager.getLc().isNetworkReachable()))
 				{ };
 				
 				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {

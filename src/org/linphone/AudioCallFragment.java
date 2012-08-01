@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.Log;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.ui.AvatarWithShadow;
@@ -56,6 +57,7 @@ public class AudioCallFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
+		
 		this.inflater = inflater;
 		this.container = container;
 		
