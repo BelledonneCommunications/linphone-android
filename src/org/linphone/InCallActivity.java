@@ -86,7 +86,6 @@ public class InCallActivity extends FragmentActivity implements
 	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
             	}
             }
-            LinphoneManager.addListener(this);
             
             if (savedInstanceState != null) {
             	return;
@@ -612,13 +611,24 @@ public class InCallActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onResume() {
-		super.onResume();
+		LinphoneManager.addListener(this);
+		LinphoneManager.startProximitySensorForActivity(this);
 		
 		if (isVideoEnabled) {
 			displayVideoCallControlsIfHidden();
 		} else {
 			setCallControlsVisibleAndRemoveCallbacks();
 		}
+		
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		LinphoneManager.removeListener(this);
+		LinphoneManager.startProximitySensorForActivity(this);
+		
+		super.onPause();
 	}
 	
 	@Override
@@ -630,11 +640,5 @@ public class InCallActivity extends FragmentActivity implements
 
 	public void bindAudioFragment(AudioCallFragment fragment) {
 		audioCallFragment = fragment;
-	}
-	
-	@Override
-	protected void onDestroy() {
-		LinphoneManager.removeListener(this);
-		super.onDestroy();
 	}
 }
