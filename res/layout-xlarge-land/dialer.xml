@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res/org.linphone">
+    android:layout_height="match_parent">
     
     <RelativeLayout
         android:id="@+id/addressbar"
@@ -34,38 +34,81 @@
         
     </RelativeLayout>
 	
-    <org.linphone.ui.Numpad 
-	    android:id="@+id/Dialer"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentBottom="true"
+    <LinearLayout 
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 	    android:layout_below="@id/addressbar"
-  		android:background="@drawable/background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
+	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentBottom="true">
         
-        <ImageView
-            android:contentDescription="@string/content_description_add_contact"
-            android:id="@+id/addContact"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/add_contact" />
+        <View 
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.5" />
         
-        <org.linphone.ui.CallButton
-            android:id="@+id/Call"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/call" />
+        <LinearLayout
+	        android:orientation="horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.5">
+            
+		    <org.linphone.ui.Numpad 
+			    android:id="@+id/Dialer"
+		  		android:background="@drawable/background_alt"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_weight="0.7" />
+	        
+	        <View 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_weight="0.3" />
+	    
+	    </LinearLayout>
+	    
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentBottom="true"
+	    android:gravity="right">
         
+        <View 
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.15" />
+	    
+	    <LinearLayout
+        	android:orientation="horizontal"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.85">
+	        
+	        <ImageView
+	            android:id="@+id/addContact"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:adjustViewBounds="true"
+	            android:contentDescription="@string/content_description_add_contact"
+	            android:scaleType="fitXY"
+	            android:src="@drawable/add_contact" />
+	        
+	        <org.linphone.ui.CallButton
+	            android:id="@+id/Call"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:adjustViewBounds="true"
+	            android:layout_weight="1"
+	            android:scaleType="fitXY"
+	            android:src="@drawable/call" />
+	        
+	    </LinearLayout>
+	    
     </LinearLayout>
 	
 </RelativeLayout>

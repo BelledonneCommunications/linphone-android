@@ -40,9 +40,22 @@ import android.widget.TextView;
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
 	private ImageView back, editContact, newContact;
-	private OnClickListener dialListener, chatListener;
 	private LayoutInflater inflater;
 	private View view;
+
+	private OnClickListener dialListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
+		}
+	};
+	
+	private OnClickListener chatListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			LinphoneActivity.instance().displayChat(v.getTag().toString());
+		}
+	};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -58,10 +71,13 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		newContact = (ImageView) view.findViewById(R.id.newContact);
 		newContact.setOnClickListener(this);
 		
-		chatListener = getChatListener();
-		dialListener = getDialListener();
-		
 		return view;
+	}
+	
+	public void changeDisplayedContact(Contact newContact) {
+		contact = newContact;
+		contact.refresh(getActivity().getContentResolver());
+		displayContact(inflater, view);
 	}
 	
 	private void displayContact(LayoutInflater inflater, View view) {
@@ -70,7 +86,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
 			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
-        	contactPicture.setBackgroundResource(R.drawable.unknown_small);
+        	contactPicture.setImageResource(R.drawable.unknown_small);
         }
 		
 		TextView contactName = (TextView) view.findViewById(R.id.contactName);
@@ -105,24 +121,6 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		}
 		contact.refresh(getActivity().getContentResolver());
 		displayContact(inflater, view);
-	}
-
-	public OnClickListener getDialListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
-			}
-		};
-	}
-	
-	public OnClickListener getChatListener() {
-		return new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LinphoneActivity.instance().displayChat(v.getTag().toString());
-			}
-		};
 	}
 
 	@Override

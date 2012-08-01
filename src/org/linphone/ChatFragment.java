@@ -48,8 +48,11 @@ import android.widget.TextView;
  */
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneOnMessageReceivedListener {
 	private LinphoneChatRoom chatRoom;
+	private View view;
 	private String sipUri;
 	private EditText message;
+	private TextView contactName;
+	private AvatarWithShadow contactPicture;
 	private RelativeLayout messagesLayout;
 	private ScrollView messagesScrollView;
 	private int previousMessageID;
@@ -59,41 +62,22 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
 		sipUri = getArguments().getString("SipUri");
-		String name = getArguments().getString("DisplayName");
+		String displayName = getArguments().getString("DisplayName");
 		String pictureUri = getArguments().getString("PictureUri");
 		
-        View view = inflater.inflate(R.layout.chat, container, false);
+        view = inflater.inflate(R.layout.chat, container, false);
         
-        TextView contactName = (TextView) view.findViewById(R.id.contactName);
-        if (name == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-        	contactName.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
-		} else if (name == null) {
-			contactName.setText(sipUri);
-		}
-        else {
-			contactName.setText(name);
-		}
-        
-        AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
-        if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
-        }
+        contactName = (TextView) view.findViewById(R.id.contactName);
+        contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
         
         ImageView sendMessage = (ImageView) view.findViewById(R.id.sendMessage);
         sendMessage.setOnClickListener(this);
         message = (EditText) view.findViewById(R.id.message);
         
         messagesLayout = (RelativeLayout) view.findViewById(R.id.messages);
-        
         messagesScrollView = (ScrollView) view.findViewById(R.id.chatScrollView);
-        messagesScrollView.post(new Runnable() {
-            @Override
-            public void run() {
-            	scrollToEnd();
-            }
-        });
         
-        invalidate();
+        displayChat(displayName, pictureUri);
         
         LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null)
@@ -117,6 +101,30 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
         scrollToEnd();
 	}
 	
+	private void displayChat(String displayName, String pictureUri) {
+		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+        	contactName.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+		} else if (displayName == null) {
+			contactName.setText(sipUri);
+		}
+        else {
+			contactName.setText(displayName);
+		}
+		
+        if (pictureUri != null) {
+        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
+        }
+        
+        messagesScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+            	scrollToEnd();
+            }
+        });
+        
+        invalidate();
+	}
+	
 	private void displayMessage(final int id, final String message, final String time, final boolean isIncoming, final RelativeLayout layout) {
 		mHandler.post(new Runnable() {
 			@Override
@@ -127,6 +135,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 				registerForContextMenu(bubble.getView());
 			}
 		});
+	}
+
+	public void changeDisplayedChat(String sipUri, String displayName, String pictureUri) {
+		this.sipUri = sipUri;
+		displayChat(displayName, pictureUri);
 	}
 	
 	@Override

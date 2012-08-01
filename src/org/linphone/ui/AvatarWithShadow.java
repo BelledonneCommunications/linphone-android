@@ -54,7 +54,7 @@ public class AvatarWithShadow extends LinearLayout {
 		contactPicture.setImageBitmap(bitmap);
 	}
 
-	public void setBackgroundResource(int res) {
-		contactPicture.setBackgroundResource(res);
+	public void setImageResource(int res) {
+		contactPicture.setImageResource(res);
 	}
 }

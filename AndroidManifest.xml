@@ -64,7 +64,7 @@
         <activity android:name="org.linphone.IncomingCallActivity"
             android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -81,12 +81,12 @@
         
         <activity android:name=".AccountPreferencesActivity"
 		    android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
         </activity>
         
         <activity android:name=".PreferencesActivity"
 		    android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -94,7 +94,7 @@
          
         <activity android:name=".setup.SetupActivity"
 		    android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

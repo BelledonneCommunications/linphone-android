@@ -37,6 +37,7 @@ import android.widget.TextView;
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts;
 	private AvatarWithShadow contactPicture;
+	private View view;
 	private TextView contactName, callDirection, time, date, dialBackUri;
 	private String sipUri, displayName, pictureUri;
 	
@@ -50,12 +51,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		String callTime = getArguments().getString("CallTime");
 		String callDate = getArguments().getString("CallDate");
 		
-		View view = inflater.inflate(R.layout.history_detail, container, false);
+		view = inflater.inflate(R.layout.history_detail, container, false);
 		
 		contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
-		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
-        }
 		
 		dialBack = (ImageView) view.findViewById(R.id.dialBack);
 		dialBack.setOnClickListener(this);
@@ -70,21 +68,40 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
 			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
 		}
-		contactName.setText(displayName == null ? sipUri : displayName);
 		
 		dialBackUri = (TextView) view.findViewById(R.id.dialBackUri);
-		dialBackUri.setText(sipUri);
 		
 		callDirection = (TextView) view.findViewById(R.id.callDirection);
-		callDirection.setText(status);
 		
 		time = (TextView) view.findViewById(R.id.time);
-		time.setText(callTime == null ? "" : callTime);
 		date = (TextView) view.findViewById(R.id.date);
-		date.setText(callDate == null ? "" : callDate);
 		
+		displayHistory(status, callTime, callDate);
 		
 		return view;
+	}
+	
+	private void displayHistory(String status, String callTime, String callDate) {
+		if (pictureUri != null) {
+        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
+        }
+		
+		contactName.setText(displayName == null ? sipUri : displayName);
+		dialBackUri.setText(sipUri);
+		callDirection.setText(status);
+		time.setText(callTime == null ? "" : callTime);
+		date.setText(callDate == null ? "" : callDate);
+	}
+	
+	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
+		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
+		}
+
+		this.sipUri = sipUri;
+		this.displayName = displayName;
+		this.pictureUri = pictureUri;
+		displayHistory(status, callTime, callDate);
 	}
 	
 	@Override

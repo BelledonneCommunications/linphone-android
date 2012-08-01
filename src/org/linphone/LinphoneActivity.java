@@ -45,7 +45,6 @@ import org.linphone.ui.AddressText;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -281,16 +280,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public void displayHistoryDetail(String sipUri, LinphoneCallLog log) {
-		//TODO Update current fragment if already visible (tablets)
 		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
 		
-		Bundle extras = new Bundle();
-		extras.putString("SipUri", sipUri);
-		if (lAddress.getDisplayName() != null) {
-			extras.putString("DisplayName", lAddress.getDisplayName());
-			extras.putString("PictureUri", uri.toString());
-		}
+		String displayName = lAddress.getDisplayName();
+		String pictureUri = uri == null ? null : uri.toString();
 		
 		String status;
 		if (log.getDirection() == CallDirection.Outgoing) {
@@ -302,11 +296,27 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				status = "Incoming";
 			}
 		}
-		extras.putString("CallStatus", status);
-		extras.putString("CallTime", secondsToDisplayableString(log.getCallDuration()));
-		extras.putString("CallDate", log.getStartDate());
 		
-		changeCurrentFragment(FragmentsAvailable.HISTORY_DETAIL, extras);
+		String callTime = secondsToDisplayableString(log.getCallDuration());
+		String callDate = log.getStartDate();
+		
+		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
+			HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
+			historyDetailFragment.changeDisplayedHistory(sipUri, displayName, pictureUri, status, callTime, callDate);
+		} else {	
+			Bundle extras = new Bundle();
+			extras.putString("SipUri", sipUri);
+			if (displayName != null) {
+				extras.putString("DisplayName", displayName);
+				extras.putString("PictureUri", pictureUri);
+			}
+			extras.putString("CallStatus", status);
+			extras.putString("CallTime", callTime);
+			extras.putString("CallDate", callDate);
+			
+			changeCurrentFragment(FragmentsAvailable.HISTORY_DETAIL, extras);
+		}
 	}
 	
 	private String secondsToDisplayableString(int secs) {
@@ -317,10 +327,15 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public void displayContact(Contact contact) {
-		//TODO Update current fragment if already visible (tablets)
-		Bundle extras = new Bundle();
-		extras.putSerializable("Contact", contact);
-		changeCurrentFragment(FragmentsAvailable.CONTACT, extras);
+		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT) {
+			ContactFragment contactFragment = (ContactFragment) fragment2;
+			contactFragment.changeDisplayedContact(contact);
+		} else {		
+			Bundle extras = new Bundle();
+			extras.putSerializable("Contact", contact);
+			changeCurrentFragment(FragmentsAvailable.CONTACT, extras);
+		}
 	}
 	
 	public void displayContacts() {
@@ -328,20 +343,31 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public void displayChat(String sipUri) {
-		//TODO Update current fragment if already visible (tablets)
 		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
+		String displayName = lAddress.getDisplayName();
+		String pictureUri = uri == null ? null : uri.toString();
 		
-		Bundle extras = new Bundle();
-		extras.putString("SipUri", sipUri);
-		if (lAddress.getDisplayName() != null) {
-			extras.putString("DisplayName", lAddress.getDisplayName());
-			extras.putString("PictureUri", uri.toString());
+		if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
+			Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+				ChatFragment chatFragment = (ChatFragment) fragment2;
+				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
+			} else {
+				Bundle extras = new Bundle();
+				extras.putString("SipUri", sipUri);
+				if (lAddress.getDisplayName() != null) {
+					extras.putString("DisplayName", displayName);
+					extras.putString("PictureUri", pictureUri);
+				}
+				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+			}
+		} else {
+			changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
+			displayChat(sipUri);
 		}
-		
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
-		changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 		displayMissedChats(getChatStorage().getUnreadMessageCount());
 	}
 
