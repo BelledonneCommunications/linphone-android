@@ -27,6 +27,7 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents.Insert;
+import android.view.Display;
 
 /*
 ApiFivePlus.java
@@ -274,5 +275,10 @@ public class ApiFivePlus {
 			return getContactDisplayName(c);
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static int getRotation(Display display) {
+		return display.getOrientation();
 	}
 }

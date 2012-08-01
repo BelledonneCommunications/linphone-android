@@ -138,6 +138,9 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		}
 	}
 	
+	private void rotatePreviewIfNeeded() {
+	}
+	
 	@Override
 	public void onResume() {		
 		super.onResume();
@@ -151,9 +154,11 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 			}
 		}
 		
+		rotatePreviewIfNeeded();
+		
 		mWakeLock.acquire();
 	}
-	
+
 	@Override
 	public void onPause() {		
 		synchronized (androidVideoWindowImpl) {

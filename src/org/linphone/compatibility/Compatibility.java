@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.view.Display;
 /**
  * @author Sylvain Berfini
  */
@@ -175,5 +176,13 @@ public class Compatibility {
 			//TODO
 		}
 		return null;
+	}
+
+	public static int getRotation(Display display) {
+		if (Version.sdkStrictlyBelow(8)) {
+			return ApiFivePlus.getRotation(display);
+		} else {
+			return ApiEightPlus.getRotation(display);
+		}
 	}
 }

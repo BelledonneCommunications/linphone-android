@@ -35,6 +35,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.Log;
@@ -43,6 +44,7 @@ import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -56,6 +58,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -89,6 +92,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private Handler mHandler = new Handler();
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
+	private OrientationEventListener mOrientationHelper;
 	
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -134,6 +138,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
         
         int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
+		
+		int rotation = Compatibility.getRotation(getWindowManager().getDefaultDisplay());
+		// Inverse landscape rotation to initiate linphoneCore correctly
+		if (rotation == 270)
+			rotation = 90;
+		else if (rotation == 90)
+			rotation = 270;
+		
+		LinphoneManager.getLc().setDeviceRotation(rotation);
+		mAlwaysChangingPhoneAngle = rotation;
 		
         instance = this;    
 	}
@@ -604,6 +618,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void startVideoActivity(LinphoneCall currentCall) {
 		Intent intent = new Intent(this, InCallActivity.class);
 		intent.putExtra("VideoEnabled", true);
+		startOrientationSensor();
 		startActivityForResult(intent, callActivity);
 	}
 	
@@ -611,6 +626,46 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		Intent intent = new Intent(this, InCallActivity.class);
 		intent.putExtra("VideoEnabled", false);
 		startActivityForResult(intent, callActivity);
+	}
+	
+	/**
+	 * Register a sensor to track phoneOrientation changes
+	 */
+	private synchronized void startOrientationSensor() {
+		if (mOrientationHelper == null) {
+			mOrientationHelper = new LocalOrientationEventListener(this);
+		}
+		mOrientationHelper.enable();
+	}
+	
+	private int mAlwaysChangingPhoneAngle = -1;
+	private class LocalOrientationEventListener extends OrientationEventListener {
+		public LocalOrientationEventListener(Context context) {
+			super(context);
+		}
+		@Override
+		public void onOrientationChanged(final int o) {
+			if (o == OrientationEventListener.ORIENTATION_UNKNOWN) return;
+
+			int degrees=270;
+			if (o < 45 || o >315) degrees=0;
+			else if (o<135) degrees=90;
+			else if (o<225) degrees=180;
+
+			if (mAlwaysChangingPhoneAngle == degrees) return;
+			mAlwaysChangingPhoneAngle = degrees;
+
+			Log.d("Phone orientation changed to ", degrees);
+			int rotation = (360 - degrees) % 360;
+			LinphoneCore lc=LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc!=null){
+				lc.setDeviceRotation(rotation);
+				LinphoneCall currentCall = lc.getCurrentCall();
+				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParamsCopy().getVideoEnabled()) {
+					lc.updateCall(currentCall, null);
+				}
+			}
+		}
 	}
 
 	public void showPreferenceErrorDialog(String message) {
