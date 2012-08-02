@@ -53,6 +53,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.incoming);
 
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);

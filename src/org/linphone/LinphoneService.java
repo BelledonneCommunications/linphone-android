@@ -152,7 +152,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
 		
-		mNotif = new Notification(R.drawable.status_level, "", System.currentTimeMillis());
+		mNotif = new Notification();
+		mNotif.icon = R.drawable.status_level;
+		mNotif.when = System.currentTimeMillis();
 		mNotif.iconLevel=IC_LEVEL_ORANGE;
 		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
 
@@ -403,7 +405,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		sb.append("MODEL=").append(Build.MODEL).append("\n");
 		//MANUFACTURER doesn't exist in android 1.5.
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
-		sb.append("SDK=").append(Build.VERSION.SDK);
+		sb.append("SDK=").append(Build.VERSION.SDK_INT);
 		Log.i(sb.toString());
 	}
 

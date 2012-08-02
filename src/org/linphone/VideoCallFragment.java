@@ -24,11 +24,8 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.support.v4.app.Fragment;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -40,13 +37,13 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**
  * @author Sylvain Berfini
  */
 @TargetApi(5)
 public class VideoCallFragment extends Fragment implements OnGestureListener, OnDoubleTapListener {
-	private WakeLock mWakeLock;
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
@@ -55,12 +52,15 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	private float mZoomFactor;
 	private float mZoomCenterX, mZoomCenterY;
 	
+	@SuppressWarnings("deprecation") // Warning useless because value is ignored and automatically set by new APIs.
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
+		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
         View view = inflater.inflate(R.layout.video, container, false);
         
-		mGestureDetector = new GestureDetector(this); 
+		mGestureDetector = new GestureDetector(getActivity(), this); 
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
 		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
@@ -95,9 +95,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 			}
 		});
 		androidVideoWindowImpl.init();
-		
-		PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, Log.TAG);
 		
 		mVideoView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
@@ -150,8 +147,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 				LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
 			}
 		}
-		
-		mWakeLock.acquire();
 	}
 
 	@Override
@@ -163,9 +158,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 			 */
 			LinphoneManager.getLc().setVideoWindow(null);
 		}
-
-		if (mWakeLock.isHeld())
-			mWakeLock.release();
 		
 		super.onPause();
 		

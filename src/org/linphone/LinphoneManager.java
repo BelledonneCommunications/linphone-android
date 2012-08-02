@@ -25,7 +25,6 @@ import static android.media.AudioManager.ROUTE_EARPIECE;
 import static android.media.AudioManager.ROUTE_SPEAKER;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
-import static android.media.AudioManager.VIBRATE_TYPE_RINGER;
 import static org.linphone.R.string.pref_codec_amr_key;
 import static org.linphone.R.string.pref_codec_amrwb_key;
 import static org.linphone.R.string.pref_codec_ilbc_key;
@@ -944,8 +943,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			// Brighten screen for at least 10 seconds
 			WakeLock wl = mPowerManager.newWakeLock(
 					PowerManager.ACQUIRE_CAUSES_WAKEUP
-					|PowerManager.ON_AFTER_RELEASE
-					|PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+					|PowerManager.ON_AFTER_RELEASE,
 					"incoming_call");
 			wl.acquire(10000);
 
@@ -1041,7 +1039,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		try {
-			if (mAudioManager.shouldVibrate(VIBRATE_TYPE_RINGER) && mVibrator !=null) {
+			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator !=null) {
 				long[] patern = {0,1000,1000};
 				mVibrator.vibrate(patern, 1);
 			}
