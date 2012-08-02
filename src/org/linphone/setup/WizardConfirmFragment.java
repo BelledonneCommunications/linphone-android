@@ -62,7 +62,7 @@ public class WizardConfirmFragment extends Fragment {
 	private void isAccountVerified(String username) {
 		final Runnable runNotReachable = new Runnable() {
 			public void run() {
-				Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG);
+				Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
 			}
 		};
 		

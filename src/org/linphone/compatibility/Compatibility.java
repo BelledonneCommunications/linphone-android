@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.linphone.Contact;
-import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
 
@@ -120,17 +119,7 @@ public class Compatibility {
 		if (Version.sdkAboveOrEqual(16)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else {
-			notif = new Notification();
-			notif.icon = R.drawable.chat_icon_over;
-			notif.iconLevel = 0;
-			notif.when = System.currentTimeMillis();
-			notif.flags &= Notification.FLAG_ONGOING_EVENT;
-			
-			notif.defaults |= Notification.DEFAULT_VIBRATE;
-			notif.defaults |= Notification.DEFAULT_SOUND;
-			notif.defaults |= Notification.DEFAULT_LIGHTS;
-			
-			notif.setLatestEventInfo(context, title, msg, intent);
+			notif = ApiFivePlus.createMessageNotification(context, title, msg, intent);
 		}
 		return notif;
 	}
@@ -141,13 +130,7 @@ public class Compatibility {
 		if (Version.sdkAboveOrEqual(16)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else {
-			notif = new Notification();
-			notif.icon = iconID;
-			notif.iconLevel = 0;
-			notif.when = System.currentTimeMillis();
-			notif.flags &= Notification.FLAG_ONGOING_EVENT;
-			
-			notif.setLatestEventInfo(context, title, msg, intent);
+			notif = ApiFivePlus.createInCallNotification(context, title, msg, iconID, intent);
 		}
 		return notif;
 	}
@@ -155,8 +138,6 @@ public class Compatibility {
 	public static String refreshContactName(ContentResolver cr, String id) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.refreshContactName(cr, id);
-		} else {
-			//TODO
 		}
 		return null;
 	}

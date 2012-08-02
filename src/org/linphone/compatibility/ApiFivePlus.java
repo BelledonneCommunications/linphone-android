@@ -7,14 +7,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.linphone.Contact;
+import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -280,5 +284,36 @@ public class ApiFivePlus {
 	@SuppressWarnings("deprecation")
 	public static int getRotation(Display display) {
 		return display.getOrientation();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static Notification createMessageNotification(Context context, String title, String msg, PendingIntent intent) {
+		Notification notif = new Notification();
+		notif.icon = R.drawable.chat_icon_over;
+		notif.iconLevel = 0;
+		notif.when = System.currentTimeMillis();
+		notif.flags &= Notification.FLAG_ONGOING_EVENT;
+		
+		notif.defaults |= Notification.DEFAULT_VIBRATE;
+		notif.defaults |= Notification.DEFAULT_SOUND;
+		notif.defaults |= Notification.DEFAULT_LIGHTS;
+		
+		notif.setLatestEventInfo(context, title, msg, intent);
+		
+		return notif;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static Notification createInCallNotification(Context context,
+			String title, String msg, int iconID, PendingIntent intent) {
+		Notification notif = new Notification();
+		notif.icon = iconID;
+		notif.iconLevel = 0;
+		notif.when = System.currentTimeMillis();
+		notif.flags &= Notification.FLAG_ONGOING_EVENT;
+		
+		notif.setLatestEventInfo(context, title, msg, intent);
+
+		return notif;
 	}
 }
