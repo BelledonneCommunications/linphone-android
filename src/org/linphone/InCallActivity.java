@@ -400,43 +400,45 @@ public class InCallActivity extends FragmentActivity implements
 			controlsHandler.removeCallbacks(mControls);
 		}
 		
-		controlsHandler.postDelayed(mControls = new Runnable() {
-			public void run() {
-				hideNumpad();
-				
-				if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
-					transfer.setVisibility(View.GONE);
-					addCall.setVisibility(View.GONE);
-					mControlsLayout.setVisibility(View.GONE);
-					switchCamera.setVisibility(View.INVISIBLE);
-					options.setImageResource(R.drawable.options);
-				} else {					
-					Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
-					animation.setAnimationListener(new AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-							video.setEnabled(false); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
-							transfer.setVisibility(View.GONE);
-							addCall.setVisibility(View.GONE);
-							mControlsLayout.setVisibility(View.GONE);
-							switchCamera.setVisibility(View.INVISIBLE);
-							options.setImageResource(R.drawable.options);
-						}
-					});
-					mControlsLayout.startAnimation(animation);
-					switchCamera.startAnimation(AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_bottom_to_top));
+		if (isVideoEnabled) {
+			controlsHandler.postDelayed(mControls = new Runnable() {
+				public void run() {
+					hideNumpad();
+					
+					if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
+						transfer.setVisibility(View.INVISIBLE);
+						addCall.setVisibility(View.INVISIBLE);
+						mControlsLayout.setVisibility(View.GONE);
+						switchCamera.setVisibility(View.INVISIBLE);
+						options.setImageResource(R.drawable.options);
+					} else {					
+						Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
+						animation.setAnimationListener(new AnimationListener() {
+							@Override
+							public void onAnimationStart(Animation animation) {
+								video.setEnabled(false); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
+								transfer.setVisibility(View.INVISIBLE);
+								addCall.setVisibility(View.INVISIBLE);
+								mControlsLayout.setVisibility(View.GONE);
+								switchCamera.setVisibility(View.INVISIBLE);
+								options.setImageResource(R.drawable.options);
+							}
+						});
+						mControlsLayout.startAnimation(animation);
+						switchCamera.startAnimation(AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_bottom_to_top));
+					}
 				}
-			}
-		}, SECONDS_BEFORE_HIDING_CONTROLS);
+			}, SECONDS_BEFORE_HIDING_CONTROLS);
+		}
 	}
 
 	public void setCallControlsVisibleAndRemoveCallbacks() {
@@ -514,9 +516,9 @@ public class InCallActivity extends FragmentActivity implements
 			options.setImageResource(R.drawable.options);
 			if (getResources().getBoolean(R.bool.disable_animations)) {
 				if (isTransferAllowed) {
-					transfer.setVisibility(View.GONE);
+					transfer.setVisibility(View.INVISIBLE);
 				}
-				addCall.setVisibility(View.GONE);
+				addCall.setVisibility(View.INVISIBLE);
 			} else {
 				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_left_to_right);
 				anim.setAnimationListener(new AnimationListener() {
@@ -533,9 +535,9 @@ public class InCallActivity extends FragmentActivity implements
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						if (isTransferAllowed) {
-							transfer.setVisibility(View.GONE);
+							transfer.setVisibility(View.INVISIBLE);
 						}
-						addCall.setVisibility(View.GONE);
+						addCall.setVisibility(View.INVISIBLE);
 					}
 				});
 				if (isTransferAllowed) {

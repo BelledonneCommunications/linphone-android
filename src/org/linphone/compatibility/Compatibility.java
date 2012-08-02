@@ -48,8 +48,6 @@ public class Compatibility {
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.prepareAddContactIntent(displayName, sipUri);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -57,8 +55,6 @@ public class Compatibility {
 	public static Intent prepareEditContactIntent(int id) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.prepareEditContactIntent(id);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -66,8 +62,6 @@ public class Compatibility {
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -75,8 +69,6 @@ public class Compatibility {
 	public static Cursor getContactsCursor(ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.getContactsCursor(cr);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -84,8 +76,6 @@ public class Compatibility {
 	public static Cursor getSIPContactsCursor(ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.getSIPContactsCursor(cr);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -93,8 +83,6 @@ public class Compatibility {
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.getCursorDisplayNameColumnIndex(cursor);
-		} else {
-			//TODO
 		}
 		return -1;
 	}
@@ -102,8 +90,6 @@ public class Compatibility {
 	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.getContact(cr, cursor, position);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -111,8 +97,6 @@ public class Compatibility {
 	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.getContactPictureInputStream(cr, id);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -120,8 +104,6 @@ public class Compatibility {
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
-		} else {
-			//TODO
 		}
 		return null;
 	}
@@ -160,8 +142,9 @@ public class Compatibility {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else {
 			notif = new Notification();
+			notif.icon = iconID;
 			notif.iconLevel = 0;
-			notif.when=System.currentTimeMillis();
+			notif.when = System.currentTimeMillis();
 			notif.flags &= Notification.FLAG_ONGOING_EVENT;
 			
 			notif.setLatestEventInfo(context, title, msg, intent);
