@@ -641,7 +641,7 @@ public class InCallActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		LinphoneManager.removeListener(this);
-		LinphoneManager.startProximitySensorForActivity(this);
+		LinphoneManager.stopProximitySensorForActivity(this);
 		
 		super.onPause();
 	}
