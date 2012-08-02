@@ -55,6 +55,7 @@ public class InCallActivity extends FragmentActivity implements
 									OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
 	
+	private static InCallActivity instance = null;
 	private Handler mHandler = new Handler();
 	private Handler controlsHandler = new Handler();
 	private Runnable mControls;
@@ -66,9 +67,18 @@ public class InCallActivity extends FragmentActivity implements
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
 	
+	public static InCallActivity instance() {
+		return instance;
+	}
+	
+	public static boolean isInstanciated() {
+		return instance != null;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		instance = this;
         setContentView(R.layout.incall);
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
@@ -632,6 +642,12 @@ public class InCallActivity extends FragmentActivity implements
 		LinphoneManager.startProximitySensorForActivity(this);
 		
 		super.onPause();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		instance = null;
+		super.onDestroy();
 	}
 	
 	@Override
