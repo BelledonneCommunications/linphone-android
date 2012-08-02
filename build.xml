@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Linphone" default="debug">
-
     <!--
         This build file is imported by the project build file. It contains
         all the targets and tasks necessary to build Android projects, be they
@@ -39,7 +38,7 @@
     <property file="ant.properties" />
     <loadproperties srcFile="project.properties" />
     <!-- version-tag: custom -->
-    <property name="linphone.package.name" value="org.linphone" />
+    <property name="linphone.package.name" value="com.lockfone.phone" />
     
     <property name="adb.device.arg" value="" />
 
@@ -636,12 +635,16 @@
                     aidlOutFolder="${out.aidl.absolute.dir}">
                 <source path="${source.absolute.dir}"/>
             </aidl>
-
+            
+            <path id="android.renderscript.include.path">
+			    <pathelement location="${android.platform.tools.dir}/renderscript/include" />
+			    <pathelement location="${android.platform.tools.dir}/renderscript/clang-include" />
+			</path>
             <!-- renderscript generates resources so it must be called before aapt -->
             <echo level="info">----------</echo>
             <echo level="info">Handling RenderScript files...</echo>
             <renderscript executable="${renderscript}"
-                    includePath="${android.renderscript.include.path}"
+                    includePathRefId="android.renderscript.include.path"
                     genFolder="${gen.absolute.dir}"
                     resFolder="${out.res.absolute.dir}/raw"
                     targetApi="${project.minSdkVersion}"
@@ -942,6 +945,7 @@
 			  <arg value="${linphone.package.name}"/> 
 			  <arg value="--custom-package" />
 			  <arg value="${linphone.package.name}"/> 
+			  <arg value="--no-crunch" />
 			</exec> 
         </do-only-if-not-library>
     </target>
