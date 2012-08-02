@@ -100,7 +100,7 @@ public class WizardConfirmFragment extends Fragment {
 			    }
 			};
 
-		    client.callAsync(listener, "check_account_validated", "sip:" + username + "@" + getString(R.string.default_domain));
+		    client.callAsync(listener, "check_account_validated", username + "@" + getString(R.string.default_domain));
 		} 
 		catch(Exception ex) {
 			mHandler.post(runNotReachable);
