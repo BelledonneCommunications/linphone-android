@@ -40,7 +40,8 @@ public class NetworkManager extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		NetworkInfo lNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo lNetworkInfo = cm.getActiveNetworkInfo();
 		Log.i("Network info [",lNetworkInfo,"]");
 		Boolean lNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,false);
 
@@ -65,9 +66,7 @@ public class NetworkManager extends BroadcastReceiver {
 			 // Other unhandled events
 		}
 
-		NetworkInfo eventInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		LinphoneManager.getInstance().connectivityChanged(eventInfo, cm);
+		LinphoneManager.getInstance().connectivityChanged(lNetworkInfo, cm);
 	}
 
 }

@@ -118,6 +118,8 @@ public class Compatibility {
 		
 		if (Version.sdkAboveOrEqual(16)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
+		} else if (Version.sdkAboveOrEqual(11)) {
+			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else {
 			notif = ApiFivePlus.createMessageNotification(context, title, msg, intent);
 		}
@@ -129,6 +131,8 @@ public class Compatibility {
 		
 		if (Version.sdkAboveOrEqual(16)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
+		} else if (Version.sdkAboveOrEqual(11)) {
+			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else {
 			notif = ApiFivePlus.createInCallNotification(context, title, msg, iconID, intent);
 		}
@@ -147,6 +151,14 @@ public class Compatibility {
 			return ApiFivePlus.getRotation(display);
 		} else {
 			return ApiEightPlus.getRotation(display);
+		}
+	}
+	
+	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
+		if (Version.sdkAboveOrEqual(11)) {
+			ApiElevenPlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
+		} else {
+			ApiFivePlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
 		}
 	}
 }

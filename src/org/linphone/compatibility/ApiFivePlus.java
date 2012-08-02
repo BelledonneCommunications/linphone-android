@@ -316,4 +316,9 @@ public class ApiFivePlus {
 
 		return notif;
 	}
+
+	@SuppressWarnings("deprecation")
+	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
+		notif.setLatestEventInfo(context, title, content, intent);
+	}
 }

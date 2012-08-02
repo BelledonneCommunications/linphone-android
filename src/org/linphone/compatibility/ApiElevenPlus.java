@@ -7,8 +7,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+
 /*
-ApiSixteenPlus.java
+ApiElevenPlus.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -28,24 +29,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /**
  * @author Sylvain Berfini
  */
-@TargetApi(16)
-public class ApiSixteenPlus {
+@TargetApi(11)
+public class ApiElevenPlus {
 
+	@SuppressWarnings("deprecation")
 	public static Notification createMessageNotification(Context context,
 			int msgCount, String msgSender, String msg, Bitmap contactIcon,
 			PendingIntent intent) {
-		String title, summary;
+		String title;
 		if (msgCount == 1) {
 			title = "Unread message from %s".replace("%s", msgSender);
-			summary = "";
 		} else {
 			title = "%i unread messages"
 					.replace("%i", String.valueOf(msgCount));
-			summary = "";
 		}
 
-		Notification notif = new Notification.BigPictureStyle(
-				new Notification.Builder(context)
+		Notification notif = new Notification.Builder(context)
 						.setContentTitle(title)
 						.setContentText(msg)
 						.setSmallIcon(R.drawable.chat_icon_over)
@@ -55,25 +54,29 @@ public class ApiSixteenPlus {
 										| Notification.DEFAULT_SOUND
 										| Notification.DEFAULT_VIBRATE)
 						.setWhen(System.currentTimeMillis())
-						.setLargeIcon(contactIcon)).setSummaryText(summary)
-				.build();
+						.setLargeIcon(contactIcon).getNotification();
 		notif.contentIntent = intent;
 
 		return notif;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Notification createInCallNotification(Context context,
 			String title, String msg, int iconID, Bitmap contactIcon,
 			String contactName, PendingIntent intent) {
 
-		Notification notif = new Notification.BigPictureStyle(
-				new Notification.Builder(context).setContentTitle(contactName)
+		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
 						.setContentText(msg).setSmallIcon(iconID)
 						.setAutoCancel(false)
 						.setWhen(System.currentTimeMillis())
-						.setLargeIcon(contactIcon)).build();
+						.setLargeIcon(contactIcon).getNotification();
 		notif.contentIntent = intent;
 
 		return notif;
+	}
+
+	public static void setNotificationLatestEventInfo(Notification notif,
+			Context context, String title, String content, PendingIntent intent) {
+		notif.contentIntent = intent;
 	}
 }

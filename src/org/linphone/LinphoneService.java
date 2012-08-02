@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
@@ -88,7 +87,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private boolean mTestDelayElapsed = true; // no timer
 	private WifiManager mWifiManager ;
 	private WifiLock mWifiLock ;
-	private List<Notification> messagesNotifications;
 	public static boolean isReady() {
 		return instance!=null && instance.mTestDelayElapsed;
 	}
@@ -161,7 +159,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
+		
+		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
 
 		LinphoneManager.createAndStart(this, this);
 		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
@@ -287,8 +286,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mCustomNotif.defaults |= Notification.DEFAULT_SOUND;
 		mCustomNotif.defaults |= Notification.DEFAULT_LIGHTS;
 		
-		mCustomNotif.setLatestEventInfo(this, title, message, notifContentIntent);
-		
+		Compatibility.setNotificationLatestEventInfo(mCustomNotif, this, title, message, notifContentIntent);
 		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
 	
@@ -435,7 +433,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			text = String.format(text, id);
 		}
 		
-		mNotif.setLatestEventInfo(this, mNotificationTitle, text, mNotifContentIntent);
+		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, text, mNotifContentIntent);
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
 
@@ -528,7 +526,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
-		mNotif.setLatestEventInfo(this, mNotificationTitle,"", mNotifContentIntent);
+		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
 	}
 	
 	protected void onIncomingReceived() {
