@@ -178,6 +178,8 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
 		if (requestCode == ADD_SIP_ACCOUNT) {
 			//Verify if last created account is filled
 			SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
@@ -198,8 +200,6 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 			}
 			createDynamicAccountsPreferences();
 		}
-		
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	private void addWizardPreferenceButton() {

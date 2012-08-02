@@ -46,6 +46,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int getNumberOfCallLogs(long nativePtr);
 	private native void delete(long nativePtr);
 	private native void setNetworkStateReachable(long nativePtr,boolean isReachable);
+	private native boolean isNetworkStateReachable(long nativePtr);
 	private native void setPlaybackGain(long nativeptr, float gain);
 	private native float getPlaybackGain(long nativeptr);
 	private native void muteMic(long nativePtr,boolean isMuted);
@@ -109,7 +110,6 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void removeCallLog(long nativePtr, long callLogPtr);
 	private native int getMissedCallsCount(long nativePtr);
 	private native void resetMissedCallsCount(long nativePtr);
-	private native boolean isNetworkReachable(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -442,8 +442,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 		return codecs;
 	}
 	public synchronized boolean isNetworkReachable() {
-		return isNetworkReachable(nativePtr);
+		return isNetworkStateReachable(nativePtr);
 	}
+	
 	public synchronized void enableKeepAlive(boolean enable) {
 		enableKeepAlive(nativePtr,enable);
 		

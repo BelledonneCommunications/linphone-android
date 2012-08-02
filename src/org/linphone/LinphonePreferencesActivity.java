@@ -103,6 +103,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 			// If we were on a LinphonePreferences sub activity, and we came back because of a change of tab, we propagate the event
 			setResult(RESULT_FIRST_USER, data);
 			finish();
+			return;
 		}
 	}
 	

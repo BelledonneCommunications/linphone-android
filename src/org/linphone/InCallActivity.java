@@ -49,7 +49,6 @@ import android.widget.LinearLayout;
 /**
  * @author Sylvain Berfini
  */
-//TODO Prevent controls from being hidden while user is using numpad
 public class InCallActivity extends FragmentActivity implements
 									LinphoneOnCallStateChangedListener,
 									LinphoneOnCallEncryptionChangedListener,
@@ -382,48 +381,52 @@ public class InCallActivity extends FragmentActivity implements
 				}
 			}
 			
-			if (controlsHandler != null && mControls != null) {
-				controlsHandler.removeCallbacks(mControls);
-			}
-			
-			controlsHandler.postDelayed(mControls = new Runnable() {
-				public void run() {
-					hideNumpad();
-					
-					if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
-						transfer.setVisibility(View.GONE);
-						addCall.setVisibility(View.GONE);
-						mControlsLayout.setVisibility(View.GONE);
-						switchCamera.setVisibility(View.INVISIBLE);
-						options.setImageResource(R.drawable.options);
-					} else {					
-						Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
-						animation.setAnimationListener(new AnimationListener() {
-							@Override
-							public void onAnimationStart(Animation animation) {
-								video.setEnabled(false); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
-								transfer.setVisibility(View.GONE);
-								addCall.setVisibility(View.GONE);
-								mControlsLayout.setVisibility(View.GONE);
-								switchCamera.setVisibility(View.INVISIBLE);
-								options.setImageResource(R.drawable.options);
-							}
-						});
-						mControlsLayout.startAnimation(animation);
-						switchCamera.startAnimation(AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_bottom_to_top));
-					}
-				}
-			}, SECONDS_BEFORE_HIDING_CONTROLS);
+			resetControlsHidingCallBack();
 		}		
+	}
+
+	public void resetControlsHidingCallBack() {
+		if (controlsHandler != null && mControls != null) {
+			controlsHandler.removeCallbacks(mControls);
+		}
+		
+		controlsHandler.postDelayed(mControls = new Runnable() {
+			public void run() {
+				hideNumpad();
+				
+				if (InCallActivity.this.getResources().getBoolean(R.bool.disable_animations)) {
+					transfer.setVisibility(View.GONE);
+					addCall.setVisibility(View.GONE);
+					mControlsLayout.setVisibility(View.GONE);
+					switchCamera.setVisibility(View.INVISIBLE);
+					options.setImageResource(R.drawable.options);
+				} else {					
+					Animation animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom);
+					animation.setAnimationListener(new AnimationListener() {
+						@Override
+						public void onAnimationStart(Animation animation) {
+							video.setEnabled(false); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
+							transfer.setVisibility(View.GONE);
+							addCall.setVisibility(View.GONE);
+							mControlsLayout.setVisibility(View.GONE);
+							switchCamera.setVisibility(View.INVISIBLE);
+							options.setImageResource(R.drawable.options);
+						}
+					});
+					mControlsLayout.startAnimation(animation);
+					switchCamera.startAnimation(AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_bottom_to_top));
+				}
+			}
+		}, SECONDS_BEFORE_HIDING_CONTROLS);
 	}
 
 	public void setCallControlsVisibleAndRemoveCallbacks() {
