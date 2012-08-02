@@ -75,8 +75,9 @@ public class ApiElevenPlus {
 		return notif;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void setNotificationLatestEventInfo(Notification notif,
 			Context context, String title, String content, PendingIntent intent) {
-		notif.contentIntent = intent;
+		notif.setLatestEventInfo(context, title, content, intent);
 	}
 }
