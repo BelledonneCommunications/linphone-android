@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.net.URL;
 
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 
 import android.os.Bundle;
@@ -194,7 +195,7 @@ public class WizardFragment extends Fragment {
 			    }
 			};
 
-		    client.callAsync(listener, "create_account_with_useragent", username, password, email, "linphone-wizard-android");
+		    client.callAsync(listener, "create_account_with_useragent", username, password, email, LinphoneManager.getInstance().getUserAgent());
 		} 
 		catch(Exception ex) {
 			mHandler.post(runNotReachable);

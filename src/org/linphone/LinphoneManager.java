@@ -84,6 +84,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -249,6 +250,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			/* instead we prefer the echo limiter */
 			currentCall.enableEchoLimiter(true);
 		}
+	}
+	
+
+	public String getUserAgent() throws NameNotFoundException {
+		StringBuilder userAgent = new StringBuilder();
+		userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
+		userAgent.append(" (");
+		userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
+		userAgent.append(Build.DEVICE + " " + Build.MODEL +  " Android/" + Build.VERSION.SDK_INT);
+		userAgent.append(")");
+		return userAgent.toString();
 	}
 
 	/**

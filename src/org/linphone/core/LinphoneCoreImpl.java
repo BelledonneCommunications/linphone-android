@@ -110,6 +110,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void removeCallLog(long nativePtr, long callLogPtr);
 	private native int getMissedCallsCount(long nativePtr);
 	private native void resetMissedCallsCount(long nativePtr);
+	private native String getVersion(long nativePtr);
 	
 	LinphoneCoreImpl(LinphoneCoreListener listener, File userConfig,File factoryConfig,Object  userdata) throws IOException {
 		mListener=listener;
@@ -730,5 +731,10 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void refreshRegisters(long nativePtr);
 	public void refreshRegisters() {
 		refreshRegisters(nativePtr);
+	}
+	
+	@Override
+	public String getVersion() {
+		return getVersion(nativePtr);
 	}
 }
