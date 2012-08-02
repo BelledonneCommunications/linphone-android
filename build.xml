@@ -38,7 +38,7 @@
     <property file="ant.properties" />
     <loadproperties srcFile="project.properties" />
     <!-- version-tag: custom -->
-    <property name="linphone.package.name" value="com.lockfone.phone" />
+    <property name="linphone.package.name" value="org.linphone" />
     
     <property name="adb.device.arg" value="" />
 
