@@ -60,9 +60,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -647,20 +649,24 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 		@Override
 		public void onOrientationChanged(final int o) {
-			if (o == OrientationEventListener.ORIENTATION_UNKNOWN) return;
+			if (o == OrientationEventListener.ORIENTATION_UNKNOWN) {
+				return;
+			}
 
-			int degrees=270;
-			if (o < 45 || o >315) degrees=0;
-			else if (o<135) degrees=90;
-			else if (o<225) degrees=180;
+			int degrees = 270;
+			if (o < 45 || o >315) degrees = 0;
+			else if (o < 135) degrees = 90;
+			else if (o < 225) degrees = 180;
 
-			if (mAlwaysChangingPhoneAngle == degrees) return;
+			if (mAlwaysChangingPhoneAngle == degrees) {
+				return;
+			}
 			mAlwaysChangingPhoneAngle = degrees;
 
 			Log.d("Phone orientation changed to ", degrees);
 			int rotation = (360 - degrees) % 360;
-			LinphoneCore lc=LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (lc!=null){
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null){
 				lc.setDeviceRotation(rotation);
 				LinphoneCall currentCall = lc.getCurrentCall();
 				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParamsCopy().getVideoEnabled()) {
@@ -822,7 +828,29 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			chatStorage.close();
 			chatStorage = null;
 		}
+		
+		if (mOrientationHelper != null) {
+			mOrientationHelper.disable();
+			mOrientationHelper = null;
+		}
+		
+		instance = null;
 		super.onDestroy();
+		
+		unbindDrawables(findViewById(R.id.topLayout));
+	    System.gc();
+	}
+	
+	private void unbindDrawables(View view) {
+        if (view != null && view.getBackground() != null) {
+        	view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+            	unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
 	}
 	
 	@Override

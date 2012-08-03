@@ -1,7 +1,6 @@
 package org.linphone.compatibility;
 
-import android.view.ScaleGestureDetector;
 
 public interface CompatibilityScaleGestureListener {
-	public boolean onScale(ScaleGestureDetector detector);
+	public boolean onScale(CompatibilityScaleGestureDetector detector);
 }

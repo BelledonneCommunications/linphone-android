@@ -165,7 +165,7 @@ public class Compatibility {
 	public static CompatibilityScaleGestureDetector getScaleGestureDetector(Context context, CompatibilityScaleGestureListener listener) {
 		if (Version.sdkAboveOrEqual(8)) {
 			CompatibilityScaleGestureDetector csgd = new CompatibilityScaleGestureDetector(context);
-			csgd.addListener(listener);
+			csgd.setOnScaleListener(listener);
 			return csgd;
 		}
 		return null;

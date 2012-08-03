@@ -263,7 +263,7 @@
 	<string name="status_in_progress">CONNECTING</string>
 	<string name="status_error">ERROR</string>
 	
-	<string name="addressHint">Number or adress</string>
+	<string name="addressHint">Number or address</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact">Add to contacts button</string>
