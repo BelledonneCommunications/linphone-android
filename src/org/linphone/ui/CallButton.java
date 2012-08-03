@@ -20,6 +20,8 @@ package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCoreException;
 
 import android.content.Context;
@@ -50,6 +52,23 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 			if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
 				if (mAddress.getText().length() > 0) { 
 					LinphoneManager.getInstance().newOutgoingCall(mAddress);
+				} else {
+					if (getContext().getResources().getBoolean(R.bool.call_last_log_if_adress_is_empty)) {
+						LinphoneCallLog[] logs = LinphoneManager.getLc().getCallLogs();
+						LinphoneCallLog log = null;
+						for (int i = logs.length - 1; i >= 0; i--) {
+							if (logs[i].getDirection() == CallDirection.Outgoing) {
+								log = logs[i];
+								break;
+							}
+						}
+						if (log == null) {
+							return;
+						}
+						mAddress.setText(log.getTo().asStringUriOnly());
+						mAddress.setDisplayedName(log.getTo().getDisplayName());
+						LinphoneManager.getInstance().newOutgoingCall(mAddress);
+					}
 				}
 			}
 		} catch (LinphoneCoreException e) {

@@ -16,7 +16,7 @@
 	<bool name="only_display_username_if_unknown">true</bool>
 	<bool name="display_messages_time">true</bool> <!-- Used to show the time of each message arrival -->
 	<bool name="display_time_aside">false</bool> <!-- if display_messages_time = true, display time on the side of the message instead of below -->
-
+	<bool name="call_last_log_if_adress_is_empty">true</bool>
 	<bool name="allow_ringing_while_early_media">true</bool>
 	<bool name="allow_transfers">true</bool>
 	<bool name="allow_edit_in_dialer">true</bool>
