@@ -3,7 +3,7 @@ SDK_PATH=$(shell dirname `which android`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
-LINPHONE_VERSION=$(shell cat submodules/linphone/configure.ac | grep -m 1 "LINPHONE_VERSION=" | sed -e 's/LINPHONE_VERSION=//')
+LINPHONE_VERSION=$(shell grep -e '^.C_INIT(' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
 KEYSTORE=bc-android.keystore
 KEYALIAS=nw8000
 
