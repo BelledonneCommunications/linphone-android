@@ -14,7 +14,7 @@ public class CompatibilityScaleGestureDetector extends ScaleGestureDetector.Simp
 		detector = new ScaleGestureDetector(context, this);
 	}
 	
-	public void addListener(CompatibilityScaleGestureListener newListener) {
+	public void setOnScaleListener(CompatibilityScaleGestureListener newListener) {
 		listener = newListener;
 	}
 	
@@ -28,6 +28,15 @@ public class CompatibilityScaleGestureDetector extends ScaleGestureDetector.Simp
 			return false;
 		}
 		
-		return listener.onScale(detector);
+		return listener.onScale(this);
     }
+	
+	public float getScaleFactor() {
+		return detector.getScaleFactor();
+	}
+	
+	public void destroy() {
+		listener = null;
+		detector = null;
+	}
 }

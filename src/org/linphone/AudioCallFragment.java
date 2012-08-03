@@ -51,7 +51,6 @@ public class AudioCallFragment extends Fragment {
 	private RelativeLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
-	private InCallActivity inCallActivity;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -144,20 +143,20 @@ public class AudioCallFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		inCallActivity = (InCallActivity) activity;
 		
-		inCallActivity.bindAudioFragment(this);
+		if (InCallActivity.isInstanciated()) {
+			InCallActivity.instance().bindAudioFragment(this);
+		}
 	}
 	
 	@Override
 	public void onStart() {
 		super.onStart();
-		if (inCallActivity == null) {
-			return;
-		}
-		
+
 		// Just to be sure we have incall controls
-		inCallActivity.setCallControlsVisibleAndRemoveCallbacks();
+		if (InCallActivity.isInstanciated()) {
+			InCallActivity.instance().setCallControlsVisibleAndRemoveCallbacks();
+		}
 	}
 	
 	@Override
@@ -177,7 +176,7 @@ public class AudioCallFragment extends Fragment {
 		int index = 0;
         
         if (LinphoneManager.getLc().getCallsNb() == 0) {
-        	inCallActivity.goBackToDialer();
+        	InCallActivity.instance().goBackToDialer();
         	return;
         }
 		

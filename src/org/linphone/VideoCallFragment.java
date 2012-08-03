@@ -25,7 +25,6 @@ import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
-import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,7 +33,6 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -49,7 +47,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
-	private InCallActivity inCallActivity;
 	private GestureDetector mGestureDetector;
 	private float mZoomFactor = 1.f;
 	private float mZoomCenterX, mZoomCenterY;
@@ -70,7 +67,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
 		mCaptureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Warning useless because value is ignored and automatically set by new APIs.
 
-		/* force surfaces Z ordering */
 		fixZOrder(mVideoView, mCaptureView);
 		
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mCaptureView);
@@ -107,19 +103,13 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 				}
 				
 				mGestureDetector.onTouchEvent(event);
-				inCallActivity.displayVideoCallControlsIfHidden();
+				InCallActivity.instance().displayVideoCallControlsIfHidden();
 				return true;
 			}
 		});
 		
 		return view;
     }
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		inCallActivity = (InCallActivity) activity;
-	}
 
 	private void fixZOrder(SurfaceView video, SurfaceView preview) {
 		video.setZOrderOnTop(false);
@@ -168,13 +158,13 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 			LinphoneManager.getLc().setVideoWindow(null);
 		}
 		
-		super.onPause();
-		
 		if (mVideoView != null)
 			((GLSurfaceView) mVideoView).onPause();
+		
+		super.onPause();
 	}
 	
-    public boolean onScale(ScaleGestureDetector detector) {
+    public boolean onScale(CompatibilityScaleGestureDetector detector) {
     	mZoomFactor *= detector.getScaleFactor();
         // Don't let the object get too small or too large.
     	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, mVideoView.getHeight() / LinphoneManager.getLc().getPreferredVideoSize().height));
@@ -232,10 +222,24 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	
 	@Override
 	public void onDestroy() {
+		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
 		if (androidVideoWindowImpl != null) { 
 			// Prevent linphone from crashing if correspondent hang up while you are rotating
 			androidVideoWindowImpl.release();
+			androidVideoWindowImpl = null;
+			mCaptureView = null;
+			mVideoView = null;
 		}
+		if (mGestureDetector != null) {
+			mGestureDetector.setOnDoubleTapListener(null);
+			mGestureDetector = null;
+		}
+		if (mScaleDetector != null) {
+			mScaleDetector.destroy();
+			mScaleDetector = null;
+		}
+		
 		super.onDestroy();
 	}
 	

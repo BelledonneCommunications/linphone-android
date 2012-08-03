@@ -110,7 +110,7 @@ public class Digit extends Button implements AddressAware {
 				if (lBegin == -1) {
 					lBegin = mAddress.length();
 				}
-				if (lBegin >=0) {
+				if (lBegin >= 0) {
 					mAddress.getEditableText().insert(lBegin,String.valueOf(mKeyCode));
 				}
 			}
@@ -127,11 +127,11 @@ public class Digit extends Button implements AddressAware {
 			LinphoneCore lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
 				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
-				mIsDtmfStarted=true;
+				mIsDtmfStarted = true;
 			} else {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					lc.stopDtmf();
-					mIsDtmfStarted=false;
+					mIsDtmfStarted = false;
 				}
 			}
 			return false;
@@ -151,7 +151,7 @@ public class Digit extends Button implements AddressAware {
 			if (lBegin == -1) {
 				lBegin = mAddress.getEditableText().length();
 			}
-			if (lBegin >=0) {
+			if (lBegin >= 0) {
 			mAddress.getEditableText().insert(lBegin,"+");
 			}
 			return true;

@@ -73,7 +73,7 @@
         <activity android:name="org.linphone.InCallActivity"
            android:theme="@android:style/Theme.NoTitleBar"
            android:noHistory="true"
-           android:launchMode="singleTop">
+           android:launchMode="singleInstance">
 		<intent-filter>
                <action android:name="android.intent.action.MAIN" />
            </intent-filter>

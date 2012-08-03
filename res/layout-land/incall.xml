@@ -34,7 +34,9 @@
         android:paddingTop="20dp"
         android:src="@drawable/switch_camera"
         android:visibility="gone" />
-
+    
+    <!-- TODO Add numpad -->
+    
     <LinearLayout
         android:id="@+id/menu"
         android:layout_width="match_parent"
