@@ -49,7 +49,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 	private InCallActivity inCallActivity;
 	private GestureDetector mGestureDetector;
-	private float mZoomFactor;
+	private float mZoomFactor = 1;
 	private float mZoomCenterX, mZoomCenterY;
 	
 	@SuppressWarnings("deprecation") // Warning useless because value is ignored and automatically set by new APIs.

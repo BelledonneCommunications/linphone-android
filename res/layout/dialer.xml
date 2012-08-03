@@ -13,6 +13,7 @@
         android:textSize="22dp"
         android:background="@drawable/dialer_address_background"
         android:inputType="textEmailAddress"
+        android:hint="@string/addressHint"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:layout_weight="0.4"

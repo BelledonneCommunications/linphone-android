@@ -342,8 +342,11 @@ public class StatusFragment extends Fragment {
 					checkBox.setChecked(true);
 					checkBox.setEnabled(false);
 					
-					LinphoneManager.getLc().setDefaultProxyConfig(accounts[selectedPosition]);
-					LinphoneManager.getLc().refreshRegisters();
+					LinphoneCore lc = LinphoneManager.getLc();
+					lc.setDefaultProxyConfig(accounts[selectedPosition]);
+					if (lc.isNetworkReachable()) {
+						lc.refreshRegisters();
+					}
 				}
 			}
 		};

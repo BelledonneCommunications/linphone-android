@@ -18,15 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import org.linphone.core.Log;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 
 
 
@@ -39,34 +34,9 @@ public class NetworkManager extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo lNetworkInfo = cm.getActiveNetworkInfo();
-		Log.i("Network info [",lNetworkInfo,"]");
 		Boolean lNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,false);
-
-		
-		if (!LinphoneService.isReady()) {
-			Log.i("Network broadcast received while Linphone service not ready");
-			return;
-		}
-		
-		
-		if (lNoConnectivity | ((lNetworkInfo.getState() == NetworkInfo.State.DISCONNECTED) /*&& !lIsFailOver*/)) {
-			LinphoneManager.getLc().setNetworkReachable(false);
-		} else if (lNetworkInfo.getState() == NetworkInfo.State.CONNECTED){
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-			boolean wifiOnly = pref.getBoolean(context.getString(R.string.pref_wifi_only_key), false);
-			if (lNetworkInfo.getTypeName().equals("WIFI") || (lNetworkInfo.getTypeName().equals("mobile") && !wifiOnly)) {
-				LinphoneManager.getLc().setNetworkReachable(true);
-			} else {
-				LinphoneManager.getLc().setNetworkReachable(false);
-			}
-		} else {
-			 // Other unhandled events
-		}
-
-		LinphoneManager.getInstance().connectivityChanged(lNetworkInfo, cm);
+		LinphoneManager.getInstance().connectivityChanged(cm, lNoConnectivity);
 	}
 
 }

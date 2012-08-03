@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneCore;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
@@ -39,11 +40,13 @@ import android.widget.ImageView;
  */
 public class DialerFragment extends Fragment {
 	private static DialerFragment instance;
+	private static boolean isCallTransferOngoing = false;
+	
 	public boolean mVisible;
 	private AddressText mAddress;
 	private CallButton mCall;
 	private ImageView mAddContact;
-	private OnClickListener addContactListener, cancelListener;
+	private OnClickListener addContactListener, cancelListener, transferListener;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -59,7 +62,11 @@ public class DialerFragment extends Fragment {
 		mCall = (CallButton) view.findViewById(R.id.Call);
 		mCall.setAddressWidget(mAddress);
 		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
-			mCall.setImageResource(R.drawable.plus);
+			if (isCallTransferOngoing) {
+				mCall.setImageResource(R.drawable.transfer_call);
+			} else {
+				mCall.setImageResource(R.drawable.add_call);
+			}
 		} else {
 			mCall.setImageResource(R.drawable.call);
 		}
@@ -69,6 +76,7 @@ public class DialerFragment extends Fragment {
 			numpad.setAddressWidget(mAddress);
 		
 		mAddContact = (ImageView) view.findViewById(R.id.addContact);
+		
 		addContactListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -82,8 +90,21 @@ public class DialerFragment extends Fragment {
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		};
+		transferListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LinphoneCore lc = LinphoneManager.getLc();
+				if (lc.getCurrentCall() == null) {
+					return;
+				}
+				lc.transferCall(lc.getCurrentCall(), mAddress.getText().toString());
+				isCallTransferOngoing = false;
+				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+			}
+		};
+		
 		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
-		resetLayout();
+		resetLayout(isCallTransferOngoing);
 		
 		if (getArguments() != null) {
 			String number = getArguments().getString("SipUri");
@@ -123,17 +144,24 @@ public class DialerFragment extends Fragment {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
 		}
-		resetLayout();
+		resetLayout(isCallTransferOngoing);
 	}
 	
-	public void resetLayout() {
+	public void resetLayout(boolean callTransfer) {
+		isCallTransferOngoing = callTransfer;
 		if (LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() > 0) {
-			mCall.setImageResource(R.drawable.plus);
-			mAddress.setText("");
+			if (isCallTransferOngoing) {
+				mCall.setImageResource(R.drawable.transfer_call);
+				mCall.setExternalClickListener(transferListener);
+			} else {
+				mCall.setImageResource(R.drawable.add_call);
+				mCall.resetClickListener();
+			}
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
+			mAddress.setText("");
 			mCall.setImageResource(R.drawable.call);
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.add_contact);

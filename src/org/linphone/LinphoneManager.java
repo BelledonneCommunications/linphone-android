@@ -692,7 +692,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			
 			//init network state
 			NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-			mLc.setNetworkReachable(networkInfo !=null? networkInfo.getState() == NetworkInfo.State.CONNECTED:false); 
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
+			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), false);
+			boolean isConnected = false;
+			if (networkInfo != null) {
+				isConnected = networkInfo.getState() == NetworkInfo.State.CONNECTED && (networkInfo.getTypeName().equals("WIFI") || (networkInfo.getTypeName().equals("mobile") && !wifiOnly));
+			}
+			mLc.setNetworkReachable(isConnected); 
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
@@ -820,14 +826,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	I/Linphone( 8397): Managing tunnel
 	I/Linphone( 8397): WIFI connected: setting network reachable
 	*/
-	public void connectivityChanged(NetworkInfo eventInfo, ConnectivityManager cm) {
-		NetworkInfo activeInfo = cm.getActiveNetworkInfo();
+	public void connectivityChanged(ConnectivityManager cm, boolean noConnectivity) {
+		NetworkInfo eventInfo = cm.getActiveNetworkInfo();
 
-		if (eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
-			Log.i(eventInfo.getTypeName()," disconnected: setting network unreachable");
+		if (noConnectivity || eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
+			Log.i("No connectivity: setting network unreachable");
 			mLc.setNetworkReachable(false);
 		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
-			manageTunnelServer(activeInfo);
+			manageTunnelServer(eventInfo);
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
 			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), false);
 			if (eventInfo.getTypeName().equals("WIFI") || (eventInfo.getTypeName().equals("mobile") && !wifiOnly)) {
@@ -839,20 +845,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	public interface EcCalibrationListener {
 		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);

@@ -595,7 +595,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		AddressType address = new AddressText(this, null);
 		address.setDisplayedName(name);
 		address.setText(number);
-		LinphoneManager.getInstance().newOutgoingCall(address);
+		if (LinphoneManager.getLc().getCallsNb() == 0) {
+			LinphoneManager.getInstance().newOutgoingCall(address);
+		}
 	}
 	
 	public void setAddressAndGoToDialer(String number) {
@@ -726,10 +728,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		contactsHandler.start();
 	}
 	
-	private void initInCallMenuLayout() {
+	private void initInCallMenuLayout(boolean callTransfer) {
 		selectMenu(FragmentsAvailable.DIALER);
 		if (dialerFragment != null) {
-			((DialerFragment) dialerFragment).resetLayout();
+			((DialerFragment) dialerFragment).resetLayout(callTransfer);
 		}
 	}
 	
@@ -738,7 +740,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			@Override
 			public void run() {
 				if (dialerFragment != null) {
-					((DialerFragment) dialerFragment).resetLayout();
+					((DialerFragment) dialerFragment).resetLayout(false);
 				}
 				
 				if (LinphoneManager.getLc().getCallsNb() > 0) {
@@ -781,8 +783,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		}
 		else if (requestCode == callActivity) {
+			boolean callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
-				initInCallMenuLayout(); 
+				initInCallMenuLayout(callTransfer); 
 			} else {
 				resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}

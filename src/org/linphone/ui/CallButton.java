@@ -35,10 +35,10 @@ import android.widget.Toast;
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
 
 	private AddressText mAddress;
-	public void setAddressWidget(AddressText a) {mAddress = a;}
+	public void setAddressWidget(AddressText a) { mAddress = a; }
 
-	private OnClickListener externalClickListener;
-	public void setExternalClickListener(OnClickListener e) {externalClickListener = e;}
+	public void setExternalClickListener(OnClickListener e) { setOnClickListener(e); }
+	public void resetClickListener() { setOnClickListener(this); }
 
 	public CallButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -56,17 +56,11 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 			LinphoneManager.getInstance().terminateCall();
 			onWrongDestinationAddress();
 		};
-
-		if (externalClickListener != null) externalClickListener.onClick(v);
 	}
-
 	
 	protected void onWrongDestinationAddress() {
-		Toast toast = Toast.makeText(getContext()
+		Toast.makeText(getContext()
 				,String.format(getResources().getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
-				,Toast.LENGTH_LONG);
-		toast.show();
+				,Toast.LENGTH_LONG).show();
 	}
-
-
 }

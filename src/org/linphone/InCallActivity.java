@@ -30,6 +30,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -242,7 +243,7 @@ public class InCallActivity extends FragmentActivity implements
 			}
 		}
 		else if (id == R.id.transfer) {
-			//TODO Call Transfer
+			goBackToDialerAndDisplayTransferButton();
 		}
 		else if (id == R.id.options) {
 			hideOrDisplayCallOptions();
@@ -579,11 +580,21 @@ public class InCallActivity extends FragmentActivity implements
 				}
 				addCall.startAnimation(anim);
 			}
+			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
 	}
 	
 	public void goBackToDialer() {
-		setResult(Activity.RESULT_FIRST_USER);
+		Intent intent = new Intent();
+		intent.putExtra("Transfer", false);
+		setResult(Activity.RESULT_FIRST_USER, intent);
+		finish();
+	}
+	
+	private void goBackToDialerAndDisplayTransferButton() {
+		Intent intent = new Intent();
+		intent.putExtra("Transfer", true);
+		setResult(Activity.RESULT_FIRST_USER, intent);
 		finish();
 	}
 
@@ -614,6 +625,8 @@ public class InCallActivity extends FragmentActivity implements
 				}
 			});
 		}
+		
+		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 	}
 
 	@Override
