@@ -161,4 +161,13 @@ public class Compatibility {
 			ApiFivePlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
 		}
 	}
+
+	public static CompatibilityScaleGestureDetector getScaleGestureDetector(Context context, CompatibilityScaleGestureListener listener) {
+		if (Version.sdkAboveOrEqual(8)) {
+			CompatibilityScaleGestureDetector csgd = new CompatibilityScaleGestureDetector(context);
+			csgd.addListener(listener);
+			return csgd;
+		}
+		return null;
+	}
 }

@@ -17,12 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import org.linphone.compatibility.Compatibility;
+import org.linphone.compatibility.CompatibilityScaleGestureDetector;
+import org.linphone.compatibility.CompatibilityScaleGestureListener;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -42,15 +45,15 @@ import android.view.WindowManager;
 /**
  * @author Sylvain Berfini
  */
-@TargetApi(5)
-public class VideoCallFragment extends Fragment implements OnGestureListener, OnDoubleTapListener {
+public class VideoCallFragment extends Fragment implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 	private InCallActivity inCallActivity;
 	private GestureDetector mGestureDetector;
-	private float mZoomFactor = 1;
+	private float mZoomFactor = 1.f;
 	private float mZoomCenterX, mZoomCenterY;
+	private CompatibilityScaleGestureDetector mScaleDetector;
 	
 	@SuppressWarnings("deprecation") // Warning useless because value is ignored and automatically set by new APIs.
 	@Override
@@ -61,6 +64,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
         View view = inflater.inflate(R.layout.video, container, false);
         
 		mGestureDetector = new GestureDetector(getActivity(), this); 
+		mScaleDetector = Compatibility.getScaleGestureDetector(getActivity(), this);
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
 		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
@@ -98,8 +102,13 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		
 		mVideoView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				if (mScaleDetector != null) {
+					mScaleDetector.onTouchEvent(event);
+				}
+				
+				mGestureDetector.onTouchEvent(event);
 				inCallActivity.displayVideoCallControlsIfHidden();
-				return mGestureDetector.onTouchEvent(event);
+				return true;
 			}
 		});
 		
@@ -165,21 +174,14 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 			((GLSurfaceView) mVideoView).onPause();
 	}
 	
-	@Override
-	public boolean onDown(MotionEvent e) {
-		return true; // Needed to make the GestureDetector working
-	}
+    public boolean onScale(ScaleGestureDetector detector) {
+    	mZoomFactor *= detector.getScaleFactor();
+        // Don't let the object get too small or too large.
+    	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, mVideoView.getHeight() / LinphoneManager.getLc().getPreferredVideoSize().height));
 
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-		
-	}
+    	LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+        return true;
+    }
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
@@ -206,16 +208,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	}
 
 	@Override
-	public void onShowPress(MotionEvent e) {
-		
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
-	}
-
-	@Override
 	public boolean onDoubleTap(MotionEvent e) {
 		if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
 			if (mZoomFactor == 1) {
@@ -237,6 +229,20 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		mZoomFactor = 1;
 		mZoomCenterX = mZoomCenterY = 0.5f;
 	}
+	
+	@Override
+	public void onDestroy() {
+		if (androidVideoWindowImpl != null) { 
+			// Prevent linphone from crashing if correspondent hang up while you are rotating
+			androidVideoWindowImpl.release();
+		}
+		super.onDestroy();
+	}
+	
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return true; // Needed to make the GestureDetector working
+	}
 
 	@Override
 	public boolean onDoubleTapEvent(MotionEvent e) {
@@ -247,13 +253,25 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	public boolean onSingleTapConfirmed(MotionEvent e) {
 		return false;
 	}
-	
+
 	@Override
-	public void onDestroy() {
-		if (androidVideoWindowImpl != null) { 
-			// Prevent linphone from crashing if correspondent hang up while you are rotating
-			androidVideoWindowImpl.release();
-		}
-		super.onDestroy();
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		return false;
 	}
 }
