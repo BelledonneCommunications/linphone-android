@@ -41,6 +41,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -58,18 +59,20 @@ public class InCallActivity extends FragmentActivity implements
 									LinphoneOnCallEncryptionChangedListener,
 									OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
+	private static InCallActivity instance;
 	
-	private static InCallActivity instance = null;
 	private Handler mHandler = new Handler();
-	private Handler controlsHandler = new Handler();
+	private Handler mControlsHandler = new Handler();
 	private Runnable mControls;
 	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera, options, transfer;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isTransferAllowed;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isTransferAllowed, isAnimationDisabled;
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
+	private int cameraNumber;
+	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
 	
 	public static InCallActivity instance() {
 		return instance;
@@ -83,11 +86,15 @@ public class InCallActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
+		
 		Compatibility.setFullScreen(getWindow());
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.incall);
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
-        isTransferAllowed = getResources().getBoolean(R.bool.allow_transfers);
+        isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
+        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations);
+        cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
         
         if (findViewById(R.id.fragmentContainer) != null) {
             initUI();
@@ -96,12 +103,13 @@ public class InCallActivity extends FragmentActivity implements
             	LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 
             	if (LinphoneUtils.isCallEstablished(call)) {
-	    			enableAndRefreshInCallActions();
 	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
+	    			enableAndRefreshInCallActions();
             	}
             }
             
-            if (savedInstanceState != null) {
+            if (savedInstanceState != null) { 
+            	// Fragment already created, no need to create it again (else it will generate a memory leak with duplicated fragments)
             	return;
             }
             
@@ -110,7 +118,7 @@ public class InCallActivity extends FragmentActivity implements
             	callFragment = new VideoCallFragment();
             	videoCallFragment = (VideoCallFragment) callFragment;
             	
-            	if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+            	if (cameraNumber > 1) {
             		switchCamera.setVisibility(View.VISIBLE); 
             	}
             } else {
@@ -121,7 +129,6 @@ public class InCallActivity extends FragmentActivity implements
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
         }
-
 	}
 	
 	private void initUI() {
@@ -160,6 +167,15 @@ public class InCallActivity extends FragmentActivity implements
 		
         if (!isTransferAllowed) {
         	addCall.setImageResource(R.drawable.options_add_call);
+        }
+
+        if (!isAnimationDisabled) {
+	        slideInRightToLeft = AnimationUtils.loadAnimation(this, R.anim.slide_in_right_to_left);
+	        slideOutLeftToRight = AnimationUtils.loadAnimation(this, R.anim.slide_out_left_to_right);
+	        slideInBottomToTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
+	        slideInTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_in_top_to_bottom);
+	        slideOutBottomToTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom_to_top);
+	        slideOutTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
         }
 	}
 	
@@ -302,7 +318,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void replaceFragmentAudioByVideo() {
-		//Hiding controls to let displayVideoCallControlsIfHidden add them plus the callback
+//		Hiding controls to let displayVideoCallControlsIfHidden add them plus the callback
 		mControlsLayout.setVisibility(View.GONE);
 		switchCamera.setVisibility(View.INVISIBLE);
 		
@@ -371,18 +387,18 @@ public class InCallActivity extends FragmentActivity implements
 	public void displayVideoCallControlsIfHidden() {
 		if (mControlsLayout != null) {
 			if (mControlsLayout.getVisibility() == View.GONE) {
-				if (getResources().getBoolean(R.bool.disable_animations)) {
+				if (isAnimationDisabled) {
 					mControlsLayout.setVisibility(View.VISIBLE);
-					if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+					if (cameraNumber > 1) {
 	            		switchCamera.setVisibility(View.VISIBLE); 
 	            	}
 				} else {
-					Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
+					Animation animation = slideInBottomToTop;
 					animation.setAnimationListener(new AnimationListener() {
 						@Override
 						public void onAnimationStart(Animation animation) {
 							mControlsLayout.setVisibility(View.VISIBLE);
-							if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+							if (cameraNumber > 1) {
 			            		switchCamera.setVisibility(View.VISIBLE); 
 			            	}
 						}
@@ -393,11 +409,12 @@ public class InCallActivity extends FragmentActivity implements
 						
 						@Override
 						public void onAnimationEnd(Animation animation) {
+							animation.setAnimationListener(null);
 						}
 					});
 					mControlsLayout.startAnimation(animation);
-					if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
-						switchCamera.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_top_to_bottom));
+					if (cameraNumber > 1) {
+						switchCamera.startAnimation(slideInTopToBottom);
 					}
 				}
 				
@@ -407,24 +424,24 @@ public class InCallActivity extends FragmentActivity implements
 	}
 
 	public void resetControlsHidingCallBack() {
-		if (controlsHandler != null && mControls != null) {
-			controlsHandler.removeCallbacks(mControls);
+		if (mControlsHandler != null && mControls != null) {
+			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
 		
 		if (isVideoEnabled) {
-			controlsHandler.postDelayed(mControls = new Runnable() {
+			mControlsHandler.postDelayed(mControls = new Runnable() {
 				public void run() {
 					hideNumpad();
 					
-					if (getResources().getBoolean(R.bool.disable_animations)) {
+					if (isAnimationDisabled) {
 						transfer.setVisibility(View.INVISIBLE);
 						addCall.setVisibility(View.INVISIBLE);
 						mControlsLayout.setVisibility(View.GONE);
 						switchCamera.setVisibility(View.INVISIBLE);
 						options.setImageResource(R.drawable.options);
 					} else {					
-						Animation animation = AnimationUtils.loadAnimation(instance, R.anim.slide_out_top_to_bottom);
+						Animation animation = slideOutTopToBottom;
 						animation.setAnimationListener(new AnimationListener() {
 							@Override
 							public void onAnimationStart(Animation animation) {
@@ -443,11 +460,13 @@ public class InCallActivity extends FragmentActivity implements
 								mControlsLayout.setVisibility(View.GONE);
 								switchCamera.setVisibility(View.INVISIBLE);
 								options.setImageResource(R.drawable.options);
+								
+								animation.setAnimationListener(null);
 							}
 						});
 						mControlsLayout.startAnimation(animation);
-						if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
-							switchCamera.startAnimation(AnimationUtils.loadAnimation(instance, R.anim.slide_out_bottom_to_top));
+						if (cameraNumber > 1) {
+							switchCamera.startAnimation(slideOutBottomToTop);
 						}
 					}
 				}
@@ -456,8 +475,8 @@ public class InCallActivity extends FragmentActivity implements
 	}
 
 	public void setCallControlsVisibleAndRemoveCallbacks() {
-		if (controlsHandler != null && mControls != null) {
-			controlsHandler.removeCallbacks(mControls);
+		if (mControlsHandler != null && mControls != null) {
+			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
 		
@@ -471,11 +490,11 @@ public class InCallActivity extends FragmentActivity implements
 		}
 			
 		dialer.setImageResource(R.drawable.dialer_alt);
-		if (getResources().getBoolean(R.bool.disable_animations)) {
+		if (isAnimationDisabled) {
 			numpad.setVisibility(View.GONE);
 		} else {
-			Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
-			anim.setAnimationListener(new AnimationListener() {
+			Animation animation = slideOutTopToBottom;
+			animation.setAnimationListener(new AnimationListener() {
 				@Override
 				public void onAnimationStart(Animation animation) {
 					
@@ -489,9 +508,10 @@ public class InCallActivity extends FragmentActivity implements
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					numpad.setVisibility(View.GONE);
+					animation.setAnimationListener(null);
 				}
 			});
-			numpad.startAnimation(anim);
+			numpad.startAnimation(animation);
 		}
 	}
 	
@@ -504,11 +524,11 @@ public class InCallActivity extends FragmentActivity implements
 			hideNumpad();
 		} else {	
 			dialer.setImageResource(R.drawable.dialer_alt_back);	
-			if (getResources().getBoolean(R.bool.disable_animations)) {
+			if (isAnimationDisabled) {
 				numpad.setVisibility(View.VISIBLE);
 			} else {
-				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
-				anim.setAnimationListener(new AnimationListener() {
+				Animation animation = slideInBottomToTop;
+				animation.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
 						
@@ -522,9 +542,10 @@ public class InCallActivity extends FragmentActivity implements
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						numpad.setVisibility(View.VISIBLE);
+						animation.setAnimationListener(null);
 					}
 				});
-				numpad.startAnimation(anim);
+				numpad.startAnimation(animation);
 			}
 		}
 	}
@@ -532,14 +553,14 @@ public class InCallActivity extends FragmentActivity implements
 	private void hideOrDisplayCallOptions() {
 		if (addCall.getVisibility() == View.VISIBLE) {
 			options.setImageResource(R.drawable.options);
-			if (getResources().getBoolean(R.bool.disable_animations)) {
+			if (isAnimationDisabled) {
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.INVISIBLE);
 				}
 				addCall.setVisibility(View.INVISIBLE);
 			} else {
-				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_left_to_right);
-				anim.setAnimationListener(new AnimationListener() {
+				Animation animation = slideOutLeftToRight;
+				animation.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
 						
@@ -556,12 +577,13 @@ public class InCallActivity extends FragmentActivity implements
 							transfer.setVisibility(View.INVISIBLE);
 						}
 						addCall.setVisibility(View.INVISIBLE);
+						animation.setAnimationListener(null);
 					}
 				});
 				if (isTransferAllowed) {
-					transfer.startAnimation(anim);
+					transfer.startAnimation(animation);
 				}
-				addCall.startAnimation(anim);
+				addCall.startAnimation(animation);
 			}
 		} else {		
 			if (getResources().getBoolean(R.bool.disable_animations)) {
@@ -571,8 +593,8 @@ public class InCallActivity extends FragmentActivity implements
 				addCall.setVisibility(View.VISIBLE);
 				options.setImageResource(R.drawable.options_alt);
 			} else {
-				Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_right_to_left);
-				anim.setAnimationListener(new AnimationListener() {
+				Animation animation = slideInRightToLeft;
+				animation.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
 						
@@ -590,12 +612,13 @@ public class InCallActivity extends FragmentActivity implements
 							transfer.setVisibility(View.VISIBLE);
 						}
 						addCall.setVisibility(View.VISIBLE);
+						animation.setAnimationListener(null);
 					}
 				});
 				if (isTransferAllowed) {
-					transfer.startAnimation(anim);
+					transfer.startAnimation(animation);
 				}
-				addCall.startAnimation(anim);
+				addCall.startAnimation(animation);
 			}
 			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
@@ -670,8 +693,8 @@ public class InCallActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		
-		if (controlsHandler != null && mControls != null) {
-			controlsHandler.removeCallbacks(mControls);
+		if (mControlsHandler != null && mControls != null) {
+			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
 		
@@ -681,16 +704,25 @@ public class InCallActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
+		if (mControlsHandler != null && mControls != null) {
+			mControlsHandler.removeCallbacks(mControls);
+		}
+		mControls = null;
+		mControlsHandler = null;
+		mHandler = null;
 		
 		unbindDrawables(findViewById(R.id.topLayout));
 		instance = null;
+		super.onDestroy();
 	    System.gc();
 	}
 	
 	private void unbindDrawables(View view) {
         if (view.getBackground() != null) {
         	view.getBackground().setCallback(null);
+        }
+        if (view instanceof ImageView) {
+        	view.setOnClickListener(null);
         }
         if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
@@ -709,5 +741,9 @@ public class InCallActivity extends FragmentActivity implements
 
 	public void bindAudioFragment(AudioCallFragment fragment) {
 		audioCallFragment = fragment;
+	}
+
+	public void bindVideoFragment(VideoCallFragment fragment) {
+		videoCallFragment = fragment;
 	}
 }

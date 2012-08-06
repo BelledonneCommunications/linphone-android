@@ -64,7 +64,6 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
-
         // "Dial-to-answer" widget for incoming calls.
         mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
         mIncomingCallWidget.setOnTriggerListener(this);
