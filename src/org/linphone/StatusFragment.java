@@ -51,7 +51,7 @@ public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit;
-	private ImageView statusLed, callQuality, encryption;
+	private ImageView statusLed, callQuality, encryption, background;
 	private ListView sliderContent;
 	private SlidingDrawer drawer;
 //	private LinearLayout allAccountsLed;
@@ -67,6 +67,7 @@ public class StatusFragment extends Fragment {
 		statusLed = (ImageView) view.findViewById(R.id.statusLed);
 		callQuality = (ImageView) view.findViewById(R.id.callQuality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
+		background = (ImageView) view.findViewById(R.id.background);
 //		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
@@ -299,6 +300,7 @@ public class StatusFragment extends Fragment {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 
 			exit.setVisibility(View.GONE);
+			background.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
@@ -310,6 +312,7 @@ public class StatusFragment extends Fragment {
 			}
 		} else {
 			exit.setVisibility(View.VISIBLE);
+			background.setVisibility(View.VISIBLE);
 		}
 	}
 	

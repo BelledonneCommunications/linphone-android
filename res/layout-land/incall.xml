@@ -5,35 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <LinearLayout
-            android:id="@+id/fragmentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="20dp" />
-
-        <fragment
-            android:id="@+id/status"
-            android:name="org.linphone.StatusFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/status" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:orientation="horizontal" />
 
     <ImageView
         android:id="@+id/switchCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:contentDescription="@string/content_description_switch_camera"
-        android:paddingTop="20dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/switch_camera"
-        android:visibility="gone" />
+        android:visibility="invisible" />
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.StatusFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/status" />
     
     <!-- TODO Add numpad -->
     
@@ -42,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:orientation="vertical" >
 
         <LinearLayout

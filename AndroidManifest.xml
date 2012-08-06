@@ -28,7 +28,7 @@
 		<activity android:name="org.linphone.LinphoneLauncherActivity"
 		    android:label="@string/app_name"
 		    android:windowSoftInputMode="adjustPan"
-		    android:theme="@android:style/Theme.NoTitleBar">
+		    android:theme="@style/NoTitle">
 		    <intent-filter>
 		        <action android:name="android.intent.action.MAIN" />
 		        <category android:name="android.intent.category.LAUNCHER" />
@@ -51,7 +51,7 @@
 		</activity>
 
 		<activity android:name="org.linphone.LinphoneActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
+		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor"
             android:launchMode="singleTask">
             <intent-filter>
@@ -61,7 +61,7 @@
         </activity>
 
         <activity android:name="org.linphone.IncomingCallActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
+		    android:theme="@style/NoTitle"
             android:noHistory="true"
 			android:launchMode="singleTop"
             android:screenOrientation="nosensor">
@@ -71,7 +71,7 @@
          </activity>
 
         <activity android:name="org.linphone.InCallActivity"
-           android:theme="@android:style/Theme.NoTitleBar"
+		   android:theme="@style/FullScreen"
            android:noHistory="true"
            android:launchMode="singleInstance">
 		<intent-filter>
@@ -80,18 +80,18 @@
         </activity>
         
         <activity android:name=".AccountPreferencesActivity"
-		    android:theme="@android:style/Theme.NoTitleBar">
+		    android:theme="@style/NoTitle">
         </activity>
         
         <activity android:name=".PreferencesActivity"
-		    android:theme="@android:style/Theme.NoTitleBar">
+		    android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
          
         <activity android:name=".setup.SetupActivity"
-		    android:theme="@android:style/Theme.NoTitleBar"
+		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

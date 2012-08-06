@@ -50,7 +50,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	private AvatarWithShadow mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneSliders mIncomingCallWidget;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -61,15 +61,13 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		mPictureView = (AvatarWithShadow) findViewById(R.id.incoming_picture);
 
         // set this flag so this activity will stay in front of the keyguard
-        int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
-        flags |= WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
+        int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
 
         // "Dial-to-answer" widget for incoming calls.
         mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
         mIncomingCallWidget.setOnTriggerListener(this);
-
 
         super.onCreate(savedInstanceState);
 	}
