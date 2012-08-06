@@ -25,6 +25,7 @@ import org.linphone.core.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
+import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,7 +39,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 /**
  * @author Sylvain Berfini
@@ -51,17 +51,13 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	private float mZoomFactor = 1.f;
 	private float mZoomCenterX, mZoomCenterY;
 	private CompatibilityScaleGestureDetector mScaleDetector;
+	private InCallActivity inCallActivity;
 	
 	@SuppressWarnings("deprecation") // Warning useless because value is ignored and automatically set by new APIs.
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-        Bundle savedInstanceState) {
-		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
+        Bundle savedInstanceState) {		
         View view = inflater.inflate(R.layout.video, container, false);
-        
-		mGestureDetector = new GestureDetector(getActivity(), this); 
-		mScaleDetector = Compatibility.getScaleGestureDetector(getActivity(), this);
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
 		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
@@ -77,8 +73,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 			}
 
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				Log.d("VIDEO WINDOW destroyed!\n");
-				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull(); 
+				LinphoneCore lc = LinphoneManager.getLc(); 
 				if (lc != null) {
 					lc.setVideoWindow(null);
 				}
@@ -103,7 +98,9 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 				}
 				
 				mGestureDetector.onTouchEvent(event);
-				InCallActivity.instance().displayVideoCallControlsIfHidden();
+				if (inCallActivity != null) {
+					inCallActivity.displayVideoCallControlsIfHidden();
+				}
 				return true;
 			}
 		});
@@ -138,28 +135,35 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	public void onResume() {		
 		super.onResume();
 		
-		if (mVideoView != null)
+		if (mVideoView != null) {
 			((GLSurfaceView) mVideoView).onResume();
+		}
 		
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
 				LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
 			}
 		}
+		
+		mGestureDetector = new GestureDetector(inCallActivity, this); 
+		mScaleDetector = Compatibility.getScaleGestureDetector(inCallActivity, this);
 	}
 
 	@Override
-	public void onPause() {		
-		synchronized (androidVideoWindowImpl) {
-			/*
-			 * this call will destroy native opengl renderer which is used by
-			 * androidVideoWindowImpl
-			 */
-			LinphoneManager.getLc().setVideoWindow(null);
+	public void onPause() {	
+		if (androidVideoWindowImpl != null) {
+			synchronized (androidVideoWindowImpl) {
+				/*
+				 * this call will destroy native opengl renderer which is used by
+				 * androidVideoWindowImpl
+				 */
+				LinphoneManager.getLc().setVideoWindow(null);
+			}
 		}
 		
-		if (mVideoView != null)
+		if (mVideoView != null) {
 			((GLSurfaceView) mVideoView).onPause();
+		}
 		
 		super.onPause();
 	}
@@ -222,14 +226,17 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	
 	@Override
 	public void onDestroy() {
-		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		inCallActivity = null;
 		
+		mCaptureView = null;
+		if (mVideoView != null) {
+			mVideoView.setOnTouchListener(null);
+			mVideoView = null;
+		}
 		if (androidVideoWindowImpl != null) { 
 			// Prevent linphone from crashing if correspondent hang up while you are rotating
 			androidVideoWindowImpl.release();
 			androidVideoWindowImpl = null;
-			mCaptureView = null;
-			mVideoView = null;
 		}
 		if (mGestureDetector != null) {
 			mGestureDetector.setOnDoubleTapListener(null);
@@ -241,6 +248,16 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		}
 		
 		super.onDestroy();
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		inCallActivity = (InCallActivity) activity;
+		if (inCallActivity != null) {
+			inCallActivity.bindVideoFragment(this);
+		}
 	}
 	
 	@Override
