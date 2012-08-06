@@ -29,6 +29,7 @@
 		    android:paddingBottom="10dp">
     
 		    <ImageView 
+		        android:id="@+id/background"
 		        android:layout_width="match_parent"
 		        android:layout_height="20dp"
 		        android:scaleType="fitXY"
@@ -37,6 +38,7 @@
 		    <TextView 
 		        android:id="@+id/statusText" 
 		        android:text="@string/status_not_connected"
+		        android:textColor="@android:color/white"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content" />
 		    
@@ -78,6 +80,7 @@
 		    <TextView 
 		        android:id="@+id/exit" 
 		        android:text="EXIT"
+		        android:textColor="@android:color/white"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentRight="true"

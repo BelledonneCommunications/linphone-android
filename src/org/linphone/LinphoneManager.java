@@ -1402,6 +1402,5 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneAddress from, byte[] event) {
-		
 	}
 }

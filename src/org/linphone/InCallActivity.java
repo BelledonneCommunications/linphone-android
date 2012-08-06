@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
@@ -82,6 +83,7 @@ public class InCallActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
+		Compatibility.setFullScreen(getWindow());
         setContentView(R.layout.incall);
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
@@ -151,8 +153,8 @@ public class InCallActivity extends FragmentActivity implements
 		dialer.setEnabled(false);
 		numpad = (Numpad) findViewById(R.id.numpad);
 		
-        switchCamera = (ImageView) findViewById(R.id.switchCamera);
-        switchCamera.setOnClickListener(this);
+		switchCamera = (ImageView) findViewById(R.id.switchCamera);
+		switchCamera.setOnClickListener(this);
 		
 		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
 		
@@ -300,6 +302,10 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void replaceFragmentAudioByVideo() {
+		//Hiding controls to let displayVideoCallControlsIfHidden add them plus the callback
+		mControlsLayout.setVisibility(View.GONE);
+		switchCamera.setVisibility(View.INVISIBLE);
+		
 		videoCallFragment = new VideoCallFragment();
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -308,10 +314,6 @@ public class InCallActivity extends FragmentActivity implements
 			transaction.commitAllowingStateLoss();
 		} catch (Exception e) {
 		}
-		
-		if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
-    		switchCamera.setVisibility(View.VISIBLE);
-    	}
 	}
 	
 	private void toogleMicro() {
@@ -394,7 +396,9 @@ public class InCallActivity extends FragmentActivity implements
 						}
 					});
 					mControlsLayout.startAnimation(animation);
-					switchCamera.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_top_to_bottom));
+					if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+						switchCamera.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_top_to_bottom));
+					}
 				}
 				
 				resetControlsHidingCallBack();
@@ -442,7 +446,9 @@ public class InCallActivity extends FragmentActivity implements
 							}
 						});
 						mControlsLayout.startAnimation(animation);
-						switchCamera.startAnimation(AnimationUtils.loadAnimation(instance, R.anim.slide_out_bottom_to_top));
+						if (AndroidCameraConfiguration.retrieveCameras().length > 1) {
+							switchCamera.startAnimation(AnimationUtils.loadAnimation(instance, R.anim.slide_out_bottom_to_top));
+						}
 					}
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);

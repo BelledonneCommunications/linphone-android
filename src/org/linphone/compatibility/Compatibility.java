@@ -34,6 +34,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.Display;
+import android.view.Window;
 /**
  * @author Sylvain Berfini
  */
@@ -169,5 +170,17 @@ public class Compatibility {
 			return csgd;
 		}
 		return null;
+	}
+
+	public static void setFullScreen(Window window) {
+		if (Version.sdkAboveOrEqual(16)) {
+			ApiSixteenPlus.setFullScreen(window);
+		} else if (Version.sdkAboveOrEqual(14)) {
+			ApiFourteenPlus.setFullScreen(window);
+		} else if (Version.sdkAboveOrEqual(11)) {
+			ApiElevenPlus.setFullScreen(window);
+		} else {
+			ApiFivePlus.setFullScreen(window);
+		}
 	}
 }
