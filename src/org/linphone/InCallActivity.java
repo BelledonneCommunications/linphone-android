@@ -439,6 +439,7 @@ public class InCallActivity extends FragmentActivity implements
 						addCall.setVisibility(View.INVISIBLE);
 						mControlsLayout.setVisibility(View.GONE);
 						switchCamera.setVisibility(View.INVISIBLE);
+						numpad.setVisibility(View.GONE);
 						options.setImageResource(R.drawable.options);
 					} else {					
 						Animation animation = slideOutTopToBottom;
@@ -459,6 +460,7 @@ public class InCallActivity extends FragmentActivity implements
 								addCall.setVisibility(View.INVISIBLE);
 								mControlsLayout.setVisibility(View.GONE);
 								switchCamera.setVisibility(View.INVISIBLE);
+								numpad.setVisibility(View.GONE);
 								options.setImageResource(R.drawable.options);
 								
 								animation.setAnimationListener(null);
