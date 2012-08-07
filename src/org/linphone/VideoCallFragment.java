@@ -171,7 +171,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
     public boolean onScale(CompatibilityScaleGestureDetector detector) {
     	mZoomFactor *= detector.getScaleFactor();
         // Don't let the object get too small or too large.
-    	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, mVideoView.getHeight() / LinphoneManager.getLc().getPreferredVideoSize().height));
+    	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, ((float) mVideoView.getHeight()) / LinphoneManager.getLc().getPreferredVideoSize().height));
 
     	LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
         return true;
@@ -204,9 +204,9 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
 		if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
-			if (mZoomFactor == 1) {
+			if (mZoomFactor == 1.f) {
 				// Zoom to make the video fill the screen in height
-				mZoomFactor = mVideoView.getHeight() / LinphoneManager.getLc().getPreferredVideoSize().height;
+				mZoomFactor = ((float) mVideoView.getHeight()) / LinphoneManager.getLc().getPreferredVideoSize().height;
 			}
 			else {
 				resetZoom();
@@ -220,7 +220,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	}
 
 	private void resetZoom() {
-		mZoomFactor = 1;
+		mZoomFactor = 1.f;
 		mZoomCenterX = mZoomCenterY = 0.5f;
 	}
 	
