@@ -944,8 +944,7 @@
 			  <arg value="--rename-manifest-package"/> 
 			  <arg value="${linphone.package.name}"/> 
 			  <arg value="--custom-package" />
-			  <arg value="${linphone.package.name}"/> 
-			  <arg value="--no-crunch" />
+			  <arg value="${linphone.package.name}"/>
 			</exec> 
         </do-only-if-not-library>
     </target>
