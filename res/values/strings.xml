@@ -240,6 +240,8 @@
 	<string name="pref_sipaccounts">SIP Accounts</string>
 	
 	<string name="pref_wifi_only">Use wifi only</string>
+    <string name="pref_use_bluetooth_if_available">Use bluetooth headset</string>
+    <string name="pref_use_bluetooth_if_available_summary">Route incoming audio to bluetooth headset if available.</string>
 	
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>

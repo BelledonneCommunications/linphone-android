@@ -1,6 +1,7 @@
 package org.linphone.compatibility;
 
 import android.annotation.TargetApi;
+import android.media.AudioManager;
 import android.view.Display;
 
 /*
@@ -29,5 +30,15 @@ public class ApiEightPlus {
 	
 	public static int getRotation(Display display) {
 		return display.getRotation();
+	}
+	
+	public static boolean enableBluetoothHeadset(AudioManager mAudioManager) {
+		if (mAudioManager.isBluetoothScoAvailableOffCall()){
+			mAudioManager.setBluetoothScoOn(true);	
+			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+			mAudioManager.startBluetoothSco();
+			return true;
+		}
+		return false;
 	}
 }
