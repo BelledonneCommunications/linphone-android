@@ -629,6 +629,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void startIncallActivity(LinphoneCall currentCall) {
 		Intent intent = new Intent(this, InCallActivity.class);
 		intent.putExtra("VideoEnabled", false);
+		startOrientationSensor();
 		startActivityForResult(intent, callActivity);
 	}
 	
