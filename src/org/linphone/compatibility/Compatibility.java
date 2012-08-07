@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.view.Display;
 import android.view.Window;
@@ -182,5 +183,12 @@ public class Compatibility {
 		} else {
 			ApiFivePlus.setFullScreen(window);
 		}
+	}
+	
+	public static boolean enableBluetoothHeadset(AudioManager mAudioManager) {
+		if (Version.sdkAboveOrEqual(8)) {
+			return ApiEightPlus.enableBluetoothHeadset(mAudioManager);
+		}
+		return false;
 	}
 }
