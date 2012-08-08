@@ -358,6 +358,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(FragmentsAvailable.CONTACTS, null);
 	}
 	
+	public void displayContactsForEdition(String sipAddress) {
+		Bundle extras = new Bundle();
+		extras.putBoolean("EditOnClick", true);
+		extras.putString("SipAddress", sipAddress);
+		changeCurrentFragment(FragmentsAvailable.CONTACTS, extras);
+	}
+	
 	public void displayChat(String sipUri) {
 		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());

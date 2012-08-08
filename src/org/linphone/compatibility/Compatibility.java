@@ -60,6 +60,13 @@ public class Compatibility {
 		return null;
 	}
 	
+	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipAddress) {
+		if (Version.sdkAboveOrEqual(5)) {
+			return ApiFivePlus.prepareEditContactIntentWithSipAddress(id, sipAddress);
+		}
+		return null;
+	}
+	
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(5)) {
 			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
