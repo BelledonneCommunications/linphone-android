@@ -107,7 +107,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		FragmentManager.enableDebugLogging(true);
 		super.onCreate(savedInstanceState);
         
         if (!LinphoneManager.isInstanciated()) {
@@ -129,15 +128,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
         initButtons();
 		
         currentFragment = FragmentsAvailable.DIALER;
-        if (savedInstanceState != null) {
-        	return;
-        }
-        
-        if (findViewById(R.id.fragmentContainer) != null) {
-        	dialerFragment = new DialerFragment();
-            dialerFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragmentContainer, dialerFragment).commit();
+        if (savedInstanceState == null) {
+	        if (findViewById(R.id.fragmentContainer) != null) {
+	        	dialerFragment = new DialerFragment();
+	            dialerFragment.setArguments(getIntent().getExtras());
+	            getSupportFragmentManager().beginTransaction()
+	                    .add(R.id.fragmentContainer, dialerFragment).commit();
+	        }
         }
         
         int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
