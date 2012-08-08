@@ -55,6 +55,7 @@ public class DialerFragment extends Fragment {
         View view = inflater.inflate(R.layout.dialer, container, false);
         
 		mAddress = (AddressText) view.findViewById(R.id.Adress); 
+		mAddress.setDialerFragment(this);
 		EraseButton erase = (EraseButton) view.findViewById(R.id.Erase);
 		erase.setAddressWidget(mAddress);
 		erase.requestFocus();
@@ -167,5 +168,11 @@ public class DialerFragment extends Fragment {
 			mAddContact.setImageResource(R.drawable.add_contact);
 			mAddContact.setOnClickListener(addContactListener);
 		}
+		
+		enableDisableAddContact();
+	}
+	
+	public void enableDisableAddContact() {
+		mAddContact.setEnabled(!mAddress.getText().toString().equals(""));	
 	}
 }
