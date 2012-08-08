@@ -1230,16 +1230,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private static void simulateProximitySensorNearby(Activity activity, boolean nearby) {
 		final Window window = activity.getWindow();
-		WindowManager.LayoutParams lAttrs = activity.getWindow().getAttributes();
+		WindowManager.LayoutParams params = window.getAttributes();
 		View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
 		if (nearby) {
-			lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			view.setVisibility(View.INVISIBLE);
+            params.screenBrightness = 0.1f;
+            view.setVisibility(View.INVISIBLE);
 		} else  {
-			lAttrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN); 
-			view.setVisibility(View.VISIBLE);
+			params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+            view.setVisibility(View.VISIBLE);
 		}
-		window.setAttributes(lAttrs);
+        window.setAttributes(params);
 	}
 
 	private static void proximityNearbyChanged() {

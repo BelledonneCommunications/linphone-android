@@ -7,9 +7,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 /*
 ApiSixteenPlus.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -78,13 +75,5 @@ public class ApiSixteenPlus {
 		notif.contentIntent = intent;
 
 		return notif;
-	}
-	
-	public static void setFullScreen(Window window) {
-		window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LOW_PROFILE);
-		
-		WindowManager.LayoutParams lAttrs = window.getAttributes();
-		lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		window.setAttributes(lAttrs);
 	}
 }
