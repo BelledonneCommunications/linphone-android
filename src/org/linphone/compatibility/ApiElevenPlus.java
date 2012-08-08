@@ -7,9 +7,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 /*
 ApiElevenPlus.java
@@ -82,14 +79,5 @@ public class ApiElevenPlus {
 	public static void setNotificationLatestEventInfo(Notification notif,
 			Context context, String title, String content, PendingIntent intent) {
 		notif.setLatestEventInfo(context, title, content, intent);
-	}
-	
-	@SuppressWarnings("deprecation")
-	public static void setFullScreen(Window window) {
-		window.getDecorView().setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
-		
-		WindowManager.LayoutParams lAttrs = window.getAttributes();
-		lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		window.setAttributes(lAttrs);
 	}
 }

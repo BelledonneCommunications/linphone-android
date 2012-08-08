@@ -32,8 +32,6 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents.Insert;
 import android.view.Display;
-import android.view.Window;
-import android.view.WindowManager;
 
 /*
 ApiFivePlus.java
@@ -344,11 +342,5 @@ public class ApiFivePlus {
 	@SuppressWarnings("deprecation")
 	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
 		notif.setLatestEventInfo(context, title, content, intent);
-	}
-
-	public static void setFullScreen(Window window) {
-		WindowManager.LayoutParams lAttrs = window.getAttributes();
-		lAttrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		window.setAttributes(lAttrs);
 	}
 }

@@ -300,6 +300,7 @@ public class StatusFragment extends Fragment {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 
 			exit.setVisibility(View.GONE);
+			statusText.setVisibility(View.GONE);
 			background.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
 			
@@ -312,7 +313,9 @@ public class StatusFragment extends Fragment {
 			}
 		} else {
 			exit.setVisibility(View.VISIBLE);
+			statusText.setVisibility(View.VISIBLE);
 			background.setVisibility(View.VISIBLE);
+			encryption.setVisibility(View.GONE);
 		}
 	}
 	

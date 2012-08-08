@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
@@ -41,9 +40,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -87,7 +86,6 @@ public class InCallActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		instance = this;
 		
-		Compatibility.setFullScreen(getWindow());
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.incall);
         
@@ -417,9 +415,8 @@ public class InCallActivity extends FragmentActivity implements
 						switchCamera.startAnimation(slideInTopToBottom);
 					}
 				}
-				
-				resetControlsHidingCallBack();
 			}
+			resetControlsHidingCallBack();
 		}		
 	}
 

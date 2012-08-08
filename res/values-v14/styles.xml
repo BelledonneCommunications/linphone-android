@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Default" parent="android:Theme.Holo" />
+    <style name="NoTitle" parent="android:Theme.Holo.NoActionBar" />
+    <style name="FullScreen" parent="android:Theme.Holo.NoActionBar.Fullscreen" />
+
+</resources>
