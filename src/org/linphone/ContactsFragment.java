@@ -51,12 +51,19 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private boolean onlyDisplayLinphoneContacts;
 	private int lastKnownPosition;
 	private AlphabetIndexer indexer;
+	private boolean editOnClick = false, editConsumed = false;
+	private String sipAddressToAdd;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
 		mInflater = inflater;
         View view = inflater.inflate(R.layout.contacts_list, container, false);
+        
+        if (getArguments() != null) {
+	        editOnClick = getArguments().getBoolean("EditOnClick");
+	        sipAddressToAdd = getArguments().getString("SipAddress");
+        }
         
         contactsList = (ListView) view.findViewById(R.id.contactsList);
         contactsList.setOnItemClickListener(this);
@@ -91,7 +98,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			
 		} 
 		else if (id == R.id.newContact) {
-			Intent intent = Compatibility.prepareAddContactIntent(null, null);
+			editConsumed = true;
+			Intent intent = Compatibility.prepareAddContactIntent(null, sipAddressToAdd);
 			startActivity(intent);
 		} 
 	}
@@ -124,22 +132,32 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		lastKnownPosition = contactsList.getFirstVisiblePosition();
-		LinphoneActivity.instance().displayContact((Contact) adapter.getItemAtPosition(position));
+		Contact contact = (Contact) adapter.getItemAtPosition(position);
+		if (editOnClick) {
+			editConsumed = true;
+			Intent intent = Compatibility.prepareEditContactIntentWithSipAddress(Integer.parseInt(contact.getID()), sipAddressToAdd);
+			startActivity(intent);
+		} else {
+			lastKnownPosition = contactsList.getFirstVisiblePosition();
+			LinphoneActivity.instance().displayContact(contact);
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		if (editConsumed) {
+			editOnClick = false;
+			sipAddressToAdd = null;
+		}
+		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
 			onlyDisplayLinphoneContacts = LinphoneActivity.instance().isLinphoneContactsPrefered();
 		}
 		
-		if (contactsList.getAdapter() == null) {
-			changeContactsAdapter();
-		}
-
+		changeContactsAdapter();
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	

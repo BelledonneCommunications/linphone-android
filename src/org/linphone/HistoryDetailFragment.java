@@ -17,10 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.AvatarWithShadow;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -84,6 +82,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private void displayHistory(String status, String callTime, String callDate) {
 		if (pictureUri != null) {
         	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
+        	view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
         }
 		
 		contactName.setText(displayName == null ? sipUri : displayName);
@@ -121,8 +120,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
 		} else if (id == R.id.addToContacts) {
-			Intent intent = Compatibility.prepareAddContactIntent(displayName, sipUri);
-			startActivity(intent);
+			LinphoneActivity.instance().displayContactsForEdition(sipUri);
 		}
 	}
 }

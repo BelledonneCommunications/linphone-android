@@ -90,6 +90,28 @@ public class ApiFivePlus {
 		return intent;
 	}
 	
+	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipUri) {
+		Intent intent = new Intent(Intent.ACTION_EDIT, Contacts.CONTENT_URI);
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
+		intent.setData(contactUri);
+		
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ArrayList<ContentValues> data = new ArrayList<ContentValues>();
+			ContentValues sipAddressRow = new ContentValues();
+			sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
+			sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+			data.add(sipAddressRow);
+			data.add(sipAddressRow);
+			intent.putParcelableArrayListExtra(Insert.DATA, data);
+		} else {
+			// VoIP field not available, we store the address in the IM field
+			intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, sipUri);
+			intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
+		}
+		
+		return intent;
+	}
+	
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
 		List<String> list = new ArrayList<String>();
 

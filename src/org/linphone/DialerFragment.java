@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCore;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -25,7 +24,6 @@ import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -81,8 +79,7 @@ public class DialerFragment extends Fragment {
 		addContactListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = Compatibility.prepareAddContactIntent(mAddress.getDisplayedName(), mAddress.getText().toString());
-				startActivity(intent);
+				LinphoneActivity.instance().displayContactsForEdition(mAddress.getText().toString());
 			}
 		};
 		cancelListener = new OnClickListener() {
@@ -167,9 +164,8 @@ public class DialerFragment extends Fragment {
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.add_contact);
 			mAddContact.setOnClickListener(addContactListener);
+			enableDisableAddContact();
 		}
-		
-		enableDisableAddContact();
 	}
 	
 	public void enableDisableAddContact() {

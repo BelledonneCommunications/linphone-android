@@ -120,6 +120,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT);
 		}
 		contact.refresh(getActivity().getContentResolver());
+		if (contact.getName() == null || contact.getName().equals("")) {
+			//Contact has been deleted, return
+			LinphoneActivity.instance().displayContacts();
+		}
 		displayContact(inflater, view);
 	}
 
