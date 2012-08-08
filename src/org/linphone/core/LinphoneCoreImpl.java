@@ -729,4 +729,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public void refreshRegisters() {
 		refreshRegisters(nativePtr);
 	}
+	@Override
+	public String getVersion() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
