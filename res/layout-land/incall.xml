@@ -28,7 +28,14 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/status" />
     
-    <!-- TODO Add numpad -->
+    <org.linphone.ui.Numpad
+        android:id="@+id/numpad"
+        android:background="@drawable/dialer_alt_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_below="@id/switchCamera"
+        android:layout_marginBottom="100dp" />
     
     <LinearLayout
         android:id="@+id/menu"

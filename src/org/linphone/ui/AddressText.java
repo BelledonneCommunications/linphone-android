@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.linphone.ui;
 
+import org.linphone.DialerFragment;
 import org.linphone.LinphoneManager.AddressType;
 
 import android.content.Context;
@@ -36,7 +37,8 @@ public class AddressText extends EditText implements AddressType {
 	private String displayedName;
 	private Uri pictureUri;
 	private Paint mTestPaint;
-
+	private DialerFragment dialer;
+	
 	public void setPictureUri(Uri uri) {
 		pictureUri = uri;
 	}
@@ -80,6 +82,10 @@ public class AddressText extends EditText implements AddressType {
 			resizedText = getHint().toString();
 		}
 		refitText(resizedText, getWidth());
+		
+		if (dialer != null) {
+			dialer.enableDisableAddContact();
+		}
 
 		super.onTextChanged(text, start, before, after);
 	}
@@ -132,5 +138,9 @@ public class AddressText extends EditText implements AddressType {
 		}
 		refitText(resizedText, parentWidth);
 		setMeasuredDimension(parentWidth, height);
+	}
+
+	public void setDialerFragment(DialerFragment dialerFragment) {
+		dialer = dialerFragment;
 	}
 }
