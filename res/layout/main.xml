@@ -5,9 +5,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Hack to adjust perfectly on every screen the bottom of the fragment with the curved menu -->
+    <LinearLayout
+	    android:id="@+id/mark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+    
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+        
+    </LinearLayout>
+    
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/mark"
         android:layout_alignParentTop="true">
 
         <LinearLayout
@@ -15,7 +71,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingBottom="65dp"
             android:paddingTop="20dp" />
 
         <fragment
@@ -68,7 +123,7 @@
             android:contentDescription="@string/content_description_contacts"
             android:scaleType="fitXY"
             android:src="@drawable/contacts" />
-
+        
         <ImageView
             android:id="@+id/dialer"
             android:layout_width="match_parent"
@@ -113,6 +168,7 @@
                 android:gravity="center"
                 android:textSize="20dp"
                 android:visibility="gone" />
+            
         </RelativeLayout>
         
     </LinearLayout>

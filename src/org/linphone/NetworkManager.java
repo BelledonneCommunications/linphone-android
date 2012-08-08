@@ -36,7 +36,9 @@ public class NetworkManager extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		Boolean lNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,false);
-		LinphoneManager.getInstance().connectivityChanged(cm, lNoConnectivity);
+		if (LinphoneManager.isInstanciated()) {
+			LinphoneManager.getInstance().connectivityChanged(cm, lNoConnectivity);
+		}
 	}
 
 }

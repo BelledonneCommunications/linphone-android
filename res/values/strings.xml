@@ -260,10 +260,10 @@
 	<string name="chat">Chat</string>
 	<string name="call">Call</string>
 	<string name="add_to_contacts">Add to contacts</string>
-	<string name="status_connected">CONNECTED</string>
-	<string name="status_not_connected">NOT CONNECTED</string>
-	<string name="status_in_progress">CONNECTING</string>
-	<string name="status_error">ERROR</string>
+	<string name="status_connected">Registered</string>
+	<string name="status_not_connected">Not Registered</string>
+	<string name="status_in_progress">Registration in progress</string>
+	<string name="status_error">Registration failed</string>
 	
 	<string name="addressHint">Number or address</string>
 	
