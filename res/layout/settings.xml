@@ -3,11 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
        
+    <!-- Hack to adjust perfectly on every screen the bottom of the fragment with the curved menu -->
+    <LinearLayout
+	    android:id="@+id/mark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+    
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:adjustViewBounds="true"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+        
+    </LinearLayout>
+		
 	<ListView
 	    android:id="@android:id/list"
+        android:layout_above="@id/mark"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:paddingBottom="75dp" />
+	    android:layout_height="match_parent" />
     
 	<LinearLayout
         android:id="@+id/menu"

@@ -34,26 +34,26 @@
 		        android:layout_height="20dp"
 		        android:scaleType="fitXY"
 		        android:src="@drawable/statebar_background"/>
-    
-		    <TextView 
-		        android:id="@+id/statusText" 
-		        android:text="@string/status_not_connected"
-		        android:textColor="@android:color/white"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content" />
 		    
 		    <ImageView 
 		        android:contentDescription="@string/content_description_led"
 		        android:id="@+id/statusLed"
 		        android:paddingLeft="5dp"
-		        android:src="@drawable/led_disconnected"
-		        android:layout_toRightOf="@id/statusText"
+		        android:src="@drawable/led_error"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content" />
 		    
+		    <TextView 
+		        android:id="@+id/statusText" 
+		        android:text="@string/status_not_connected"
+		        android:textColor="@android:color/white"
+		        android:paddingLeft="5dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_toRightOf="@id/statusLed" />
+		    
 		    <LinearLayout 
 		        android:id="@+id/moreStatusLed"
-		        android:paddingLeft="5dp"
 		        android:layout_width="wrap_content"
 		        android:layout_height="10dp"
 		        android:orientation="horizontal"
@@ -79,7 +79,7 @@
 		    
 		    <TextView 
 		        android:id="@+id/exit" 
-		        android:text="EXIT"
+		        android:text="@string/menu_exit"
 		        android:textColor="@android:color/white"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"

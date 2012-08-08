@@ -60,8 +60,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -107,6 +107,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		FragmentManager.enableDebugLogging(true);
 		super.onCreate(savedInstanceState);
         
         if (!LinphoneManager.isInstanciated()) {
@@ -124,18 +125,19 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 
         setContentView(R.layout.main);
+        instance = this;
         initButtons();
-        
-        if (LinphoneManager.isInstanciated()) {
-			LinphoneManager.addListener(this);
-		}
+		
+        currentFragment = FragmentsAvailable.DIALER;
+        if (savedInstanceState != null) {
+        	return;
+        }
         
         if (findViewById(R.id.fragmentContainer) != null) {
         	dialerFragment = new DialerFragment();
             dialerFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragmentContainer, dialerFragment).commit();
-            currentFragment = FragmentsAvailable.DIALER;
         }
         
         int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
@@ -150,8 +152,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		LinphoneManager.getLc().setDeviceRotation(rotation);
 		mAlwaysChangingPhoneAngle = rotation;
-		
-        instance = this;    
 	}
 	
 	private void initButtons() {
@@ -174,7 +174,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(newFragmentType, extras, false);
 	}
 	
-	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {
+	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {		
 		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
 			return;
 		}
@@ -241,15 +241,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		}
 		try {
-			getSupportFragmentManager().popBackStack(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			getSupportFragmentManager().popBackStackImmediate(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		} catch (java.lang.IllegalStateException e) {
 			
 		}
 		
 		transaction.addToBackStack(newFragmentType.toString());
 		transaction.replace(R.id.fragmentContainer, newFragment);
-
 		transaction.commitAllowingStateLoss();
+		getSupportFragmentManager().executePendingTransactions();
+		
 		currentFragment = newFragmentType;
 	}
 	
@@ -266,9 +267,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			
 			transaction.addToBackStack(newFragmentType.toString());
 			transaction.replace(R.id.fragmentContainer2, newFragment);
-	
-			transaction.commitAllowingStateLoss();
-			
 		} else {
 			if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
 				if (newFragmentType.isRightOf(currentFragment)) {
@@ -282,16 +280,17 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			ll.setVisibility(View.GONE);
 			
 			try {
-				getSupportFragmentManager().popBackStack(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				getSupportFragmentManager().popBackStackImmediate(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			} catch (java.lang.IllegalStateException e) {
 				
 			}
 			
 			transaction.addToBackStack(newFragmentType.toString());
 			transaction.replace(R.id.fragmentContainer, newFragment);
-	
-			transaction.commitAllowingStateLoss();
 		}
+		transaction.commitAllowingStateLoss();
+		getSupportFragmentManager().executePendingTransactions();
+		
 		currentFragment = newFragmentType;
 	}
 	
@@ -787,13 +786,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(resultCode, requestCode, data);
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				exit();
 			} else {
 				FragmentsAvailable newFragment = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
-				changeCurrentFragment(newFragment, null, true);
 				selectMenu(newFragment);
+				changeCurrentFragment(newFragment, null, true);
 			}
 		}
 		else if (requestCode == callActivity) {
@@ -804,12 +804,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		}
-		super.onActivityResult(resultCode, requestCode, data);
 	}
 	
 	@Override
-	protected void onResume() {
+	protected void onResume() {		
 		super.onResume();
+        
+        LinphoneManager.addListener(this);
         
         prepareContactsInBackground();
 		
@@ -832,6 +833,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onDestroy() {
+		LinphoneManager.removeListener(this);
+		
 		if (chatStorage != null) {
 			chatStorage.close();
 			chatStorage = null;

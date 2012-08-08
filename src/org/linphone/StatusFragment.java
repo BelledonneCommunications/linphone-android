@@ -175,7 +175,7 @@ public class StatusFragment extends Fragment {
 	
 	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
 		try {
-			boolean defaultAccountConnected = (isDefaultAccount && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
+			boolean defaultAccountConnected = (isDefaultAccount && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
 			if (state == RegistrationState.RegistrationOk && defaultAccountConnected) {
 				return R.drawable.led_connected;
 			} else if (state == RegistrationState.RegistrationProgress) {
@@ -194,7 +194,7 @@ public class StatusFragment extends Fragment {
 	
 	private String getStatusIconText(LinphoneCore.RegistrationState state) {
 		try {
-			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
 				return getString(R.string.status_connected);
 			} else if (state == RegistrationState.RegistrationProgress) {
 				return getString(R.string.status_in_progress);
