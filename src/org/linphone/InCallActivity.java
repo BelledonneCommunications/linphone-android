@@ -384,7 +384,7 @@ public class InCallActivity extends FragmentActivity implements
 	
 	public void displayVideoCallControlsIfHidden() {
 		if (mControlsLayout != null) {
-			if (mControlsLayout.getVisibility() == View.GONE) {
+			if (mControlsLayout.getVisibility() != View.VISIBLE) {
 				if (isAnimationDisabled) {
 					mControlsLayout.setVisibility(View.VISIBLE);
 					if (cameraNumber > 1) {
