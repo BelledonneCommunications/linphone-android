@@ -75,8 +75,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:stretchColumns="*"
-	        android:paddingTop="20dp">
-	    </TableLayout>
+	        android:paddingTop="20dp"/>
     
     </ScrollView>
 

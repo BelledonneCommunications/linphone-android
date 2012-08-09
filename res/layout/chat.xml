@@ -75,4 +75,5 @@
             android:src="@drawable/chat_send_message" />
         
     </LinearLayout>
+    
 </LinearLayout>

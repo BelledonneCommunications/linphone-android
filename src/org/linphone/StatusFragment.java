@@ -382,7 +382,7 @@ public class StatusFragment extends Fragment {
 			ImageView status = (ImageView) view.findViewById(R.id.State);
 			
 			TextView identity = (TextView) view.findViewById(R.id.Identity);
-			String sipAddress = lpc.getIdentity().startsWith("sip:") ? lpc.getIdentity().split("sip:")[1] : lpc.getIdentity();
+			String sipAddress = (lpc.getIdentity() != null && lpc.getIdentity().startsWith("sip:")) ? lpc.getIdentity().split("sip:")[1] : lpc.getIdentity();
 			identity.setText(sipAddress);
 			
 			CheckBox isDefault = (CheckBox) view.findViewById(R.id.Default);

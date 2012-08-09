@@ -18,9 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.compatibility.Compatibility;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -41,7 +42,7 @@ public class AccountPreferencesActivity extends LinphonePreferencesActivity {
 		
 		PreferenceScreen screen = getPreferenceScreen();
 		int n = getIntent().getExtras().getInt("Account", 1);
-		addExtraAccountPreferencesFields(screen, n);
+		manageAccountPreferencesFields(screen, n);
 	}
 	
 	OnPreferenceChangeListener preferenceChangedListener = new OnPreferenceChangeListener() {
@@ -52,50 +53,48 @@ public class AccountPreferencesActivity extends LinphonePreferencesActivity {
 		}		
 	};
 	
-	private void addExtraAccountPreferencesFields(PreferenceScreen parent, final int n) {
+	private void manageAccountPreferencesFields(PreferenceScreen parent, final int n) {
     	final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		
-    	EditTextPreference username = new EditTextPreference(this);
+    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().getPreference(0);
+    	EditTextPreference username = (EditTextPreference) account.getPreference(0);
+    	username.setText(prefs.getString(getString(R.string.pref_username_key) + getAccountNumber(n), ""));
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	username.setTitle(getString(R.string.pref_username));
-    	username.setPersistent(true);
-    	username.setDialogMessage(getString(R.string.pref_help_username));
     	username.setKey(getString(R.string.pref_username_key) + getAccountNumber(n));
     	username.setOnPreferenceChangeListener(preferenceChangedListener);
+    	username.setSummary(username.getText());
     	
-    	EditTextPreference password = new EditTextPreference(this);
+    	EditTextPreference password = (EditTextPreference) account.getPreference(1);
+    	password.setText(prefs.getString(getString(R.string.pref_passwd_key) + getAccountNumber(n), ""));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    	password.setTitle(getString(R.string.pref_passwd));
-    	password.setPersistent(true);
     	password.setKey(getString(R.string.pref_passwd_key) + getAccountNumber(n));
     	
-    	EditTextPreference domain = new EditTextPreference(this);
+    	EditTextPreference domain = (EditTextPreference) account.getPreference(2);
+    	domain.setText(prefs.getString(getString(R.string.pref_domain_key) + getAccountNumber(n), ""));
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	domain.setTitle(getString(R.string.pref_domain));
-    	domain.setPersistent(true);
-    	domain.setDialogMessage(getString(R.string.pref_help_domain));
     	domain.setKey(getString(R.string.pref_domain_key) + getAccountNumber(n));
     	domain.setOnPreferenceChangeListener(preferenceChangedListener);
-    	
-    	EditTextPreference proxy = new EditTextPreference(this);
+    	domain.setSummary(domain.getText());
+
+    	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().getPreference(1);
+    	EditTextPreference proxy = (EditTextPreference) advanced.getPreference(0);
+    	proxy.setText(prefs.getString(getString(R.string.pref_proxy_key) + getAccountNumber(n), ""));
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	proxy.setTitle(getString(R.string.pref_proxy));
-    	proxy.setPersistent(true);
     	proxy.setKey(getString(R.string.pref_proxy_key) + getAccountNumber(n));
     	proxy.setOnPreferenceChangeListener(preferenceChangedListener);
+    	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
     	
-    	CheckBoxPreference outboundProxy = new CheckBoxPreference(this);
-    	outboundProxy.setTitle(getString(R.string.pref_enable_outbound_proxy));
-    	outboundProxy.setPersistent(true);
+    	Preference outboundProxy = advanced.getPreference(1);
+    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n), false));
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n));
    
-    	final CheckBoxPreference disable = new CheckBoxPreference(this);
-    	disable.setTitle(getString(R.string.pref_disable_account));
-    	disable.setPersistent(true);
+    	final Preference disable = advanced.getPreference(2);
+    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
+    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(n), false));
     	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
 
-    	final Preference delete = new Preference(this);
-    	delete.setTitle(R.string.pref_delete_account);
+    	final Preference delete = advanced.getPreference(4);
+    	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
@@ -130,48 +129,23 @@ public class AccountPreferencesActivity extends LinphonePreferencesActivity {
 	        }
         });
     	
-    	CheckBoxPreference mainAccount = new CheckBoxPreference(this);
-    	mainAccount.setTitle(R.string.pref_default_account_title);
+    	Preference mainAccount = advanced.getPreference(3);
+    	Compatibility.setPreferenceChecked(mainAccount, prefs.getInt(getString(R.string.pref_default_account), 0) == n);
+    	mainAccount.setEnabled(!Compatibility.isPreferenceChecked(mainAccount));
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
 			public boolean onPreferenceClick(Preference preference) {
 				
 				SharedPreferences.Editor editor = prefs.edit();
-				editor.putInt(getString(R.string.pref_default_account), n);
+				editor.putInt(getString(R.string.pref_default_account_key), n);
 				editor.commit();
 				delete.setEnabled(false);
 				disable.setEnabled(false);
-				disable.setChecked(false);
+				Compatibility.setPreferenceChecked(disable, false);
 				preference.setEnabled(false);
 				return true;
 			}
 		});
-    	
-    	mainAccount.setChecked(prefs.getInt(getString(R.string.pref_default_account), 0) == n);
-    	mainAccount.setEnabled(!mainAccount.isChecked());
-    	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
-    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
-    	
-		PreferenceCategory category = new PreferenceCategory(this);
-		category.setTitle(getString(R.string.pref_sipaccount));
-    	parent.addPreference(category);
-    	category.addPreference(username);
-    	category.addPreference(password);
-    	category.addPreference(domain);
-    	
-    	category = new PreferenceCategory(this);
-		category.setTitle(getString(R.string.pref_advanced));
-		parent.addPreference(category);
-    	category.addPreference(proxy);
-    	category.addPreference(outboundProxy);
-    	category.addPreference(disable);
-    	category.addPreference(mainAccount);
-    	category.addPreference(delete);
-    	
-    	username.setSummary(username.getText());
-    	domain.setSummary(domain.getText());
-    	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
-    	outboundProxy.setSummary(getString(R.string.pref_help_outbound_proxy));
 	}
 	
 	private String getAccountNumber(int n) {

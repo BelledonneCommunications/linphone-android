@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference 
+        android:title="@string/menu_exit"/>
+
+	<PreferenceCategory 
+	    android:title="@string/pref_sipaccounts"/>
+
+	<Preference 
+	    android:title="@string/setup_title"/>
+
+    <PreferenceCategory 
+        android:key="@string/pref_tunnel_key" 
+        android:title="@string/pref_tunnel">
+        
+            <EditTextPreference 
+                android:title="@string/pref_tunnel_host"
+                android:key="@string/pref_tunnel_host_key"/>
+
+            <EditTextPreference 
+                android:title="@string/pref_tunnel_port"
+                android:key="@string/pref_tunnel_port_key" 
+                android:defaultValue="443"/>
+
+            <ListPreference 
+                android:title="@string/pref_tunnel_mode"
+                android:entries="@array/tunnel_mode_entries"
+                android:entryValues="@array/tunnel_mode_entry_values"
+                android:defaultValue="@string/default_tunnel_mode_entry_value"
+                android:key="@string/pref_tunnel_mode_key" />
+            
+    </PreferenceCategory>
+
+	<PreferenceCategory 
+	    android:title="@string/pref_preferences">
+	    
+		<SwitchPreference 
+		    android:title="@string/pref_autostart"
+			android:key="@string/pref_autostart_key" 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+			android:defaultValue="false"/>
+
+		<SwitchPreference 
+		    android:defaultValue="true"
+			android:title="@string/pref_video_enable_title" 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+			android:key="@string/pref_video_enable_key" />
+
+		<EditTextPreference 
+		    android:title="@string/pref_stun_server"
+			android:key="@string/pref_stun_server_key"/>
+		
+	</PreferenceCategory>
+
+	<PreferenceCategory 
+	    android:title="@string/pref_audio">
+	    
+	    <SwitchPreference 
+	        android:key="@string/pref_use_bluetooth_if_available_key"
+	     	android:defaultValue="true"
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+		 	android:title="@string/pref_use_bluetooth_if_available" 
+		 	android:summary="@string/pref_use_bluetooth_if_available_summary"/>
+	    
+		<CheckBoxPreference 
+		    android:key="@string/pref_echo_limiter_key"
+		 	android:title="@string/pref_echo_limiter" 
+		 	android:summary="@string/pref_echo_limiter_summary"/>
+
+		<CheckBoxPreference 
+		    android:key="@string/pref_echo_cancellation_key" 
+		    android:defaultValue="false"
+			android:title="@string/pref_echo_cancellation" 
+			android:summary="@string/pref_echo_cancellation_summary"/>
+
+		<CheckBoxPreference 
+		    android:key="@string/pref_echo_canceller_calibration_key"
+		 	android:title="@string/pref_echo_canceller_calibration" />
+
+		 <PreferenceScreen 
+		     android:title="@string/pref_codecs" 
+		     android:key="@string/pref_codecs_key">
+		     
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_speex16_key"
+				android:title="@string/pref_codec_speex16"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_speex8_key"
+				android:title="@string/pref_codec_speex8"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_ilbc_key"
+				android:title="@string/pref_codec_ilbc"
+				android:shouldDisableView="true"
+				android:summary="@string/pref_ilbc_summary"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_amr_key" 
+				android:title="@string/pref_codec_amr" 
+				android:defaultValue="true"
+				android:shouldDisableView="true"  />
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_g729_key"
+                android:title="@string/pref_codec_g729"
+                android:defaultValue="true"
+                android:shouldDisableView="true"  />
+			
+            <SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+                android:key="@string/pref_codec_amrwb_key"
+                android:title="@string/pref_codec_amrwb"
+                android:defaultValue="true"
+                android:shouldDisableView="true"  />
+            
+		 	<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+		 	    android:key="@string/pref_codec_gsm_key"
+				android:title="@string/pref_codec_gsm"/>
+		 	
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_g722_key"
+				android:defaultValue="false"
+				android:title="@string/pref_codec_g722"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_silk24_key"
+				android:title="@string/pref_codec_silk24"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_silk16_key" 
+				android:title="@string/pref_codec_silk16"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_pcmu_key"
+				android:title="@string/pref_codec_pcmu"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_codec_pcma_key"
+				android:title="@string/pref_codec_pcma"/>
+			
+		</PreferenceScreen>
+	
+	</PreferenceCategory>
+
+	<PreferenceCategory 
+	    android:title="@string/pref_video" 
+	    android:dependency="@string/pref_video_enable_key" 
+	    android:shouldDisableView="true">
+		 
+		<SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+		    android:key="@string/pref_video_use_front_camera_key"
+			android:title="@string/pref_video_use_front_camera_title"
+			android:dependency="@string/pref_video_enable_key"/>
+	
+		<SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+		    android:key="@string/pref_video_initiate_call_with_video_key"
+			android:defaultValue="true"
+			android:title="@string/pref_video_initiate_call_with_video_title"
+			android:summary="@string/pref_video_initiate_call_with_video"
+			android:dependency="@string/pref_video_enable_key"/>
+	
+		<SwitchPreference
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+			android:key="@string/pref_video_automatically_share_my_video_key"
+			android:title="@string/pref_video_automatically_share_my_video_title"
+			android:defaultValue="true" android:summary="@string/pref_video_automatically_share_my_video"
+			android:dependency="@string/pref_video_enable_key"/>
+		
+	    <SwitchPreference
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+			android:key="@string/pref_video_automatically_accept_video_key"
+			android:title="@string/pref_video_automatically_accept_video_title"
+			android:defaultValue="true" android:summary="@string/pref_video_automatically_accept_video"
+			android:dependency="@string/pref_video_enable_key"/>
+	
+			<PreferenceScreen 
+			    android:dependency="@string/pref_video_enable_key"
+				android:shouldDisableView="true" 
+				android:key="@string/pref_video_codecs_key"
+				android:title="@string/pref_video_codecs_title">
+			
+				<SwitchPreference 
+					android:switchTextOn="@string/yes"
+					android:switchTextOff="@string/no"
+				    android:key="@string/pref_video_codec_vp8_key"
+					android:title="@string/pref_video_codec_vp8_title"
+					android:defaultValue="true"/>
+				
+				<SwitchPreference 
+					android:switchTextOn="@string/yes"
+					android:switchTextOff="@string/no"
+				    android:key="@string/pref_video_codec_h264_key"
+					android:title="@string/pref_video_codec_h264_title"
+					android:defaultValue="false"/>
+				
+				<SwitchPreference 
+					android:switchTextOn="@string/yes"
+					android:switchTextOff="@string/no"
+				    android:key="@string/pref_video_codec_mpeg4_key"
+					android:title="@string/pref_video_codec_mpeg4_title"
+					android:defaultValue="false"/>
+				
+	 			<SwitchPreference 
+					android:switchTextOn="@string/yes"
+					android:switchTextOff="@string/no"
+	 			    android:key="@string/pref_video_codec_h263_key"
+					android:title="@string/pref_video_codec_h263_title"
+					android:defaultValue="false" android:layout="@layout/hidden"/>
+	 			
+			</PreferenceScreen>
+			
+	</PreferenceCategory>
+
+	<PreferenceCategory 
+	    android:title="@string/pref_advanced">
+	    
+		<EditTextPreference 
+		    android:title="@string/pref_prefix"
+			android:key="@string/pref_prefix_key"></EditTextPreference>
+
+		<SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+		    android:key="@string/pref_escape_plus_key"
+			android:title="@string/pref_escape_plus"/>
+
+		<SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+		    android:key="@string/pref_debug_key"
+			android:title="@string/pref_debug" android:enabled="true"/>
+
+		<PreferenceScreen 
+		    android:title="@string/pref_network_title">
+	 			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_ipv6_key"
+             	android:title="@string/pref_ipv6_title" 
+             	android:defaultValue="false" />
+		
+			<CheckBoxPreference 
+			    android:key="@string/pref_transport_udp_key"
+			 	android:title="@string/pref_transport_udp" 
+			 	android:defaultValue="true"/>
+			
+			<CheckBoxPreference 
+			    android:key="@string/pref_transport_tcp_key"
+			 	android:title="@string/pref_transport_tcp" />
+			
+			<CheckBoxPreference 
+			    android:key="@string/pref_transport_tls_key"
+			 	android:title="@string/pref_transport_tls" />
+			
+			<SwitchPreference
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_transport_use_standard_ports_key"
+				android:title="@string/pref_transport_use_standard_ports"/>
+			
+			<SwitchPreference 
+				android:switchTextOn="@string/yes"
+				android:switchTextOff="@string/no"
+			    android:key="@string/pref_wifi_only_key"
+				android:title="@string/pref_wifi_only"/>
+			
+		</PreferenceScreen>
+		
+		<ListPreference 
+		    android:title="@string/pref_media_encryption"
+			android:key="@string/pref_media_encryption_key"
+			android:defaultValue="@string/pref_media_encryption_key_none" /> 
+
+		<PreferenceScreen 
+		    android:title="@string/pref_audio_hacks_title"
+			android:layout="@layout/hidden">
+			
+			<CheckBoxPreference 
+			    android:key="@string/pref_audio_hacks_use_routing_api_key"
+			  	android:title="@string/pref_audio_hacks_use_routing_api_title" />
+			
+			 <CheckBoxPreference 
+			    android:key="@string/pref_audio_hacks_use_galaxys_hack_key"
+			  	android:title="@string/pref_audio_hacks_use_galaxys_hack_title" />
+			 
+			 <EditTextPreference 
+			     android:key="@string/pref_audio_use_specific_mode_key"
+			  	android:title="@string/pref_audio_use_specific_mode_title"
+			  	android:summary="@string/pref_audio_use_specific_mode_summary"
+			  	android:defaultValue="0" android:numeric="integer" />
+			 
+		</PreferenceScreen>
+		
+	</PreferenceCategory>
+
+</PreferenceScreen>

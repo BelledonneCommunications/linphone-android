@@ -87,9 +87,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		if (LinphoneActivity.isInstanciated())
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
 		
-		List<LinphoneCallLog> logs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-		initLogsLists(logs);
+		initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
         historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+        expandAllGroups();
 	}
 	
 	private void initLogsLists(List<LinphoneCallLog> logs) {
@@ -129,19 +129,6 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 				mLogs.remove(k);
 			}
 		}
-	}
-	
-	private void collapseAllGroups() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				for (int groupToCollapse = 0; groupToCollapse < historyList.getExpandableListAdapter().getGroupCount(); groupToCollapse++) {
-					if (historyList.isGroupExpanded(groupToCollapse)) {
-						historyList.collapseGroup(groupToCollapse);
-					}
-				}
-			}
-		});
 	}
 	
 	private void expandAllGroups() {
@@ -216,10 +203,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		}
 		
 		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
-		if (id == R.id.ok) {
-			collapseAllGroups();
-		} 
-		else if (id == R.id.edit) {
+		if (id != R.id.ok) {
 			expandAllGroups();
 		}
 	}
