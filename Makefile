@@ -3,6 +3,7 @@ SDK_PATH=$(shell dirname `which android`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
+LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
 KEYSTORE=bc-android.keystore
 KEYALIAS=nw8000
 
@@ -48,7 +49,7 @@ prepare-mediastreamer2:
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
 generate-libs: 
-	$(NDK_PATH)/ndk-build BUILD_SILK=1 -j$(NUMCPUS)
+	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path .
@@ -73,3 +74,4 @@ clean:
 	ant clean
 
 .PHONY: clean
+
