@@ -60,6 +60,8 @@
 		
 	<ListView
 	    android:id="@android:id/list"
+        android:listSelector="@drawable/list_selector" 
+        android:cacheColorHint="@color/transparent"
         android:layout_above="@id/mark"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" />

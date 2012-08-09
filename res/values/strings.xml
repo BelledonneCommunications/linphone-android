@@ -117,7 +117,7 @@
 	<string name="filter_contacts">Filter contacts</string>
 	<string name="title_numbers_dialog">%s\'s phone numbers</string>
     <string name="pref_delete_account">Delete this account</string>
-    <string name="pref_default_account_title">Use as default</string>
+    <string name="pref_default_account">Use as default</string>
     <string name="pref_echo_canceller_calibration">Echo canceller calibration</string>
     <string name="pref_echo_limiter">Echo limiter</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>
@@ -235,10 +235,7 @@
 	<string name="dynamic_video_accept">Accept video</string>
 	<string name="dynamic_video_deny">Deny video</string>
 	
-	<string name="pref_extra_accounts">pref_nb_accounts_extra</string>
-	<string name="pref_default_account">pref_default_account</string>
 	<string name="pref_sipaccounts">SIP Accounts</string>
-	
 	<string name="pref_wifi_only">Use wifi only</string>
     <string name="pref_use_bluetooth_if_available">Use bluetooth headset</string>
     <string name="pref_use_bluetooth_if_available_summary">Route incoming audio to bluetooth headset if available.</string>

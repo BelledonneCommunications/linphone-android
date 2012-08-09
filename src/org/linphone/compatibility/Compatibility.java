@@ -34,6 +34,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.preference.Preference;
 import android.view.Display;
 /**
  * @author Sylvain Berfini
@@ -184,5 +185,21 @@ public class Compatibility {
 			return ApiEightPlus.enableBluetoothHeadset(mAudioManager);
 		}
 		return false;
+	}
+	
+	public static void setPreferenceChecked(Preference preference, boolean checked) {
+		if (Version.sdkAboveOrEqual(8)) {
+			ApiFourteenPlus.setPreferenceChecked(preference, checked);
+		} else {
+			ApiFivePlus.setPreferenceChecked(preference, checked);
+		}
+	}
+	
+	public static boolean isPreferenceChecked(Preference preference) {
+		if (Version.sdkAboveOrEqual(8)) {
+			return ApiFourteenPlus.isPreferenceChecked(preference);
+		} else {
+			return ApiFivePlus.isPreferenceChecked(preference);
+		}
 	}
 }

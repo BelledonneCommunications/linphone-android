@@ -28,15 +28,23 @@
         	android:summary="@string/pref_help_proxy"
             android:persistent="true"/>
         
-        <CheckBoxPreference
+        <SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
         	android:title="@string/pref_enable_outbound_proxy"
+        	android:dialogMessage="@string/pref_help_outbound_proxy"
+        	android:summary="@string/pref_help_outbound_proxy"
             android:persistent="true"/>
         
-        <CheckBoxPreference
+        <SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
         	android:title="@string/pref_disable_account"
             android:persistent="true"/>
         
-        <CheckBoxPreference
+        <SwitchPreference 
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
         	android:title="@string/pref_default_account"
             android:persistent="true"/>
         

@@ -24,6 +24,8 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
@@ -342,5 +344,13 @@ public class ApiFivePlus {
 	@SuppressWarnings("deprecation")
 	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
 		notif.setLatestEventInfo(context, title, content, intent);
+	}
+
+	public static void setPreferenceChecked(Preference preference, boolean checked) {
+		((CheckBoxPreference) preference).setChecked(checked);
+	}
+	
+	public static boolean isPreferenceChecked(Preference preference) {
+		return ((CheckBoxPreference) preference).isChecked();
 	}
 }
