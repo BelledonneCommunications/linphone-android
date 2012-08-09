@@ -15,7 +15,7 @@
 	    android:layout_marginLeft="10dp"/>
 	    
 	<TextView 
-	    android:id="@+id/sipUri"
+	    android:id="@+id/dateAndTime"
 	    android:lines="1"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
