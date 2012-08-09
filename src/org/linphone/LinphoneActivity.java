@@ -789,8 +789,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				exit();
 			} else {
 				FragmentsAvailable newFragment = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
-				selectMenu(newFragment);
 				changeCurrentFragment(newFragment, null, true);
+				selectMenu(newFragment);
 			}
 		}
 		else if (requestCode == callActivity) {
