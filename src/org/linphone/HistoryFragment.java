@@ -115,20 +115,13 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	}
 	
 	private void initMissedLogsLists(List<LinphoneCallLog> logs) {
-		initLogsLists(logs);
-		for (int k = 0; k < mLogs.size(); k++) {
-			List<LinphoneCallLog> group = mLogs.get(k);
-			boolean removeGroup = true;
-			for (LinphoneCallLog log : group) {
-				if (log.getDirection() == CallDirection.Incoming && log.getStatus() == CallStatus.Missed) {
-					removeGroup = false;
-					break;
-				}
-			}
-			if (removeGroup) {
-				mLogs.remove(k);
+		List<LinphoneCallLog> missedLogs = new ArrayList<LinphoneCallLog>();
+		for (LinphoneCallLog log : logs) {
+			if (log.getDirection() == CallDirection.Incoming && log.getStatus() == CallStatus.Missed) {
+				missedLogs.add(log);
 			}
 		}
+		initLogsLists(missedLogs);
 	}
 	
 	private void expandAllGroups() {
@@ -202,10 +195,8 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			isEditMode = true;
 		}
 		
-		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
-		if (id != R.id.ok) {
-			expandAllGroups();
-		}
+		historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+		expandAllGroups();
 	}
 	
 	@Override
@@ -216,7 +207,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			}
 			
 			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-	        historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+	        historyList.setAdapter(new CallHistoryAdapter(getActivity()));
 	        expandAllGroups();
 		}
 		return false;
@@ -228,7 +219,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		if (isEditMode) {
 			LinphoneManager.getLc().removeCallLog(log);
 			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-	        historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+	        historyList.setAdapter(new CallHistoryAdapter(getActivity()));
 	        expandAllGroups();
 		} else {
 			LinphoneAddress address;
@@ -341,7 +332,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 				view = mInflater.inflate(R.layout.history_group, parent,false);
 			}
 			
-			LinphoneCallLog log = (LinphoneCallLog) getChild(groupPosition, 0);
+			LinphoneCallLog log = (LinphoneCallLog) getChild(groupPosition, 0);			
 			LinphoneAddress address;
 			
 			TextView contact = (TextView) view.findViewById(R.id.sipUri);
