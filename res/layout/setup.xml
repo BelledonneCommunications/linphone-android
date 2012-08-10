@@ -4,18 +4,45 @@
   	android:background="@drawable/background"
 	android:layout_height="match_parent">
      
+    <LinearLayout
+		android:id="@+id/mark"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:orientation="horizontal">
+	    
+		<ImageView 
+			android:visibility="invisible"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:src="@drawable/setup_mark"
+			android:adjustViewBounds="true"
+			android:scaleType="fitXY"
+			android:layout_weight="0.5"/>
+		          
+		<ImageView 
+			android:visibility="invisible"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:src="@drawable/setup_mark"
+			android:adjustViewBounds="true"
+			android:scaleType="fitXY"
+			android:layout_weight="0.5"/>
+	  
+	</LinearLayout>
+	
 	<LinearLayout
 		android:id="@+id/fragmentContainer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:paddingBottom="75dp"
 		android:padding="20dp"
+		android:layout_above="@id/mark"
 		android:orientation="horizontal" />
 	  
 	<LinearLayout
 		android:id="@+id/menu"
 		android:layout_width="match_parent"
-		android:layout_height="90dp"
+		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:orientation="horizontal">
 	    
@@ -23,8 +50,9 @@
 			android:contentDescription="@string/content_description_cancel"
 			android:id="@+id/setup_cancel"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:src="@drawable/setup_cancel"
+			android:adjustViewBounds="true"
 			android:scaleType="fitXY"
 			android:layout_weight="0.5"/>
 		          
@@ -32,8 +60,9 @@
 			android:contentDescription="@string/content_description_next"
 			android:id="@+id/setup_next"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:src="@drawable/setup_next"
+			android:adjustViewBounds="true"
 			android:scaleType="fitXY"
 			android:layout_weight="0.5"/>
 		         
@@ -42,8 +71,9 @@
 			android:id="@+id/setup_back"
 			android:visibility="gone"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:src="@drawable/setup_back"
+			android:adjustViewBounds="true"
 			android:scaleType="fitXY"
 			android:layout_weight="0.5"/>
 	  
