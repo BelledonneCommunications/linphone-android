@@ -188,7 +188,7 @@ public class Compatibility {
 	}
 	
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
-		if (Version.sdkAboveOrEqual(8)) {
+		if (Version.sdkAboveOrEqual(14)) {
 			ApiFourteenPlus.setPreferenceChecked(preference, checked);
 		} else {
 			ApiFivePlus.setPreferenceChecked(preference, checked);
@@ -196,7 +196,7 @@ public class Compatibility {
 	}
 	
 	public static boolean isPreferenceChecked(Preference preference) {
-		if (Version.sdkAboveOrEqual(8)) {
+		if (Version.sdkAboveOrEqual(14)) {
 			return ApiFourteenPlus.isPreferenceChecked(preference);
 		} else {
 			return ApiFivePlus.isPreferenceChecked(preference);
