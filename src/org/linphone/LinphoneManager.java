@@ -49,7 +49,6 @@ import java.util.TimerTask;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -196,37 +195,33 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
 	private native void hackSpeakerState(boolean speakerOn);
-	private static void sRouteAudioToSpeakerOrBluetoothHelper(boolean speakerOn) {
-		getInstance().routeAudioToSpeakerOrBluetoothHelper(speakerOn);
+	private static void sRouteAudioToSpeakerHelperHelper(boolean speakerOn) {
+		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
 	}
 	@SuppressWarnings("deprecation")
-	private void routeAudioToSpeakerOrBluetoothHelper(boolean speakerOn) {
+	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
 		boolean different = isSpeakerOn() ^ speakerOn;
 		if (!different) {
 			Log.d("Skipping change audio route by the same route ",
 					speakerOn ? "speaker" : "earpiece");
 			return;
 		}
-		if (mPref.getBoolean(getString(R.string.pref_use_bluetooth_if_available), true) && Compatibility.enableBluetoothHeadset(mAudioManager)) {
-			return;
+		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
+			setAudioModeIncallForGalaxyS();
+
+		if (sLPref.useSpecificAudioModeHack() != -1)
+			mAudioManager.setMode(sLPref.useSpecificAudioModeHack());
+
+		if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
+			mAudioManager.setRouting(
+					MODE_NORMAL,
+					speakerOn? ROUTE_SPEAKER : ROUTE_EARPIECE,
+					AudioManager.ROUTE_ALL);
 		} else {
-			if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
-				setAudioModeIncallForGalaxyS();
-	
-			if (sLPref.useSpecificAudioModeHack() != -1)
-				mAudioManager.setMode(sLPref.useSpecificAudioModeHack());
-	
-			if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
-				mAudioManager.setRouting(
-						MODE_NORMAL,
-						speakerOn? ROUTE_SPEAKER : ROUTE_EARPIECE,
-						AudioManager.ROUTE_ALL);
-			} else {
-				mAudioManager.setSpeakerphoneOn(speakerOn); 
-			}
-			for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
-				listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
-			}
+			mAudioManager.setSpeakerphoneOn(speakerOn); 
+		}
+		for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
+			listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
 		}
 	}
 	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
@@ -235,7 +230,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			Log.d("Hack to have speaker=",speakerOn," while on call");
 			hackSpeakerState(speakerOn);
 		} else {
-			routeAudioToSpeakerOrBluetoothHelper(speakerOn);
+			routeAudioToSpeakerHelperHelper(speakerOn);
 		}
 	}
 
@@ -642,7 +637,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void initFromConf() throws LinphoneConfigException {
 
-
+		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key,true));
 		initFromConfTunnel();
 
 		if (initialTransports == null)

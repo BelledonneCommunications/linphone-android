@@ -36,6 +36,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.Preference;
 import android.view.Display;
+import android.view.Window;
 /**
  * @author Sylvain Berfini
  */
@@ -180,12 +181,6 @@ public class Compatibility {
 		return null;
 	}
 	
-	public static boolean enableBluetoothHeadset(AudioManager mAudioManager) {
-		if (Version.sdkAboveOrEqual(8)) {
-			return ApiEightPlus.enableBluetoothHeadset(mAudioManager);
-		}
-		return false;
-	}
 	
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
 		if (Version.sdkAboveOrEqual(14)) {

@@ -19,9 +19,6 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<!-- Needed to use bluetooth headset -->
-	<uses-permission android:name="android.permission.BLUETOOTH"/>
-	<uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 	
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     

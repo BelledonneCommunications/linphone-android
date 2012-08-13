@@ -28,7 +28,6 @@ import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_echo_limiter_key;
 import static org.linphone.R.string.pref_media_encryption_key;
-import static org.linphone.R.string.pref_use_bluetooth_if_available_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
 import java.util.ArrayList;
@@ -259,10 +258,6 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
 		findPreference(pref_echo_limiter_key).setEnabled(true);
-		
-		if (!Version.sdkAboveOrEqual(8)) {
-			uncheckAndDisableCheckbox(pref_use_bluetooth_if_available_key);
-		}
 
 		initializeMediaEncryptionPreferences();
 	
