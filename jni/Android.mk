@@ -74,7 +74,9 @@ include $(linphone-root-dir)/submodules/tunnel/Android.mk
 endif
 
 ifeq ($(BUILD_SILK), 1)
+ifeq (,$(DUMP_VAR))
 $(info Build proprietary SILK plugin for mediastreamer2)
+endif
 include $(linphone-root-dir)/submodules/mssilk/Android.mk
 endif
 
@@ -83,7 +85,9 @@ ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 include $(linphone-root-dir)/submodules/msilbc/Android.mk
 
 ifeq ($(BUILD_X264), 1)
+ifeq (,$(DUMP_VAR))
 $(info Build X264 plugin for mediastreamer2)
+endif
 include $(linphone-root-dir)/submodules/msx264/Android.mk
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/x264.mk),)
 include $(linphone-root-dir)/submodules/externals/build/x264/Android.mk
@@ -104,7 +108,9 @@ endif #armeabi-v7a
 
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
+ifeq (,$(DUMP_VAR))
 $(info Build ZRTP support - makes application GPLv3)
+endif
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/zrtpcpp.mk),)
 include $(linphone-root-dir)/submodules/externals/build/libzrtpcpp/Android.mk
 else
