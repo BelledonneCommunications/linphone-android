@@ -34,6 +34,9 @@
 
 		<EditTextPreference android:title="@string/pref_stun_server"
 			android:key="@string/pref_stun_server_key"></EditTextPreference>
+
+		<CheckBoxPreference android:title="@string/pref_ice_enable"
+			android:key="@string/pref_ice_enable_key" android:defaultValue="false"></CheckBoxPreference>
 	</PreferenceCategory>
 
 

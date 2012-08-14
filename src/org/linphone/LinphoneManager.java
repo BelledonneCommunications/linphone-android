@@ -688,8 +688,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		//stun server
 		String lStun = getPrefString(R.string.pref_stun_server_key, null);
+		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, false);
 		mLc.setStunServer(lStun);
-		mLc.setFirewallPolicy((lStun!=null && lStun.length()>0) ? FirewallPolicy.UseStun : FirewallPolicy.NoFirewall);
+		if (lStun!=null && lStun.length()>0) {
+			mLc.setFirewallPolicy(useICE ? FirewallPolicy.UseIce : FirewallPolicy.UseStun);
+		} else {
+			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
+		}
 		
 		//accounts
 		try {
