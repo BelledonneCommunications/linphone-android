@@ -52,7 +52,15 @@
 		<EditTextPreference 
 		    android:title="@string/pref_stun_server"
 			android:key="@string/pref_stun_server_key"/>
-		
+
+		<SwitchPreference
+			android:title="@string/pref_ice_enable"
+			android:summary="@string/pref_ice_enable_summary"
+			android:key="@string/pref_ice_enable_key"
+			android:switchTextOn="@string/yes"
+			android:switchTextOff="@string/no"
+			android:defaultValue="false"/>
+
 	</PreferenceCategory>
 
 	<PreferenceCategory 
