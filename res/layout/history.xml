@@ -55,7 +55,6 @@
     
     <ExpandableListView 
         android:id="@+id/historyList"
-        android:listSelector="@drawable/list_selector" 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@android:color/darker_gray"
