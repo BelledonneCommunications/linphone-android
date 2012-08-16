@@ -47,7 +47,6 @@
     <string name="first_launch_suceeded_once_key">first_launch_suceeded_once_key</string>
 
     <string name="pref_wifi_only_key">pref_wifi_only_key</string>
-    <string name="pref_use_bluetooth_if_available_key">pref_use_bluetooth_if_available_key</string>
         
     <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
     <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>

@@ -66,14 +66,6 @@
 	<PreferenceCategory 
 	    android:title="@string/pref_audio">
 	    
-	    <SwitchPreference 
-	        android:key="@string/pref_use_bluetooth_if_available_key"
-	     	android:defaultValue="true"
-			android:switchTextOn="@string/yes"
-			android:switchTextOff="@string/no"
-		 	android:title="@string/pref_use_bluetooth_if_available" 
-		 	android:summary="@string/pref_use_bluetooth_if_available_summary"/>
-	    
 		<CheckBoxPreference 
 		    android:key="@string/pref_echo_limiter_key"
 		 	android:title="@string/pref_echo_limiter" 
