@@ -251,7 +251,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 		elPref = (CheckBoxPreference) findPreference(pref_echo_limiter_key);
 		mencPref = (ListPreference) findPreference(pref_media_encryption_key);
 
-		boolean fastCpu = Version.isArmv7();
+		boolean fastCpu = Version.hasFastCpu();
 		if (fastCpu) {
 			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000, false);
 			findPreference(pref_codec_speex16_key).setEnabled(true);

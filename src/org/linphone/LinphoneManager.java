@@ -1111,7 +1111,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void initializePayloads() {
 		Log.i("Initializing supported payloads");
 		Editor e = mPref.edit();
-		boolean fastCpu = Version.isArmv7();
+		boolean fastCpu = Version.hasFastCpu();
 
 		e.putBoolean(getString(R.string.pref_codec_gsm_key), true);
 		e.putBoolean(getString(R.string.pref_codec_pcma_key), true);
