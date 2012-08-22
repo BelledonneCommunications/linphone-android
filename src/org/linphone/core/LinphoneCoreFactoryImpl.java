@@ -71,7 +71,7 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 		//Main library
 		if (!hasNeonInCpuFeatures()) {
 			try {
-				if (!isArmv7()) {
+				if (!isArmv7() && !Version.isX86()) {
 					System.loadLibrary("linphonearmv5"); 
 				} else {
 					System.loadLibrary("linphonenoneon"); 
