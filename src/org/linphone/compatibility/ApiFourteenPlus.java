@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /**
  * @author Sylvain Berfini
  */
-@TargetApi(8)
+@TargetApi(14)
 public class ApiFourteenPlus {
 
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
