@@ -8,7 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 	    android:layout_alignParentTop="true"
+        android:focusable="true"
+		android:focusableInTouchMode="true"
        	android:layout_gravity="center">
+       	<!-- focusable/focusableInTouchMode are set to true to prevent the keyboard to be displayed automatically -->
         
 	    <org.linphone.ui.AddressText
 	        android:id="@+id/Adress"

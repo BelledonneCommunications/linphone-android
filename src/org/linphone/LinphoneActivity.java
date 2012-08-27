@@ -124,7 +124,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 
         setContentView(R.layout.main);
-        instance = this;
+        instance = this;		
         initButtons();
 		
         currentFragment = FragmentsAvailable.DIALER;
@@ -171,6 +171,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(newFragmentType, extras, false);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {		
 		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
 			return;
@@ -438,6 +439,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		chat.setSelected(false);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public void selectMenu(FragmentsAvailable menuToSelect) {
 		currentFragment = menuToSelect;
 		resetSelection();

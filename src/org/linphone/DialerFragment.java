@@ -51,12 +51,12 @@ public class DialerFragment extends Fragment {
         Bundle savedInstanceState) {
 		instance = this;
         View view = inflater.inflate(R.layout.dialer, container, false);
-        
+		
 		mAddress = (AddressText) view.findViewById(R.id.Adress); 
 		mAddress.setDialerFragment(this);
+		
 		EraseButton erase = (EraseButton) view.findViewById(R.id.Erase);
 		erase.setAddressWidget(mAddress);
-		erase.requestFocus();
 		
 		mCall = (CallButton) view.findViewById(R.id.Call);
 		mCall.setAddressWidget(mAddress);
@@ -71,8 +71,9 @@ public class DialerFragment extends Fragment {
 		}
 		
 		AddressAware numpad = (AddressAware) view.findViewById(R.id.Dialer);
-		if (numpad != null)
+		if (numpad != null) {
 			numpad.setAddressWidget(mAddress);
+		}
 		
 		mAddContact = (ImageView) view.findViewById(R.id.addContact);
 		
