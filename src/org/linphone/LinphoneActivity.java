@@ -256,16 +256,22 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		if (statusFragment != null) {
 			statusFragment.closeStatusBar();
 		}
-		
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
+		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
-			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 			ll.setVisibility(View.VISIBLE);
 			
 			transaction.addToBackStack(newFragmentType.toString());
 			transaction.replace(R.id.fragmentContainer2, newFragment);
 		} else {
+			if (newFragmentType == FragmentsAvailable.DIALER) {
+				ll.setVisibility(View.GONE);
+			} else {
+				ll.setVisibility(View.INVISIBLE);
+			}
+			
 			if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
 				if (newFragmentType.isRightOf(currentFragment)) {
 					transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
@@ -273,9 +279,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 					transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 				}
 			}
-			
-			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-			ll.setVisibility(View.GONE);
 			
 			try {
 				getSupportFragmentManager().popBackStackImmediate(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
