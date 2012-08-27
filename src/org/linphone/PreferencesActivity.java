@@ -296,7 +296,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 		
 		addEchoPrefsListener();
 		
-		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
+		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_hacks_use_galaxys_hack_key);
 
 		if (!LinphoneManager.getLc().isTunnelAvailable()){
 			hidePreferenceCategory(R.string.pref_tunnel_key);

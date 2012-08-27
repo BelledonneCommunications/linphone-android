@@ -319,7 +319,7 @@
 			  	android:title="@string/pref_audio_hacks_use_galaxys_hack_title" />
 			 
 			 <EditTextPreference 
-			     android:key="@string/pref_audio_use_specific_mode_key"
+			    android:key="@string/pref_audio_use_specific_mode_key"
 			  	android:title="@string/pref_audio_use_specific_mode_title"
 			  	android:summary="@string/pref_audio_use_specific_mode_summary"
 			  	android:defaultValue="0" android:numeric="integer" />
