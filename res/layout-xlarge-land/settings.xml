@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
+    android:layout_height="match_parent">
+       
     <!-- Hack to adjust perfectly on every screen the bottom of the fragment with the curved menu -->
     <LinearLayout
 	    android:id="@+id/mark"
@@ -58,43 +57,16 @@
 		    android:visibility="invisible" />
         
     </LinearLayout>
-    
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+		
+	<ListView
+	    android:id="@android:id/list"
+        android:listSelector="@drawable/list_selector" 
+        android:cacheColorHint="@color/transparent"
         android:layout_above="@id/mark"
-        android:layout_alignParentTop="true" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="20dp">
-        
-	        <LinearLayout
-	            android:id="@+id/fragmentContainer"
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:layout_weight="0.67" />
-	        
-	        <LinearLayout
-	            android:id="@+id/fragmentContainer2"
-	            android:visibility="gone"
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:layout_weight="0.33" />
-        
-        </LinearLayout>
-
-        <fragment
-            android:id="@+id/status"
-            android:name="org.linphone.StatusFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/status" />
-    </FrameLayout>
-
-    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" />
+    
+	<LinearLayout
         android:id="@+id/menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

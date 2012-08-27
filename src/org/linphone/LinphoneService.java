@@ -603,6 +603,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			} else {
 				FileInputStream fis = new FileInputStream(uriString);
 				mRingerPlayer.setDataSource(fis.getFD());
+				fis.close();
 			}
 		} catch (IOException e) {
 			Log.e(e, "Cannot set ringtone");
