@@ -262,7 +262,8 @@
 			android:switchTextOn="@string/yes"
 			android:switchTextOff="@string/no"
 		    android:key="@string/pref_debug_key"
-			android:title="@string/pref_debug" android:enabled="true"/>
+			android:title="@string/pref_debug" 
+			android:defaultValue="false"/>
 
 		<PreferenceScreen 
 		    android:title="@string/pref_network_title">

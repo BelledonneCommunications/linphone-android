@@ -308,7 +308,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 			videoSettings.removeAll();
 			videoSettings.setLayoutResource(R.layout.hidden);
 			
-			CheckBoxPreference enableVideo = (CheckBoxPreference) findPreference(R.string.pref_video_enable_key);
+			Preference enableVideo = findPreference(R.string.pref_video_enable_key);
 			enableVideo.setLayoutResource(R.layout.hidden);
 		}
 	}

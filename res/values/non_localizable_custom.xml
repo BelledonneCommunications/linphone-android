@@ -6,6 +6,7 @@
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 
 	<!-- Interface settings -->
+    <bool name="use_simple_history">true</bool>
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_wizard">false</bool>
     <bool name="hide_accounts">false</bool>

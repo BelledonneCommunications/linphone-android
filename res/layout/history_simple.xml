@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@drawable/background"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_all_calls"
+            android:id="@+id/allCalls"
+            android:src="@drawable/history_all"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_missed_calls"
+            android:id="@+id/missedCalls"
+            android:src="@drawable/history_missed"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_edit"
+            android:id="@+id/edit"
+            android:src="@drawable/history_edit"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_validate"
+            android:id="@+id/ok"
+            android:src="@drawable/ok"
+            android:visibility="gone"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+    </LinearLayout>
+    
+    <ListView 
+        android:id="@+id/historyList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/darker_gray"
+        android:cacheColorHint="@color/transparent"
+        android:dividerHeight="1dp" />
+
+</LinearLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal" >
+    
+    <ImageView 
+        android:contentDescription="@string/content_description_call_direction"
+	    android:id="@+id/icon"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0.9"
+	    android:src="@drawable/call_status_incoming"
+	    android:layout_marginLeft="10dp"/>
+	    
+	<TextView 
+	    android:id="@+id/sipUri"
+	    android:lines="1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0.3"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:textColor="@android:color/black"
+	    android:layout_marginLeft="10dp" />
+	
+	<ImageView 
+        android:contentDescription="@string/content_description_detail"
+	    android:id="@+id/detail"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0.9"
+	    android:src="@drawable/list_detail"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp" />
+	
+	<ImageView 
+        android:contentDescription="@string/content_description_delete"
+	    android:id="@+id/delete"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0.9"
+	    android:visibility="gone"
+	    android:src="@drawable/list_delete"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp" />
+    
+</LinearLayout>
