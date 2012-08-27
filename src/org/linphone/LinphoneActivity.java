@@ -185,7 +185,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		switch (newFragmentType) {
 		case HISTORY:
-			newFragment = new HistoryFragment();
+			if (getResources().getBoolean(R.bool.use_simple_history)) {
+				newFragment = new HistorySimpleFragment();
+			} else {
+				newFragment = new HistoryFragment();
+			}
 			break;
 		case HISTORY_DETAIL:
 			newFragment = new HistoryDetailFragment();

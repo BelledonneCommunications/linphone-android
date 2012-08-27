@@ -30,6 +30,8 @@
         
         <CheckBoxPreference
         	android:title="@string/pref_enable_outbound_proxy"
+        	android:dialogMessage="@string/pref_help_outbound_proxy"
+        	android:summary="@string/pref_help_outbound_proxy"
             android:persistent="true"/>
         
         <CheckBoxPreference
