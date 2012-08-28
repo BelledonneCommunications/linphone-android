@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphoneManager.LinphoneConfigException;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -158,6 +159,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 				i.putExtra("Account", n);
 				i.setClass(PreferencesActivity.this, AccountPreferencesActivity.class);
 				startActivityForResult(i, ADD_SIP_ACCOUNT);
+				Compatibility.overridePendingTransition(PreferencesActivity.this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 				return false;
 			}
 		});
