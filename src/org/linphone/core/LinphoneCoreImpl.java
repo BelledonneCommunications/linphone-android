@@ -56,7 +56,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native void sendDtmf(long nativePtr,char dtmf);
 	private native void clearCallLogs(long nativePtr);
 	private native boolean isMicMuted(long nativePtr);
-	private native long findPayloadType(long nativePtr, String mime, int clockRate);
+	private native long findPayloadType(long nativePtr, String mime, int clockRate, int channels);
 	private native int enablePayloadType(long nativePtr, long payloadType,	boolean enable);
 	private native void enableEchoCancellation(long nativePtr,boolean enable);
 	private native boolean isEchoCancellationEnabled(long nativePtr);
@@ -255,9 +255,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public synchronized boolean isMicMuted() {
 		return isMicMuted(nativePtr);
 	}
-	public synchronized PayloadType findPayloadType(String mime, int clockRate) {
+	public synchronized PayloadType findPayloadType(String mime, int clockRate, int channels) {
 		isValid();
-		long playLoadType = findPayloadType(nativePtr, mime, clockRate);
+		long playLoadType = findPayloadType(nativePtr, mime, clockRate, channels);
 		if (playLoadType == 0) {
 			return null;
 		} else {
