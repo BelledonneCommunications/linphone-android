@@ -617,19 +617,19 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				if (!proxy.startsWith("sip:")) {
 					proxy = "sip:" + proxy;
 				}
-				LinphoneProxyConfig defaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
-				mLc.addProxyConfig(defaultProxyConfig);
+				LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
+				mLc.addProxyConfig(proxycon);
 				
 				//outbound proxy
 				if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false)) {
-					defaultProxyConfig.setRoute(proxy);
+					proxycon.setRoute(proxy);
 				} else {
-					defaultProxyConfig.setRoute(null);
+					proxycon.setRoute(null);
 				}
-				defaultProxyConfig.done();
+				proxycon.done();
 				
 				if (defaultAccount) {
-					mLc.setDefaultProxyConfig(defaultProxyConfig);
+					mLc.setDefaultProxyConfig(proxycon);
 				}
 			}
 		}
