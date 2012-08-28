@@ -85,8 +85,8 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 		return (CheckBoxPreference) findPreference(getString(key));
 	}
 
-	private void detectAudioCodec(int id, String mime, int rate, boolean hide) {
-		boolean enable = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType(mime, rate)!=null;
+	private void detectAudioCodec(int id, String mime, int rate, int channels, boolean hide) {
+		boolean enable = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType(mime, rate, channels)!=null;
 		Preference cb = findPreference(id);
 		cb.setEnabled(enable);
 		if (hide && !enable) {
@@ -241,7 +241,7 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 
 		boolean fastCpu = Version.hasFastCpu();
 		if (fastCpu) {
-			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000, false);
+			detectAudioCodec(pref_codec_ilbc_key, "iLBC", 8000, 1, false);
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
@@ -249,13 +249,13 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 
 		initializeMediaEncryptionPreferences();
 	
-		detectAudioCodec(pref_codec_amr_key,"AMR", 8000, false);
-        detectAudioCodec(pref_codec_amrwb_key,"AMR-WB", 16000, false);
-		//detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, true);
-		//detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, true);
-		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, true);
-		detectAudioCodec(R.string.pref_codec_silk24_key,"SILK",24000, true);
-		detectAudioCodec(R.string.pref_codec_g729_key,"G729",8000, true);
+		detectAudioCodec(pref_codec_amr_key,"AMR", 8000, 1, false);
+		detectAudioCodec(pref_codec_amrwb_key,"AMR-WB", 16000, 1, false);
+		//detectAudioCodec(R.string.pref_codec_silk8_key,"SILK",8000, 1, true);
+		//detectAudioCodec(R.string.pref_codec_silk12_key,"SILK",12000, 1, true);
+		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, 1, true);
+		detectAudioCodec(R.string.pref_codec_silk24_key,"SILK",24000, 1, true);
+		detectAudioCodec(R.string.pref_codec_g729_key,"G729",8000, 1, true);
 		
 		// No video
 		if (!Version.isVideoCapable()) {
