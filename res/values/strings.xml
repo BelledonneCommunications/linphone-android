@@ -266,6 +266,7 @@
 	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact">Add to contacts button</string>
+	<string name="content_description_about"></string>
 	<string name="content_description_chat"></string>
 	<string name="content_description_dial_back"></string>
 	<string name="content_description_contact_picture"></string>

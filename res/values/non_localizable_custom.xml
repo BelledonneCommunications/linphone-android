@@ -6,22 +6,28 @@
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 
 	<!-- Interface settings -->
-    <bool name="use_simple_history">false</bool>
+    <bool name="use_simple_history">true</bool>
+    <bool name="replace_settings_by_about">false</bool>
+    <bool name="replace_chat_by_about">false</bool>
+    
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
 	<bool name="useFirstLoginActivity">false</bool>
+	
 	<bool name="disable_animations">false</bool>
 	<bool name="lock_statusbar">false</bool>
 	<bool name="emoticons_in_messages">true</bool>
 	<bool name="only_display_username_if_unknown">true</bool>
 	<bool name="display_messages_time">true</bool> <!-- Used to show the time of each message arrival -->
 	<bool name="display_time_aside">false</bool> <!-- if display_messages_time = true, display time on the side of the message instead of below -->
+	
 	<bool name="call_last_log_if_adress_is_empty">true</bool>
 	<bool name="allow_ringing_while_early_media">true</bool>
 	<bool name="allow_transfers">true</bool>
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
+	
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>
  
