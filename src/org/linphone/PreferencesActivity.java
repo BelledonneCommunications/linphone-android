@@ -60,6 +60,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.widget.ImageView;
 
 public class PreferencesActivity extends LinphonePreferencesActivity implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
@@ -130,14 +131,14 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 	}
 	
 	private void addExtraAccountPreferencesButton(PreferenceCategory parent, final int n, boolean isNewAccount) {
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		if (isNewAccount) {
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putInt(getString(R.string.pref_extra_accounts), n+1);
 			editor.commit();
 		}
 		
-		Preference me = new Preference(PreferencesActivity.this);
+		final Preference me = new Preference(PreferencesActivity.this);
 		String keyUsername = getString(R.string.pref_username_key);
 		String keyDomain = getString(R.string.pref_domain_key);
 		if (n > 0) {
@@ -160,19 +161,6 @@ public class PreferencesActivity extends LinphonePreferencesActivity implements 
 				return false;
 			}
 		});
-		
-		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-			if (lpc.getIdentity().contains(prefs.getString(keyUsername, "")) && lpc.getIdentity().contains(prefs.getString(keyDomain, ""))) {
-				while ((lpc.getState() == RegistrationState.RegistrationProgress || lpc.getState() == RegistrationState.RegistrationNone) && (LinphoneManager.getLc().isNetworkReachable()))
-				{ };
-				
-				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
-					me.setWidgetLayoutResource(R.layout.preference_led_connected);
-				} else {
-					me.setWidgetLayoutResource(R.layout.preference_led_not_connected);
-				}
-			}
-		}
 		
 		parent.addPreference(me);
 	}
