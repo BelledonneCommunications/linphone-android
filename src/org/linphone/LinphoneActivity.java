@@ -85,7 +85,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
-	private ImageView history, contacts, dialer, settings, chat;
+	private ImageView history, contacts, dialer, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment;
 	private Fragment dialerFragment, messageListenerFragment;
 	private SavedState dialerSavedState;
@@ -134,6 +134,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	            dialerFragment.setArguments(getIntent().getExtras());
 	            getSupportFragmentManager().beginTransaction()
 	                    .add(R.id.fragmentContainer, dialerFragment).commit();
+	    		selectMenu(FragmentsAvailable.DIALER);
 	        }
         }
         
@@ -158,11 +159,27 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
         contacts.setOnClickListener(this);
         dialer = (ImageView) findViewById(R.id.dialer);
         dialer.setOnClickListener(this);
-		dialer.setSelected(true);
         settings = (ImageView) findViewById(R.id.settings);
         settings.setOnClickListener(this);
         chat = (ImageView) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
+		aboutChat = (ImageView) findViewById(R.id.about_chat);
+		aboutSettings = (ImageView) findViewById(R.id.about_settings);
+		
+		if (getResources().getBoolean(R.bool.replace_chat_by_about)) {
+			chat.setVisibility(View.GONE);
+			chat.setOnClickListener(null);
+			findViewById(R.id.completeChat).setVisibility(View.GONE);
+			aboutChat.setVisibility(View.VISIBLE);
+			aboutChat.setOnClickListener(this);
+		}
+		if (getResources().getBoolean(R.bool.replace_settings_by_about)) {
+			settings.setVisibility(View.GONE);
+			settings.setOnClickListener(null);
+			aboutSettings.setVisibility(View.VISIBLE);
+			aboutSettings.setOnClickListener(this);
+		}
+		
 		missedCalls = (TextView) findViewById(R.id.missedCalls);
 		missedChats = (TextView) findViewById(R.id.missedChats);
 	}
@@ -208,6 +225,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			dialerFragment = newFragment;
 			break;
 		case SETTINGS:
+			break;
+		case ABOUT_INSTEAD_OF_CHAT:
+		case ABOUT_INSTEAD_OF_SETTINGS:
+			newFragment = new AboutFragment();
 			break;
 		case CHAT:
 			newFragment = new ChatFragment();
@@ -418,19 +439,26 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			dialer.setSelected(true);
 		}
 		else if (id == R.id.settings) {
-//			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-//				changeCurrentFragment(FragmentsAvailable.SETTINGS, null);
-//				settings.setSelected(true);
-//			} else {
-				Intent intent = new Intent(ACTION_MAIN);
-				intent.setClass(this, PreferencesActivity.class);
-				startActivityForResult(intent, SETTINGS_ACTIVITY);
-				if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
-					Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
-				} else {
-					Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
-				}
-//			}
+			Intent intent = new Intent(ACTION_MAIN);
+			intent.setClass(this, PreferencesActivity.class);
+			startActivityForResult(intent, SETTINGS_ACTIVITY);
+			if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
+				Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+			} else {
+				Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+			}
+		}
+		else if (id == R.id.about_chat) {
+			Bundle b = new Bundle();
+			b.putSerializable("About", FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT);
+			changeCurrentFragment(FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT, b);
+			aboutChat.setSelected(true);
+		}
+		else if (id == R.id.about_settings) {
+			Bundle b = new Bundle();
+			b.putSerializable("About", FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS);
+			changeCurrentFragment(FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS, b);
+			aboutSettings.setSelected(true);
 		}
 		else if (id == R.id.chat) {
 			changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
@@ -444,6 +472,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		dialer.setSelected(false);
 		settings.setSelected(false);
 		chat.setSelected(false);
+		aboutChat.setSelected(false);
+		aboutSettings.setSelected(false);
 	}
 	
 	@SuppressWarnings("incomplete-switch")
@@ -465,6 +495,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			break;
 		case SETTINGS:
 			settings.setSelected(true);
+			break;
+		case ABOUT_INSTEAD_OF_CHAT:
+			aboutChat.setSelected(true);
+			break;
+		case ABOUT_INSTEAD_OF_SETTINGS:
+			aboutSettings.setSelected(true);
 			break;
 		case CHAT:
 		case CHATLIST:

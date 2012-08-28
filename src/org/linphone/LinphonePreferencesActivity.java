@@ -32,7 +32,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class LinphonePreferencesActivity extends PreferenceActivity implements OnClickListener {
-	private ImageView history, contacts, dialer, settings, chat;
+	private ImageView history, contacts, dialer, settings, chat, aboutChat, aboutSettings;
 	private TextView missedCalls;
 	
 	@Override
@@ -61,12 +61,28 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
         chat = (ImageView) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 		missedCalls = (TextView) findViewById(R.id.missedCalls);
+		aboutChat = (ImageView) findViewById(R.id.about_chat);
+		aboutChat.setOnClickListener(this);
+		aboutSettings = (ImageView) findViewById(R.id.about_settings);
+		aboutSettings.setOnClickListener(this);
+		
+		if (getResources().getBoolean(R.bool.replace_chat_by_about)) {
+			chat.setVisibility(View.GONE);
+			findViewById(R.id.completeChat).setVisibility(View.GONE);
+			aboutChat.setVisibility(View.VISIBLE);
+		}
+		if (getResources().getBoolean(R.bool.replace_settings_by_about)) {
+			settings.setVisibility(View.GONE);
+			aboutSettings.setVisibility(View.VISIBLE);
+		}
 		
 		history.setSelected(false);
 		contacts.setSelected(false);
 		dialer.setSelected(false);
 		settings.setSelected(true);
 		chat.setSelected(false);
+		aboutChat.setSelected(false);
+		aboutSettings.setSelected(false);
 	}
 	
 	@Override
@@ -85,6 +101,12 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements O
 		}
 		else if (id == R.id.chat) {
 			newFragment = FragmentsAvailable.CHATLIST;
+		}
+		else if (id == R.id.about_chat) {
+			newFragment = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
+		}
+		else if (id == R.id.about_settings) {
+			newFragment = FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS;
 		}
 		
 		if (newFragment != FragmentsAvailable.SETTINGS) {

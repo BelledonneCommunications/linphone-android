@@ -144,8 +144,31 @@
             android:contentDescription="@string/content_description_settings"
             android:scaleType="fitXY"
             android:src="@drawable/settings" />
+        
+        <ImageView
+            android:id="@+id/about_settings"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+			android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_about"
+            android:scaleType="fitXY"
+            android:src="@drawable/about_settings" />
+        
+        <ImageView
+            android:id="@+id/about_chat"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+			android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_about"
+            android:scaleType="fitXY"
+            android:src="@drawable/about_chat" />
 
         <RelativeLayout
+            android:id="@+id/completeChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.2">
