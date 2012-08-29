@@ -77,17 +77,6 @@
                <action android:name="android.intent.action.MAIN" />
            </intent-filter>
         </activity>
-        
-        <activity android:name=".AccountPreferencesActivity"
-		    android:theme="@style/NoTitle">
-        </activity>
-        
-        <activity android:name=".PreferencesActivity"
-		    android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-         </activity>
          
         <activity android:name=".setup.SetupActivity"
 		    android:theme="@style/NoTitle"
