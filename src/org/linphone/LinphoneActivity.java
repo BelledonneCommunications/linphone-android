@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
@@ -42,7 +43,6 @@ import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
-import org.linphone.ui.PreferencesListFragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -87,7 +87,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
 	private ImageView history, contacts, dialer, settings, chat, aboutChat, aboutSettings;
-	private FragmentsAvailable currentFragment;
+	private FragmentsAvailable currentFragment, nextFragment;
 	private Fragment dialerFragment, messageListenerFragment;
 	private SavedState dialerSavedState;
 	private ChatStorage chatStorage;
@@ -128,7 +128,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
         instance = this;		
         initButtons();
 		
-        currentFragment = FragmentsAvailable.DIALER;
+        currentFragment = nextFragment = FragmentsAvailable.DIALER;
         if (savedInstanceState == null) {
 	        if (findViewById(R.id.fragmentContainer) != null) {
 	        	dialerFragment = new DialerFragment();
@@ -194,6 +194,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
 			return;
 		}
+		nextFragment = newFragmentType;
 		
 		if (currentFragment == FragmentsAvailable.DIALER) {
 			dialerSavedState = getSupportFragmentManager().saveFragmentInstanceState(dialerFragment);
@@ -227,6 +228,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			break;
 		case SETTINGS:
 			newFragment = new PreferencesFragment();
+			break;
+		case ACCOUNT_SETTINGS:
+			newFragment = new AccountPreferencesFragment();
 			break;
 		case ABOUT_INSTEAD_OF_CHAT:
 		case ABOUT_INSTEAD_OF_SETTINGS:
@@ -293,7 +297,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			transaction.addToBackStack(newFragmentType.toString());
 			transaction.replace(R.id.fragmentContainer2, newFragment);
 		} else {
-			if (newFragmentType == FragmentsAvailable.DIALER) {
+			if (newFragmentType == FragmentsAvailable.DIALER 
+					|| newFragmentType == FragmentsAvailable.SETTINGS 
+					|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
 				ll.setVisibility(View.GONE);
 			} else {
 				ll.setVisibility(View.INVISIBLE);
@@ -441,14 +447,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			dialer.setSelected(true);
 		}
 		else if (id == R.id.settings) {
-//			Intent intent = new Intent(ACTION_MAIN);
-//			intent.setClass(this, PreferencesActivity.class);
-//			startActivityForResult(intent, SETTINGS_ACTIVITY);
-//			if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
-//				Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
-//			} else {
-//				Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
-//			}
 			changeCurrentFragment(FragmentsAvailable.SETTINGS, null);
 			settings.setSelected(true);
 		}
@@ -498,6 +496,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			dialer.setSelected(true);
 			break;
 		case SETTINGS:
+		case ACCOUNT_SETTINGS:
 			settings.setSelected(true);
 			break;
 		case ABOUT_INSTEAD_OF_CHAT:
@@ -531,6 +530,45 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			statusFragment.registrationStateChanged(LinphoneManager.getLc().getDefaultProxyConfig().getState());
 		}
+	}
+	
+	public void displaySettings() {
+		changeCurrentFragment(FragmentsAvailable.SETTINGS, null);
+		settings.setSelected(true);
+	}
+	
+	public void applyConfigChangesIfNeeded() {
+		if (nextFragment != FragmentsAvailable.SETTINGS && nextFragment != FragmentsAvailable.ACCOUNT_SETTINGS) {
+			reloadConfig();
+		}
+	}
+	
+	private void reloadConfig() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		
+		if (lc != null && (lc.isInComingInvitePending() || lc.isIncall())) {
+			Log.w("Call in progress => settings not applied");
+			return;
+		}
+
+		try {
+			LinphoneManager.getInstance().initFromConf();
+			lc.setVideoPolicy(LinphoneManager.getInstance().isAutoInitiateVideoCalls(), LinphoneManager.getInstance().isAutoAcceptCamera());
+		} catch (LinphoneException e) {
+			if (! (e instanceof LinphoneConfigException)) {
+				Log.e(e, "Cannot update config");
+				return;
+			}
+
+			LinphoneActivity.instance().showPreferenceErrorDialog(e.getMessage());
+		}
+	}
+	
+	public void displayAccountSettings(int accountNumber) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("Account", accountNumber);
+		changeCurrentFragment(FragmentsAvailable.ACCOUNT_SETTINGS, bundle);
+		settings.setSelected(true);
 	}
 	
 	public StatusFragment getStatusFragment() {
@@ -936,6 +974,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 				return true;
 			}
+		} else if (keyCode == KeyEvent.KEYCODE_BACK && currentFragment == FragmentsAvailable.SETTINGS) {
+			reloadConfig();
 		}
 		if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
 			statusFragment.openOrCloseStatusBar();

@@ -49,6 +49,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -639,6 +640,10 @@ public class InCallActivity extends FragmentActivity implements
 
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state, String message) {
+		if (state==State.Error){
+			showToast(R.string.call_error, message);
+		}
+		
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
 			finish();
 			return;
@@ -665,6 +670,15 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		
 		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
+	}
+	
+	private void showToast(int id, String txt) {
+		final String msg = String.format(getString(id), txt);
+		mHandler.post(new Runnable() {
+			public void run() {
+				Toast.makeText(InCallActivity.this, msg, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override

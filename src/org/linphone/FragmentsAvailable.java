@@ -29,6 +29,7 @@ public enum FragmentsAvailable {
 	CONTACT,
 	ABOUT_INSTEAD_OF_SETTINGS,
 	ABOUT_INSTEAD_OF_CHAT,
+	ACCOUNT_SETTINGS,
 	SETTINGS,
 	CHATLIST,
 	CHAT;
@@ -62,9 +63,12 @@ public enum FragmentsAvailable {
 		case SETTINGS:
 			return DIALER.isRightOf(fragment) || fragment == DIALER;
 			
+		case ACCOUNT_SETTINGS:
+			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
+			
 		case ABOUT_INSTEAD_OF_CHAT:
 		case CHATLIST:
-			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS;
+			return ACCOUNT_SETTINGS.isRightOf(fragment) || fragment == ACCOUNT_SETTINGS || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS;
 			
 		case CHAT:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
