@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 @SuppressLint("ValidFragment")
 public class PreferencesListFragment extends ListFragment {
@@ -74,8 +75,19 @@ public class PreferencesListFragment extends ListFragment {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
+    	// Hack to correctly display preferences
+    	View view = inflater.inflate(R.layout.settings, null);
+    	
+    	ViewParent p = preferencesList.getParent();
+        if (p != null) {
+            ((ViewGroup)p).removeView(preferencesList);
+        }
+    	
+    	RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.topLayout);
+    	layout.addView(preferencesList);
+    	
         postBindPreferences();
-        return preferencesList;
+        return view;
     }
     
     @Override
@@ -90,9 +102,11 @@ public class PreferencesListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        
         if (bundle != null) {
             xmlResID = bundle.getInt("xml");
         }
+        
         mPreferenceManager = onCreatePreferenceManager();
         preferencesList = (ListView) LayoutInflater.from(getActivity()).inflate(R.layout.preference_list_content, null);
         preferencesList.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -120,9 +134,9 @@ public class PreferencesListFragment extends ListFragment {
 	        Method m = PreferenceManager.class.getDeclaredMethod("dispatchActivityDestroy");
 	        m.setAccessible(true);
 	        m.invoke(mPreferenceManager);
-       } catch(Exception e) {
-           e.printStackTrace();
-       }
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
     }
 
     @Override

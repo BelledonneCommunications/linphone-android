@@ -976,8 +976,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_BACK && currentFragment == FragmentsAvailable.SETTINGS) {
 			reloadConfig();
-		}
-		if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
+		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
 			statusFragment.openOrCloseStatusBar();
 		}
 		return super.onKeyDown(keyCode, event);

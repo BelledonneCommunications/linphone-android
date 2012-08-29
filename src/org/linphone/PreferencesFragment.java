@@ -379,12 +379,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 	
 	public void refresh() {
-//		try {
-//			LinphoneManager.getInstance().initAccounts();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
 		createDynamicAccountsPreferences();
 	}
 	
