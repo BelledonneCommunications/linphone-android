@@ -42,6 +42,7 @@ import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
+import org.linphone.ui.PreferencesListFragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -225,6 +226,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			dialerFragment = newFragment;
 			break;
 		case SETTINGS:
+			newFragment = new PreferencesFragment();
 			break;
 		case ABOUT_INSTEAD_OF_CHAT:
 		case ABOUT_INSTEAD_OF_SETTINGS:
@@ -439,14 +441,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			dialer.setSelected(true);
 		}
 		else if (id == R.id.settings) {
-			Intent intent = new Intent(ACTION_MAIN);
-			intent.setClass(this, PreferencesActivity.class);
-			startActivityForResult(intent, SETTINGS_ACTIVITY);
-			if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
-				Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
-			} else {
-				Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
-			}
+//			Intent intent = new Intent(ACTION_MAIN);
+//			intent.setClass(this, PreferencesActivity.class);
+//			startActivityForResult(intent, SETTINGS_ACTIVITY);
+//			if (FragmentsAvailable.SETTINGS.isRightOf(currentFragment)) {
+//				Compatibility.overridePendingTransition(this, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+//			} else {
+//				Compatibility.overridePendingTransition(this, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+//			}
+			changeCurrentFragment(FragmentsAvailable.SETTINGS, null);
+			settings.setSelected(true);
 		}
 		else if (id == R.id.about_chat) {
 			Bundle b = new Bundle();
