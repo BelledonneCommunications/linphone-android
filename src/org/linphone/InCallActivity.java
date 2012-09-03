@@ -639,7 +639,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCallStateChanged(LinphoneCall call, State state, String message) {
+	public void onCallStateChanged(final LinphoneCall call, State state, String message) {
 		if (state==State.Error){
 			showToast(R.string.call_error, message);
 		}
@@ -658,6 +658,15 @@ public class InCallActivity extends FragmentActivity implements
 			
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
 			enableAndRefreshInCallActions();
+			
+			if (status != null) {
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						status.refreshStatusItems(call);
+					}
+				});
+			}
 		}
 		
 		if (audioCallFragment != null) {
@@ -682,9 +691,14 @@ public class InCallActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCallEncryptionChanged(LinphoneCall call, boolean encrypted, String authenticationToken) {
+	public void onCallEncryptionChanged(final LinphoneCall call, boolean encrypted, String authenticationToken) {
 		if (status != null) {
-			status.refreshStatusItems();
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					status.refreshStatusItems(call);
+				}
+			});
 		}
 	}
 	

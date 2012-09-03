@@ -25,6 +25,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Log;
 import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
@@ -265,8 +266,9 @@ public class StatusFragment extends Fragment {
 		super.onResume();
 		
 		if (isInCall) {
+			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 			startCallQuality();
-			refreshStatusItems();
+			refreshStatusItems(call);
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
@@ -294,10 +296,10 @@ public class StatusFragment extends Fragment {
 		}
 	}
 	
-	public void refreshStatusItems() {
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+	public void refreshStatusItems(LinphoneCall call) {
 		if (call != null && encryption != null) {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			Log.e("MediaEncryption = " + mediaEncryption);
 
 			exit.setVisibility(View.GONE);
 			statusText.setVisibility(View.GONE);
