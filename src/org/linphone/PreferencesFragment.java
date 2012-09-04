@@ -399,7 +399,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 						public void run() {
 							updateAccountLed(me, username, domain);
 						}
-					}, 1000);
+					}, 1500);
 				} else {
 					me.setLed(R.drawable.led_disconnected);
 				}

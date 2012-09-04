@@ -577,10 +577,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public void initAccounts() throws LinphoneCoreException {
 		for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
-			if (getPrefBoolean(getString(R.string.pref_disable_account_key) + i, false)) {
+			String key = i == 0 ? "" : String.valueOf(i);
+			if (getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
 				continue;
 			}
-			initAccount(i == 0 ? "" : String.valueOf(i), i == 0, i == getPrefInt(R.string.pref_default_account, 0));
+			initAccount(key, i == 0, i == getPrefInt(R.string.pref_default_account, 0));
 		}
 		
 		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
@@ -603,11 +604,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
+		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
 		if (username != null && username.length() > 0) {
-			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
+			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, domain);
 			mLc.addAuthInfo(lAuthInfo);
 			
-			String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
 			if (domain != null && domain.length() > 0) {
 				String identity = "sip:" + username +"@" + domain;
 				String proxy = getPrefString(getString(R.string.pref_proxy_key) + key, null);
@@ -819,7 +820,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return mPref.getString(key, value);
 	}
 	private int getPrefExtraAccountsNumber() {
-		return mPref.getInt(getString(R.string.pref_extra_accounts), 0);
+		return mPref.getInt(getString(R.string.pref_extra_accounts), 1);
 	}
 
 
