@@ -581,7 +581,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
 				continue;
 			}
-			initAccount(key, i == 0, i == getPrefInt(R.string.pref_default_account, 0));
+			initAccount(key, i == 0, i == getPrefInt(R.string.pref_default_account_key, 0));
 		}
 		
 		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
