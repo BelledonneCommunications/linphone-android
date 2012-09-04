@@ -45,7 +45,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		super.onCreate(savedInstanceState);
 		
 		PreferenceScreen screen = getPreferenceScreen();
-		int n = getArguments().getInt("Account", 1);
+		int n = getArguments().getInt("Account", 0);
 		manageAccountPreferencesFields(screen, n);
 	}
 	
