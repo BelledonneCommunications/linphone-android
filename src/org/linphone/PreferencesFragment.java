@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -299,9 +300,9 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 	
 	private void manageCheckbox(int key, boolean value, boolean enabled, boolean hidden) {
-		CheckBoxPreference box = (CheckBoxPreference) findPreference(key);
+		Preference box = findPreference(key);
 		box.setEnabled(enabled);
-		box.setChecked(value);
+		Compatibility.setPreferenceChecked(box, value);
 		writeBoolean(key, value);
 		if (hidden) box.setLayoutResource(R.layout.hidden);
 	}

@@ -94,7 +94,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
    
     	final Preference disable = advanced.getPreference(2);
     	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
-    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(n), false));
+    	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(n), false));
     	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
 
     	final Preference delete = advanced.getPreference(4);
