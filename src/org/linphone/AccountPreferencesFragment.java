@@ -35,7 +35,9 @@ import android.text.InputType;
  * @author Sylvain Berfini
  */
 public class AccountPreferencesFragment extends PreferencesListFragment {
-
+	private int n;
+	private String key;
+	
 	public AccountPreferencesFragment() {
 		super(R.xml.account_preferences);
 	}
@@ -45,8 +47,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		super.onCreate(savedInstanceState);
 		
 		PreferenceScreen screen = getPreferenceScreen();
-		int n = getArguments().getInt("Account", 0);
-		manageAccountPreferencesFields(screen, n);
+		n = getArguments().getInt("Account", 0);
+		key = getAccountNumber(n);
+		manageAccountPreferencesFields(screen);
 	}
 	
 	OnPreferenceChangeListener preferenceChangedListener = new OnPreferenceChangeListener() {
@@ -57,45 +60,45 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}		
 	};
 	
-	private void manageAccountPreferencesFields(PreferenceScreen parent, final int n) {
+	private void manageAccountPreferencesFields(PreferenceScreen parent) {
     	final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		
     	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().getPreference(0);
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
-    	username.setText(prefs.getString(getString(R.string.pref_username_key) + getAccountNumber(n), ""));
+    	username.setText(prefs.getString(getString(R.string.pref_username_key) + key, ""));
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	username.setKey(getString(R.string.pref_username_key) + getAccountNumber(n));
+    	username.setKey(getString(R.string.pref_username_key) + key);
     	username.setOnPreferenceChangeListener(preferenceChangedListener);
     	username.setSummary(username.getText());
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(1);
-    	password.setText(prefs.getString(getString(R.string.pref_passwd_key) + getAccountNumber(n), ""));
+    	password.setText(prefs.getString(getString(R.string.pref_passwd_key) + key, ""));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    	password.setKey(getString(R.string.pref_passwd_key) + getAccountNumber(n));
+    	password.setKey(getString(R.string.pref_passwd_key) + key);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(2);
-    	domain.setText(prefs.getString(getString(R.string.pref_domain_key) + getAccountNumber(n), ""));
+    	domain.setText(prefs.getString(getString(R.string.pref_domain_key) + key, ""));
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	domain.setKey(getString(R.string.pref_domain_key) + getAccountNumber(n));
+    	domain.setKey(getString(R.string.pref_domain_key) + key);
     	domain.setOnPreferenceChangeListener(preferenceChangedListener);
     	domain.setSummary(domain.getText());
 
     	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().getPreference(1);
     	EditTextPreference proxy = (EditTextPreference) advanced.getPreference(0);
-    	proxy.setText(prefs.getString(getString(R.string.pref_proxy_key) + getAccountNumber(n), ""));
+    	proxy.setText(prefs.getString(getString(R.string.pref_proxy_key) + key, ""));
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	proxy.setKey(getString(R.string.pref_proxy_key) + getAccountNumber(n));
+    	proxy.setKey(getString(R.string.pref_proxy_key) + key);
     	proxy.setOnPreferenceChangeListener(preferenceChangedListener);
     	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
     	
     	Preference outboundProxy = advanced.getPreference(1);
-    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n), false));
-    	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(n));
+    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false));
+    	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + key);
    
     	final Preference disable = advanced.getPreference(2);
     	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
-    	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(n), false));
-    	disable.setKey(getString(R.string.pref_disable_account_key) + getAccountNumber(n));
+    	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + key, false));
+    	disable.setKey(getString(R.string.pref_disable_account_key) + key);
 
     	final Preference delete = advanced.getPreference(4);
     	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
