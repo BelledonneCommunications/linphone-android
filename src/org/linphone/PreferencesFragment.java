@@ -37,11 +37,13 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
+import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.content.Context;
@@ -347,24 +349,27 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 	
 	private void addExtraAccountPreferencesButton(PreferenceCategory parent, final int n, boolean isNewAccount) {
-		final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		if (isNewAccount) {
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putInt(getString(R.string.pref_extra_accounts), n+1);
 			editor.commit();
 		}
 		
-		final Preference me = new Preference(mContext);
+		final LedPreference me = new LedPreference(mContext);
 		String keyUsername = getString(R.string.pref_username_key);
 		String keyDomain = getString(R.string.pref_domain_key);
 		if (n > 0) {
 			keyUsername += n + "";
 			keyDomain += n + "";
 		}
-		if (prefs.getString(keyUsername, null) == null) {
+		
+		String username = prefs.getString(keyUsername, "");
+		String domain = prefs.getString(keyDomain, "");
+		if (username == null) {
 			me.setTitle(getString(R.string.pref_sipaccount));
 		} else {
-			me.setTitle(prefs.getString(keyUsername, "") + "@" + prefs.getString(keyDomain, ""));
+			me.setTitle(username + "@" + domain);
 		}
 		
 		me.setOnPreferenceClickListener(new OnPreferenceClickListener() 
@@ -375,11 +380,23 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			}
 		});
 		
+		updateAccountLed(me, username, domain);
 		parent.addPreference(me);
 	}
 	
-	public void refresh() {
-		createDynamicAccountsPreferences();
+	private void updateAccountLed(LedPreference me, String username, String domain) {
+		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+			if (lpc.getIdentity().contains(username) && lpc.getIdentity().contains(domain)) {
+				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
+					me.setLed(R.drawable.led_connected);
+				} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationFailed) {
+					me.setLed(R.drawable.led_error);
+				} else {
+					me.setLed(R.drawable.led_disconnected);
+				}
+				break;
+			}
+		}
 	}
 	
 	private void addWizardPreferenceButton() {
@@ -444,6 +461,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 		}
 		
-		refresh();
+		createDynamicAccountsPreferences();
 	}
 }
