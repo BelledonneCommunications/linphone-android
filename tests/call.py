@@ -5,10 +5,13 @@ from lib.LinphoneTest import LinphoneTest
 
 class CallTest(LinphoneTest):
 	def precond(self):
+		# Run Linphone
+		runComponent = 'org.linphone' + '/' + 'org.linphone.setup.LinphoneActivity'
+		self.device.startActivity(component=runComponent)
+		
 		# Be sure to be on dialer screen
 		dialer = self.find('dialer')
 		self.easyDevice.touch(dialer, MonkeyDevice.DOWN_AND_UP)
-		MonkeyRunner.sleep(1)
 
 	def test(self):
 		# Type a SIP address
