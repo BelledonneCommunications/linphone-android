@@ -25,7 +25,7 @@
 		<RelativeLayout
 			android:id="@id/handle"
 		    android:layout_width="match_parent"
-		    android:layout_height="20dp"
+		    android:layout_height="40dp"
 		    android:layout_marginBottom="10dp">
     
 		    <ImageView 
@@ -41,17 +41,20 @@
 		        android:paddingLeft="5dp"
 		        android:src="@drawable/led_error"
 		        android:adjustViewBounds="true"
+            	android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content" />
+		        android:layout_height="match_parent" />
 		    
 		    <TextView 
 		        android:id="@+id/statusText" 
 		        android:text="@string/status_not_connected"
 		        android:textColor="@android:color/white"
+		        android:textSize="20dp"
 		        android:paddingLeft="5dp"
             	android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="center_vertical"
 		        android:layout_toRightOf="@id/statusLed" />
 		    
 		    <LinearLayout 
@@ -85,9 +88,11 @@
 		        android:id="@+id/exit" 
 		        android:text="@string/menu_exit"
 		        android:textColor="@android:color/white"
+		        android:textSize="20dp"
 		        android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="center_vertical"
 		        android:layout_alignParentRight="true"
 		        android:paddingRight="10dp" />
 		

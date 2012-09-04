@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingTop="20dp" />
+            android:paddingTop="40dp" />
 
         <fragment
             android:id="@+id/status"
