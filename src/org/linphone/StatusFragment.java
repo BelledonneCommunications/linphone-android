@@ -340,7 +340,7 @@ public class StatusFragment extends Fragment {
 				if (checkBox.isChecked()) {
 					SharedPreferences.Editor editor = prefs.edit();
 					int selectedPosition = (Integer) checkBox.getTag();
-					editor.putInt(getString(R.string.pref_default_account), selectedPosition);
+					editor.putInt(getString(R.string.pref_default_account_key), selectedPosition);
 					editor.commit();
 
 					for (CheckBox cb : checkboxes) {
@@ -394,7 +394,7 @@ public class StatusFragment extends Fragment {
 			isDefault.setChecked(false);
 			isDefault.setEnabled(true);
 			
-			if (prefs.getInt(getString(R.string.pref_default_account), 0) == position) {
+			if (prefs.getInt(getString(R.string.pref_default_account_key), 0) == position) {
 				isDefault.setChecked(true);
 				isDefault.setEnabled(false);
 				status.setImageResource(getStatusIconResource(lpc.getState(), true));

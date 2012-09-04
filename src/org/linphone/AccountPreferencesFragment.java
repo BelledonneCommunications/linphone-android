@@ -96,12 +96,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + key);
    
     	final Preference disable = advanced.getPreference(2);
-    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
+    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account_key), 0) != n);
     	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + key, false));
     	disable.setKey(getString(R.string.pref_disable_account_key) + key);
 
     	final Preference delete = advanced.getPreference(4);
-    	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account), 0) != n);
+    	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account_key), 0) != n);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
@@ -124,9 +124,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
         		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(lastAccount), false);
         		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(lastAccount), false);
         		
-        		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account), 0);
+        		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account_key), 0);
         		if (defaultAccount > n) {
-        			editor.putInt(getString(R.string.pref_default_account), defaultAccount - 1);
+        			editor.putInt(getString(R.string.pref_default_account_key), defaultAccount - 1);
         		}
         		
         		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
@@ -139,7 +139,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
         });
     	
     	Preference mainAccount = advanced.getPreference(3);
-    	Compatibility.setPreferenceChecked(mainAccount, prefs.getInt(getString(R.string.pref_default_account), 0) == n);
+    	Compatibility.setPreferenceChecked(mainAccount, prefs.getInt(getString(R.string.pref_default_account_key), 0) == n);
     	mainAccount.setEnabled(!Compatibility.isPreferenceChecked(mainAccount));
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
