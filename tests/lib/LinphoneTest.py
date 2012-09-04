@@ -43,6 +43,9 @@ class LinphoneTest():
 	def print_result_ko(self):
 		print self.test_name + colors.KO + ' KO' + colors.END
 		
+	def press_back(self):
+		self.device.press('KEYCODE_BACK', MonkeyDevice.DOWN_AND_UP)
+		
 	# Override following methods
 	def precond(self):
 		pass
