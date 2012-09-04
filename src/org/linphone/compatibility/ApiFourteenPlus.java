@@ -2,7 +2,7 @@ package org.linphone.compatibility;
 
 import android.annotation.TargetApi;
 import android.preference.Preference;
-import android.preference.SwitchPreference;
+import android.preference.TwoStatePreference;
 
 /*
 ApiFourteenPlus.java
@@ -29,10 +29,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public class ApiFourteenPlus {
 
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
-		((SwitchPreference) preference).setChecked(checked);
+		((TwoStatePreference) preference).setChecked(checked);
 	}
 	
 	public static boolean isPreferenceChecked(Preference preference) {
-		return ((SwitchPreference) preference).isChecked();
+		return ((TwoStatePreference) preference).isChecked();
 	}
 }
