@@ -67,7 +67,6 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 						}
 						mAddress.setText(log.getTo().asStringUriOnly());
 						mAddress.setDisplayedName(log.getTo().getDisplayName());
-						LinphoneManager.getInstance().newOutgoingCall(mAddress);
 					}
 				}
 			}
