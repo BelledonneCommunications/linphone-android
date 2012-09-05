@@ -663,7 +663,7 @@ public class InCallActivity extends FragmentActivity implements
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						status.refreshStatusItems(call);
+						status.refreshStatusItems(call, isVideoEnabled);
 					}
 				});
 			}
@@ -696,7 +696,7 @@ public class InCallActivity extends FragmentActivity implements
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					status.refreshStatusItems(call);
+					status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 				}
 			});
 		}

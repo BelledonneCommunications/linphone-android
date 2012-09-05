@@ -271,7 +271,7 @@ public class StatusFragment extends Fragment {
 		if (isInCall) {
 			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 			startCallQuality();
-			refreshStatusItems(call);
+			refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
@@ -299,14 +299,16 @@ public class StatusFragment extends Fragment {
 		}
 	}
 	
-	public void refreshStatusItems(LinphoneCall call) {
+	public void refreshStatusItems(LinphoneCall call, boolean isVideoEnabled) {
 		if (call != null && encryption != null) {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 			Log.e("MediaEncryption = " + mediaEncryption);
 
 			exit.setVisibility(View.GONE);
 			statusText.setVisibility(View.GONE);
-			background.setVisibility(View.GONE);
+			if (isVideoEnabled) {
+				background.setVisibility(View.GONE);
+			}
 			encryption.setVisibility(View.VISIBLE);
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
