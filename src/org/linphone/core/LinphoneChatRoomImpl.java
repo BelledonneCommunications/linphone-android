@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
+import org.linphone.core.LinphoneChatMessage.StateListener;
+
 class LinphoneChatRoomImpl implements LinphoneChatRoom {
 	protected final long nativePtr;
 	private native long getPeerAddress(long ptr);
@@ -33,5 +35,15 @@ class LinphoneChatRoomImpl implements LinphoneChatRoom {
 
 	public void sendMessage(String message) {
 		sendMessage(nativePtr,message);
+	}
+	@Override
+	public void sendMessage(LinphoneChatMessage msg, StateListener listener) {
+		// TODO To be implemened
+		
+	}
+	@Override
+	public void sendMessage(Object opaque, String message) {
+		// ignore, deprecated.
+		
 	}
 }
