@@ -5,3 +5,4 @@ bin
 doc
 ant.properties
 local.properties
+tests/*$py.class

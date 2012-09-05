@@ -49,7 +49,7 @@
 	            android:paddingRight="5dp"
 	            android:layout_centerVertical="true"
 	            android:layout_alignParentRight="true"
-	            android:src="@drawable/wizard_ok"/>
+	            android:src="@drawable/wizard_notok"/>
         
         </RelativeLayout>
         
@@ -87,7 +87,7 @@
 	            android:paddingRight="5dp"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
-	            android:src="@drawable/wizard_ok"/>
+	            android:src="@drawable/wizard_notok"/>
         
         </RelativeLayout>
         
@@ -113,7 +113,7 @@
 	            android:paddingRight="5dp"
 	            android:layout_centerVertical="true"
 	            android:layout_alignParentRight="true"
-	            android:src="@drawable/wizard_ok"/>
+	            android:src="@drawable/wizard_notok"/>
         
         </RelativeLayout>
         
