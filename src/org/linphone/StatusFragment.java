@@ -119,7 +119,7 @@ public class StatusFragment extends Fragment {
 		if (getResources().getBoolean(R.bool.lock_statusbar)) {
 			return;
 		}
-
+		
 		if (getResources().getBoolean(R.bool.disable_animations)) {
 			drawer.toggle();
 		} else {
@@ -141,7 +141,7 @@ public class StatusFragment extends Fragment {
 	
 	private void populateSliderContent() {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
-			AccountsListAdapter adapter = new AccountsListAdapter(LinphoneManager.getLc().getProxyConfigList());
+			AccountsListAdapter adapter = new AccountsListAdapter();
 			sliderContent.setAdapter(adapter);
 		}
 	}
@@ -325,12 +325,10 @@ public class StatusFragment extends Fragment {
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {
-		private LinphoneProxyConfig[] accounts;
 		private SharedPreferences prefs;
 		private List<CheckBox> checkboxes;
 		
-		AccountsListAdapter(LinphoneProxyConfig[] lpcs) {
-			accounts = lpcs;
+		AccountsListAdapter() {
 			prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 			checkboxes = new ArrayList<CheckBox>();
 		}
@@ -354,7 +352,7 @@ public class StatusFragment extends Fragment {
 					checkBox.setEnabled(false);
 					
 					LinphoneCore lc = LinphoneManager.getLc();
-					lc.setDefaultProxyConfig(accounts[selectedPosition]);
+					lc.setDefaultProxyConfig((LinphoneProxyConfig) getItem(selectedPosition));
 					if (lc.isNetworkReachable()) {
 						lc.refreshRegisters();
 					}
@@ -363,11 +361,11 @@ public class StatusFragment extends Fragment {
 		};
 		
 		public int getCount() {
-			return accounts.length;
+			return LinphoneManager.getLc().getProxyConfigList().length;
 		}
 
 		public Object getItem(int position) {
-			return accounts[position];
+			return LinphoneManager.getLc().getProxyConfigList()[position];
 		}
 
 		public long getItemId(int position) {
