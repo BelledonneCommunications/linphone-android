@@ -38,7 +38,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -49,6 +51,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -289,9 +292,7 @@ public class InCallActivity extends FragmentActivity implements
 					setCallControlsVisibleAndRemoveCallbacks();
 					
 				} else {
-					if (!call.getCurrentParamsCopy().getVideoEnabled()) {
-						LinphoneManager.getInstance().addVideo();
-					}
+					LinphoneManager.getInstance().addVideo();
 					
 					isSpeakerEnabled = true;
 					LinphoneManager.getInstance().routeAudioToSpeaker();
@@ -640,8 +641,8 @@ public class InCallActivity extends FragmentActivity implements
 
 	@Override
 	public void onCallStateChanged(final LinphoneCall call, State state, String message) {
-		if (state==State.Error){
-			showToast(R.string.call_error, message);
+		if (state==State.Error) {
+			displayCustomToast(null, message, Toast.LENGTH_LONG);
 		}
 		
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -681,11 +682,28 @@ public class InCallActivity extends FragmentActivity implements
 		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 	}
 	
-	private void showToast(int id, String txt) {
-		final String msg = String.format(getString(id), txt);
+	private void displayCustomToast(final String title, final String message, final int duration) {
 		mHandler.post(new Runnable() {
+			@Override
 			public void run() {
-				Toast.makeText(InCallActivity.this, msg, Toast.LENGTH_SHORT).show();
+				LayoutInflater inflater = getLayoutInflater();
+				View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
+
+				TextView toastTitle = (TextView) layout.findViewById(R.id.toastTitle);
+				if (title == null) {
+					toastTitle.setVisibility(View.GONE);
+				} else {
+					toastTitle.setText(title);
+				}
+				
+				TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+				toastText.setText(message);
+				
+				final Toast toast = new Toast(getApplicationContext());
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.setDuration(duration);
+				toast.setView(layout);
+				toast.show();
 			}
 		});
 	}
