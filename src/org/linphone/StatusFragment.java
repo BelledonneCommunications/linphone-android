@@ -32,9 +32,11 @@ import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +46,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -58,6 +61,10 @@ public class StatusFragment extends Fragment {
 //	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
+	
+	private Toast zrtpToast;
+	private CountDownTimer zrtpHack;
+	private boolean hideZrtpToast = false;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -85,7 +92,9 @@ public class StatusFragment extends Fragment {
 		exit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneActivity.instance().exit();
+				if (LinphoneActivity.isInstanciated()) {
+					LinphoneActivity.instance().exit();
+				}
 			}
 		});
 
@@ -267,9 +276,9 @@ public class StatusFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		if (isInCall) {
-			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+
+		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		if (isInCall && call != null) {
 			startCallQuality();
 			refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			
@@ -293,16 +302,19 @@ public class StatusFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		
+		if (zrtpToast != null) {
+			hideZRTPDialog();
+		}
+		
 		if (mCallQualityUpdater != null) {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater = null;
 		}
 	}
 	
-	public void refreshStatusItems(LinphoneCall call, boolean isVideoEnabled) {
+	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
 		if (call != null && encryption != null) {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
-			Log.e("MediaEncryption = " + mediaEncryption);
 
 			exit.setVisibility(View.GONE);
 			statusText.setVisibility(View.GONE);
@@ -311,6 +323,9 @@ public class StatusFragment extends Fragment {
 			}
 			encryption.setVisibility(View.VISIBLE);
 			
+			Log.e("MediaEncryption = " + mediaEncryption);
+			Log.e("TokenVerified = " + call.isAuthenticationTokenVerified());
+			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
 				encryption.setImageResource(R.drawable.security_ok);
 			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
@@ -318,12 +333,99 @@ public class StatusFragment extends Fragment {
 			} else {
 				encryption.setImageResource(R.drawable.security_ko);
 			}
+			
+			if (mediaEncryption == MediaEncryption.ZRTP) {
+				encryption.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						showZRTPDialog(call);
+					}
+				});
+			} else {
+				encryption.setOnClickListener(null);
+			}
 		} else {
 			exit.setVisibility(View.VISIBLE);
 			statusText.setVisibility(View.VISIBLE);
 			background.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);
 		}
+	}
+	
+	private void hideZRTPDialog() {
+		hideZrtpToast = true;
+		
+		if (zrtpToast != null) {
+			zrtpToast.cancel();
+		}
+		if (zrtpHack != null) {
+			zrtpHack.cancel();
+		}
+	}
+	
+	private void showZRTPDialog(final LinphoneCall call) {
+        boolean authVerified = call.isAuthenticationTokenVerified();
+        String format = getString(authVerified ? R.string.reset_sas_fmt : R.string.verify_sas_fmt);
+        
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		View layout = inflater.inflate(R.layout.zrtp_dialog, (ViewGroup) getActivity().findViewById(R.id.toastRoot));
+		
+		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+		toastText.setText(String.format(format, call.getAuthenticationToken()));
+		
+		zrtpToast = new Toast(getActivity());
+		zrtpToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0, LinphoneUtils.pixelsToDpi(getResources(), 40));
+		zrtpToast.setDuration(Toast.LENGTH_LONG);
+		zrtpToast.setView(layout);
+		
+		ImageView ok = (ImageView) layout.findViewById(R.id.toastOK);
+		ok.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (call != null) {
+					call.setAuthenticationTokenVerified(true);
+				}
+				if (encryption != null) {
+					encryption.setImageResource(R.drawable.security_ok);
+				}
+				hideZRTPDialog();
+			}
+		});
+		
+		ImageView notOk = (ImageView) layout.findViewById(R.id.toastNotOK);
+		notOk.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (call != null) {
+					call.setAuthenticationTokenVerified(false);
+				}
+				if (encryption != null) {
+					encryption.setImageResource(R.drawable.security_pending);
+				}
+				hideZRTPDialog();
+			}
+		});
+		
+		zrtpHack = new CountDownTimer(3000, 1000)
+		{
+		    public void onTick(long millisUntilFinished) 
+		    { 
+		    	if (!hideZrtpToast) {
+		    		zrtpToast.show(); 
+		    	}
+		    }
+		    public void onFinish() { 
+		    	if (!hideZrtpToast) { 
+		    		zrtpToast.show();
+		    		zrtpHack.start();
+		    	}
+		    }
+
+		};
+
+		zrtpToast.show();
+		hideZrtpToast = false;
+		zrtpHack.start();
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {
@@ -363,7 +465,12 @@ public class StatusFragment extends Fragment {
 		};
 		
 		public int getCount() {
-			return LinphoneManager.getLc().getProxyConfigList().length;
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				return lc.getProxyConfigList().length;
+			} else {
+				return 0;
+			}
 		}
 
 		public Object getItem(int position) {
