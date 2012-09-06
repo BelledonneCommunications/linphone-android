@@ -154,11 +154,15 @@ public final class ContactHelper {
 				}
 				String[] projection = {android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO};
 		    	Cursor photoCursor = resolver.query(photoUri, projection, null, null, null);
-				boolean valid = testPhotoUriAndCloseCursor(photoCursor);
-				if (valid) {
+		    	String maybeDisplayName = c.getString(c.getColumnIndex(nameCol));
+				boolean isPhotoValid = testPhotoUriAndCloseCursor(photoCursor);
+				if (isPhotoValid) {
 					foundPhotoUri = photoUri;
-					displayName = c.getString(c.getColumnIndex(nameCol));
-					c.close();
+					displayName = maybeDisplayName;
+					return true;
+				} else if (maybeDisplayName != null) {
+					foundPhotoUri = null;
+					displayName = maybeDisplayName;
 					return true;
 				}
 			}
