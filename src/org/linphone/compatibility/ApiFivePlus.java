@@ -67,6 +67,10 @@ public class ApiFivePlus {
 		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
 		
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			if (sipUri.startsWith("sip:")) {
+				sipUri = sipUri.substring(4);
+			}
+			
 			ArrayList<ContentValues> data = new ArrayList<ContentValues>();
 			ContentValues sipAddressRow = new ContentValues();
 			sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);

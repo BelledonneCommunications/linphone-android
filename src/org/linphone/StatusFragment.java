@@ -25,7 +25,6 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.Log;
 import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
@@ -322,9 +321,6 @@ public class StatusFragment extends Fragment {
 				background.setVisibility(View.GONE);
 			}
 			encryption.setVisibility(View.VISIBLE);
-			
-			Log.e("MediaEncryption = " + mediaEncryption);
-			Log.e("TokenVerified = " + call.isAuthenticationTokenVerified());
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
 				encryption.setImageResource(R.drawable.security_ok);
