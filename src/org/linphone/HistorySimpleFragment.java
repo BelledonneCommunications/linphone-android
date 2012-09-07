@@ -151,7 +151,10 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			} else {
 				address = log.getTo();
 			}
-			LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
+			
+			if (LinphoneActivity.isInstanciated()) {
+				LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
+			}
 		}
 	}
 	
