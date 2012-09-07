@@ -618,7 +618,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				if (!proxy.startsWith("sip:")) {
 					proxy = "sip:" + proxy;
 				}
+				
 				LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
+				
+				String regId = getPrefString(R.string.push_reg_id_key, null);
+				if (regId != null) {
+					String contactInfos = "app-id=org.linphone.phone.dev;pn-type=android;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf;";
+					proxycon.setContactParameters(contactInfos);
+				}
 				mLc.addProxyConfig(proxycon);
 				
 				//outbound proxy

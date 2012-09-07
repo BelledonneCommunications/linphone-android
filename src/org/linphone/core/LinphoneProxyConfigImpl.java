@@ -75,7 +75,7 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	private native int setRoute(long ptr,String uri);
 	private native void enablePublish(long ptr,boolean enable);
 	private native boolean publishEnabled(long ptr);
-	
+	private native void setContactParameters(long ptr, String params);
 	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
@@ -142,5 +142,9 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	}
 	public boolean publishEnabled() {
 		return publishEnabled(nativePtr); 
+	}
+	@Override
+	public void setContactParameters(String params) {
+		setContactParameters(nativePtr, params);
 	}
 }

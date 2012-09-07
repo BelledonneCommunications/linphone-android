@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<!-- Push notification settings -->
+	<bool name="enable_push_id">true</bool>
+	<string name="push_reg_id_key">175894229314</string>
+	<string name="push_sender_id">175894229314</string>
 
 	<string name="default_domain">sip.linphone.org</string>
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
