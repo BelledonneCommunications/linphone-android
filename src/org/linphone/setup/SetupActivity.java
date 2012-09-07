@@ -127,8 +127,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 
 	public void logIn(String username, String password, String domain) {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (imm != null) {
-			imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+		if (imm != null && getCurrentFocus() != null) {
+			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 		}
 
         saveCreatedAccount(username, password, domain);
