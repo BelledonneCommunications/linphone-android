@@ -83,4 +83,6 @@
     <string name="pref_media_encryption_key_none">none</string>
     <string name="pref_media_encryption_key_srtp">srtp</string>
     <string name="pref_media_encryption_key_zrtp">zrtp</string>
+    
+	<string name="push_reg_id_key">push_reg_id_key</string>
 </resources>
