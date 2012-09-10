@@ -1,7 +1,5 @@
 package org.linphone.test;
 
-import junit.framework.Assert;
-
 import org.linphone.InCallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
@@ -34,9 +32,7 @@ public class CallTest extends
 		solo.enterText((EditText) solo.getView(R.id.Adress), "cotcot@sip.linphone.org");
 		solo.clickOnView(solo.getView(R.id.Call));
 		
-		solo.waitForActivity("InCallActivity", 2000);
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
-		Assert.assertTrue(solo.searchText("Simon MORLAT"));
 	}
 	
 	@Override

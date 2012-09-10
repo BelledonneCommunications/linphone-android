@@ -73,7 +73,7 @@ public class PushNotificationTest extends
 		HttpClient httpClient = createHttpClient();
 		HttpPost httpPost = new HttpPost("https://android.googleapis.com/gcm/send");
 		httpPost.setHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
-		httpPost.setHeader("Authorization", "key=AIzaSyBJAhCVeeqIErwTfYwy-t83_EwvZlCFo9I");
+		httpPost.setHeader("Authorization", "key=AIzaSyDbCO1_KgFhkig_aaTutxx0jEHIib0i8C0");
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("data.test", "TEST"));
@@ -85,6 +85,7 @@ public class PushNotificationTest extends
 			e.printStackTrace();
 		}
 		
+        // Can be true if a previous notification worked and log hasn't been cleared since...
 		Assert.assertTrue(solo.waitForLogMessage("Push notification received", 3000));
 	}
 	
