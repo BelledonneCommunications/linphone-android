@@ -20,18 +20,14 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import org.linphone.core.Log;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Version;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-
-import com.google.android.gcm.GCMRegistrar;
 
 /**
  * 
@@ -59,20 +55,9 @@ public class LinphoneLauncherActivity extends Activity {
         
 		mHandler = new Handler();
 
-		// Starting the push notification service
+
 		if (getResources().getBoolean(R.bool.enable_push_id)) {
-			GCMRegistrar.checkDevice(this);
-			GCMRegistrar.checkManifest(this);
-			final String regId = GCMRegistrar.getRegistrationId(this);
-			if (regId.equals("")) {
-				GCMRegistrar.register(this, getString(R.string.push_sender_id));
-			} else {
-				Log.e("Push Notification : already registered with id = " + regId);
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putString(this.getString(R.string.push_reg_id_key), regId);
-				editor.commit();
-			}
+			Compatibility.initPushNotificationService(this);
 		}
 		
 		if (LinphoneService.isReady()) {

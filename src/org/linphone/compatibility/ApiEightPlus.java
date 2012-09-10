@@ -1,7 +1,15 @@
 package org.linphone.compatibility;
 
+import org.linphone.R;
+import org.linphone.core.Log;
+
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.Display;
+
+import com.google.android.gcm.GCMRegistrar;
 
 /*
 ApiEightPlus.java
@@ -29,5 +37,21 @@ public class ApiEightPlus {
 	
 	public static int getRotation(Display display) {
 		return display.getRotation();
+	}
+	
+	public static void initPushNotificationService(Context context) {
+		// Starting the push notification service
+		GCMRegistrar.checkDevice(context);
+		GCMRegistrar.checkManifest(context);
+		final String regId = GCMRegistrar.getRegistrationId(context);
+		if (regId.equals("")) {
+			GCMRegistrar.register(context, context.getString(R.string.push_sender_id));
+		} else {
+			Log.e("Push Notification : already registered with id = " + regId);
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString(context.getString(R.string.push_reg_id_key), regId);
+			editor.commit();
+		}
 	}
 }
