@@ -49,6 +49,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -68,6 +69,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -86,7 +88,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
-	private ImageView history, contacts, dialer, settings, chat, aboutChat, aboutSettings;
+	private ImageView dialer;
+	private RelativeLayout contacts, history, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment, nextFragment;
 	private Fragment dialerFragment, messageListenerFragment;
 	private SavedState dialerSavedState;
@@ -154,18 +157,27 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void initButtons() {
-		history = (ImageView) findViewById(R.id.history);
+//		Typeface typeface = Typeface.createFromAsset(getAssets(), "font_linphone.ttf");
+		Typeface typeface = null;
+		
+		history = (RelativeLayout) findViewById(R.id.history);
         history.setOnClickListener(this);
-        contacts  = (ImageView) findViewById(R.id.contacts);
+        setMenuTypeface(history, typeface);
+        contacts  = (RelativeLayout) findViewById(R.id.contacts);
         contacts.setOnClickListener(this);
+        setMenuTypeface(contacts, typeface);
         dialer = (ImageView) findViewById(R.id.dialer);
         dialer.setOnClickListener(this);
-        settings = (ImageView) findViewById(R.id.settings);
+        settings = (RelativeLayout) findViewById(R.id.settings);
         settings.setOnClickListener(this);
-        chat = (ImageView) findViewById(R.id.chat);
+        setMenuTypeface(settings, typeface);
+        chat = (RelativeLayout) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
-		aboutChat = (ImageView) findViewById(R.id.about_chat);
-		aboutSettings = (ImageView) findViewById(R.id.about_settings);
+        setMenuTypeface(chat, typeface);
+		aboutChat = (RelativeLayout) findViewById(R.id.about_chat);
+        setMenuTypeface(aboutChat, typeface);
+		aboutSettings = (RelativeLayout) findViewById(R.id.about_settings);
+        setMenuTypeface(aboutSettings, typeface);
 		
 		if (getResources().getBoolean(R.bool.replace_chat_by_about)) {
 			chat.setVisibility(View.GONE);
@@ -866,6 +878,15 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void exit() {
 		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+	}
+	
+	private void setMenuTypeface(RelativeLayout menu, Typeface typeface) {
+		if (typeface == null) {
+			return;
+		}
+		
+		TextView tv = (TextView) menu.findViewById(R.id.text);
+		tv.setTypeface(typeface);
 	}
 	
 	@Override
