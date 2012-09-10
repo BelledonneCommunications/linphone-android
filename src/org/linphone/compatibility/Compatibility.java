@@ -195,4 +195,10 @@ public class Compatibility {
 			return ApiFivePlus.isPreferenceChecked(preference);
 		}
 	}
+	
+	public static void initPushNotificationService(Context context) {
+		if (Version.sdkAboveOrEqual(8)) {
+			ApiEightPlus.initPushNotificationService(context);
+		}
+	}
 }
