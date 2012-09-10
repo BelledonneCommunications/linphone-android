@@ -67,7 +67,7 @@ public class LinphoneLauncherActivity extends Activity {
 			if (regId.equals("")) {
 				GCMRegistrar.register(this, getString(R.string.push_sender_id));
 			} else {
-				Log.e("Already registered = " + regId);
+				Log.e("Push Notification : already registered with id = " + regId);
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putString(this.getString(R.string.push_reg_id_key), regId);
