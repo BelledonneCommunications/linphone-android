@@ -2,6 +2,10 @@
 <resources>
     <color name="main_app_color">#ffcf4c29</color>
     
+    <color name="text_selected">#ffcf4c29</color>
+    <color name="text_over">#ffb9c4cb</color>
+    <color name="text_default">#ff5b656f</color>
+    
     <color name="numpad_background_bottom">#ffe4edf2</color>
     <color name="numpad_background_dialer">#ffd8d8d8</color>
     <color name="numpad_background_top">#ffb1bdc3</color>

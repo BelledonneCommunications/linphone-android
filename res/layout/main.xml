@@ -94,14 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.2">
 
-            <ImageView
-                android:id="@+id/history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_history"
-                android:scaleType="fitXY"
-                android:src="@drawable/history" />
+            <include layout="@layout/menu_history_button" />
 
             <TextView
                 android:id="@+id/missedCalls"
@@ -115,15 +108,7 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/contacts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-			android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_contacts"
-            android:scaleType="fitXY"
-            android:src="@drawable/contacts" />
+        <include layout="@layout/menu_contact_button" />
         
         <ImageView
             android:id="@+id/dialer"
@@ -135,37 +120,11 @@
             android:scaleType="fitXY"
             android:src="@drawable/dialer" />
 
-        <ImageView
-            android:id="@+id/settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-			android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_settings"
-            android:scaleType="fitXY"
-            android:src="@drawable/settings" />
+        <include layout="@layout/menu_settings_button" />
         
-        <ImageView
-            android:id="@+id/about_settings"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-			android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_about"
-            android:scaleType="fitXY"
-            android:src="@drawable/about_settings" />
+        <include layout="@layout/menu_about_settings_button" />
         
-        <ImageView
-            android:id="@+id/about_chat"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-			android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_about"
-            android:scaleType="fitXY"
-            android:src="@drawable/about_chat" />
+        <include layout="@layout/menu_about_chat_button" />
 
         <RelativeLayout
             android:id="@+id/completeChat"
@@ -173,14 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.2">
 
-            <ImageView
-                android:id="@+id/chat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-				android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_chat"
-                android:scaleType="fitXY"
-                android:src="@drawable/chat" />
+            <include layout="@layout/menu_chat_button" />
 
             <TextView
                 android:id="@+id/missedChats"
