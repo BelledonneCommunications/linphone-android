@@ -325,4 +325,8 @@
 	<string name="button_chat">Chat</string>
 	<string name="button_about">About</string>
 	
+	<string name="button_setup_cancel">Cancel</string>
+	<string name="button_setup_back">Back</string>
+	<string name="button_setup_next">Let\'s go</string>
+	
 </resources>
