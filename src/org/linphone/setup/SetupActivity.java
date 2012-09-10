@@ -32,14 +32,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
 public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private static SetupActivity instance;
-	private ImageView back, next, cancel;
+	private RelativeLayout back, next, cancel;
 	private SetupFragments currentFragment;
 	private SharedPreferences mPref;
 	
@@ -69,11 +69,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	private void initUI() {
-		back = (ImageView) findViewById(R.id.setup_back);
+		back = (RelativeLayout) findViewById(R.id.setup_back);
 		back.setOnClickListener(this);
-		next = (ImageView) findViewById(R.id.setup_next);
+		next = (RelativeLayout) findViewById(R.id.setup_next);
 		next.setOnClickListener(this);
-		cancel = (ImageView) findViewById(R.id.setup_cancel);
+		cancel = (RelativeLayout) findViewById(R.id.setup_cancel);
 		cancel.setOnClickListener(this);
 	}
 	

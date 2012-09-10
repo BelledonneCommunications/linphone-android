@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	android:id="@+id/history"
     xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/setup_next"
+	android:layout_weight="0.5"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     
-    <ImageView
+    <ImageView 
         android:id="@+id/image"
+		android:contentDescription="@string/content_description_next"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:src="@drawable/setup_next"
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/content_description_history"
-		android:scaleType="fitXY"
-		android:src="@drawable/history" />
-    
+		android:scaleType="fitXY" />
+
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
@@ -21,7 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignBottom="@id/image"
         android:paddingBottom="10dp"
-        android:textColor="@drawable/text_color"
-        android:text="@string/button_history" />
+        android:textColor="@drawable/text_color_setup_next"
+        android:text="@string/button_setup_next" />
     
 </RelativeLayout>

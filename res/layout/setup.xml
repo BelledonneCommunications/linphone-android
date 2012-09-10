@@ -46,36 +46,11 @@
 		android:layout_alignParentBottom="true"
 		android:orientation="horizontal">
 	    
-		<ImageView 
-			android:contentDescription="@string/content_description_cancel"
-			android:id="@+id/setup_cancel"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:src="@drawable/setup_cancel"
-			android:adjustViewBounds="true"
-			android:scaleType="fitXY"
-			android:layout_weight="0.5"/>
+		<include layout="@layout/setup_cancel_button" />
 		          
-		<ImageView 
-			android:contentDescription="@string/content_description_next"
-			android:id="@+id/setup_next"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:src="@drawable/setup_next"
-			android:adjustViewBounds="true"
-			android:scaleType="fitXY"
-			android:layout_weight="0.5"/>
-		         
-		<ImageView 
-			android:contentDescription="@string/content_description_back"
-			android:id="@+id/setup_back"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:src="@drawable/setup_back"
-			android:adjustViewBounds="true"
-			android:scaleType="fitXY"
-			android:layout_weight="0.5"/>
+		<include layout="@layout/setup_next_button" />
+		
+		<include layout="@layout/setup_back_button" />    
 	  
 	</LinearLayout>
  
