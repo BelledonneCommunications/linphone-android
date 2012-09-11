@@ -25,7 +25,7 @@
     <string name="verify_sas_fmt">Verify %s</string>
     <string name="communication_encrypted">Encrypted</string>
    
-	<string name="waiting_for_startup">Starting up...</string>
+	<string name="waiting_for_startup">Starting up&#8230;</string>
 	<string name="couldnt_accept_call">An error occurred while accepting call</string>
 
 	<string name="error_adding_new_call">Error adding new call</string>
@@ -172,8 +172,8 @@
 	<string name="about_bugreport_email_text">Describe problem here</string>
 	<string name="about_error_generating_bugreport_attachement">Error generating bug report</string>
 	<string name="about_logs_not_found">Logs not found.</string>
-	<string name="about_reading_logs">Reading logs, may takes time...</string>
-	<string name="about_mailer_chooser_text">Send bug report with...</string>
+	<string name="about_reading_logs">Reading logs, may takes time&#8230;</string>
+	<string name="about_mailer_chooser_text">Send bug report with&#8230;</string>
 	<string name="menu_about">About</string>
 	<string name="pref_audio">Audio</string>
 	<string name="menu_exit">Exit</string>
@@ -216,7 +216,7 @@
 	<string name="pref_stun_server">Stun server</string>
 	<string name="pref_ice_enable">Enable ICE</string>
 	<string name="pref_ice_enable_summary">A STUN server must be configured to use ICE</string>
-	<string name="ec_calibrating">Calibrating...</string>
+	<string name="ec_calibrating">Calibrating&#8230;</string>
 	<string name="ec_calibrated">Calibrated [%s ms]</string>
 	<string name="failed">failed</string>
 	<string name="first_login_explanation">Enter your username and password to connect to the service.</string>

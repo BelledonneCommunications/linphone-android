@@ -49,7 +49,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -160,27 +159,18 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void initButtons() {
-//		Typeface typeface = Typeface.createFromAsset(getAssets(), "font_linphone.ttf");
-		Typeface typeface = null;
-		
 		history = (RelativeLayout) findViewById(R.id.history);
         history.setOnClickListener(this);
-        setMenuTypeface(history, typeface);
         contacts  = (RelativeLayout) findViewById(R.id.contacts);
         contacts.setOnClickListener(this);
-        setMenuTypeface(contacts, typeface);
         dialer = (ImageView) findViewById(R.id.dialer);
         dialer.setOnClickListener(this);
         settings = (RelativeLayout) findViewById(R.id.settings);
         settings.setOnClickListener(this);
-        setMenuTypeface(settings, typeface);
         chat = (RelativeLayout) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
-        setMenuTypeface(chat, typeface);
 		aboutChat = (RelativeLayout) findViewById(R.id.about_chat);
-        setMenuTypeface(aboutChat, typeface);
 		aboutSettings = (RelativeLayout) findViewById(R.id.about_settings);
-        setMenuTypeface(aboutSettings, typeface);
 		
 		if (getResources().getBoolean(R.bool.replace_chat_by_about)) {
 			chat.setVisibility(View.GONE);
@@ -911,15 +901,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void exit() {
 		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-	}
-	
-	private void setMenuTypeface(RelativeLayout menu, Typeface typeface) {
-		if (typeface == null) {
-			return;
-		}
-		
-		TextView tv = (TextView) menu.findViewById(R.id.text);
-		tv.setTypeface(typeface);
 	}
 	
 	@Override
