@@ -300,6 +300,8 @@
 	<string name="content_description_cancel"></string>
 	<string name="content_description_next"></string>
 	<string name="content_description_back"></string>
+	<string name="content_description_setup_ok"></string>
+	<string name="content_description_mark"></string>
 	
 	<string name="setup_title">Account Setup Assistant</string>
 	<string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>

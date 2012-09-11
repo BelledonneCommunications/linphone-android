@@ -5,6 +5,7 @@
     android:orientation="vertical">
     
     <ImageView 
+   		android:contentDescription="@string/content_description_welcome"
 	    android:paddingTop="40dp"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
 		    android:layout_height="wrap_content">
             
 	        <ImageView
+	    		android:contentDescription="@string/content_description_validate"
 	            android:id="@+id/setup_apply"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"

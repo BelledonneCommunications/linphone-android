@@ -12,6 +12,7 @@
 		android:orientation="horizontal">
 	    
 		<ImageView 
+		    android:contentDescription="@string/content_description_mark"
 			android:visibility="invisible"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -21,6 +22,7 @@
 			android:layout_weight="0.5"/>
 		          
 		<ImageView 
+		    android:contentDescription="@string/content_description_mark"
 			android:visibility="invisible"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
