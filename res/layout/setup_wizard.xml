@@ -40,7 +40,8 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@android:color/black" />
+	            android:textColor="@android:color/black"
+            	android:background="@drawable/setup_field_background" />
 	        
 	        <ImageView 
 	            android:id="@+id/setup_username_ok"
@@ -54,6 +55,7 @@
         </RelativeLayout>
         
         <RelativeLayout 
+           	android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             
@@ -66,7 +68,8 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@android:color/black" />
+	            android:textColor="@android:color/black"
+            	android:background="@drawable/setup_field_background" />
 	        
 	        <EditText
 	            android:id="@+id/setup_password_confirm"
@@ -78,7 +81,8 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@android:color/black" />
+	            android:textColor="@android:color/black"
+            	android:background="@drawable/setup_field_background" />
 	        
 	        <ImageView 
 	            android:id="@+id/setup_password_ok"
@@ -92,6 +96,7 @@
         </RelativeLayout>
         
         <RelativeLayout 
+           	android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             
@@ -104,7 +109,8 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@android:color/black" />
+	            android:textColor="@android:color/black"
+            	android:background="@drawable/setup_field_background" />
 	        
 	        <ImageView 
 	            android:id="@+id/setup_email_ok"
