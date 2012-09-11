@@ -6,9 +6,9 @@
         android:radius="25dp" />
     
     <stroke 
-        android:color="@color/nmissed_calls_background" />
+        android:color="@color/missed_calls_background" />
     
     <solid 
-        android:color="@color/nmissed_calls_background" />
+        android:color="@color/missed_calls_background" />
     
 </shape>

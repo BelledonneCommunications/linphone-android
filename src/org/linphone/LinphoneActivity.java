@@ -59,7 +59,9 @@ import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +73,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -672,6 +675,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state, String message) {
+		if (state == State.Error) {
+			displayCustomToast(null, message, Toast.LENGTH_LONG);
+		}
+		
 		if (state == State.IncomingReceived) {
 			startActivity(new Intent(this, IncomingCallActivity.class));
 		} else if (state == State.OutgoingInit) {
@@ -686,6 +693,32 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
+	}
+	
+	private void displayCustomToast(final String title, final String message, final int duration) {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				LayoutInflater inflater = getLayoutInflater();
+				View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
+
+				TextView toastTitle = (TextView) layout.findViewById(R.id.toastTitle);
+				if (title == null) {
+					toastTitle.setVisibility(View.GONE);
+				} else {
+					toastTitle.setText(title);
+				}
+				
+				TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+				toastText.setText(message);
+				
+				final Toast toast = new Toast(getApplicationContext());
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.setDuration(duration);
+				toast.setView(layout);
+				toast.show();
+			}
+		});
 	}
 
 	@Override
