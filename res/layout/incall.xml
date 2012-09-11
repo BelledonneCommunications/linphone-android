@@ -112,6 +112,7 @@
                 android:visibility="invisible" />
 
             <ImageView
+		    	android:contentDescription="@string/content_description_add_call"
                 android:id="@+id/addCall"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"

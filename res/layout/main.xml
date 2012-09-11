@@ -14,6 +14,7 @@
         android:orientation="horizontal">
     
 		<ImageView
+		    android:contentDescription="@string/content_description_mark"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
@@ -23,6 +24,7 @@
 		    android:visibility="invisible" />
 		
 		<ImageView
+		    android:contentDescription="@string/content_description_mark"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
@@ -32,6 +34,7 @@
 		    android:visibility="invisible" />
 		
 		<ImageView
+		    android:contentDescription="@string/content_description_mark"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
@@ -41,6 +44,7 @@
 		    android:visibility="invisible" />
 		
 		<ImageView
+		    android:contentDescription="@string/content_description_mark"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
@@ -50,6 +54,7 @@
 		    android:visibility="invisible" />
 		
 		<ImageView
+		    android:contentDescription="@string/content_description_mark"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"

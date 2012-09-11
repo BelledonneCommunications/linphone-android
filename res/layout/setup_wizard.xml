@@ -5,6 +5,7 @@
     android:orientation="vertical" >
     
     <ImageView 
+   		android:contentDescription="@string/content_description_welcome"
 	    android:paddingTop="40dp"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
             	android:background="@drawable/setup_field_background" />
 	        
 	        <ImageView 
+	    		android:contentDescription="@string/content_description_setup_ok"
 	            android:id="@+id/setup_username_ok"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -85,6 +87,7 @@
             	android:background="@drawable/setup_field_background" />
 	        
 	        <ImageView 
+	    		android:contentDescription="@string/content_description_setup_ok"
 	            android:id="@+id/setup_password_ok"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -113,6 +116,7 @@
             	android:background="@drawable/setup_field_background" />
 	        
 	        <ImageView 
+	    		android:contentDescription="@string/content_description_setup_ok"
 	            android:id="@+id/setup_email_ok"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -129,6 +133,7 @@
 		    android:layout_height="wrap_content">
             
 	        <ImageView
+	    		android:contentDescription="@string/content_description_validate"
 	            android:id="@+id/setup_create"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
