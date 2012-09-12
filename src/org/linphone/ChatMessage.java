@@ -1,4 +1,6 @@
 package org.linphone;
+
+import org.linphone.core.LinphoneChatMessage;
 /*
 ChatMessage.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -25,14 +27,16 @@ public class ChatMessage {
 	private String message;
 	private String timestamp;
 	private boolean incoming;
+	private int status;
 	private int id;
 	
-	public ChatMessage(int id, String message, String timestamp, boolean incoming) {
+	public ChatMessage(int id, String message, String timestamp, boolean incoming, int status) {
 		super();
 		this.id = id;
 		this.message = message;
 		this.timestamp = timestamp;
 		this.incoming = incoming;
+		this.status = status;
 	}
 	
 	public int getId() {
@@ -61,5 +65,13 @@ public class ChatMessage {
 	
 	public void setIncoming(boolean incoming) {
 		this.incoming = incoming;
+	}
+	
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	public LinphoneChatMessage.State getStatus() {
+		return LinphoneChatMessage.State.fromInt(status);
 	}
 }

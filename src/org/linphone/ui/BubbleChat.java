@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.core.LinphoneChatMessage;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -32,6 +33,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -74,8 +76,9 @@ public class BubbleChat {
 	}
 	
 	private RelativeLayout view;
+	private ImageView statusView;
 	
-	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, int previousID) {
+	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
 		view = new RelativeLayout(context);
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -98,45 +101,43 @@ public class BubbleChat {
     	view.setLayoutParams(layoutParams);	
     	
     	if (context.getResources().getBoolean(R.bool.display_messages_time)) {
+    		LinearLayout layout;
 	    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
-		    	LinearLayout layout;
 		    	if (isIncoming) {
 		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_incoming, null);
 		    	} else {
 		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_outgoing, null);
 		    	}
-		    	
-		    	TextView msgView = (TextView) layout.findViewById(R.id.message);
-		    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-		    		msgView.setText(getSmiledText(context, message));
-		    	} else {
-		    		msgView.setText(message);
-		    	}
-		    	
-		    	TextView timeView = (TextView) layout.findViewById(R.id.time);
-		    	timeView.setText(timestampToHumanDate(context, time));
-		    	
-		    	view.addView(layout);
 	    	} else {
-		    	LinearLayout layout;
 	    		if (isIncoming) {
 		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
 		    	} else {
 		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
 		    	}
-		    	
-		    	TextView msgView = (TextView) layout.findViewById(R.id.message);
-		    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-		    		msgView.setText(getSmiledText(context, message));
-		    	} else {
-		    		msgView.setText(message);
-		    	}
-		    	
-		    	TextView timeView = (TextView) layout.findViewById(R.id.time);
-		    	timeView.setText(timestampToHumanDate(context, time));
-		    	
-		    	view.addView(layout);
 	    	}
+	    	
+	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
+	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+	    		msgView.setText(getSmiledText(context, message));
+	    	} else {
+	    		msgView.setText(message);
+	    	}
+	    	
+	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
+	    	timeView.setText(timestampToHumanDate(context, time));
+	    	
+	    	statusView = (ImageView) layout.findViewById(R.id.status);
+	    	if (statusView != null) {
+	    		if (status == LinphoneChatMessage.State.Delivered) {
+	    			statusView.setImageResource(R.drawable.led_connected); //FIXME
+	    		} else if (status == LinphoneChatMessage.State.NotDelivered) {
+	    			statusView.setImageResource(R.drawable.led_error); //FIXME
+	    		} else {
+	    			statusView.setImageResource(R.drawable.led_inprogress); //FIXME
+	    		}
+	    	}
+	    	
+	    	view.addView(layout);
     	} else {
     		TextView messageView = new TextView(context);
     		messageView.setId(id);
@@ -151,6 +152,21 @@ public class BubbleChat {
         	
         	view.addView(messageView);
     	}
+	}
+	
+	public void updateStatusView(LinphoneChatMessage.State status) {
+		if (statusView == null) {
+			return;
+		}
+		
+		if (status == LinphoneChatMessage.State.Delivered) {
+			statusView.setImageResource(R.drawable.led_connected); //FIXME
+		} else if (status == LinphoneChatMessage.State.NotDelivered) {
+			statusView.setImageResource(R.drawable.led_error); //FIXME
+		} else {
+			statusView.setImageResource(R.drawable.led_inprogress); //FIXME
+		}
+		view.invalidate();
 	}
 	
 	public View getView() {

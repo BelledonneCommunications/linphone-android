@@ -22,8 +22,10 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 
 class LinphoneChatRoomImpl implements LinphoneChatRoom {
 	protected final long nativePtr;
+	private native long createLinphoneChatMessage(long ptr, String message);
 	private native long getPeerAddress(long ptr);
 	private native void sendMessage(long ptr, String message);
+	private native void sendMessage2(long ptr, long message, StateListener listener);
 
 	protected LinphoneChatRoomImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -36,14 +38,19 @@ class LinphoneChatRoomImpl implements LinphoneChatRoom {
 	public void sendMessage(String message) {
 		sendMessage(nativePtr,message);
 	}
+	
 	@Override
-	public void sendMessage(LinphoneChatMessage msg, StateListener listener) {
-		// TODO To be implemened
+	public void sendMessage(LinphoneChatMessage message, StateListener listener) {
+		sendMessage2(nativePtr, message.getNativePtr(), listener);
 		
 	}
 	@Override
 	public void sendMessage(Object opaque, String message) {
 		// ignore, deprecated.
 		
+	}
+	@Override
+	public LinphoneChatMessage createLinphoneChatMessage(String message) {
+		return new LinphoneChatMessageImpl(createLinphoneChatMessage(nativePtr, message));
 	}
 }

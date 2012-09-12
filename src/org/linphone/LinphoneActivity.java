@@ -614,6 +614,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void onMessageSent(String to, String message) {
 		getChatStorage().saveMessage("", to, message);
 	}
+	
+	public void onMessageStateChanged(String to, String message, int newState) {
+		getChatStorage().updateMessageStatus(to, message, newState);
+	}
 
 	@Override
 	public void onRegistrationStateChanged(RegistrationState state) {

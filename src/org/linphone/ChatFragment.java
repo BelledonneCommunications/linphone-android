@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.ui.AvatarWithShadow;
@@ -46,7 +48,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class ChatFragment extends Fragment implements OnClickListener, LinphoneOnMessageReceivedListener {
+public class ChatFragment extends Fragment implements OnClickListener, LinphoneOnMessageReceivedListener, LinphoneChatMessage.StateListener {
 	private LinphoneChatRoom chatRoom;
 	private View view;
 	private String sipUri;
@@ -57,6 +59,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 	private ScrollView messagesScrollView;
 	private int previousMessageID;
 	private Handler mHandler = new Handler();
+	private BubbleChat lastSentMessageBubble;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -93,7 +96,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 		previousMessageID = -1;
 		ChatStorage chatStorage = LinphoneActivity.instance().getChatStorage();
         for (ChatMessage msg : messagesList) {
-        	displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), messagesLayout);
+        	displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout);
         	chatStorage.markMessageAsRead(msg.getId());
         }
         LinphoneActivity.instance().updateMissedChatCount();
@@ -125,11 +128,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
         invalidate();
 	}
 	
-	private void displayMessage(final int id, final String message, final String time, final boolean isIncoming, final RelativeLayout layout) {
+	private void displayMessage(final int id, final String message, final String time, final boolean isIncoming, final LinphoneChatMessage.State status, final RelativeLayout layout) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				BubbleChat bubble = new BubbleChat(layout.getContext(), id, message, time, isIncoming, previousMessageID);
+				BubbleChat bubble = new BubbleChat(layout.getContext(), id, message, time, isIncoming, status, previousMessageID);
+				if (!isIncoming) {
+					lastSentMessageBubble = bubble;
+				}
 				previousMessageID = id;
 				layout.addView(bubble.getView());
 				registerForContextMenu(bubble.getView());
@@ -170,14 +176,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 		if (chatRoom != null && message != null && message.getText().length() > 0) {
 			String messageToSend = message.getText().toString();
 			message.setText("");
-			
-			chatRoom.sendMessage(messageToSend);
+
+			LinphoneChatMessage chatMessage = chatRoom.createLinphoneChatMessage(messageToSend);
+			chatRoom.sendMessage(chatMessage, this);
 			
 			if (LinphoneActivity.isInstanciated()) {
 				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
 			}
 			
-			displayMessage(previousMessageID + 2, messageToSend, String.valueOf(System.currentTimeMillis()), false, messagesLayout);
+			displayMessage(previousMessageID + 2, messageToSend, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout);
 			scrollToEnd();
 		}
 	}
@@ -195,8 +202,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneO
 	public void onMessageReceived(LinphoneAddress from, String message) {
 		if (from.asStringUriOnly().equals(sipUri))  {
 			int id = previousMessageID + 2;
-			displayMessage(id, message, String.valueOf(System.currentTimeMillis()), true, messagesLayout);
+			displayMessage(id, message, String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
 			scrollToEnd();
+		}
+	}
+
+	@Override
+	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+		final String finalMessage = msg.getMessage();
+		final State finalState = state;
+		if (LinphoneActivity.isInstanciated() && state != State.InProgress) {
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage, finalState.toInt());
+					lastSentMessageBubble.updateStatusView(finalState);
+				}
+			});
 		}
 	}
 	
