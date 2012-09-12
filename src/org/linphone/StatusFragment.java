@@ -372,7 +372,6 @@ public class StatusFragment extends Fragment {
 		zrtpToast = new Toast(getActivity());
 		zrtpToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0, LinphoneUtils.pixelsToDpi(getResources(), 40));
 		zrtpToast.setDuration(Toast.LENGTH_LONG);
-		zrtpToast.setView(layout);
 		
 		ImageView ok = (ImageView) layout.findViewById(R.id.toastOK);
 		ok.setOnClickListener(new OnClickListener() {
@@ -419,8 +418,9 @@ public class StatusFragment extends Fragment {
 
 		};
 
-		zrtpToast.show();
+		zrtpToast.setView(layout);
 		hideZrtpToast = false;
+		zrtpToast.show();
 		zrtpHack.start();
 	}
 	

@@ -301,6 +301,7 @@
 	<string name="content_description_next"></string>
 	<string name="content_description_back"></string>
 	<string name="content_description_setup_ok"></string>
+	<string name="content_description_message_status"></string>
 	<string name="content_description_mark"></string>
 	
 	<string name="setup_title">Account Setup Assistant</string>
