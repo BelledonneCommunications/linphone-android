@@ -93,7 +93,6 @@ class LinphoneCoreImpl implements LinphoneCore {
 	private native int getSignalingTransportPort(long nativePtr, int code);
 	private native void setSignalingTransportPorts(long nativePtr, int udp, int tcp, int tls);
 	private native void enableIpv6(long nativePtr,boolean enable);
-	private native void adjustSoftwareVolume(long nativePtr,int db);
 	private native int pauseCall(long nativePtr, long callPtr);
 	private native int pauseAllCalls(long nativePtr);
 	private native int resumeCall(long nativePtr, long callPtr);
@@ -474,7 +473,7 @@ class LinphoneCoreImpl implements LinphoneCore {
 		enableIpv6(nativePtr,enable);
 	}
 	public synchronized void adjustSoftwareVolume(int i) {
-		adjustSoftwareVolume(nativePtr, i);
+		//deprecated, does the same as setPlaybackGain().
 	}
 
 	public synchronized boolean pauseCall(LinphoneCall call) {

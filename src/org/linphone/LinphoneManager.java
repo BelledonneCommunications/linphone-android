@@ -1201,7 +1201,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (nextVolume > maxVolume) nextVolume = maxVolume;
 			if (nextVolume < 0) nextVolume = 0;
 
-			mLc.adjustSoftwareVolume((nextVolume - maxVolume)* dbStep);
+			mLc.setPlaybackGain((nextVolume - maxVolume)* dbStep);
 		} else
 			// starting from ICS, volume must be adjusted by the application, at least for STREAM_VOICE_CALL volume stream
 			mAudioManager.adjustStreamVolume(LINPHONE_VOLUME_STREAM, i<0?AudioManager.ADJUST_LOWER:AudioManager.ADJUST_RAISE, 0);
