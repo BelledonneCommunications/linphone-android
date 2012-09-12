@@ -477,8 +477,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 			mLc.enableIpv6(getPrefBoolean(R.string.pref_ipv6_key, false));
 			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
-
-			mLc.setPlaybackGain(3);   
+ 
 			mLc.setRing(null);
 			mLc.setRootCA(mLinphoneRootCaFile);
 			mLc.setPlayFile(mPauseSoundFile);
