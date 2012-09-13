@@ -65,7 +65,7 @@ public class BubbleChat {
 	    emoticons.put(":-*", R.drawable.emo_im_kissing);
 	    emoticons.put(":*", R.drawable.emo_im_kissing);
 	    emoticons.put(":-/", R.drawable.emo_im_undecided);
-	    emoticons.put(":/ ", R.drawable.emo_im_undecided);
+	    emoticons.put(":/ ", R.drawable.emo_im_undecided); // The space after is needed to avoid bad display of links
 	    emoticons.put(":-\\", R.drawable.emo_im_undecided);
 	    emoticons.put(":\\", R.drawable.emo_im_undecided);
 	    emoticons.put(":-O", R.drawable.emo_im_surprised);
@@ -110,7 +110,7 @@ public class BubbleChat {
     		text = getTextWithHttpLinks(message);
     	}
     	
-    	if (context.getResources().getBoolean(R.bool.display_messages_time)) {
+    	if (context.getResources().getBoolean(R.bool.display_messages_time_and_status)) {
     		LinearLayout layout;
 	    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
 		    	if (isIncoming) {
