@@ -28,8 +28,11 @@ import org.linphone.core.LinphoneChatMessage;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +65,7 @@ public class BubbleChat {
 	    emoticons.put(":-*", R.drawable.emo_im_kissing);
 	    emoticons.put(":*", R.drawable.emo_im_kissing);
 	    emoticons.put(":-/", R.drawable.emo_im_undecided);
-	    emoticons.put(":/", R.drawable.emo_im_undecided);
+	    emoticons.put(":/ ", R.drawable.emo_im_undecided);
 	    emoticons.put(":-\\", R.drawable.emo_im_undecided);
 	    emoticons.put(":\\", R.drawable.emo_im_undecided);
 	    emoticons.put(":-O", R.drawable.emo_im_surprised);
@@ -100,6 +103,13 @@ public class BubbleChat {
     	layoutParams.setMargins(0, LinphoneUtils.pixelsToDpi(context.getResources(), 10), 0, 0);
     	view.setLayoutParams(layoutParams);	
     	
+    	Spanned text;
+    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+    		text = getSmiledText(context, getTextWithHttpLinks(message));
+    	} else {
+    		text = getTextWithHttpLinks(message);
+    	}
+    	
     	if (context.getResources().getBoolean(R.bool.display_messages_time)) {
     		LinearLayout layout;
 	    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
@@ -117,11 +127,8 @@ public class BubbleChat {
 	    	}
 	    	
 	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
-	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-	    		msgView.setText(getSmiledText(context, message));
-	    	} else {
-	    		msgView.setText(message);
-	    	}
+	    	msgView.setText(text);
+	    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
 	    	
 	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
 	    	timeView.setText(timestampToHumanDate(context, time));
@@ -143,12 +150,9 @@ public class BubbleChat {
     		messageView.setId(id);
         	messageView.setTextColor(Color.BLACK);
         	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        	
-        	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-        		messageView.setText(getSmiledText(context, message));
-        	} else {
-        		messageView.setText(message);
-        	}
+        	messageView.setText(text);
+        	messageView.setLinksClickable(true);
+        	messageView.setMovementMethod(LinkMovementMethod.getInstance());
         	
         	view.addView(messageView);
     	}
@@ -205,7 +209,7 @@ public class BubbleChat {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 	
-	public static Spannable getSmiledText(Context context, String text) {
+	public static Spannable getSmiledText(Context context, Spanned text) {
 		SpannableStringBuilder builder = new SpannableStringBuilder(text);
 		int index;
 
@@ -223,5 +227,24 @@ public class BubbleChat {
 		    }
 		}
 		return builder;
+	}
+	
+	public static Spanned getTextWithHttpLinks(String text) {
+		if (text.contains("http://")) {
+			int indexHttp = text.indexOf("http://");
+			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+			String link = text.substring(indexHttp, indexFinHttp);
+			String linkWithoutScheme = link.replace("http://", "");
+			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+		}
+		if (text.contains("https://")) {
+			int indexHttp = text.indexOf("https://");
+			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+			String link = text.substring(indexHttp, indexFinHttp);
+			String linkWithoutScheme = link.replace("https://", "");
+			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+		}
+		
+		return Html.fromHtml(text);
 	}
 }

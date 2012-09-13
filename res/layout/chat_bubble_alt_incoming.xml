@@ -19,6 +19,8 @@
         android:gravity="bottom"
         android:singleLine="true"
         android:paddingLeft="5dp"
+        android:linksClickable="true"
+		android:autoLink="web"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
     
