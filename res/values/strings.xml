@@ -61,15 +61,6 @@
 	<string name="conf_admin_choice_leave">Momentarily leave conference</string>
 	<string name="conf_admin_choice_terminate">Terminate conference</string>
 
-	<string name="conf_choice_transfer_existing">Transfer to existing call</string>
-	<string name="conf_choice_transfer_new">Transfer to new call</string>
-	<string name="conf_choice_resume">Resume</string>
-	<string name="conf_choice_pause">Pause</string>
-	<string name="conf_choice_merge_to_conference">Add to conference</string>
-	<string name="conf_choice_merge_all_to_conference">Add all calls to conference</string>
-	<string name="conf_choice_remove_from_conference">Remove from the conference</string>
-	<string name="conf_choice_terminate">Terminate</string>
-
 	<string name="hangup">Hang up</string>
 	<string name="conf_simple_merge_bt_txt">Merge</string>
 	<string name="conf_simple_transfer_bt_txt">Transfer</string>
@@ -184,7 +175,6 @@
 	<string name="pref_domain">Domain*</string>
 	<string name="pref_passwd">Password*</string>
 	<string name="pref_username">Username*</string>
-	<string name="hello">Hello World, Linphone!</string>
 	<string name="pref_sipaccount">SIP Account</string>
 	<string name="wrong_username">wrong user name</string>
 	<string name="wrong_passwd">wrong password</string>
@@ -232,10 +222,6 @@
 	<string name="media_encryption_none">None</string>
 	<string name="media_encryption_srtp">SRTP</string>
 	<string name="media_encryption_zrtp">ZRTP</string>
-	
-	<string name="dynamic_video_asking">Your correspondent would like to switch to video</string>
-	<string name="dynamic_video_accept">Accept video</string>
-	<string name="dynamic_video_deny">Deny video</string>
 	
 	<string name="pref_sipaccounts">SIP Accounts</string>
 	<string name="pref_wifi_only">Use wifi only</string>

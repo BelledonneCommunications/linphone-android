@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_disable_account">Désactiver</string>
+    
+    <string name="pref_tunnel">Tunnel</string>
+	<string name="pref_tunnel_host">Hôte</string>
+	<string name="pref_tunnel_port">Port</string>
+	<string name="pref_tunnel_mode">Mode</string>
+
+   	<!-- do not change order without changing corresponding entry_values in non_localizable_strings.xml -->
+	<string-array name="tunnel_mode_entries"> 
+		<item>désactivé</item>
+		<item>3G seulement</item>
+		<item>toujours</item>
+		<item>auto</item>
+	</string-array> 
+
+    <string name="incall_notif_active">Appel audio en cours</string>
+    <string name="incall_notif_paused">Appel en pause</string>
+    <string name="incall_notif_video">Appel vidéo en cours</string>
+    
+    <string name="not_ready_to_make_new_call">Pas prêt pour un nouvel appel</string>
+    <string name="bad_target_uri">Mauvais contact : %s</string>
+    <string name="reset_sas_fmt">Annuler vérification %s</string>
+    <string name="verify_sas_fmt">Vérifier %s</string>
+    <string name="communication_encrypted">Encrypté</string>
+   
+	<string name="waiting_for_startup">Démarrage&#8230;</string>
+	<string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation d\'un appel</string>
+
+	<string name="error_adding_new_call">Erreur lors de l\'ajout de l\'appel</string>
+	<string name="transfer_started">Transfert commencé</string>
+	<string name="transfer_dialog_title">Transférer l\'appel vers</string>
+	<string name="transfer_to_new_call">Nouvel appel</string>
+	<string name="resume_dialog_title">Reprendre l\'appel</string>
+	<string name="cannot_resume_paused_by_remote_call">Impossible de reprendre l\'appel mis en pause par votre correspondant</string>
+	<string name="conf_show_details_text">Montrer les détails</string>
+
+	<string name="skipable_error_service_not_ready">Attention : le service n\'est pas prêt</string>
+
+	<string name="close_button_text">Fermer</string>
+	
+	<string name="status_conf_call">conf</string>
+	<string name="status_active_call">actif</string>
+	<string name="state_paused">en pause</string>
+	<string name="state_paused_by_remote">mis en pause par le correspondant</string>
+	<string name="state_streams_running"></string>
+	<string name="state_incoming_received">entrant</string>
+	<string name="state_outgoing_ringing">sonnant</string>
+	<string name="state_outgoing_progress">sortant</string>
+	
+	<string name="mutemic_button_txt">Silence</string>
+	<string name="speaker_button_txt">Haut parleur</string>
+	<string name="bluetooth_button_txt">Bluetooth</string>
+
+	<string name="CancelButtonText">Annuler</string>
+	<string name="AddCallButtonText">Ajouter un appel</string>
+	<string name="TransferCallButtonText">Transférer appel</string>
+
+	<string name="hangup">Raccrocher</string>
+	<string name="conf_simple_merge_bt_txt">Fusionner</string>
+	<string name="conf_simple_transfer_bt_txt">Transférer</string>
+	<string name="conf_simple_video_bt_txt">Vidéo</string>
+<!--	<string name="conf_simple_no_current_call">No active call</string>-->
+	<string name="show_send_dtmfs_button">Dialpad</string>
+
+	<string name="pref_audio_soft_volume_title">Utiliser volume logiciel</string>
+
+	<string name="pref_ipv6_title">Utiliser ipv6 au lieu de ipv4</string>
+
+	<string name="error_while_accepting_pending_call">Erreur pendant l\'acceptation de l\'appel</string>
+	<string name="incoming_call_dialog_title">%s vous apelle</string>
+	<string name="accept">Accepter</string>
+	<string name="decline">Refuser</string>
+	<string name="unknown_incoming_call_name">Inconnu</string>
+	
+	<string name="pref_network_title">Réseau</string>
+	<string name="pref_transport_use_standard_ports">Utiliser les ports standards</string>
+	<string name="at_least_a_protocol">Au moins un est requis</string>
+
+
+    <string name="first_launch_ok">Enregistré avec succès</string>
+    <string name="error">Erreur</string>
+    <string name="click_to_show_first_login_view">Commencer</string>
+    <string name="dialer_null_on_new_intent">Application pas prête</string>
+
+	<string name="no_phone_numbers">Aucun numéro trouvé pour %s</string>
+	<string name="filter_contacts">Filtrer contacts</string>
+	<string name="title_numbers_dialog">Numéros de %s</string>
+    <string name="pref_delete_account">Supprimer ce compte</string>
+    <string name="pref_default_account">Utiliser par défaut</string>
+    <string name="pref_echo_canceller_calibration">Calibration de l\'annulateur d\'écho</string>
+    <string name="pref_echo_limiter">Limiteur d\'écho</string>
+    <string name="pref_video_use_front_camera_title">Utiliser la caméra en façade</string>
+	<string name="pref_video">Vidéo</string>
+	<string name="pref_preferences">Préférences</string>
+    <string name="pref_video_codecs_title">Codecs</string>
+    
+    <string name="pref_video_settings_title">Paramètres vidéo</string>
+    <string name="pref_video_automatically_share_my_video_title">Partager ma vidéo</string>
+    <string name="pref_video_automatically_accept_video_title">Accepter vidéo entrante</string>
+    <string name="pref_video_automatically_share_my_video">Envoyer ma vidéo automatiquement</string>
+    <string name="pref_video_automatically_accept_video">Accepter automatiquement la vidéo</string>
+    <string name="pref_video_initiate_call_with_video_title">Initier les appels en vidéo</string>
+    <string name="pref_video_initiate_call_with_video"></string>
+    <string name="pref_video_enable_title">Activer la vidéo</string>
+    <string name="pref_escape_plus">Remplacer + par 00</string>
+    <string name="pref_ilbc_summary">iLBC peut être indisponible suivant le processeur ARM et la version d\'Android.</string>
+    <string name="pref_echo_cancellation">Annulateur d\'écho</string>
+    <string name="pref_autostart">Démarrer au lancement du téléphone</string>
+    <string name="pref_enable_outbound_proxy">Outbound proxy</string>
+    <string name="pref_codecs">Codecs</string>
+    
+	<string name="pref_debug">Activer les traces de débogage</string>
+	<string name="about_report_issue">Reporter un problème</string>
+	<string name="about_bugreport_email_text">Décrivez le problème ici</string>
+	<string name="about_error_generating_bugreport_attachement">Erreur pendant la génération du rapport d\'incident</string>
+	<string name="about_logs_not_found">Traces non trouvées.</string>
+	<string name="about_reading_logs">En train de lire les traces, peut prendre du temps&#8230;</string>
+	<string name="about_mailer_chooser_text">Envoyer le rapport avec&#8230;</string>
+	<string name="menu_about">A propos</string>
+	<string name="pref_audio">Audio</string>
+	<string name="menu_exit">Quitter</string>
+	<string name="pref_prefix">Préfix</string>
+	<string name="pref_advanced">Avancé</string>
+	<string name="menu_settings">Paramètres</string>
+	<string name="pref_proxy">Serveur mandataire</string>
+	<string name="pref_domain">Domaine*</string>
+	<string name="pref_passwd">Mot de passe*</string>
+	<string name="pref_username">Nom d\'utilisateur*</string>
+	<string name="pref_sipaccount">Compte SIP</string>
+	<string name="wrong_username">Mauvais nom d\'utilisateur</string>
+	<string name="wrong_passwd">Mauvais mot de passe</string>
+	<string name="wrong_domain">Mauvais domaine</string>
+	<string name="wrong_settings">Mauvais paramètre(s)</string>
+	<string name="tab_dialer">Dialer</string>
+	<string name="tab_contact">Contact</string>
+	<string name="call_error">Erreur lors de l\'appel de %s</string>
+	<string name="yes">Oui</string>
+	<string name="no">Non</string>
+	<string name="dismiss">Annuler</string>
+	<string name="cont">Continuer</string>
+	<string name="never_remind">Ne plus me le rapeller</string>
+	<string name="config_error">%s, voulez-vous aller dans les paramètres ?</string>
+	<string name="initial_config_error">&lt;P ALIGN=CENTER&gt;Aucun compte SIP configuré, voulez-vous aller dans les paramètres ?&lt;br/&gt;&lt;br/&gt; Besoin d\'aide ?&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
+	<string name="first_launch_message">&lt;P ALIGN=CENTER&gt;Bienvenue dans le téléphone SIP Linphone&lt;br/&gt;&lt;br/&gt; Si vous êtes nouveau, jetez un oeil à &lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt; </string>
+	<string name="ec_calibration_launch_message">Démarrage de la calibration de l\'annulateur d\'écho</string>
+	<string name="warning_already_incall">Impossible de démarrer un nouvel appel, un appel est en cours</string>
+	<string name="tab_history">Historique</string>
+	<string name="warning_wrong_destination_address">Impossible de construire l\'adresse de destination depuis [%s]</string>
+	<string name="menu_clear_history">Nettoyer</string>
+	<string name="error_cannot_get_call_parameters">Impossible de récupérer les paramètres de l\'appel</string>
+	<string name="error_cannot_create_default_parameters">Impossible de créer les paramètres par défaut de l\'appel</string>
+	<string name="error_cannot_invite_address">Impossible d\'inviter l\'adresse [%s]</string>
+	
+	<string name="notification_started">démarré</string>
+	<string name="pref_echo_cancellation_summary">Supprime l\'écho entendu de l\'autre côté (non recommandé)</string>
+	<string name="pref_echo_limiter_summary">Supprime l\'écho entendu de l\'autre côté (méthode force brute)</string>
+	<string name="pref_stun_server">Serveur Stun</string>
+	<string name="pref_ice_enable">Activer ICE</string>
+	<string name="pref_ice_enable_summary">Un serveur STUN doit être configuré pour utiliser ICE</string>
+	<string name="ec_calibrating">Calibration&#8230;</string>
+	<string name="ec_calibrated">Calibré [%s ms]</string>
+	<string name="failed">échoué</string>
+	<string name="first_login_explanation">Entrez votre nom d\'utilisateur et votre mot de passe pour vous connecter au service.</string>
+	<string name="first_login_username">Nom d\'utilisateur</string>
+	<string name="first_login_password">Mot de passe</string>
+	<string name="first_login_connect">Connexion</string>
+	<string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
+	<string name="first_launch_bad_login_password">Impossible de se connecter; Vérifiez vos informations de connexion et réessayez</string>
+	
+	<string name="pref_amr_summary">Le codec AMR codec peut ne pas être disponible sur votre téléphone</string>
+	<string name="pref_media_encryption">Encryption</string>
+	<string name="media_encryption_none">Aucune</string>
+	
+	<string name="pref_sipaccounts">Comptes SIP</string>
+	<string name="pref_wifi_only">Wi-Fi uniquement</string>
+	<string name="pref_push_notification">Activer les notifications poussées</string>
+	
+	<string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
+	<string name="wizard_server_unavailable">Serveur injoignable, vérifiez votre connexion internet.</string>
+	<string name="wizard_username_unavailable">Ce nom d\'utilisateur est déjà pris.</string>
+	<string name="wizard_username_incorrect">Votre nom d\'utilisateur n\'est pas valide.</string>
+	<string name="wizard_email_incorrect">Votre courriel n\'est pas valide.</string>
+	<string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide (6 caractères min).</string>
+	<string name="wizard_passwords_unmatched">Les mots de passe sont différents.</string>
+	
+	<string name="pref_help_proxy">Adresse IP ou nom de domaine du serveur mandataire SIP (facultatif)</string>
+	<string name="pref_help_outbound_proxy">Faire passer tous les appels via le serveur mandataire SIP</string>
+	<string name="pref_help_username">Exemple: john si votre compte est john@sip.linphone.org</string>
+	<string name="pref_help_domain">sip.linphone.org si votre compte est john@sip.linphone.org</string>
+	
+	<string name="delete">Supprimer</string>
+	<string name="chat">Chat</string>
+	<string name="call">Appel</string>
+	<string name="add_to_contacts">Ajouter aux contacts</string>
+	<string name="status_connected">Enregistré</string>
+	<string name="status_not_connected">Pas Enregistré</string>
+	<string name="status_in_progress">Enregistrement en cours</string>
+	<string name="status_error">Enregistrement échoué</string>
+	
+	<string name="addressHint">Numéro ou adresse</string>
+	
+	<!-- Used by Android to help blind people by describing them images -->
+	<string name="content_description_add_contact"></string>
+	<string name="content_description_about"></string>
+	<string name="content_description_chat"></string>
+	<string name="content_description_dial_back"></string>
+	<string name="content_description_contact_picture"></string>
+	<string name="content_description_send_message"></string>
+	<string name="content_description_detail"></string>
+	<string name="content_description_delete"></string>
+	<string name="content_description_new_discussion"></string>
+	<string name="content_description_edit"></string>
+	<string name="content_description_validate"></string>
+	<string name="content_description_all_contacts"></string>
+	<string name="content_description_linphone_contacts"></string>
+	<string name="content_description_call_direction"></string>
+	<string name="content_description_all_calls"></string>
+	<string name="content_description_missed_calls"></string>
+	<string name="content_description_switch_video"></string>
+	<string name="content_description_toggle_speaker"></string>
+	<string name="content_description_toggle_micro"></string>
+	<string name="content_description_add_call"></string>
+	<string name="content_description_pause"></string>
+	<string name="content_description_hang_up"></string>
+	<string name="content_description_numpad"></string>
+	<string name="content_description_settings"></string>
+	<string name="content_description_dialer"></string>
+	<string name="content_description_history"></string>
+	<string name="content_description_contacts"></string>
+	<string name="content_description_led"></string>
+	<string name="content_description_call_quality"></string>
+	<string name="content_description_encryption"></string>
+	<string name="content_description_switch_camera"></string>
+	<string name="content_description_welcome"></string>
+	<string name="content_description_cancel"></string>
+	<string name="content_description_next"></string>
+	<string name="content_description_back"></string>
+	<string name="content_description_setup_ok"></string>
+	<string name="content_description_message_status"></string>
+	<string name="content_description_mark"></string>
+	
+	<string name="setup_title">Assistant aux comptes</string>
+	<string name="setup_welcome">Cet assistant va vous aider à configurer un compte SIP pour vos appels.</string>
+	<string name="setup_create_account">Créer un compte linphone.org</string>
+	<string name="setup_login_linphone">J\'ai déjà un compte linphone.org</string>
+	<string name="setup_login_generic">J\'ai déjà un compte SIP</string>
+	<string name="setup_linphone_account_hint">Entrez votre nom d\'utilisateur et votre mot de passe linphone.org</string>
+	<string name="setup_general_account_hint">Entrez votre nom d\'utilisateur et votre mot de passe linphone.org</string>
+	<string name="setup_apply">Appliquer</string>
+	<string name="setup_username_hint">nom d\'utilisateur</string>
+	<string name="setup_password_hint">mot de passe</string>
+	<string name="setup_domain_hint">domaine</string>
+	<string name="setup_password_confirm_hint">confirmez le mot de passe</string>
+	<string name="setup_email_hint">courriel</string>
+	<string name="setup_create">Créer le compte</string>
+	<string name="setup_validate_account">Un courriel vous à été envoyé. Pour activer votre compte, vous devez cliquer sur le lien qu\'il contient. Une fois ceci fait, revenez ici et cliquez sur le bouton ci-dessous.</string>
+	<string name="setup_check_account_validation">Vérifier</string>
+	<string name="setup_account_not_validated">Votre compte n\'a pas encore été validé.</string>
+	<string name="setup_account_validated">Votre compte à été validé.</string>
+	
+	<string name="button_history">Historique</string>
+	<string name="button_contacts">Contacts</string>
+	<string name="button_settings">Options</string>
+	<string name="button_chat">Chat</string>
+	<string name="button_about">A propos</string>
+	
+	<string name="button_setup_cancel">Annuler</string>
+	<string name="button_setup_back">Retour</string>
+	<string name="button_setup_next">Allons-y</string>
+	
+</resources>

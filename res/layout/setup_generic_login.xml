@@ -16,7 +16,7 @@
 	    android:gravity="center"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/setup_linphone_account_hint"
+	    android:text="@string/setup_general_account_hint"
         android:textColor="@android:color/black"/>
     
     <LinearLayout 

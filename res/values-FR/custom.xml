@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="messages_date_format">HH:mm d MMM</string>
+	<string name="today_date_format">HH:mm</string>
+    
+	<string name="app_name">Linphone 2</string>
+	<string name="notification_title">Linphone</string>
+	<string name="wait_dialog_text">Démarrage</string>
+	<string name="notification_registered">Enregistré comme %s </string> 
+	<string name="notification_register_failure">Erreur lors de l\'enregistrement en tant que %s</string>
+	<string name="about_text">Linphone %s téléphone compatible SIP (rfc 3261) sous licence GPL V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+
+    <string name="tunnel_host"></string>
+    <string name="default_tunnel_mode_entry_value">@string/tunnel_mode_entry_value_disabled</string>
+</resources>
+ 
