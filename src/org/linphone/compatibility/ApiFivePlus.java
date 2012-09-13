@@ -67,7 +67,7 @@ public class ApiFivePlus {
 		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
 		
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			if (sipUri.startsWith("sip:")) {
+			if (sipUri != null && sipUri.startsWith("sip:")) {
 				sipUri = sipUri.substring(4);
 			}
 			

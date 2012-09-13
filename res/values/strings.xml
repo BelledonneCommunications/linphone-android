@@ -239,6 +239,7 @@
 	
 	<string name="pref_sipaccounts">SIP Accounts</string>
 	<string name="pref_wifi_only">Use wifi only</string>
+	<string name="pref_push_notification">Enable push notifications</string>
 	
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
