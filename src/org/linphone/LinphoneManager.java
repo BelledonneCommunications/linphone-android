@@ -470,7 +470,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
 			;
-			LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key,true));
+			LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false));
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
@@ -623,7 +623,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				// Add parameters for push notifications
 				String regId = getPrefString(R.string.push_reg_id_key, null);
 				String appId = getString(R.string.push_sender_id);
-				if (regId != null) {
+				if (regId != null && getPrefBoolean(R.string.pref_push_notification_key, true)) {
 					String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf;";
 					proxycon.setContactParameters(contactInfos);
 				}
@@ -646,7 +646,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void initFromConf() throws LinphoneConfigException {
 
-		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key,true));
+		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false));
 		initFromConfTunnel();
 
 		if (initialTransports == null)
