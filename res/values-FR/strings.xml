@@ -241,13 +241,13 @@
 	<string name="content_description_message_status"></string>
 	<string name="content_description_mark"></string>
 	
-	<string name="setup_title">Assistant aux comptes</string>
+	<string name="setup_title">Assistant de configuration des comptes</string>
 	<string name="setup_welcome">Cet assistant va vous aider à configurer un compte SIP pour vos appels.</string>
 	<string name="setup_create_account">Créer un compte linphone.org</string>
 	<string name="setup_login_linphone">J\'ai déjà un compte linphone.org</string>
 	<string name="setup_login_generic">J\'ai déjà un compte SIP</string>
 	<string name="setup_linphone_account_hint">Entrez votre nom d\'utilisateur et votre mot de passe linphone.org</string>
-	<string name="setup_general_account_hint">Entrez votre nom d\'utilisateur et votre mot de passe linphone.org</string>
+	<string name="setup_general_account_hint">Entrez votre nom d\'utilisateur, votre mot de passe et le domaine de votre compte SIP</string>
 	<string name="setup_apply">Appliquer</string>
 	<string name="setup_username_hint">nom d\'utilisateur</string>
 	<string name="setup_password_hint">mot de passe</string>
