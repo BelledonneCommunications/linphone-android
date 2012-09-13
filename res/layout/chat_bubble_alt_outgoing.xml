@@ -24,6 +24,8 @@
     
     <TextView 
         android:id="@+id/message"
+        android:linksClickable="true"
+		android:autoLink="web"
         android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

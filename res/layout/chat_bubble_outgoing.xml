@@ -10,6 +10,8 @@
         android:id="@+id/message"
     	android:layout_gravity="right"
         android:textColor="@android:color/black"
+        android:linksClickable="true"
+		android:autoLink="web"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
