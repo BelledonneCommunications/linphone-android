@@ -25,6 +25,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
+import org.linphone.core.Log;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -73,16 +74,19 @@ public class PushNotificationTest extends
 		HttpClient httpClient = createHttpClient();
 		HttpPost httpPost = new HttpPost("https://android.googleapis.com/gcm/send");
 		httpPost.setHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
-		httpPost.setHeader("Authorization", "key=AIzaSyDbCO1_KgFhkig_aaTutxx0jEHIib0i8C0");
+		httpPost.setHeader("Authorization", "key=AIzaSyBJAhCVeeqIErwTfYwy-t83_EwvZlCFo9I"); // Test API
+//		httpPost.setHeader("Authorization", "key=AIzaSyDbCO1_KgFhkig_aaTutxx0jEHIib0i8C0");
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("data.test", "TEST"));
         nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
         try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			httpClient.execute(httpPost, new BasicResponseHandler());
+			String result = httpClient.execute(httpPost, new BasicResponseHandler());
+			Log.d("TEST Http POST result: " + result);
 		} catch (Exception e) {
 			e.printStackTrace();
+			new junit.framework.TestFailure(this, e.getCause());
 		}
 		
         // Can be true if a previous notification worked and log hasn't been cleared since...

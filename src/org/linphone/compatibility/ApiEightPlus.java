@@ -40,15 +40,23 @@ public class ApiEightPlus {
 	}
 	
 	public static void initPushNotificationService(Context context) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
 		// Starting the push notification service
 		GCMRegistrar.checkDevice(context);
 		GCMRegistrar.checkManifest(context);
 		final String regId = GCMRegistrar.getRegistrationId(context);
-		if (regId.equals("")) {
-			GCMRegistrar.register(context, context.getString(R.string.push_sender_id));
+		String newPushSenderID = context.getString(R.string.push_sender_id);
+		String currentPushSenderID = prefs.getString(context.getString(R.string.push_sender_id_key), null);
+		if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
+			GCMRegistrar.register(context, newPushSenderID);
+			
+			Log.d("Push Notification : storing current sender id = " + newPushSenderID);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString(context.getString(R.string.push_sender_id_key), newPushSenderID);
+			editor.commit();
 		} else {
-			Log.e("Push Notification : already registered with id = " + regId);
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			Log.d("Push Notification : already registered with id = " + regId);
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString(context.getString(R.string.push_reg_id_key), regId);
 			editor.commit();

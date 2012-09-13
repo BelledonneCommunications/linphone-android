@@ -6,6 +6,7 @@ import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.setup.SetupActivity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
@@ -31,20 +32,22 @@ public class AccountsTest extends
 	}
 	
 	public void testConfigureExistingAccount() {
+		Context context = getActivity();
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		int nbAccountsBefore = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.clickOnView(solo.getView(R.id.settings));
-		solo.clickOnText("Account Setup Assistant");
+		solo.clickOnText(context.getString(R.string.setup_title));
 		
 		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
 		solo.clickOnView(solo.getView(R.id.setup_next));
-		solo.clickOnText("I already have a linphone.org account");
+		solo.clickOnText(context.getString(R.string.setup_login_linphone));
 		solo.enterText((EditText) solo.getView(R.id.setup_username), "wizard15");
 		solo.enterText((EditText) solo.getView(R.id.setup_password), "wizard15");
-		solo.clickOnText("Apply");
+		solo.clickOnText(context.getString(R.string.setup_apply));
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		Assert.assertTrue(solo.searchText("wizard15@sip.linphone.org"));
@@ -54,6 +57,8 @@ public class AccountsTest extends
 	}
 	
 	public void testDeleteConfiguredAccount() {
+		Context context = getActivity();
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		int nbAccountsBefore = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		
@@ -70,7 +75,7 @@ public class AccountsTest extends
 				list.setSelection(7);
 			}
 		});
-		solo.clickOnText("Delete this account");
+		solo.clickOnText(context.getString(R.string.pref_delete_account));
 		
 		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		Assert.assertEquals(nbAccountsBefore - 1, nbAccountsAfter);
