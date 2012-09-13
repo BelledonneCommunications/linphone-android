@@ -71,6 +71,7 @@ public class PushNotificationTest extends
 		String regId = prefs.getString(getActivity().getString(R.string.push_reg_id_key), null);
 		
 		// Send a push notification
+		// To do the same from a terminal use: curl --header "Authorization: key=AIzaSyBJAhCVeeqIErwTfYwy-t83_EwvZlCFo9I" --header Content-Type:"application/json" https://android.googleapis.com/gcm/send  -d "{\"registration_ids\":[\"DEVICE_REG_ID\"]}"
 		HttpClient httpClient = createHttpClient();
 		HttpPost httpPost = new HttpPost("https://android.googleapis.com/gcm/send");
 		httpPost.setHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
