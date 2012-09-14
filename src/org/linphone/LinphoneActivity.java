@@ -36,6 +36,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreFactory;
@@ -49,6 +50,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -593,8 +595,19 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	@Override
-	public void onMessageReceived(LinphoneAddress from, String message) {
-		int id = getChatStorage().saveMessage(from.asStringUriOnly(), "", message);
+	public void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message) {
+		String textMessage = message.getMessage();
+		String url = message.getExternalBodyUrl();
+		String notificationText = null;
+		int id = -1;
+		if (textMessage != null && textMessage.length() > 0) {
+			id = getChatStorage().saveMessage(from.asStringUriOnly(), "", textMessage);
+			notificationText = textMessage;
+		} else if (url != null && url.length() > 0) {
+			Bitmap bm = ChatFragment.downloadImage(url);
+			id = getChatStorage().saveMessage(from.asStringUriOnly(), "", bm);
+			notificationText = url;
+		}
 		
 		ChatFragment chatFragment = ((ChatFragment) messageListenerFragment);
 		if (messageListenerFragment != null && messageListenerFragment.isVisible() && chatFragment.getSipUri().equals(from.asStringUriOnly())) {
@@ -604,7 +617,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			displayMissedChats(getChatStorage().getUnreadMessageCount());
 		}
 		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
-		LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), message);
+		LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), notificationText);
 	}
 	
 	public void updateMissedChatCount() {
@@ -615,8 +628,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		getChatStorage().saveMessage("", to, message);
 	}
 	
+	public void onMessageSent(String to, Bitmap image) {
+		getChatStorage().saveMessage("", to, image);
+	}
+	
 	public void onMessageStateChanged(String to, String message, int newState) {
 		getChatStorage().updateMessageStatus(to, message, newState);
+	}
+	
+	public void onMessageStateChanged(String to, Bitmap image, int newState) {
+		getChatStorage().updateMessageStatus(to, image, newState);
 	}
 
 	@Override
@@ -908,8 +929,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(resultCode, requestCode, data);
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {	
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				exit();
@@ -926,6 +946,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			} else {
 				resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
+		}
+		else {
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 	

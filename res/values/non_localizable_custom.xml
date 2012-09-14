@@ -7,6 +7,7 @@
 
 	<string name="default_domain">sip.linphone.org</string>
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
+	<string name="upload_url">https://www.linphone.org:444/upload.php</string>
 
 	<!-- Interface settings -->
     <bool name="use_simple_history">true</bool>

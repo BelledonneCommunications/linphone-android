@@ -21,6 +21,7 @@ package org.linphone;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
@@ -60,7 +61,7 @@ public interface LinphoneSimpleListener {
 	}
 	
 	public static interface LinphoneOnMessageReceivedListener extends LinphoneSimpleListener {
-		void onMessageReceived(LinphoneAddress from, String message);
+		void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message);
 	}
 
 	public static interface LinphoneOnRegistrationStateChangedListener extends LinphoneSimpleListener {
