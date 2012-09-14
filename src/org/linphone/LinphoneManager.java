@@ -54,6 +54,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -880,11 +881,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneAddress from, String message) {
+		//deprecated
+	}
+	
+	@Override
+	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneAddress from, LinphoneChatMessage message) {
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
 			((LinphoneActivity) listener).onMessageReceived(from, message);
 		}
 	}
-
 
 	public String getLastLcStatusMessage() {
 		return lastLcStatusMessage;

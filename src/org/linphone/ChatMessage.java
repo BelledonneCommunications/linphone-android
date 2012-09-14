@@ -1,6 +1,9 @@
 package org.linphone;
 
 import org.linphone.core.LinphoneChatMessage;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 /*
 ChatMessage.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -29,14 +32,16 @@ public class ChatMessage {
 	private boolean incoming;
 	private int status;
 	private int id;
+	private Bitmap image;
 	
-	public ChatMessage(int id, String message, String timestamp, boolean incoming, int status) {
+	public ChatMessage(int id, String message, byte[] rawImage, String timestamp, boolean incoming, int status) {
 		super();
 		this.id = id;
 		this.message = message;
 		this.timestamp = timestamp;
 		this.incoming = incoming;
 		this.status = status;
+		this.image = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
 	}
 	
 	public int getId() {
@@ -73,5 +78,9 @@ public class ChatMessage {
 	
 	public LinphoneChatMessage.State getStatus() {
 		return LinphoneChatMessage.State.fromInt(status);
+	}
+
+	public Bitmap getImage() {
+		return image;
 	}
 }

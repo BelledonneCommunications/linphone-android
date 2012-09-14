@@ -89,6 +89,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		if (info == null || info.targetView == null) {
+			return false;
+		}
 		String sipUri = (String) info.targetView.getTag();
 		
 		LinphoneActivity.instance().removeFromChatList(sipUri);

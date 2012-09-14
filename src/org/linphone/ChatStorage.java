@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 
 /**
  * @author Sylvain Berfini
@@ -56,6 +59,16 @@ public class ChatStorage {
 		db.update(TABLE_NAME, values, "direction LIKE " + OUTGOING + " AND remoteContact LIKE \"" + to + "\" AND message LIKE \"" + message + "\"", null);
 	}
 	
+	public void updateMessageStatus(String to, Bitmap image, int status) {
+		ContentValues values = new ContentValues();
+		values.put("status", status);
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		image.compress(CompressFormat.JPEG, 100, baos);
+		
+		db.update(TABLE_NAME, values, "direction LIKE " + OUTGOING + " AND remoteContact LIKE \"" + to + "\" AND image LIKE \"" + baos.toByteArray() + "\"", null);
+	}
+	
 	public int saveMessage(String from, String to, String message) {
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
@@ -76,6 +89,30 @@ public class ChatStorage {
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
 	
+	public int saveMessage(String from, String to, Bitmap image) {
+		ContentValues values = new ContentValues();
+		if (from.equals("")) {
+			values.put("localContact", from);
+			values.put("remoteContact", to);
+			values.put("direction", OUTGOING);
+			values.put("read", READ);
+			values.put("status", LinphoneChatMessage.State.InProgress.toInt());
+		} else if (to.equals("")) {
+			values.put("localContact", to);
+			values.put("remoteContact", from);
+			values.put("direction", INCOMING);
+			values.put("read", NOT_READ);
+			values.put("status", LinphoneChatMessage.State.Idle.toInt());
+		}
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		image.compress(CompressFormat.JPEG, 100, baos);
+		values.put("image", baos.toByteArray());
+		
+		values.put("time", System.currentTimeMillis());
+		return (int) db.insert(TABLE_NAME, null, values);
+	}
+	
 	public List<ChatMessage> getMessages(String correspondent) {
 		List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
 		
@@ -88,8 +125,9 @@ public class ChatStorage {
 			message = c.getString(c.getColumnIndex("message"));
 			timestamp = c.getString(c.getColumnIndex("time"));
 			int status = c.getInt(c.getColumnIndex("status"));
+			byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
 			
-			ChatMessage chatMessage = new ChatMessage(id, message, timestamp, direction == INCOMING, status);
+			ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status);
 			chatMessages.add(chatMessage);
 		}
 		
@@ -128,7 +166,7 @@ public class ChatStorage {
 
 	class ChatHelper extends SQLiteOpenHelper {
 	
-	    private static final int DATABASE_VERSION = 3;
+	    private static final int DATABASE_VERSION = 4;
 	    private static final String DATABASE_NAME = "linphone-android";
 	    
 	    ChatHelper(Context context) {
@@ -137,7 +175,7 @@ public class ChatStorage {
 	
 	    @Override
 	    public void onCreate(SQLiteDatabase db) {
-	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT NOT NULL, time NUMERIC, read INTEGER, status INTEGER);");
+	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT, image BLOB, time NUMERIC, read INTEGER, status INTEGER);");
 	    }
 	
 		@Override

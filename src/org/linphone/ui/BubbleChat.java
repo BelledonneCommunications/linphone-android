@@ -27,6 +27,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.Html;
 import android.text.Spannable;
@@ -81,7 +82,7 @@ public class BubbleChat {
 	private RelativeLayout view;
 	private ImageView statusView;
 	
-	public BubbleChat(Context context, int id, String message, String time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
+	public BubbleChat(Context context, int id, String message, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
 		view = new RelativeLayout(context);
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -103,11 +104,13 @@ public class BubbleChat {
     	layoutParams.setMargins(0, LinphoneUtils.pixelsToDpi(context.getResources(), 10), 0, 0);
     	view.setLayoutParams(layoutParams);	
     	
-    	Spanned text;
-    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-    		text = getSmiledText(context, getTextWithHttpLinks(message));
-    	} else {
-    		text = getTextWithHttpLinks(message);
+    	Spanned text = null;
+    	if (message != null) {
+	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+	    		text = getSmiledText(context, getTextWithHttpLinks(message));
+	    	} else {
+	    		text = getTextWithHttpLinks(message);
+	    	}
     	}
     	
     	if (context.getResources().getBoolean(R.bool.display_messages_time_and_status)) {
@@ -127,8 +130,15 @@ public class BubbleChat {
 	    	}
 	    	
 	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
-	    	msgView.setText(text);
-	    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
+	    	if (message != null && msgView != null) {
+		    	msgView.setText(text);
+		    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
+	    	}
+	    	
+	    	ImageView imageView = (ImageView) layout.findViewById(R.id.image);
+	    	if (image != null && imageView != null) {
+		    	imageView.setImageBitmap(image);
+	    	}
 	    	
 	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
 	    	timeView.setText(timestampToHumanDate(context, time));
