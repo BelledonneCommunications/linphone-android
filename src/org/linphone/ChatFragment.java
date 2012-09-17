@@ -570,8 +570,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
     		final String filePath = getRealPathFromURI(data.getData());
         	showPopupMenuAskingImageSize(filePath);
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
 		}
-        super.onActivityResult(requestCode, resultCode, data);
     }
 	
 	class ProgressOutputStream extends OutputStream {
