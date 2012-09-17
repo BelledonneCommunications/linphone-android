@@ -611,7 +611,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		ChatFragment chatFragment = ((ChatFragment) messageListenerFragment);
 		if (messageListenerFragment != null && messageListenerFragment.isVisible() && chatFragment.getSipUri().equals(from.asStringUriOnly())) {
-			chatFragment.onMessageReceived(from, message);
+			chatFragment.onMessageReceived(id, from, message);
 			getChatStorage().markMessageAsRead(id);
 		} else if (LinphoneService.isReady()) {
 			displayMissedChats(getChatStorage().getUnreadMessageCount());
@@ -624,19 +624,19 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		displayMissedChats(getChatStorage().getUnreadMessageCount());
 	}
 	
-	public void onMessageSent(String to, String message) {
-		getChatStorage().saveMessage("", to, message);
+	public int onMessageSent(String to, String message) {
+		return getChatStorage().saveMessage("", to, message);
 	}
 	
-	public void onMessageSent(String to, Bitmap image) {
-		getChatStorage().saveMessage("", to, image);
+	public int onMessageSent(String to, Bitmap image, String imageURL) {
+		return getChatStorage().saveMessage("", to, image);
 	}
 	
 	public void onMessageStateChanged(String to, String message, int newState) {
 		getChatStorage().updateMessageStatus(to, message, newState);
 	}
 	
-	public void onMessageStateChanged(String to, Bitmap image, int newState) {
+	public void onImageMessageStateChanged(String to, String image, int newState) {
 		getChatStorage().updateMessageStatus(to, image, newState);
 	}
 

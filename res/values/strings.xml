@@ -319,5 +319,14 @@
 	<string name="button_setup_cancel">Cancel</string>
 	<string name="button_setup_back">Back</string>
 	<string name="button_setup_next">Let\'s go</string>
+
+	<string name="share_picture_size_small">Small</string>
+	<string name="share_picture_size_medium">Medium</string>
+	<string name="share_picture_size_large">Large</string>
+	<string name="share_picture_size_real">Real size</string>
+	<string name="save_picture">Save picture</string>
+	<string name="image_picker_title">Select source</string>
+	<string name="image_saved">Image saved</string>
+	<string name="image_not_saved">Error, image not saved</string>
 	
 </resources>

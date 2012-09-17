@@ -41,7 +41,7 @@ public class ChatMessage {
 		this.timestamp = timestamp;
 		this.incoming = incoming;
 		this.status = status;
-		this.image = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+		this.image = rawImage != null ? BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length) : null;
 	}
 	
 	public int getId() {

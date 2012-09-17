@@ -11,6 +11,16 @@
 	    android:orientation="horizontal">
         
         <ImageView 
+            android:contentDescription="@string/content_description_delete"
+            android:id="@+id/deleteAll"
+            android:src="@drawable/history_delete"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+        <ImageView 
             android:contentDescription="@string/content_description_all_calls"
             android:id="@+id/allCalls"
             android:src="@drawable/history_all"
@@ -43,7 +53,7 @@
         <ImageView 
             android:contentDescription="@string/content_description_validate"
             android:id="@+id/ok"
-            android:src="@drawable/ok"
+            android:src="@drawable/history_ok"
             android:visibility="gone"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
