@@ -49,31 +49,54 @@
         
     </ScrollView>
     
-    <LinearLayout 
+    <RelativeLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="60dp"
-	    android:gravity="center"
-	    android:orientation="horizontal">
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:background="@drawable/chat_field_background">
+        
+        <ImageView
+            android:contentDescription="@string/content_description_send_message"
+            android:id="@+id/sendPicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/chat_send_picture"
+            android:paddingLeft="10dp" />
+        
+        <ImageView
+            android:contentDescription="@string/content_description_send_message"
+            android:id="@+id/sendMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/chat_send_message"
+            android:paddingRight="15dp" />
         
         <EditText
             android:id="@+id/message"
             android:inputType="textShortMessage"
             android:textColor="@android:color/black"
-        	android:layout_weight="1"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:background="@drawable/chat_message_background"
-            android:padding="15dp"/>
-                
-        <ImageView
-            android:contentDescription="@string/content_description_send_message"
-            android:id="@+id/sendMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:src="@drawable/chat_send_message" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/sendPicture"
+            android:layout_toLeftOf="@id/sendMessage"
+            android:padding="20dp"/>
         
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toRightOf="@id/sendPicture"
+            android:layout_toLeftOf="@id/sendMessage"
+            android:visibility="gone"
+     		style="@android:style/Widget.ProgressBar.Horizontal"
+            android:paddingTop="2dp" />
+        
+    </RelativeLayout>
     
 </LinearLayout>

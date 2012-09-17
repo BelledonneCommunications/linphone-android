@@ -130,6 +130,7 @@ public class ChatStorage {
 			ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status);
 			chatMessages.add(chatMessage);
 		}
+		c.close();
 		
 		return chatMessages;
 	}
@@ -146,6 +147,7 @@ public class ChatStorage {
 			String remoteContact = c.getString(c.getColumnIndex("remoteContact"));
 			chatList.add(remoteContact);
 		}
+		c.close();
 		
 		return chatList;
 	}
@@ -166,7 +168,7 @@ public class ChatStorage {
 
 	class ChatHelper extends SQLiteOpenHelper {
 	
-	    private static final int DATABASE_VERSION = 4;
+	    private static final int DATABASE_VERSION = 9;
 	    private static final String DATABASE_NAME = "linphone-android";
 	    
 	    ChatHelper(Context context) {
@@ -183,5 +185,18 @@ public class ChatStorage {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");
 			onCreate(db);
 		}
+	}
+
+	public byte[] getRawImageFromMessage(int id) {
+		String[] columns = { "image" };
+		Cursor c = db.query(TABLE_NAME, columns, "id LIKE " + id + "", null, null, null, null);
+		
+		if (c.moveToFirst()) {
+			byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
+			c.close();
+			return rawImage;
+		}
+		
+		return null;
 	}
 }

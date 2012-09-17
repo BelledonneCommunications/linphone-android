@@ -133,11 +133,15 @@ public class BubbleChat {
 	    	if (message != null && msgView != null) {
 		    	msgView.setText(text);
 		    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
+	    	} else if (msgView != null) {
+	    		msgView.setVisibility(View.GONE);
 	    	}
 	    	
 	    	ImageView imageView = (ImageView) layout.findViewById(R.id.image);
 	    	if (image != null && imageView != null) {
 		    	imageView.setImageBitmap(image);
+	    	} else if (imageView != null) {
+	    		imageView.setVisibility(View.GONE);
 	    	}
 	    	
 	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
@@ -146,11 +150,11 @@ public class BubbleChat {
 	    	statusView = (ImageView) layout.findViewById(R.id.status);
 	    	if (statusView != null) {
 	    		if (status == LinphoneChatMessage.State.Delivered) {
-	    			statusView.setImageResource(R.drawable.led_connected); //FIXME
+	    			statusView.setImageResource(R.drawable.chat_message_delivered);
 	    		} else if (status == LinphoneChatMessage.State.NotDelivered) {
-	    			statusView.setImageResource(R.drawable.led_error); //FIXME
+	    			statusView.setImageResource(R.drawable.chat_message_not_delivered);
 	    		} else {
-	    			statusView.setImageResource(R.drawable.led_inprogress); //FIXME
+	    			statusView.setImageResource(R.drawable.chat_message_delivered);
 	    		}
 	    	}
 	    	
@@ -174,11 +178,11 @@ public class BubbleChat {
 		}
 		
 		if (status == LinphoneChatMessage.State.Delivered) {
-			statusView.setImageResource(R.drawable.led_connected); //FIXME
+			statusView.setImageResource(R.drawable.chat_message_delivered);
 		} else if (status == LinphoneChatMessage.State.NotDelivered) {
-			statusView.setImageResource(R.drawable.led_error); //FIXME
+			statusView.setImageResource(R.drawable.chat_message_not_delivered);
 		} else {
-			statusView.setImageResource(R.drawable.led_inprogress); //FIXME
+			statusView.setImageResource(R.drawable.chat_message_inprogress);
 		}
 		view.invalidate();
 	}

@@ -52,7 +52,7 @@ import android.widget.TextView;
 public class HistorySimpleFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private ListView historyList;
 	private LayoutInflater mInflater;
-	private ImageView allCalls, missedCalls, edit, ok;
+	private ImageView allCalls, missedCalls, edit, ok, deleteAll;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs; 
 	
@@ -66,14 +66,22 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
         historyList.setOnItemClickListener(this);
         registerForContextMenu(historyList);
         
+        deleteAll = (ImageView) view.findViewById(R.id.deleteAll);
+        deleteAll.setOnClickListener(this);
+        deleteAll.setEnabled(false);
+        
         allCalls = (ImageView) view.findViewById(R.id.allCalls);
         allCalls.setOnClickListener(this);
+        
         missedCalls = (ImageView) view.findViewById(R.id.missedCalls);
         missedCalls.setOnClickListener(this);
+        
         allCalls.setEnabled(false);
         onlyDisplayMissedCalls = false;
+        
         edit = (ImageView) view.findViewById(R.id.edit);
         edit.setOnClickListener(this);
+        
         ok = (ImageView) view.findViewById(R.id.ok);
         ok.setOnClickListener(this);
         
@@ -125,12 +133,17 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		else if (id == R.id.ok) {
 			edit.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
+	        deleteAll.setEnabled(false);
 			isEditMode = false;
 		} 
 		else if (id == R.id.edit) {
 			edit.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
+	        deleteAll.setEnabled(true);
 			isEditMode = true;
+		}
+		else if (id == R.id.deleteAll) {
+			LinphoneManager.getLc().clearCallLogs();
 		}
 		
 		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));

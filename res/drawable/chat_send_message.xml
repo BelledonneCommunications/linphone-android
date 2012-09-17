@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true" 
-        android:drawable="@drawable/chat_send_message_over" />
+        android:drawable="@drawable/chat_send_over" />
     <item android:state_enabled="false" 
-        android:drawable="@drawable/chat_send_message_disabled" />
+        android:drawable="@drawable/chat_send_disabled" />
     <item
-         android:drawable="@drawable/chat_send_message_default" />
+         android:drawable="@drawable/chat_send_default" />
 </selector>
 

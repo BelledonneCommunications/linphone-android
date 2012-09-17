@@ -39,7 +39,7 @@ import android.widget.TextView;
  */
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private ImageView back, editContact, newContact;
+	private ImageView editContact, newContact;
 	private LayoutInflater inflater;
 	private View view;
 
@@ -64,8 +64,6 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		this.inflater = inflater;
 		view = inflater.inflate(R.layout.contact, container, false);
 		
-		back = (ImageView) view.findViewById(R.id.back);
-		back.setOnClickListener(this);
 		editContact = (ImageView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
 		newContact = (ImageView) view.findViewById(R.id.newContact);
@@ -133,10 +131,6 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		Intent intent;
 			
 		switch (id) {
-		case R.id.back:
-			LinphoneActivity.instance().onBackPressed();
-			break;
-			
 		case R.id.editContact:
 			intent = Compatibility.prepareEditContactIntent(Integer.parseInt(contact.getID()));
 			startActivity(intent);
