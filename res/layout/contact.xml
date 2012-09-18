@@ -12,6 +12,7 @@
 	    android:orientation="horizontal">
         
         <ImageView 
+            android:contentDescription="@string/content_description_edit"
             android:id="@+id/editContact"
             android:src="@drawable/contact_edit"
 		    android:layout_width="match_parent"

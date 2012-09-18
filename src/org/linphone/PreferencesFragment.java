@@ -47,6 +47,7 @@ import org.linphone.setup.SetupActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -73,6 +74,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	private static final int ACCOUNTS_SETTINGS_ID = 0;
 	private static final int WIZARD_SETTINGS_ID = 1;
 	private static final int CAMERA_SETTINGS_ID = 5;
+	private static final int WIZARD_INTENT = 1;
 	
 	public PreferencesFragment() {
 		super(R.xml.preferences);
@@ -131,8 +133,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		// No video
 		if (!Version.isVideoCapable()) {
 			uncheckAndDisableCheckbox(pref_video_enable_key);
-		} else if (!AndroidCameraConfiguration.hasFrontCamera()) {
-			uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
+		} else {
+			if (!AndroidCameraConfiguration.hasFrontCamera()) {
+				uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
+			}
 		}
 
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
@@ -413,10 +417,19 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		wizard.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	Intent intent = new Intent(mContext, SetupActivity.class);
-	        	startActivity(intent);
+	        	startActivityForResult(intent, WIZARD_INTENT);
 	        	return true;
 	        }
         });
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == WIZARD_INTENT && resultCode == Activity.RESULT_OK) {
+			if (LinphoneActivity.isInstanciated()) {
+				LinphoneActivity.instance().goToDialer();
+			}
+		}
 	}
 
 	private void initializeMediaEncryptionPreferences() {
