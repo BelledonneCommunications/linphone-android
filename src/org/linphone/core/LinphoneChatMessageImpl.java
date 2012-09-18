@@ -4,9 +4,10 @@ public class LinphoneChatMessageImpl implements LinphoneChatMessage {
 	protected final long nativePtr;
 	private native void setUserData(long ptr);
 	private native String getMessage(long ptr);
-	private native LinphoneAddress getPeerAddress(long ptr);
+	private native long getPeerAddress(long ptr);
 	private native String getExternalBodyUrl(long ptr);
 	private native void setExternalBodyUrl(long ptr, String url);
+	private native long getFrom(long ptr);
 	
 	protected LinphoneChatMessageImpl(long aNativePtr)  {
 		nativePtr = aNativePtr;
@@ -35,7 +36,7 @@ public class LinphoneChatMessageImpl implements LinphoneChatMessage {
 	
 	@Override
 	public LinphoneAddress getPeerAddress() {
-		return getPeerAddress(nativePtr);
+		return new LinphoneAddressImpl(getPeerAddress(nativePtr));
 	}
 	
 	@Override
@@ -46,5 +47,10 @@ public class LinphoneChatMessageImpl implements LinphoneChatMessage {
 	@Override
 	public void setExternalBodyUrl(String url) {
 		setExternalBodyUrl(nativePtr, url);
+	}
+	
+	@Override
+	public LinphoneAddress getFrom() {
+		return new LinphoneAddressImpl(getFrom(nativePtr));
 	}
 }
