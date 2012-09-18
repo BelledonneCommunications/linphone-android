@@ -59,14 +59,11 @@ public class ChatStorage {
 		db.update(TABLE_NAME, values, "direction LIKE " + OUTGOING + " AND remoteContact LIKE \"" + to + "\" AND message LIKE \"" + message + "\"", null);
 	}
 	
-	public void updateMessageStatus(String to, Bitmap image, int status) {
+	public void updateMessageStatus(String to, int id, int status) {
 		ContentValues values = new ContentValues();
 		values.put("status", status);
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		image.compress(CompressFormat.JPEG, 100, baos);
-		
-		db.update(TABLE_NAME, values, "direction LIKE " + OUTGOING + " AND remoteContact LIKE \"" + to + "\" AND image LIKE \"" + baos.toByteArray() + "\"", null);
+		db.update(TABLE_NAME, values, "id LIKE " + id, null);
 	}
 	
 	public int saveMessage(String from, String to, String message) {
@@ -168,7 +165,7 @@ public class ChatStorage {
 
 	class ChatHelper extends SQLiteOpenHelper {
 	
-	    private static final int DATABASE_VERSION = 12;
+	    private static final int DATABASE_VERSION = 13;
 	    private static final String DATABASE_NAME = "linphone-android";
 	    
 	    ChatHelper(Context context) {

@@ -29,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -37,9 +38,11 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -97,6 +100,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private int previousMessageID;
 	private Handler mHandler = new Handler();
 	private BubbleChat lastSentMessageBubble;
+	private HashMap<Integer, String> latestImageMessages;
 	
 	private ProgressBar progressBar;
 	private int bytesSent;
@@ -283,7 +287,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 	
 	@Override
+	public void onPause() {
+		super.onPause();
+		latestImageMessages = null;
+		Log.e("Deleted hashmap");
+	}
+	
+	@SuppressLint("UseSparseArrays")
+	@Override
 	public void onResume() {
+		latestImageMessages = new HashMap<Integer, String>();
+		Log.e("New hashmap");
+		
 		super.onResume();
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -326,6 +341,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (LinphoneActivity.isInstanciated()) {
 				newId = LinphoneActivity.instance().onMessageSent(sipUri, bitmap, url);
 			}
+			latestImageMessages.put(newId, url);
+			Log.e("Add " + newId + ", " + url + " to hashmap");
 			
 			displayImageMessage(newId, bitmap, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout);
 			scrollToEnd();
@@ -362,10 +379,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					if (finalMessage != null) {
+					if (finalMessage != null && !finalMessage.equals("")) {
 						LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage, finalState.toInt());
-					} else if (finalImage != null) {
-						LinphoneActivity.instance().onImageMessageStateChanged(sipUri, finalImage, finalState.toInt());
+					} else if (finalImage != null && !finalImage.equals("")) {
+						if (latestImageMessages != null && latestImageMessages.containsValue(finalImage)) {
+							int id = -1;
+							for (int key : latestImageMessages.keySet()) {
+								String object = latestImageMessages.get(key);
+								if (object.equals(finalImage)) {
+									id = key;
+									break;
+								}
+							}
+							Log.e("ID = " + id);
+							if (id != -1) {
+								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, finalState.toInt());
+							}
+						}
 					}
 					if (lastSentMessageBubble != null) {
 						lastSentMessageBubble.updateStatusView(finalState);
