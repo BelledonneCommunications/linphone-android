@@ -104,6 +104,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private String fileToUploadPath;
 	private Bitmap imageToUpload;
 	private Uri imageToUploadUri;
+	private Thread uploadThread;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -141,7 +142,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         cancelUpload.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				uploadThread.interrupt();
+				uploadLayout.setVisibility(View.GONE);
+				textLayout.setVisibility(View.VISIBLE);
+				progressBar.setProgress(0);
 			}
 		});
         
@@ -533,48 +537,59 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		uploadLayout.setVisibility(View.VISIBLE);
     	textLayout.setVisibility(View.GONE);
 		
-    	new Thread(new Runnable() {
+    	uploadThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				Bitmap bm = null;
-				if (filePath != null) {
-	                bm = BitmapFactory.decodeFile(filePath);
-	                if (bm != null && size != ImageSize.REAL) {
-	                	int pixelsMax = size == ImageSize.SMALL ? SIZE_SMALL : size == ImageSize.MEDIUM ? SIZE_MEDIUM : SIZE_LARGE;
-	                    if (bm.getWidth() > bm.getHeight() && bm.getWidth() > pixelsMax) {
-	                    	bm = Bitmap.createScaledBitmap(bm, pixelsMax, (pixelsMax * bm.getHeight()) / bm.getWidth(), false);
-	                    } else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > pixelsMax) {
-	                    	bm = Bitmap.createScaledBitmap(bm, (pixelsMax * bm.getWidth()) / bm.getHeight(), pixelsMax, false);
-	                    }
-	                }
-				} else if (image != null) {
-					bm = image;
+				String url = null;
+				
+				if (!uploadThread.isInterrupted()) {
+					if (filePath != null) {
+		                bm = BitmapFactory.decodeFile(filePath);
+		                if (bm != null && size != ImageSize.REAL) {
+		                	int pixelsMax = size == ImageSize.SMALL ? SIZE_SMALL : size == ImageSize.MEDIUM ? SIZE_MEDIUM : SIZE_LARGE;
+		                    if (bm.getWidth() > bm.getHeight() && bm.getWidth() > pixelsMax) {
+		                    	bm = Bitmap.createScaledBitmap(bm, pixelsMax, (pixelsMax * bm.getHeight()) / bm.getWidth(), false);
+		                    } else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > pixelsMax) {
+		                    	bm = Bitmap.createScaledBitmap(bm, (pixelsMax * bm.getWidth()) / bm.getHeight(), pixelsMax, false);
+		                    }
+		                }
+					} else if (image != null) {
+						bm = image;
+					}
 				}
-                final Bitmap fbm = bm;
                 
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
                 if (bm != null) {
                 	bm.compress(CompressFormat.JPEG, COMPRESSOR_QUALITY, outStream);
                 }
                 
-                final String url = uploadImage(filePath, bm, COMPRESSOR_QUALITY, outStream.size());
-                File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
-                file.delete();
+                if (!uploadThread.isInterrupted() && bm != null) {
+	                url = uploadImage(filePath, bm, COMPRESSOR_QUALITY, outStream.size());
+	                File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+	                file.delete();
+                }
                     
-                mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						uploadLayout.setVisibility(View.GONE);
-						textLayout.setVisibility(View.VISIBLE);
-		            	if (url != null) {
-		            		sendImageMessage(url, fbm);
-		            	} else {
-		            		Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_LONG).show();
-		            	}
-					}
-				});
+                if (!uploadThread.isInterrupted()) {
+                    final Bitmap fbm = bm;
+                    final String furl = url;
+	                mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							uploadLayout.setVisibility(View.GONE);
+							textLayout.setVisibility(View.VISIBLE);
+							progressBar.setProgress(0);
+			            	if (furl != null) {
+			            		sendImageMessage(furl, fbm);
+			            	} else {
+			            		Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_LONG).show();
+			            	}
+						}
+					});
+                }
 			}
-		}).start();
+		});
+    	uploadThread.start();
 	}
 	
 	@Override
