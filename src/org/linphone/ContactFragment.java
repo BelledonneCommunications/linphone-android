@@ -95,6 +95,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		for (String numberOrAddress : contact.getNumerosOrAddresses()) {
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
+			if (numberOrAddress.startsWith("sip:")) {
+				numberOrAddress = numberOrAddress.substring(4);
+			}
 			((TextView) v.findViewById(R.id.numeroOrAddress)).setText(numberOrAddress);
 			
 			v.findViewById(R.id.dial).setOnClickListener(dialListener);

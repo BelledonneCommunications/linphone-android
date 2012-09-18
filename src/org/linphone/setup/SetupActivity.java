@@ -21,6 +21,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Log;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -143,6 +144,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			writePreference(R.string.first_launch_suceeded_once_key, true);
+			setResult(Activity.RESULT_OK);
 			finish();
 		}
 	}
@@ -189,6 +191,19 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			writePreference(R.string.pref_username_key, username);
 			writePreference(R.string.pref_passwd_key, password);
 			writePreference(R.string.pref_domain_key, domain);
+			
+			boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
+			if (isMainAccountLinphoneDotOrg) {
+				writePreference(R.string.pref_proxy_key, domain + ":5223");
+				writePreference(R.string.pref_enable_outbound_proxy_key, true);
+				writePreference(R.string.pref_stun_server_key, "stun.linphone.org");
+				
+				writePreference(R.string.pref_ice_enable_key, true);
+				writePreference(R.string.pref_push_notification_key, true);
+				writePreference(R.string.pref_transport_tls_key, true);
+				writePreference(R.string.pref_transport_tcp_key, false);
+				writePreference(R.string.pref_transport_udp_key, false);
+			}
 		} else {
 			writePreference(getString(R.string.pref_username_key) + newAccountId, username);
 			writePreference(getString(R.string.pref_passwd_key) + newAccountId, password);

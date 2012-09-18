@@ -143,6 +143,7 @@
 		
 		<CheckBoxPreference 
 		    android:key="@string/pref_video_use_front_camera_key"
+		    android:defaultValue="true"
 			android:title="@string/pref_video_use_front_camera_title"
 			android:dependency="@string/pref_video_enable_key"/>
 	
@@ -246,7 +247,7 @@
 			<CheckBoxPreference 
 			    android:key="@string/pref_push_notification_key"
 				android:title="@string/pref_push_notification"
-				android:defaultValue="true"/>
+				android:defaultValue="false"/>
 			
 		</PreferenceScreen>
 		

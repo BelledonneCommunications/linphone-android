@@ -57,15 +57,15 @@
 	    android:background="@drawable/chat_field_background">
         
         <ImageView
-            android:contentDescription="@string/content_description_send_message"
             android:id="@+id/sendPicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:adjustViewBounds="true"
-            android:src="@drawable/chat_send_picture"
-            android:paddingLeft="10dp" />
+            android:contentDescription="@string/content_description_send_message"
+            android:paddingLeft="8dp"
+            android:src="@drawable/chat_send_picture" />
         
         <ImageView
             android:contentDescription="@string/content_description_send_message"
