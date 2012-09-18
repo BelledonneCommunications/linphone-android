@@ -636,8 +636,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		getChatStorage().updateMessageStatus(to, message, newState);
 	}
 	
-	public void onImageMessageStateChanged(String to, String image, int newState) {
-		getChatStorage().updateMessageStatus(to, image, newState);
+	public void onImageMessageStateChanged(String to, int id, int newState) {
+		getChatStorage().updateMessageStatus(to, id, newState);
 	}
 
 	@Override

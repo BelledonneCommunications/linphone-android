@@ -154,7 +154,7 @@ public class BubbleChat {
 	    		} else if (status == LinphoneChatMessage.State.NotDelivered) {
 	    			statusView.setImageResource(R.drawable.chat_message_not_delivered);
 	    		} else {
-	    			statusView.setImageResource(R.drawable.chat_message_delivered);
+	    			statusView.setImageResource(R.drawable.chat_message_inprogress);
 	    		}
 	    	}
 	    	
