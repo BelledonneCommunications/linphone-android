@@ -144,6 +144,7 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		}
 		else if (id == R.id.deleteAll) {
 			LinphoneManager.getLc().clearCallLogs();
+			mLogs = new ArrayList<LinphoneCallLog>();
 		}
 		
 		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
