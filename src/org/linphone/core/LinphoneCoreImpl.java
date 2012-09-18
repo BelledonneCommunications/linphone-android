@@ -736,4 +736,9 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public String getVersion() {
 		return getVersion(nativePtr);
 	}
+	
+	@Override
+	public PayloadType findPayloadType(String mime, int clockRate) {
+		return null;
+	}
 }

@@ -885,9 +885,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	@Override
-	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneAddress from, LinphoneChatMessage message) {
+	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
-			((LinphoneActivity) listener).onMessageReceived(from, message);
+			((LinphoneActivity) listener).onMessageReceived(message.getFrom(), message);
 		}
 	}
 

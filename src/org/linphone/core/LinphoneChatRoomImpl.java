@@ -44,11 +44,7 @@ class LinphoneChatRoomImpl implements LinphoneChatRoom {
 		sendMessage2(nativePtr, message.getNativePtr(), listener);
 		
 	}
-	@Override
-	public void sendMessage(Object opaque, String message) {
-		// ignore, deprecated.
-		
-	}
+
 	@Override
 	public LinphoneChatMessage createLinphoneChatMessage(String message) {
 		return new LinphoneChatMessageImpl(createLinphoneChatMessage(nativePtr, message));
