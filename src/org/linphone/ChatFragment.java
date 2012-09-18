@@ -21,7 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,15 +37,11 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -78,7 +73,7 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.StateListener {
-	private static final int ADD_PHOTO = 0;
+	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_SAVE_PICTURE = 1;
 	private static final int MENU_PICTURE_SMALL = 2;
@@ -94,18 +89,21 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private View view;
 	private String sipUri;
 	private EditText message;
-	private ImageView sendImage;
+	private ImageView sendImage, cancelUpload;
 	private TextView contactName;
 	private AvatarWithShadow contactPicture;
-	private RelativeLayout messagesLayout;
+	private RelativeLayout messagesLayout, uploadLayout, textLayout;
 	private ScrollView messagesScrollView;
 	private int previousMessageID;
 	private Handler mHandler = new Handler();
 	private BubbleChat lastSentMessageBubble;
+	
 	private ProgressBar progressBar;
 	private int bytesSent;
 	private String uploadServerUri;
 	private String fileToUploadPath;
+	private Bitmap imageToUpload;
+	private Uri imageToUploadUri;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -123,6 +121,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         sendMessage.setOnClickListener(this);
         message = (EditText) view.findViewById(R.id.message);
         
+        uploadLayout = (RelativeLayout) view.findViewById(R.id.uploadLayout);
+        textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
+        
         messagesLayout = (RelativeLayout) view.findViewById(R.id.messages);
         messagesScrollView = (ScrollView) view.findViewById(R.id.chatScrollView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
@@ -133,6 +134,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			@Override
 			public void onClick(View v) {
 				pickImage();
+			}
+		});
+        
+        cancelUpload = (ImageView) view.findViewById(R.id.cancelUpload);
+        cancelUpload.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//TODO
 			}
 		});
         
@@ -228,13 +237,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		
 		if (v.getId() == R.id.sendPicture) {
 			menu.add(0, MENU_PICTURE_SMALL, 0, getString(R.string.share_picture_size_small));
 			menu.add(0, MENU_PICTURE_MEDIUM, 0, getString(R.string.share_picture_size_medium));
 			menu.add(0, MENU_PICTURE_LARGE, 0, getString(R.string.share_picture_size_large));
-			menu.add(0, MENU_PICTURE_REAL, 0, getString(R.string.share_picture_size_real));
+//			Not a good idea, very big pictures cause Out of Memory exceptions, slow display, ...
+//			menu.add(0, MENU_PICTURE_REAL, 0, getString(R.string.share_picture_size_real));
 		} else {
 			menu.add(v.getId(), MENU_DELETE_MESSAGE, 0, getString(R.string.delete));
 			ImageView iv = (ImageView) v.findViewById(R.id.image);
@@ -255,16 +263,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			saveImage(item.getGroupId());
 			break;
 		case MENU_PICTURE_SMALL:
-			uploadAndSendImage(fileToUploadPath, ImageSize.SMALL);
+			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.SMALL);
 			break;
 		case MENU_PICTURE_MEDIUM:
-			uploadAndSendImage(fileToUploadPath, ImageSize.MEDIUM);
+			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.MEDIUM);
 			break;
 		case MENU_PICTURE_LARGE:
-			uploadAndSendImage(fileToUploadPath, ImageSize.LARGE);
+			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.LARGE);
 			break;
 		case MENU_PICTURE_REAL:
-			uploadAndSendImage(fileToUploadPath, ImageSize.REAL);
+			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.REAL);
 			break;
 		}
 		return true;
@@ -273,6 +281,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onResume() {
 		super.onResume();
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
 			LinphoneActivity.instance().updateChatFragment(this);
@@ -368,16 +377,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 	private void pickImage() {
 	    final List<Intent> cameraIntents = new ArrayList<Intent>();
-	    final Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-	    final PackageManager packageManager = getActivity().getPackageManager();
-	    final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-	    for(ResolveInfo res : listCam) {
-	        final String packageName = res.activityInfo.packageName;
-	        final Intent intent = new Intent(captureIntent);
-	        intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-	        intent.setPackage(packageName);
-	        cameraIntents.add(intent);
-	    }
+	    final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+	    imageToUploadUri = Uri.fromFile(file);
+    	captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
+	    cameraIntents.add(captureIntent);
 
 	    final Intent galleryIntent = new Intent();
 	    galleryIntent.setType("image/*");
@@ -437,10 +441,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 	
 	private String uploadImage(String filePath, Bitmap file, int compressorQuality, final int imageSize) {
-		File sourceFile = new File(filePath); 
-		if (!sourceFile.isFile()) {
-			Log.e("Can't read source file " + filePath + ", upload failed");
-			return null;
+		String fileName;
+		if (filePath != null) {
+			File sourceFile = new File(filePath); 
+			fileName = sourceFile.getName();
+		} else {
+			fileName = "linphone-android-photo-" + System.currentTimeMillis() + ".jpg";
 		}
 		
 		String response = null;
@@ -450,7 +456,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			String twoHyphens = "--";
 			String boundary = "---------------------------14737809831466499882746641449";
 			
-            FileInputStream fileInputStream = new FileInputStream(sourceFile);
             URL url = new URL(uploadServerUri);
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoInput(true); 
@@ -460,7 +465,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
             conn.setRequestProperty("Connection", "Keep-Alive");
             conn.setRequestProperty("ENCTYPE", "multipart/form-data");
             conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-            conn.setRequestProperty("uploaded_file", sourceFile.getName()); 
+            conn.setRequestProperty("uploaded_file", fileName); 
             
             ProgressOutputStream pos = new ProgressOutputStream(conn.getOutputStream());
             pos.setListener(new OutputStreamListener() {
@@ -473,7 +478,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
             DataOutputStream dos = new DataOutputStream(pos);
   
             dos.writeBytes(lineEnd + twoHyphens + boundary + lineEnd); 
-            dos.writeBytes("Content-Disposition: form-data; name=\"userfile\"; filename=\""+ sourceFile.getName() + "\"" + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"userfile\"; filename=\""+ fileName + "\"" + lineEnd);
             dos.writeBytes("Content-Type: application/octet-stream" + lineEnd);
             dos.writeBytes(lineEnd);
   
@@ -482,7 +487,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
             dos.writeBytes(lineEnd);
             dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
-            fileInputStream.close();
             dos.flush();
             dos.close();
             
@@ -519,27 +523,33 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	    return cursor.getString(column_index);
     }
 	
-	private void showPopupMenuAskingImageSize(String filePath) {
+	private void showPopupMenuAskingImageSize(String filePath, Bitmap image) {
 		fileToUploadPath = filePath;
-		getActivity().openContextMenu(sendImage);
+		imageToUpload = image;
+		sendImage.showContextMenu();
 	}
 	
-	private void uploadAndSendImage(final String filePath, final ImageSize size) {
-		progressBar.setVisibility(View.VISIBLE);
-    	message.setVisibility(View.GONE);
+	private void uploadAndSendImage(final String filePath, final Bitmap image, final ImageSize size) {
+		uploadLayout.setVisibility(View.VISIBLE);
+    	textLayout.setVisibility(View.GONE);
 		
     	new Thread(new Runnable() {
 			@Override
 			public void run() {
-                Bitmap bm = BitmapFactory.decodeFile(filePath);
-                if (bm != null && size != ImageSize.REAL) {
-                	int pixelsMax = size == ImageSize.SMALL ? SIZE_SMALL : size == ImageSize.MEDIUM ? SIZE_MEDIUM : SIZE_LARGE;
-                    if (bm.getWidth() > bm.getHeight() && bm.getWidth() > pixelsMax) {
-                    	bm = Bitmap.createScaledBitmap(bm, pixelsMax, (pixelsMax * bm.getHeight()) / bm.getWidth(), false);
-                    } else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > pixelsMax) {
-                    	bm = Bitmap.createScaledBitmap(bm, (pixelsMax * bm.getWidth()) / bm.getHeight(), pixelsMax, false);
-                    }
-                }
+				Bitmap bm = null;
+				if (filePath != null) {
+	                bm = BitmapFactory.decodeFile(filePath);
+	                if (bm != null && size != ImageSize.REAL) {
+	                	int pixelsMax = size == ImageSize.SMALL ? SIZE_SMALL : size == ImageSize.MEDIUM ? SIZE_MEDIUM : SIZE_LARGE;
+	                    if (bm.getWidth() > bm.getHeight() && bm.getWidth() > pixelsMax) {
+	                    	bm = Bitmap.createScaledBitmap(bm, pixelsMax, (pixelsMax * bm.getHeight()) / bm.getWidth(), false);
+	                    } else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > pixelsMax) {
+	                    	bm = Bitmap.createScaledBitmap(bm, (pixelsMax * bm.getWidth()) / bm.getHeight(), pixelsMax, false);
+	                    }
+	                }
+				} else if (image != null) {
+					bm = image;
+				}
                 final Bitmap fbm = bm;
                 
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -548,12 +558,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
                 }
                 
                 final String url = uploadImage(filePath, bm, COMPRESSOR_QUALITY, outStream.size());
+                File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+                file.delete();
                     
                 mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						progressBar.setVisibility(View.GONE);
-		            	message.setVisibility(View.VISIBLE);
+						uploadLayout.setVisibility(View.GONE);
+						textLayout.setVisibility(View.VISIBLE);
 		            	if (url != null) {
 		            		sendImageMessage(url, fbm);
 		            	} else {
@@ -568,8 +580,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
-    		final String filePath = getRealPathFromURI(data.getData());
-        	showPopupMenuAskingImageSize(filePath);
+        	if (data != null && data.getExtras() != null && data.getExtras().get("data") != null) {
+        		Bitmap bm = (Bitmap) data.getExtras().get("data");
+        		showPopupMenuAskingImageSize(null, bm);
+        	} 
+        	else if (data != null && data.getData() != null) {
+	    		String filePath = getRealPathFromURI(data.getData());
+	        	showPopupMenuAskingImageSize(filePath, null);
+        	}
+        	else if (imageToUploadUri != null) {
+        		String filePath = imageToUploadUri.getPath();
+        		showPopupMenuAskingImageSize(filePath, null);
+        	}
+        	else {
+        		File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+        		if (file.exists()) {
+	        	    imageToUploadUri = Uri.fromFile(file);
+	        	    String filePath = imageToUploadUri.getPath();
+	        		showPopupMenuAskingImageSize(filePath, null);
+        		}
+        	}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}

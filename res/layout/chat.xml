@@ -50,6 +50,7 @@
     </ScrollView>
     
     <RelativeLayout 
+        android:id="@+id/messageLayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal"
@@ -85,15 +86,34 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/sendPicture"
             android:layout_toLeftOf="@id/sendMessage"
+            android:background="@android:color/transparent"
             android:padding="20dp"/>
+        
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/uploadLayout"
+        android:visibility="gone"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:background="@drawable/chat_progressbar_background">
+        
+        <ImageView 
+            android:contentDescription="@string/content_description_cancel"
+            android:id="@+id/cancelUpload"
+            android:src="@drawable/chat_stop_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true" />
         
         <ProgressBar
             android:id="@+id/progressbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_toRightOf="@id/sendPicture"
-            android:layout_toLeftOf="@id/sendMessage"
-            android:visibility="gone"
+            android:layout_height="15dp"
+            android:layout_toLeftOf="@id/cancelUpload"
+            android:layout_centerVertical="true"
      		style="@android:style/Widget.ProgressBar.Horizontal"
             android:paddingTop="2dp" />
         
