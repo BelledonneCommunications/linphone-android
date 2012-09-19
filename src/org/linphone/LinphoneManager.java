@@ -55,6 +55,8 @@ import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneCallStats.MediaType;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
@@ -1001,6 +1003,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		mListenerDispatcher.onCallStateChanged(call, state, message);
 	}
+
+	public void callStatsUpdated(final LinphoneCore lc, final LinphoneCall call, final LinphoneCallStats stats) {}
 
 	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
 			boolean encrypted, String authenticationToken) {
