@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="bottom"
         android:orientation="horizontal">
     
 		<ImageView
@@ -17,8 +18,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
+		    android:scaleType="fitEnd"
 		    android:src="@drawable/mark"
 		    android:visibility="invisible" />
 		
@@ -27,8 +27,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
+		    android:scaleType="fitEnd"
 		    android:src="@drawable/mark"
 		    android:visibility="invisible" />
 		
@@ -37,18 +36,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.24"
-		    android:adjustViewBounds="true"
 		    android:scaleType="fitEnd"
-		    android:src="@drawable/dialer"
-		    android:visibility="invisible" />
-		
-		<ImageView
-		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
 		    android:src="@drawable/mark"
 		    android:visibility="invisible" />
 		
@@ -57,8 +45,16 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
+		    android:scaleType="fitEnd"
+		    android:src="@drawable/mark"
+		    android:visibility="invisible" />
+		
+		<ImageView
+		    android:contentDescription="@string/content_description_mark"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.2"
+		    android:scaleType="fitEnd"
 		    android:src="@drawable/mark"
 		    android:visibility="invisible" />
         
@@ -75,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingTop="20dp">
+            android:paddingTop="40dp">
         
 	        <LinearLayout
 	            android:id="@+id/fragmentContainer"
@@ -98,6 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/status" />
+        
     </FrameLayout>
 
     <LinearLayout

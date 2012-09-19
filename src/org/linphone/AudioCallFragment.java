@@ -21,6 +21,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Log;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.app.Activity;
@@ -31,6 +32,7 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -41,16 +43,20 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class AudioCallFragment extends Fragment {
+public class AudioCallFragment extends Fragment implements OnClickListener {
 	private static final int rowHeight = 75; // Value set in active_call.xml
-//	private static final int rowImageHeight = 100; // Value set in active_call.xml
+	private static final int rowImageHeight = 75; // Value set in avatar.xml
+	private static final int botMarginIfImage = 25;
 	private static final int rowThickRatio = 85; // Ratio dependent from the image
 	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
-//	private static final int topMarginWithImage = topMargin + rowImageHeight;
+	private static final int topMarginWithImage = topMargin + rowImageHeight + botMarginIfImage;
 	
 	private RelativeLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
+	private boolean previousCallIsActive = false;
+	
+	private InCallActivity incallActvityInstance;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -75,6 +81,7 @@ public class AudioCallFragment extends Fragment {
 		displayOrHideContactPicture(callView, pictureUri, hide);
 		setRowBackgroundAndPadding(callView, resources, index);
 		registerCallDurationTimer(callView, call);
+		previousCallIsActive = !hide;
 	}
 	
 	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
@@ -93,6 +100,9 @@ public class AudioCallFragment extends Fragment {
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
 		boolean isCallPaused;
 		ImageView callState = (ImageView) callView.findViewById(R.id.callStatus);
+		callState.setTag(call);
+		callState.setOnClickListener(this);
+		
 		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote || call.getState() == State.Pausing) {
 			callState.setImageResource(R.drawable.pause_default);
 			isCallPaused = true;
@@ -103,6 +113,7 @@ public class AudioCallFragment extends Fragment {
 			callState.setImageResource(R.drawable.play_default);
 			isCallPaused = false;
 		}
+		
 		return isCallPaused;
 	}
 	
@@ -121,7 +132,11 @@ public class AudioCallFragment extends Fragment {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call_first);
     	} else {
     		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call);
-    		callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMargin * index), 0, 0);
+    		if (previousCallIsActive) {
+    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMarginWithImage * index), 0, 0);
+    		} else {
+    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMargin * index), 0, 0);
+    		}
     	}
 	}
 	
@@ -141,11 +156,26 @@ public class AudioCallFragment extends Fragment {
 	}
 
 	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+		case R.id.callStatus:
+			LinphoneCall call = (LinphoneCall) v.getTag();
+			if (incallActvityInstance != null) {
+				Log.e("InCallActivity instanciated");
+				incallActvityInstance.pauseOrResumeCall(call);
+			}
+			break;
+		}
+	}
+
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		incallActvityInstance = (InCallActivity) activity;
 		
-		if (InCallActivity.isInstanciated()) {
-			InCallActivity.instance().bindAudioFragment(this);
+		if (incallActvityInstance != null) {
+			incallActvityInstance.bindAudioFragment(this);
 		}
 	}
 	

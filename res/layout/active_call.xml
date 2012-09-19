@@ -50,6 +50,6 @@
 	    android:layout_height="wrap_content"
 	    linphone:picture="@drawable/unknown_small"
 	    android:layout_gravity="center"
-	    android:paddingBottom="10sp" />
+	    android:paddingBottom="10dp" />
 
 </LinearLayout>
