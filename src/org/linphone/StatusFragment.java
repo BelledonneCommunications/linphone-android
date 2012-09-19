@@ -277,9 +277,11 @@ public class StatusFragment extends Fragment {
 		super.onResume();
 
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		if (isInCall && call != null) {
+		if (isInCall && (call != null || LinphoneManager.getLc().getConferenceSize() > 1)) {
 			startCallQuality();
-			refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+			if (call != null) {
+				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+			}
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);

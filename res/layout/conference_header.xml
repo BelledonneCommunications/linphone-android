@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/cell_call_first">
+	    
+    <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="20dp"
+       	android:paddingRight="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/text_header"
+        android:text="@string/conference"
+        android:textSize="26dp" />
+    
+    <ImageView
+        android:contentDescription="@string/content_description_pause"
+        android:id="@+id/conferenceStatus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/pause_default" />
+    
+    <Chronometer
+        android:visibility="invisible"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+       	android:paddingRight="20dp"
+       	android:gravity="center_vertical|right"
+	    android:textColor="@android:color/white"
+	    android:textSize="22dp" />
+
+</LinearLayout>
