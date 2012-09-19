@@ -26,6 +26,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 
@@ -63,7 +64,7 @@ public class InCallActivity extends FragmentActivity implements
 	private Handler mHandler = new Handler();
 	private Handler mControlsHandler = new Handler();
 	private Runnable mControls;
-	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera, options, transfer;
+	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera, options, transfer, conference;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
@@ -153,6 +154,8 @@ public class InCallActivity extends FragmentActivity implements
 		pause.setEnabled(false);
 		hangUp = (ImageView) findViewById(R.id.hangUp);
 		hangUp.setOnClickListener(this);
+		conference = (ImageView) findViewById(R.id.conference);
+		conference.setOnClickListener(this);
 		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
 		dialer.setEnabled(false);
@@ -177,19 +180,10 @@ public class InCallActivity extends FragmentActivity implements
         }
 	}
 	
-	private void enableAndRefreshInCallActions() {
+	private void refreshInCallActions() {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				options.setEnabled(true);
-				video.setEnabled(true);
-				micro.setEnabled(true);
-				speaker.setEnabled(true);
-				addCall.setEnabled(true);
-				transfer.setEnabled(true);
-				pause.setEnabled(true);
-				dialer.setEnabled(true);
-
 				if (!isVideoActivatedInSettings()) {
 					video.setEnabled(false);
 				} else {
@@ -211,6 +205,40 @@ public class InCallActivity extends FragmentActivity implements
 				} else {
 					micro.setImageResource(R.drawable.micro_on);
 				}
+				
+				if (LinphoneManager.getLc().getCallsNb() > 1) {
+					conference.setVisibility(View.VISIBLE);
+					pause.setVisibility(View.GONE);
+				} else {
+					conference.setVisibility(View.GONE);
+					pause.setVisibility(View.VISIBLE);
+					
+					List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.Paused));
+					if (pausedCalls.size() == 1) {
+						pause.setImageResource(R.drawable.pause_on);
+					} else {
+						pause.setImageResource(R.drawable.pause_off);
+					}
+				}
+			}
+		});
+	}
+	
+	private void enableAndRefreshInCallActions() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				options.setEnabled(true);
+				video.setEnabled(true);
+				micro.setEnabled(true);
+				speaker.setEnabled(true);
+				addCall.setEnabled(true);
+				transfer.setEnabled(true);
+				pause.setEnabled(true);
+				dialer.setEnabled(true);
+				conference.setEnabled(true);
+
+				refreshInCallActions();
 			}
 		});
 	}
@@ -247,13 +275,16 @@ public class InCallActivity extends FragmentActivity implements
 			goBackToDialer();
 		} 
 		else if (id == R.id.pause) {
-			pause();
+			pauseOrResumeCall();
 		} 
 		else if (id == R.id.hangUp) {
 			hangUp();
 		} 
 		else if (id == R.id.dialer) {
 			hideOrDisplayNumpad();
+		}
+		else if (id == R.id.conference) {
+			enterConference();
 		}
 		else if (id == R.id.switchCamera) {
 			if (videoCallFragment != null) {
@@ -351,18 +382,29 @@ public class InCallActivity extends FragmentActivity implements
 		LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 	}
 	
-	private void pause() {
+	private void pauseOrResumeCall() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall call = lc.getCurrentCall();
+		pauseOrResumeCall(call);
+	}
+	
+	public void pauseOrResumeCall(LinphoneCall call) {
+		Log.e("Call = " + call);
+		LinphoneCore lc = LinphoneManager.getLc();
 		if (call != null && LinphoneUtils.isCallRunning(call)) {
+			Log.e("Pausing call " + call);
 			lc.pauseCall(call);
 			pause.setImageResource(R.drawable.pause_on);
 		} else {
 			List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc, Arrays.asList(State.Paused));
 			if (pausedCalls.size() == 1) {
 				LinphoneCall callToResume = pausedCalls.get(0);
-				lc.resumeCall(callToResume);
-				pause.setImageResource(R.drawable.pause_off);
+				Log.e("CallToResume " + callToResume);
+				if ((call != null && callToResume.equals(call)) || call == null) {
+					Log.e("Resuming call " + callToResume);
+					lc.resumeCall(callToResume);
+					pause.setImageResource(R.drawable.pause_off);
+				}
 			}
 		}
 	}
@@ -378,6 +420,10 @@ public class InCallActivity extends FragmentActivity implements
 		} else {
 			lc.terminateAllCalls();
 		}
+	}
+	
+	private void enterConference() {
+		//TODO
 	}
 	
 	public void displayVideoCallControlsIfHidden() {
@@ -661,6 +707,7 @@ public class InCallActivity extends FragmentActivity implements
 				});
 			}
 		}
+		refreshInCallActions();
 		
 		if (audioCallFragment != null) {
 			mHandler.post(new Runnable() {
@@ -688,6 +735,7 @@ public class InCallActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onResume() {
+		instance = this;
 		LinphoneManager.addListener(this);
 		LinphoneManager.startProximitySensorForActivity(this);
 		
