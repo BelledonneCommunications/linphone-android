@@ -23,6 +23,9 @@ class LinphoneCallImpl implements LinphoneCall {
  
 	protected final long nativePtr;
 	boolean ownPtr = false;
+	private LinphoneCallStats audioStats;
+	private LinphoneCallStats videoStats;
+
 	native private void finalize(long nativePtr);
 	native private long  getCallLog(long nativePtr);
 	private native boolean isIncoming(long nativePtr);
@@ -57,6 +60,18 @@ class LinphoneCallImpl implements LinphoneCall {
 		} else {
 			return null;
 		}
+	}
+	public void setAudioStats(LinphoneCallStats stats) {
+		audioStats = stats;
+	}
+	public void setVideoStats(LinphoneCallStats stats) {
+		videoStats = stats;
+	}
+	public LinphoneCallStats getAudioStats() {
+		return audioStats;
+	}
+	public LinphoneCallStats getVideoStats() {
+		return videoStats;
 	}
 	public CallDirection getDirection() {
 		return isIncoming(nativePtr)?CallDirection.Incoming:CallDirection.Outgoing;
