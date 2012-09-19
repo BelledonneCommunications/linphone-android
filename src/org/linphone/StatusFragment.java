@@ -275,13 +275,18 @@ public class StatusFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		LinphoneCore lc = LinphoneManager.getLc();
 
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		if (isInCall && (call != null || LinphoneManager.getLc().getConferenceSize() > 1)) {
-			startCallQuality();
+		LinphoneCall call = lc.getCurrentCall();
+		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 			if (call != null) {
+				startCallQuality();
 				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			}
+			
+			exit.setVisibility(View.GONE);
+			statusText.setVisibility(View.GONE);
+			encryption.setVisibility(View.VISIBLE);
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
@@ -291,6 +296,11 @@ public class StatusFragment extends Fragment {
 				drawer.lock();
 			}
 		} else {
+			exit.setVisibility(View.VISIBLE);
+			statusText.setVisibility(View.VISIBLE);
+			background.setVisibility(View.VISIBLE);
+			encryption.setVisibility(View.GONE);
+			
 			if (drawer != null && getResources().getBoolean(R.bool.lock_statusbar)) {
 				drawer.lock();
 			} else if (drawer != null) {
@@ -314,15 +324,12 @@ public class StatusFragment extends Fragment {
 	}
 	
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
-		if (call != null && encryption != null) {
+		if (call != null) {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 
-			exit.setVisibility(View.GONE);
-			statusText.setVisibility(View.GONE);
 			if (isVideoEnabled) {
 				background.setVisibility(View.GONE);
 			}
-			encryption.setVisibility(View.VISIBLE);
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
 				encryption.setImageResource(R.drawable.security_ok);
@@ -342,11 +349,6 @@ public class StatusFragment extends Fragment {
 			} else {
 				encryption.setOnClickListener(null);
 			}
-		} else {
-			exit.setVisibility(View.VISIBLE);
-			statusText.setVisibility(View.VISIBLE);
-			background.setVisibility(View.VISIBLE);
-			encryption.setVisibility(View.GONE);
 		}
 	}
 	
