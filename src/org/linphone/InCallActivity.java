@@ -26,7 +26,6 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 
@@ -385,23 +384,26 @@ public class InCallActivity extends FragmentActivity implements
 	private void pauseOrResumeCall() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall call = lc.getCurrentCall();
-		pauseOrResumeCall(call);
+		pauseOrResumeCall(call, false);
 	}
 	
-	public void pauseOrResumeCall(LinphoneCall call) {
-		Log.e("Call = " + call);
+	public void pauseOrResumeCall(LinphoneCall call, boolean leaveConference) {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (call != null && LinphoneUtils.isCallRunning(call)) {
-			Log.e("Pausing call " + call);
-			lc.pauseCall(call);
-			pause.setImageResource(R.drawable.pause_on);
+			if (call.isInConference()) {
+				lc.removeFromConference(call);
+				if (lc.getConferenceSize() <= 1) {
+					lc.leaveConference();
+				}
+			} else {
+				lc.pauseCall(call);
+				pause.setImageResource(R.drawable.pause_on);
+			}
 		} else {
 			List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc, Arrays.asList(State.Paused));
 			if (pausedCalls.size() == 1) {
 				LinphoneCall callToResume = pausedCalls.get(0);
-				Log.e("CallToResume " + callToResume);
 				if ((call != null && callToResume.equals(call)) || call == null) {
-					Log.e("Resuming call " + callToResume);
 					lc.resumeCall(callToResume);
 					pause.setImageResource(R.drawable.pause_off);
 				}
@@ -423,7 +425,16 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void enterConference() {
-		//TODO
+		LinphoneManager.getLc().addAllToConference();
+	}
+	
+	public void pauseOrResumeConference() {
+		LinphoneCore lc = LinphoneManager.getLc();
+		if (lc.isInConference()) {
+			lc.leaveConference();
+		} else {
+			lc.enterConference();
+		}
 	}
 	
 	public void displayVideoCallControlsIfHidden() {

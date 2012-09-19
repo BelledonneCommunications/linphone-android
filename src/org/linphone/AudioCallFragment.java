@@ -21,7 +21,6 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.Log;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.app.Activity;
@@ -49,12 +48,14 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 	private static final int botMarginIfImage = 25;
 	private static final int rowThickRatio = 85; // Ratio dependent from the image
 	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
+	private static final int conferenceMargin = 20;
 	private static final int topMarginWithImage = topMargin + rowImageHeight + botMarginIfImage;
 	
 	private RelativeLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
 	private boolean previousCallIsActive = false;
+	private boolean isConferenceRunning = false;
 	
 	private InCallActivity incallActvityInstance;
 	
@@ -71,6 +72,20 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
         return view;
     }
 	
+	private void displayConferenceHeader() {
+		LinearLayout conferenceHeader = (LinearLayout) inflater.inflate(R.layout.conference_header, container, false);
+		
+		ImageView conferenceState = (ImageView) conferenceHeader.findViewById(R.id.conferenceStatus);
+		conferenceState.setOnClickListener(this);
+		if (LinphoneManager.getLc().isInConference()) {
+			conferenceState.setImageResource(R.drawable.play_default);
+		} else {
+			conferenceState.setImageResource(R.drawable.pause_default);
+		}
+		
+		callsList.addView(conferenceHeader);
+	}
+	
 	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call, int index) {
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
         LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
@@ -79,9 +94,11 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		setContactName(callView, lAddress, sipUri, resources);
 		boolean hide = displayCallStatusIconAndReturnCallPaused(callView, call);
 		displayOrHideContactPicture(callView, pictureUri, hide);
-		setRowBackgroundAndPadding(callView, resources, index, !hide);
+		setRowBackgroundAndPadding(callView, resources, index, call, !hide);
 		registerCallDurationTimer(callView, call);
 		previousCallIsActive = !hide;
+
+    	callsList.addView(callView);
 	}
 	
 	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
@@ -98,7 +115,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 	}
 	
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
-		boolean isCallPaused;
+		boolean isCallPaused, isInConference;
 		ImageView callState = (ImageView) callView.findViewById(R.id.callStatus);
 		callState.setTag(call);
 		callState.setOnClickListener(this);
@@ -106,15 +123,23 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote || call.getState() == State.Pausing) {
 			callState.setImageResource(R.drawable.pause_default);
 			isCallPaused = true;
+			isInConference = false;
 		} else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {
 			callState.setImageResource(R.drawable.call_state_ringing_default);
 			isCallPaused = false;
+			isInConference = false;
 		} else {
-			callState.setImageResource(R.drawable.play_default);
+			if (isConferenceRunning && call.isInConference()) {
+				callState.setImageResource(R.drawable.call_state_delete_default);
+				isInConference = true;
+			} else {
+				callState.setImageResource(R.drawable.play_default);
+				isInConference = false;
+			}
 			isCallPaused = false;
 		}
 		
-		return isCallPaused;
+		return isCallPaused || isInConference;
 	}
 	
 	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, boolean hide) {
@@ -127,7 +152,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		}
 	}
 	
-	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index, boolean active) {
+	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index, LinphoneCall call, boolean active) {
 		int backgroundResource;
 		if (index == 0) {
 //			backgroundResource = active ? R.drawable.cell_call_first_highlight : R.drawable.cell_call_first;
@@ -139,10 +164,16 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		callView.findViewById(R.id.row).setBackgroundResource(backgroundResource);
 		
 		if (index != 0) {
+			int marginIfConferenceAndCallNotInside = 0;
+			if (isConferenceRunning) {
+				if (!call.isInConference()) {
+					marginIfConferenceAndCallNotInside = conferenceMargin;
+				}
+			}
     		if (previousCallIsActive) {
-    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMarginWithImage * index), 0, 0);
+    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, (topMarginWithImage * index) + marginIfConferenceAndCallNotInside), 0, 0);
     		} else {
-    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMargin * index), 0, 0);
+    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, (topMargin * index) + marginIfConferenceAndCallNotInside), 0, 0);
     		}
     	}
 	}
@@ -169,8 +200,12 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		case R.id.callStatus:
 			LinphoneCall call = (LinphoneCall) v.getTag();
 			if (incallActvityInstance != null) {
-				Log.e("InCallActivity instanciated");
-				incallActvityInstance.pauseOrResumeCall(call);
+				incallActvityInstance.pauseOrResumeCall(call, true);
+			}
+			break;
+		case R.id.conferenceStatus:
+			if (incallActvityInstance != null) {
+				incallActvityInstance.pauseOrResumeConference();
 			}
 			break;
 		}
@@ -191,8 +226,8 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		super.onStart();
 
 		// Just to be sure we have incall controls
-		if (InCallActivity.isInstanciated()) {
-			InCallActivity.instance().setCallControlsVisibleAndRemoveCallbacks();
+		if (incallActvityInstance != null) {
+			incallActvityInstance.setCallControlsVisibleAndRemoveCallbacks();
 		}
 	}
 	
@@ -213,14 +248,18 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		int index = 0;
         
         if (LinphoneManager.getLc().getCallsNb() == 0) {
-        	InCallActivity.instance().goBackToDialer();
+        	incallActvityInstance.goBackToDialer();
         	return;
         }
 		
+        isConferenceRunning = LinphoneManager.getLc().getConferenceSize() > 1;
+        if (isConferenceRunning) {
+        	displayConferenceHeader();
+        	index++;
+        }
         for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
         	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call, container, false);
         	displayCall(resources, callView, call, index);
-        	callsList.addView(callView);
         	index++;
         }
         

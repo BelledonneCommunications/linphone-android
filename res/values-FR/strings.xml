@@ -200,6 +200,7 @@
 	<string name="status_error">Enregistrement échoué</string>
 	
 	<string name="addressHint">Numéro ou adresse</string>
+	<string name="conference">Conférence</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact"></string>
