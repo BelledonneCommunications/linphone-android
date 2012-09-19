@@ -3,20 +3,15 @@
 	android:id="@+id/toastRoot"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:background="@drawable/zrtp_popup"
+	android:background="@drawable/popup"
 	android:orientation="vertical" >
-
-	<TextView
-		android:id="@+id/toastTitle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	<TextView
 		android:id="@+id/toastMessage"
-		android:textColor="@android:color/black"
-		android:layout_marginTop="5dp"
+		android:textColor="@android:color/white"
+		android:padding="5dp"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+		android:layout_height="wrap_content"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

@@ -691,7 +691,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	@Override
 	public void onCallStateChanged(LinphoneCall call, State state, String message) {
 		if (state == State.Error) {
-			displayCustomToast(null, message, Toast.LENGTH_LONG);
+			displayCustomToast(message, Toast.LENGTH_LONG);
 		}
 		
 		if (state == State.IncomingReceived) {
@@ -710,20 +710,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		displayMissedCalls(missedCalls);
 	}
 	
-	private void displayCustomToast(final String title, final String message, final int duration) {
+	private void displayCustomToast(final String message, final int duration) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				LayoutInflater inflater = getLayoutInflater();
 				View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
 
-				TextView toastTitle = (TextView) layout.findViewById(R.id.toastTitle);
-				if (title == null) {
-					toastTitle.setVisibility(View.GONE);
-				} else {
-					toastTitle.setText(title);
-				}
-				
 				TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
 				toastText.setText(message);
 				
