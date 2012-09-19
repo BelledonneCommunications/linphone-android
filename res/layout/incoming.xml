@@ -25,7 +25,7 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:scaleType="fitCenter"
-		        android:src="@drawable/sel_call" />
+		        android:src="@drawable/cell_call" />
 		    
 		    <TextView
 			    android:id="@+id/incoming_caller_number"

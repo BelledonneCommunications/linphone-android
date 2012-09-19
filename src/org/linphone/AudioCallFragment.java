@@ -79,7 +79,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		setContactName(callView, lAddress, sipUri, resources);
 		boolean hide = displayCallStatusIconAndReturnCallPaused(callView, call);
 		displayOrHideContactPicture(callView, pictureUri, hide);
-		setRowBackgroundAndPadding(callView, resources, index);
+		setRowBackgroundAndPadding(callView, resources, index, !hide);
 		registerCallDurationTimer(callView, call);
 		previousCallIsActive = !hide;
 	}
@@ -127,11 +127,18 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		}
 	}
 	
-	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index) {
+	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index, boolean active) {
+		int backgroundResource;
 		if (index == 0) {
-    		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call_first);
-    	} else {
-    		callView.findViewById(R.id.row).setBackgroundResource(R.drawable.sel_call);
+//			backgroundResource = active ? R.drawable.cell_call_first_highlight : R.drawable.cell_call_first;
+			backgroundResource = R.drawable.cell_call_first;
+		} else {
+//			backgroundResource = active ? R.drawable.cell_call_highlight : R.drawable.cell_call;
+			backgroundResource = R.drawable.cell_call;
+		}
+		callView.findViewById(R.id.row).setBackgroundResource(backgroundResource);
+		
+		if (index != 0) {
     		if (previousCallIsActive) {
     			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, topMarginWithImage * index), 0, 0);
     		} else {
