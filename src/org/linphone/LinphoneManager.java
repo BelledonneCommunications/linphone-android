@@ -807,8 +807,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		try {
 			mTimer.cancel();
 			mLc.destroy();
+		} 
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		finally {
 			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
-		} finally {
 			mLc = null;
 			instance = null;
 		}
