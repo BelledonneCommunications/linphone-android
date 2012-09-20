@@ -30,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -39,7 +38,7 @@ import android.widget.TextView;
  */
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private ImageView editContact, newContact;
+	private TextView editContact, newContact;
 	private LayoutInflater inflater;
 	private View view;
 
@@ -64,9 +63,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		this.inflater = inflater;
 		view = inflater.inflate(R.layout.contact, container, false);
 		
-		editContact = (ImageView) view.findViewById(R.id.editContact);
+		editContact = (TextView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
-		newContact = (ImageView) view.findViewById(R.id.newContact);
+		newContact = (TextView) view.findViewById(R.id.newContact);
 		newContact.setOnClickListener(this);
 		
 		return view;

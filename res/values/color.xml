@@ -6,6 +6,8 @@
     <color name="text_over">#ffb9c4cb</color>
     <color name="text_default">#ff5b656f</color>
     <color name="text_header">#ff7e8e9e</color>
+    <color name="text_button">#ff41484f</color>
+    <color name="text_button_selected">#ffa6b3bf</color>
     
     <color name="numpad_background_bottom">#ffe4edf2</color>
     <color name="numpad_background_dialer">#ffd8d8d8</color>

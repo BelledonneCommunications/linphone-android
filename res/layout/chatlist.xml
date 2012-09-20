@@ -10,30 +10,42 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_new_discussion"
             android:id="@+id/newDiscussion"
-            android:src="@drawable/chat_new"
+            android:background="@drawable/chat_new"
+            android:text="@string/button_new_chat"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_edit"
             android:id="@+id/edit"
-            android:src="@drawable/chat_edit"
+            android:background="@drawable/chat_edit"
+            android:text="@string/button_edit"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_validate"
             android:id="@+id/ok"
-            android:src="@drawable/chat_ok"
+            android:background="@drawable/chat_ok"
+            android:text="@string/button_ok"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
             android:visibility="gone"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
