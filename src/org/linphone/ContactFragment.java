@@ -41,6 +41,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	private TextView editContact, newContact;
 	private LayoutInflater inflater;
 	private View view;
+	private boolean displayChatAddressOnly = false;
 
 	private OnClickListener dialListener = new OnClickListener() {
 		@Override
@@ -62,6 +63,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		
 		this.inflater = inflater;
 		view = inflater.inflate(R.layout.contact, container, false);
+		
+		if (getArguments() != null) {
+			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
+		}
 		
 		editContact = (TextView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
@@ -100,14 +105,21 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			}
 			((TextView) v.findViewById(R.id.numeroOrAddress)).setText(displayednumberOrAddress);
 			
-			v.findViewById(R.id.dial).setOnClickListener(dialListener);
-			v.findViewById(R.id.dial).setTag(numberOrAddress);
+			if (!displayChatAddressOnly) {
+				v.findViewById(R.id.dial).setOnClickListener(dialListener);
+				v.findViewById(R.id.dial).setTag(numberOrAddress);
+			} else {
+				v.findViewById(R.id.dial).setVisibility(View.GONE);
+			}
 
 			if (LinphoneUtils.isSipAddress(numberOrAddress)) {
 				v.findViewById(R.id.chat).setOnClickListener(chatListener);
 				v.findViewById(R.id.chat).setTag(numberOrAddress);
 			} else {
 				v.findViewById(R.id.chat).setVisibility(View.INVISIBLE);
+				if (displayChatAddressOnly) {
+					v.setVisibility(View.GONE);
+				}
 			}
 			
 			controls.addView(v);
@@ -123,7 +135,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		contact.refresh(getActivity().getContentResolver());
 		if (contact.getName() == null || contact.getName().equals("")) {
 			//Contact has been deleted, return
-			LinphoneActivity.instance().displayContacts();
+			LinphoneActivity.instance().displayContacts(false);
 		}
 		displayContact(inflater, view);
 	}

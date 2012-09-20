@@ -414,7 +414,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		return dateFormat.format(cal.getTime());
 	}
 	
-	public void displayContact(Contact contact) {
+	public void displayContact(Contact contact, boolean chatOnly) {
 		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT) {
 			ContactFragment contactFragment = (ContactFragment) fragment2;
@@ -422,12 +422,20 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		} else {		
 			Bundle extras = new Bundle();
 			extras.putSerializable("Contact", contact);
+			extras.putBoolean("ChatAddressOnly", chatOnly);
 			changeCurrentFragment(FragmentsAvailable.CONTACT, extras);
 		}
 	}
 	
-	public void displayContacts() {
-		changeCurrentFragment(FragmentsAvailable.CONTACTS, null);
+	public void displayContacts(boolean chatOnly) {
+		if (chatOnly) {
+			preferLinphoneContacts = true;
+		}
+		
+		Bundle extras = new Bundle();
+		extras.putBoolean("ChatAddressOnly", chatOnly);
+		changeCurrentFragment(FragmentsAvailable.CONTACTS, extras);
+		preferLinphoneContacts = false;
 	}
 	
 	public void displayContactsForEdition(String sipAddress) {

@@ -127,7 +127,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.newDiscussion) {
 			String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
-				LinphoneActivity.instance().displayContacts();
+				LinphoneActivity.instance().displayContacts(true);
 			} else {
 				if (!LinphoneUtils.isSipAddress(sipUri)) {
 					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
