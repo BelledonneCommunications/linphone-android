@@ -51,7 +51,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private boolean onlyDisplayLinphoneContacts;
 	private int lastKnownPosition;
 	private AlphabetIndexer indexer;
-	private boolean editOnClick = false, editConsumed = false;
+	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
 	private String sipAddressToAdd;
 	
 	@Override
@@ -63,6 +63,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         if (getArguments() != null) {
 	        editOnClick = getArguments().getBoolean("EditOnClick");
 	        sipAddressToAdd = getArguments().getString("SipAddress");
+	        
+	        onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
         
         contactsList = (ListView) view.findViewById(R.id.contactsList);
@@ -139,7 +141,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			startActivity(intent);
 		} else {
 			lastKnownPosition = contactsList.getFirstVisiblePosition();
-			LinphoneActivity.instance().displayContact(contact);
+			LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);
 		}
 	}
 	
