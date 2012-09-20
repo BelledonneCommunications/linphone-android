@@ -159,8 +159,8 @@ public class DialerFragment extends Fragment {
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
-			mAddress.setText("");
 		} else {
+			mAddress.setText("");
 			mCall.setImageResource(R.drawable.call);
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.add_contact);
@@ -170,6 +170,6 @@ public class DialerFragment extends Fragment {
 	}
 	
 	public void enableDisableAddContact() {
-		mAddContact.setEnabled(!mAddress.getText().toString().equals(""));	
+		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));	
 	}
 }
