@@ -89,10 +89,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private static final int callActivity = 19;
 	
 	private static LinphoneActivity instance;
-	
+
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
 	private ImageView dialer;
+	private LinearLayout menu, mark;
 	private RelativeLayout contacts, history, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment, nextFragment;
 	private Fragment dialerFragment, messageListenerFragment;
@@ -161,6 +162,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void initButtons() {
+		menu = (LinearLayout) findViewById(R.id.menu);
+		mark = (LinearLayout) findViewById(R.id.mark);
+		
 		history = (RelativeLayout) findViewById(R.id.history);
         history.setOnClickListener(this);
         contacts  = (RelativeLayout) findViewById(R.id.contacts);
@@ -190,6 +194,23 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		missedCalls = (TextView) findViewById(R.id.missedCalls);
 		missedChats = (TextView) findViewById(R.id.missedChats);
+	}
+	
+	private void hideStatusBar() {
+		if (statusFragment == null) {
+			return;
+		}
+		
+		statusFragment.getView().setVisibility(View.GONE);
+		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
+	}
+	private void showStatusBar() {
+		if (statusFragment == null) {
+			return;
+		}
+		
+		statusFragment.getView().setVisibility(View.VISIBLE);
+		findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 	
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
@@ -263,8 +284,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
-		if (statusFragment != null) {
-			statusFragment.closeStatusBar();
+		if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+			if (newFragmentType == FragmentsAvailable.DIALER) {
+				showStatusBar();
+			} else {
+				hideStatusBar();
+			}
+		} else {
+			if (statusFragment != null) {
+				statusFragment.closeStatusBar();
+			}
 		}
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -291,8 +320,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void changeFragmentForTablets(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
-		if (statusFragment != null) {
-			statusFragment.closeStatusBar();
+		if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+			if (newFragmentType == FragmentsAvailable.DIALER) {
+				showStatusBar();
+			} else {
+				hideStatusBar();
+			}
+		} else {
+			if (statusFragment != null) {
+				statusFragment.closeStatusBar();
+			}
 		}
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
@@ -528,7 +565,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void updateChatFragment(ChatFragment fragment) {
 		messageListenerFragment = fragment;
 		// Hack to maintain ADJUST_PAN flag
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+	}
+	
+	public void hideMenu(boolean hide) {
+		menu.setVisibility(hide ? View.GONE : View.VISIBLE);
+		mark.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}
 	
 	public void updateStatusFragment(StatusFragment fragment) {
@@ -754,12 +796,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	@Override
 	public void goToDialer() {
 		changeCurrentFragment(FragmentsAvailable.DIALER, null);
-	}
-
-	public void onRegistrationStateChanged(RegistrationState state, String message) {
-		if (statusFragment != null) {
-			statusFragment.registrationStateChanged(state);
-		}
 	}
 
 	public void startVideoActivity(LinphoneCall currentCall) {

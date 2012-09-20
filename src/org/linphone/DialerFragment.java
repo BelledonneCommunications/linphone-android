@@ -159,8 +159,8 @@ public class DialerFragment extends Fragment {
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
-		} else {
 			mAddress.setText("");
+		} else {
 			mCall.setImageResource(R.drawable.call);
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.add_contact);

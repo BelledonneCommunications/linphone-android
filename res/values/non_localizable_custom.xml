@@ -17,9 +17,10 @@
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
-	<bool name="useFirstLoginActivity">false</bool>
+	<bool name="useFirstLoginActivity">true</bool>
 	
 	<bool name="disable_animations">false</bool>
+    <bool name="show_statusbar_only_on_dialer">true</bool>
 	<bool name="lock_statusbar">false</bool>
 	<bool name="emoticons_in_messages">true</bool>
 	<bool name="only_display_username_if_unknown">true</bool>

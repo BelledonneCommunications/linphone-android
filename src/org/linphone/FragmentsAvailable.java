@@ -59,19 +59,19 @@ public enum FragmentsAvailable {
 		case DIALER:
 			return CONTACTS.isRightOf(fragment) || fragment == CONTACT || fragment == CONTACTS;
 			
-		case ABOUT_INSTEAD_OF_SETTINGS:
-		case SETTINGS:
-			return DIALER.isRightOf(fragment) || fragment == DIALER;
-			
-		case ACCOUNT_SETTINGS:
-			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
-			
 		case ABOUT_INSTEAD_OF_CHAT:
 		case CHATLIST:
-			return ACCOUNT_SETTINGS.isRightOf(fragment) || fragment == ACCOUNT_SETTINGS || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS;
+			return DIALER.isRightOf(fragment) || fragment == DIALER;
 			
 		case CHAT:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
+			
+		case ABOUT_INSTEAD_OF_SETTINGS:
+		case SETTINGS:
+			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
+			
+		case ACCOUNT_SETTINGS:
+			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
 			
 		default:
 			return false;

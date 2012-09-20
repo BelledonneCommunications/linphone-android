@@ -515,7 +515,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().onRegistrationStateChanged(state, message);
+					LinphoneActivity.instance().onRegistrationStateChanged(state);
 				}
 			}
 		});
