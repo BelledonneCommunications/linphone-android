@@ -201,6 +201,7 @@
 	
 	<string name="addressHint">Numéro ou adresse</string>
 	<string name="conference">Conférence</string>
+	<string name="draft">Brouillon</string>
 	<string name="new_fast_chat">Entrez une adresse SIP avec qui discuter&#8230;</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
