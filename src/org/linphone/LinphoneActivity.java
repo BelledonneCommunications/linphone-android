@@ -59,6 +59,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -197,20 +198,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void hideStatusBar() {
-		if (statusFragment == null) {
-			return;
-		}
-		
-		statusFragment.getView().setVisibility(View.GONE);
+		findViewById(R.id.status).setVisibility(View.GONE);
 		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
 	}
 	
 	private void showStatusBar() {
-		if (statusFragment == null || statusFragment.isVisible()) {
-			return;
-		}
-		
-		statusFragment.getView().setVisibility(View.VISIBLE);
+		findViewById(R.id.status).setVisibility(View.VISIBLE);
 		findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 	
@@ -226,7 +219,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		nextFragment = newFragmentType;
 		
 		if (currentFragment == FragmentsAvailable.DIALER) {
-			dialerSavedState = getSupportFragmentManager().saveFragmentInstanceState(dialerFragment);
+			try {
+				dialerSavedState = getSupportFragmentManager().saveFragmentInstanceState(dialerFragment);
+			} catch (Exception e) {}
 		}
 		
 		Fragment newFragment = null;
@@ -1072,12 +1067,21 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && currentFragment == FragmentsAvailable.DIALER) {
-			if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
-				return true;
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (currentFragment == FragmentsAvailable.DIALER) {
+				if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
+					return true;
+				}
+			} else {
+				int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+				if (backStackEntryCount == 1) {
+					showStatusBar();
+				}
+				
+				if (currentFragment == FragmentsAvailable.SETTINGS) {
+					reloadConfig();
+				}
 			}
-		} else if (keyCode == KeyEvent.KEYCODE_BACK && currentFragment == FragmentsAvailable.SETTINGS) {
-			reloadConfig();
 		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
 			statusFragment.openOrCloseStatusBar();
 		}
