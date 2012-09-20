@@ -10,30 +10,42 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_all_contacts"
             android:id="@+id/allContacts"
-            android:src="@drawable/all_contacts"
+            android:background="@drawable/all_contacts"
+            android:text="@string/button_all_contacts"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@drawable/switch_button_text_color"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_linphone_contacts"
             android:id="@+id/linphoneContacts"
-            android:src="@drawable/linphone_contacts"
+            android:background="@drawable/linphone_contacts"
+            android:text="@string/button_sip_contacts"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@drawable/switch_button_text_color"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_add_contact"
             android:id="@+id/newContact"
-            android:src="@drawable/new_contact"
+            android:background="@drawable/new_contact"
+            android:text="@string/button_add_contact"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"

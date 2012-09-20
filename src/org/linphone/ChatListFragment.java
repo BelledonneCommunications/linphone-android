@@ -47,7 +47,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private LayoutInflater mInflater;
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
-	private ImageView edit, ok, newDiscussion;
+	private TextView edit, ok, newDiscussion;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
 	
@@ -61,11 +61,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		chatList.setOnItemClickListener(this);
 		registerForContextMenu(chatList);
 		
-		edit = (ImageView) view.findViewById(R.id.edit);
+		edit = (TextView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
-		newDiscussion = (ImageView) view.findViewById(R.id.newDiscussion);
+		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
 		newDiscussion.setOnClickListener(this);
-		ok = (ImageView) view.findViewById(R.id.ok);
+		ok = (TextView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(this);
 		
 		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);

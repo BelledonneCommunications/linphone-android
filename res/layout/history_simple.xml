@@ -8,52 +8,73 @@
     <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:orientation="horizontal"
+	    android:background="@drawable/toolsbar_background">
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_delete"
             android:id="@+id/deleteAll"
-            android:src="@drawable/history_delete"
+            android:background="@drawable/history_delete"
+            android:text="@string/button_delete_all"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_all_calls"
             android:id="@+id/allCalls"
-            android:src="@drawable/history_all"
+            android:background="@drawable/history_all"
+            android:text="@string/button_all_call"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:textColor="@drawable/switch_button_text_color"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_missed_calls"
             android:id="@+id/missedCalls"
-            android:src="@drawable/history_missed"
+            android:background="@drawable/history_missed"
+            android:text="@string/button_missed_call"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:textColor="@drawable/switch_button_text_color"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_edit"
             android:id="@+id/edit"
-            android:src="@drawable/history_edit"
+            android:background="@drawable/history_edit"
+            android:text="@string/button_edit"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-        <ImageView 
+        <TextView 
             android:contentDescription="@string/content_description_validate"
             android:id="@+id/ok"
-            android:src="@drawable/history_ok"
+            android:background="@drawable/history_ok"
+            android:text="@string/button_ok"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@color/text_button"
             android:visibility="gone"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"

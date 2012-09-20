@@ -38,6 +38,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -53,7 +56,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	private Handler mHandler = new Handler();
 	private ExpandableListView historyList;
 	private LayoutInflater mInflater;
-	private ImageView allCalls, missedCalls, edit, ok, deleteAll;
+	private TextView allCalls, missedCalls, edit, ok, deleteAll;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private SparseArray<List<LinphoneCallLog>> mLogs; 
 	
@@ -67,23 +70,23 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
         historyList.setOnChildClickListener(this);
         historyList.setOnGroupClickListener(this);
         
-        deleteAll = (ImageView) view.findViewById(R.id.deleteAll);
+        deleteAll = (TextView) view.findViewById(R.id.deleteAll);
         deleteAll.setOnClickListener(this);
-        deleteAll.setEnabled(false);
+        deleteAll.setVisibility(View.INVISIBLE);
         
-        allCalls = (ImageView) view.findViewById(R.id.allCalls);
+        allCalls = (TextView) view.findViewById(R.id.allCalls);
         allCalls.setOnClickListener(this);
         
-        missedCalls = (ImageView) view.findViewById(R.id.missedCalls);
+        missedCalls = (TextView) view.findViewById(R.id.missedCalls);
         missedCalls.setOnClickListener(this);
         
         allCalls.setEnabled(false);
         onlyDisplayMissedCalls = false;
         
-        edit = (ImageView) view.findViewById(R.id.edit);
+        edit = (TextView) view.findViewById(R.id.edit);
         edit.setOnClickListener(this);
         
-        ok = (ImageView) view.findViewById(R.id.ok);
+        ok = (TextView) view.findViewById(R.id.ok);
         ok.setOnClickListener(this);
         
 		return view;
@@ -195,13 +198,13 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		else if (id == R.id.ok) {
 			edit.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
-	        deleteAll.setEnabled(false);
+			hideDeleteAllButton();
 			isEditMode = false;
 		} 
 		else if (id == R.id.edit) {
 			edit.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
-	        deleteAll.setEnabled(true);
+			showDeleteAllButton();
 			isEditMode = true;
 		}
 		else if (id == R.id.deleteAll) {
@@ -245,6 +248,66 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
 		}
 		return false;
+	}
+	
+	private void hideDeleteAllButton() {
+		if (deleteAll == null || deleteAll.getVisibility() != View.VISIBLE) {
+			return;
+		}
+			
+		if (getActivity().getResources().getBoolean(R.bool.disable_animations)) {
+			deleteAll.setVisibility(View.INVISIBLE);
+		} else {
+			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_right_to_left);
+			animation.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					deleteAll.setVisibility(View.INVISIBLE);
+					animation.setAnimationListener(null);
+				}
+			});
+			deleteAll.startAnimation(animation);
+		}
+	}
+	
+	private void showDeleteAllButton() {
+		if (deleteAll == null || deleteAll.getVisibility() == View.VISIBLE) {
+			return;
+		}
+		
+		if (getActivity().getResources().getBoolean(R.bool.disable_animations)) {
+			deleteAll.setVisibility(View.VISIBLE);
+		} else {
+			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_left_to_right);
+			animation.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					deleteAll.setVisibility(View.VISIBLE);
+					animation.setAnimationListener(null);
+				}
+			});
+			deleteAll.startAnimation(animation);
+		}
 	}
 	
 	class CallHistoryAdapter extends BaseExpandableListAdapter {

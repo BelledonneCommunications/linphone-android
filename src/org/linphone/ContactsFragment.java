@@ -47,7 +47,7 @@ import android.widget.TextView;
 public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
-	private ImageView allContacts, linphoneContacts, newContact;
+	private TextView allContacts, linphoneContacts, newContact;
 	private boolean onlyDisplayLinphoneContacts;
 	private int lastKnownPosition;
 	private AlphabetIndexer indexer;
@@ -68,13 +68,13 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         contactsList = (ListView) view.findViewById(R.id.contactsList);
         contactsList.setOnItemClickListener(this);
         
-        allContacts = (ImageView) view.findViewById(R.id.allContacts);
+        allContacts = (TextView) view.findViewById(R.id.allContacts);
         allContacts.setOnClickListener(this);
         
-        linphoneContacts = (ImageView) view.findViewById(R.id.linphoneContacts);
+        linphoneContacts = (TextView) view.findViewById(R.id.linphoneContacts);
         linphoneContacts.setOnClickListener(this);
         
-        newContact = (ImageView) view.findViewById(R.id.newContact);
+        newContact = (TextView) view.findViewById(R.id.newContact);
         newContact.setOnClickListener(this);
         newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
         

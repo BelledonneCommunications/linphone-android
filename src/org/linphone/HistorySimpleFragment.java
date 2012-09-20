@@ -38,6 +38,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -52,7 +55,7 @@ import android.widget.TextView;
 public class HistorySimpleFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private ListView historyList;
 	private LayoutInflater mInflater;
-	private ImageView allCalls, missedCalls, edit, ok, deleteAll;
+	private TextView allCalls, missedCalls, edit, ok, deleteAll;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs; 
 	
@@ -66,23 +69,23 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
         historyList.setOnItemClickListener(this);
         registerForContextMenu(historyList);
         
-        deleteAll = (ImageView) view.findViewById(R.id.deleteAll);
+        deleteAll = (TextView) view.findViewById(R.id.deleteAll);
         deleteAll.setOnClickListener(this);
-        deleteAll.setEnabled(false);
+        deleteAll.setVisibility(View.INVISIBLE);
         
-        allCalls = (ImageView) view.findViewById(R.id.allCalls);
+        allCalls = (TextView) view.findViewById(R.id.allCalls);
         allCalls.setOnClickListener(this);
         
-        missedCalls = (ImageView) view.findViewById(R.id.missedCalls);
+        missedCalls = (TextView) view.findViewById(R.id.missedCalls);
         missedCalls.setOnClickListener(this);
         
         allCalls.setEnabled(false);
         onlyDisplayMissedCalls = false;
         
-        edit = (ImageView) view.findViewById(R.id.edit);
+        edit = (TextView) view.findViewById(R.id.edit);
         edit.setOnClickListener(this);
         
-        ok = (ImageView) view.findViewById(R.id.ok);
+        ok = (TextView) view.findViewById(R.id.ok);
         ok.setOnClickListener(this);
         
 		return view;
@@ -133,13 +136,13 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		else if (id == R.id.ok) {
 			edit.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
-	        deleteAll.setEnabled(false);
+			hideDeleteAllButton();
 			isEditMode = false;
 		} 
 		else if (id == R.id.edit) {
 			edit.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
-	        deleteAll.setEnabled(true);
+			showDeleteAllButton();
 			isEditMode = true;
 		}
 		else if (id == R.id.deleteAll) {
@@ -169,6 +172,66 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			if (LinphoneActivity.isInstanciated()) {
 				LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
 			}
+		}
+	}
+	
+	private void hideDeleteAllButton() {
+		if (deleteAll == null || deleteAll.getVisibility() != View.VISIBLE) {
+			return;
+		}
+			
+		if (getActivity().getResources().getBoolean(R.bool.disable_animations)) {
+			deleteAll.setVisibility(View.INVISIBLE);
+		} else {
+			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_right_to_left);
+			animation.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					deleteAll.setVisibility(View.INVISIBLE);
+					animation.setAnimationListener(null);
+				}
+			});
+			deleteAll.startAnimation(animation);
+		}
+	}
+	
+	private void showDeleteAllButton() {
+		if (deleteAll == null || deleteAll.getVisibility() == View.VISIBLE) {
+			return;
+		}
+		
+		if (getActivity().getResources().getBoolean(R.bool.disable_animations)) {
+			deleteAll.setVisibility(View.VISIBLE);
+		} else {
+			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_left_to_right);
+			animation.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					deleteAll.setVisibility(View.VISIBLE);
+					animation.setAnimationListener(null);
+				}
+			});
+			deleteAll.startAnimation(animation);
 		}
 	}
 	
