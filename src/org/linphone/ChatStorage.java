@@ -42,6 +42,7 @@ public class ChatStorage {
 	private Context context;
 	private SQLiteDatabase db;
 	private static final String TABLE_NAME = "chat";
+	private static final String DRAFT_TABLE_NAME = "chat_draft";
 
 	public ChatStorage(Context c) {
 	    context = c;
@@ -110,6 +111,57 @@ public class ChatStorage {
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
 	
+	public int saveDraft(String to, String message) {
+		ContentValues values = new ContentValues();
+		values.put("remoteContact", to);
+		values.put("message", message);
+		return (int) db.insert(DRAFT_TABLE_NAME, null, values);
+	}
+	
+	public void updateDraft(String to, String message) {
+		ContentValues values = new ContentValues();
+		values.put("message", message);
+		
+		db.update(DRAFT_TABLE_NAME, values, "remoteContact LIKE \"" + to + "\"", null);
+	}
+	
+	public void deleteDraft(String to) {
+		db.delete(DRAFT_TABLE_NAME, "remoteContact LIKE \"" + to + "\"", null);
+	}
+	
+	public String getDraft(String to) {
+		Cursor c = db.query(DRAFT_TABLE_NAME, null, "remoteContact LIKE \"" + to + "\"", null, null, null, "id ASC");
+
+		String message = null;
+		while (c.moveToNext()) {
+			try {
+				message = c.getString(c.getColumnIndex("message"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		c.close();
+		
+		return message;
+	}
+	
+	public List<String> getDrafts() {
+		List<String> drafts = new ArrayList<String>();
+		Cursor c = db.query(DRAFT_TABLE_NAME, null, null, null, null, null, "id ASC");
+
+		while (c.moveToNext()) {
+			try {
+				String to = c.getString(c.getColumnIndex("remoteContact"));
+				drafts.add(to);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		c.close();
+		
+		return drafts;
+	}
+	
 	public List<ChatMessage> getMessages(String correspondent) {
 		List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
 		
@@ -167,27 +219,6 @@ public class ChatStorage {
 		return db.query(TABLE_NAME, null, "read LIKE " + NOT_READ, null, null, null, null).getCount();
 	}
 
-	class ChatHelper extends SQLiteOpenHelper {
-	
-	    private static final int DATABASE_VERSION = 13;
-	    private static final String DATABASE_NAME = "linphone-android";
-	    
-	    ChatHelper(Context context) {
-	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	    }
-	
-	    @Override
-	    public void onCreate(SQLiteDatabase db) {
-	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT, image BLOB, time NUMERIC, read INTEGER, status INTEGER);");
-	    }
-	
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");
-			onCreate(db);
-		}
-	}
-
 	public byte[] getRawImageFromMessage(int id) {
 		String[] columns = { "image" };
 		Cursor c = db.query(TABLE_NAME, columns, "id LIKE " + id + "", null, null, null, null);
@@ -199,5 +230,28 @@ public class ChatStorage {
 		}
 		
 		return null;
+	}
+
+	class ChatHelper extends SQLiteOpenHelper {
+	
+	    private static final int DATABASE_VERSION = 14;
+	    private static final String DATABASE_NAME = "linphone-android";
+	    
+	    ChatHelper(Context context) {
+	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	    }
+	
+	    @Override
+	    public void onCreate(SQLiteDatabase db) {
+	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT, image BLOB, time NUMERIC, read INTEGER, status INTEGER);");
+	        db.execSQL("CREATE TABLE " + DRAFT_TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, remoteContact TEXT NOT NULL, message TEXT);");
+	    }
+	
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");
+			db.execSQL("DROP TABLE IF EXISTS " + DRAFT_TABLE_NAME + ";");
+			onCreate(db);
+		}
 	}
 }

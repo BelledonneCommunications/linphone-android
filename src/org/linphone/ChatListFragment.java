@@ -24,8 +24,6 @@ import org.linphone.core.LinphoneCoreFactory;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -47,9 +45,9 @@ import android.widget.TextView;
  */
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
-	private List<String> mConversations;
+	private List<String> mConversations, mDrafts;
 	private ListView chatList;
-	private ImageView edit, ok, newDiscussion, isFastNewChatAddressOk;
+	private ImageView edit, ok, newDiscussion;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
 	
@@ -78,10 +76,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onResume() {
 		super.onResume();
 		
-		if (LinphoneActivity.isInstanciated())
+		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHATLIST);
+		}
 		
 		mConversations = LinphoneActivity.instance().getChatList();
+		mDrafts = LinphoneActivity.instance().getDraftChatList();
+		mConversations.removeAll(mDrafts);
 		chatList.setAdapter(new ChatListAdapter());
 	}
 
@@ -101,6 +102,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		LinphoneActivity.instance().removeFromChatList(sipUri);
 		mConversations = LinphoneActivity.instance().getChatList();
+		mDrafts = LinphoneActivity.instance().getDraftChatList();
+		mConversations.removeAll(mDrafts);
 		chatList.setAdapter(new ChatListAdapter());
 		return true;
 	}
@@ -145,8 +148,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneActivity.instance().displayChat(sipUri);
 		} else if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().removeFromChatList(sipUri);
+			LinphoneActivity.instance().removeFromDrafts(sipUri);
+			
 			mConversations = LinphoneActivity.instance().getChatList();
+			mDrafts = LinphoneActivity.instance().getDraftChatList();
+			mConversations.removeAll(mDrafts);
 			chatList.setAdapter(new ChatListAdapter());
+			
 			LinphoneActivity.instance().updateMissedChatCount();
 		}
 	}
@@ -156,7 +164,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 		
 		public int getCount() {
-			return mConversations.size();
+			return mConversations.size() + mDrafts.size();
 		}
 
 		public Object getItem(int position) {
@@ -176,7 +184,14 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
 				
 			}
-			String contact = mConversations.get(position);
+			String contact;
+			boolean isDraft = false;
+			if (position >= mDrafts.size()) {
+				contact = mConversations.get(position - mDrafts.size());
+			} else {
+				contact = mDrafts.get(position);
+				isDraft = true;
+			}
 			view.setTag(contact);
 			
 			LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
@@ -191,6 +206,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			} 
 			
 			sipUri.setText(address.getDisplayName() == null ? contact : address.getDisplayName());
+			if (isDraft) {
+				view.findViewById(R.id.draft).setVisibility(View.VISIBLE);
+			}
 			
 			ImageView delete, detail;
 			delete = (ImageView) view.findViewById(R.id.delete);
@@ -198,9 +216,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			if (isEditMode) {
 				delete.setVisibility(View.VISIBLE);
-				detail.setVisibility(View.GONE);
+				detail.setVisibility(View.INVISIBLE);
 			} else {
-				delete.setVisibility(View.GONE);
+				delete.setVisibility(View.INVISIBLE);
 				detail.setVisibility(View.VISIBLE);
 			}
 			

@@ -251,6 +251,7 @@
 	
 	<string name="addressHint">Number or address</string>
 	<string name="conference">Conference</string>
+	<string name="draft">Draft</string>
 	<string name="new_fast_chat">Enter a SIP address to chat with&#8230;</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->

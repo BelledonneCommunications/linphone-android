@@ -322,6 +322,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void onPause() {
 		super.onPause();
 		latestImageMessages = null;
+		
+		if (!message.getText().toString().equals("") && LinphoneActivity.isInstanciated()) {
+			ChatStorage chatStorage = LinphoneActivity.instance().getChatStorage();
+			if (chatStorage.getDraft(sipUri) == null) {
+				chatStorage.saveDraft(sipUri, message.getText().toString());
+			} else {
+				chatStorage.updateDraft(sipUri, message.getText().toString());
+			}
+		} else if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().getChatStorage().deleteDraft(sipUri);
+		}
 	}
 	
 	@SuppressLint("UseSparseArrays")
@@ -336,6 +347,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneActivity.instance().updateChatFragment(this);
 		}
 		scrollToEnd();
+		
+		if (LinphoneActivity.isInstanciated()) {
+			String draft = LinphoneActivity.instance().getChatStorage().getDraft(sipUri);
+			message.setText(draft);
+		}
 	}
 
 	@Override

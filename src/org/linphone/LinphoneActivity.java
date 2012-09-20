@@ -204,8 +204,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		statusFragment.getView().setVisibility(View.GONE);
 		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
 	}
+	
 	private void showStatusBar() {
-		if (statusFragment == null) {
+		if (statusFragment == null || statusFragment.isVisible()) {
 			return;
 		}
 		
@@ -624,8 +625,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		return statusFragment;
 	}
 
-	public ArrayList<String> getChatList() {
+	public List<String> getChatList() {
 		return getChatStorage().getChatList();
+	}
+
+	public List<String> getDraftChatList() {
+		return getChatStorage().getDrafts();
 	}
 	
 	public List<ChatMessage> getChatMessages(String correspondent) {
@@ -634,6 +639,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	public void removeFromChatList(String sipUri) {
 		getChatStorage().removeDiscussion(sipUri);
+	}
+	
+	public void removeFromDrafts(String sipUri) {
+		getChatStorage().deleteDraft(sipUri);
 	}
 	
 	@Override
@@ -667,10 +676,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public int onMessageSent(String to, String message) {
+		getChatStorage().deleteDraft(to);
 		return getChatStorage().saveMessage("", to, message);
 	}
 	
 	public int onMessageSent(String to, Bitmap image, String imageURL) {
+		getChatStorage().deleteDraft(to);
 		return getChatStorage().saveMessage("", to, image);
 	}
 	
