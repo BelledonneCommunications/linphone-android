@@ -116,16 +116,20 @@ public class ChatStorage {
 		Cursor c = db.query(TABLE_NAME, null, "remoteContact LIKE \"" + correspondent + "\"", null, null, null, "id ASC");
 		
 		while (c.moveToNext()) {
-			String message, timestamp;
-			int id = c.getInt(c.getColumnIndex("id"));
-			int direction = c.getInt(c.getColumnIndex("direction"));
-			message = c.getString(c.getColumnIndex("message"));
-			timestamp = c.getString(c.getColumnIndex("time"));
-			int status = c.getInt(c.getColumnIndex("status"));
-			byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
-			
-			ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status);
-			chatMessages.add(chatMessage);
+			try {
+				String message, timestamp;
+				int id = c.getInt(c.getColumnIndex("id"));
+				int direction = c.getInt(c.getColumnIndex("direction"));
+				message = c.getString(c.getColumnIndex("message"));
+				timestamp = c.getString(c.getColumnIndex("time"));
+				int status = c.getInt(c.getColumnIndex("status"));
+				byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
+				
+				ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status);
+				chatMessages.add(chatMessage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		c.close();
 		

@@ -24,6 +24,8 @@ import org.linphone.core.LinphoneCoreFactory;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -35,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,7 +49,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private LayoutInflater mInflater;
 	private List<String> mConversations;
 	private ListView chatList;
-	private ImageView edit, ok, newDiscussion;
+	private ImageView edit, ok, newDiscussion, isFastNewChatAddressOk;
+	private EditText fastNewChat;
 	private boolean isEditMode = false;
 	
 	@Override
@@ -66,6 +70,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		ok = (ImageView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(this);
 		
+		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
 		return view;
 	}
 
@@ -117,7 +122,18 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			chatList.setAdapter(new ChatListAdapter());
 		}
 		else if (id == R.id.newDiscussion) {
-			LinphoneActivity.instance().displayContacts();
+			String sipUri = fastNewChat.getText().toString();
+			if (sipUri.equals("")) {
+				LinphoneActivity.instance().displayContacts();
+			} else {
+				if (!LinphoneUtils.isSipAddress(sipUri)) {
+					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+				}
+				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
+					sipUri = "sip:" + sipUri;
+				}
+				LinphoneActivity.instance().displayChat(sipUri);
+			}
 		}
 	}
 
