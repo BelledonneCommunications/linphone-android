@@ -76,7 +76,11 @@ class LinphoneCallImpl implements LinphoneCall {
 		return new LinphoneCallParamsImpl(getCurrentParamsCopy(nativePtr));
 	}
 	public LinphoneCallParams getRemoteParams() {
-		return new LinphoneCallParamsImpl(getRemoteParams(nativePtr));
+		long remoteParamsPtr = getRemoteParams(nativePtr);
+		if (remoteParamsPtr == 0) {
+			return null;
+		}
+		return new LinphoneCallParamsImpl(remoteParamsPtr);
 	}
 	public void enableCamera(boolean enabled) {
 		enableCamera(nativePtr, enabled);
