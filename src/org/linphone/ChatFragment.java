@@ -49,6 +49,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -64,6 +65,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -161,9 +163,39 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		
 		uploadServerUri = getActivity().getResources().getString(R.string.upload_url);
+		addVirtualKeyboardVisiblityListener();
 		
 		return view;
     }
+	
+	private void addVirtualKeyboardVisiblityListener() {
+		view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+			    Rect visibleArea = new Rect();
+			    view.getWindowVisibleDisplayFrame(visibleArea);
+	
+			    int heightDiff = view.getRootView().getHeight() - (visibleArea.bottom - visibleArea.top);
+			    if (heightDiff > 200) {
+			    	showKeyboardVisibleMode();
+			    } else {
+			    	hideKeyboardVisibleMode();
+			    }
+			}
+		}); 
+	}
+	
+	public void showKeyboardVisibleMode() {
+		LinphoneActivity.instance().hideMenu(true);
+		contactPicture.setVisibility(View.GONE);
+		scrollToEnd();
+	}
+	
+	public void hideKeyboardVisibleMode() {
+		LinphoneActivity.instance().hideMenu(false);
+		contactPicture.setVisibility(View.VISIBLE);
+		scrollToEnd();
+	}
 	
 	private void invalidate() {
 		messagesLayout.removeAllViews();		
@@ -290,14 +322,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void onPause() {
 		super.onPause();
 		latestImageMessages = null;
-		Log.e("Deleted hashmap");
 	}
 	
 	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onResume() {
 		latestImageMessages = new HashMap<Integer, String>();
-		Log.e("New hashmap");
 		
 		super.onResume();
 
@@ -342,7 +372,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				newId = LinphoneActivity.instance().onMessageSent(sipUri, bitmap, url);
 			}
 			latestImageMessages.put(newId, url);
-			Log.e("Add " + newId + ", " + url + " to hashmap");
 			
 			displayImageMessage(newId, bitmap, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout);
 			scrollToEnd();

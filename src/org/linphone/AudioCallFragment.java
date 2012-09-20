@@ -78,9 +78,9 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		ImageView conferenceState = (ImageView) conferenceHeader.findViewById(R.id.conferenceStatus);
 		conferenceState.setOnClickListener(this);
 		if (LinphoneManager.getLc().isInConference()) {
-			conferenceState.setImageResource(R.drawable.play_default);
+			conferenceState.setImageResource(R.drawable.play);
 		} else {
-			conferenceState.setImageResource(R.drawable.pause_default);
+			conferenceState.setImageResource(R.drawable.pause);
 		}
 		
 		callsList.addView(conferenceHeader);
@@ -121,7 +121,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		callState.setOnClickListener(this);
 		
 		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote || call.getState() == State.Pausing) {
-			callState.setImageResource(R.drawable.pause_default);
+			callState.setImageResource(R.drawable.pause);
 			isCallPaused = true;
 			isInConference = false;
 		} else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {
@@ -130,10 +130,10 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 			isInConference = false;
 		} else {
 			if (isConferenceRunning && call.isInConference()) {
-				callState.setImageResource(R.drawable.call_state_delete_default);
+				callState.setImageResource(R.drawable.remove);
 				isInConference = true;
 			} else {
-				callState.setImageResource(R.drawable.play_default);
+				callState.setImageResource(R.drawable.play);
 				isInConference = false;
 			}
 			isCallPaused = false;
