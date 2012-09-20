@@ -48,6 +48,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
 	private TextView edit, ok, newDiscussion;
+	private ImageView clearFastChat;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
 	
@@ -63,12 +64,18 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		edit = (TextView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
+		
 		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
 		newDiscussion.setOnClickListener(this);
+		
 		ok = (TextView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(this);
 		
+		clearFastChat = (ImageView) view.findViewById(R.id.clearFastChatField);
+		clearFastChat.setOnClickListener(this);
+		
 		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
+		
 		return view;
 	}
 
@@ -112,7 +119,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.ok) {
+		if (id == R.id.clearFastChatField) {
+			fastNewChat.setText("");
+		}
+		else if (id == R.id.ok) {
 			edit.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
 			isEditMode = false;
