@@ -34,7 +34,6 @@
             android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
@@ -49,7 +48,6 @@
             android:visibility="gone"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         

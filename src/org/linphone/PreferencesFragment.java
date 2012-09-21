@@ -164,9 +164,12 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		
 		addEchoPrefsListener();
 		
-		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_hacks_use_galaxys_hack_key);
+		if (Hacks.needSoftvolume()) {
+			Log.w("Using Audio Hack");
+			checkAndDisableCheckbox(R.string.pref_audio_hacks_use_galaxys_hack_key);
+		}
 
-		if (!LinphoneManager.getLc().isTunnelAvailable()){
+		if (!LinphoneManager.getLc().isTunnelAvailable()) {
 			hidePreferenceCategory(R.string.pref_tunnel_key);
 		}
 		

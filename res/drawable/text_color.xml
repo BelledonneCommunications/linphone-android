@@ -4,5 +4,7 @@
            android:color="@color/text_over" />
      <item android:state_selected="true"
            android:color="@color/text_selected" />
+     <item android:state_enabled="false"
+           android:color="@color/text_disabled" />
      <item android:color="@color/text_default" />
  </selector>

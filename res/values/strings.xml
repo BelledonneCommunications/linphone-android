@@ -341,6 +341,10 @@
 	<string name="button_micro">Micro</string>
 	<string name="button_speaker">Speaker</string>
 	<string name="button_options">Options</string>
+	
+	<string name="button_send_message">Send</string>
+	<string name="button_send_picture">Pic</string>
+	<string name="uploading_image">Uploading&#8230;</string>
 
 	<string name="share_picture_size_small">Small</string>
 	<string name="share_picture_size_medium">Medium</string>

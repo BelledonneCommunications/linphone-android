@@ -56,26 +56,28 @@
 	    android:orientation="horizontal"
 	    android:background="@drawable/chat_field_background">
         
-        <ImageView
+        <TextView
             android:id="@+id/sendPicture"
+            android:text="@string/button_send_picture"
+            android:gravity="center"
+            android:textColor="@drawable/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_send_message"
-            android:paddingLeft="8dp"
-            android:src="@drawable/chat_send_picture" />
+            android:drawableTop="@drawable/chat_send_picture"
+            android:paddingLeft="9dp" />
         
-        <ImageView
-            android:contentDescription="@string/content_description_send_message"
+        <TextView
             android:id="@+id/sendMessage"
+            android:text="@string/button_send_message"
+            android:gravity="center"
+            android:textColor="@drawable/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
-            android:src="@drawable/chat_send_message"
+            android:drawableTop="@drawable/chat_send_message"
             android:paddingRight="15dp" />
         
         <EditText
@@ -108,14 +110,32 @@
             android:adjustViewBounds="true"
             android:layout_alignParentRight="true" />
         
-        <ProgressBar
-            android:id="@+id/progressbar"
+        <LinearLayout 
             android:layout_width="match_parent"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/cancelUpload"
             android:layout_toLeftOf="@id/cancelUpload"
-            android:layout_centerVertical="true"
-     		style="@android:style/Widget.ProgressBar.Horizontal"
-            android:paddingTop="2dp" />
+            android:paddingBottom="20dp"
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <TextView
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+            	android:gravity="center"
+                android:text="@string/uploading_image"
+            	android:textColor="@android:color/black"/>
+            
+	        <ProgressBar
+	            android:id="@+id/progressbar"
+	            android:layout_width="match_parent"
+	            android:layout_height="15dp"
+	     		style="@android:style/Widget.ProgressBar.Horizontal"
+	            android:paddingTop="2dp"
+	            android:paddingLeft="2dp"
+	            android:paddingRight="2dp" />
+        
+        </LinearLayout>
         
     </RelativeLayout>
     
