@@ -83,7 +83,7 @@
 	            android:text="@string/button_transfer"
 	            android:gravity="center"
 	            android:paddingTop="50dp"
-	            android:textColor="@color/text_button"
+	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1"
@@ -120,7 +120,7 @@
 	            android:text="@string/button_add_call"
 	            android:gravity="center"
 	            android:paddingTop="50dp"
-	            android:textColor="@color/text_button"
+	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1"
@@ -140,7 +140,7 @@
 	            android:text="@string/button_video"
 	            android:gravity="center"
 	            android:paddingTop="45dp"
-	            android:textColor="@color/text_button"
+	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1" />
@@ -151,7 +151,7 @@
 	            android:text="@string/button_micro"
 	            android:gravity="center"
 	            android:paddingTop="45dp"
-	            android:textColor="@color/text_button"
+	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1" />
@@ -162,7 +162,7 @@
 	            android:text="@string/button_speaker"
 	            android:gravity="center"
 	            android:paddingTop="45dp"
-	            android:textColor="@color/text_button"
+	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1" />
@@ -173,7 +173,7 @@
 	            android:text="@string/button_options"
 	            android:gravity="center"
 	            android:paddingTop="45dp"
-	            android:textColor="@color/text_button"
+	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1" />
