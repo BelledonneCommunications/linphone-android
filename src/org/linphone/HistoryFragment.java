@@ -245,7 +245,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			} else {
 				address = log.getTo();
 			}
-			LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
+			LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
 		}
 		return false;
 	}
@@ -342,8 +342,8 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 				view = mInflater.inflate(R.layout.history_cell, parent,false);
 			}
 			
-			LinphoneCallLog log = (LinphoneCallLog) getChild(groupPosition, childPosition);
-			LinphoneAddress address;
+			final LinphoneCallLog log = (LinphoneCallLog) getChild(groupPosition, childPosition);
+			final LinphoneAddress address;
 			
 			TextView dateAndTime = (TextView) view.findViewById(R.id.dateAndTime);
 			ImageView detail = (ImageView) view.findViewById(R.id.detail);
@@ -374,6 +374,14 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			} else {
 				delete.setVisibility(View.GONE);
 				detail.setVisibility(View.VISIBLE);
+				detail.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LinphoneActivity.isInstanciated()) {
+							LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
+						}
+					}
+				});
 			}
 
 			return view;
