@@ -5,6 +5,7 @@
     <color name="text_selected">#ffcf4c29</color>
     <color name="text_over">#ffb9c4cb</color>
     <color name="text_default">#ff5b656f</color>
+    <color name="text_disabled">#ffa6b3bf</color>
     <color name="text_header">#ff7e8e9e</color>
     
     <color name="text_switch_selected">#ffffff</color>

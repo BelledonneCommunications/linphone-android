@@ -58,6 +58,8 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -94,8 +96,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private View view;
 	private String sipUri;
 	private EditText message;
-	private ImageView sendImage, cancelUpload;
-	private TextView contactName;
+	private ImageView cancelUpload;
+	private TextView sendImage, sendMessage, contactName;
 	private AvatarWithShadow contactPicture;
 	private RelativeLayout messagesLayout, uploadLayout, textLayout;
 	private ScrollView messagesScrollView;
@@ -124,7 +126,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         contactName = (TextView) view.findViewById(R.id.contactName);
         contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
         
-        ImageView sendMessage = (ImageView) view.findViewById(R.id.sendMessage);
+        sendMessage = (TextView) view.findViewById(R.id.sendMessage);
         sendMessage.setOnClickListener(this);
         message = (EditText) view.findViewById(R.id.message);
         
@@ -135,7 +137,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         messagesScrollView = (ScrollView) view.findViewById(R.id.chatScrollView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         
-        sendImage = (ImageView) view.findViewById(R.id.sendPicture);
+        sendImage = (TextView) view.findViewById(R.id.sendPicture);
         registerForContextMenu(sendImage);
         sendImage.setOnClickListener(new OnClickListener() {
 			@Override
@@ -164,6 +166,25 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		
 		uploadServerUri = getActivity().getResources().getString(R.string.upload_url);
 		addVirtualKeyboardVisiblityListener();
+		
+        message.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable arg0) {
+				
+			}
+
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				
+			}
+
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) 
+			{
+				if (message.getText().toString().equals("")) {
+					sendMessage.setEnabled(false);
+				} else {
+					sendMessage.setEnabled(true);
+				}
+			}
+		});
 		
 		return view;
     }
