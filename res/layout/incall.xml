@@ -77,13 +77,16 @@
                 android:layout_weight="1"
                 android:visibility="invisible" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/transfer"
+                android:background="@drawable/options_transfer"
+	            android:text="@string/button_transfer"
+	            android:gravity="center"
+	            android:paddingTop="50dp"
+	            android:textColor="@color/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1"
-                android:scaleType="fitXY"
-                android:src="@drawable/options_transfer"
                 android:visibility="invisible" />
         </LinearLayout>
 
@@ -111,14 +114,16 @@
                 android:layout_weight="1"
                 android:visibility="invisible" />
 
-            <ImageView
-		    	android:contentDescription="@string/content_description_add_call"
+            <TextView
                 android:id="@+id/addCall"
+                android:background="@drawable/options_add_call_alt"
+	            android:text="@string/button_add_call"
+	            android:gravity="center"
+	            android:paddingTop="50dp"
+	            android:textColor="@color/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_weight="1"
-                android:scaleType="fitXY"
-                android:src="@drawable/options_add_call_alt"
                 android:visibility="invisible" />
             
         </LinearLayout>
@@ -129,40 +134,49 @@
             android:layout_weight="1"
             android:orientation="horizontal" >
 
-            <ImageView
+            <TextView
                 android:id="@+id/video"
+                android:background="@drawable/video_off"
+	            android:text="@string/button_video"
+	            android:gravity="center"
+	            android:paddingTop="45dp"
+	            android:textColor="@color/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/content_description_switch_video"
-                android:scaleType="fitXY"
-                android:src="@drawable/video_off" />
+                android:layout_weight="1" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/micro"
+                android:background="@drawable/micro_on"
+	            android:text="@string/button_micro"
+	            android:gravity="center"
+	            android:paddingTop="45dp"
+	            android:textColor="@color/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/content_description_toggle_micro"
-                android:scaleType="fitXY"
-                android:src="@drawable/micro_on" />
+                android:layout_weight="1" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/speaker"
+                android:background="@drawable/speaker_off"
+	            android:text="@string/button_speaker"
+	            android:gravity="center"
+	            android:paddingTop="45dp"
+	            android:textColor="@color/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/content_description_toggle_speaker"
-                android:scaleType="fitXY"
-                android:src="@drawable/speaker_off" />
+                android:layout_weight="1" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/options"
+                android:background="@drawable/options"
+	            android:text="@string/button_options"
+	            android:gravity="center"
+	            android:paddingTop="45dp"
+	            android:textColor="@color/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
-                android:layout_weight="1"
-                android:scaleType="fitXY"
-                android:src="@drawable/options" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
