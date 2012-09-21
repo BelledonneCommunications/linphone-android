@@ -54,6 +54,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
@@ -482,7 +483,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setRing(null);
 			mLc.setRootCA(mLinphoneRootCaFile);
 			mLc.setPlayFile(mPauseSoundFile);
-			mLc.setVideoPolicy(isAutoInitiateVideoCalls(), isAutoAcceptCamera());
 
 			int availableCores = Runtime.getRuntime().availableProcessors();
 			Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
@@ -655,6 +655,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		setSignalingTransportsFromConfiguration(initialTransports);
 		initMediaEncryption();
+
+		mLc.setVideoPolicy(isAutoInitiateVideoCalls(), isAutoAcceptCamera());
 		
 		try {
 			// Configure audio codecs
@@ -1109,10 +1111,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return getPrefBoolean(R.string.pref_video_enable_key, false);
 	}
 	
-	public boolean shareMyCamera() {
-		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_share_my_video_key, false);
-	}
-	
 	public boolean isAutoAcceptCamera() {
 		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_accept_video_key, false);
 	}
@@ -1184,12 +1182,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return false;
 	}
 
-	public boolean acceptCall(LinphoneCall call) {
+	public boolean acceptCallWithParams(LinphoneCall call, LinphoneCallParams params) {
 		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
 			setAudioModeIncallForGalaxyS();
 
 		try {
-			mLc.acceptCall(call);
+			mLc.acceptCallWithParams(call, params);
 			return true;
 		} catch (LinphoneCoreException e) {
 			Log.i(e, "Accept call failed");

@@ -98,11 +98,11 @@
     
     <string name="pref_video_settings_title">Paramètres vidéo</string>
     <string name="pref_video_automatically_share_my_video_title">Partager ma vidéo</string>
-    <string name="pref_video_automatically_accept_video_title">Accepter vidéo entrante</string>
+    <string name="pref_video_automatically_accept_video_title">Accepter appels vidéo</string>
     <string name="pref_video_automatically_share_my_video">Envoyer ma vidéo automatiquement</string>
-    <string name="pref_video_automatically_accept_video">Accepter automatiquement la vidéo</string>
+    <string name="pref_video_automatically_accept_video">Toujours accepter les demandes d\'appels vidéo</string>
     <string name="pref_video_initiate_call_with_video_title">Initier les appels en vidéo</string>
-    <string name="pref_video_initiate_call_with_video"></string>
+    <string name="pref_video_initiate_call_with_video">Toujours envoyer des demandes d\'appels vidéo</string>
     <string name="pref_video_enable_title">Activer la vidéo</string>
     <string name="pref_animation_enable_title">Activer les animations</string>
     <string name="pref_escape_plus">Remplacer + par 00</string>
