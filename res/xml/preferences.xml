@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Preference 
+	    android:title="@string/menu_about"/>
+    
     <PreferenceCategory 
         android:title="@string/pref_sipaccounts"/>
 
@@ -41,6 +44,11 @@
 		    android:defaultValue="true"
 			android:title="@string/pref_video_enable_title" 
 			android:key="@string/pref_video_enable_key" />
+		
+		<CheckBoxPreference 
+		    android:defaultValue="true"
+			android:title="@string/pref_animation_enable_title" 
+			android:key="@string/pref_animation_enable_key" />
 
 		<EditTextPreference 
 		    android:title="@string/pref_stun_server"

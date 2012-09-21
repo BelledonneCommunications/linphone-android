@@ -104,6 +104,7 @@
     <string name="pref_video_initiate_call_with_video_title">Initier les appels en vidéo</string>
     <string name="pref_video_initiate_call_with_video"></string>
     <string name="pref_video_enable_title">Activer la vidéo</string>
+    <string name="pref_animation_enable_title">Activer les animations</string>
     <string name="pref_escape_plus">Remplacer + par 00</string>
     <string name="pref_ilbc_summary">iLBC peut être indisponible suivant le processeur ARM et la version d\'Android.</string>
     <string name="pref_echo_cancellation">Annulateur d\'écho</string>

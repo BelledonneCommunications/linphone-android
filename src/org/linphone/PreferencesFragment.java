@@ -71,9 +71,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	private int nbAccounts = 1;
 	private PreferenceCategory accounts;
 	
-	private static final int ACCOUNTS_SETTINGS_ID = 0;
-	private static final int WIZARD_SETTINGS_ID = 1;
-	private static final int CAMERA_SETTINGS_ID = 5;
+	private static final int ABOUT_SETTINGS_ID = 0;
+	private static final int ACCOUNTS_SETTINGS_ID = 1;
+	private static final int WIZARD_SETTINGS_ID = 2;
+	private static final int CAMERA_SETTINGS_ID = 6;
 	private static final int WIZARD_INTENT = 1;
 	
 	public PreferencesFragment() {
@@ -97,6 +98,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			wizard.setLayoutResource(R.layout.hidden);
 		} else {
 			addWizardPreferenceButton();
+		}
+		
+		if (getResources().getBoolean(R.bool.disable_animations)) {
+			uncheckDisableAndHideCheckbox(R.string.pref_animation_enable_key);
 		}
 		
 		addTransportChecboxesListener();
@@ -173,6 +178,21 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			
 			Preference enableVideo = findPreference(R.string.pref_video_enable_key);
 			enableVideo.setLayoutResource(R.layout.hidden);
+		}
+		
+		if (getResources().getBoolean(R.bool.display_about_in_settings)) {
+			getPreferenceScreen().getPreference(ABOUT_SETTINGS_ID).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					if (LinphoneActivity.isInstanciated()) {
+						LinphoneActivity.instance().displayAbout();
+						return true;
+					}
+					return false;
+				}
+			});
+		} else {
+			getPreferenceScreen().getPreference(ABOUT_SETTINGS_ID).setLayoutResource(R.layout.hidden);
 		}
 	}
 	

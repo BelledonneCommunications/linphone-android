@@ -27,6 +27,7 @@ public enum FragmentsAvailable {
 	HISTORY_DETAIL,
 	CONTACTS,
 	CONTACT,
+	ABOUT,
 	ABOUT_INSTEAD_OF_SETTINGS,
 	ABOUT_INSTEAD_OF_CHAT,
 	ACCOUNT_SETTINGS,
@@ -66,6 +67,7 @@ public enum FragmentsAvailable {
 		case CHAT:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
 			
+		case ABOUT:
 		case ABOUT_INSTEAD_OF_SETTINGS:
 		case SETTINGS:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;

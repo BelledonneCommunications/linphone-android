@@ -255,7 +255,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			return;
 		}
 			
-		if (getActivity().getResources().getBoolean(R.bool.disable_animations)) {
+		if (LinphoneActivity.instance().isAnimationDisabled()) {
 			deleteAll.setVisibility(View.INVISIBLE);
 		} else {
 			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_right_to_left);
@@ -285,7 +285,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			return;
 		}
 		
-		if (getActivity().getResources().getBoolean(R.bool.disable_animations)) {
+		if (LinphoneActivity.instance().isAnimationDisabled()) {
 			deleteAll.setVisibility(View.VISIBLE);
 		} else {
 			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_left_to_right);

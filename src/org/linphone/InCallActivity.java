@@ -32,6 +32,7 @@ import org.linphone.ui.Numpad;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -91,7 +92,9 @@ public class InCallActivity extends FragmentActivity implements
         
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
         isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
-        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations);
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !prefs.getBoolean(getString(R.string.pref_animation_enable_key), true);
         cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
         
         if (findViewById(R.id.fragmentContainer) != null) {
@@ -180,6 +183,9 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void refreshInCallActions() {
+		if (mHandler == null) {
+			mHandler = new Handler();
+		}
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -224,6 +230,9 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void enableAndRefreshInCallActions() {
+		if (mHandler == null) {
+			mHandler = new Handler();
+		}
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -604,7 +613,154 @@ public class InCallActivity extends FragmentActivity implements
 		}
 	}
 	
+	private void hideAnimatedPortraitCallOptions() {
+		Animation animation = slideOutLeftToRight;
+		animation.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				if (isTransferAllowed) {
+					transfer.setVisibility(View.INVISIBLE);
+				}
+				addCall.setVisibility(View.INVISIBLE);
+				animation.setAnimationListener(null);
+			}
+		});
+		if (isTransferAllowed) {
+			transfer.startAnimation(animation);
+		}
+		addCall.startAnimation(animation);
+	}
+	
+	private void hideAnimatedLandscapeCallOptions() {
+		Animation animation = slideOutTopToBottom;
+		if (isTransferAllowed) {
+			animation.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					transfer.setAnimation(null);
+					transfer.setVisibility(View.INVISIBLE);
+					animation = AnimationUtils.loadAnimation(InCallActivity.this, R.anim.slide_out_top_to_bottom); // Reload animation to prevent transfer button to blink
+					animation.setAnimationListener(new AnimationListener() {
+						@Override
+						public void onAnimationStart(Animation animation) {
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							addCall.setVisibility(View.INVISIBLE);
+						}
+					});
+					addCall.startAnimation(animation);
+				}
+			});
+			transfer.startAnimation(animation);
+		} else {
+			animation.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					addCall.setVisibility(View.INVISIBLE);
+				}
+			});
+			addCall.startAnimation(animation);
+		}
+	}
+	
+	private void showAnimatedPortraitCallOptions() {
+		Animation animation = slideInRightToLeft;
+		animation.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				options.setImageResource(R.drawable.options_alt);
+				if (isTransferAllowed) {
+					transfer.setVisibility(View.VISIBLE);
+				}
+				addCall.setVisibility(View.VISIBLE);
+				animation.setAnimationListener(null);
+			}
+		});
+		if (isTransferAllowed) {
+			transfer.startAnimation(animation);
+		}
+		addCall.startAnimation(animation);
+	}
+	
+	private void showAnimatedLandscapeCallOptions() {
+		Animation animation = slideInBottomToTop;
+		animation.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				addCall.setAnimation(null);
+				options.setImageResource(R.drawable.options_alt);
+				addCall.setVisibility(View.VISIBLE);
+				if (isTransferAllowed) {
+					animation.setAnimationListener(new AnimationListener() {
+						@Override
+						public void onAnimationStart(Animation animation) {
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							transfer.setVisibility(View.VISIBLE);
+						}
+					});
+					transfer.startAnimation(animation);
+				}
+			}
+		});
+		addCall.startAnimation(animation);
+	}
+	
 	private void hideOrDisplayCallOptions() {
+		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+		
 		if (addCall.getVisibility() == View.VISIBLE) {
 			options.setImageResource(R.drawable.options);
 			if (isAnimationDisabled) {
@@ -613,66 +769,25 @@ public class InCallActivity extends FragmentActivity implements
 				}
 				addCall.setVisibility(View.INVISIBLE);
 			} else {
-				Animation animation = slideOutLeftToRight;
-				animation.setAnimationListener(new AnimationListener() {
-					@Override
-					public void onAnimationStart(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						if (isTransferAllowed) {
-							transfer.setVisibility(View.INVISIBLE);
-						}
-						addCall.setVisibility(View.INVISIBLE);
-						animation.setAnimationListener(null);
-					}
-				});
-				if (isTransferAllowed) {
-					transfer.startAnimation(animation);
+				if (isOrientationLandscape) {
+					hideAnimatedLandscapeCallOptions();
+				} else {
+					hideAnimatedPortraitCallOptions();
 				}
-				addCall.startAnimation(animation);
 			}
 		} else {		
-			if (getResources().getBoolean(R.bool.disable_animations)) {
+			if (isAnimationDisabled) {
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.VISIBLE);
 				}
 				addCall.setVisibility(View.VISIBLE);
 				options.setImageResource(R.drawable.options_alt);
 			} else {
-				Animation animation = slideInRightToLeft;
-				animation.setAnimationListener(new AnimationListener() {
-					@Override
-					public void onAnimationStart(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-						
-					}
-					
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						options.setImageResource(R.drawable.options_alt);
-						if (isTransferAllowed) {
-							transfer.setVisibility(View.VISIBLE);
-						}
-						addCall.setVisibility(View.VISIBLE);
-						animation.setAnimationListener(null);
-					}
-				});
-				if (isTransferAllowed) {
-					transfer.startAnimation(animation);
+				if (isOrientationLandscape) {
+					showAnimatedLandscapeCallOptions();
+				} else {
+					showAnimatedPortraitCallOptions();
 				}
-				addCall.startAnimation(animation);
 			}
 			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
