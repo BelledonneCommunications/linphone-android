@@ -334,6 +334,13 @@
 	<string name="button_all_call">All</string>
 	<string name="button_missed_call">Missed</string>
 	<string name="button_delete_all">Delete All</string>
+	
+	<string name="button_transfer">Transfer</string>
+	<string name="button_add_call">Add call</string>
+	<string name="button_video">Video</string>
+	<string name="button_micro">Micro</string>
+	<string name="button_speaker">Speaker</string>
+	<string name="button_options">Options</string>
 
 	<string name="share_picture_size_small">Small</string>
 	<string name="share_picture_size_medium">Medium</string>

@@ -50,6 +50,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * @author Sylvain Berfini
@@ -64,7 +65,8 @@ public class InCallActivity extends FragmentActivity implements
 	private Handler mHandler = new Handler();
 	private Handler mControlsHandler = new Handler();
 	private Runnable mControls;
-	private ImageView video, micro, speaker, addCall, pause, hangUp, dialer, switchCamera, options, transfer, conference;
+	private ImageView pause, hangUp, dialer, switchCamera, conference;
+	private TextView video, micro, speaker, options, addCall, transfer;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
@@ -133,22 +135,22 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void initUI() {
-		video = (ImageView) findViewById(R.id.video);
+		video = (TextView) findViewById(R.id.video);
 		video.setOnClickListener(this);
 		video.setEnabled(false);
-		micro = (ImageView) findViewById(R.id.micro);
+		micro = (TextView) findViewById(R.id.micro);
 		micro.setOnClickListener(this);
 		micro.setEnabled(false);
-		speaker = (ImageView) findViewById(R.id.speaker);
+		speaker = (TextView) findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
 		speaker.setEnabled(false);
-		addCall = (ImageView) findViewById(R.id.addCall);
+		addCall = (TextView) findViewById(R.id.addCall);
 		addCall.setOnClickListener(this);
 		addCall.setEnabled(false);
-		transfer = (ImageView) findViewById(R.id.transfer);
+		transfer = (TextView) findViewById(R.id.transfer);
 		transfer.setOnClickListener(this);
 		transfer.setEnabled(false);
-		options = (ImageView) findViewById(R.id.options);
+		options = (TextView) findViewById(R.id.options);
 		options.setOnClickListener(this);
 		options.setEnabled(false);
 		pause = (ImageView) findViewById(R.id.pause);
@@ -169,7 +171,7 @@ public class InCallActivity extends FragmentActivity implements
 		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
 		
         if (!isTransferAllowed) {
-        	addCall.setImageResource(R.drawable.options_add_call);
+        	addCall.setBackgroundResource(R.drawable.options_add_call);
         }
 
         if (!isAnimationDisabled) {
@@ -193,22 +195,22 @@ public class InCallActivity extends FragmentActivity implements
 					video.setEnabled(false);
 				} else {
 					if (isVideoEnabled) {
-			        	video.setImageResource(R.drawable.video_on);
+			        	video.setBackgroundResource(R.drawable.video_on);
 					} else {
-						video.setImageResource(R.drawable.video_off);
+						video.setBackgroundResource(R.drawable.video_off);
 					}
 				}
 				
 				if (isSpeakerEnabled) {
-					speaker.setImageResource(R.drawable.speaker_on);
+					speaker.setBackgroundResource(R.drawable.speaker_on);
 				} else {
-					speaker.setImageResource(R.drawable.speaker_off);
+					speaker.setBackgroundResource(R.drawable.speaker_off);
 				}
 				
 				if (isMicMuted) {
-					micro.setImageResource(R.drawable.micro_off);
+					micro.setBackgroundResource(R.drawable.micro_off);
 				} else {
-					micro.setImageResource(R.drawable.micro_on);
+					micro.setBackgroundResource(R.drawable.micro_on);
 				}
 				
 				if (LinphoneManager.getLc().getCallsNb() > 1) {
@@ -323,7 +325,7 @@ public class InCallActivity extends FragmentActivity implements
 					LinphoneManager.getLc().updateCall(call, params);
 					replaceFragmentVideoByAudio();
 					
-					video.setImageResource(R.drawable.video_on);
+					video.setBackgroundResource(R.drawable.video_on);
 					setCallControlsVisibleAndRemoveCallbacks();
 					
 				} else {
@@ -331,10 +333,10 @@ public class InCallActivity extends FragmentActivity implements
 					
 					isSpeakerEnabled = true;
 					LinphoneManager.getInstance().routeAudioToSpeaker();
-					speaker.setImageResource(R.drawable.speaker_on);
+					speaker.setBackgroundResource(R.drawable.speaker_on);
 					
 					replaceFragmentAudioByVideo();
-					video.setImageResource(R.drawable.video_off);
+					video.setBackgroundResource(R.drawable.video_off);
 					displayVideoCallControlsIfHidden();
 				}
 			}
@@ -372,9 +374,9 @@ public class InCallActivity extends FragmentActivity implements
 		isMicMuted = !isMicMuted;
 		lc.muteMic(isMicMuted);
 		if (isMicMuted) {
-			micro.setImageResource(R.drawable.micro_off);
+			micro.setBackgroundResource(R.drawable.micro_off);
 		} else {
-			micro.setImageResource(R.drawable.micro_on);
+			micro.setBackgroundResource(R.drawable.micro_on);
 		}
 	}
 	
@@ -382,10 +384,10 @@ public class InCallActivity extends FragmentActivity implements
 		isSpeakerEnabled = !isSpeakerEnabled;
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
-			speaker.setImageResource(R.drawable.speaker_on);
+			speaker.setBackgroundResource(R.drawable.speaker_on);
 		} else {
 			LinphoneManager.getInstance().routeAudioToReceiver();
-			speaker.setImageResource(R.drawable.speaker_off);
+			speaker.setBackgroundResource(R.drawable.speaker_off);
 		}
 		LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 	}
@@ -501,7 +503,7 @@ public class InCallActivity extends FragmentActivity implements
 						mControlsLayout.setVisibility(View.GONE);
 						switchCamera.setVisibility(View.INVISIBLE);
 						numpad.setVisibility(View.GONE);
-						options.setImageResource(R.drawable.options);
+						options.setBackgroundResource(R.drawable.options);
 					} else {					
 						Animation animation = slideOutTopToBottom;
 						animation.setAnimationListener(new AnimationListener() {
@@ -522,7 +524,7 @@ public class InCallActivity extends FragmentActivity implements
 								mControlsLayout.setVisibility(View.GONE);
 								switchCamera.setVisibility(View.INVISIBLE);
 								numpad.setVisibility(View.GONE);
-								options.setImageResource(R.drawable.options);
+								options.setBackgroundResource(R.drawable.options);
 								
 								animation.setAnimationListener(null);
 							}
@@ -706,7 +708,7 @@ public class InCallActivity extends FragmentActivity implements
 			
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				options.setImageResource(R.drawable.options_alt);
+				options.setBackgroundResource(R.drawable.options_alt);
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.VISIBLE);
 				}
@@ -734,7 +736,7 @@ public class InCallActivity extends FragmentActivity implements
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				addCall.setAnimation(null);
-				options.setImageResource(R.drawable.options_alt);
+				options.setBackgroundResource(R.drawable.options_alt);
 				addCall.setVisibility(View.VISIBLE);
 				if (isTransferAllowed) {
 					animation.setAnimationListener(new AnimationListener() {
@@ -762,7 +764,7 @@ public class InCallActivity extends FragmentActivity implements
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 		
 		if (addCall.getVisibility() == View.VISIBLE) {
-			options.setImageResource(R.drawable.options);
+			options.setBackgroundResource(R.drawable.options);
 			if (isAnimationDisabled) {
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.INVISIBLE);
@@ -781,7 +783,7 @@ public class InCallActivity extends FragmentActivity implements
 					transfer.setVisibility(View.VISIBLE);
 				}
 				addCall.setVisibility(View.VISIBLE);
-				options.setImageResource(R.drawable.options_alt);
+				options.setBackgroundResource(R.drawable.options_alt);
 			} else {
 				if (isOrientationLandscape) {
 					showAnimatedLandscapeCallOptions();
