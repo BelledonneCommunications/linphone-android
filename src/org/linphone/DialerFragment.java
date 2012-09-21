@@ -148,7 +148,12 @@ public class DialerFragment extends Fragment {
 	
 	public void resetLayout(boolean callTransfer) {
 		isCallTransferOngoing = callTransfer;
-		if (LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() > 0) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) {
+			return;
+		}
+		
+		if (lc.getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
 				mCall.setImageResource(R.drawable.transfer_call);
 				mCall.setExternalClickListener(transferListener);

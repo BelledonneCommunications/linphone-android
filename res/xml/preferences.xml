@@ -153,7 +153,8 @@
 		    android:key="@string/pref_video_use_front_camera_key"
 		    android:defaultValue="true"
 			android:title="@string/pref_video_use_front_camera_title"
-			android:dependency="@string/pref_video_enable_key"/>
+			android:dependency="@string/pref_video_enable_key"
+			android:layout="@layout/hidden"/>
 	
 		<CheckBoxPreference 
 		    android:key="@string/pref_video_initiate_call_with_video_key"
@@ -167,7 +168,8 @@
 			android:title="@string/pref_video_automatically_share_my_video_title"
 			android:defaultValue="true" 
 			android:summary="@string/pref_video_automatically_share_my_video"
-			android:dependency="@string/pref_video_enable_key"/>
+			android:dependency="@string/pref_video_enable_key"
+			android:layout="@layout/hidden"/>
 		
 	    <CheckBoxPreference
 			android:key="@string/pref_video_automatically_accept_video_key"

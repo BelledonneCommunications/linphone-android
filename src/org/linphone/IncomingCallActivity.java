@@ -24,6 +24,7 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.LinphoneSliders;
@@ -128,7 +129,12 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		LinphoneManager.getLc().terminateCall(mCall);
 	}
 	private void answer() {
-		if (!LinphoneManager.getInstance().acceptCall(mCall)) {
+		LinphoneCallParams params = mCall.getCurrentParamsCopy();
+		if (mCall.getRemoteParams().getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
+			params.setVideoEnabled(true);
+		}
+		
+		if (!LinphoneManager.getInstance().acceptCallWithParams(mCall, params)) {
 			// the above method takes care of Samsung Galaxy S
 			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
 		} else {
@@ -136,7 +142,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 				return;
 			}
 			
-			if (mCall.getCurrentParamsCopy().getVideoEnabled()) {
+			if (mCall.getRemoteParams().getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
 				LinphoneActivity.instance().startVideoActivity(mCall);
 			}
 			else {
