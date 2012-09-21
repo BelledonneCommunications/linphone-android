@@ -56,6 +56,7 @@
     <string name="pref_video_automatically_accept_video_key">pref_video_automatically_accept_video_key</string>
     <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
     <string name="pref_video_enable_key">pref_video_enable_key</string>
+    <string name="pref_animation_enable_key">pref_animation_enable_key</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_autostart_key">pref_autostart_key</string>

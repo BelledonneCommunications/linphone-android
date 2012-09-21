@@ -99,7 +99,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private Fragment dialerFragment, messageListenerFragment;
 	private SavedState dialerSavedState;
 	private ChatStorage chatStorage;
-	private boolean preferLinphoneContacts = false;
+	private boolean preferLinphoneContacts = false, isAnimationDisabled = false;
 	private Handler mHandler = new Handler();
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
@@ -159,6 +159,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		LinphoneManager.getLc().setDeviceRotation(rotation);
 		mAlwaysChangingPhoneAngle = rotation;
+		
+		updateAnimationsState();
 	}
 	
 	private void initButtons() {
@@ -255,6 +257,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		case ACCOUNT_SETTINGS:
 			newFragment = new AccountPreferencesFragment();
 			break;
+		case ABOUT:
 		case ABOUT_INSTEAD_OF_CHAT:
 		case ABOUT_INSTEAD_OF_SETTINGS:
 			newFragment = new AboutFragment();
@@ -278,6 +281,15 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 	}
 	
+	private void updateAnimationsState() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !prefs.getBoolean(getString(R.string.pref_animation_enable_key), true);
+	}
+	
+	public boolean isAnimationDisabled() {
+		return isAnimationDisabled;
+	}
+	
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
 		if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 			if (newFragmentType == FragmentsAvailable.DIALER) {
@@ -293,7 +305,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-		if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
+		if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 			if (newFragmentType.isRightOf(currentFragment)) {
 				transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 			} else {
@@ -344,7 +356,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				ll.setVisibility(View.INVISIBLE);
 			}
 			
-			if (!withoutAnimation && !getResources().getBoolean(R.bool.disable_animations) && currentFragment.shouldAnimate()) {
+			if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 				if (newFragmentType.isRightOf(currentFragment)) {
 					transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 				} else {
@@ -443,6 +455,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		extras.putBoolean("EditOnClick", true);
 		extras.putString("SipAddress", sipAddress);
 		changeCurrentFragment(FragmentsAvailable.CONTACTS, extras);
+	}
+	
+	public void displayAbout() {
+		changeCurrentFragment(FragmentsAvailable.ABOUT, null);
 	}
 	
 	public void displayChat(String sipUri) {
@@ -592,6 +608,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public void applyConfigChangesIfNeeded() {
 		if (nextFragment != FragmentsAvailable.SETTINGS && nextFragment != FragmentsAvailable.ACCOUNT_SETTINGS) {
 			reloadConfig();
+			updateAnimationsState();
 		}
 	}
 	
@@ -709,7 +726,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				if (missedCallsCount > 0) {
 					missedCalls.setText(missedCallsCount + "");
 					missedCalls.setVisibility(View.VISIBLE);
-					if (!getResources().getBoolean(R.bool.disable_animations)) {
+					if (!isAnimationDisabled) {
 						missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
 					}
 				} else {
@@ -732,7 +749,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 						missedChats.setTextSize(20);
 					}
 					missedChats.setVisibility(View.VISIBLE);
-					if (!getResources().getBoolean(R.bool.disable_animations)) {
+					if (!isAnimationDisabled) {
 						missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
 					}
 				} else {
@@ -1087,6 +1104,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				
 				if (currentFragment == FragmentsAvailable.SETTINGS) {
 					reloadConfig();
+					updateAnimationsState();
 				}
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {

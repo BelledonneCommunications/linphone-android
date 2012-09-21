@@ -13,6 +13,7 @@
     <bool name="use_simple_history">true</bool>
     <bool name="replace_settings_by_about">false</bool>
     <bool name="replace_chat_by_about">false</bool>
+    <bool name="display_about_in_settings">true</bool>
     
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_wizard">false</bool>
