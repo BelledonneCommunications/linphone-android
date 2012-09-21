@@ -73,11 +73,13 @@ public class LinphoneLauncherActivity extends Activity {
 	protected void onServiceReady() {
 		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
 		
-		startActivity(new Intent()
-		.setClass(this, LinphoneActivity.class)
-		.setData(getIntent().getData()));
-
-		finish();
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, LinphoneActivity.class).setData(getIntent().getData()));
+				finish();
+			}
+		}, 1000);
 	}
 
 
