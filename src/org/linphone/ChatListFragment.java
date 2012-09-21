@@ -203,6 +203,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				isDraft = true;
 			}
 			view.setTag(contact);
+			final String fContact = contact;
 			
 			LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
@@ -230,6 +231,14 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			} else {
 				delete.setVisibility(View.INVISIBLE);
 				detail.setVisibility(View.VISIBLE);
+				detail.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LinphoneActivity.isInstanciated()) {
+							LinphoneActivity.instance().displayChat(fContact);
+						}
+					}
+				});
 			}
 			
 			return view;

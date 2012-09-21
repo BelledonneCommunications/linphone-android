@@ -67,11 +67,11 @@ public enum FragmentsAvailable {
 		case CHAT:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
 			
-		case ABOUT:
 		case ABOUT_INSTEAD_OF_SETTINGS:
 		case SETTINGS:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
-			
+		
+		case ABOUT:
 		case ACCOUNT_SETTINGS:
 			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
 			
