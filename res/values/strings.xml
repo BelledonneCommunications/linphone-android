@@ -361,6 +361,8 @@
 	<string name="share_picture_size_large">Large</string>
 	<string name="share_picture_size_real">Real size</string>
 	<string name="save_picture">Save picture</string>
+	<string name="text_copied_to_clipboard">Text copied to clipboard</string>
+	<string name="copy_text">Copy text</string>
 	<string name="image_picker_title">Select source</string>
 	<string name="image_saved">Image saved</string>
 	<string name="image_not_saved">Error, image not saved</string>

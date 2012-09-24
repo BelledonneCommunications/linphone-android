@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
@@ -87,6 +88,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private static final int MENU_PICTURE_MEDIUM = 3;
 	private static final int MENU_PICTURE_LARGE = 4;
 	private static final int MENU_PICTURE_REAL = 5;
+	private static final int MENU_COPY_TEXT = 6;
 	private static final int COMPRESSOR_QUALITY = 100;
 	private static final int SIZE_SMALL = 500;
 	private static final int SIZE_MEDIUM = 1000;
@@ -309,6 +311,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			ImageView iv = (ImageView) v.findViewById(R.id.image);
 			if (iv != null && iv.getVisibility() == View.VISIBLE) {
 				menu.add(v.getId(), MENU_SAVE_PICTURE, 0, getString(R.string.save_picture));
+			} else {
+				menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
 			}
 		}
 	}
@@ -322,6 +326,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			break;
 		case MENU_SAVE_PICTURE:
 			saveImage(item.getGroupId());
+			break;
+		case MENU_COPY_TEXT:
+			copyText(item.getGroupId());
 			break;
 		case MENU_PICTURE_SMALL:
 			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.SMALL);
@@ -422,6 +429,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				messagesScrollView.fullScroll(View.FOCUS_DOWN);
 			}
 		}, 100);
+	}
+	
+	private void copyText(int id) {
+		String msg = LinphoneActivity.instance().getChatStorage().getTextMessageForId(id);
+		if (msg != null) {
+			Compatibility.copyTextToClipboard(getActivity(), msg);
+			LinphoneActivity.instance().displayCustomToast(getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT);
+		}
 	}
 
 	public void onMessageReceived(int id, LinphoneAddress from, LinphoneChatMessage message) {

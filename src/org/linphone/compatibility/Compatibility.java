@@ -201,4 +201,12 @@ public class Compatibility {
 			ApiEightPlus.initPushNotificationService(context);
 		}
 	}
+
+	public static void copyTextToClipboard(Context context, String msg) {
+		if(Version.sdkAboveOrEqual(11)) {
+			ApiElevenPlus.copyTextToClipboard(context, msg);
+		} else {
+		    ApiFivePlus.copyTextToClipboard(context, msg);
+		}
+	}
 }

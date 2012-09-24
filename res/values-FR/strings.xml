@@ -310,6 +310,8 @@
 	<string name="share_picture_size_large">Grande</string>
 	<string name="share_picture_size_real">Taille réelle</string>
 	<string name="save_picture">Sauvegarder l\'image</string>
+	<string name="copy_text">Copier le texte</string>
+	<string name="text_copied_to_clipboard">Texte copié dans le presse papier</string>
 	<string name="image_picker_title">Choisissez la source</string>
 	<string name="image_saved">Image sauvegardée</string>
 	<string name="image_not_saved">Erreur, image non sauvegardée</string>

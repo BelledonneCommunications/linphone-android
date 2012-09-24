@@ -5,6 +5,8 @@ import org.linphone.R;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -79,5 +81,11 @@ public class ApiElevenPlus {
 	public static void setNotificationLatestEventInfo(Notification notif,
 			Context context, String title, String content, PendingIntent intent) {
 		notif.setLatestEventInfo(context, title, content, intent);
+	}
+
+	public static void copyTextToClipboard(Context context, String msg) {
+		ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); 
+	    ClipData clip = android.content.ClipData.newPlainText("Message", msg);
+	    clipboard.setPrimaryClip(clip);
 	}
 }

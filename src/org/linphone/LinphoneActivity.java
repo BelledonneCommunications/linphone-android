@@ -782,7 +782,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		displayMissedCalls(missedCalls);
 	}
 	
-	private void displayCustomToast(final String message, final int duration) {
+	public void displayCustomToast(final String message, final int duration) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {

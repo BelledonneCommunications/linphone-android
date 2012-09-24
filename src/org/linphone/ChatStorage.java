@@ -187,6 +187,22 @@ public class ChatStorage {
 		
 		return chatMessages;
 	}
+
+	public String getTextMessageForId(int id) {
+		Cursor c = db.query(TABLE_NAME, null, "id LIKE " + id, null, null, null, null);
+
+		String message = null;
+		if (c.moveToFirst()) {
+			try {
+				message = c.getString(c.getColumnIndex("message"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		c.close();
+		
+		return message;
+	}
 	
 	public void removeDiscussion(String correspondent) {
 		db.delete(TABLE_NAME, "remoteContact LIKE \"" + correspondent + "\"", null);
