@@ -47,7 +47,7 @@ import android.widget.TextView;
 public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
-	private TextView allContacts, linphoneContacts, newContact;
+	private TextView allContacts, linphoneContacts, newContact, noSipContact, noContact;
 	private boolean onlyDisplayLinphoneContacts;
 	private int lastKnownPosition;
 	private AlphabetIndexer indexer;
@@ -66,6 +66,9 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	        
 	        onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
+        
+        noSipContact = (TextView) view.findViewById(R.id.noSipContact);
+        noContact = (TextView) view.findViewById(R.id.noContact);
         
         contactsList = (ListView) view.findViewById(R.id.contactsList);
         contactsList.setOnItemClickListener(this);
@@ -111,13 +114,27 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		
 		Cursor allContactsCursor = LinphoneActivity.instance().getAllContactsCursor();
 		Cursor sipContactsCursor = LinphoneActivity.instance().getSIPContactsCursor();
+
+		noSipContact.setVisibility(View.GONE);
+		noContact.setVisibility(View.GONE);
+		contactsList.setVisibility(View.VISIBLE);
 		
 		if (onlyDisplayLinphoneContacts) {
-			indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), sipContactsCursor));
+			if (sipContactsCursor.getCount() == 0) {
+				noSipContact.setVisibility(View.VISIBLE);
+				contactsList.setVisibility(View.GONE);
+			} else {
+				indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), sipContactsCursor));
+			}
 		} else {
-			indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-			contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), allContactsCursor));
+			if (allContactsCursor.getCount() == 0) {
+				noContact.setVisibility(View.VISIBLE);
+				contactsList.setVisibility(View.GONE);
+			} else {
+				indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), allContactsCursor));
+			}
 		}
 		LinphoneActivity.instance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
 	}

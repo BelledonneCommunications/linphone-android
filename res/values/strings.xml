@@ -254,6 +254,11 @@
 	<string name="conference">Conference</string>
 	<string name="draft">Draft</string>
 	<string name="new_fast_chat">Enter a SIP address to chat with&#8230;</string>
+	<string name="no_call_history">No call in your history.</string>
+	<string name="no_missed_call_history">No missed call in your history.</string>
+	<string name="no_contact">No contact in your address book.</string>
+	<string name="no_sip_contact">No SIP contact in your address book.</string>
+	<string name="no_chat_history">No chat history.</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact">Add to contacts button</string>

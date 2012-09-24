@@ -55,7 +55,7 @@ import android.widget.TextView;
 public class HistorySimpleFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private ListView historyList;
 	private LayoutInflater mInflater;
-	private TextView allCalls, missedCalls, edit, ok, deleteAll;
+	private TextView allCalls, missedCalls, edit, ok, deleteAll, noCallHistory, noMissedCallHistory;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs; 
 	
@@ -64,6 +64,9 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
         Bundle savedInstanceState) {
 		mInflater = inflater;
         View view = inflater.inflate(R.layout.history_simple, container, false);
+        
+        noCallHistory = (TextView) view.findViewById(R.id.noCallHistory);
+        noMissedCallHistory = (TextView) view.findViewById(R.id.noMissedCallHistory);
         
         historyList = (ListView) view.findViewById(R.id.historyList);
         historyList.setOnItemClickListener(this);
@@ -91,6 +94,36 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		return view;
     }
 	
+	private void removeNotMissedCallsFromLogs() {
+		if (onlyDisplayMissedCalls) {
+			List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
+			for (LinphoneCallLog log : mLogs) {
+				if (log.getStatus() == CallStatus.Missed) {
+					missedCalls.add(log);
+				}
+			}
+			mLogs = missedCalls;
+		}
+	}
+	
+	private boolean hideHistoryListAndDisplayMessageIfEmpty() {
+		removeNotMissedCallsFromLogs();
+		if (mLogs.isEmpty()) {
+			if (onlyDisplayMissedCalls) {
+				noMissedCallHistory.setVisibility(View.VISIBLE);
+			} else {
+				noCallHistory.setVisibility(View.VISIBLE);
+			}
+			historyList.setVisibility(View.GONE);
+			return true;
+		} else {
+			noCallHistory.setVisibility(View.GONE);
+			noMissedCallHistory.setVisibility(View.GONE);
+			historyList.setVisibility(View.VISIBLE);
+			return false;
+		}
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -98,7 +131,9 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
 		
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-        historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
 	}
 
 	@Override
@@ -113,7 +148,9 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		LinphoneCallLog log = mLogs.get(info.position);
 		LinphoneManager.getLc().removeCallLog(log);
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-        historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
 		return true;
 	}
 
@@ -150,7 +187,9 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			mLogs = new ArrayList<LinphoneCallLog>();
 		}
 		
-		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
 	}
 
 	@Override
@@ -159,7 +198,9 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			LinphoneCallLog log = mLogs.get(position);
 			LinphoneManager.getLc().removeCallLog(log);
 			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-	        historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+				historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			}
 		} else {
 			if (LinphoneActivity.isInstanciated()) {
 				LinphoneCallLog log = mLogs.get(position);
@@ -240,15 +281,7 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		CallHistoryAdapter(Context aContext) {
 			missedCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_missed);
 			
-			if (onlyDisplayMissedCalls) {
-				List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
-				for (LinphoneCallLog log : mLogs) {
-					if (log.getStatus() == CallStatus.Missed) {
-						missedCalls.add(log);
-					}
-				}
-				mLogs = missedCalls;
-			} else {
+			if (!onlyDisplayMissedCalls) {
 				outgoingCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_outgoing);
 				incomingCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_incoming);
 			}

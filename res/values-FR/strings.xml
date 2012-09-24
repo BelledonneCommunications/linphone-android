@@ -203,7 +203,12 @@
 	<string name="addressHint">Numéro ou adresse</string>
 	<string name="conference">Conférence</string>
 	<string name="draft">Brouillon</string>
-	<string name="new_fast_chat">Entrez une adresse SIP avec qui discuter&#8230;</string>
+	<string name="new_fast_chat">Entrez une adresse SIP&#8230;</string>
+	<string name="no_call_history">Aucun appel dans votre historique.</string>
+	<string name="no_missed_call_history">Aucun appel manqué dans votre historique.</string>
+	<string name="no_contact">Aucun contact dans votre carnet d\'adresse.</string>
+	<string name="no_sip_contact">Aucun contact SIP dans votre carnet d\'adresse.</string>
+	<string name="no_chat_history">Aucun historique de chat.</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact"></string>
@@ -295,7 +300,7 @@
 	<string name="button_send_picture">Img</string>
 	<string name="uploading_image">Envoi en cours&#8230;</string>
 	
-	<string name="call_update_title">Mise à jour de l'appel</string>
+	<string name="call_update_title">Mise à jour de l\'appel</string>
 	<string name="call_update_desc">Votre correspondant souhaite ajouter la vidéo à l\'appel en cours.</string>
 	<string name="call_update_yes">Accepter</string>
 	<string name="call_update_no">Refuser</string>

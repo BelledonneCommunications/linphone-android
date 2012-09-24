@@ -67,6 +67,28 @@
 		    android:fastScrollAlwaysVisible="true"
 		    android:fastScrollEnabled="true"
 	        android:dividerHeight="1dp" />
+	    
+	    <TextView 
+	        android:id="@+id/noSipContact"
+	        android:visibility="gone"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+	        android:text="@string/no_sip_contact"
+	        android:textColor="@drawable/text_color"
+	        android:textAppearance="@android:style/TextAppearance.Large"/>
+	    
+	    <TextView 
+	        android:id="@+id/noContact"
+	        android:visibility="gone"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+	        android:text="@string/no_contact"
+	        android:textColor="@drawable/text_color"
+	        android:textAppearance="@android:style/TextAppearance.Large"/>
         
     </RelativeLayout>
 
