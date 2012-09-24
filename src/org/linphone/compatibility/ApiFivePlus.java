@@ -33,6 +33,7 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents.Insert;
+import android.text.ClipboardManager;
 import android.view.Display;
 
 /*
@@ -56,6 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /**
  * @author Sylvain Berfini
  */
+@SuppressWarnings("deprecation")
 @TargetApi(5)
 public class ApiFivePlus {
 	public static void overridePendingTransition(Activity activity, int idAnimIn, int idAnimOut) {
@@ -309,12 +311,10 @@ public class ApiFivePlus {
 		return null;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static int getRotation(Display display) {
 		return display.getOrientation();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static Notification createMessageNotification(Context context, String title, String msg, PendingIntent intent) {
 		Notification notif = new Notification();
 		notif.icon = R.drawable.chat_icon_over;
@@ -331,7 +331,6 @@ public class ApiFivePlus {
 		return notif;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static Notification createInCallNotification(Context context,
 			String title, String msg, int iconID, PendingIntent intent) {
 		Notification notif = new Notification();
@@ -345,7 +344,6 @@ public class ApiFivePlus {
 		return notif;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
 		notif.setLatestEventInfo(context, title, content, intent);
 	}
@@ -356,5 +354,10 @@ public class ApiFivePlus {
 	
 	public static boolean isPreferenceChecked(Preference preference) {
 		return ((CheckBoxPreference) preference).isChecked();
+	}
+
+	public static void copyTextToClipboard(Context context, String msg) {
+	    ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+	    clipboard.setText(msg);
 	}
 }
