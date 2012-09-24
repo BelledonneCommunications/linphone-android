@@ -23,6 +23,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreFactory;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -44,6 +45,8 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
+	private Handler mHandler = new Handler();
+	
 	private LayoutInflater mInflater;
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
@@ -91,6 +94,18 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			chatList.setAdapter(new ChatListAdapter());
 		}
 	}
+	
+	public void refresh() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				mConversations = LinphoneActivity.instance().getChatList();
+				mDrafts = LinphoneActivity.instance().getDraftChatList();
+				mConversations.removeAll(mDrafts);
+				hideAndDisplayMessageIfNoChat();
+			}
+		});
+	}
 
 	@Override
 	public void onResume() {
@@ -98,12 +113,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHATLIST);
+			LinphoneActivity.instance().updateChatListFragment(this);
 		}
 		
-		mConversations = LinphoneActivity.instance().getChatList();
-		mDrafts = LinphoneActivity.instance().getDraftChatList();
-		mConversations.removeAll(mDrafts);
-		hideAndDisplayMessageIfNoChat();
+		refresh();
 	}
 
 	@Override
@@ -216,7 +229,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				isDraft = true;
 			}
 			view.setTag(contact);
-			final String fContact = contact;
+			int unreadMessagesCount = LinphoneActivity.instance().getChatStorage().getUnreadMessageCount(contact);
 			
 			LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
@@ -234,24 +247,20 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				view.findViewById(R.id.draft).setVisibility(View.VISIBLE);
 			}
 			
-			ImageView delete, detail;
-			delete = (ImageView) view.findViewById(R.id.delete);
-			detail = (ImageView) view.findViewById(R.id.detail);
+			ImageView delete = (ImageView) view.findViewById(R.id.delete);
+			TextView unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
+			
+			if (unreadMessagesCount > 0) {
+				unreadMessages.setVisibility(View.VISIBLE);
+				unreadMessages.setText(String.valueOf(unreadMessagesCount));
+			} else {
+				unreadMessages.setVisibility(View.GONE);
+			}
 			
 			if (isEditMode) {
 				delete.setVisibility(View.VISIBLE);
-				detail.setVisibility(View.INVISIBLE);
 			} else {
 				delete.setVisibility(View.INVISIBLE);
-				detail.setVisibility(View.VISIBLE);
-				detail.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (LinphoneActivity.isInstanciated()) {
-							LinphoneActivity.instance().displayChat(fContact);
-						}
-					}
-				});
 			}
 			
 			return view;

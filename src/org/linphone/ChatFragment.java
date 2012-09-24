@@ -328,7 +328,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			saveImage(item.getGroupId());
 			break;
 		case MENU_COPY_TEXT:
-			copyText(item.getGroupId());
+			copyTextMessageToClipboard(item.getGroupId());
 			break;
 		case MENU_PICTURE_SMALL:
 			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.SMALL);
@@ -431,7 +431,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}, 100);
 	}
 	
-	private void copyText(int id) {
+	private void copyTextMessageToClipboard(int id) {
 		String msg = LinphoneActivity.instance().getChatStorage().getTextMessageForId(id);
 		if (msg != null) {
 			Compatibility.copyTextToClipboard(getActivity(), msg);

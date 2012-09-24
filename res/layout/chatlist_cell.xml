@@ -19,16 +19,18 @@
 	    android:visibility="invisible"
 	    android:src="@drawable/list_delete" />
 	
-	<ImageView 
-        android:contentDescription="@string/content_description_detail"
-	    android:id="@+id/detail"
-	    android:paddingRight="5dp"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
+	<TextView
+        android:id="@+id/unreadMessages"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+	    android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/delete"
 	    android:layout_centerVertical="true"
+        android:background="@drawable/chat_icon_over"
 	    android:adjustViewBounds="true"
-	    android:src="@drawable/list_detail" />
+        android:gravity="center"
+        android:textSize="18dp"
+        android:visibility="gone" />
 	
 	<TextView 
 	    android:id="@+id/draft"
@@ -38,7 +40,7 @@
 	    android:layout_height="wrap_content"
 	    android:textAppearance="?android:attr/textAppearanceSmall"
 	    android:textColor="@color/text_selected"
-	    android:layout_toLeftOf="@id/detail"
+	    android:layout_toLeftOf="@id/unreadMessages"
 	    android:text="@string/draft"
 	    android:layout_marginLeft="5dp"
 	    android:layout_marginRight="5dp" />
