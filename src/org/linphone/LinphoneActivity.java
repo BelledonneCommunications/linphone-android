@@ -205,6 +205,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	private void showStatusBar() {
 		findViewById(R.id.status).setVisibility(View.VISIBLE);
+		if (statusFragment != null && !statusFragment.isVisible()) {
+			// Hack to ensure statusFragment is visible after coming back to dialer from chat
+			statusFragment.getView().setVisibility(View.VISIBLE);
+		}
 		findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 	
