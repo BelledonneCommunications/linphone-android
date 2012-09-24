@@ -181,19 +181,21 @@ public class DialerFragment extends Fragment {
 	}
 	
 	public void newOutgoingCall(Intent intent) {
-		String scheme = intent.getData().getScheme();
-		if (scheme.startsWith("imto")) {
-			mAddress.setText("sip:" + intent.getData().getLastPathSegment());
-		} else if (scheme.startsWith("call") || scheme.startsWith("sip")) {
-			mAddress.setText(intent.getData().getSchemeSpecificPart());
-		} else {
-			Log.e("Unknown scheme: ",scheme);
-			mAddress.setText(intent.getData().getSchemeSpecificPart());
+		if (intent != null && intent.getData() != null) {
+			String scheme = intent.getData().getScheme();
+			if (scheme.startsWith("imto")) {
+				mAddress.setText("sip:" + intent.getData().getLastPathSegment());
+			} else if (scheme.startsWith("call") || scheme.startsWith("sip")) {
+				mAddress.setText(intent.getData().getSchemeSpecificPart());
+			} else {
+				Log.e("Unknown scheme: ",scheme);
+				mAddress.setText(intent.getData().getSchemeSpecificPart());
+			}
+	
+			mAddress.clearDisplayedName();
+			intent.setData(null);
+	
+			LinphoneManager.getInstance().newOutgoingCall(mAddress);
 		}
-
-		mAddress.clearDisplayedName();
-		intent.setData(null);
-
-		LinphoneManager.getInstance().newOutgoingCall(mAddress);
 	}
 }
