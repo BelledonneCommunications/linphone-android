@@ -155,8 +155,9 @@ public class StatusFragment extends Fragment {
 	}
 	
 	public void registrationStateChanged(final RegistrationState state) {
-		if (!isAttached)
+		if (!isAttached) {
 			return;
+		}
 		
 		mHandler.post(new Runnable() {
 			@Override
@@ -164,6 +165,8 @@ public class StatusFragment extends Fragment {
 				statusLed.setImageResource(getStatusIconResource(state, true));
 				statusText.setText(getStatusIconText(state));
 //				setMiniLedsForEachAccount();
+				populateSliderContent();
+				sliderContent.invalidate();
 			}
 		});
 	}

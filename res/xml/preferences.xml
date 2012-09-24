@@ -46,7 +46,7 @@
 			android:key="@string/pref_video_enable_key" />
 		
 		<CheckBoxPreference 
-		    android:defaultValue="true"
+		    android:defaultValue="false"
 			android:title="@string/pref_animation_enable_title" 
 			android:key="@string/pref_animation_enable_key" />
 

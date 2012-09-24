@@ -1098,7 +1098,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				}
 			} else {
 				int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-				if (backStackEntryCount == 1) {
+				if (backStackEntryCount <= 1) {
 					showStatusBar();
 				}
 				
