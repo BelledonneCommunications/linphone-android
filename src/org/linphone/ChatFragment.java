@@ -39,7 +39,6 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 
@@ -50,7 +49,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -472,7 +473,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 									break;
 								}
 							}
-							Log.e("ID = " + id);
 							if (id != -1) {
 								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, finalState.toInt());
 							}
@@ -668,6 +668,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					} else if (image != null) {
 						bm = image;
 					}
+				}
+				
+				// Rotate the bitmap if possible/needed, using EXIF data
+				try {
+					ExifInterface exif = new ExifInterface(filePath);
+					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+					Matrix matrix = new Matrix();
+					if (pictureOrientation == 6) {
+						matrix.postRotate(90);
+					} else if (pictureOrientation == 3) {
+						matrix.postRotate(180);
+					} else if (pictureOrientation == 8) {
+						matrix.postRotate(270);
+					}
+					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
                 
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
