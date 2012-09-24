@@ -96,7 +96,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private LinearLayout menu, mark;
 	private RelativeLayout contacts, history, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment, nextFragment;
-	private Fragment dialerFragment, messageListenerFragment;
+	private Fragment dialerFragment, messageListenerFragment, messageListFragment;
 	private SavedState dialerSavedState;
 	private ChatStorage chatStorage;
 	private boolean preferLinphoneContacts = false, isAnimationDisabled = false;
@@ -268,6 +268,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			break;
 		case CHATLIST:
 			newFragment = new ChatListFragment();
+			messageListFragment = new Fragment();
 			break;
 		}
 		
@@ -587,6 +588,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	}
 	
+	public void updateChatListFragment(ChatListFragment fragment) {
+		messageListFragment = fragment;
+	}
+	
 	public void hideMenu(boolean hide) {
 		menu.setVisibility(hide ? View.GONE : View.VISIBLE);
 		mark.setVisibility(hide ? View.GONE : View.VISIBLE);
@@ -685,6 +690,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			getChatStorage().markMessageAsRead(id);
 		} else if (LinphoneService.isReady()) {
 			displayMissedChats(getChatStorage().getUnreadMessageCount());
+			if (messageListFragment != null && messageListFragment.isVisible()) {
+				((ChatListFragment) messageListFragment).refresh();
+			}
 		}
 		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
 		LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), notificationText);

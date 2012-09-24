@@ -235,6 +235,10 @@ public class ChatStorage {
 		return db.query(TABLE_NAME, null, "read LIKE " + NOT_READ, null, null, null, null).getCount();
 	}
 
+	public int getUnreadMessageCount(String contact) {
+		return db.query(TABLE_NAME, null, "remoteContact LIKE \"" + contact + "\" AND read LIKE " + NOT_READ, null, null, null, null).getCount();
+	}
+
 	public byte[] getRawImageFromMessage(int id) {
 		String[] columns = { "image" };
 		Cursor c = db.query(TABLE_NAME, columns, "id LIKE " + id + "", null, null, null, null);
