@@ -27,6 +27,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 
@@ -38,10 +39,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -50,6 +54,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -79,6 +84,7 @@ public class InCallActivity extends FragmentActivity implements
 	private int cameraNumber;
 	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
 	private CountDownTimer timer;
+	private AcceptCallUpdateDialog callUpdateDialog;
 	
 	public static InCallActivity instance() {
 		return instance;
@@ -816,6 +822,10 @@ public class InCallActivity extends FragmentActivity implements
 		if (timer != null) {
 			timer.cancel();
 		}
+		
+		if (callUpdateDialog != null) {
+			callUpdateDialog.dismissAllowingStateLoss();
+		}
 		 
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
@@ -890,7 +900,7 @@ public class InCallActivity extends FragmentActivity implements
 			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 				mHandler.post(new Runnable() {
 					public void run() {
-						//TODO: ask the user it's choice
+						showAcceptCallUpdateDialog();
 						
 						// We let 30 secs for the user to decide
 						timer = new CountDownTimer(30000, 1000) {
@@ -913,6 +923,12 @@ public class InCallActivity extends FragmentActivity implements
 		
 		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 	}
+	
+	private void showAcceptCallUpdateDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        callUpdateDialog = new AcceptCallUpdateDialog();
+        callUpdateDialog.show(fm, "Accept Call Update Dialog");
+    }
 
 	@Override
 	public void onCallEncryptionChanged(final LinphoneCall call, boolean encrypted, String authenticationToken) {
@@ -997,5 +1013,39 @@ public class InCallActivity extends FragmentActivity implements
 
 	public void bindVideoFragment(VideoCallFragment fragment) {
 		videoCallFragment = fragment;
+	}
+	
+	class AcceptCallUpdateDialog extends DialogFragment {
+
+	    public AcceptCallUpdateDialog() {
+	        // Empty constructor required for DialogFragment
+	    }
+
+	    @Override
+	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	        View view = inflater.inflate(R.layout.accept_call_update_dialog, container);
+
+	        getDialog().setTitle(R.string.call_update_title);
+	        
+	        Button yes = (Button) view.findViewById(R.id.yes);
+	        yes.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+			    	Log.d("Call Update Accepted");
+			    	acceptCallUpdate(true);
+				}
+			});
+	        
+	        Button no = (Button) view.findViewById(R.id.no);
+	        no.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+			    	Log.d("Call Update Denied");
+			    	acceptCallUpdate(false);
+				}
+			});
+	        
+	        return view;
+	    }
 	}
 }
