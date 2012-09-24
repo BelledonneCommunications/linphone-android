@@ -99,7 +99,7 @@ public class StatusFragment extends Fragment {
 
 		// We create it once to not delay the first display
 		populateSliderContent();
-		
+
         return view;
     }
 	
