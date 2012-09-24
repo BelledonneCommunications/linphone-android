@@ -18,12 +18,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.Log;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -176,5 +178,22 @@ public class DialerFragment extends Fragment {
 	
 	public void enableDisableAddContact() {
 		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));	
+	}
+	
+	public void newOutgoingCall(Intent intent) {
+		String scheme = intent.getData().getScheme();
+		if (scheme.startsWith("imto")) {
+			mAddress.setText("sip:" + intent.getData().getLastPathSegment());
+		} else if (scheme.startsWith("call") || scheme.startsWith("sip")) {
+			mAddress.setText(intent.getData().getSchemeSpecificPart());
+		} else {
+			Log.e("Unknown scheme: ",scheme);
+			mAddress.setText(intent.getData().getSchemeSpecificPart());
+		}
+
+		mAddress.clearDisplayedName();
+		intent.setData(null);
+
+		LinphoneManager.getInstance().newOutgoingCall(mAddress);
 	}
 }
