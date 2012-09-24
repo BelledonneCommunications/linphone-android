@@ -285,7 +285,7 @@
 	<string name="button_delete_all">Tout supprimer</string>
 	
 	<string name="button_transfer">Transfert</string>
-	<string name="button_add_call">Ajouter appel</string>
+	<string name="button_add_call">+ Appel</string>
 	<string name="button_video">Vidéo</string>
 	<string name="button_micro">Micro</string>
 	<string name="button_speaker">Haut parleur</string>
@@ -294,6 +294,11 @@
 	<string name="button_send_message">Envoyer</string>
 	<string name="button_send_picture">Img</string>
 	<string name="uploading_image">Envoi en cours&#8230;</string>
+	
+	<string name="call_update_title">Mise à jour de l'appel</string>
+	<string name="call_update_desc">Votre correspondant souhaite ajouter la vidéo à l\'appel en cours.</string>
+	<string name="call_update_yes">Accepter</string>
+	<string name="call_update_no">Refuser</string>
 
 	<string name="share_picture_size_small">Petite</string>
 	<string name="share_picture_size_medium">Moyenne</string>
