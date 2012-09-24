@@ -24,6 +24,7 @@
         android:layout_alignBottom="@id/image"
         android:paddingBottom="10dp"
         android:textColor="@drawable/text_color"
-        android:text="@string/button_about" />
+        android:text="@string/button_about"
+        android:textSize="13dp" />
     
 </RelativeLayout>
