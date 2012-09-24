@@ -67,6 +67,7 @@ public class InCallActivity extends FragmentActivity implements
 									LinphoneOnCallEncryptionChangedListener,
 									OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
+	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	
 	private static InCallActivity instance;
 	
@@ -902,8 +903,7 @@ public class InCallActivity extends FragmentActivity implements
 					public void run() {
 						showAcceptCallUpdateDialog();
 						
-						// We let 30 secs for the user to decide
-						timer = new CountDownTimer(30000, 1000) {
+						timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
 							public void onTick(long millisUntilFinished) { }
 							public void onFinish() {
 								acceptCallUpdate(false);

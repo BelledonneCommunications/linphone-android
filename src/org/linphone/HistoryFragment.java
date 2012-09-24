@@ -38,10 +38,10 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -56,7 +56,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	private Handler mHandler = new Handler();
 	private ExpandableListView historyList;
 	private LayoutInflater mInflater;
-	private TextView allCalls, missedCalls, edit, ok, deleteAll;
+	private TextView allCalls, missedCalls, edit, ok, deleteAll, noCallHistory, noMissedCallHistory;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private SparseArray<List<LinphoneCallLog>> mLogs; 
 	
@@ -65,6 +65,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
         Bundle savedInstanceState) {
 		mInflater = inflater;
         View view = inflater.inflate(R.layout.history, container, false);
+        
+        noCallHistory = (TextView) view.findViewById(R.id.noCallHistory);
+        noMissedCallHistory = (TextView) view.findViewById(R.id.noMissedCallHistory);
         
         historyList = (ExpandableListView) view.findViewById(R.id.historyList);
         historyList.setOnChildClickListener(this);
@@ -92,6 +95,23 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		return view;
     }
 	
+	private boolean hideHistoryListAndDisplayMessageIfEmpty() {
+		if (mLogs.size() == 0) {
+			if (onlyDisplayMissedCalls) {
+				noMissedCallHistory.setVisibility(View.VISIBLE);
+			} else {
+				noCallHistory.setVisibility(View.VISIBLE);
+			}
+			historyList.setVisibility(View.GONE);
+			return true;
+		} else {
+			noCallHistory.setVisibility(View.GONE);
+			noMissedCallHistory.setVisibility(View.GONE);
+			historyList.setVisibility(View.VISIBLE);
+			return false;
+		}
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -99,7 +119,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
 		
 		initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-        historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
         expandAllGroups();
 	}
 	
@@ -212,7 +234,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			initLogsLists(new ArrayList<LinphoneCallLog>());
 		}
 		
-		historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
 		expandAllGroups();
 	}
 	
@@ -224,7 +248,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			}
 			
 			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-	        historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+			if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+				historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			}
 	        expandAllGroups();
 		}
 		return false;
@@ -236,7 +262,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		if (isEditMode) {
 			LinphoneManager.getLc().removeCallLog(log);
 			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-	        historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+			if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+				historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			}
 	        expandAllGroups();
 		} else {
 			LinphoneAddress address;
