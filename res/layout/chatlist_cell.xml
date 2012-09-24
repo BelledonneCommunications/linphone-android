@@ -26,7 +26,7 @@
 	    android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/delete"
 	    android:layout_centerVertical="true"
-        android:background="@drawable/chat_icon_over"
+        android:background="@drawable/missed_calls_bg"
 	    android:adjustViewBounds="true"
         android:gravity="center"
         android:textSize="18dp"
