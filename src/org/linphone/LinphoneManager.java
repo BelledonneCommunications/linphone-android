@@ -501,7 +501,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				}
 			};
 
-			mTimer.scheduleAtFixedRate(lTask, 0, 100); 
+			mTimer.scheduleAtFixedRate(lTask, 0, 20); 
 
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
