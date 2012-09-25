@@ -969,7 +969,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 					((DialerFragment) dialerFragment).resetLayout(false);
 				}
 				
-				if (LinphoneManager.getLc().getCallsNb() > 0) {
+				if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 					LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 					if (call.getCurrentParamsCopy().getVideoEnabled()) {
 						startVideoActivity(call);
