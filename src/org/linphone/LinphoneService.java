@@ -158,7 +158,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
-		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
 
@@ -271,7 +271,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 	public void addNotification(Intent onClickIntent, int iconResourceID, String title, String message) {
-		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		if (mCustomNotif == null) {
 			mCustomNotif = new Notification();
@@ -295,7 +295,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		notifIntent.putExtra("GoToChat", true);
 		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
 		
-		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		if (fromName == null) {
 			fromName = fromSipUri;
@@ -321,6 +321,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	public void removeMessageNotification() {
 		mNM.cancel(MESSAGE_NOTIF_ID);
+		resetIntentLaunchedOnNotificationClick();
 	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
@@ -523,9 +524,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	
 	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {
 		incomingReceivedActivity = activity;
-		
+		resetIntentLaunchedOnNotificationClick();
+	}
+	
+	private void resetIntentLaunchedOnNotificationClick() {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
-		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, 0);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
 	}
 	

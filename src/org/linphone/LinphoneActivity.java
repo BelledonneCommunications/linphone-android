@@ -580,14 +580,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public void updateDialerFragment(DialerFragment fragment) {
 		dialerFragment = fragment;
-		// Hack to maintain ADJUST_PAN flag
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		// Hack to maintain soft input flags
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 	
 	public void updateChatFragment(ChatFragment fragment) {
 		messageListenerFragment = fragment;
-		// Hack to maintain ADJUST_PAN flag
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		// Hack to maintain soft input flags
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 	
 	public void updateChatListFragment(ChatListFragment fragment) {
