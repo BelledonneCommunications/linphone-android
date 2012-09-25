@@ -166,6 +166,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				LinphoneActivity.instance().displayContacts(true);
 			} else {
 				if (!LinphoneUtils.isSipAddress(sipUri)) {
+					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
+						return;
+					}
 					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
 				}
 				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {

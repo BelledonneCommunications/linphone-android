@@ -66,7 +66,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:drawableTop="@drawable/chat_send_picture"
-            android:paddingLeft="9dp" />
+            android:paddingLeft="5dp" />
         
         <TextView
             android:id="@+id/sendMessage"
@@ -78,7 +78,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:drawableTop="@drawable/chat_send_message"
-            android:paddingRight="15dp" />
+            android:paddingRight="10dp" />
         
         <EditText
             android:id="@+id/message"
