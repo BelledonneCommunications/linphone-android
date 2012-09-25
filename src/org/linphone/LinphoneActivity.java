@@ -302,10 +302,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			} else {
 				hideStatusBar();
 			}
-		} else {
-			if (statusFragment != null) {
-				statusFragment.closeStatusBar();
-			}
+		}
+		if (statusFragment != null) {
+			statusFragment.closeStatusBar();
 		}
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -338,10 +337,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			} else {
 				hideStatusBar();
 			}
-		} else {
-			if (statusFragment != null) {
-				statusFragment.closeStatusBar();
-			}
+		}
+		if (statusFragment != null) {
+			statusFragment.closeStatusBar();
 		}
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
