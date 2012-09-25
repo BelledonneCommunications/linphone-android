@@ -77,6 +77,8 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	private native boolean publishEnabled(long ptr);
 	private native void setContactParameters(long ptr, String params);
 	
+	private native int lookupCCCFromIso(long nativePtr, String iso);
+	
 	public void enableRegister(boolean value) {
 		enableRegister(nativePtr,value);
 	}
@@ -146,5 +148,9 @@ class LinphoneProxyConfigImpl implements LinphoneProxyConfig {
 	@Override
 	public void setContactParameters(String params) {
 		setContactParameters(nativePtr, params);
+	}
+	@Override
+	public int lookupCCCFromIso(String iso) {
+		return lookupCCCFromIso(nativePtr, iso);
 	}
 }
