@@ -129,7 +129,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		LinphoneManager.getLc().terminateCall(mCall);
 	}
 	private void answer() {
-		LinphoneCallParams params = mCall.getCurrentParamsCopy();
+		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
 		if (mCall.getRemoteParams().getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
 			params.setVideoEnabled(true);
 		}
