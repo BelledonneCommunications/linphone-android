@@ -21,6 +21,9 @@ package org.linphone.core;
 
 class LinphoneCallStatsImpl implements LinphoneCallStats {
 	private int mediaType;
+	private int iceState;
+	private float downloadBandwidth;
+	private float uploadBandwidth;
 	private float senderLossRate;
 	private float receiverLossRate;
 	private float senderInterarrivalJitter;
@@ -30,6 +33,9 @@ class LinphoneCallStatsImpl implements LinphoneCallStats {
 	private float jitterBufferSize;
 
 	private native int getMediaType(long nativeStatsPtr);
+	private native int getIceState(long nativeStatsPtr);
+	private native float getDownloadBandwidth(long nativeStatsPtr);
+	private native float getUploadBandwidth(long nativeStatsPtr);
 	private native float getSenderLossRate(long nativeStatsPtr);
 	private native float getReceiverLossRate(long nativeStatsPtr);
 	private native float getSenderInterarrivalJitter(long nativeStatsPtr, long nativeCallPtr);
@@ -40,6 +46,9 @@ class LinphoneCallStatsImpl implements LinphoneCallStats {
 
 	protected LinphoneCallStatsImpl(long nativeCallPtr, long nativeStatsPtr) {
 		mediaType = getMediaType(nativeStatsPtr);
+		iceState = getIceState(nativeStatsPtr);
+		downloadBandwidth = getDownloadBandwidth(nativeStatsPtr);
+		uploadBandwidth = getUploadBandwidth(nativeStatsPtr);
 		senderLossRate = getSenderLossRate(nativeStatsPtr);
 		receiverLossRate = getReceiverLossRate(nativeStatsPtr);
 		senderInterarrivalJitter = getSenderInterarrivalJitter(nativeStatsPtr, nativeCallPtr);
@@ -51,6 +60,18 @@ class LinphoneCallStatsImpl implements LinphoneCallStats {
 
 	public MediaType getMediaType() {
 		return MediaType.fromInt(mediaType);
+	}
+
+	public IceState getIceState() {
+		return IceState.fromInt(iceState);
+	}
+
+	public float getDownloadBandwidth() {
+		return downloadBandwidth;
+	}
+
+	public float getUploadBandwidth() {
+		return uploadBandwidth;
 	}
 
 	public float getSenderLossRate() {
