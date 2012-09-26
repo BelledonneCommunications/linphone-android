@@ -52,6 +52,7 @@
 
 		<EditTextPreference 
 		    android:title="@string/pref_stun_server"
+		    android:defaultValue="@string/default_stun"
 			android:key="@string/pref_stun_server_key"/>
 
 		<CheckBoxPreference 
