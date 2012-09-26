@@ -82,7 +82,8 @@
         
         <EditText
             android:id="@+id/message"
-            android:inputType="textShortMessage"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
             android:textColor="@android:color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

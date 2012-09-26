@@ -61,6 +61,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -131,7 +132,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         
         sendMessage = (TextView) view.findViewById(R.id.sendMessage);
         sendMessage.setOnClickListener(this);
+        
         message = (EditText) view.findViewById(R.id.message);
+        if (!getActivity().getResources().getBoolean(R.bool.allow_chat_multiline)) {
+        	message.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
+        	message.setMaxLines(1);
+        }
         
         uploadLayout = (RelativeLayout) view.findViewById(R.id.uploadLayout);
         textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
