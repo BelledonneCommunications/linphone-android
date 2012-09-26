@@ -54,6 +54,10 @@ public class ApiEightPlus {
 			Log.d("Push Notification : storing current sender id = " + newPushSenderID);
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString(context.getString(R.string.push_sender_id_key), newPushSenderID);
+			
+			Log.d("Push Notification : new id = " + regId);
+			editor.putString(context.getString(R.string.push_reg_id_key), regId);
+			
 			editor.commit();
 		} else {
 			Log.d("Push Notification : already registered with id = " + regId);
