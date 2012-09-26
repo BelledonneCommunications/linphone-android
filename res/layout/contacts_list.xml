@@ -23,7 +23,7 @@
         <TextView 
             android:contentDescription="@string/content_description_all_contacts"
             android:id="@+id/allContacts"
-            android:background="@drawable/all_contacts"
+            android:background="@drawable/contacts_all"
             android:text="@string/button_all_contacts"
             android:gravity="center"
             android:paddingTop="20dp"
@@ -38,7 +38,7 @@
         <TextView 
             android:contentDescription="@string/content_description_linphone_contacts"
             android:id="@+id/linphoneContacts"
-            android:background="@drawable/linphone_contacts"
+            android:background="@drawable/contacts_sip"
             android:text="@string/button_sip_contacts"
             android:gravity="center"
             android:paddingTop="20dp"
@@ -53,7 +53,7 @@
         <TextView 
             android:contentDescription="@string/content_description_add_contact"
             android:id="@+id/newContact"
-            android:background="@drawable/new_contact"
+            android:background="@drawable/contacts_add_contact"
             android:text="@string/button_add_contact"
             android:gravity="center"
             android:paddingTop="20dp"
