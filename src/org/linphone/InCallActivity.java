@@ -895,6 +895,12 @@ public class InCallActivity extends FragmentActivity implements
 		
 		if (state == State.CallUpdatedByRemote) {
 			// If the correspondent proposes video while audio call
+			boolean isVideoEnabled = LinphoneManager.getInstance().isVideoEnabled();
+			if (!isVideoEnabled) {
+				acceptCallUpdate(false);
+				return;
+			}
+			
 			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
 			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
 			boolean autoAcceptCameraPolicy = LinphoneManager.getInstance().isAutoAcceptCamera();
