@@ -494,13 +494,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			} catch (LinphoneException e) {
 				Log.w("no config ready yet");
 			}
+			
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
 					mLc.iterate();
 				}
 			};
-
 			mTimer.scheduleAtFixedRate(lTask, 0, 20); 
 
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
