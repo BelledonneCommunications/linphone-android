@@ -18,8 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.linphone.core.Log;
-
 import android.content.Context;
 
 import com.google.android.gcm.GCMBroadcastReceiver;
@@ -30,7 +28,6 @@ import com.google.android.gcm.GCMBroadcastReceiver;
 public class GCMReceiver extends GCMBroadcastReceiver {
     @Override
     protected String getGCMIntentServiceClassName(Context context) {
-    	Log.e("Broadcasting GCM = " + context.getPackageName() + ".gcm.GCMService");
-        return context.getPackageName() + ".gcm.GCMService";
+        return "org.linphone.gcm.GCMService";
     }
 }

@@ -50,14 +50,10 @@ public class ApiEightPlus {
 		String currentPushSenderID = prefs.getString(context.getString(R.string.push_sender_id_key), null);
 		if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
 			GCMRegistrar.register(context, newPushSenderID);
-			String newRegId = GCMRegistrar.getRegistrationId(context);
 			
 			Log.d("Push Notification : storing current sender id = " + newPushSenderID);
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString(context.getString(R.string.push_sender_id_key), newPushSenderID);
-			
-			Log.d("Push Notification : new id = " + newRegId);
-			editor.putString(context.getString(R.string.push_reg_id_key), newRegId);
 			
 			editor.commit();
 		} else {
