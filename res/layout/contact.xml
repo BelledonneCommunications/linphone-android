@@ -28,7 +28,7 @@
         <TextView 
             android:contentDescription="@string/content_description_add_contact"
             android:id="@+id/newContact"
-            android:background="@drawable/contact_add"
+            android:background="@drawable/contact_add_contact"
             android:text="@string/button_add_contact"
             android:gravity="center"
             android:paddingTop="20dp"
