@@ -31,6 +31,7 @@
 	<bool name="display_call_stats">true</bool>
 	
 	<!-- Behavior Settings -->
+	<bool name="allow_chat_multiline">false</bool>
 	<bool name="call_last_log_if_adress_is_empty">true</bool>
 	<bool name="allow_ringing_while_early_media">true</bool>
 	<bool name="allow_transfers">true</bool>
