@@ -6,6 +6,7 @@
 	<!--<string name="push_sender_id">622464153529</string>-->
 
 	<string name="default_domain">sip.linphone.org</string>
+	<string name="default_stun">stun.linphone.org</string>
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 	<string name="upload_url">https://www.linphone.org:444/upload.php</string>
 
