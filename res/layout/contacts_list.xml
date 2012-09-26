@@ -8,7 +8,17 @@
     <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:orientation="horizontal"
+	    android:background="@drawable/toolsbar_background">
+	    
+        <TextView 
+            android:visibility="invisible"
+            android:paddingTop="20dp"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
         
         <TextView 
             android:contentDescription="@string/content_description_all_contacts"
