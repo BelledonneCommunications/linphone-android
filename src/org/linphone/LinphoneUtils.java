@@ -65,11 +65,11 @@ public final class LinphoneUtils {
 	private static boolean preventVolumeBarToDisplay = false;
 
 	public static boolean isSipAddress(String numberOrAddress) {
-		return numberOrAddress != null && numberOrAddress.matches("^(sip:)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+		return numberOrAddress != null && numberOrAddress.matches("^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
-		return numberOrAddress != null && numberOrAddress.matches("^sip:[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+		return numberOrAddress != null && numberOrAddress.matches("^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
 	}
 	
 	public static String getUsernameFromAddress(String address) {

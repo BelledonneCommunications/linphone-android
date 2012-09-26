@@ -8,6 +8,7 @@
    
    	<TextView 
    	    android:id="@+id/numeroOrAddress"
+	    android:lines="1"
  		android:layout_width="0dp"
  		android:layout_height="wrap_content"
  		android:layout_weight="1"
