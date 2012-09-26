@@ -86,7 +86,7 @@
            </intent-filter>
         </activity>
          
-        <activity android:name=".setup.SetupActivity"
+        <activity android:name="org.linphone.setup.SetupActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>
@@ -109,7 +109,7 @@
 		</receiver>
 		
 		<!-- Needed for push notification -->
-		<receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
+		<receiver android:name="org.linphone.gcm.GCMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
 		  <intent-filter>
 		    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 		    <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -117,7 +117,7 @@
 		  </intent-filter>
 		</receiver>
 		
-		<service android:name=".GCMIntentService" />
+		<service android:name="org.linphone.gcm.GCMService" />
 	
 	</application>
 

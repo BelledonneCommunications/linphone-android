@@ -1,6 +1,6 @@
-package org.linphone;
+package org.linphone.gcm;
 /*
-GCMIntentService.java
+GCMService.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 
@@ -32,9 +34,9 @@ import com.google.android.gcm.GCMBaseIntentService;
  * @author Sylvain Berfini
  */
 // Warning ! Do not rename the service !
-public class GCMIntentService extends GCMBaseIntentService {
+public class GCMService extends GCMBaseIntentService {
 
-	public GCMIntentService() {
+	public GCMService() {
 		
 	}
 	
