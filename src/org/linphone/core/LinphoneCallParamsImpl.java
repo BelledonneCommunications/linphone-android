@@ -32,6 +32,8 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	private native void audioBandwidth(long nativePtr, int bw);
 	private native void setMediaEncryption(long nativePtr, int menc);
 	private native int getMediaEncryption(long nativePtr);
+	private native long getUsedAudioCodec(long nativePtr);
+	private native long getUsedVideoCodec(long nativePtr);
 	private native void destroy(long nativePtr);
 	
 	
@@ -59,6 +61,18 @@ public class LinphoneCallParamsImpl implements LinphoneCallParams {
 	
 	public void setMediaEnctyption(MediaEncryption menc) {
 		setMediaEncryption(nativePtr, menc.mValue);
+	}
+
+	public PayloadType getUsedAudioCodec() {
+		long ptr = getUsedAudioCodec(nativePtr);
+		if (ptr == 0) return null;
+		return new PayloadTypeImpl(ptr);
+	}
+
+	public PayloadType getUsedVideoCodec() {
+		long ptr = getUsedVideoCodec(nativePtr);
+		if (ptr == 0) return null;
+		return new PayloadTypeImpl(ptr);
 	}
 
 	private native boolean localConferenceMode(long nativePtr);
