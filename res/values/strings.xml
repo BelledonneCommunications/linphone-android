@@ -260,6 +260,12 @@
 	<string name="no_sip_contact">No SIP contact in your address book.</string>
 	<string name="no_chat_history">No chat history.</string>
 	
+	<string name="call_stats_audio">Audio</string>
+	<string name="call_stats_codec">Codec:</string>
+	<string name="call_stats_upload">Upload bandwidth:</string>
+	<string name="call_stats_download">Download bandwidth:</string>
+	<string name="call_stats_ice">ICE connectivity:</string>
+	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact">Add to contacts button</string>
 	<string name="content_description_about"></string>
