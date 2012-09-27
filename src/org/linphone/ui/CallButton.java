@@ -23,6 +23,7 @@ import org.linphone.R;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneProxyConfig;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -65,7 +66,13 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 						if (log == null) {
 							return;
 						}
-						mAddress.setText(log.getTo().asStringUriOnly());
+						
+						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+						if (lpc != null && log.getTo().getDomain().equals(lpc.getDomain())) {
+							mAddress.setText(log.getTo().getUserName());
+						} else {
+							mAddress.setText(log.getTo().asStringUriOnly());
+						}
 						mAddress.setDisplayedName(log.getTo().getDisplayName());
 					}
 				}
