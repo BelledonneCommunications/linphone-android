@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.InputStream;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.content.Intent;
@@ -112,13 +113,16 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				v.findViewById(R.id.dial).setVisibility(View.GONE);
 			}
 
+			v.findViewById(R.id.chat).setOnClickListener(chatListener);
 			if (LinphoneUtils.isSipAddress(numberOrAddress)) {
-				v.findViewById(R.id.chat).setOnClickListener(chatListener);
 				v.findViewById(R.id.chat).setTag(numberOrAddress);
 			} else {
-				v.findViewById(R.id.chat).setVisibility(View.INVISIBLE);
-				if (displayChatAddressOnly) {
-					v.setVisibility(View.GONE);
+				LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+				if (lpc != null) {
+					if (!numberOrAddress.startsWith("sip:")) {
+						numberOrAddress = "sip:" + numberOrAddress;
+					}
+					v.findViewById(R.id.chat).setTag(numberOrAddress + "@" + lpc.getDomain());
 				}
 			}
 			
