@@ -107,7 +107,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.dial).setOnClickListener(dialListener);
-				v.findViewById(R.id.dial).setTag(numberOrAddress);
+				v.findViewById(R.id.dial).setTag(displayednumberOrAddress);
 			} else {
 				v.findViewById(R.id.dial).setVisibility(View.GONE);
 			}
