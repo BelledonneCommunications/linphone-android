@@ -456,9 +456,9 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	private void initializeMediaEncryptionPreferences() {
-		LinphoneCore lc=LinphoneManager.getLc();
-		boolean hasZrtp=lc.mediaEncryptionSupported(MediaEncryption.ZRTP);
-		boolean hasSrtp=lc.mediaEncryptionSupported(MediaEncryption.SRTP);
+		LinphoneCore lc = LinphoneManager.getLc();
+		boolean hasZrtp = lc.mediaEncryptionSupported(MediaEncryption.ZRTP);
+		boolean hasSrtp = lc.mediaEncryptionSupported(MediaEncryption.SRTP);
 		if (!hasSrtp && !hasZrtp){
 			mencPref.setEnabled(false);
 		}else{

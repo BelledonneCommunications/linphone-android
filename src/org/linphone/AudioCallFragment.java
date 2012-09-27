@@ -105,7 +105,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 
 		setContactName(callView, lAddress, sipUri, resources);
 		boolean hide = displayCallStatusIconAndReturnCallPaused(callView, call);
-		displayOrHideContactPictureAndStats(callView, pictureUri, call, hide);
+		displayOrHideContactPictureAndStats(resources, callView, pictureUri, call, hide);
 		setRowBackgroundAndPadding(callView, resources, index, call, !hide);
 		registerCallDurationTimer(callView, call);
 		previousCallIsActive = !hide;
@@ -154,7 +154,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		return isCallPaused || isInConference;
 	}
 	
-	private void displayOrHideContactPictureAndStats(LinearLayout callView, Uri pictureUri, LinphoneCall call, boolean hide) {
+	private void displayOrHideContactPictureAndStats(Resources resources, LinearLayout callView, Uri pictureUri, LinphoneCall call, boolean hide) {
 		ViewFlipper flipper = (ViewFlipper) callView.findViewById(R.id.flipper);
 		flipper.setDisplayedChild(FLIPPER_AVATAR_VIEW);
 		
@@ -166,7 +166,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 			flipper.setVisibility(View.GONE);
 		}
 
-		if (getActivity().getResources().getBoolean(R.bool.display_call_stats)) {
+		if (resources.getBoolean(R.bool.display_call_stats)) {
 			View audioCallstats = callView.findViewById(R.id.audioCallStats);
 			if (call != null) {
 				flipper.setEnabled(true);
