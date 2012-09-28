@@ -261,6 +261,7 @@
 	<string name="no_chat_history">No chat history.</string>
 	
 	<string name="call_stats_audio">Audio</string>
+	<string name="call_stats_video">Video</string>
 	<string name="call_stats_codec">Codec:</string>
 	<string name="call_stats_upload">Upload bandwidth:</string>
 	<string name="call_stats_download">Download bandwidth:</string>

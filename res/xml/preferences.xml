@@ -86,10 +86,12 @@
 		     
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_speex16_key"
+				android:defaultValue="true"
 				android:title="@string/pref_codec_speex16"/>
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_speex8_key"
+				android:defaultValue="true"
 				android:title="@string/pref_codec_speex8"/>
 			
 			<CheckBoxPreference 
@@ -118,6 +120,7 @@
             
 		 	<CheckBoxPreference 
 		 	    android:key="@string/pref_codec_gsm_key"
+				android:defaultValue="true"
 				android:title="@string/pref_codec_gsm"/>
 		 	
 			<CheckBoxPreference 
@@ -131,14 +134,16 @@
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_silk16_key" 
-			android:title="@string/pref_codec_silk16"/>
+				android:title="@string/pref_codec_silk16"/>
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_pcmu_key"
+				android:defaultValue="true"
 				android:title="@string/pref_codec_pcmu"/>
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_pcma_key"
+				android:defaultValue="true"
 				android:title="@string/pref_codec_pcma"/>
 			
 		</PreferenceScreen>
