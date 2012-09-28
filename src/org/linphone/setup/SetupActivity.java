@@ -196,7 +196,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			if (isMainAccountLinphoneDotOrg) {
 				writePreference(R.string.pref_proxy_key, domain + ":5223");
 				writePreference(R.string.pref_enable_outbound_proxy_key, true);
-				writePreference(R.string.pref_stun_server_key, "stun.linphone.org");
+				writePreference(R.string.pref_stun_server_key, getString(R.string.default_stun));
 				
 				writePreference(R.string.pref_ice_enable_key, true);
 				writePreference(R.string.pref_push_notification_key, true);
