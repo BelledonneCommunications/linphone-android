@@ -868,6 +868,14 @@ public class InCallActivity extends FragmentActivity implements
 			if (isVideoEnabledInCall != isVideoEnabled) {
 				isVideoEnabled = isVideoEnabledInCall;
 				switchVideo(isVideoEnabled);
+			} else {
+				//Hack to fix Galaxy S issue
+				if (isSpeakerEnabled) {
+					LinphoneManager.getInstance().routeAudioToSpeaker();
+				} else {
+					LinphoneManager.getInstance().routeAudioToReceiver();
+				}
+				LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 			}
 			
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
