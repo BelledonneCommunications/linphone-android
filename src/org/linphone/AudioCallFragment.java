@@ -17,13 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.ui.AvatarWithShadow;
 
@@ -31,7 +27,6 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -45,7 +40,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 /**
  * @author Sylvain Berfini
@@ -59,10 +53,6 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 	private static final int conferenceMargin = 20;
 	private static final int topMarginWithImage = topMargin + rowImageHeight + botMarginIfImage;
 	
-    private static final int FLIPPER_AVATAR_VIEW = 0;
-    private static final int FLIPPER_AUDIO_STATS_VIEW = 1;
-	
-    private Handler mHandler = new Handler();
 	private RelativeLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
@@ -105,7 +95,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 
 		setContactName(callView, lAddress, sipUri, resources);
 		boolean hide = displayCallStatusIconAndReturnCallPaused(callView, call);
-		displayOrHideContactPictureAndStats(resources, callView, pictureUri, call, hide);
+		displayOrHideContactPicture(callView, pictureUri, hide);
 		setRowBackgroundAndPadding(callView, resources, index, call, !hide);
 		registerCallDurationTimer(callView, call);
 		previousCallIsActive = !hide;
@@ -154,94 +144,11 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		return isCallPaused || isInConference;
 	}
 	
-	private void displayOrHideContactPictureAndStats(Resources resources, LinearLayout callView, Uri pictureUri, LinphoneCall call, boolean hide) {
-		ViewFlipper flipper = (ViewFlipper) callView.findViewById(R.id.flipper);
-		flipper.setDisplayedChild(FLIPPER_AVATAR_VIEW);
-		
+	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, boolean hide) {
 		AvatarWithShadow contactPicture = (AvatarWithShadow) callView.findViewById(R.id.contactPicture);
 		if (pictureUri != null) {
         	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
         }
-		if (hide) {
-			flipper.setVisibility(View.GONE);
-		}
-
-		if (resources.getBoolean(R.bool.display_call_stats)) {
-			View audioCallstats = callView.findViewById(R.id.audioCallStats);
-			if (call != null) {
-				flipper.setEnabled(true);
-				initAudioStatsRefresher(call, audioCallstats);
-				initFlipperListeners(flipper);
-			}
-		} else {
-			flipper.setEnabled(false);
-		}
-	}
-	
-	private void initAudioStatsRefresher(final LinphoneCall call, final View view) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-			    final Timer timer = new Timer();
-				TimerTask lTask = new TimerTask() {
-					@Override
-					public void run() {
-						if (call == null) {
-							timer.cancel();
-							return;
-						}
-						final LinphoneCallStats audioStats = call.getAudioStats();
-						if (audioStats != null) {
-							mHandler.post(new Runnable() {
-								@Override
-								public void run() {
-									TextView codec = (TextView) view.findViewById(R.id.audioCodec);
-									TextView dl = (TextView) view.findViewById(R.id.audioDownloadBandwith);
-									TextView ul = (TextView) view.findViewById(R.id.audioUploadBandwith);
-									TextView ice = (TextView) view.findViewById(R.id.ice);
-									if (codec == null || dl == null || ul == null || ice == null) {
-										timer.cancel();
-										return;
-									}
-									codec.setText(call.getCurrentParamsCopy().getUsedAudioCodec().getMime());
-									dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
-									ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
-									ice.setText(audioStats.getIceState().toString());
-								}
-							});
-						}
-					}
-				};
-				timer.scheduleAtFixedRate(lTask, 0, 1500);
-			}
-		}).start();
-	}
-	
-	private void initFlipperListeners(final ViewFlipper flipper) {
-		SwipeListener swipeListener = new SwipeListener() {
-			int currentView = FLIPPER_AVATAR_VIEW;
-			
-			@Override
-			public void onLeftToRightSwipe() {
-				if (currentView == FLIPPER_AVATAR_VIEW) {
-					currentView = FLIPPER_AUDIO_STATS_VIEW;
-				} else {
-					currentView = FLIPPER_AVATAR_VIEW;
-				}
-				flipper.setDisplayedChild(currentView);
-			}
-			
-			@Override
-			public void onRightToLeftSwipe() {
-				if (currentView == FLIPPER_AUDIO_STATS_VIEW) {
-					currentView = FLIPPER_AVATAR_VIEW;
-				} else {
-					currentView = FLIPPER_AUDIO_STATS_VIEW;
-				}
-				flipper.setDisplayedChild(currentView);
-			}
-		};
-        flipper.setOnTouchListener(new SwipeGestureDetector(swipeListener));
 	}
 	
 	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index, LinphoneCall call, boolean active) {

@@ -19,12 +19,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.PayloadType;
 import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
@@ -44,6 +48,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +60,8 @@ public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit;
 	private ImageView statusLed, callQuality, encryption, background;
-	private ListView sliderContent;
+	private ListView sliderContentAccounts;
+	private TableLayout callStats;
 	private SlidingDrawer drawer;
 //	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
@@ -76,6 +82,7 @@ public class StatusFragment extends Fragment {
 		encryption = (ImageView) view.findViewById(R.id.encryption);
 		background = (ImageView) view.findViewById(R.id.background);
 //		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
+		callStats = (TableLayout) view.findViewById(R.id.callStats);
 		
 		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
 		drawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
@@ -85,7 +92,7 @@ public class StatusFragment extends Fragment {
 			}
 		});
 		
-		sliderContent = (ListView) view.findViewById(R.id.content);
+		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
 		
 		exit = (TextView) view.findViewById(R.id.exit);
 		exit.setOnClickListener(new OnClickListener() {
@@ -149,8 +156,18 @@ public class StatusFragment extends Fragment {
 	
 	private void populateSliderContent() {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
-			AccountsListAdapter adapter = new AccountsListAdapter();
-			sliderContent.setAdapter(adapter);
+			sliderContentAccounts.setVisibility(View.GONE);
+			callStats.setVisibility(View.GONE);
+			
+			if (isInCall && getResources().getBoolean(R.bool.display_call_stats)) {
+				callStats.setVisibility(View.VISIBLE);
+				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+				initCallStatsRefresher(call, callStats);
+			} else if (!isInCall) {
+				sliderContentAccounts.setVisibility(View.VISIBLE);
+				AccountsListAdapter adapter = new AccountsListAdapter();
+				sliderContentAccounts.setAdapter(adapter);
+			}
 		}
 	}
 	
@@ -166,7 +183,7 @@ public class StatusFragment extends Fragment {
 				statusText.setText(getStatusIconText(state));
 //				setMiniLedsForEachAccount();
 				populateSliderContent();
-				sliderContent.invalidate();
+				sliderContentAccounts.invalidate();
 			}
 		});
 	}
@@ -294,10 +311,6 @@ public class StatusFragment extends Fragment {
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
 			statusText.setText(getString(R.string.status_connected));
-			
-			if (drawer != null) {
-				drawer.lock();
-			}
 		} else {
 			exit.setVisibility(View.VISIBLE);
 			statusText.setVisibility(View.VISIBLE);
@@ -429,6 +442,71 @@ public class StatusFragment extends Fragment {
 		hideZrtpToast = false;
 		zrtpToast.show();
 		zrtpHack.start();
+	}
+	
+	private void initCallStatsRefresher(final LinphoneCall call, final View view) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+			    final Timer timer = new Timer();
+				TimerTask lTask = new TimerTask() {
+					@Override
+					public void run() {
+						if (call == null) {
+							timer.cancel();
+							return;
+						}
+
+						final TextView title = (TextView) view.findViewById(R.id.call_stats_title);
+						final TextView codec = (TextView) view.findViewById(R.id.codec);
+						final TextView dl = (TextView) view.findViewById(R.id.downloadBandwith);
+						final TextView ul = (TextView) view.findViewById(R.id.uploadBandwith);
+						final TextView ice = (TextView) view.findViewById(R.id.ice);
+						if (codec == null || dl == null || ul == null || ice == null) {
+							timer.cancel();
+							return;
+						}
+						
+						if (call.getCurrentParamsCopy().getVideoEnabled()) {
+							final LinphoneCallStats videoStats = call.getVideoStats();
+							if (videoStats != null) {
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										title.setText(getString(R.string.call_stats_video));
+										PayloadType payload = call.getCurrentParamsCopy().getUsedVideoCodec();
+										if (payload != null) {
+											codec.setText(payload.getMime());
+										}
+										dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " kbits/s");
+										ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) + " kbits/s");
+										ice.setText(videoStats.getIceState().toString());
+									}
+								});
+							}
+						} else {
+							final LinphoneCallStats audioStats = call.getAudioStats();
+							if (audioStats != null) {
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										title.setText(getString(R.string.call_stats_audio));
+										PayloadType payload = call.getCurrentParamsCopy().getUsedAudioCodec();
+										if (payload != null) {
+											codec.setText(payload.getMime());
+										}
+										dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
+										ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
+										ice.setText(audioStats.getIceState().toString());
+									}
+								});
+							}
+						}
+					}
+				};
+				timer.scheduleAtFixedRate(lTask, 0, 1500);
+			}
+		}).start();
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {

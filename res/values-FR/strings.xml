@@ -211,9 +211,10 @@
 	<string name="no_chat_history">Aucun historique de chat.</string>
 	
 	<string name="call_stats_audio">Audio</string>
+	<string name="call_stats_video">Vidéo</string>
 	<string name="call_stats_codec">Codec :</string>
 	<string name="call_stats_upload">Bande passante envoi :</string>
-	<string name="call_stats_download">Bande passante reception :</string>
+	<string name="call_stats_download">Bande passante réception :</string>
 	<string name="call_stats_ice">Connexion ICE :</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
