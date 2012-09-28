@@ -204,7 +204,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	@SuppressWarnings("deprecation")
 	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
 		boolean different = isSpeakerOn() ^ speakerOn;
-		if (!different) {
+		if (!different && !Hacks.needGalaxySAudioHack()) {
 			Log.d("Skipping change audio route by the same route ",
 					speakerOn ? "speaker" : "earpiece");
 			return;
@@ -227,7 +227,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
 		}
 	}
-	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
+	
+	public synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
 		final LinphoneCall call = mLc.getCurrentCall();
 		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
 			Log.d("Hack to have speaker=",speakerOn," while on call");
