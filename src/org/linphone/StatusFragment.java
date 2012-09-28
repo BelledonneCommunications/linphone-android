@@ -473,7 +473,7 @@ public class StatusFragment extends Fragment {
 								mHandler.post(new Runnable() {
 									@Override
 									public void run() {
-										title.setText(getString(R.string.call_stats_video));
+										title.setText("Audio");
 										PayloadType payload = call.getCurrentParamsCopy().getUsedVideoCodec();
 										if (payload != null) {
 											codec.setText(payload.getMime());
@@ -490,7 +490,7 @@ public class StatusFragment extends Fragment {
 								mHandler.post(new Runnable() {
 									@Override
 									public void run() {
-										title.setText(getString(R.string.call_stats_audio));
+										title.setText("Video");
 										PayloadType payload = call.getCurrentParamsCopy().getUsedAudioCodec();
 										if (payload != null) {
 											codec.setText(payload.getMime());

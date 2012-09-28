@@ -48,8 +48,10 @@ public class GCMService extends GCMBaseIntentService {
 	@Override
 	protected void onMessage(Context context, Intent intent) {
 		Log.d("Push notification received");
-		LinphoneManager.getLc().setNetworkReachable(false);
-		LinphoneManager.getLc().setNetworkReachable(true);
+		if (LinphoneManager.isInstanciated()) {
+			LinphoneManager.getLc().setNetworkReachable(false);
+			LinphoneManager.getLc().setNetworkReachable(true);
+		}
 	}
 
 	@Override
