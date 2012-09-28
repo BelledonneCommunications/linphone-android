@@ -9,13 +9,13 @@ import android.widget.EditText;
 
 import com.jayway.android.robotium.solo.Solo;
 
-public class CallTest extends
+public class OutgoingCallTest extends
 		ActivityInstrumentationTestCase2<LinphoneActivity> {
 
 	private Solo solo;
 	
 	@SuppressWarnings("deprecation")
-	public CallTest() {
+	public OutgoingCallTest() {
 		super("org.linphone", LinphoneActivity.class);
 	}
 
