@@ -26,6 +26,16 @@ public class AccountsTest extends
 	public AccountsTest() {
 		super("org.linphone", LinphoneActivity.class);
 	}
+	
+	private void selectItemInListOnUIThread(final int item) {
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				ListView list = (ListView) solo.getView(android.R.id.list);
+				list.setSelection(item);
+			}
+		});
+	}
 
 	@Override
 	  protected void setUp() throws Exception {
@@ -33,9 +43,9 @@ public class AccountsTest extends
 		solo = new Solo(getInstrumentation(), getActivity());
 	}
 	
-	public void testAConfigureExternalSIPAccount() {
+	public void testAConfigureExistingLinphoneAccount() {
 		Context context = getActivity();
-		
+
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		int nbAccountsBefore = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		
@@ -43,6 +53,52 @@ public class AccountsTest extends
 		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
 		Log.testSuccess("Wizard launching at first startup");
 		
+		solo.clickOnView(solo.getView(R.id.setup_next));
+		solo.clickOnText(context.getString(R.string.setup_login_linphone));
+		solo.enterText((EditText) solo.getView(R.id.setup_username), "wizard15");
+		solo.enterText((EditText) solo.getView(R.id.setup_password), "wizard15");
+		solo.clickOnText(context.getString(R.string.setup_apply));
+		
+		solo.waitForActivity("LinphoneActivity", 2000);
+		Assert.assertTrue(solo.searchText("wizard15@sip.linphone.org"));
+		
+		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
+		Assert.assertEquals(nbAccountsBefore + 1, nbAccountsAfter);
+		Log.testSuccess("Configure existing sip.linphone.org account");
+		
+		String stunServer = prefs.getString(context.getString(R.string.pref_stun_server_key), "");
+		Assert.assertEquals(stunServer, context.getString(R.string.default_stun));
+		Log.testSuccess("Default stun server is configured");
+		
+		boolean tls = prefs.getBoolean(context.getString(R.string.pref_transport_tls_key), false);
+		Assert.assertEquals(tls, true);
+		Log.testSuccess("TLS is set by default");
+		
+		String proxy = prefs.getString(context.getString(R.string.pref_proxy_key), "");
+		Assert.assertEquals(proxy, context.getString(R.string.default_domain) + ":5223");
+		boolean outboundproxy = prefs.getBoolean(context.getString(R.string.pref_enable_outbound_proxy_key), false);
+		Assert.assertEquals(outboundproxy, true);
+		Log.testSuccess("Outbound proxy is configured");
+		
+		boolean ice = prefs.getBoolean(context.getString(R.string.pref_ice_enable_key), false);
+		Assert.assertEquals(ice, true);
+		Log.testSuccess("ICE is enabled");
+	}
+	
+	public void testBConfigureExternalSIPAccount() {
+		Context context = getActivity();
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		int nbAccountsBefore = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
+		
+		solo.waitForActivity("LinphoneActivity", 2000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+		Log.testSuccess("Wizard not launching at startup if account is configured");
+		
+		solo.clickOnView(solo.getView(R.id.settings));
+		solo.clickOnText(context.getString(R.string.setup_title));
+		
+		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
 		solo.clickOnView(solo.getView(R.id.setup_next));
 		solo.clickOnText(context.getString(R.string.setup_login_generic));
 		solo.enterText((EditText) solo.getView(R.id.setup_username), "junit");
@@ -56,34 +112,20 @@ public class AccountsTest extends
 		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		Assert.assertEquals(nbAccountsBefore + 1, nbAccountsAfter);
 		Log.testSuccess("Configure existing generic account");
-	}
-	
-	public void testBConfigureExistingLinphoneAccount() {
-		Context context = getActivity();
-
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		int nbAccountsBefore = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
-		Log.testSuccess("Wizard not launching at startup if account is configured");
-		
 		solo.clickOnView(solo.getView(R.id.settings));
-		solo.clickOnText(context.getString(R.string.setup_title));
+		Assert.assertTrue(solo.searchText("junit@test.linphone.org"));
 		
-		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
-		solo.clickOnView(solo.getView(R.id.setup_next));
-		solo.clickOnText(context.getString(R.string.setup_login_linphone));
-		solo.enterText((EditText) solo.getView(R.id.setup_username), "wizard15");
-		solo.enterText((EditText) solo.getView(R.id.setup_password), "wizard15");
-		solo.clickOnText(context.getString(R.string.setup_apply));
-		
-		solo.waitForActivity("LinphoneActivity", 2000);
-		Assert.assertTrue(solo.searchText("wizard15@sip.linphone.org"));
-		
-		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
-		Assert.assertEquals(nbAccountsBefore + 1, nbAccountsAfter);
-		Log.testSuccess("Configure existing sip.linphone.org account");
+		solo.clickOnText("junit@test.linphone.org");
+		solo.sleep(500);
+		selectItemInListOnUIThread(6);
+		solo.clickOnText(context.getString(R.string.pref_default_account));
+		int defaultAccount = prefs.getInt(context.getString(R.string.pref_default_account_key), 0);
+		solo.sleep(1000);
+		Assert.assertEquals(1, defaultAccount);
+		Log.testSuccess("Select another account as default");
 	}
 	
 	public void testCDeleteConfiguredAccount() {
@@ -99,14 +141,8 @@ public class AccountsTest extends
 		Assert.assertTrue(solo.searchText("wizard15@sip.linphone.org"));
 
 		solo.clickOnText("wizard15@sip.linphone.org");
-
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				ListView list = (ListView) solo.getView(android.R.id.list);
-				list.setSelection(7);
-			}
-		});
+		solo.sleep(500);
+		selectItemInListOnUIThread(7);
 		solo.clickOnText(context.getString(R.string.pref_delete_account));
 		
 		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
@@ -171,7 +207,7 @@ public class AccountsTest extends
 		solo.enterText((EditText) solo.getView(R.id.setup_username), "wizard42");
 		solo.enterText((EditText) solo.getView(R.id.setup_password), "wizard42");
 		solo.enterText((EditText) solo.getView(R.id.setup_password_confirm), "wizard42");
-		solo.enterText((EditText) solo.getView(R.id.setup_email), "wizard15@linphone.org");
+		solo.enterText((EditText) solo.getView(R.id.setup_email), "wizard42@linphone.org");
 		solo.sleep(sleepingTime);
 		Assert.assertEquals(error.getText(), "");
 		Assert.assertTrue(createAccount.isEnabled());
