@@ -130,10 +130,12 @@
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_silk24_key"
+                android:defaultValue="false"
 				android:title="@string/pref_codec_silk24"/>
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_codec_silk16_key" 
+                android:defaultValue="false"
 				android:title="@string/pref_codec_silk16"/>
 			
 			<CheckBoxPreference 
