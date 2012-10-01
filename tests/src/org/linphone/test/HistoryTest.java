@@ -122,10 +122,26 @@ public class HistoryTest extends ActivityInstrumentationTestCase2<LinphoneActivi
 		solo.clickOnText(context.getString(R.string.button_edit));
 		solo.sleep(1000);
 		solo.clickOnText("cotcot");
-		solo.clickOnText("cotcot");
+		solo.clickOnText(context.getString(R.string.button_ok));
+		
+		Assert.assertFalse(solo.searchText("cotcot", 2));
+		Log.testSuccess("Clean history from one cotcot entries");
+	}
+	
+	public void testGDeleteAllHistoryEntries() {
+		Context context = getActivity();
+		
+		solo.waitForActivity("LinphoneActivity", 2000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+		solo.clickOnView(solo.getView(R.id.history));
+
+		solo.clickOnText(context.getString(R.string.button_edit));
+		solo.sleep(2000);
+		solo.clickOnText(context.getString(R.string.button_delete_all));
+		solo.clickOnText(context.getString(R.string.button_ok));
 		
 		Assert.assertTrue(solo.searchText(context.getString(R.string.no_call_history)));
-		Log.testSuccess("Clean history from two cotcot entries");
+		Log.testSuccess("Clean history from all entries");
 	}
 	
 	@Override
