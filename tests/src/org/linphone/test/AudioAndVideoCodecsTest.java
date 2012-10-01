@@ -15,12 +15,12 @@ import android.widget.ListView;
 
 import com.jayway.android.robotium.solo.Solo;
 
-public class AudioCodecsTest extends ActivityInstrumentationTestCase2<LinphoneActivity> {
-
+public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<LinphoneActivity> {
+	private static final String sipAdressToCall = "miaou@sip.linphone.org";
 	private Solo solo;
 	
 	@SuppressWarnings("deprecation")
-	public AudioCodecsTest() {
+	public AudioAndVideoCodecsTest() {
 		super("org.linphone", LinphoneActivity.class);
 	}
 	
@@ -50,6 +50,19 @@ public class AudioCodecsTest extends ActivityInstrumentationTestCase2<LinphoneAc
 		solo.sleep(500);
 		selectItemInListOnUIThread(11);
 		solo.clickOnText(context.getString(R.string.pref_codecs));
+		solo.sleep(500);
+	}
+	
+	private void goToVideoCodecsSettings() {
+		Context context = getActivity();
+		
+		solo.waitForActivity("LinphoneActivity", 2000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+		solo.clickOnView(solo.getView(R.id.settings));
+
+		solo.sleep(500);
+		selectItemInListOnUIThread(14);
+		solo.clickOnText(context.getString(R.string.pref_video_codecs_title), 2); //Hack: since pref_codecs = pref_video_codecs_title, we have to select the 2nd button
 		solo.sleep(500);
 	}
 	
@@ -110,10 +123,32 @@ public class AudioCodecsTest extends ActivityInstrumentationTestCase2<LinphoneAc
 		}
 	}
 	
+	private void disableAllEnabledVideoCodecs() {
+		Context context = getActivity();
+		
+		goToVideoCodecsSettings();
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_vp8_key), false)) {
+			solo.clickOnText(context.getString(R.string.pref_video_codec_vp8_title));
+			solo.sleep(500);
+		}
+		
+		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_h264_key), false)) {
+			solo.clickOnText(context.getString(R.string.pref_video_codec_h264_title));
+			solo.sleep(500);
+		}
+		
+		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_mpeg4_key), false)) {
+			solo.clickOnText(context.getString(R.string.pref_video_codec_mpeg4_title));
+			solo.sleep(500);
+		}
+	}
+	
 	private void goToDialerAndOutgoingCall(String codecTextToAssert) {
 		solo.clickOnView(solo.getView(R.id.dialer));
 		solo.clickOnView(solo.getView(R.id.Adress));
-		solo.enterText((EditText) solo.getView(R.id.Adress), "cotcot@sip.linphone.org");
+		solo.enterText((EditText) solo.getView(R.id.Adress), sipAdressToCall);
 		solo.clickOnView(solo.getView(R.id.Call));
 		
 		solo.waitForActivity("InCallActivity", 2000);
@@ -215,15 +250,6 @@ public class AudioCodecsTest extends ActivityInstrumentationTestCase2<LinphoneAc
 		goToDialerAndOutgoingCall("iLBC");
 	}
 	
-	public void testKOutgoingAudioCallSpeex16() {
-		Context context = getActivity();
-		disableAllEnabledAudioCodecs();
-		solo.clickOnText(context.getString(R.string.pref_codec_speex16));
-		solo.goBack();
-		
-		goToDialerAndOutgoingCall("speex");
-	}
-	
 	public void testJOutgoingAudioCallSpeex8() {
 		Context context = getActivity();
 		disableAllEnabledAudioCodecs();
@@ -233,8 +259,63 @@ public class AudioCodecsTest extends ActivityInstrumentationTestCase2<LinphoneAc
 		goToDialerAndOutgoingCall("speex");
 	}
 	
+	public void testKOutgoingAudioCallSpeex16() {
+		Context context = getActivity();
+		disableAllEnabledAudioCodecs();
+		solo.clickOnText(context.getString(R.string.pref_codec_speex16));
+		solo.goBack();
+		
+		goToDialerAndOutgoingCall("speex");
+	}
+	
+	public void testLEnableVideo() {
+		Context context = getActivity();
+		
+		solo.waitForActivity("LinphoneActivity", 2000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+		solo.clickOnView(solo.getView(R.id.settings));
+
+		solo.sleep(500);
+		selectItemInListOnUIThread(4);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (!prefs.getBoolean(context.getString(R.string.pref_video_enable_key), true)) {
+			solo.clickOnText(context.getString(R.string.pref_video_enable_title));
+			solo.sleep(500);
+		}
+	}
+	
+	public void testMOutgoingVideoCallVP8() {
+		Context context = getActivity();
+		disableAllEnabledVideoCodecs();
+		solo.clickOnText(context.getString(R.string.pref_video_codec_vp8_title));
+		solo.goBack();
+		
+		goToDialerAndOutgoingCall("VP8");
+	}
+	
+	public void testNOutgoingVideoCallH264() {
+		Context context = getActivity();
+		disableAllEnabledVideoCodecs();
+		solo.clickOnText(context.getString(R.string.pref_video_codec_h264_title));
+		solo.goBack();
+		
+		goToDialerAndOutgoingCall("H264");
+	}
+	
+	public void testOOutgoingVideoCallMPG4() {
+		Context context = getActivity();
+		disableAllEnabledVideoCodecs();
+		solo.clickOnText(context.getString(R.string.pref_video_codec_mpeg4_title));
+		solo.goBack();
+		
+		goToDialerAndOutgoingCall("MP4V-ES");
+	}
+	
 	@Override
 	public void tearDown() throws Exception {
+		if (solo.getCurrentActivity().getClass() == InCallActivity.class) {
+			solo.clickOnView(solo.getView(R.id.hangUp));
+		}
         solo.finishOpenedActivities();
 	}
 }

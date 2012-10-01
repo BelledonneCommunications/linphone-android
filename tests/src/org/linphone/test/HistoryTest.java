@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.linphone.InCallActivity;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 
 import android.content.Context;
@@ -36,6 +37,9 @@ public class HistoryTest extends ActivityInstrumentationTestCase2<LinphoneActivi
 	  protected void setUp() throws Exception {
 	    super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
+		
+		//Depending on previous tests, history may not be empty
+		LinphoneManager.getLc().clearCallLogs();
 	}
 	
 	public void testADisplayEmptyHistory() {
