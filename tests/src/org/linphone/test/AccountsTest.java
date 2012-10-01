@@ -145,6 +145,8 @@ public class AccountsTest extends
 		selectItemInListOnUIThread(7);
 		solo.clickOnText(context.getString(R.string.pref_delete_account));
 		
+		solo.goBack();
+		
 		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
 		Assert.assertEquals(nbAccountsBefore - 1, nbAccountsAfter);
 		Log.testSuccess("Deleting existing SIP account");
