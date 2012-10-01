@@ -1,5 +1,6 @@
 NDK_PATH=$(shell dirname `which ndk-build`)
 SDK_PATH=$(shell dirname `which android`)
+SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
@@ -68,6 +69,15 @@ release: update-project
 
 run-linphone:
 	ant run
+	
+run-tests:
+	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
+	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
+	@cd $(TOPDIR)/tests/ && \
+	$(SDK_PATH)/android update test-project --path . -m ../ && \
+	ant debug && \
+	ant installd && \
+	ant test
 
 clean:
 	$(NDK_PATH)/ndk-build clean

@@ -55,6 +55,7 @@ public class HistoryTest extends ActivityInstrumentationTestCase2<LinphoneActivi
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.clickOnView(solo.getView(R.id.settings));
+		solo.sleep(500);
 		selectItemInListOnUIThread(4);
 		solo.clickOnText(context.getString(R.string.pref_video_enable_title));
 		
