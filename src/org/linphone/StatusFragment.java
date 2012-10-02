@@ -70,6 +70,8 @@ public class StatusFragment extends Fragment {
 	private Toast zrtpToast;
 	private CountDownTimer zrtpHack;
 	private boolean hideZrtpToast = false;
+	private Timer mTimer;
+	private TimerTask mTask;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -159,7 +161,7 @@ public class StatusFragment extends Fragment {
 			sliderContentAccounts.setVisibility(View.GONE);
 			callStats.setVisibility(View.GONE);
 			
-			if (isInCall && getResources().getBoolean(R.bool.display_call_stats)) {
+			if (isInCall && isAttached && getResources().getBoolean(R.bool.display_call_stats)) {
 				callStats.setVisibility(View.VISIBLE);
 				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 				initCallStatsRefresher(call, callStats);
@@ -445,68 +447,67 @@ public class StatusFragment extends Fragment {
 	}
 	
 	private void initCallStatsRefresher(final LinphoneCall call, final View view) {
-		new Thread(new Runnable() {
+		if (mTimer != null && mTask != null) {
+			return;
+		}
+		
+	    mTimer = new Timer();
+		mTask = new TimerTask() {
 			@Override
 			public void run() {
-			    final Timer timer = new Timer();
-				TimerTask lTask = new TimerTask() {
-					@Override
-					public void run() {
-						if (call == null) {
-							timer.cancel();
-							return;
-						}
+				if (call == null) {
+					mTimer.cancel();
+					return;
+				}
 
-						final TextView title = (TextView) view.findViewById(R.id.call_stats_title);
-						final TextView codec = (TextView) view.findViewById(R.id.codec);
-						final TextView dl = (TextView) view.findViewById(R.id.downloadBandwith);
-						final TextView ul = (TextView) view.findViewById(R.id.uploadBandwith);
-						final TextView ice = (TextView) view.findViewById(R.id.ice);
-						if (codec == null || dl == null || ul == null || ice == null) {
-							timer.cancel();
-							return;
-						}
-						
-						if (call.getCurrentParamsCopy().getVideoEnabled()) {
-							final LinphoneCallStats videoStats = call.getVideoStats();
-							if (videoStats != null) {
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										title.setText("Audio");
-										PayloadType payload = call.getCurrentParamsCopy().getUsedVideoCodec();
-										if (payload != null) {
-											codec.setText(payload.getMime());
-										}
-										dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " kbits/s");
-										ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) + " kbits/s");
-										ice.setText(videoStats.getIceState().toString());
-									}
-								});
+				final TextView title = (TextView) view.findViewById(R.id.call_stats_title);
+				final TextView codec = (TextView) view.findViewById(R.id.codec);
+				final TextView dl = (TextView) view.findViewById(R.id.downloadBandwith);
+				final TextView ul = (TextView) view.findViewById(R.id.uploadBandwith);
+				final TextView ice = (TextView) view.findViewById(R.id.ice);
+				if (codec == null || dl == null || ul == null || ice == null) {
+					mTimer.cancel();
+					return;
+				}
+				
+				if (call.getCurrentParamsCopy().getVideoEnabled()) {
+					final LinphoneCallStats videoStats = call.getVideoStats();
+					if (videoStats != null) {
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								title.setText("Video");
+								PayloadType payload = call.getCurrentParamsCopy().getUsedVideoCodec();
+								if (payload != null) {
+									codec.setText(payload.getMime());
+								}
+								dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " kbits/s");
+								ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) + " kbits/s");
+								ice.setText(videoStats.getIceState().toString());
 							}
-						} else {
-							final LinphoneCallStats audioStats = call.getAudioStats();
-							if (audioStats != null) {
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										title.setText("Video");
-										PayloadType payload = call.getCurrentParamsCopy().getUsedAudioCodec();
-										if (payload != null) {
-											codec.setText(payload.getMime());
-										}
-										dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
-										ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
-										ice.setText(audioStats.getIceState().toString());
-									}
-								});
-							}
-						}
+						});
 					}
-				};
-				timer.scheduleAtFixedRate(lTask, 0, 1500);
+				} else {
+					final LinphoneCallStats audioStats = call.getAudioStats();
+					if (audioStats != null) {
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								title.setText("Audio");
+								PayloadType payload = call.getCurrentParamsCopy().getUsedAudioCodec();
+								if (payload != null) {
+									codec.setText(payload.getMime());
+								}
+								dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
+								ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
+								ice.setText(audioStats.getIceState().toString());
+							}
+						});
+					}
+				}
 			}
-		}).start();
+		};
+		mTimer.scheduleAtFixedRate(mTask, 0, 1500);
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {
