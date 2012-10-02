@@ -468,7 +468,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-
 	private synchronized void startLibLinphone() {
 		try {
 			copyAssetsFromPackage();
@@ -897,6 +896,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
 			((LinphoneActivity) listener).onMessageReceived(message.getFrom(), message);
 		}
+	}
+
+	@Override
+	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
+		Log.d("DTMF received: " + dtmf);
 	}
 
 	public String getLastLcStatusMessage() {

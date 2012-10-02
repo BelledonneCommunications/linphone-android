@@ -1105,8 +1105,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 	}
 	
-	
-	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (currentFragment == FragmentsAvailable.DIALER) {
