@@ -23,7 +23,7 @@ class LinphoneAuthInfoImpl implements LinphoneAuthInfo {
 	private native long newLinphoneAuthInfo(String username, String userid, String passwd, String ha1,String realm);
 	private native void  delete(long ptr);
 	protected LinphoneAuthInfoImpl(String username,String password, String realm)  {
-		nativePtr = newLinphoneAuthInfo(username,null,password,null,realm);
+		nativePtr = newLinphoneAuthInfo(username,"",password,"","");
 	}
 	protected void finalize() throws Throwable {
 		delete(nativePtr);

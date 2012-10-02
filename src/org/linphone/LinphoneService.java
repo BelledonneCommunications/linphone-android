@@ -501,10 +501,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	public void onRegistrationStateChanged(final RegistrationState state,
 			final String message) {
-		if (instance == null) {
-			Log.i("Service not ready, discarding registration state change to ",state.toString());
-			return;
-		}
+//		if (instance == null) {
+//			Log.i("Service not ready, discarding registration state change to ",state.toString());
+//			return;
+//		}
 		if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 			sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 		}

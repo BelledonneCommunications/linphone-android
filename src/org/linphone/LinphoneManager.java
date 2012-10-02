@@ -608,7 +608,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
 		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
 		if (username != null && username.length() > 0) {
-			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, domain);
+			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
 			mLc.addAuthInfo(lAuthInfo);
 			
 			if (domain != null && domain.length() > 0) {
