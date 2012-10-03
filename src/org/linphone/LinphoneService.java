@@ -554,12 +554,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
 			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
 			boolean autoAcceptCameraPolicy = LinphoneManager.getInstance().isAutoAcceptCamera();
-			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy) {
+			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 				try {
 					LinphoneManager.getLc().deferCallUpdate(call);
-					
-//					if (incallListener() != null)
-//						incallListener().onCallStateChanged(call, state, message);
 				} catch (LinphoneCoreException e) {
 					e.printStackTrace();
 				}
