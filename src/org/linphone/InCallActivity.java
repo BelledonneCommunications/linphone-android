@@ -320,7 +320,6 @@ public class InCallActivity extends FragmentActivity implements
 			hideOrDisplayCallOptions();
 		} 
 	}
-
 	
 	private void switchVideo(final boolean displayVideo) {
 		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
@@ -334,20 +333,19 @@ public class InCallActivity extends FragmentActivity implements
 				if (!displayVideo) {
 					LinphoneCallParams params = call.getCurrentParamsCopy();
 					params.setVideoEnabled(false);
-					
 					LinphoneManager.getLc().updateCall(call, params);
-					replaceFragmentVideoByAudio();
-					
 					video.setBackgroundResource(R.drawable.video_on);
+					
+					replaceFragmentVideoByAudio();
 					setCallControlsVisibleAndRemoveCallbacks();
 				} else {
 					LinphoneManager.getInstance().addVideo();
 					isSpeakerEnabled = true;
 					LinphoneManager.getInstance().routeAudioToSpeaker();
 					speaker.setBackgroundResource(R.drawable.speaker_on);
+					video.setBackgroundResource(R.drawable.video_off);
 					
 					replaceFragmentAudioByVideo();
-					video.setBackgroundResource(R.drawable.video_off);
 					displayVideoCallControlsIfHidden();
 				}
 			}
@@ -928,14 +926,15 @@ public class InCallActivity extends FragmentActivity implements
 						}.start();
 					}
 				});
-			} else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						acceptCallUpdate(true);
-					}
-				});
-			}
+			} 
+//			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
+//				mHandler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						acceptCallUpdate(true);
+//					}
+//				});
+//			}
 		}
 		
 		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);

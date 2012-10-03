@@ -16,7 +16,7 @@ import android.widget.ListView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<LinphoneActivity> {
-	private static final String sipAdressToCall = "miaou@sip.linphone.org";
+	private static final String sipAdressToCall = "cotcot@sip.linphone.org";
 	private Solo solo;
 	
 	@SuppressWarnings("deprecation")
@@ -25,6 +25,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 	}
 	
 	private void selectItemInListOnUIThread(final int item) {
+		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -47,7 +48,6 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		solo.sleep(500);
 		selectItemInListOnUIThread(11);
 		solo.clickOnText(context.getString(R.string.pref_codecs));
 		solo.sleep(500);
@@ -60,7 +60,6 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		solo.sleep(500);
 		selectItemInListOnUIThread(14);
 		solo.clickOnText(context.getString(R.string.pref_video_codecs_title), 2); //Hack: since pref_codecs = pref_video_codecs_title, we have to select the 2nd button
 		solo.sleep(500);
@@ -169,7 +168,6 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		solo.sleep(500);
 		selectItemInListOnUIThread(4);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		if (prefs.getBoolean(context.getString(R.string.pref_video_enable_key), false)) {

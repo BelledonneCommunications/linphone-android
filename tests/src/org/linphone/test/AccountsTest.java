@@ -28,6 +28,7 @@ public class AccountsTest extends
 	}
 	
 	private void selectItemInListOnUIThread(final int item) {
+		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -119,7 +120,6 @@ public class AccountsTest extends
 		Assert.assertTrue(solo.searchText("junit@test.linphone.org"));
 		
 		solo.clickOnText("junit@test.linphone.org");
-		solo.sleep(500);
 		selectItemInListOnUIThread(6);
 		solo.clickOnText(context.getString(R.string.pref_default_account));
 		int defaultAccount = prefs.getInt(context.getString(R.string.pref_default_account_key), 0);
@@ -141,7 +141,6 @@ public class AccountsTest extends
 		Assert.assertTrue(solo.searchText("wizard15@sip.linphone.org"));
 
 		solo.clickOnText("wizard15@sip.linphone.org");
-		solo.sleep(500);
 		selectItemInListOnUIThread(7);
 		solo.clickOnText(context.getString(R.string.pref_delete_account));
 		
