@@ -40,7 +40,7 @@ public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActi
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		selectItemInListOnUIThread(18);
+		selectItemInListOnUIThread(19);
 		solo.clickOnText(context.getString(R.string.pref_network_title));
 		solo.sleep(500);
 	}
