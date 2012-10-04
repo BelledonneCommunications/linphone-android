@@ -31,9 +31,9 @@ video_jitt_comp=60
 nortp_timeout=30
 
 [sound]
-playback_dev_id=ANDROID SND: Android Sound card
-ringer_dev_id=ANDROID SND: Android Sound card
-capture_dev_id=ANDROID SND: Android Sound card
+playback_dev_id=
+ringer_dev_id=
+capture_dev_id=
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 ec_tail_len=120
