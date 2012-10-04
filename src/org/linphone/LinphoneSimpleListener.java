@@ -62,5 +62,9 @@ public interface LinphoneSimpleListener {
 	public static interface LinphoneOnTextReceivedListener extends LinphoneSimpleListener {
 		void onTextReceived(LinphoneAddress from, String message);
 	}
+	
+	public static interface LinphoneOnDTMFReceivedListener extends LinphoneSimpleListener {
+		void onDTMFReceived(LinphoneCall call, int dtmf);
+	}
 
 }

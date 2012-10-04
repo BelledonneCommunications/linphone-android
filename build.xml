@@ -1048,10 +1048,10 @@
             <fileset dir="submodules/linphone/java/common">
             </fileset>
         </copy>
-        <copy includeemptydirs="false" todir="src/temp">
+        <!-- <copy includeemptydirs="false" todir="src/temp">
             <fileset dir="submodules/linphone/coreapi/help/java">
             </fileset>
-        </copy>
+        </copy> -->
     </target>
 
     <target name="delete-temp" description="remove linphone java files into right directories.">
