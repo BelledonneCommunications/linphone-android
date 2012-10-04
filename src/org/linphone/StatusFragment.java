@@ -23,6 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -470,14 +471,15 @@ public class StatusFragment extends Fragment {
 					return;
 				}
 				
-				if (call.getCurrentParamsCopy().getVideoEnabled()) {
+				final LinphoneCallParams params = call.getCurrentParamsCopy();
+				if (params.getVideoEnabled()) {
 					final LinphoneCallStats videoStats = call.getVideoStats();
 					if (videoStats != null) {
 						mHandler.post(new Runnable() {
 							@Override
 							public void run() {
 								title.setText("Video");
-								PayloadType payload = call.getCurrentParamsCopy().getUsedVideoCodec();
+								PayloadType payload = params.getUsedVideoCodec();
 								if (payload != null) {
 									codec.setText(payload.getMime());
 								}
@@ -494,7 +496,7 @@ public class StatusFragment extends Fragment {
 							@Override
 							public void run() {
 								title.setText("Audio");
-								PayloadType payload = call.getCurrentParamsCopy().getUsedAudioCodec();
+								PayloadType payload = params.getUsedAudioCodec();
 								if (payload != null) {
 									codec.setText(payload.getMime());
 								}
