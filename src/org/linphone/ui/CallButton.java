@@ -73,6 +73,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 						} else {
 							mAddress.setText(log.getTo().asStringUriOnly());
 						}
+						mAddress.setSelection(mAddress.getText().toString().length());
 						mAddress.setDisplayedName(log.getTo().getDisplayName());
 					}
 				}
