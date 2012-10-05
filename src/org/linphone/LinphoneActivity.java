@@ -1118,6 +1118,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				}
 				
 				if (currentFragment == FragmentsAvailable.SETTINGS) {
+					showStatusBar();
 					reloadConfig();
 					updateAnimationsState();
 				}
