@@ -184,6 +184,16 @@ public class StatusFragment extends Fragment {
 			public void run() {
 				statusLed.setImageResource(getStatusIconResource(state, true));
 				statusText.setText(getStatusIconText(state));
+				if (getResources().getBoolean(R.bool.lock_statusbar)) {
+					statusText.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (LinphoneManager.isInstanciated()) {
+								LinphoneManager.getLc().refreshRegisters();
+							}
+						}
+					});
+				}
 //				setMiniLedsForEachAccount();
 				populateSliderContent();
 				sliderContentAccounts.invalidate();
@@ -582,7 +592,7 @@ public class StatusFragment extends Fragment {
 			TextView identity = (TextView) view.findViewById(R.id.Identity);
 			String sipAddress = (lpc.getIdentity() != null && lpc.getIdentity().startsWith("sip:")) ? lpc.getIdentity().split("sip:")[1] : lpc.getIdentity();
 			identity.setText(sipAddress);
-			identity.setOnClickListener(new OnClickListener() {
+			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					LinphoneManager.getLc().refreshRegisters();
