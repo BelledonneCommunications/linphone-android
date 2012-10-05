@@ -288,7 +288,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	private void updateAnimationsState() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !prefs.getBoolean(getString(R.string.pref_animation_enable_key), true);
+        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !prefs.getBoolean(getString(R.string.pref_animation_enable_key), false);
 	}
 	
 	public boolean isAnimationDisabled() {
