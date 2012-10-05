@@ -217,6 +217,17 @@
 			
 	</PreferenceCategory>
 
+	<PreferenceCategory
+    	android:title="@string/pref_linphone_friend_title">
+	    
+	    <CheckBoxPreference 
+		    android:key="@string/pref_auto_accept_friends_key"
+			android:title="@string/pref_auto_accept_friends_title"
+			android:summary="@string/pref_auto_accept_friends_desc"
+			android:defaultValue="false"/>
+	    
+	</PreferenceCategory>
+
 	<PreferenceCategory 
 	    android:title="@string/pref_advanced">
 			
@@ -273,7 +284,7 @@
 		    android:title="@string/pref_media_encryption"
 			android:key="@string/pref_media_encryption_key"
 			android:defaultValue="@string/pref_media_encryption_key_none" /> 
-
+		
 		<PreferenceScreen 
 		    android:title="@string/pref_audio_hacks_title"
 			android:layout="@layout/hidden">

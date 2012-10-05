@@ -163,7 +163,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
 
 		LinphoneManager.createAndStart(this, this);
-		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Online);
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWifiLock = mWifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, this.getPackageName()+"-wifi-call-lock");
 		mWifiLock.setReferenceCounted(false);
@@ -197,6 +196,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 				}
 			}, 5000);
 		}
+		
+		LinphoneManager.getLc().setPresenceInfo(0, "", OnlineStatus.Online);
 	}
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
@@ -459,8 +460,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	@Override
 	public synchronized void onDestroy() {
-		instance=null;
-		LinphoneManager.getLc().setPresenceInfo(0, null, OnlineStatus.Offline);
+		LinphoneManager.getLc().setPresenceInfo(0, "", OnlineStatus.Offline);
+		instance = null;
 		LinphoneManager.destroy();
 
 	    // Make sure our notification is gone.

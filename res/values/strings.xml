@@ -374,4 +374,10 @@
 	<string name="image_saved">Image saved</string>
 	<string name="image_not_saved">Error, image not saved</string>
 	
+	<string name="pref_linphone_friend_title">Friends</string>
+	<string name="pref_auto_accept_friends_title">New friends</string>
+	<string name="pref_auto_accept_friends_desc">utomatically accept new friend requests</string>
+	<string name="linphone_friend_new_request_title">Friend request</string>
+	<string name="linphone_friend_new_request_desc">wants to share it\'s presence status with you and be aware of yours.</string>
+	
 </resources>

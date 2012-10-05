@@ -741,4 +741,20 @@ class LinphoneCoreImpl implements LinphoneCore {
 	public PayloadType findPayloadType(String mime, int clockRate) {
 		return null;
 	}
+	
+	private native void removeFriend(long ptr, long lf);
+	@Override
+	public void removeFriend(LinphoneFriend lf) {
+		removeFriend(nativePtr, lf.getNativePtr());
+	}
+	
+	private native long getFriendByAddress(long ptr, String sipUri);
+	@Override
+	public LinphoneFriend findFriendByAddress(String sipUri) {
+		long ptr = getFriendByAddress(nativePtr, sipUri);
+		if (ptr == 0) {
+			return null;
+		}
+		return new LinphoneFriendImpl(ptr);
+	}
 }

@@ -75,6 +75,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	private static final int ACCOUNTS_SETTINGS_ID = 1;
 	private static final int WIZARD_SETTINGS_ID = 2;
 	private static final int CAMERA_SETTINGS_ID = 6;
+	private static final int FRIENDS_SETTINGS_ID = 7;
 	private static final int WIZARD_INTENT = 1;
 	
 	public PreferencesFragment() {
@@ -102,6 +103,12 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		
 		if (getResources().getBoolean(R.bool.disable_animations)) {
 			uncheckDisableAndHideCheckbox(R.string.pref_animation_enable_key);
+		}
+		
+		if (!getResources().getBoolean(R.bool.enable_linphone_friends)) {
+			PreferenceCategory friends = (PreferenceCategory) getPreferenceScreen().getPreference(FRIENDS_SETTINGS_ID);
+			friends.removeAll();
+			friends.setLayoutResource(R.layout.hidden);
 		}
 		
 		addTransportChecboxesListener();

@@ -88,4 +88,6 @@
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
 	<string name="pref_push_notification_key">pref_push_notification_key</string>
+	
+	<string name="pref_auto_accept_friends_key">pref_auto_accept_friends_key</string>
 </resources>

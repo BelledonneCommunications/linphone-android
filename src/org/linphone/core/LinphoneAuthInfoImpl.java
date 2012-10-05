@@ -43,7 +43,6 @@ class LinphoneAuthInfoImpl implements LinphoneAuthInfo {
 	public void setPassword(String password) {
 		// TODO Auto-generated method stub
 		throw new RuntimeException("not implemeneted yet");
-		
 	}
 	public void setRealm(String realm) {
 		// TODO Auto-generated method stub

@@ -323,4 +323,10 @@
 	<string name="image_saved">Image sauvegardée</string>
 	<string name="image_not_saved">Erreur, image non sauvegardée</string>
 	
+	<string name="pref_linphone_friend_title">Amis</string>
+	<string name="pref_auto_accept_friends_title">Nouveaux amis</string>
+	<string name="pref_auto_accept_friends_desc">Toujours accepter les nouvelles demandes d\'amis</string>
+	<string name="linphone_friend_new_request_title">Requête d\'ami</string>
+	<string name="linphone_friend_new_request_desc">voudrait être partager son status avec vous et voir le votre.</string>
+	
 </resources>

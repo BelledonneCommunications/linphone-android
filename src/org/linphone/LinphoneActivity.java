@@ -39,8 +39,11 @@ import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.core.Log;
+import org.linphone.core.OnlineStatus;
 import org.linphone.mediastream.Version;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
@@ -55,6 +58,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.app.FragmentActivity;
@@ -70,6 +74,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -96,7 +101,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private LinearLayout menu, mark;
 	private RelativeLayout contacts, history, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment, nextFragment;
-	private Fragment dialerFragment, messageListenerFragment, messageListFragment;
+	private Fragment dialerFragment, messageListenerFragment, messageListFragment, friendStatusListenerFragment;
 	private SavedState dialerSavedState;
 	private ChatStorage chatStorage;
 	private boolean preferLinphoneContacts = false, isAnimationDisabled = false;
@@ -244,6 +249,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			break;
 		case CONTACTS:
 			newFragment = new ContactsFragment();
+			friendStatusListenerFragment = newFragment;
 			break;
 		case CONTACT:
 			newFragment = new ContactFragment();
@@ -863,6 +869,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private int mAlwaysChangingPhoneAngle = -1;
+	private AcceptNewFriendDialog acceptNewFriendDialog;
 	private class LocalOrientationEventListener extends OrientationEventListener {
 		public LocalOrientationEventListener(Context context) {
 			super(context);
@@ -924,6 +931,111 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		return preferLinphoneContacts;
 	}
 	
+	private void refreshStatus(OnlineStatus status) {
+		if (LinphoneManager.isInstanciated()) {
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, "", status);
+		}
+	}
+	
+	public void onNewSubscriptionRequestReceived(LinphoneFriend friend, String sipUri) {
+		sipUri = sipUri.replace("<", "").replace(">", "");
+		Log.d("New friend request from " + sipUri);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (prefs.getBoolean(getString(R.string.pref_auto_accept_friends_key), false)) {
+			Contact contact = findContactWithSipAddress(sipUri);
+			if (contact != null) {
+				friend.enableSubscribes(true);
+				try {
+					LinphoneManager.getLc().addFriend(friend);
+					contact.setFriend(friend);
+				} catch (LinphoneCoreException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			Contact contact = findContactWithSipAddress(sipUri);
+			if (contact != null) {
+				FragmentManager fm = getSupportFragmentManager();
+		        acceptNewFriendDialog = new AcceptNewFriendDialog(contact, sipUri);
+		        acceptNewFriendDialog.show(fm, "New Friend Request Dialog");
+			}
+		}
+	}
+	
+	private Contact findContactWithSipAddress(String sipUri) {
+		if (!sipUri.startsWith("sip:")) {
+			sipUri = "sip:" + sipUri;
+		}
+		
+		for (Contact contact : sipContactList) {
+			for (String addr : contact.getNumerosOrAddresses()) {
+				if (addr.equals(sipUri)) {
+					return contact;
+				}
+			}
+		}
+		return null;
+	}
+
+	public void onNotifyPresenceReceived(LinphoneFriend friend) {
+		Log.d("friend " + friend.getAddress() + " has a new status: " + friend.getStatus().toString());
+		if (currentFragment == FragmentsAvailable.CONTACTS && friendStatusListenerFragment != null) {
+			((ContactsFragment) friendStatusListenerFragment).invalidate();
+		}
+	}
+	
+	public boolean newFriend(Contact contact, String sipUri) {
+		Log.d("Adding friend :" + sipUri + " associated with contact " + contact.getName());
+		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend(sipUri);
+		friend.enableSubscribes(true);
+		friend.setIncSubscribePolicy(LinphoneFriend.SubscribePolicy.SPAccept);
+		try {
+			LinphoneManager.getLc().addFriend(friend);
+			contact.setFriend(friend);
+			return true;
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	private void acceptNewFriend(Contact contact, String sipUri, boolean accepted) {
+		acceptNewFriendDialog.dismissAllowingStateLoss();
+		if (accepted) {
+			newFriend(contact, sipUri);
+		}
+	}
+	
+	public boolean removeFriend(Contact contact, String sipUri) {
+		Log.d("Removing friend :" + sipUri + " associated with contact " + contact.getName());
+		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
+		if (friend != null) {
+			friend.enableSubscribes(false);
+			LinphoneManager.getLc().removeFriend(friend);
+			contact.setFriend(null);
+			return true;
+		}
+		return false;
+	}
+	
+	private void searchFriendAndAddToContact(Contact contact) {
+		if (contact == null || contact.getNumerosOrAddresses() == null) {
+			return;
+		}
+		
+		for (String sipUri : contact.getNumerosOrAddresses()) {
+			if (LinphoneUtils.isSipAddress(sipUri)) {
+				LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
+				if (friend != null) {
+					friend.enableSubscribes(true);
+					friend.setIncSubscribePolicy(LinphoneFriend.SubscribePolicy.SPAccept);
+					contact.setFriend(friend);
+					break;
+				}
+			}
+		}
+	}
+	
 	private void prepareContactsInBackground() {
 		contactCursor = Compatibility.getContactsCursor(getContentResolver());
 		sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
@@ -932,9 +1044,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		Thread sipContactsHandler = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
 				for (int i = 0; i < sipContactCursor.getCount(); i++) {
 					Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
+					contact.refresh(getContentResolver());
+					if (getResources().getBoolean(R.bool.enable_linphone_friends)) {
+						searchFriendAndAddToContact(contact);
+					}
 					sipContactList.add(contact);
 				}
 			}
@@ -944,7 +1059,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		Thread contactsHandler = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
 				for (int i = 0; i < contactCursor.getCount(); i++) {
 					Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
 					contactList.add(contact);
@@ -993,6 +1107,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public void exit() {
+        refreshStatus(OnlineStatus.Offline);
 		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 	}
@@ -1044,6 +1159,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				startActivity(new Intent(this, IncomingCallActivity.class));
 			}
 		}
+		
+        refreshStatus(OnlineStatus.Online);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+        refreshStatus(OnlineStatus.Away);
 	}
 	
 	@Override
@@ -1129,6 +1252,42 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	class AcceptNewFriendDialog extends DialogFragment {
+		private Contact contact;
+		private String sipUri;
+		
+	    public AcceptNewFriendDialog(Contact c, String a) {
+	    	contact = c;
+	    	sipUri = a;
+	        // Empty constructor required for DialogFragment
+	    }
+
+	    @Override
+	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	        View view = inflater.inflate(R.layout.new_friend_request_dialog, container);
+
+	        getDialog().setTitle(R.string.linphone_friend_new_request_title);
+	        
+	        Button yes = (Button) view.findViewById(R.id.yes);
+	        yes.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+			    	acceptNewFriend(contact, sipUri, true);
+				}
+			});
+	        
+	        Button no = (Button) view.findViewById(R.id.no);
+	        no.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					acceptNewFriend(contact, sipUri, false);
+				}
+			});
+	        
+	        return view;
+	    }
 	}
 }
 
