@@ -132,7 +132,7 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			historyList.setAdapter(new CallHistoryAdapter(getActivity()));
 		}
 	}
 
@@ -149,7 +149,7 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		LinphoneManager.getLc().removeCallLog(log);
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			historyList.setAdapter(new CallHistoryAdapter(getActivity()));
 		}
 		return true;
 	}
@@ -313,7 +313,6 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			ImageView detail = (ImageView) view.findViewById(R.id.detail);
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			ImageView callDirection = (ImageView) view.findViewById(R.id.icon);
-			
 			
 			if (log.getDirection() == CallDirection.Incoming) {
 				address = log.getFrom();

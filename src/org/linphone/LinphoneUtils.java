@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -63,13 +64,17 @@ public final class LinphoneUtils {
 	private LinphoneUtils(){}
 
 	private static boolean preventVolumeBarToDisplay = false;
+	private static final String sipAddressRegExp = "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
+	private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
 	public static boolean isSipAddress(String numberOrAddress) {
-		return numberOrAddress != null && numberOrAddress.matches("^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+		Pattern p = Pattern.compile(sipAddressRegExp);
+		return p.matcher(numberOrAddress).matches();
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
-		return numberOrAddress != null && numberOrAddress.matches("^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+		Pattern p = Pattern.compile(strictSipAddressRegExp);
+		return p.matcher(numberOrAddress).matches();
 	}
 	
 	public static String getUsernameFromAddress(String address) {
