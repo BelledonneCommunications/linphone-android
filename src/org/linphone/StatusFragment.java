@@ -348,6 +348,8 @@ public class StatusFragment extends Fragment {
 
 			if (isVideoEnabled) {
 				background.setVisibility(View.GONE);
+			} else {
+				background.setVisibility(View.VISIBLE);
 			}
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
