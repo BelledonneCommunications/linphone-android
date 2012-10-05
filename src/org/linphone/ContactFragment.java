@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -123,6 +124,35 @@ public class ContactFragment extends Fragment implements OnClickListener {
 						numberOrAddress = "sip:" + numberOrAddress;
 					}
 					v.findViewById(R.id.chat).setTag(numberOrAddress + "@" + lpc.getDomain());
+				}
+			}
+			
+			final String finalNumberOrAddress = numberOrAddress;
+			ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
+			if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {
+				friend.setVisibility(View.VISIBLE);
+				
+				boolean isAlreadyAFriend = LinphoneManager.getLc().findFriendByAddress(finalNumberOrAddress) != null;
+				if (!isAlreadyAFriend) {
+					friend.setImageResource(R.drawable.friend_add);
+					friend.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (LinphoneActivity.instance().newFriend(contact, finalNumberOrAddress)) {
+								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
+							}
+						}
+					});
+				} else {
+					friend.setImageResource(R.drawable.friend_remove);
+					friend.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (LinphoneActivity.instance().removeFriend(contact, finalNumberOrAddress)) {
+								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
+							}
+						}
+					});
 				}
 			}
 			

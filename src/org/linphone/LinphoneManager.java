@@ -883,8 +883,18 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void byeReceived(LinphoneCore lc, String from) {}
 	public void displayMessage(LinphoneCore lc, String message) {}
 	public void show(LinphoneCore lc) {}
-	public void newSubscriptionRequest(LinphoneCore lc,LinphoneFriend lf,String url) {}
-	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {}
+	
+	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf, String url) {
+		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
+			((LinphoneActivity) listener).onNewSubscriptionRequestReceived(lf, url);
+		}
+	}
+	
+	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
+			((LinphoneActivity) listener).onNotifyPresenceReceived(lf);
+		}
+	}
 	
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneAddress from, String message) {

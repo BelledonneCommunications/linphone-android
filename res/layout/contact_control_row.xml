@@ -39,5 +39,18 @@
    	    android:paddingRight="5dp"
    	    android:scaleType="fitCenter"
    	    android:src="@drawable/chat_icon_over" />
+   	
+   	<ImageView
+   	    android:id="@+id/addFriend"
+   	    android:visibility="gone"
+   	    android:layout_width="0dp"
+   	    android:layout_height="match_parent"
+   	    android:layout_weight="0.2"
+   	    android:contentDescription="@string/content_description_dial_back"
+   	    android:gravity="right"
+   	    android:paddingLeft="5dp"
+   	    android:paddingRight="5dp"
+   	    android:scaleType="fitCenter"
+   	    android:src="@drawable/friend_add" />
   
   </TableRow>

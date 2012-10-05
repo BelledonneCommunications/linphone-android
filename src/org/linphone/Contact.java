@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneFriend;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
@@ -37,6 +38,7 @@ public class Contact implements Serializable {
 	private transient Uri photoUri;
 	private transient Bitmap photo;
 	private List<String> numerosOrAddresses;
+	private LinphoneFriend friend;
 	
 	public Contact(String id, String name) {
 		super();
@@ -61,6 +63,14 @@ public class Contact implements Serializable {
 		this.photo = picture;
 	}
 	
+	public void setFriend(LinphoneFriend friend) {
+		this.friend = friend;
+	}
+	
+	public LinphoneFriend getFriend() {
+		return friend;
+	}
+	
 	public String getID() {
 		return id;
 	}
@@ -79,10 +89,6 @@ public class Contact implements Serializable {
 
 	public List<String> getNumerosOrAddresses() {
 		return numerosOrAddresses;
-	}
-
-	public void setNumerosOrAddresses(List<String> numerosOrAddresses) {
-		this.numerosOrAddresses = numerosOrAddresses;
 	}
 	
 	public void refresh(ContentResolver cr) {

@@ -20,12 +20,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneFriend;
+import org.linphone.core.OnlineStatus;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +48,8 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
+	private Handler mHandler = new Handler();
+	
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView allContacts, linphoneContacts, newContact, noSipContact, noContact;
@@ -176,8 +181,18 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			onlyDisplayLinphoneContacts = LinphoneActivity.instance().isLinphoneContactsPrefered();
 		}
 		
-		changeContactsAdapter();
-		contactsList.setSelectionFromTop(lastKnownPosition, 0);
+		invalidate();
+	}
+	
+	public void invalidate() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				lastKnownPosition = contactsList.getFirstVisiblePosition();
+				changeContactsAdapter();
+				contactsList.setSelectionFromTop(lastKnownPosition, 0);
+			}
+		});
 	}
 	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
@@ -244,6 +259,23 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 				icon.setImageURI(contact.getPhotoUri());
 			} else {
 				icon.setImageBitmap(bitmapUnknown);
+			}
+			
+			ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
+			LinphoneFriend friend = contact.getFriend();
+			if (friend != null) {
+				friendStatus.setVisibility(View.VISIBLE);
+				if (friend.getStatus() == OnlineStatus.Online) {
+					friendStatus.setImageResource(R.drawable.led_connected);
+				} else if (friend.getStatus() == OnlineStatus.Busy || friend.getStatus() == OnlineStatus.DoNotDisturb) {
+					friendStatus.setImageResource(R.drawable.led_error);
+				} else if (friend.getStatus() == OnlineStatus.Away || friend.getStatus() == OnlineStatus.BeRightBack) {
+					friendStatus.setImageResource(R.drawable.led_inprogress);
+				} else if (friend.getStatus() == OnlineStatus.Offline) {
+					friendStatus.setImageResource(R.drawable.led_disconnected);
+				} else {
+					friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
+				}
 			}
 			
 			return view;

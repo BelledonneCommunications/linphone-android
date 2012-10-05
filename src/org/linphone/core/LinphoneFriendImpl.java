@@ -18,7 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.core;
 
-class LinphoneFriendImpl implements LinphoneFriend {
+import java.io.Serializable;
+
+class LinphoneFriendImpl implements LinphoneFriend, Serializable {
 	protected final long nativePtr;
 	private native long newLinphoneFriend(String friendUri);
 	private native void setAddress(long nativePtr,long friend);
@@ -48,14 +50,12 @@ class LinphoneFriendImpl implements LinphoneFriend {
 	}
 	public void setAddress(LinphoneAddress anAddress) {
 		this.setAddress(nativePtr, ((LinphoneAddressImpl)anAddress).nativePtr);
-		
 	}
 	public LinphoneAddress getAddress() {
 		return new LinphoneAddressImpl(getAddress(nativePtr));
 	}
 	public void setIncSubscribePolicy(SubscribePolicy policy) {
 		setIncSubscribePolicy(nativePtr,policy.mValue);
-		
 	}
 	public SubscribePolicy getIncSubscribePolicy() {
 		return SubscribePolicy.fromInt(getIncSubscribePolicy(nativePtr)) ;
@@ -66,7 +66,6 @@ class LinphoneFriendImpl implements LinphoneFriend {
 	public boolean isSubscribesEnabled() {
 		return isSubscribesEnabled(nativePtr);
 	}
-
 	public OnlineStatus getStatus() {
 		return OnlineStatus.fromInt(getStatus(nativePtr));
 	}
@@ -76,5 +75,7 @@ class LinphoneFriendImpl implements LinphoneFriend {
 	public void done() {
 		done(nativePtr);
 	}
-
+	public long getNativePtr() {
+		return nativePtr;
+	}
 }
