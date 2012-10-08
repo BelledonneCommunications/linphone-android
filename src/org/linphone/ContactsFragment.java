@@ -188,7 +188,6 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				lastKnownPosition = contactsList.getFirstVisiblePosition();
 				changeContactsAdapter();
 				contactsList.setSelectionFromTop(lastKnownPosition, 0);
 			}
@@ -263,7 +262,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			
 			ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
 			LinphoneFriend friend = contact.getFriend();
-			if (friend != null) {
+			if (!LinphoneActivity.instance().isContactPresenceDisabled() && friend != null) {
 				friendStatus.setVisibility(View.VISIBLE);
 				if (friend.getStatus() == OnlineStatus.Online) {
 					friendStatus.setImageResource(R.drawable.led_connected);
