@@ -136,12 +136,13 @@ public class ApiFivePlus {
 				.toString();
 			projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
 			Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
-
-			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
-			while (c.moveToNext()) {
-				list.add("sip:" + c.getString(nbId)); 
+			if (c != null) {
+				int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+				while (c.moveToNext()) {
+					list.add("sip:" + c.getString(nbId)); 
+				}
+				c.close();
 			}
-			c.close();
 		} else {
 			String selection = new StringBuilder()
 				.append(Data.CONTACT_ID).append(" =  ? AND ")
@@ -152,21 +153,24 @@ public class ApiFivePlus {
 				.append(") = 'sip'")
 				.toString();
 			Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
-
-			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
-			while (c.moveToNext()) {
-				list.add("sip:" + c.getString(nbId)); 
+			if (c != null) {
+				int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
+				while (c.moveToNext()) {
+					list.add("sip:" + c.getString(nbId)); 
+				}
+				c.close();
 			}
-			c.close();
 		}
 		
 		// Phone Numbers
 		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
-        while (c.moveToNext()) {
-            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
-            list.add(number); 
-        }
-        c.close();
+		if (c != null) {
+	        while (c.moveToNext()) {
+	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+	            list.add(number); 
+	        }
+	        c.close();
+		}
 
 		return list;
 	}
@@ -220,7 +224,7 @@ public class ApiFivePlus {
 		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + select + ")";
 		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, Data.DISPLAY_NAME + " ASC");
 		
-		if (!shouldGroupBy) {
+		if (!shouldGroupBy || cursor == null) {
 			return cursor;
 		}
 		
@@ -241,6 +245,7 @@ public class ApiFivePlus {
 		        result.addRow(newRow);
 	    	}
 	    }
+		cursor.close();
 		return result;
 	}
 	
@@ -305,7 +310,7 @@ public class ApiFivePlus {
 
 	public static String refreshContactName(ContentResolver cr, String id) {
 		Cursor c = getGeneralContactCursor(cr, Data.CONTACT_ID + " = '" + id + "'", false);
-		if (c.moveToFirst()) {
+		if (c != null && c.moveToFirst()) {
 			return getContactDisplayName(c);
 		}
 		return null;

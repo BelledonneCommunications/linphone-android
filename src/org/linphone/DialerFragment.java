@@ -145,6 +145,7 @@ public class DialerFragment extends Fragment {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
 		}
+		mAddress.setText("");
 		resetLayout(isCallTransferOngoing);
 	}
 	
@@ -167,7 +168,6 @@ public class DialerFragment extends Fragment {
 			mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			mAddress.setText("");
 			mCall.setImageResource(R.drawable.call);
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.add_contact);
