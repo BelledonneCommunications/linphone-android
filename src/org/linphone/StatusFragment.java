@@ -485,42 +485,39 @@ public class StatusFragment extends Fragment {
 					return;
 				}
 				
-				final LinphoneCallParams params = call.getCurrentParamsCopy();
-				if (params.getVideoEnabled()) {
-					final LinphoneCallStats videoStats = call.getVideoStats();
-					if (videoStats != null) {
-						mHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								title.setText("Video");
-								PayloadType payload = params.getUsedVideoCodec();
-								if (payload != null) {
-									codec.setText(payload.getMime());
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						synchronized(LinphoneManager.getLc()) {
+							final LinphoneCallParams params = call.getCurrentParamsCopy();
+							if (params.getVideoEnabled()) {
+								final LinphoneCallStats videoStats = call.getVideoStats();
+								if (videoStats != null) {
+									title.setText("Video");
+									PayloadType payload = params.getUsedVideoCodec();
+									if (payload != null) {
+										codec.setText(payload.getMime());
+									}
+									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " kbits/s");
+									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) + " kbits/s");
+									ice.setText(videoStats.getIceState().toString());
 								}
-								dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " kbits/s");
-								ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) + " kbits/s");
-								ice.setText(videoStats.getIceState().toString());
-							}
-						});
-					}
-				} else {
-					final LinphoneCallStats audioStats = call.getAudioStats();
-					if (audioStats != null) {
-						mHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								title.setText("Audio");
-								PayloadType payload = params.getUsedAudioCodec();
-								if (payload != null) {
-									codec.setText(payload.getMime());
+							} else {
+								final LinphoneCallStats audioStats = call.getAudioStats();
+								if (audioStats != null) {
+									title.setText("Audio");
+									PayloadType payload = params.getUsedAudioCodec();
+									if (payload != null) {
+										codec.setText(payload.getMime());
+									}
+									dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
+									ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
+									ice.setText(audioStats.getIceState().toString());
 								}
-								dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
-								ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
-								ice.setText(audioStats.getIceState().toString());
 							}
-						});
+						}
 					}
-				}
+				});
 			}
 		};
 		mTimer.scheduleAtFixedRate(mTask, 0, 1500);
