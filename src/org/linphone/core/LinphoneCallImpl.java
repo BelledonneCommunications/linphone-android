@@ -155,7 +155,7 @@ class LinphoneCallImpl implements LinphoneCall {
 		return isAuthenticationTokenVerified(nativePtr);
 	}
 
-	private native boolean setAuthenticationTokenVerified(long nativePtr, boolean verified);
+	private native void setAuthenticationTokenVerified(long nativePtr, boolean verified);
 	public void setAuthenticationTokenVerified(boolean verified){
 		setAuthenticationTokenVerified(nativePtr, verified);
 	}
