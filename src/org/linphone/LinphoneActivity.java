@@ -1223,7 +1223,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			LinphoneService.instance().removeMessageNotification();
 			String sipUri = extras.getString("ChatContactSipUri");
 			displayChat(sipUri);
-		} else if (extras != null && extras.getBoolean("Notification", false)) {
+		} 
+		else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				if (call.getCurrentParamsCopy().getVideoEnabled()) {
@@ -1236,6 +1237,14 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		else {
 			if (dialerFragment != null) {
 				((DialerFragment) dialerFragment).newOutgoingCall(intent);
+			}
+			if (LinphoneManager.getLc().getCalls().length > 0) {
+				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+				if (call.getCurrentParamsCopy().getVideoEnabled()) {
+					startVideoActivity(call);
+				} else {
+					startIncallActivity(call);
+				}
 			}
 		}
 	}
@@ -1273,7 +1282,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	    public AcceptNewFriendDialog(Contact c, String a) {
 	    	contact = c;
 	    	sipUri = a;
-	        // Empty constructor required for DialogFragment
 	    }
 
 	    @Override
