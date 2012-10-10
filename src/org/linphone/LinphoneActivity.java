@@ -1041,7 +1041,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 	}
 	
-	private void prepareContactsInBackground() {
+	private synchronized void prepareContactsInBackground() {
 		if (contactCursor != null) {
 			contactCursor.close();
 		}
