@@ -175,7 +175,7 @@ public class StatusFragment extends Fragment {
 	}
 	
 	public void registrationStateChanged(final RegistrationState state) {
-		if (!isAttached) {
+		if (!isAttached || !LinphoneService.isReady()) {
 			return;
 		}
 		
