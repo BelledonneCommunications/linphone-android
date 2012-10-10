@@ -61,7 +61,6 @@ class LinphoneCallLogImpl implements LinphoneCallLog {
 	public int getCallDuration() {
 		return getCallDuration(nativePtr);
 	}
-	@Override
 	public int getCallId() {
 		return getCallId(nativePtr);
 	}

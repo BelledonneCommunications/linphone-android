@@ -47,6 +47,7 @@ public class DialerFragment extends Fragment {
 	private CallButton mCall;
 	private ImageView mAddContact;
 	private OnClickListener addContactListener, cancelListener, transferListener;
+	private boolean shouldEmptyAddressField = true;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -108,6 +109,7 @@ public class DialerFragment extends Fragment {
 		resetLayout(isCallTransferOngoing);
 		
 		if (getArguments() != null) {
+			shouldEmptyAddressField = false;
 			String number = getArguments().getString("SipUri");
 			String displayName = getArguments().getString("DisplayName");
 			String photo = getArguments().getString("PhotoUri");
@@ -145,7 +147,12 @@ public class DialerFragment extends Fragment {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
 		}
-		mAddress.setText("");
+		
+		if (shouldEmptyAddressField) {
+			mAddress.setText("");
+		} else {
+			shouldEmptyAddressField = true;
+		}
 		resetLayout(isCallTransferOngoing);
 	}
 	
