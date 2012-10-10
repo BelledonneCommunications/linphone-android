@@ -1051,33 +1051,47 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		contactCursor = Compatibility.getContactsCursor(getContentResolver());
 		sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
-		if (contactCursor != null && sipContactCursor != null) {
-			contactList = new ArrayList<Contact>();
-			sipContactList = new ArrayList<Contact>();
-			
-			Thread contactsHandler = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					for (int i = 0; i < contactCursor.getCount(); i++) {
-						Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
-						contact.refresh(getContentResolver());
-						
-						for (String aon : contact.getNumerosOrAddresses()) {
-							if (LinphoneUtils.isSipAddress(aon)) {
-								if (!isContactPresenceDisabled) {
-									searchFriendAndAddToContact(contact);
-								}
-								if (!sipContactList.contains(contact)) {
-									sipContactList.add(contact);
-								}
-							}
-						}
-						contactList.add(contact);
+		
+		Thread sipContactsHandler = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < sipContactCursor.getCount(); i++) {
+					Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
+					contact.refresh(getContentResolver());
+					if (getResources().getBoolean(R.bool.enable_linphone_friends)) {
+						searchFriendAndAddToContact(contact);
 					}
+					sipContactList.add(contact);
 				}
-			});
-			contactsHandler.start();
-		}
+			}
+		});
+		sipContactsHandler.start();
+			
+		contactList = new ArrayList<Contact>();
+		sipContactList = new ArrayList<Contact>();
+		
+		Thread contactsHandler = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < contactCursor.getCount(); i++) {
+					Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
+//						contact.refresh(getContentResolver());
+//						
+//						for (String aon : contact.getNumerosOrAddresses()) {
+//							if (LinphoneUtils.isSipAddress(aon)) {
+//								if (!isContactPresenceDisabled) {
+//									searchFriendAndAddToContact(contact);
+//								}
+//								if (!sipContactList.contains(contact)) {
+//									sipContactList.add(contact);
+//								}
+//							}
+//						}
+					contactList.add(contact);
+				}
+			}
+		});
+		contactsHandler.start();
 	}
 	
 	private void initInCallMenuLayout(boolean callTransfer) {
