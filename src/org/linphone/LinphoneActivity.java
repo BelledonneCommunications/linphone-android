@@ -1065,10 +1065,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				}
 				for (int i = 0; i < contactCursor.getCount(); i++) {
 					Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
-					Log.e("Contact ID = " + contact.getID());
 					for (Contact c : sipContactList) {
 						if (c.getID().equals(contact.getID())) {
-							Log.e("Match found : Temp ID = " + c.getID());
 							contact = c;
 							break;
 						}
