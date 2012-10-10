@@ -302,17 +302,23 @@ public class ApiFivePlus {
 		Contact contact = getContact(cr, cursor, 0);
 		if (contact != null && contact.getNumerosOrAddresses().contains(sipUri)) {
 			address.setDisplayName(contact.getName());
+			cursor.close();
 			return contact.getPhotoUri();
 		}
-		
+
+		cursor.close();
 		return null;
 	}
 
 	public static String refreshContactName(ContentResolver cr, String id) {
-		Cursor c = getGeneralContactCursor(cr, Data.CONTACT_ID + " = '" + id + "'", false);
-		if (c != null && c.moveToFirst()) {
-			return getContactDisplayName(c);
+		Cursor cursor = getGeneralContactCursor(cr, Data.CONTACT_ID + " = '" + id + "'", false);
+		if (cursor != null && cursor.moveToFirst()) {
+			String contactDisplayName = getContactDisplayName(cursor);
+			cursor.close();
+			return contactDisplayName;
 		}
+		
+		cursor.close();
 		return null;
 	}
 	

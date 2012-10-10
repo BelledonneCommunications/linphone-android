@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.linphone.core.LinphoneAddress;
@@ -69,12 +70,14 @@ public final class LinphoneUtils {
 
 	public static boolean isSipAddress(String numberOrAddress) {
 		Pattern p = Pattern.compile(sipAddressRegExp);
-		return p.matcher(numberOrAddress).matches();
+		Matcher m = p.matcher(numberOrAddress);
+		return m != null && m.matches();
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
 		Pattern p = Pattern.compile(strictSipAddressRegExp);
-		return p.matcher(numberOrAddress).matches();
+		Matcher m = p.matcher(numberOrAddress);
+		return m != null && m.matches();
 	}
 	
 	public static String getUsernameFromAddress(String address) {
