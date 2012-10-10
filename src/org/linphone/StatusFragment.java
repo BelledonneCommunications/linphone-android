@@ -492,14 +492,16 @@ public class StatusFragment extends Fragment {
 							final LinphoneCallParams params = call.getCurrentParamsCopy();
 							if (params.getVideoEnabled()) {
 								final LinphoneCallStats videoStats = call.getVideoStats();
-								if (videoStats != null) {
+								final LinphoneCallStats audioStats = call.getAudioStats();
+								if (videoStats != null && audioStats != null) {
 									title.setText("Video");
-									PayloadType payload = params.getUsedVideoCodec();
-									if (payload != null) {
-										codec.setText(payload.getMime());
+									PayloadType payloadAudio = params.getUsedAudioCodec();
+									PayloadType payloadVideo = params.getUsedVideoCodec();
+									if (payloadVideo != null && payloadAudio != null) {
+										codec.setText(payloadVideo.getMime() + " / " + payloadAudio.getMime());
 									}
-									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " kbits/s");
-									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) + " kbits/s");
+									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " / " + (int) audioStats.getDownloadBandwidth() + " kbits/s");
+									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) +  " / " + (int) audioStats.getUploadBandwidth() + " kbits/s");
 									ice.setText(videoStats.getIceState().toString());
 								}
 							} else {
