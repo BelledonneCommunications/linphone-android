@@ -1058,7 +1058,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				for (int i = 0; i < sipContactCursor.getCount(); i++) {
 					Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
 					contact.refresh(getContentResolver());
-					if (getResources().getBoolean(R.bool.enable_linphone_friends)) {
+					if (!isContactPresenceDisabled) {
 						searchFriendAndAddToContact(contact);
 					}
 					sipContactList.add(contact);
@@ -1254,10 +1254,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-				if (call.getCurrentParamsCopy().getVideoEnabled()) {
-					startVideoActivity(call);
-				} else {
-					startIncallActivity(call);
+				if (call != null && call.getState() != LinphoneCall.State.IncomingReceived) {
+					if (call.getCurrentParamsCopy().getVideoEnabled()) {
+						startVideoActivity(call);
+					} else {
+						startIncallActivity(call);
+					}
 				}
 			}
 		}
