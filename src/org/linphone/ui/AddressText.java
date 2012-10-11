@@ -81,7 +81,7 @@ public class AddressText extends EditText implements AddressType {
 		if (resizedText.equals("") && getHint() != null) {
 			resizedText = getHint().toString();
 		}
-		refitText(resizedText, getWidth());
+		refitText(resizedText, getWidth(), getHeight());
 		
 		if (dialer != null) {
 			dialer.enableDisableAddContact();
@@ -97,16 +97,17 @@ public class AddressText extends EditText implements AddressType {
 			if (resizedText.equals("") && getHint() != null) {
 				resizedText = getHint().toString();
 			}
-			refitText(resizedText, getWidth());
+			refitText(resizedText, getWidth(), getHeight());
 		}
 	}
 
-	private void refitText(String text, int textWidth) {
+	private void refitText(String text, int textWidth, int textHeight) {
 		if (textWidth <= 0) {
 			return;
 		}
 		
 		int targetWidth = textWidth - getPaddingLeft() - getPaddingRight();
+		int targetHeight = textHeight - getPaddingTop() - getPaddingBottom();
 		float hi = 90;
 		float lo = 2;
 		final float threshold = 0.5f;
@@ -116,7 +117,7 @@ public class AddressText extends EditText implements AddressType {
 		while ((hi - lo) > threshold) {
 			float size = (hi + lo) / 2;
 			mTestPaint.setTextSize(size);
-			if (mTestPaint.measureText(text) >= targetWidth) {
+			if (mTestPaint.measureText(text) >= targetWidth || size >= targetHeight) {
 				hi = size;
 			}
 			else {
@@ -136,7 +137,7 @@ public class AddressText extends EditText implements AddressType {
 		if (resizedText.equals("") && getHint() != null) {
 			resizedText = getHint().toString();
 		}
-		refitText(resizedText, parentWidth);
+		refitText(resizedText, parentWidth, height);
 		setMeasuredDimension(parentWidth, height);
 	}
 
