@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:linphone="http://schemas.android.com/apk/res-auto" 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+		    
+    <org.linphone.ui.SlidingDrawer
+		android:id="@+id/statusBar"
+		linphone:direction="topToBottom"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		linphone:handle="@+id/handle"
+		linphone:content="@+id/content">
+	
+        <RelativeLayout
+			android:id="@id/content"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+            
+	            <TableLayout
+				    android:id="@+id/callStats"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+			    	android:layout_gravity="center"
+				    android:paddingBottom="10dp"
+				    android:paddingLeft="5dp"
+				    android:paddingRight="5dp"
+				    android:background="@android:color/black">
+			    
+				    <TableRow
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content">
+				        
+				        <TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+					    	android:gravity="left|center_vertical"
+					    	android:id="@+id/call_stats_title"
+					        android:textStyle="bold"
+					        android:textColor="@color/text_default"
+					        android:textSize="18dp"/>
+				        
+				    </TableRow>
+			    
+				    <TableRow
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content">
+				        
+				        <TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+					    	android:gravity="left|center_vertical"
+					    	android:text="@string/call_stats_codec"
+					        android:textStyle="bold"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				        <TextView 
+				            android:id="@+id/codec"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="5dp"
+					    	android:gravity="right|center_vertical"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				    </TableRow>
+				    
+				    <TableRow
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content">
+				        
+				        <TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+					    	android:gravity="left|center_vertical"
+					    	android:text="@string/call_stats_upload"
+					        android:textStyle="bold"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				        <TextView 
+				            android:id="@+id/uploadBandwith"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="5dp"
+					    	android:gravity="right|center_vertical"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				    </TableRow>
+				    
+				    <TableRow
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content">
+				        
+				        <TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+					    	android:gravity="left|center_vertical"
+					    	android:text="@string/call_stats_download"
+					        android:textColor="@android:color/white"
+					        android:textStyle="bold"
+					        android:textSize="12dp"/>
+				        
+				        <TextView 
+				            android:id="@+id/downloadBandwith"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="5dp"
+					    	android:gravity="right|center_vertical"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				    </TableRow>
+				    
+				    <TableRow
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content">
+				        
+				        <TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+					    	android:gravity="left|center_vertical"
+					    	android:text="@string/call_stats_ice"
+					        android:textStyle="bold"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				        <TextView 
+				            android:id="@+id/ice"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="5dp"
+					    	android:gravity="right|center_vertical"
+					        android:textColor="@android:color/white"
+					        android:textSize="12dp"/>
+				        
+				    </TableRow>
+			    
+			</TableLayout>
+			
+	        <ListView
+				android:id="@+id/accounts"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:stackFromBottom="true"
+			    android:paddingBottom="10dp"
+			    android:background="@android:color/black"/>
+		
+        </RelativeLayout>
+        
+		<RelativeLayout
+			android:id="@id/handle"
+		    android:layout_width="match_parent"
+		    android:layout_height="20dp"
+		    android:layout_marginBottom="10dp">
+    
+		    <ImageView 
+		        android:id="@+id/background"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:scaleType="fitXY"
+		        android:src="@drawable/statebar_background"/>
+		    
+		    <ImageView 
+		        android:contentDescription="@string/content_description_led"
+		        android:id="@+id/statusLed"
+		        android:paddingLeft="5dp"
+		        android:src="@drawable/led_error"
+		        android:adjustViewBounds="true"
+            	android:layout_centerVertical="true"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent" />
+		    
+		    <TextView 
+		        android:id="@+id/statusText" 
+		        android:text="@string/status_not_connected"
+		        android:textColor="@android:color/white"
+		        android:textSize="14dp"
+		        android:paddingLeft="5dp"
+            	android:layout_centerVertical="true"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="center_vertical"
+		        android:layout_toRightOf="@id/statusLed" />
+		    
+		    <LinearLayout 
+		        android:id="@+id/moreStatusLed"
+		        android:layout_width="wrap_content"
+		        android:layout_height="10dp"
+		        android:orientation="horizontal"
+		        android:layout_toRightOf="@id/statusLed"/>
+		    
+		    <ImageView
+		        android:contentDescription="@string/content_description_call_quality"
+		        android:id="@+id/callQuality"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_centerVertical="true"
+		        android:src="@drawable/call_quality_indicator_0" 
+		        android:adjustViewBounds="true"
+		        android:layout_centerHorizontal="true"
+		        android:visibility="gone" />
+		    
+		    <ImageView
+		        android:contentDescription="@string/content_description_encryption"
+		        android:id="@+id/encryption"
+		        android:paddingRight="5dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_centerVertical="true"
+		        android:src="@drawable/security_pending" 
+		        android:adjustViewBounds="true"
+		        android:visibility="gone"
+		        android:layout_alignParentRight="true" />
+		    
+		    <TextView 
+		        android:id="@+id/exit" 
+		        android:text="@string/menu_exit"
+		        android:textColor="@android:color/white"
+		        android:textSize="14dp"
+		        android:layout_centerVertical="true"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="center_vertical"
+		        android:layout_alignParentRight="true"
+		        android:paddingRight="10dp" />
+		
+		</RelativeLayout>
+		
+	</org.linphone.ui.SlidingDrawer>
+	
+</RelativeLayout>
