@@ -4,7 +4,7 @@
 	<string name="messages_date_format">HH:mm d MMM</string>
 	<string name="today_date_format">HH:mm</string>
     
-	<string name="app_name">Linphone 2</string>
+	<string name="app_name">Linphone</string>
 	<string name="notification_title">Linphone</string>
 	<string name="wait_dialog_text">Démarrage</string>
 	<string name="notification_registered">Enregistré comme %s </string> 
