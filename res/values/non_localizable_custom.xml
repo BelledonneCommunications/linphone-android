@@ -40,6 +40,7 @@
 	<bool name="allow_transfers">true</bool>
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
+	<bool name="disable_chat">false</bool>
 	
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>

@@ -252,6 +252,7 @@
 	
 	<string name="addressHint">Number or address</string>
 	<string name="conference">Conference</string>
+	<string name="incoming">Incoming call</string>
 	<string name="draft">Draft</string>
 	<string name="new_fast_chat">Enter a SIP address to chat with&#8230;</string>
 	<string name="no_call_history">No call in your history.</string>

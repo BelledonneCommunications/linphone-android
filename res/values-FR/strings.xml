@@ -202,6 +202,7 @@
 	
 	<string name="addressHint">Numéro ou adresse</string>
 	<string name="conference">Conférence</string>
+	<string name="incoming">Appel entrant</string>
 	<string name="draft">Brouillon</string>
 	<string name="new_fast_chat">Entrez une adresse SIP&#8230;</string>
 	<string name="no_call_history">Aucun appel dans votre historique.</string>

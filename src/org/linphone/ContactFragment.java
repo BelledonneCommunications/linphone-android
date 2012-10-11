@@ -156,6 +156,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				}
 			}
 			
+			if (getResources().getBoolean(R.bool.disable_chat)) {
+				v.findViewById(R.id.chat).setVisibility(View.GONE);
+			}
+			
 			controls.addView(v);
 		}
 	}

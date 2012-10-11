@@ -476,6 +476,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	public void displayChat(String sipUri) {
+		if (getResources().getBoolean(R.bool.disable_chat)) {
+			return;
+		}
+		
 		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
 		String displayName = lAddress.getDisplayName();
@@ -684,6 +688,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	public void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message) {
+		if (getResources().getBoolean(R.bool.disable_chat)) {
+			return;
+		}
+		
 		String textMessage = message.getMessage();
 		String url = message.getExternalBodyUrl();
 		String notificationText = null;
