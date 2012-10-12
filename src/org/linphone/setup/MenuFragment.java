@@ -41,10 +41,18 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		createAccount.setOnClickListener(this);
 		
 		logLinphoneAccount = (ImageView) view.findViewById(R.id.setup_login_linphone);
-		logLinphoneAccount.setOnClickListener(this);
+		if (getResources().getBoolean(R.bool.hide_linphone_accounts_wizard)) {
+			view.findViewById(R.id.setup_login_linphone_layout).setVisibility(View.GONE);
+		} else {
+			logLinphoneAccount.setOnClickListener(this);
+		}
 		
 		logGenericAccount = (ImageView) view.findViewById(R.id.setup_login_generic);
-		logGenericAccount.setOnClickListener(this);
+		if (getResources().getBoolean(R.bool.hide_generic_accounts_wizard)) {
+			view.findViewById(R.id.setup_login_generic_layout).setVisibility(View.GONE);
+		} else {
+			logGenericAccount.setOnClickListener(this);
+		}
 		
 		return view;
 	}
