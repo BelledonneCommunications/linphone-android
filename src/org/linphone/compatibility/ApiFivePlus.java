@@ -184,7 +184,7 @@ public class ApiFivePlus {
 					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL)";
         } else {
         	req += " OR (" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                    + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
+                    + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
         }
 		
 		return getGeneralContactCursor(cr, req, true);
@@ -197,7 +197,7 @@ public class ApiFivePlus {
 					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL";
         } else {
         	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                    + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
+                    + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
         }
 		
 		return getGeneralContactCursor(cr, req, true);
