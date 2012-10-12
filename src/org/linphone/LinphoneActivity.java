@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
@@ -38,6 +39,7 @@ import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -87,7 +89,8 @@ import android.widget.Toast;
 public class LinphoneActivity extends FragmentActivity implements OnClickListener, ContactPicked, 
 										LinphoneOnCallStateChangedListener, 
 										LinphoneOnMessageReceivedListener,
-										LinphoneOnRegistrationStateChangedListener {
+										LinphoneOnRegistrationStateChangedListener,
+										EcCalibrationListener {
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
     private static final int FIRST_LOGIN_ACTIVITY = 101;
@@ -1132,10 +1135,31 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 	}
-	
+
+	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = prefs.edit();
+		if (status == EcCalibratorStatus.DoneNoEcho) {
+			editor.putBoolean(getString(R.string.pref_echo_limiter_key), false);
+			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), false);
+		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
+			editor.putBoolean(getString(R.string.pref_echo_limiter_key), false);
+			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), true);
+		}
+		editor.commit();
+	}
+
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {	
-		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if ((requestCode == FIRST_LOGIN_ACTIVITY) && (resultCode == RESULT_OK)) {
+			Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
+			try {
+				LinphoneManager.getInstance().startEcCalibration(this);
+			} catch (LinphoneCoreException e) {
+				Log.e(e, "Unable to calibrate EC");
+			}
+		}
+		else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				exit();
 			} else {

@@ -130,7 +130,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
-		findPreference(pref_echo_limiter_key).setEnabled(true);
 
 		initializeMediaEncryptionPreferences();
 	
@@ -213,7 +212,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	private void doOnFirstLaunch() {
-		manageCheckbox(R.string.pref_echo_limiter_key, !Hacks.hasBuiltInEchoCanceller(), true, false);
 		prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 	}
 
@@ -306,12 +304,17 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
 		mHandler.post(new Runnable() {
 			public void run() {
-				if (status == EcCalibratorStatus.Done) {
+				if (status == EcCalibratorStatus.DoneNoEcho) {
+					elPref.setChecked(false);
+					ecPref.setChecked(false);
+				} else if (status == EcCalibratorStatus.Done) {
 					ecCalibratePref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+					elPref.setChecked(false);
+					ecPref.setChecked(true);
 				} else if (status == EcCalibratorStatus.Failed) {
 					ecCalibratePref.setSummary(R.string.failed);
-					elPref.setChecked(true);
-					ecPref.setChecked(false);
+					elPref.setChecked(false);
+					ecPref.setChecked(true);
 				}
 			}
 		});
