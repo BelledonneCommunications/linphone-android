@@ -64,7 +64,7 @@ import android.preference.PreferenceScreen;
 public class PreferencesFragment extends PreferencesListFragment implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
 	private Context mContext;
-	private CheckBoxPreference ecCalibratePref;
+	private Preference ecCalibratePref;
 	private CheckBoxPreference elPref;
 	private CheckBoxPreference ecPref;
 	private ListPreference mencPref;
@@ -113,7 +113,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		
 		addTransportChecboxesListener();
 		
-		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
+		ecCalibratePref = findPreference(pref_echo_canceller_calibration_key);
 		ecCalibratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				startEcCalibration();
@@ -304,16 +304,12 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
-
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (status == EcCalibratorStatus.Done) {
 					ecCalibratePref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
-					ecCalibratePref.setChecked(true);
-
 				} else if (status == EcCalibratorStatus.Failed) {
 					ecCalibratePref.setSummary(R.string.failed);
-					ecCalibratePref.setChecked(false);
 					elPref.setChecked(true);
 					ecPref.setChecked(false);
 				}
