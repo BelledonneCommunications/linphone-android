@@ -79,6 +79,12 @@
 		<CheckBoxPreference 
 		    android:key="@string/pref_echo_canceller_calibration_key"
 			android:title="@string/pref_echo_canceller_calibration" />
+		
+		<EditTextPreference 
+		    android:key="@string/pref_audio_port_key"
+		    android:title="@string/pref_audio_port_title"
+		    android:defaultValue="7078"
+			android:layout="@layout/hidden"/>
 
 		<PreferenceScreen 
 			android:title="@string/pref_codecs" 
@@ -177,6 +183,12 @@
 			android:defaultValue="true" 
 			android:summary="@string/pref_video_automatically_share_my_video"
 			android:dependency="@string/pref_video_enable_key"
+			android:layout="@layout/hidden"/>
+		
+		<EditTextPreference 
+		    android:key="@string/pref_video_port_key"
+		    android:title="@string/pref_video_port_title"
+		    android:defaultValue="9078"
 			android:layout="@layout/hidden"/>
 		
 	    <CheckBoxPreference

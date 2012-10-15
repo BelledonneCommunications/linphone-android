@@ -157,6 +157,10 @@
     <string name="pref_codec_silk24">silk 24 Khz</string>
     <string name="pref_codec_g729">g729</string>
     <string name="pref_codecs">Codecs</string>
+    <string name="pref_communication_expire_title">Communication timeout</string>
+    <string name="pref_incoming_expire_title">Incoming call timeout</string>
+    <string name="pref_video_port_title">Video port</string>
+    <string name="pref_audio_port_title">Audio port</string>
     <string name="place_call_chooser">Place a call</string>
     
 	<string name="pref_debug">Debug</string>
