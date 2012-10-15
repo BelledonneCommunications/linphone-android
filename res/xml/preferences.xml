@@ -186,19 +186,19 @@
 			android:dependency="@string/pref_video_enable_key"
 			android:layout="@layout/hidden"/>
 		
-		<EditTextPreference 
-		    android:key="@string/pref_video_port_key"
-		    android:title="@string/pref_video_port_title"
-		    android:defaultValue="9078"
-		    android:summary="@string/pref_video_port_description"
-			android:layout="@layout/hidden"/>
-		
 	    <CheckBoxPreference
 			android:key="@string/pref_video_automatically_accept_video_key"
 			android:title="@string/pref_video_automatically_accept_video_title"
 			android:defaultValue="true" 
 			android:summary="@string/pref_video_automatically_accept_video"
 			android:dependency="@string/pref_video_enable_key"/>
+		
+		<EditTextPreference 
+		    android:key="@string/pref_video_port_key"
+		    android:title="@string/pref_video_port_title"
+		    android:defaultValue="9078"
+		    android:summary="@string/pref_video_port_description"
+			android:layout="@layout/hidden"/>
 	
 			<PreferenceScreen 
 			    android:dependency="@string/pref_video_enable_key"
