@@ -17,6 +17,7 @@
             android:background="@drawable/history_delete"
             android:text="@string/button_delete_all"
             android:gravity="center"
+            android:textSize="13dp"
             android:paddingTop="20dp"
             android:textColor="@color/text_button"
 		    android:layout_width="match_parent"

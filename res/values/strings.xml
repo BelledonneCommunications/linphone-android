@@ -352,7 +352,7 @@
 	<string name="button_add_contact">New contact</string>
 	<string name="button_all_call">All</string>
 	<string name="button_missed_call">Missed</string>
-	<string name="button_delete_all">Delete All</string>
+	<string name="button_delete_all">Delete</string>
 	
 	<string name="button_transfer">Transfer</string>
 	<string name="button_add_call">Add call</string>
