@@ -646,6 +646,43 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
+	private void readAndSetAudioAndVideoPorts() throws NumberFormatException {
+		int aPortStart, aPortEnd, vPortStart, vPortEnd;
+		aPortStart = aPortEnd = 7078;
+		vPortStart = vPortEnd = 9078;
+
+		String audioPort = getPrefString(R.string.pref_audio_port_key, String.valueOf(aPortStart));
+		String videoPort = getPrefString(R.string.pref_video_port_key, String.valueOf(vPortStart));
+
+		if (audioPort.contains("-")) {
+			// Port range
+			aPortStart = Integer.parseInt(audioPort.split("-")[0]);
+			aPortEnd = Integer.parseInt(audioPort.split("-")[1]);
+		} else {
+			aPortStart = aPortEnd = Integer.parseInt(audioPort);
+		}
+		
+		if (videoPort.contains("-")) {
+			// Port range
+			vPortStart = Integer.parseInt(videoPort.split("-")[0]);
+			vPortEnd = Integer.parseInt(videoPort.split("-")[1]);
+		} else {
+			vPortStart = vPortEnd = Integer.parseInt(audioPort);
+		}
+		
+		if (aPortStart >= aPortEnd) {
+			mLc.setAudioPort(aPortStart);
+		} else {
+			mLc.setAudioPortRange(aPortStart, aPortEnd);
+		}
+	
+		if (vPortStart >= vPortEnd) {
+			mLc.setVideoPort(vPortStart);
+		} else {
+			mLc.setVideoPortRange(vPortStart, vPortEnd);
+		}
+	}
+
 	public void initFromConf() throws LinphoneConfigException {
 
 		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false));
@@ -658,6 +695,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		initMediaEncryption();
 
 		mLc.setVideoPolicy(isAutoInitiateVideoCalls(), isAutoAcceptCamera());
+		
+		readAndSetAudioAndVideoPorts();
 		
 		try {
 			// Configure audio codecs

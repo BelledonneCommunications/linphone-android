@@ -90,4 +90,9 @@
 	<string name="pref_push_notification_key">pref_push_notification_key</string>
 	
 	<string name="pref_auto_accept_friends_key">pref_auto_accept_friends_key</string>
+	
+    <string name="pref_video_port_key">pref_video_port_key</string>
+    <string name="pref_audio_port_key">pref_audio_port_key</string>
+    <string name="pref_incoming_expire_key">pref_incoming_expire_key</string>
+    <string name="pref_communication_expire_key">pref_communication_expire_key</string>
 </resources>
