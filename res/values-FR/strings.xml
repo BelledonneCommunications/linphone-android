@@ -301,7 +301,7 @@
 	<string name="button_add_contact">+ Contact</string>
 	<string name="button_all_call">Tous</string>
 	<string name="button_missed_call">Manqués</string>
-	<string name="button_delete_all">Tout supprimer</string>
+	<string name="button_delete_all">Supprimer</string>
 	
 	<string name="button_transfer">Transfert</string>
 	<string name="button_add_call">+ Appel</string>
