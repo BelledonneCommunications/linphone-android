@@ -720,7 +720,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			enableDisableAudioCodec("SILK", 12000, 1, R.string.pref_codec_silk12_key);
 			enableDisableAudioCodec("SILK", 8000, 1, R.string.pref_codec_silk8_key);
 
-
 			// Configure video codecs
 			for (PayloadType videoCodec : mLc.getVideoCodecs()) {
 				enableDisableVideoCodecs(videoCodec);
