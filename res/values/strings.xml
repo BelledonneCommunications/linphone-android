@@ -163,6 +163,7 @@
     <string name="pref_audio_port_title">Audio port or port range</string>
     <string name="pref_video_port_description">Video port or port range (minport-maxport)</string>
     <string name="pref_audio_port_description">Audio port or port range (minport-maxport)</string>
+    <string name="pref_incoming_call_timeout_title">Incoming call timeout (in seconds)</string>
     <string name="place_call_chooser">Place a call</string>
     
 	<string name="pref_debug">Debug</string>

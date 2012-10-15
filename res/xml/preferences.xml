@@ -252,6 +252,12 @@
 		<CheckBoxPreference 
 		    android:key="@string/pref_escape_plus_key"
 			android:title="@string/pref_escape_plus"/>
+		
+		<EditTextPreference 
+		    android:key="@string/pref_incoming_call_timeout_key"
+		    android:title="@string/pref_incoming_call_timeout_title"
+		    android:defaultValue="30"
+		    android:layout="@layout/hidden"/>
 
 		<CheckBoxPreference 
 		    android:key="@string/pref_debug_key"
