@@ -698,6 +698,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		readAndSetAudioAndVideoPorts();
 		
+		int incomingCallTimeout = Integer.parseInt(getPrefString(R.string.pref_incoming_call_timeout_key, "30"));
+		mLc.setIncomingTimeout(incomingCallTimeout);
+		
 		try {
 			// Configure audio codecs
 //			enableDisableAudioCodec("speex", 32000, 1, R.string.pref_codec_speex32_key);

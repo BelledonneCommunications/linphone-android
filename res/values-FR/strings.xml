@@ -117,6 +117,7 @@
     <string name="pref_audio_port_title">Port ou plage de port audio</string>
     <string name="pref_video_port_description">Port ou plage (min-max) pour l\'audio</string>
     <string name="pref_audio_port_description">Port ou plage (min-max) pour la video</string>
+    <string name="pref_incoming_call_timeout_title">Timeout (en secondes) pour les appels entrants</string>
     
 	<string name="pref_debug">Activer les traces de débogage</string>
 	<string name="about_report_issue">Reporter un problème</string>
