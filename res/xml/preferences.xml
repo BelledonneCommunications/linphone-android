@@ -76,7 +76,7 @@
 			android:title="@string/pref_echo_cancellation" 
 			android:summary="@string/pref_echo_cancellation_summary"/>
 
-		<CheckBoxPreference 
+		<Preference 
 		    android:key="@string/pref_echo_canceller_calibration_key"
 			android:title="@string/pref_echo_canceller_calibration" />
 		
