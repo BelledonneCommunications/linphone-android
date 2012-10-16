@@ -152,7 +152,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		}
 		if (Hacks.hasBuiltInEchoCanceller()) {
 			uncheckDisableAndHideCheckbox(R.string.pref_echo_cancellation_key);
-			uncheckDisableAndHideCheckbox(R.string.pref_echo_canceller_calibration_key);
+			findPreference(R.string.pref_echo_canceller_calibration_key).setLayoutResource(R.layout.hidden);
 		}
 
 
