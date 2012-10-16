@@ -164,8 +164,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			findPreference(R.string.pref_video_codec_h264_key).setDefaultValue(false);
 		}
 		
-		addEchoPrefsListener();
-		
 		if (Hacks.needSoftvolume()) {
 			Log.w("Using Audio Hack");
 			checkAndDisableCheckbox(R.string.pref_audio_hacks_use_galaxys_hack_key);
@@ -209,16 +207,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 
 	private void doOnFirstLaunch() {
 		prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
-	}
-
-	private void addEchoPrefsListener(){
-		OnPreferenceChangeListener ec_listener=new OnPreferenceChangeListener(){
-			public boolean onPreferenceChange(Preference arg0, Object newValue) {
-				Boolean val=(Boolean)newValue;
-				return true;
-			}
-		};
-		ecPref.setOnPreferenceChangeListener(ec_listener);
 	}
 
 	private void addTransportChecboxesListener() {
