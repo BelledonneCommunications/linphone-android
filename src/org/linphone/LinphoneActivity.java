@@ -47,6 +47,7 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
 import org.linphone.mediastream.Version;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
 
@@ -1150,11 +1151,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if ((requestCode == FIRST_LOGIN_ACTIVITY) && (resultCode == RESULT_OK)) {
-			Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
-			try {
-				LinphoneManager.getInstance().startEcCalibration(this);
-			} catch (LinphoneCoreException e) {
-				Log.e(e, "Unable to calibrate EC");
+			if (!Hacks.hasBuiltInEchoCanceller()) {
+				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
+				try {
+					LinphoneManager.getInstance().startEcCalibration(this);
+				} catch (LinphoneCoreException e) {
+					Log.e(e, "Unable to calibrate EC");
+				}
 			}
 		}
 		else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
