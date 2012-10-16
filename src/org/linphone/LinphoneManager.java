@@ -726,9 +726,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 
 			boolean useEC = getPrefBoolean(R.string.pref_echo_cancellation_key, false);
-			boolean useEL = getPrefBoolean(R.string.pref_echo_limiter_key, false);
 			mLc.enableEchoCancellation(useEC);
-			mLc.enableEchoLimiter(useEL);
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}

@@ -90,7 +90,6 @@
     <string name="pref_delete_account">Supprimer ce compte</string>
     <string name="pref_default_account">Utiliser par défaut</string>
     <string name="pref_echo_canceller_calibration">Calibration de l\'annulateur d\'écho</string>
-    <string name="pref_echo_limiter">Limiteur d\'écho</string>
     <string name="pref_video_use_front_camera_title">Utiliser la caméra en façade</string>
 	<string name="pref_video">Vidéo</string>
 	<string name="pref_preferences">Préférences</string>
@@ -162,8 +161,7 @@
 	<string name="error_cannot_invite_address">Impossible d\'inviter l\'adresse [%s]</string>
 	
 	<string name="notification_started">démarré</string>
-	<string name="pref_echo_cancellation_summary">Supprime l\'écho entendu de l\'autre côté (non recommandé)</string>
-	<string name="pref_echo_limiter_summary">Supprime l\'écho entendu de l\'autre côté (méthode force brute)</string>
+	<string name="pref_echo_cancellation_summary">Supprime l\'écho entendu de l\'autre côté</string>
 	<string name="pref_stun_server">Serveur Stun</string>
 	<string name="pref_ice_enable">Activer ICE</string>
 	<string name="pref_ice_enable_summary">Un serveur STUN doit être configuré pour utiliser ICE</string>

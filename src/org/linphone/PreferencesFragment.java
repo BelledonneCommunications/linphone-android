@@ -24,7 +24,6 @@ import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
-import static org.linphone.R.string.pref_echo_limiter_key;
 import static org.linphone.R.string.pref_media_encryption_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
@@ -65,7 +64,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	private Handler mHandler = new Handler();
 	private Context mContext;
 	private Preference ecCalibratePref;
-	private CheckBoxPreference elPref;
 	private CheckBoxPreference ecPref;
 	private ListPreference mencPref;
 	private int nbAccounts = 1;
@@ -121,7 +119,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			}
 		});
 		ecPref = (CheckBoxPreference) findPreference(pref_echo_cancellation_key);
-		elPref = (CheckBoxPreference) findPreference(pref_echo_limiter_key);
 		mencPref = (ListPreference) findPreference(pref_media_encryption_key);
 
 		boolean fastCpu = Version.hasFastCpu();
@@ -154,7 +151,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			doOnFirstLaunch();
 		}
 		if (Hacks.hasBuiltInEchoCanceller()) {
-			uncheckDisableAndHideCheckbox(R.string.pref_echo_limiter_key);
 			uncheckDisableAndHideCheckbox(R.string.pref_echo_cancellation_key);
 			uncheckDisableAndHideCheckbox(R.string.pref_echo_canceller_calibration_key);
 		}
@@ -219,23 +215,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		OnPreferenceChangeListener ec_listener=new OnPreferenceChangeListener(){
 			public boolean onPreferenceChange(Preference arg0, Object newValue) {
 				Boolean val=(Boolean)newValue;
-				if (val){
-					elPref.setChecked(!val);
-				}
-				return true;
-			}
-		};
-		OnPreferenceChangeListener el_listener=new OnPreferenceChangeListener(){
-			public boolean onPreferenceChange(Preference arg0, Object newValue) {
-				Boolean val=(Boolean)newValue;
-				if (val){
-					ecPref.setChecked(!val);
-				}
 				return true;
 			}
 		};
 		ecPref.setOnPreferenceChangeListener(ec_listener);
-		elPref.setOnPreferenceChangeListener(el_listener);
 	}
 
 	private void addTransportChecboxesListener() {
@@ -305,15 +288,12 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (status == EcCalibratorStatus.DoneNoEcho) {
-					elPref.setChecked(false);
 					ecPref.setChecked(false);
 				} else if (status == EcCalibratorStatus.Done) {
 					ecCalibratePref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
-					elPref.setChecked(false);
 					ecPref.setChecked(true);
 				} else if (status == EcCalibratorStatus.Failed) {
 					ecCalibratePref.setSummary(R.string.failed);
-					elPref.setChecked(false);
 					ecPref.setChecked(true);
 				}
 			}
