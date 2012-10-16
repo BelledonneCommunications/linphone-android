@@ -66,6 +66,7 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -926,6 +927,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (textReceivedListener != null)
 			textReceivedListener.onTextReceived(from, message);
 	}
+	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {}
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
 		if (dtmfReceivedListener != null)
 			dtmfReceivedListener.onDTMFReceived(call, dtmf);
