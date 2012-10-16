@@ -167,6 +167,7 @@
 	<string name="pref_ice_enable_summary">Un serveur STUN doit être configuré pour utiliser ICE</string>
 	<string name="ec_calibrating">Calibration&#8230;</string>
 	<string name="ec_calibrated">Calibré [%s ms]</string>
+	<string name="no_echo">Pas d\'écho</string>
 	<string name="failed">échoué</string>
 	<string name="first_login_explanation">Entrez votre nom d\'utilisateur et votre mot de passe pour vous connecter au service.</string>
 	<string name="first_login_username">Nom d\'utilisateur</string>

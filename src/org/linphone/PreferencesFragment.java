@@ -288,6 +288,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (status == EcCalibratorStatus.DoneNoEcho) {
+					ecCalibratePref.setSummary(R.string.no_echo);
 					ecPref.setChecked(false);
 				} else if (status == EcCalibratorStatus.Done) {
 					ecCalibratePref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
