@@ -214,7 +214,7 @@
 	<string name="pref_ice_enable_summary">A STUN server must be configured to use ICE</string>
 	<string name="ec_calibrating">Calibrating&#8230;</string>
 	<string name="ec_calibrated">Calibrated [%s ms]</string>
-	<string name="failed">failed</string>
+	<string name="no_echo">No echo</string><string name="failed">failed</string>
 	<string name="first_login_explanation">Enter your username and password to connect to the service.</string>
 	<string name="first_login_username">Username</string>
 	<string name="first_login_password">Password</string>
@@ -385,5 +385,6 @@
 	<string name="pref_auto_accept_friends_desc">utomatically accept new friend requests</string>
 	<string name="linphone_friend_new_request_title">Friend request</string>
 	<string name="linphone_friend_new_request_desc">wants to share it\'s presence status with you and be aware of yours.</string>
+	
 	
 </resources>
