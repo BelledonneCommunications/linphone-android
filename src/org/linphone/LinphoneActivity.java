@@ -1140,10 +1140,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = prefs.edit();
 		if (status == EcCalibratorStatus.DoneNoEcho) {
-			editor.putBoolean(getString(R.string.pref_echo_limiter_key), false);
 			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), false);
 		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
-			editor.putBoolean(getString(R.string.pref_echo_limiter_key), false);
 			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), true);
 		}
 		editor.commit();

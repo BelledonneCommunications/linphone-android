@@ -66,11 +66,6 @@
 	    android:title="@string/pref_audio">
 		
 		<CheckBoxPreference 
-		    android:key="@string/pref_echo_limiter_key"
-			android:title="@string/pref_echo_limiter"
-			android:summary="@string/pref_echo_limiter_summary"/>
-
-		<CheckBoxPreference 
 		    android:key="@string/pref_echo_cancellation_key" 
 		    android:defaultValue="false"
 			android:title="@string/pref_echo_cancellation" 
