@@ -151,8 +151,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 				changeFragment(fragment);
 				currentFragment = SetupFragments.ECHO_CANCELLER_CALIBRATION;
-				back.setVisibility(View.GONE);
-				next.setVisibility(View.VISIBLE);
+				back.setVisibility(View.VISIBLE);
+				next.setVisibility(View.GONE);
 				next.setEnabled(false);
 				cancel.setEnabled(false);
 			} else {

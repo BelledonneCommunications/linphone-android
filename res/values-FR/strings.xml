@@ -336,4 +336,6 @@
 	<string name="linphone_friend_new_request_title">Requête d\'ami</string>
 	<string name="linphone_friend_new_request_desc">voudrait être partager son status avec vous et voir le votre.</string>
 	
+	<string name="setup_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
+	
 </resources>
