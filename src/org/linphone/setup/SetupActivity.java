@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Log;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
 import android.content.Context;
@@ -141,14 +142,32 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			Log.e(e, "Error while initializing from config in first login activity");
 			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
 		}
-		
+	}
+
+	public void linphoneLogIn(String username, String password) {
+		logIn(username, password, getString(R.string.default_domain));
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			writePreference(R.string.first_launch_suceeded_once_key, true);
-			setResult(Activity.RESULT_OK);
-			finish();
+			if (!Hacks.hasBuiltInEchoCanceller()) {
+				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
+				changeFragment(fragment);
+				currentFragment = SetupFragments.ECHO_CANCELLER_CALIBRATION;
+				back.setVisibility(View.GONE);
+				next.setVisibility(View.VISIBLE);
+				next.setEnabled(false);
+				cancel.setEnabled(false);
+			} else {
+				success();
+			}
 		}
 	}
-	
+
+	public void genericLogIn(String username, String password, String domain) {
+		logIn(username, password, domain);
+		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+			success();
+		}
+	}
+
 	private void writePreference(int key, String value) {
 		mPref.edit().putString(getString(key), value).commit();
 	}
@@ -237,9 +256,12 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			Log.e(e, "Error while initializing from config in first login activity");
 			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
 		}
-		
-		writePreference(R.string.first_launch_suceeded_once_key, true);
-		finish();
+
+		success();
+	}
+
+	public void isEchoCalibrationFinished() {
+		success();
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -248,5 +270,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public void success() {
+		writePreference(R.string.first_launch_suceeded_once_key, true);
+		setResult(Activity.RESULT_OK);
+		finish();
 	}
 }
