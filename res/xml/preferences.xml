@@ -56,13 +56,10 @@
 
 
 	<PreferenceCategory android:title="@string/pref_audio">
-		<CheckBoxPreference android:key="@string/pref_echo_limiter_key"
-		 android:title="@string/pref_echo_limiter" android:summary="@string/pref_echo_limiter_summary"/>
-
 		<CheckBoxPreference android:key="@string/pref_echo_cancellation_key" android:defaultValue="false"
 			android:title="@string/pref_echo_cancellation" android:summary="@string/pref_echo_cancellation_summary"></CheckBoxPreference>
 
-		<CheckBoxPreference android:key="@string/pref_echo_canceller_calibration_key"
+		<Preference android:key="@string/pref_echo_canceller_calibration_key"
 		 android:title="@string/pref_echo_canceller_calibration" />
 
 		 <PreferenceScreen android:title="@string/pref_codecs" android:key="@string/pref_codecs_key">

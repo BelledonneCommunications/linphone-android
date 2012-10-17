@@ -120,7 +120,6 @@
     <string name="pref_delete_account">Delete this account</string>
     <string name="pref_default_account_title">Use as default</string>
     <string name="pref_echo_canceller_calibration">Echo canceller calibration</string>
-    <string name="pref_echo_limiter">Echo limiter</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>
 	<string name="pref_video">Video</string>
 	<string name="pref_preferences">Preferences</string>
@@ -211,11 +210,11 @@
 <string name="error_cannot_invite_address">Cannot invite destination address [%s]</string>
 
 <string name="notification_started">started</string>
-<string name="pref_echo_cancellation_summary">Removes the echo heard by other end (not recommended)</string>
-<string name="pref_echo_limiter_summary">Removes the echo heard by other end (brute force method)</string>
+<string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 <string name="pref_stun_server">Stun server</string>
 <string name="ec_calibrating">Calibrating...</string>
 <string name="ec_calibrated">Calibrated [%s ms]</string>
+<string name="no_echo">No echo</string>
 <string name="failed">failed</string>
 <string name="first_login_explanation">Enter your username and password to connect to the service.</string>
 <string name="first_login_username">Username</string>

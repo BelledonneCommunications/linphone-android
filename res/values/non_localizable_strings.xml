@@ -33,7 +33,6 @@
 	<string name="pref_transport_use_standard_ports_key">pref_transport_use_standard_ports_key</string>
 
     <string name="pref_echo_canceller_calibration_key">pref_echo_canceller_calibration_key</string>
-    <string name="pref_echo_limiter_key">pref_echo_limiter_key</string>
     <string name="pref_prefix_key">pref_prefix_key</string>
     <string name="pref_proxy_key">pref_proxy_key</string>
     <string name="pref_domain_key">pref_domain_key</string>

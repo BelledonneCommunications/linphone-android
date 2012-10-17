@@ -21,14 +21,18 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
+import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.Log;
 import org.linphone.mediastream.Version;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
@@ -148,19 +152,25 @@ public class LinphoneActivity extends TabActivity implements ContactPicked
 		switch (requestCode) {
 		case FIRST_LOGIN_ACTIVITY:
 			if (resultCode == RESULT_OK) {
-//				Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
-//				try {
-//					LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
-//						public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-//							PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.this)
-//							.edit().putBoolean(
-//									getString(R.string.pref_echo_canceller_calibration_key),
-//									status == EcCalibratorStatus.Done).commit();
-//						}
-//					});
-//				} catch (LinphoneCoreException e) {
-//					Log.e(e, "Unable to calibrate EC");
-//				}
+				if (!Hacks.hasBuiltInEchoCanceller()) {
+					Toast.makeText(this, getString(R.string.ec_calibration_launch_message), Toast.LENGTH_LONG).show();
+					try {
+						LinphoneManager.getInstance().startEcCalibration(new EcCalibrationListener() {
+							public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
+								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.this);
+								SharedPreferences.Editor editor = prefs.edit();
+								if (status == EcCalibratorStatus.DoneNoEcho) {
+									editor.putBoolean(getString(R.string.pref_echo_cancellation_key), false);
+								} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
+									editor.putBoolean(getString(R.string.pref_echo_cancellation_key), true);
+								}
+								editor.commit();
+							}
+						});
+					} catch (LinphoneCoreException e) {
+						Log.e(e, "Unable to calibrate EC");
+					}
+				}
 				fillTabHost();
 			} else {
 				finish();

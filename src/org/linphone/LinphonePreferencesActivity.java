@@ -26,7 +26,6 @@ import static org.linphone.R.string.pref_codec_ilbc_key;
 import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
-import static org.linphone.R.string.pref_echo_limiter_key;
 import static org.linphone.R.string.pref_media_encryption_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
@@ -76,8 +75,7 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 
 public class LinphonePreferencesActivity extends PreferenceActivity implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
-	private CheckBoxPreference ecCalibratePref;
-	private CheckBoxPreference elPref;
+	private Preference ecCalibratePref;
 	private CheckBoxPreference ecPref;
 	private ListPreference mencPref;
 	private int nbAccounts = 1;
@@ -597,7 +595,7 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 		
 		addTransportChecboxesListener();
 		
-		ecCalibratePref = (CheckBoxPreference) findPreference(pref_echo_canceller_calibration_key);
+		ecCalibratePref = findPreference(pref_echo_canceller_calibration_key);
 		ecCalibratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				startEcCalibration();
@@ -605,7 +603,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			}
 		});
 		ecPref = (CheckBoxPreference) findPreference(pref_echo_cancellation_key);
-		elPref = (CheckBoxPreference) findPreference(pref_echo_limiter_key);
 		mencPref = (ListPreference) findPreference(pref_media_encryption_key);
 
 		boolean fastCpu = Version.isArmv7();
@@ -614,7 +611,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			findPreference(pref_codec_speex16_key).setEnabled(true);
 			//findPreference(pref_codec_speex32_key)).setEnabled(enableIlbc);
 		}
-		findPreference(pref_echo_limiter_key).setEnabled(true);
 
 		initializeMediaEncryptionPreferences();
 	
@@ -637,9 +633,8 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			doOnFirstLaunch();
 		}
 		if (Hacks.hasBuiltInEchoCanceller()) {
-			uncheckDisableAndHideCheckbox(R.string.pref_echo_limiter_key);
 			uncheckDisableAndHideCheckbox(R.string.pref_echo_cancellation_key);
-			uncheckDisableAndHideCheckbox(R.string.pref_echo_canceller_calibration_key);
+			findPreference(R.string.pref_echo_canceller_calibration_key).setLayoutResource(R.layout.hidden);
 		}
 
 
@@ -651,10 +646,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			findPreference(R.string.pref_video_codec_h264_key).setDefaultValue(false);
 		}
 		
-		addEchoPrefsListener();
-		
-		if (Hacks.needSoftvolume()) checkAndDisableCheckbox(R.string.pref_audio_soft_volume_key);
-
 		if (!LinphoneManager.getLc().isTunnelAvailable()){
 			hidePreferenceCategory(R.string.pref_tunnel_key);
 		}
@@ -677,7 +668,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 	}
 
 	private void doOnFirstLaunch() {
-		manageCheckbox(R.string.pref_echo_limiter_key, !Hacks.hasBuiltInEchoCanceller(), true, false);
 		prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 	}
 
@@ -709,29 +699,6 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 			mencPref.setDefaultValue(getString(R.string.media_encryption_none));
 			//mencPref.setValueIndex(mencPref.findIndexOfValue(getString(R.string.media_encryption_none)));
 		}
-	}
-
-	private void addEchoPrefsListener(){
-		OnPreferenceChangeListener ec_listener=new OnPreferenceChangeListener(){
-			public boolean onPreferenceChange(Preference arg0, Object newValue) {
-				Boolean val=(Boolean)newValue;
-				if (val){
-					elPref.setChecked(!val);
-				}
-				return true;
-			}
-		};
-		OnPreferenceChangeListener el_listener=new OnPreferenceChangeListener(){
-			public boolean onPreferenceChange(Preference arg0, Object newValue) {
-				Boolean val=(Boolean)newValue;
-				if (val){
-					ecPref.setChecked(!val);
-				}
-				return true;
-			}
-		};
-		ecPref.setOnPreferenceChangeListener(ec_listener);
-		elPref.setOnPreferenceChangeListener(el_listener);
 	}
 
 	private void addTransportChecboxesListener() {
@@ -801,15 +768,15 @@ public class LinphonePreferencesActivity extends PreferenceActivity implements E
 
 		mHandler.post(new Runnable() {
 			public void run() {
-				if (status == EcCalibratorStatus.Done) {
+				if (status == EcCalibratorStatus.DoneNoEcho) {
+					ecCalibratePref.setSummary(R.string.no_echo);
+					ecPref.setChecked(false);
+				} else if (status == EcCalibratorStatus.Done) {
 					ecCalibratePref.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
-					ecCalibratePref.setChecked(true);
-
+					ecPref.setChecked(true);
 				} else if (status == EcCalibratorStatus.Failed) {
 					ecCalibratePref.setSummary(R.string.failed);
-					ecCalibratePref.setChecked(false);
-					elPref.setChecked(true);
-					ecPref.setChecked(false);
+					ecPref.setChecked(true);
 				}
 			}
 		});
