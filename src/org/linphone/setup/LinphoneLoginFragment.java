@@ -58,7 +58,7 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 				return;
 			}
 			
-			SetupActivity.instance().logIn(login.getText().toString(), password.getText().toString(), getString(R.string.default_domain));
+			SetupActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString());
 		}
 	}
 }

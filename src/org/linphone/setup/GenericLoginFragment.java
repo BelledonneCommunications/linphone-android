@@ -59,7 +59,7 @@ public class GenericLoginFragment extends Fragment implements OnClickListener {
 				return;
 			}
 			
-			SetupActivity.instance().logIn(login.getText().toString(), password.getText().toString(), domain.getText().toString());
+			SetupActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), domain.getText().toString());
 		}
 	}
 }
