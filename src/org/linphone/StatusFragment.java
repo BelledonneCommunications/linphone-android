@@ -498,7 +498,7 @@ public class StatusFragment extends Fragment {
 									PayloadType payloadAudio = params.getUsedAudioCodec();
 									PayloadType payloadVideo = params.getUsedVideoCodec();
 									if (payloadVideo != null && payloadAudio != null) {
-										codec.setText(payloadVideo.getMime() + " / " + payloadAudio.getMime());
+										codec.setText(payloadVideo.getMime() + " / " + payloadAudio.getMime() + (payloadAudio.getRate() / 1000));
 									}
 									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " / " + (int) audioStats.getDownloadBandwidth() + " kbits/s");
 									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) +  " / " + (int) audioStats.getUploadBandwidth() + " kbits/s");
@@ -510,7 +510,7 @@ public class StatusFragment extends Fragment {
 									title.setText("Audio");
 									PayloadType payload = params.getUsedAudioCodec();
 									if (payload != null) {
-										codec.setText(payload.getMime());
+										codec.setText(payload.getMime() + (payload.getRate() / 1000));
 									}
 									dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
 									ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
