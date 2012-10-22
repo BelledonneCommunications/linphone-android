@@ -10,6 +10,7 @@
 	    android:layout_alignParentTop="true"
         android:focusable="true"
 		android:focusableInTouchMode="true"
+        android:background="@drawable/dialer_address_background"
        	android:layout_gravity="center">
        	<!-- focusable/focusableInTouchMode are set to true to prevent the keyboard to be displayed automatically -->
         
@@ -18,15 +19,17 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:textColor="@android:color/white"
+	        android:layout_toLeftOf="@+id/Erase"
+	        android:background="@color/transparent"
 	        android:textSize="30dp"
-	        android:background="@drawable/dialer_address_background"
 	        android:paddingLeft="20dp"
 	        android:paddingRight="20dp"
        		android:gravity="center"
-	        android:inputType="textEmailAddress" />
+	        android:inputType="textEmailAddress"
+	        android:hint="@string/addressHint" />
 	            
         <org.linphone.ui.EraseButton
-            android:id="@+id/Erase"
+            android:id="@id/Erase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 	        android:paddingRight="10dp"
@@ -36,60 +39,25 @@
             android:src="@drawable/backspace" />
         
     </RelativeLayout>
-	
-    <LinearLayout 
-        android:orientation="vertical"
+    
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-	    android:layout_below="@id/addressbar"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentBottom="true">
+        android:layout_height="match_parent">
         
-        <View 
+        <org.linphone.ui.Numpad 
+		    android:id="@+id/Dialer"
+	  		android:background="@drawable/background_alt"
 	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="0.5" />
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true" />
         
         <LinearLayout
-	        android:orientation="horizontal"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:layout_weight="0.5">
-            
-		    <org.linphone.ui.Numpad 
-			    android:id="@+id/Dialer"
-		  		android:background="@drawable/background_alt"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:layout_weight="0.7" />
-	        
-	        <View 
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:layout_weight="0.3" />
-	    
-	    </LinearLayout>
-	    
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-	    android:layout_alignParentRight="true"
-	    android:layout_alignParentBottom="true"
-	    android:gravity="right">
-        
-        <View 
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="0.15" />
-	    
-	    <LinearLayout
         	android:orientation="horizontal"
 	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="0.85">
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true">
 	        
 	        <ImageView
 	            android:id="@+id/addContact"
@@ -111,7 +79,7 @@
 	            android:src="@drawable/call" />
 	        
 	    </LinearLayout>
-	    
-    </LinearLayout>
+        
+    </RelativeLayout>
 	
 </RelativeLayout>
