@@ -5,8 +5,6 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
-KEYSTORE=bc-android.keystore
-KEYALIAS=nw8000
 
 all: prepare-sources generate-libs generate-apk install-apk run-linphone
 
@@ -54,11 +52,10 @@ generate-libs:
 
 update-project:
 	$(SDK_PATH)/android update project --path .
-	echo "key.store=$(KEYSTORE)" > ant.properties
-	echo "key.alias=$(KEYALIAS)" >> ant.properties
 	touch default.properties
 
 generate-apk:
+	ant clean
 	ant debug
 
 install-apk: generate-apk
