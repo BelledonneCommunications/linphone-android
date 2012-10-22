@@ -79,7 +79,7 @@
 		    android:key="@string/pref_audio_port_key"
 		    android:title="@string/pref_audio_port_title"
 		    android:summary="@string/pref_audio_port_description"
-		    android:defaultValue="7078"
+		    android:defaultValue="@string/default_audio_port"
 			android:layout="@layout/hidden"/>
 
 		<PreferenceScreen 
@@ -191,7 +191,7 @@
 		<EditTextPreference 
 		    android:key="@string/pref_video_port_key"
 		    android:title="@string/pref_video_port_title"
-		    android:defaultValue="9078"
+		    android:defaultValue="@string/default_video_port"
 		    android:summary="@string/pref_video_port_description"
 			android:layout="@layout/hidden"/>
 	

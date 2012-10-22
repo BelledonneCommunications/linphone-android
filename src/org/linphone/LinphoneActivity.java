@@ -219,11 +219,19 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	private void hideStatusBar() {
+		if (Version.isXLargeScreen(this)) {
+			return;
+		}
+		
 		findViewById(R.id.status).setVisibility(View.GONE);
 		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
 	}
 
 	private void showStatusBar() {
+		if (Version.isXLargeScreen(this)) {
+			return;
+		}
+		
 		findViewById(R.id.status).setVisibility(View.VISIBLE);
 		if (statusFragment != null && !statusFragment.isVisible()) {
 			// Hack to ensure statusFragment is visible after coming back to
@@ -526,22 +534,16 @@ public class LinphoneActivity extends FragmentActivity implements
 			return;
 		}
 
-		LinphoneAddress lAddress = LinphoneCoreFactory.instance()
-				.createLinphoneAddress(sipUri);
-		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(
-				lAddress, getContentResolver());
+		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
 		String displayName = lAddress.getDisplayName();
 		String pictureUri = uri == null ? null : uri.toString();
 
-		if (currentFragment == FragmentsAvailable.CHATLIST
-				|| currentFragment == FragmentsAvailable.CHAT) {
-			Fragment fragment2 = getSupportFragmentManager().findFragmentById(
-					R.id.fragmentContainer2);
-			if (fragment2 != null && fragment2.isVisible()
-					&& currentFragment == FragmentsAvailable.CHAT) {
+		if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
+			Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
 				ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName,
-						pictureUri);
+				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
 			} else {
 				Bundle extras = new Bundle();
 				extras.putString("SipUri", sipUri);
@@ -1363,8 +1365,11 @@ public class LinphoneActivity extends FragmentActivity implements
 					return true;
 				}
 			} else {
-				int backStackEntryCount = getSupportFragmentManager()
-						.getBackStackEntryCount();
+				if (Version.isXLargeScreen(this)) {
+					return true;
+				}
+				
+				int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 				if (backStackEntryCount <= 1) {
 					showStatusBar();
 				}
