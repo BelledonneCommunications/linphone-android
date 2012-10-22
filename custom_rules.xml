@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="custom_rules">
+	<property name="linphone.package.name" value="org.linphone" />
+
+	<target name="-pre-build" description="Move file that is not to be compiled.">
+		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
+			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.build"
+			failonerror="false" />
+	</target>
+
+	<target name="-post-build" description="Restore file that has been moved so that it was not compiled.">
+		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.build"
+			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
+			failonerror="false" />
+	</target>
+
+	<target name="-package-resources" depends="-crunch">
+		<!-- only package resources if *not* a library project -->
+		<do-only-if-not-library elseText="Library project: do not package resources..." >
+			<exec executable="${aapt}" failonerror="true">
+				<arg value="package" />
+				<arg value="-f" />
+				<arg value="-v" />
+				<arg value="--version-code" />
+				<arg value="${version.code}" />
+				<arg value="--debug-mode" />
+				<arg value="-m" />
+				<arg value="-u" />
+				<arg value="-J" />
+				<arg path="${gen.absolute.dir}" />
+				<arg value="-M" />
+				<arg path="${out.manifest.abs.file}" />
+				<arg value="-I" />
+				<arg path="${project.target.android.jar}" />
+				<arg value="-F" />
+				<arg path="${out.absolute.dir}/${resource.package.file.name}" />
+				<arg value="-S" />
+				<arg path="${resource.absolute.dir}" />
+				<arg value="--rename-manifest-package"/>
+				<arg value="${linphone.package.name}"/>
+				<arg value="--custom-package" />
+				<arg value="${linphone.package.name}"/>
+			</exec> 
+		</do-only-if-not-library>
+	</target>
+
+	<target name="run">
+		<exec executable="adb">
+			<arg value="shell"/>
+			<arg value="am"/>
+			<arg value="start"/>
+			<arg value="-a"/>
+			<arg value="android.intent.action.MAIN"/>
+			<arg value="-n"/>
+			<arg value="${linphone.package.name}/org.linphone.LinphoneLauncherActivity"/>
+		</exec>
+	</target>
+</project>
