@@ -57,7 +57,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -81,7 +80,7 @@ public class InCallActivity extends FragmentActivity implements
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isTransferAllowed, isAnimationDisabled;
-	private LinearLayout mControlsLayout;
+	private ViewGroup mControlsLayout;
 	private Numpad numpad;
 	private int cameraNumber;
 	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
@@ -180,7 +179,7 @@ public class InCallActivity extends FragmentActivity implements
 		switchCamera = (ImageView) findViewById(R.id.switchCamera);
 		switchCamera.setOnClickListener(this);
 		
-		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
+		mControlsLayout = (ViewGroup) findViewById(R.id.menu);
 		
         if (!isTransferAllowed) {
         	addCall.setBackgroundResource(R.drawable.options_add_call);

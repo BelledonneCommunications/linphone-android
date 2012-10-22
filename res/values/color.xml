@@ -23,4 +23,6 @@
     <color name="missed_calls_background">#ffcf4c29</color>
     
     <color name="transparent">#00000000</color>
+    
+    <color name="landscape_background">#CCCCCC</color>
 </resources>

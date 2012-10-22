@@ -509,7 +509,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 			sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 		}
-		else {
+
+		if (state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
 		}
 
