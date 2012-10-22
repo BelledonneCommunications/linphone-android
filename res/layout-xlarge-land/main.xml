@@ -142,10 +142,6 @@
             android:contentDescription="@string/content_description_dialer"
             android:scaleType="fitXY"
             android:src="@drawable/dialer" />
-
-        <include layout="@layout/menu_settings_button" />
-        
-        <include layout="@layout/menu_about_settings_button" />
         
         <include layout="@layout/menu_about_chat_button" />
 
@@ -169,6 +165,10 @@
                 android:visibility="gone" />
             
         </RelativeLayout>
+
+        <include layout="@layout/menu_settings_button" />
+        
+        <include layout="@layout/menu_about_settings_button" />
         
     </LinearLayout>
 

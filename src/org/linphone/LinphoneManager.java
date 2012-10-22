@@ -648,8 +648,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private void readAndSetAudioAndVideoPorts() throws NumberFormatException {
 		int aPortStart, aPortEnd, vPortStart, vPortEnd;
-		aPortStart = aPortEnd = 7078;
-		vPortStart = vPortEnd = 9078;
+		aPortStart = aPortEnd = Integer.parseInt(getString(R.string.default_audio_port));
+		vPortStart = vPortEnd = Integer.parseInt(getString(R.string.default_video_port));
 
 		String audioPort = getPrefString(R.string.pref_audio_port_key, String.valueOf(aPortStart));
 		String videoPort = getPrefString(R.string.pref_video_port_key, String.valueOf(vPortStart));
@@ -667,7 +667,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			vPortStart = Integer.parseInt(videoPort.split("-")[0]);
 			vPortEnd = Integer.parseInt(videoPort.split("-")[1]);
 		} else {
-			vPortStart = vPortEnd = Integer.parseInt(audioPort);
+			vPortStart = vPortEnd = Integer.parseInt(videoPort);
 		}
 		
 		if (aPortStart >= aPortEnd) {

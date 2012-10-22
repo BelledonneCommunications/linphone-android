@@ -73,7 +73,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		editContact = (TextView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
 		newContact = (TextView) view.findViewById(R.id.newContact);
-		newContact.setOnClickListener(this);
+		if (newContact != null) {
+			newContact.setOnClickListener(this);
+		}
 		
 		return view;
 	}

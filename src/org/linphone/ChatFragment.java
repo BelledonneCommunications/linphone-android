@@ -258,6 +258,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		
         if (pictureUri != null) {
         	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
+        } else {
+        	contactPicture.setImageResource(R.drawable.unknown_small);
         }
         
         messagesScrollView.post(new Runnable() {

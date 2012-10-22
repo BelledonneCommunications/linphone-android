@@ -44,6 +44,9 @@
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
 	
+	<string name="default_audio_port">7078</string>
+	<string name="default_video_port">9078</string>
+	
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>
  
