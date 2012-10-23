@@ -577,12 +577,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public void initAccounts() throws LinphoneCoreException {
+		boolean cleanBefore = true;
 		for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
 			String key = i == 0 ? "" : String.valueOf(i);
-			if (getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
-				continue;
+			if (!getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
+				initAccount(key, cleanBefore, i == getPrefInt(R.string.pref_default_account_key, 0));
+				cleanBefore = false;
 			}
-			initAccount(key, i == 0, i == getPrefInt(R.string.pref_default_account_key, 0));
+			
 		}
 		
 		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
