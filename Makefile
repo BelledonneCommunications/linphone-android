@@ -4,7 +4,7 @@ SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
-LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
+LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
 
 all: update-project prepare-sources install-apk run-linphone
 
@@ -47,7 +47,7 @@ prepare-mediastreamer2:
 
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
-generate-libs: 
+generate-libs:
 	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full BUILD_GPLV3_ZRTP=1 -j$(NUMCPUS)
 
 update-project:
@@ -66,7 +66,7 @@ release: update-project
 
 run-linphone:
 	ant run
-	
+
 run-tests:
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
