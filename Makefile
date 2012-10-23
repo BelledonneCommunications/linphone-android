@@ -49,6 +49,7 @@ prepare-mediastreamer2:
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
 generate-libs: 
+	mkdir -p $(TOPDIR)/gen && touch $(TOPDIR)/gen/linphonecore_jni.h
 	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full -j$(NUMCPUS)
 
 update-project:
