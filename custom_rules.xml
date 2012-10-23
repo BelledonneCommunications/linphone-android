@@ -4,19 +4,50 @@
 
 	<target name="-pre-build" description="Move file that is not to be compiled.">
 		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
-			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.build"
+			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
 			failonerror="false" />
 	</target>
 
 	<target name="-post-build" description="Restore file that has been moved so that it was not compiled.">
-		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.build"
+		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
 			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
 			failonerror="false" />
 	</target>
 
+	<target name="javah">
+		<echo level="info">Generate JNI header</echo>
+		<javah outputfile="gen/linphonecore_jni.h">
+			<classpath>
+				<pathelement location="${out.classes.absolute.dir}" />
+			</classpath>
+			<class name="org.linphone.core.LinphoneAddressImpl" />
+			<class name="org.linphone.core.LinphoneAuthInfoImpl" />
+			<class name="org.linphone.core.LinphoneCallImpl" />
+			<class name="org.linphone.core.LinphoneCallLogImpl" />
+			<class name="org.linphone.core.LinphoneCallParamsImpl" />
+			<class name="org.linphone.core.LinphoneCallStatsImpl" />
+			<class name="org.linphone.core.LinphoneChatMessageImpl" />
+			<class name="org.linphone.core.LinphoneChatRoomImpl" />
+			<class name="org.linphone.core.LinphoneCoreFactoryImpl" />
+			<class name="org.linphone.core.LinphoneCoreImpl" />
+			<class name="org.linphone.core.LinphoneFriendImpl" />
+			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
+			<class name="org.linphone.core.PayloadTypeImpl" />
+		</javah>
+	</target>
+
+	<target name="build-libs">
+		<exec executable="make" failonerror="true">
+			<arg value="generate-libs" />
+		</exec>
+	</target>
+
+	<target name="-post-compile" depends="javah, build-libs">
+	</target>
+
 	<target name="-package-resources" depends="-crunch">
 		<!-- only package resources if *not* a library project -->
-		<do-only-if-not-library elseText="Library project: do not package resources..." >
+		<do-only-if-not-library elseText="Library project: do not package resources...">
 			<exec executable="${aapt}" failonerror="true">
 				<arg value="package" />
 				<arg value="-f" />
@@ -36,23 +67,23 @@
 				<arg path="${out.absolute.dir}/${resource.package.file.name}" />
 				<arg value="-S" />
 				<arg path="${resource.absolute.dir}" />
-				<arg value="--rename-manifest-package"/>
-				<arg value="${linphone.package.name}"/>
+				<arg value="--rename-manifest-package" />
+				<arg value="${linphone.package.name}" />
 				<arg value="--custom-package" />
-				<arg value="${linphone.package.name}"/>
+				<arg value="${linphone.package.name}" />
 			</exec> 
 		</do-only-if-not-library>
 	</target>
 
 	<target name="run">
 		<exec executable="adb">
-			<arg value="shell"/>
-			<arg value="am"/>
-			<arg value="start"/>
-			<arg value="-a"/>
-			<arg value="android.intent.action.MAIN"/>
-			<arg value="-n"/>
-			<arg value="${linphone.package.name}/org.linphone.LinphoneLauncherActivity"/>
+			<arg value="shell" />
+			<arg value="am" />
+			<arg value="start" />
+			<arg value="-a" />
+			<arg value="android.intent.action.MAIN" />
+			<arg value="-n" />
+			<arg value="${linphone.package.name}/org.linphone.LinphoneLauncherActivity" />
 		</exec>
 	</target>
 </project>
