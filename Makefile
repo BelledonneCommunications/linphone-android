@@ -6,7 +6,7 @@ TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
 
-all: prepare-sources generate-libs generate-apk install-apk run-linphone
+all: update-project prepare-sources install-apk run-linphone
 
 prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
