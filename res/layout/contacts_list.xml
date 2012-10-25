@@ -57,6 +57,7 @@
             android:text="@string/button_add_contact"
             android:gravity="center"
             android:paddingTop="20dp"
+            android:textSize="13dp"
             android:textColor="@color/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
