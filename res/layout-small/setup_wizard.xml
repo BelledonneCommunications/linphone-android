@@ -23,7 +23,7 @@
     <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:paddingTop="40dp"
+	    android:paddingTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
 	    android:gravity="center"
@@ -80,10 +80,13 @@
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/setup_password"
 	            android:hint="@string/setup_password_confirm_hint"
+	            android:singleLine="true"
+	            android:lines="1"
+	            android:maxLines="1"
 	            android:inputType="textPassword"
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
-	            android:singleLine="true"
+	            android:ellipsize="end"
 	            android:textColor="@android:color/black"
             	android:background="@drawable/setup_field_background" />
 	        
