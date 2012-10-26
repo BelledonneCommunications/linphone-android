@@ -2,27 +2,19 @@
 			****************************
 
 To build liblinphone for Android, you must:
-0) download the Android sdk with platform-tools >= 13, tools >= 20 (20.0.3 for linux) and sdk platform >= 16
-1) download the Android ndk (>=r5c) from google.
+0) download the Android sdk with platform-tools >= 13, tools >= 20 (20.0.3 for linux) and sdk platform >= 16, then add both 'tools' and 'platform-tools' folders in your path.
+1) download the Android ndk (>=r5c) from google and add it to your path.
 2) install the autotools: autoconf, automake, aclocal, libtoolize pkgconfig
 2bis) on some 64 bits systems you'll need the ia32-libs package
-3) run the ./prepare_sources.sh script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
-	$ ./prepare_sources.sh
+3) run the Makefile script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
+	$ make
 
-4) finally from directory linphone-android, just execute command:
-	$ ${my google ndk directory}/ndk-build
+To create an apk with a different package name, you need to edit the custom_rules.xml file:
+1) look for the property named "linphone.package.name" and change it value accordingly
+2) run again the Makefile script. You can only regenerate the apk if you already built it before.
+	$ make install-apk
 
-
-To create an apk with a different package name, you need to use the ant script:
-1) first you have to generate first the local.properties file using android sdk
-	$ ${my google sdk directory}/tools/android update project --path ${my project path}
-2) change inside the build.xml file the value of the property "linphone.package.name"
-3) run the ant script
-	$ ant debug
-4) to install the newly created apk, run the following command
-	$ ant installd
-
-Some options can be passed to ndk-build, like "ndk-build SOME_OPTION=SOME_VALUE"
+Some options can be passed to ndk-build, like "ndk-build SOME_OPTION=SOME_VALUE". Put them into the Makefile script, under the generate-libs target
 
 Option Name     |     Possible values                                                                                                   | Default value 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
