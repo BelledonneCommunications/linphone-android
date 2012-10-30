@@ -124,6 +124,9 @@ public class InCallActivity extends FragmentActivity implements
             
             if (savedInstanceState != null) { 
             	// Fragment already created, no need to create it again (else it will generate a memory leak with duplicated fragments)
+            	isSpeakerEnabled = savedInstanceState.getBoolean("Speaker");
+            	isMicMuted = savedInstanceState.getBoolean("Mic");
+            	refreshInCallActions();
             	return;
             }
             
@@ -143,6 +146,14 @@ public class InCallActivity extends FragmentActivity implements
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
         }
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean("Speaker", isSpeakerEnabled);
+		outState.putBoolean("Mic", isMicMuted);
+		
+		super.onSaveInstanceState(outState);
 	}
 	
 	private void initUI() {

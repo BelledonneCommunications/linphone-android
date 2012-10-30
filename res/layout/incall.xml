@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/content_description_switch_camera"
         android:layout_marginTop="40dp"
         android:visibility="invisible"
@@ -191,6 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_pause"
                 android:scaleType="fitXY"
                 android:src="@drawable/pause_off" />
@@ -201,6 +203,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_conference"
                 android:scaleType="fitXY"
                 android:src="@drawable/conference" />
@@ -210,6 +213,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_hang_up"
                 android:scaleType="fitXY"
                 android:src="@drawable/hangup" />
@@ -219,6 +223,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_numpad"
                 android:scaleType="fitXY"
                 android:src="@drawable/dialer_alt" />
