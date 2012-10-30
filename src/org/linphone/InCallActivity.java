@@ -339,7 +339,8 @@ public class InCallActivity extends FragmentActivity implements
 					params.setVideoEnabled(false);
 					LinphoneManager.getLc().updateCall(call, params);
 					video.setBackgroundResource(R.drawable.video_on);
-					
+
+					LinphoneManager.startProximitySensorForActivity(InCallActivity.this);
 					replaceFragmentVideoByAudio();
 					setCallControlsVisibleAndRemoveCallbacks();
 				} else {
@@ -348,7 +349,8 @@ public class InCallActivity extends FragmentActivity implements
 					LinphoneManager.getInstance().routeAudioToSpeaker();
 					speaker.setBackgroundResource(R.drawable.speaker_on);
 					video.setBackgroundResource(R.drawable.video_off);
-					
+
+					LinphoneManager.stopProximitySensorForActivity(InCallActivity.this);
 					replaceFragmentAudioByVideo();
 					displayVideoCallControlsIfHidden();
 				}
@@ -966,11 +968,11 @@ public class InCallActivity extends FragmentActivity implements
 	protected void onResume() {
 		instance = this;
 		LinphoneManager.addListener(this);
-		LinphoneManager.startProximitySensorForActivity(this);
 		
 		if (isVideoEnabled) {
 			displayVideoCallControlsIfHidden();
 		} else {
+			LinphoneManager.startProximitySensorForActivity(this);
 			setCallControlsVisibleAndRemoveCallbacks();
 		}
 		
@@ -985,8 +987,10 @@ public class InCallActivity extends FragmentActivity implements
 			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
-		
-		LinphoneManager.stopProximitySensorForActivity(this);
+
+		if (!isVideoEnabled) {
+			LinphoneManager.stopProximitySensorForActivity(this);
+		}
 		LinphoneManager.removeListener(this);
 	}
 	
