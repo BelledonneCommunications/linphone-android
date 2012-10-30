@@ -14,8 +14,7 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="40dp" />
+            android:orientation="horizontal" />
 
         <fragment
             android:id="@+id/status"
