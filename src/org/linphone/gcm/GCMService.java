@@ -79,4 +79,8 @@ public class GCMService extends GCMBaseIntentService {
 		editor.putString(context.getString(R.string.push_reg_id_key), null);
 		editor.commit();
 	}
+	
+	protected String[] getSenderIds(Context context) {
+	    return new String[] { context.getString(R.string.push_sender_id) };
+	}
 }
