@@ -168,6 +168,17 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	public void onPause() {
 		super.onPause();
 
+		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		int n = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
+		String keyUsername = getString(R.string.pref_username_key) + (n-1 == 0 ? "" : Integer.toString(n-1));
+		
+		if (prefs.getString(keyUsername, "").equals("")) {
+			//If not, we suppress it to not display a blank field
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putInt(getString(R.string.pref_extra_accounts), n-1);
+			editor.commit();
+		}
+		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().applyConfigChangesIfNeeded();
 		}
