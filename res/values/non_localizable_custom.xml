@@ -17,6 +17,7 @@
     <bool name="display_about_in_settings">true</bool>
     
     <bool name="hide_camera_settings">false</bool>
+    <bool name="replace_wizard_with_old_interface">false</bool>
     <bool name="hide_wizard">false</bool>
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>

@@ -103,7 +103,7 @@
     <string name="click_to_show_first_login_view">Start</string>
     <string name="dialer_null_on_new_intent">Application not ready</string>
 
-
+	<string name="pref_add_account">Add account</string>
 	<string name="no_phone_numbers">No phone numbers found for %s</string>
 	<string name="filter_contacts">Filter contacts</string>
 	<string name="title_numbers_dialog">%s\'s phone numbers</string>

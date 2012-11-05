@@ -84,6 +84,7 @@
     <string name="click_to_show_first_login_view">Commencer</string>
     <string name="dialer_null_on_new_intent">Application pas prête</string>
 
+    <string name="pref_add_account">Ajouter un compte</string>
 	<string name="no_phone_numbers">Aucun numéro trouvé pour %s</string>
 	<string name="filter_contacts">Filtrer contacts</string>
 	<string name="title_numbers_dialog">Numéros de %s</string>

@@ -58,6 +58,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
 public class PreferencesFragment extends PreferencesListFragment implements EcCalibrationListener {
@@ -92,9 +93,13 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			accounts.setLayoutResource(R.layout.hidden);
 		}
 		
-		if (getResources().getBoolean(R.bool.hide_wizard)) {
+		if (getResources().getBoolean(R.bool.hide_wizard) || getResources().getBoolean(R.bool.replace_wizard_with_old_interface)) {
 			Preference wizard = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
-			wizard.setLayoutResource(R.layout.hidden);
+			if (getResources().getBoolean(R.bool.replace_wizard_with_old_interface)) {
+				createAddAccountButton();
+			} else {
+				wizard.setLayoutResource(R.layout.hidden);
+			}
 		} else {
 			addWizardPreferenceButton();
 		}
@@ -197,6 +202,19 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		} else {
 			getPreferenceScreen().getPreference(ABOUT_SETTINGS_ID).setLayoutResource(R.layout.hidden);
 		}
+	}
+	
+	private void createAddAccountButton() {
+		Preference addAccount = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
+		addAccount.setTitle(getString(R.string.pref_add_account));
+		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        public boolean onPreferenceClick(Preference preference) {
+	        	addExtraAccountPreferencesButton(accounts, nbAccounts, true);
+	        	LinphoneActivity.instance().displayAccountSettings(nbAccounts);
+	        	nbAccounts++;
+	        	return true;
+	        }
+        });
 	}
 	
 	private void hidePreferenceCategory(int key) {
