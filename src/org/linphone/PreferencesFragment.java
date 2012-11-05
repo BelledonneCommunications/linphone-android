@@ -25,10 +25,10 @@ import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_media_encryption_key;
+import static org.linphone.R.string.pref_transport_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
@@ -55,11 +55,8 @@ import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 
 public class PreferencesFragment extends PreferencesListFragment implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
@@ -70,11 +67,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	private int nbAccounts = 1;
 	private PreferenceCategory accounts;
 	
-	private static final int ABOUT_SETTINGS_ID = 0;
-	private static final int ACCOUNTS_SETTINGS_ID = 1;
-	private static final int WIZARD_SETTINGS_ID = 2;
-	private static final int CAMERA_SETTINGS_ID = 6;
-	private static final int FRIENDS_SETTINGS_ID = 7;
 	private static final int WIZARD_INTENT = 1;
 	
 	public PreferencesFragment() {
@@ -88,13 +80,13 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 
 		if (getResources().getBoolean(R.bool.hide_accounts)) {	
 			// Hide category
-			PreferenceCategory accounts = (PreferenceCategory) getPreferenceScreen().getPreference(ACCOUNTS_SETTINGS_ID);
+			PreferenceCategory accounts = (PreferenceCategory) findPreference(getString(R.string.pref_sipaccounts_key));
 			accounts.removeAll();
 			accounts.setLayoutResource(R.layout.hidden);
 		}
 		
 		if (getResources().getBoolean(R.bool.hide_wizard) || getResources().getBoolean(R.bool.replace_wizard_with_old_interface)) {
-			Preference wizard = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
+			Preference wizard = findPreference(getString(R.string.setup_key));
 			if (getResources().getBoolean(R.bool.replace_wizard_with_old_interface)) {
 				createAddAccountButton();
 			} else {
@@ -109,12 +101,12 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		}
 		
 		if (!getResources().getBoolean(R.bool.enable_linphone_friends)) {
-			PreferenceCategory friends = (PreferenceCategory) getPreferenceScreen().getPreference(FRIENDS_SETTINGS_ID);
+			PreferenceCategory friends = (PreferenceCategory) findPreference(getString(R.string.pref_linphone_friend_key));
 			friends.removeAll();
 			friends.setLayoutResource(R.layout.hidden);
 		}
-		
-		addTransportChecboxesListener();
+
+		initializeTransportPreferences();
 		
 		ecCalibratePref = findPreference(pref_echo_canceller_calibration_key);
 		ecCalibratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -179,8 +171,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		}
 		
 		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
-			PreferenceScreen screen = getPreferenceScreen();
-			PreferenceCategory videoSettings = (PreferenceCategory) screen.getPreference(CAMERA_SETTINGS_ID);
+			PreferenceCategory videoSettings = (PreferenceCategory) findPreference(getString(R.string.pref_video_key));
 			videoSettings.removeAll();
 			videoSettings.setLayoutResource(R.layout.hidden);
 			
@@ -189,7 +180,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		}
 		
 		if (getResources().getBoolean(R.bool.display_about_in_settings)) {
-			getPreferenceScreen().getPreference(ABOUT_SETTINGS_ID).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					if (LinphoneActivity.isInstanciated()) {
@@ -200,12 +191,12 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 				}
 			});
 		} else {
-			getPreferenceScreen().getPreference(ABOUT_SETTINGS_ID).setLayoutResource(R.layout.hidden);
+			findPreference(getString(R.string.menu_about_key)).setLayoutResource(R.layout.hidden);
 		}
 	}
 	
 	private void createAddAccountButton() {
-		Preference addAccount = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
+		Preference addAccount = findPreference(getString(R.string.setup_key));
 		addAccount.setTitle(getString(R.string.pref_add_account));
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
@@ -225,58 +216,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 
 	private void doOnFirstLaunch() {
 		prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
-	}
-
-	private void addTransportChecboxesListener() {
-
-		final List<CheckBoxPreference> checkboxes = Arrays.asList(
-				findCheckbox(R.string.pref_transport_udp_key)
-				,findCheckbox(R.string.pref_transport_tcp_key)
-				,findCheckbox(R.string.pref_transport_tls_key)
-				);
-		
-
-		OnPreferenceChangeListener changedListener = new OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue) {
-					for (CheckBoxPreference p : checkboxes) {
-						if (p == preference) continue;
-						p.setChecked(false);
-					}
-					return true;
-				} else {
-					for (CheckBoxPreference p : checkboxes) {
-						if (p == preference) continue;
-						if (p.isChecked()) return true;
-					}
-					return false;
-				}
-			}
-		};
-		
-		OnPreferenceClickListener clickListener = new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
-				// Forbid no protocol selection
-				
-				if (((CheckBoxPreference) preference).isChecked()) {
-					// Trying to unckeck
-					for (CheckBoxPreference p : checkboxes) {
-						if (p == preference) continue;
-						if (p.isChecked()) return false;
-					}
-					/*Toast.makeText(LinphonePreferencesActivity.this,
-							getString(R.string.at_least_a_protocol),
-							Toast.LENGTH_SHORT).show();*/
-					return true;
-				}
-				return false;
-			}
-		};
-
-		for (CheckBoxPreference c : checkboxes) {
-			c.setOnPreferenceChangeListener(changedListener);
-			c.setOnPreferenceClickListener(clickListener);
-		}
 	}
 
 	private synchronized void startEcCalibration() {
@@ -335,10 +274,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		return getPreferenceManager().getSharedPreferences();
 	}
 
-	private CheckBoxPreference findCheckbox(int key) {
-		return (CheckBoxPreference) findPreference(getString(key));
-	}
-
 	private void detectAudioCodec(int id, String mime, int rate, int channels, boolean hide) {
 		boolean enable = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType(mime, rate, channels)!=null;
 		Preference cb = findPreference(id);
@@ -353,7 +288,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	private void createDynamicAccountsPreferences() {
-		accounts = (PreferenceCategory) getPreferenceScreen().getPreference(ACCOUNTS_SETTINGS_ID);
+		accounts = (PreferenceCategory) findPreference(getString(R.string.pref_sipaccounts_key));
 		accounts.removeAll();
 		
 		// Get already configured extra accounts
@@ -429,7 +364,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 	
 	private void addWizardPreferenceButton() {
-		Preference wizard = (Preference) getPreferenceScreen().getPreference(WIZARD_SETTINGS_ID);
+		Preference wizard = findPreference(getString(R.string.setup_key));
 		wizard.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	Intent intent = new Intent(mContext, SetupActivity.class);
@@ -476,6 +411,27 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			mencPref.setDefaultValue(getString(R.string.media_encryption_none));
 			//mencPref.setValueIndex(mencPref.findIndexOfValue(getString(R.string.media_encryption_none)));
 		}
+	}
+	
+	private void initializeTransportPreferences() {		
+		List<CharSequence> mencEntries=new ArrayList<CharSequence>();
+		List<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
+		mencEntries.add(getString(R.string.pref_transport_udp));
+		mencEntryValues.add(getString(R.string.pref_transport_udp_key));
+		mencEntries.add(getString(R.string.pref_transport_tcp));
+		mencEntryValues.add(getString(R.string.pref_transport_tcp_key));
+		
+		mencEntries.add(getString(R.string.pref_transport_tls));
+		mencEntryValues.add(getString(R.string.pref_transport_tls_key));
+		
+		ListPreference transport = (ListPreference) findPreference(pref_transport_key);
+		
+		CharSequence[] contents=new CharSequence[mencEntries.size()];
+		mencEntries.toArray(contents);
+		transport.setEntries(contents);
+		contents=new CharSequence[mencEntryValues.size()];
+		mencEntryValues.toArray(contents);
+		transport.setEntryValues(contents);
 	}
 
 	private Preference findPreference(int key) {
