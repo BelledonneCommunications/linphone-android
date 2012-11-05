@@ -257,6 +257,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		addAccount.setTitle(getString(R.string.pref_add_account));
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
+	        	SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+	    		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+	    		prefs.edit().putInt(getString(R.string.pref_extra_accounts), nbAccounts+1).commit();
+	    		
 	        	addExtraAccountPreferencesButton(accounts, nbAccounts, true);
 	        	LinphoneActivity.instance().displayAccountSettings(nbAccounts);
 	        	nbAccounts++;
