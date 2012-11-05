@@ -75,6 +75,7 @@
 	<string name="unknown_incoming_call_name">Inconnu</string>
 	
 	<string name="pref_network_title">Réseau</string>
+	<string name="pref_transport">Transport</string>
 	<string name="pref_transport_use_standard_ports">Utiliser les ports standards</string>
 	<string name="at_least_a_protocol">Au moins un est requis</string>
 

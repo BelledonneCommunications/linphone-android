@@ -91,12 +91,12 @@
 	<string name="unknown_incoming_call_name">Unknown</string>
 	
 	<string name="pref_network_title">Network</string>
+	<string name="pref_transport">Transport</string>
 	<string name="pref_transport_udp">UDP</string>
 	<string name="pref_transport_tcp">TCP</string>
 	<string name="pref_transport_tls">TLS</string>
 	<string name="pref_transport_use_standard_ports">Use standard ports</string>
 	<string name="at_least_a_protocol">At least one item is required</string>
-
 
     <string name="first_launch_ok">Registration successful</string>
     <string name="error">Error</string>
