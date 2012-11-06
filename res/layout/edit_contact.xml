@@ -12,10 +12,10 @@
 	    android:orientation="horizontal">
         
         <TextView 
-            android:contentDescription="@string/content_description_edit"
-            android:id="@+id/editContact"
-            android:background="@drawable/contact_edit"
-            android:text="@string/button_edit"
+            android:contentDescription="@string/content_description_cancel"
+            android:id="@+id/cancel"
+            android:background="@drawable/contact_cancel"
+            android:text="@string/button_cancel"
             android:gravity="center"
             android:paddingTop="20dp"
             android:textColor="@drawable/text_button"
@@ -26,11 +26,12 @@
 		    android:layout_weight="1"/>
         
         <TextView 
-            android:contentDescription="@string/content_description_add_contact"
-            android:id="@+id/newContact"
-            android:background="@drawable/contact_add_contact"
-            android:text="@string/button_add_contact"
+            android:contentDescription="@string/content_description_validate"
+            android:id="@+id/ok"
+            android:background="@drawable/contact_ok"
+            android:text="@string/button_ok"
             android:gravity="center"
+            android:enabled="false"
             android:paddingTop="20dp"
             android:textColor="@drawable/text_button"
 		    android:layout_width="match_parent"
@@ -42,12 +43,12 @@
     </LinearLayout>
     
     <LinearLayout 
-	    android:layout_width="match_parent"
+	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:paddingTop="20dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-	    android:gravity="center"
+	    android:gravity="center_vertical"
 	    android:orientation="horizontal">
         
         <org.linphone.ui.AvatarWithShadow
@@ -56,27 +57,16 @@
 		    android:layout_height="wrap_content"
 		    linphone:picture="@drawable/unknown_small" />
 	        
-        <TextView
-            android:id="@+id/contactName"
-            android:paddingLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-	    	android:textColor="@android:color/black" />
-        
-    </LinearLayout>
-    
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-	    <TableLayout
-	        android:id="@+id/controls"
+        <EditText
+	        android:id="@+id/contactName"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:stretchColumns="*"
-	        android:paddingTop="20dp"/>
-    
-    </ScrollView>
+	        android:textColor="@android:color/black"
+	        android:background="@drawable/chat_fast_address_background"
+	        android:gravity="center"
+	        android:paddingRight="5dp"
+	        android:inputType="textPersonName|textCapWords"/>
+        
+    </LinearLayout>
 
 </LinearLayout>

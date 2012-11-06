@@ -18,10 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
-import org.linphone.ui.AddressText;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -67,10 +65,6 @@ public final class ContactHelper {
 			address.setDisplayName(displayName);
 		}
 		return succeeded;
-	}
-
-	public static Intent prepareAddContactIntent(AddressText address) {
-		return Compatibility.prepareAddContactIntent(address.getDisplayedName(), address.getText().toString());
 	}
 	
 	public static Intent prepareEditContactIntent(int id) {
