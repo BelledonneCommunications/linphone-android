@@ -19,12 +19,13 @@
         
             <EditTextPreference 
 				android:title="@string/pref_tunnel_host"
-				android:key="@string/pref_tunnel_host_key"/>
+				android:key="@string/pref_tunnel_host_key"
+				android:defaultValue="@string/pref_tunnel_host_default"/>
 
             <EditTextPreference 
                 android:title="@string/pref_tunnel_port"
 				android:key="@string/pref_tunnel_port_key" 
-				android:defaultValue="443"/>
+				android:defaultValue="@string/pref_tunnel_port_default"/>
 
             <ListPreference 
                 android:title="@string/pref_tunnel_mode"
@@ -39,7 +40,7 @@
 	    android:title="@string/pref_preferences">
 
 		<CheckBoxPreference 
-		    android:defaultValue="true"
+		    android:defaultValue="@bool/pref_video_enable_default"
 			android:title="@string/pref_video_enable_title" 
 			android:key="@string/pref_video_enable_key" />
 		
@@ -48,7 +49,7 @@
 		    
 		    <CheckBoxPreference 
 			    android:key="@string/pref_echo_cancellation_key" 
-			    android:defaultValue="false"
+			    android:defaultValue="@bool/pref_echo_canceller_default"
 				android:title="@string/pref_echo_cancellation" 
 				android:summary="@string/pref_echo_cancellation_summary"/>
 	
@@ -62,66 +63,66 @@
 			     
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_speex16_key"
-					android:defaultValue="true"
+					android:defaultValue="@bool/pref_codec_speex16_default"
 					android:title="@string/pref_codec_speex16"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_speex8_key"
-					android:defaultValue="true"
+					android:defaultValue="@bool/pref_codec_speex8_default"
 					android:title="@string/pref_codec_speex8"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_ilbc_key"
 					android:title="@string/pref_codec_ilbc"
-					android:shouldDisableView="true"
+					android:shouldDisableView="@bool/pref_codec_ilbc_default"
 					android:summary="@string/pref_ilbc_summary"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_amr_key" 
 					android:title="@string/pref_codec_amr" 
-					android:defaultValue="true"
+					android:defaultValue="@bool/pref_codec_speex16_default"
 					android:shouldDisableView="true"  />
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_g729_key"
 	                android:title="@string/pref_codec_g729"
-	                android:defaultValue="true"
+	                android:defaultValue="@bool/pref_codec_g729_default"
 	                android:shouldDisableView="true"  />
 				
 	            <CheckBoxPreference 
 	                android:key="@string/pref_codec_amrwb_key"
 	                android:title="@string/pref_codec_amrwb"
-	                android:defaultValue="true"
+	                android:defaultValue="@bool/pref_codec_amrwb_default"
 	                android:shouldDisableView="true"  />
 	            
 			 	<CheckBoxPreference 
 			 	    android:key="@string/pref_codec_gsm_key"
-					android:defaultValue="true"
+					android:defaultValue="@bool/pref_codec_gsm_default"
 					android:title="@string/pref_codec_gsm"/>
 			 	
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_g722_key"
-					android:defaultValue="false"
+					android:defaultValue="@bool/pref_codec_g722_default"
 					android:title="@string/pref_codec_g722"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_silk24_key"
-	                android:defaultValue="false"
+	                android:defaultValue="@bool/pref_codec_silk24_default"
 					android:title="@string/pref_codec_silk24"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_silk16_key" 
-	                android:defaultValue="false"
+	                android:defaultValue="@bool/pref_codec_silk16_default"
 					android:title="@string/pref_codec_silk16"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_pcmu_key"
-					android:defaultValue="true"
+					android:defaultValue="@bool/pref_codec_pcmu_default"
 					android:title="@string/pref_codec_pcmu"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_pcma_key"
-					android:defaultValue="true"
+					android:defaultValue="@bool/pref_codec_pcma_default"
 					android:title="@string/pref_codec_pcma"/>
 				
 			</PreferenceCategory>
@@ -136,14 +137,14 @@
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_video_use_front_camera_key"
-			    android:defaultValue="true"
+			    android:defaultValue="@bool/pref_video_use_front_camera_default"
 				android:title="@string/pref_video_use_front_camera_title"
 				android:dependency="@string/pref_video_enable_key"
 				android:layout="@layout/hidden"/>
 		
 			<CheckBoxPreference 
 			    android:key="@string/pref_video_initiate_call_with_video_key"
-				android:defaultValue="true"
+				android:defaultValue="@bool/pref_video_initiate_call_with_video_default"
 				android:title="@string/pref_video_initiate_call_with_video_title"
 				android:summary="@string/pref_video_initiate_call_with_video"
 				android:dependency="@string/pref_video_enable_key"/>
@@ -151,7 +152,7 @@
 			<CheckBoxPreference
 				android:key="@string/pref_video_automatically_share_my_video_key"
 				android:title="@string/pref_video_automatically_share_my_video_title"
-				android:defaultValue="true" 
+				android:defaultValue="@bool/pref_video_automatically_share_my_video_default" 
 				android:summary="@string/pref_video_automatically_share_my_video"
 				android:dependency="@string/pref_video_enable_key"
 				android:layout="@layout/hidden"/>
@@ -159,7 +160,7 @@
 		    <CheckBoxPreference
 				android:key="@string/pref_video_automatically_accept_video_key"
 				android:title="@string/pref_video_automatically_accept_video_title"
-				android:defaultValue="true" 
+				android:defaultValue="@bool/pref_video_automatically_accept_video_default" 
 				android:summary="@string/pref_video_automatically_accept_video"
 				android:dependency="@string/pref_video_enable_key"/>
 		
@@ -172,22 +173,22 @@
 					<CheckBoxPreference 
 					    android:key="@string/pref_video_codec_vp8_key"
 						android:title="@string/pref_video_codec_vp8_title"
-						android:defaultValue="true"/>
+						android:defaultValue="@bool/pref_video_codec_vp8_default"/>
 					
 					<CheckBoxPreference 
 					    android:key="@string/pref_video_codec_h264_key"
 						android:title="@string/pref_video_codec_h264_title"
-						android:defaultValue="false"/>
+						android:defaultValue="@bool/pref_video_codec_h264_default"/>
 					
 					<CheckBoxPreference 
 					    android:key="@string/pref_video_codec_mpeg4_key"
 						android:title="@string/pref_video_codec_mpeg4_title"
-						android:defaultValue="false"/>
+						android:defaultValue="@bool/pref_video_codec_mpeg4_default"/>
 					
 		 			<CheckBoxPreference 
 		 			    android:key="@string/pref_video_codec_h263_key"
 						android:title="@string/pref_video_codec_h263_title"
-						android:defaultValue="false" 
+						android:defaultValue="@bool/pref_video_codec_h263_default" 
 						android:layout="@layout/hidden"/>
 		 			
 				</PreferenceCategory>
@@ -212,7 +213,8 @@
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_wifi_only_key"
-				android:title="@string/pref_wifi_only"/>
+				android:title="@string/pref_wifi_only"
+				android:defaultValue="@bool/pref_wifi_only_default"/>
 
 			<EditTextPreference 
 			    android:title="@string/pref_stun_server"
@@ -222,11 +224,12 @@
 			<CheckBoxPreference 
 			    android:title="@string/pref_ice_enable"
 				android:key="@string/pref_ice_enable_key" 
-				android:defaultValue="false"/>
+				android:defaultValue="@bool/pref_ice_enabled_default"/>
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_transport_use_standard_ports_key"
-				android:title="@string/pref_transport_use_standard_ports"/>
+				android:title="@string/pref_transport_use_standard_ports"
+				android:defaultValue="@bool/pref_transport_use_standard_ports_default"/>
 			
 			<EditTextPreference 
 			    android:key="@string/pref_audio_port_key"
@@ -245,22 +248,22 @@
 			<ListPreference 
 			    android:title="@string/pref_transport"
 				android:key="@string/pref_transport_key"
-				android:defaultValue="@string/pref_transport_udp_key" /> 
+				android:defaultValue="@string/pref_transport_default" /> 
 			
 			<ListPreference 
 			    android:title="@string/pref_media_encryption"
 				android:key="@string/pref_media_encryption_key"
-				android:defaultValue="@string/pref_media_encryption_key_none" /> 
+				android:defaultValue="@string/pref_media_encryption_default" /> 
 			
 			<CheckBoxPreference 
 			    android:key="@string/pref_push_notification_key"
 				android:title="@string/pref_push_notification"
-				android:defaultValue="false"/>
+				android:defaultValue="@bool/pref_push_notification_default"/>
 	 			
 			<CheckBoxPreference 
 				android:key="@string/pref_ipv6_key"
 				android:title="@string/pref_ipv6_title" 
-				android:defaultValue="false" />
+				android:defaultValue="@bool/pref_ipv6_default" />
 			
 		</PreferenceScreen>
 		
@@ -270,22 +273,22 @@
 			<CheckBoxPreference 
 			    android:key="@string/pref_debug_key"
 				android:title="@string/pref_debug" 
-				android:defaultValue="false"/>
+				android:defaultValue="@bool/pref_debug_default"/>
 			
 			<CheckBoxPreference 
-			    android:defaultValue="false"
+			    android:defaultValue="@bool/pref_animation_enable_default"
 				android:title="@string/pref_animation_enable_title" 
 				android:key="@string/pref_animation_enable_key" />
 	            
 			<CheckBoxPreference 
 			    android:title="@string/pref_autostart"
 				android:key="@string/pref_autostart_key" 
-				android:defaultValue="false"/>
+				android:defaultValue="@bool/pref_autostart_default"/>
 			
 			<EditTextPreference 
 			    android:key="@string/pref_incoming_call_timeout_key"
 			    android:title="@string/pref_incoming_call_timeout_title"
-			    android:defaultValue="30"
+			    android:defaultValue="@string/pref_incoming_call_timeout_default"
 			    android:layout="@layout/hidden"/>
 			
 			<PreferenceScreen
@@ -304,7 +307,7 @@
 					android:key="@string/pref_audio_use_specific_mode_key"
 					android:title="@string/pref_audio_use_specific_mode_title"
 				  	android:summary="@string/pref_audio_use_specific_mode_summary"
-				  	android:defaultValue="0" 
+				  	android:defaultValue="@string/pref_audio_use_specific_mode_default" 
 				  	android:numeric="integer" />
 				 
 			</PreferenceScreen>
@@ -321,7 +324,7 @@
 		    android:key="@string/pref_auto_accept_friends_key"
 			android:title="@string/pref_auto_accept_friends_title"
 			android:summary="@string/pref_auto_accept_friends_desc"
-			android:defaultValue="false"/>
+			android:defaultValue="@bool/pref_auto_accept_friends_default"/>
 	    
 	</PreferenceCategory>
 

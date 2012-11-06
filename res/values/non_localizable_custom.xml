@@ -6,7 +6,6 @@
 	<!--<string name="push_sender_id">622464153529</string>-->
 
 	<string name="default_domain">sip.linphone.org</string>
-	<string name="default_stun">stun.linphone.org</string>
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 	<string name="upload_url">https://www.linphone.org:444/upload.php</string>
 
@@ -44,9 +43,6 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
-	
-	<string name="default_audio_port">7078</string>
-	<string name="default_video_port">9078</string>
 	
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>
