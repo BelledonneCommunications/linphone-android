@@ -18,15 +18,18 @@ import android.widget.TextView;
 
 public class EditContactFragment extends Fragment {
 	private View view;
-	private boolean isNewContact = true;
 	private TextView ok;
 	private EditText displayName;
+	
+	private boolean isNewContact = true;
+	private int contactID;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Contact contact = null;
 		if (getArguments() != null && getArguments().getSerializable("Contact") != null) {
 			contact = (Contact) getArguments().getSerializable("Contact");
 			isNewContact = false;
+			contactID = Integer.parseInt(contact.getID());
 		}
 		
 		view = inflater.inflate(R.layout.edit_contact, container, false);
@@ -45,7 +48,10 @@ public class EditContactFragment extends Fragment {
 			public void onClick(View v) {
 				if (isNewContact) {
 					createNewContact();
+				} else {
+					updateExistingContact();
 				}
+				getFragmentManager().popBackStackImmediate();
 			}
 		});
 		
@@ -77,7 +83,7 @@ public class EditContactFragment extends Fragment {
 	
 	private void createNewContact() {
 		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-        int contactID = ops.size();
+        contactID = ops.size();
 
         ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
     		.withValue(RawContacts.ACCOUNT_TYPE, null)
@@ -86,6 +92,27 @@ public class EditContactFragment extends Fragment {
         if (displayName.getText().length() > 0) {           
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)              
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName.getText().toString()).build()
+            );
+        }
+        
+        try {
+            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+        	
+        }
+	}
+	
+	private void updateExistingContact() {
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		
+		if (displayName.getText().length() > 0) {        
+			String selectPhone = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE +  "'" ; 
+			String[] phoneArgs = new String[] { String.valueOf(contactID) };   
+			
+            ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
+        		.withSelection(selectPhone, phoneArgs) 
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName.getText().toString()).build()
             );
