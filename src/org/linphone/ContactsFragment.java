@@ -23,7 +23,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.OnlineStatus;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -109,8 +108,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		} 
 		else if (id == R.id.newContact) {
 			editConsumed = true;
-			Intent intent = Compatibility.prepareAddContactIntent(null, sipAddressToAdd);
-			startActivity(intent);
+			LinphoneActivity.instance().addContact(null, sipAddressToAdd);
 		} 
 	}
 	
@@ -159,8 +157,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		Contact contact = (Contact) adapter.getItemAtPosition(position);
 		if (editOnClick) {
 			editConsumed = true;
-			Intent intent = Compatibility.prepareEditContactIntentWithSipAddress(Integer.parseInt(contact.getID()), sipAddressToAdd);
-			startActivity(intent);
+			LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
 		} else {
 			lastKnownPosition = contactsList.getFirstVisiblePosition();
 			LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);

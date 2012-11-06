@@ -29,6 +29,8 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<!-- Needed to store received images if the user wants to -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<!-- Needed to use our own Contact editor -->
+	<uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 	
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     

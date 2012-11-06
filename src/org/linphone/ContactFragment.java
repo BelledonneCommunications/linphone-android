@@ -23,7 +23,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.ui.AvatarWithShadow;
 
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -59,8 +58,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		}
 	};
 	
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		contact = (Contact) getArguments().getSerializable("Contact");
 		
 		this.inflater = inflater;
@@ -183,17 +181,14 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		Intent intent;
 			
 		switch (id) {
 		case R.id.editContact:
-			intent = Compatibility.prepareEditContactIntent(Integer.parseInt(contact.getID()));
-			startActivity(intent);
+			LinphoneActivity.instance().editContact(contact);
 			break;
 			
 		case R.id.newContact:
-			intent = Compatibility.prepareAddContactIntent("", "");
-			startActivity(intent);
+			LinphoneActivity.instance().addContact("", "");
 			break;
 		}
 	}
