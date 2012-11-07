@@ -147,6 +147,7 @@ public class EditContactFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						nounoa.delete();
+						numbersAndAddresses.remove(nounoa);
 						view.setVisibility(View.GONE);
 					}
 				});
@@ -279,7 +280,35 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		public void delete() {
-			//TODO
+			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+			
+			if (isSipAddress) {
+				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
+						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
+						+ ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?"; 
+				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
+				
+	            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
+	        		.withSelection(select, args) 
+	                .build()
+	            );
+			} else {
+				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
+						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
+						+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
+				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
+				
+	            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
+	        		.withSelection(select, args) 
+	                .build()
+	            );
+			}
+	        
+	        try {
+	            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        }
 		}
 		
 		private void addNewNumber(ArrayList<ContentProviderOperation> ops) {
