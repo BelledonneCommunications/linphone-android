@@ -341,4 +341,8 @@
 	
 	<string name="setup_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
 	
+	<string name="delete_contact">Supprimer contact</string>
+	<string name="sip_address">Adresse SIP</string>
+	<string name="phone_number">Numéro de téléphone</string>
+	
 </resources>

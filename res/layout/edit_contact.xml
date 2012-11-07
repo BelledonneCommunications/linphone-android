@@ -42,45 +42,52 @@
         
     </LinearLayout>
     
-    <LinearLayout 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:paddingTop="20dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-	    android:gravity="center_vertical"
-	    android:orientation="horizontal">
-        
-        <org.linphone.ui.AvatarWithShadow
-		    android:id="@+id/contactPicture"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    linphone:picture="@drawable/unknown_small" />
-	        
-        <EditText
-	        android:id="@+id/contactName"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/black"
-	        android:background="@drawable/chat_fast_address_background"
-	        android:gravity="left"
-	        android:paddingRight="5dp"
-	        android:inputType="textPersonName|textCapWords"/>
-        
-    </LinearLayout>
-    
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        
-	    <TableLayout
-	        android:id="@+id/controls"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:stretchColumns="*"
-	        android:paddingTop="20dp"
-	        android:paddingLeft="10dp"
-	        android:paddingRight="10dp"/>
+    
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical" >
+    
+		    <LinearLayout 
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:paddingTop="20dp"
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp"
+			    android:gravity="center_vertical"
+			    android:orientation="horizontal">
+		        
+		        <org.linphone.ui.AvatarWithShadow
+				    android:id="@+id/contactPicture"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    linphone:picture="@drawable/unknown_small" />
+			        
+		        <EditText
+			        android:id="@+id/contactName"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:textColor="@android:color/black"
+			        android:background="@drawable/chat_fast_address_background"
+			        android:gravity="left"
+			        android:paddingRight="5dp"
+			        android:inputType="textPersonName|textCapWords"/>
+		        
+		    </LinearLayout>
+		        
+		    <TableLayout
+		        android:id="@+id/controls"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:stretchColumns="*"
+		        android:paddingTop="20dp"
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp"/>
+
+		</LinearLayout>
     
     </ScrollView>
 

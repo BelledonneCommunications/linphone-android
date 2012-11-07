@@ -88,6 +88,9 @@ public class ChatStorage {
 	}
 	
 	public int saveMessage(String from, String to, Bitmap image) {
+		if (image == null)
+			return -1;
+		
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);

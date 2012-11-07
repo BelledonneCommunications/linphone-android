@@ -118,12 +118,23 @@ public class ApiFivePlus {
 		return intent;
 	}
 	
+	@SuppressWarnings("resource")
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
 		List<String> list = new ArrayList<String>();
 
 		Uri uri = Data.CONTENT_URI;
 		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
 
+		// Phone Numbers
+		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
+		if (c != null) {
+	        while (c.moveToNext()) {
+	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+	            list.add(number); 
+	        }
+	        c.close();
+		}
+		
 		// SIP addresses
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
 			String selection = new StringBuilder()
@@ -135,7 +146,7 @@ public class ApiFivePlus {
 				.append("'")
 				.toString();
 			projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
-			Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
+			c = cr.query(uri, projection, selection, new String[]{id}, null);
 			if (c != null) {
 				int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
 				while (c.moveToNext()) {
@@ -152,7 +163,7 @@ public class ApiFivePlus {
 				.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
 				.append(") = 'sip'")
 				.toString();
-			Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
+			c = cr.query(uri, projection, selection, new String[]{id}, null);
 			if (c != null) {
 				int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
 				while (c.moveToNext()) {
@@ -160,16 +171,6 @@ public class ApiFivePlus {
 				}
 				c.close();
 			}
-		}
-		
-		// Phone Numbers
-		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
-		if (c != null) {
-	        while (c.moveToNext()) {
-	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
-	            list.add(number); 
-	        }
-	        c.close();
 		}
 
 		return list;
