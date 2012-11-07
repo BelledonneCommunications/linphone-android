@@ -22,22 +22,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_add_contact"
-            android:id="@+id/newContact"
-            android:background="@drawable/contact_add_contact"
-            android:text="@string/button_add_contact"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
+		    android:adjustViewBounds="true"/>
         
     </LinearLayout>
     
