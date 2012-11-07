@@ -39,7 +39,7 @@ import android.widget.TextView;
  */
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private TextView editContact, newContact;
+	private TextView editContact;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -70,10 +70,6 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		
 		editContact = (TextView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
-		newContact = (TextView) view.findViewById(R.id.newContact);
-		if (newContact != null) {
-			newContact.setOnClickListener(this);
-		}
 		
 		return view;
 	}
@@ -185,10 +181,6 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		switch (id) {
 		case R.id.editContact:
 			LinphoneActivity.instance().editContact(contact);
-			break;
-			
-		case R.id.newContact:
-			LinphoneActivity.instance().addContact("", "");
 			break;
 		}
 	}

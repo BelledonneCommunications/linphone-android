@@ -1075,6 +1075,17 @@ public class LinphoneActivity extends FragmentActivity implements
 			}
 		}
 	}
+	
+	public void removeContactFromLists(Contact contact) {
+		if (contactList.contains(contact)) {
+			contactList.remove(contact);
+			contactCursor = Compatibility.getContactsCursor(getContentResolver());
+		}
+		if (sipContactList.contains(contact)) {
+			sipContactList.remove(contact);
+			sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
+		}
+	}
 
 	private synchronized void prepareContactsInBackground() {
 		if (contactCursor != null) {
@@ -1110,10 +1121,11 @@ public class LinphoneActivity extends FragmentActivity implements
 				}
 			}
 		});
-		sipContactsHandler.start();
 
 		contactList = new ArrayList<Contact>();
 		sipContactList = new ArrayList<Contact>();
+		
+		sipContactsHandler.start();
 	}
 
 	private void initInCallMenuLayout(boolean callTransfer) {
