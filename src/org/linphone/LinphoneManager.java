@@ -581,22 +581,22 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		try {
 			// Configure audio codecs
-//			enableDisableAudioCodec("speex", 32000, R.string.pref_codec_speex32_key);
-			enableDisableAudioCodec("speex", 32000, false);
-			enableDisableAudioCodec("speex", 16000, R.string.pref_codec_speex16_key);
-			enableDisableAudioCodec("speex", 8000, R.string.pref_codec_speex8_key);
-			enableDisableAudioCodec("iLBC", 8000, R.string.pref_codec_ilbc_key);
-			enableDisableAudioCodec("GSM", 8000, R.string.pref_codec_gsm_key);
-			enableDisableAudioCodec("G722", 8000, R.string.pref_codec_g722_key);
-			enableDisableAudioCodec("G729", 8000, R.string.pref_codec_g729_key); 
-			enableDisableAudioCodec("PCMU", 8000, R.string.pref_codec_pcmu_key);
-			enableDisableAudioCodec("PCMA", 8000, R.string.pref_codec_pcma_key);
-			enableDisableAudioCodec("AMR", 8000, R.string.pref_codec_amr_key);
-            enableDisableAudioCodec("AMR-WB", 16000, R.string.pref_codec_amrwb_key);
-			enableDisableAudioCodec("SILK", 24000, R.string.pref_codec_silk24_key);
-			enableDisableAudioCodec("SILK", 16000, R.string.pref_codec_silk16_key);
-			enableDisableAudioCodec("SILK", 12000, R.string.pref_codec_silk12_key);
-			enableDisableAudioCodec("SILK", 8000, R.string.pref_codec_silk8_key);
+//			enableDisableAudioCodec("speex", 32000, 1, R.string.pref_codec_speex32_key);
+			enableDisableAudioCodec("speex", 32000, 1, false);
+			enableDisableAudioCodec("speex", 16000, 1, R.string.pref_codec_speex16_key);
+			enableDisableAudioCodec("speex", 8000, 1, R.string.pref_codec_speex8_key);
+			enableDisableAudioCodec("iLBC", 8000, 1, R.string.pref_codec_ilbc_key);
+			enableDisableAudioCodec("GSM", 8000, 1, R.string.pref_codec_gsm_key);
+			enableDisableAudioCodec("G722", 8000, 1, R.string.pref_codec_g722_key);
+			enableDisableAudioCodec("G729", 8000, 1, R.string.pref_codec_g729_key); 
+			enableDisableAudioCodec("PCMU", 8000, 1, R.string.pref_codec_pcmu_key);
+			enableDisableAudioCodec("PCMA", 8000, 1, R.string.pref_codec_pcma_key);
+			enableDisableAudioCodec("AMR", 8000, 1, R.string.pref_codec_amr_key);
+            enableDisableAudioCodec("AMR-WB", 16000, 1, R.string.pref_codec_amrwb_key);
+			enableDisableAudioCodec("SILK", 24000, 1, R.string.pref_codec_silk24_key);
+			enableDisableAudioCodec("SILK", 16000, 1, R.string.pref_codec_silk16_key);
+			enableDisableAudioCodec("SILK", 12000, 1, R.string.pref_codec_silk12_key);
+			enableDisableAudioCodec("SILK", 8000, 1, R.string.pref_codec_silk8_key);
 
 
 			// Configure video codecs
@@ -768,15 +768,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.setSignalingTransportPorts(ports);
 	}
 
-	private void enableDisableAudioCodec(String codec, int rate, int key) throws LinphoneCoreException {
-		PayloadType pt = mLc.findPayloadType(codec, rate);
+	private void enableDisableAudioCodec(String codec, int rate, int channels, int key) throws LinphoneCoreException {
+		PayloadType pt = mLc.findPayloadType(codec, rate, channels);
 		if (pt !=null) {
 			boolean enable= getPrefBoolean(key,false);
 			mLc.enablePayloadType(pt, enable);
 		}
 	}
-	private void enableDisableAudioCodec(String codec, int rate, boolean enable) throws LinphoneCoreException {
-		PayloadType pt = mLc.findPayloadType(codec, rate);
+	private void enableDisableAudioCodec(String codec, int rate, int channels, boolean enable) throws LinphoneCoreException {
+		PayloadType pt = mLc.findPayloadType(codec, rate, channels);
 		if (pt !=null) {
 			mLc.enablePayloadType(pt, enable);
 		}
