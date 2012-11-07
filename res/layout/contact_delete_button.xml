@@ -2,7 +2,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/delete"
+    android:text="@string/delete_contact"
     android:background="@drawable/alert"
     android:textColor="@android:color/white"
     android:gravity="center"

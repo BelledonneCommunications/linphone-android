@@ -1087,7 +1087,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 	}
 
-	private synchronized void prepareContactsInBackground() {
+	public synchronized void prepareContactsInBackground() {
 		if (contactCursor != null) {
 			contactCursor.close();
 		}

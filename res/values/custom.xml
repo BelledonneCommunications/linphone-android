@@ -6,6 +6,7 @@
 	<string name="picture_name_format">linphone-mms-%s.jpg</string>
     
 	<string name="app_name">Linphone</string>
+	<string name="addressbook_label">Linphone</string>
 	<string name="notification_title">Linphone</string>
 	<string name="wait_dialog_text">Starting up</string>
 	<string name="notification_registered">Registered to %s </string> 

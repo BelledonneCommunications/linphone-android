@@ -8,6 +8,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.content.ContentProviderOperation;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -29,10 +30,13 @@ public class EditContactFragment extends Fragment {
 	private TextView ok;
 	private EditText displayName;
 	private LayoutInflater inflater;
+	private View deleteContact;
 	
 	private boolean isNewContact = true;
 	private int contactID;
 	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
+	private ArrayList<ContentProviderOperation> ops;
+	private int firstSipAddressIndex = -1;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
@@ -67,7 +71,17 @@ public class EditContactFragment extends Fragment {
 				for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
 					numberOrAddress.save();
 				}
-				
+
+		        try {
+		            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+					
+			        if (isNewContact) {
+			        	LinphoneActivity.instance().prepareContactsInBackground();
+			        }
+		        } catch (Exception e) {
+		        	e.printStackTrace();
+		        }
+		        
 				getFragmentManager().popBackStackImmediate();
 			}
 		});
@@ -106,17 +120,23 @@ public class EditContactFragment extends Fragment {
 		
 		initNumbersFields((TableLayout) view.findViewById(R.id.controls), contact);
 		
+		ops = new ArrayList<ContentProviderOperation>();
+		
 		return view;
 	}
 	
-	private void initNumbersFields(TableLayout controls, final Contact contact) {
+	private void initNumbersFields(final TableLayout controls, final Contact contact) {
 		controls.removeAllViews();
 		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();
 		
 		if (contact != null) {
 			for (String numberOrAddress : contact.getNumerosOrAddresses()) {
-				boolean isSip = numberOrAddress.startsWith("sip:");
+				final boolean isSip = numberOrAddress.startsWith("sip:");
 				if (isSip) {
+					if (firstSipAddressIndex == -1) {
+						firstSipAddressIndex = controls.getChildCount();
+					}
+					
 					numberOrAddress = numberOrAddress.replace("sip:", "");
 				}
 				
@@ -149,31 +169,98 @@ public class EditContactFragment extends Fragment {
 						nounoa.delete();
 						numbersAndAddresses.remove(nounoa);
 						view.setVisibility(View.GONE);
+						if (isSip) // Add back the add SIP row
+							addEmptyRowToAllowNewNumberOrAddress(controls, true);
 					}
 				});
 				
 				controls.addView(view);
 			}
-			
-			if (!isNewContact) {
-				View deleteContact = inflater.inflate(R.layout.contact_delete_button, null);
-				deleteContact.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						deleteExistingContact();
-						LinphoneActivity.instance().removeContactFromLists(contact);
-						LinphoneActivity.instance().displayContacts(false);
-					}
-				});
-				controls.addView(deleteContact);
+		}
+		
+		if (!isNewContact) {
+			deleteContact = inflater.inflate(R.layout.contact_delete_button, null);
+			deleteContact.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					deleteExistingContact();
+					LinphoneActivity.instance().removeContactFromLists(contact);
+					LinphoneActivity.instance().displayContacts(false);
+				}
+			});
+			controls.addView(deleteContact, controls.getChildCount());
+		}
+
+		// Add one for phone numbers, one for SIP address
+		addEmptyRowToAllowNewNumberOrAddress(controls, false);
+		if (firstSipAddressIndex == -1) { // Only add new SIP address field if there is no SIP address yet
+			firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to alwas display phone numbers before SIP accounts
+			addEmptyRowToAllowNewNumberOrAddress(controls, true);
+		}
+	}
+	
+	private void addEmptyRowToAllowNewNumberOrAddress(final TableLayout controls, final boolean isSip) {
+		final View view = inflater.inflate(R.layout.contact_add_row, null);
+		
+		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(isSip);
+		
+		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
+		noa.setHint(isSip ? getString(R.string.sip_address) : getString(R.string.phone_number));
+		noa.requestFocus();
+		noa.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				nounoa.setNewNumberOrAddress(noa.getText().toString());
 			}
 			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+		
+		final ImageView add = (ImageView) view.findViewById(R.id.add);
+		add.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Add a line, and change add button for a delete button
+				numbersAndAddresses.add(nounoa);
+				add.setImageResource(R.drawable.list_delete);
+				add.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						numbersAndAddresses.remove(nounoa);
+						view.setVisibility(View.GONE);
+						if (isSip) // Add back the add SIP row
+							addEmptyRowToAllowNewNumberOrAddress(controls, true);
+					}
+				});
+				if (!isSip) { // Only 1 SIP address / contact
+					firstSipAddressIndex++;
+					addEmptyRowToAllowNewNumberOrAddress(controls, false);
+				}
+			}
+		});
+		
+		if (isSip) {
+			controls.addView(view, controls.getChildCount());
+			// Move to the bottom the remove contact button
+			controls.removeView(deleteContact);
+			controls.addView(deleteContact, controls.getChildCount());
+		} else {
+			if (firstSipAddressIndex != -1) {
+				controls.addView(view, firstSipAddressIndex);
+			} else {
+				controls.addView(view);
+			}
 		}
 	}
 	
 	private void createNewContact() {
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-        contactID = ops.size();
+        contactID = 0;
 
         ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
     		.withValue(RawContacts.ACCOUNT_TYPE, null)
@@ -187,17 +274,9 @@ public class EditContactFragment extends Fragment {
                 .build()
             );
         }
-        
-        try {
-            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
 	}
 	
 	private void updateExistingContact() {
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-		
 		if (displayName.getText().length() > 0) {        
 			String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE +  "'" ; 
 			String[] args = new String[] { String.valueOf(contactID) };   
@@ -209,17 +288,9 @@ public class EditContactFragment extends Fragment {
                 .build()
             );
         }
-        
-        try {
-            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
 	}
 	
 	private void deleteExistingContact() {
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-		
 		if (displayName.getText().length() > 0) {        
 			String select = ContactsContract.Data.CONTACT_ID + "=?"; 
 			String[] args = new String[] { String.valueOf(contactID) };   
@@ -237,10 +308,27 @@ public class EditContactFragment extends Fragment {
         }
 	}
 	
+	private String findRawContactID(String contactID) {
+		Cursor c = getActivity().getContentResolver().query(RawContacts.CONTENT_URI,
+		          new String[]{RawContacts._ID},
+		          RawContacts.CONTACT_ID + "=?",
+		          new String[]{contactID}, null);
+		if (c != null && c.moveToFirst()) {
+			return c.getString(c.getColumnIndex(RawContacts._ID));
+		}
+		return null;
+	}
+	
 	class NewOrUpdatedNumberOrAddress {
 		private String oldNumberOrAddress;
 		private String newNumberOrAddress;
 		private boolean isSipAddress;
+		
+		public NewOrUpdatedNumberOrAddress() {
+			oldNumberOrAddress = null;
+			newNumberOrAddress = null;
+			isSipAddress = false;
+		}
 		
 		public NewOrUpdatedNumberOrAddress(boolean isSip) {
 			oldNumberOrAddress = null;
@@ -262,26 +350,16 @@ public class EditContactFragment extends Fragment {
 			if (newNumberOrAddress == null || newNumberOrAddress.equals(oldNumberOrAddress))
 				return;
 
-			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-			
 			if (oldNumberOrAddress == null) {
 				// New number to add
-				addNewNumber(ops);
+				addNewNumber();
 			} else {
 				// Old number to update
-				updateNumber(ops);
+				updateNumber();
 			}
-			
-			try {
-	            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
 		}
 		
 		public void delete() {
-			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-			
 			if (isSipAddress) {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
@@ -303,39 +381,55 @@ public class EditContactFragment extends Fragment {
 	                .build()
 	            );
 			}
-	        
-	        try {
-	            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
 		}
 		
-		private void addNewNumber(ArrayList<ContentProviderOperation> ops) {
-			if (isSipAddress) {
-				ops.add(ContentProviderOperation.
-			        newInsert(ContactsContract.Data.CONTENT_URI)
-			        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
-			        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-			        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newNumberOrAddress)
-			        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
-			        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, "Linphone")
-			        .build()
-			    );
+		private void addNewNumber() {
+			if (isNewContact) {
+				if (isSipAddress) {
+					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
+				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
+				        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newNumberOrAddress)
+				        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
+				        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, getString(R.string.addressbook_label))
+				        .build()
+				    );
+				} else {
+					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
+				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
+				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
+				        .withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
+				        .build()
+				    );
+				}
 			} else {
-				ops.add(ContentProviderOperation.
-			        newInsert(ContactsContract.Data.CONTENT_URI)
-			        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
-			        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-			        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-			        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
-			        .withValue(ContactsContract.CommonDataKinds.Phone.LABEL, "Linphone")
-			        .build()
-			    );
+				String rawContactId = findRawContactID(String.valueOf(contactID));
+				
+				if (isSipAddress) {
+					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
+					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
+				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
+				        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newNumberOrAddress)
+				        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
+				        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, getString(R.string.addressbook_label))
+				        .build()
+				    );
+				} else {
+					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
+					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
+				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
+				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
+				        .withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
+				        .build()
+				    );
+				}
 			}
 		}
 		
-		private void updateNumber(ArrayList<ContentProviderOperation> ops) {
+		private void updateNumber() {
 			if (isSipAddress) {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
