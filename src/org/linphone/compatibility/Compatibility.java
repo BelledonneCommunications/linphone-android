@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.Contact;
@@ -27,6 +28,7 @@ import org.linphone.mediastream.Version;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,76 +42,76 @@ import android.view.Display;
  */
 public class Compatibility {
 	public static void overridePendingTransition(Activity activity, int idAnimIn, int idAnimOut) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			ApiFivePlus.overridePendingTransition(activity, idAnimIn, idAnimOut);
 		}
 	}
 	
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.prepareAddContactIntent(displayName, sipUri);
 		}
 		return null;
 	}
 	
 	public static Intent prepareEditContactIntent(int id) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.prepareEditContactIntent(id);
 		}
 		return null;
 	}
 	
 	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipAddress) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.prepareEditContactIntentWithSipAddress(id, sipAddress);
 		}
 		return null;
 	}
 	
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
 		}
 		return null;
 	}
 	
 	public static Cursor getContactsCursor(ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.getContactsCursor(cr);
 		}
 		return null;
 	}
 	
 	public static Cursor getSIPContactsCursor(ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.getSIPContactsCursor(cr);
 		}
 		return null;
 	}
 	
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.getCursorDisplayNameColumnIndex(cursor);
 		}
 		return -1;
 	}
 
 	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.getContact(cr, cursor, position);
 		}
 		return null;
 	}
 
 	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.getContactPictureInputStream(cr, id);
 		}
 		return null;
 	}
 	
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
 		}
 		return null;
@@ -126,7 +128,7 @@ public class Compatibility {
 		
 		if (Version.sdkAboveOrEqual(16)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
-		} else if (Version.sdkAboveOrEqual(11)) {
+		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else {
 			notif = ApiFivePlus.createMessageNotification(context, title, msg, intent);
@@ -139,7 +141,7 @@ public class Compatibility {
 		
 		if (Version.sdkAboveOrEqual(16)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
-		} else if (Version.sdkAboveOrEqual(11)) {
+		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else {
 			notif = ApiFivePlus.createInCallNotification(context, title, msg, iconID, intent);
@@ -148,14 +150,14 @@ public class Compatibility {
 	}
 
 	public static String refreshContactName(ContentResolver cr, String id) {
-		if (Version.sdkAboveOrEqual(5)) {
+		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.refreshContactName(cr, id);
 		}
 		return null;
 	}
 
 	public static int getRotation(Display display) {
-		if (Version.sdkStrictlyBelow(8)) {
+		if (Version.sdkStrictlyBelow(Version.API08_FROYO_22)) {
 			return ApiFivePlus.getRotation(display);
 		} else {
 			return ApiEightPlus.getRotation(display);
@@ -163,7 +165,7 @@ public class Compatibility {
 	}
 	
 	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
-		if (Version.sdkAboveOrEqual(11)) {
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			ApiElevenPlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
 		} else {
 			ApiFivePlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
@@ -171,7 +173,7 @@ public class Compatibility {
 	}
 
 	public static CompatibilityScaleGestureDetector getScaleGestureDetector(Context context, CompatibilityScaleGestureListener listener) {
-		if (Version.sdkAboveOrEqual(8)) {
+		if (Version.sdkAboveOrEqual(Version.API08_FROYO_22)) {
 			CompatibilityScaleGestureDetector csgd = new CompatibilityScaleGestureDetector(context);
 			csgd.setOnScaleListener(listener);
 			return csgd;
@@ -181,7 +183,7 @@ public class Compatibility {
 	
 	
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
-		if (Version.sdkAboveOrEqual(14)) {
+		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
 			ApiFourteenPlus.setPreferenceChecked(preference, checked);
 		} else {
 			ApiFivePlus.setPreferenceChecked(preference, checked);
@@ -189,7 +191,7 @@ public class Compatibility {
 	}
 	
 	public static boolean isPreferenceChecked(Preference preference) {
-		if (Version.sdkAboveOrEqual(14)) {
+		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
 			return ApiFourteenPlus.isPreferenceChecked(preference);
 		} else {
 			return ApiFivePlus.isPreferenceChecked(preference);
@@ -197,16 +199,48 @@ public class Compatibility {
 	}
 	
 	public static void initPushNotificationService(Context context) {
-		if (Version.sdkAboveOrEqual(8)) {
+		if (Version.sdkAboveOrEqual(Version.API08_FROYO_22)) {
 			ApiEightPlus.initPushNotificationService(context);
 		}
 	}
 
 	public static void copyTextToClipboard(Context context, String msg) {
-		if(Version.sdkAboveOrEqual(11)) {
+		if(Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			ApiElevenPlus.copyTextToClipboard(context, msg);
 		} else {
 		    ApiFivePlus.copyTextToClipboard(context, msg);
+		}
+	}
+	
+	public static void addSipAddressToContact(Context context, ArrayList<ContentProviderOperation> ops, String sipAddress) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.addSipAddressToContact(context, ops, sipAddress);
+		} else {
+			ApiFivePlus.addSipAddressToContact(context, ops, sipAddress);
+		}
+	}
+	
+	public static void addSipAddressToContact(Context context, ArrayList<ContentProviderOperation> ops, String sipAddress, String rawContactID) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.addSipAddressToContact(context, ops, sipAddress, rawContactID);
+		} else {
+			ApiFivePlus.addSipAddressToContact(context, ops, sipAddress, rawContactID);
+		}
+	}
+	
+	public static void updateSipAddressForContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String newSipAddress, String contactID) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.updateSipAddressForContact(ops, oldSipAddress, newSipAddress, contactID);
+		} else {
+			ApiFivePlus.updateSipAddressForContact(ops, oldSipAddress, newSipAddress, contactID);
+		}
+	}
+	
+	public static void deleteSipAddressFromContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String contactID) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
+		} else {
+			ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
 		}
 	}
 }
