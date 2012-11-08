@@ -247,9 +247,11 @@ public class EditContactFragment extends Fragment {
 		
 		if (isSip) {
 			controls.addView(view, controls.getChildCount());
-			// Move to the bottom the remove contact button
-			controls.removeView(deleteContact);
-			controls.addView(deleteContact, controls.getChildCount());
+			if (deleteContact != null) {
+				// Move to the bottom the remove contact button
+				controls.removeView(deleteContact);
+				controls.addView(deleteContact, controls.getChildCount());
+			}
 		} else {
 			if (firstSipAddressIndex != -1) {
 				controls.addView(view, firstSipAddressIndex);
@@ -361,15 +363,7 @@ public class EditContactFragment extends Fragment {
 		
 		public void delete() {
 			if (isSipAddress) {
-				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
-						+ ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?"; 
-				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
-				
-	            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-	        		.withSelection(select, args) 
-	                .build()
-	            );
+				Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
@@ -386,14 +380,7 @@ public class EditContactFragment extends Fragment {
 		private void addNewNumber() {
 			if (isNewContact) {
 				if (isSipAddress) {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
-				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newNumberOrAddress)
-				        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
-				        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, getString(R.string.addressbook_label))
-				        .build()
-				    );
+					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
 				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
@@ -408,14 +395,7 @@ public class EditContactFragment extends Fragment {
 				String rawContactId = findRawContactID(String.valueOf(contactID));
 				
 				if (isSipAddress) {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
-					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newNumberOrAddress)
-				        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
-				        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, getString(R.string.addressbook_label))
-				        .build()
-				    );
+					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
 					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
@@ -431,17 +411,7 @@ public class EditContactFragment extends Fragment {
 		
 		private void updateNumber() {
 			if (isSipAddress) {
-				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
-						+ ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?"; 
-				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
-				
-	            ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
-	        		.withSelection(select, args) 
-	                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-	                .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newNumberOrAddress)
-	                .build()
-	            );
+				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 

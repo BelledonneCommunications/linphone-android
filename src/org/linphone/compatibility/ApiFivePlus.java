@@ -15,6 +15,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -371,5 +372,53 @@ public class ApiFivePlus {
 	public static void copyTextToClipboard(Context context, String msg) {
 	    ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
 	    clipboard.setText(msg);
+	}
+	
+	public static void addSipAddressToContact(Context context, ArrayList<ContentProviderOperation> ops, String sipAddress) {
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
+	        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+	        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+	        .withValue(ContactsContract.CommonDataKinds.Im.DATA, sipAddress)
+	        .withValue(ContactsContract.CommonDataKinds.Im.TYPE,  ContactsContract.CommonDataKinds.Im.TYPE_CUSTOM)
+	        .withValue(ContactsContract.CommonDataKinds.Im.LABEL, context.getString(R.string.addressbook_label))
+	        .build()
+	    );
+	}
+	
+	public static void addSipAddressToContact(Context context, ArrayList<ContentProviderOperation> ops, String sipAddress, String rawContactID) {
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
+		    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactID)       
+	        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+	        .withValue(ContactsContract.CommonDataKinds.Im.DATA, sipAddress)
+	        .withValue(ContactsContract.CommonDataKinds.Im.TYPE,  ContactsContract.CommonDataKinds.Im.TYPE_CUSTOM)
+	        .withValue(ContactsContract.CommonDataKinds.Im.LABEL, context.getString(R.string.addressbook_label))
+	        .build()
+	    );
+	}
+	
+	public static void updateSipAddressForContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String newSipAddress, String contactID) {
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
+				+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE +  "' AND " 
+				+ ContactsContract.CommonDataKinds.Im.DATA + "=?"; 
+		String[] args = new String[] { String.valueOf(contactID), oldSipAddress };   
+		
+        ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
+    		.withSelection(select, args) 
+            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+            .withValue(ContactsContract.CommonDataKinds.Im.DATA, newSipAddress)
+            .build()
+        );
+	}
+	
+	public static void deleteSipAddressFromContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String contactID) {
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
+				+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE +  "' AND " 
+				+ ContactsContract.CommonDataKinds.Im.DATA + "=?"; 
+		String[] args = new String[] { String.valueOf(contactID), oldSipAddress };   
+		
+        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
+    		.withSelection(select, args) 
+            .build()
+        );
 	}
 }
