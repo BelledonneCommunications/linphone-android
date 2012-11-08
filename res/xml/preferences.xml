@@ -74,13 +74,14 @@
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_ilbc_key"
 					android:title="@string/pref_codec_ilbc"
-					android:shouldDisableView="@bool/pref_codec_ilbc_default"
+					android:defaultValue="@bool/pref_codec_ilbc_default"
+					android:shouldDisableView="true"
 					android:summary="@string/pref_ilbc_summary"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_amr_key" 
 					android:title="@string/pref_codec_amr" 
-					android:defaultValue="@bool/pref_codec_speex16_default"
+					android:defaultValue="@bool/pref_codec_amr_default"
 					android:shouldDisableView="true"  />
 				
 				<CheckBoxPreference 
