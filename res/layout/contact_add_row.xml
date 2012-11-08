@@ -11,7 +11,7 @@
    	    android:id="@+id/add"
  		android:layout_width="wrap_content"
  		android:layout_height="wrap_content"
- 		android:src="@drawable/sym_action_add"
+ 		android:src="@drawable/list_add"
         android:paddingRight="5dp"
         android:gravity="left" />
    	
