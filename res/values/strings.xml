@@ -391,4 +391,6 @@
 	<string name="delete_contact">Delete contact</string>
 	<string name="sip_address">SIP address</string>
 	<string name="phone_number">Phone number</string>
+	<string name="contact_first_name">First name</string>
+	<string name="contact_last_name">Last name</string>
 </resources>

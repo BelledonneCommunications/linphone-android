@@ -28,7 +28,7 @@ import android.widget.TextView;
 public class EditContactFragment extends Fragment {
 	private View view;
 	private TextView ok;
-	private EditText displayName;
+	private EditText firstName, lastName;
 	private LayoutInflater inflater;
 	private View deleteContact;
 	
@@ -86,11 +86,31 @@ public class EditContactFragment extends Fragment {
 			}
 		});
 		
-		displayName = (EditText) view.findViewById(R.id.contactName);
-		displayName.addTextChangedListener(new TextWatcher() {
+		lastName = (EditText) view.findViewById(R.id.contactLastName);
+		lastName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (displayName.getText().length() > 0) {
+				if (lastName.getText().length() > 0) {
+					ok.setEnabled(true);
+				} else {
+					ok.setEnabled(false);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+		
+		firstName = (EditText) view.findViewById(R.id.contactFirstName);
+		firstName.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (firstName.getText().length() > 0) {
 					ok.setEnabled(true);
 				} else {
 					ok.setEnabled(false);
@@ -107,7 +127,14 @@ public class EditContactFragment extends Fragment {
 		});
 		
 		if (!isNewContact) {
-			displayName.setText(contact.getName());
+			String fn = findContactFirstName(String.valueOf(contactID));
+			String ln = findContactLastName(String.valueOf(contactID));
+			if (fn != null || ln != null) {
+				firstName.setText(fn);
+				lastName.setText(ln);
+			} else {
+				lastName.setText(contact.getName());
+			}
 		}
 		
 		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
@@ -205,6 +232,7 @@ public class EditContactFragment extends Fragment {
 		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(isSip);
 		
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
+		numbersAndAddresses.add(nounoa);
 		noa.setHint(isSip ? getString(R.string.sip_address) : getString(R.string.phone_number));
 		noa.requestFocus();
 		noa.addTextChangedListener(new TextWatcher() {
@@ -227,7 +255,6 @@ public class EditContactFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// Add a line, and change add button for a delete button
-				numbersAndAddresses.add(nounoa);
 				add.setImageResource(R.drawable.list_delete);
 				add.setOnClickListener(new OnClickListener() {
 					@Override
@@ -268,46 +295,55 @@ public class EditContactFragment extends Fragment {
     		.withValue(RawContacts.ACCOUNT_TYPE, null)
     		.withValue(RawContacts.ACCOUNT_NAME, null).build());
         
-        if (displayName.getText().length() > 0) {           
+        if (getDisplayName() != null) {           
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)              
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName.getText().toString())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, getDisplayName())
                 .build()
             );
         }
 	}
 	
 	private void updateExistingContact() {
-		if (displayName.getText().length() > 0) {        
+		if (getDisplayName() != null) {        
 			String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE +  "'" ; 
 			String[] args = new String[] { String.valueOf(contactID) };   
 			
             ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
         		.withSelection(select, args) 
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName.getText().toString())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, getDisplayName())
                 .build()
             );
         }
 	}
 	
 	private void deleteExistingContact() {
-		if (displayName.getText().length() > 0) {        
-			String select = ContactsContract.Data.CONTACT_ID + "=?"; 
-			String[] args = new String[] { String.valueOf(contactID) };   
-			
-            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-        		.withSelection(select, args) 
-                .build()
-            );
-        }
+		String select = ContactsContract.Data.CONTACT_ID + "=?"; 
+		String[] args = new String[] { String.valueOf(contactID) };   
+		
+        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
+    		.withSelection(select, args) 
+            .build()
+        );
         
         try {
             getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
         } catch (Exception e) {
         	e.printStackTrace();
         }
+	}
+	
+	private String getDisplayName() {
+		String displayName = null;
+		if (firstName.getText().length() > 0 && lastName.getText().length() > 0)
+			displayName = firstName.getText().toString() + " " + lastName.getText().toString();
+		else if (firstName.getText().length() > 0)
+			displayName = firstName.getText().toString();
+		else if (lastName.getText().length() > 0)
+			displayName = lastName.getText().toString();
+		return displayName;
 	}
 	
 	private String findRawContactID(String contactID) {
@@ -317,6 +353,28 @@ public class EditContactFragment extends Fragment {
 		          new String[]{contactID}, null);
 		if (c != null && c.moveToFirst()) {
 			return c.getString(c.getColumnIndex(RawContacts._ID));
+		}
+		return null;
+	}
+	
+	private String findContactFirstName(String contactID) {
+		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+		          new String[]{ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
+		          RawContacts.CONTACT_ID + "=?",
+		          new String[]{contactID}, null);
+		if (c != null && c.moveToFirst()) {
+			return c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+		}
+		return null;
+	}
+	
+	private String findContactLastName(String contactID) {
+		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+		          new String[]{ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME},
+		          RawContacts.CONTACT_ID + "=?",
+		          new String[]{contactID}, null);
+		if (c != null && c.moveToFirst()) {
+			return c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
 		}
 		return null;
 	}

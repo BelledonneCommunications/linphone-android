@@ -66,15 +66,34 @@
 				    android:layout_height="wrap_content"
 				    linphone:picture="@drawable/unknown_small" />
 			        
-		        <EditText
-			        android:id="@+id/contactName"
+		        <LinearLayout
 			        android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
-			        android:textColor="@android:color/black"
-			        android:background="@drawable/chat_fast_address_background"
-			        android:gravity="left"
-			        android:paddingRight="5dp"
-			        android:inputType="textPersonName|textCapWords"/>
+			        android:orientation="vertical">
+			        
+			        <EditText
+				        android:id="@+id/contactLastName"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:hint="@string/contact_last_name"
+				        android:textColor="@android:color/black"
+				        android:background="@drawable/chat_fast_address_background"
+				        android:gravity="left"
+				        android:paddingRight="5dp"
+				        android:inputType="textPersonName|textCapWords"/>
+			        
+			        <EditText
+				        android:id="@+id/contactFirstName"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:hint="@string/contact_first_name"
+				        android:textColor="@android:color/black"
+				        android:background="@drawable/chat_fast_address_background"
+				        android:gravity="left"
+				        android:paddingRight="5dp"
+				        android:inputType="textPersonName|textCapWords"/>
+		            
+		        </LinearLayout>
 		        
 		    </LinearLayout>
 		        
