@@ -53,6 +53,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -104,6 +105,11 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			PreferenceCategory friends = (PreferenceCategory) findPreference(getString(R.string.pref_linphone_friend_key));
 			friends.removeAll();
 			friends.setLayoutResource(R.layout.hidden);
+		}
+
+		EditTextPreference imageSharingServer = (EditTextPreference) findPreference(getString(R.string.pref_image_sharing_server_key));
+		if (getResources().getBoolean(R.bool.disable_chat)) {
+			imageSharingServer.setLayoutResource(R.layout.hidden);
 		}
 
 		initializeTransportPreferences();

@@ -49,6 +49,7 @@
     <bool name="pref_animation_enable_default">false</bool>
     <bool name="pref_autostart_default">false</bool>
     <string name="pref_incoming_call_timeout_default">30</string>
+    <string name="pref_image_sharing_server_default">https://www.linphone.org:444/upload.php</string>
     <string name="pref_audio_use_specific_mode_default">0</string>
     
     <bool name="pref_auto_accept_friends_default">false</bool>

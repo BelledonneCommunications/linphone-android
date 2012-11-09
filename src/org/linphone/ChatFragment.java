@@ -173,7 +173,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			chatRoom = lc.createChatRoom(sipUri);
 		}
 		
-		uploadServerUri = getActivity().getResources().getString(R.string.upload_url);
+		uploadServerUri = getActivity().getResources().getString(R.string.pref_image_sharing_server_key);
 		addVirtualKeyboardVisiblityListener();
 		
         message.addTextChangedListener(new TextWatcher() {
@@ -641,9 +641,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		String[] proj = { MediaStore.Images.Media.DATA };
 	    CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
 	    Cursor cursor = loader.loadInBackground();
-	    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	    cursor.moveToFirst();
-	    return cursor.getString(column_index);
+	    if (cursor != null && cursor.moveToFirst()) {
+		    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		    return cursor.getString(column_index);
+	    }
+	    return null;
     }
 	
 	private void showPopupMenuAskingImageSize(String filePath, Bitmap image) {

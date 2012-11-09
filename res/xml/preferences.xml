@@ -291,6 +291,11 @@
 			    android:title="@string/pref_incoming_call_timeout_title"
 			    android:defaultValue="@string/pref_incoming_call_timeout_default"
 			    android:layout="@layout/hidden"/>
+				 
+			 <EditTextPreference 
+				android:key="@string/pref_image_sharing_server_key"
+				android:title="@string/pref_image_sharing_server_title"
+			  	android:defaultValue="@string/pref_image_sharing_server_default" />
 			
 			<PreferenceScreen
 			    android:title="@string/pref_audio_hacks_title"
