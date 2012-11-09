@@ -344,5 +344,7 @@
 	<string name="delete_contact">Supprimer contact</string>
 	<string name="sip_address">Adresse SIP</string>
 	<string name="phone_number">Numéro de téléphone</string>
+	<string name="contact_first_name">Prénom</string>
+	<string name="contact_last_name">Nom</string>
 	
 </resources>
