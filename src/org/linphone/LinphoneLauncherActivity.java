@@ -21,7 +21,6 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.mediastream.Version;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,7 +45,7 @@ public class LinphoneLauncherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		// Hack to avoid to draw twice LinphoneActivity on tablets
-        if (Version.isXLargeScreen(this)) {
+        if (getResources().getBoolean(R.bool.isTablet)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
