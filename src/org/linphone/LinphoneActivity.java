@@ -45,7 +45,6 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
-import org.linphone.mediastream.Version;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
 
@@ -204,9 +203,13 @@ public class LinphoneActivity extends FragmentActivity implements
 		missedCalls = (TextView) findViewById(R.id.missedCalls);
 		missedChats = (TextView) findViewById(R.id.missedChats);
 	}
+	
+	private boolean isTablet() {
+		return getResources().getBoolean(R.bool.isTablet);
+	}
 
 	private void hideStatusBar() {
-		if (Version.isXLargeScreen(this)) {
+		if (isTablet()) {
 			return;
 		}
 		
@@ -215,7 +218,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	private void showStatusBar() {
-		if (Version.isXLargeScreen(this)) {
+		if (isTablet()) {
 			return;
 		}
 		
@@ -299,7 +302,7 @@ public class LinphoneActivity extends FragmentActivity implements
 
 		if (newFragment != null) {
 			newFragment.setArguments(extras);
-			if (Version.isXLargeScreen(this)) {
+			if (isTablet()) {
 				changeFragmentForTablets(newFragment, newFragmentType, withoutAnimation);
 			} else {
 				changeFragment(newFragment, newFragmentType, withoutAnimation);
@@ -1337,7 +1340,7 @@ public class LinphoneActivity extends FragmentActivity implements
 					return true;
 				}
 			} else {
-				if (Version.isXLargeScreen(this)) {
+				if (isTablet()) {
 					return true;
 				}
 				

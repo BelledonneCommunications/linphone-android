@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    	<!-- Do not translate any of the strings below -->
+	<bool name="isTablet">false</bool>
 
 	<string name="pref_disable_account_key">pref_disable_account_key</string>
 	<string name="pref_extra_accounts">pref_nb_accounts_extra</string>
