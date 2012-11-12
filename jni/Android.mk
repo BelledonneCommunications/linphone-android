@@ -149,3 +149,15 @@ ifneq ($(BUILD_G729), 0)
 include $(linphone-root-dir)/submodules/bcg729/Android.mk
 include $(linphone-root-dir)/submodules/bcg729/msbcg729/Android.mk
 endif
+
+ifneq ($(BUILD_WEBRTC_AECM), 0)
+ifneq ($(TARGET_ARCH), x86)
+ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
+WEBRTC_BUILD_NEON_LIBS=true
+endif
+include $(linphone-root-dir)/submodules/externals/build/webrtc/system_wrappers/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/webrtc/common_audio/signal_processing/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_processing/utility/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_processing/aecm/Android.mk
+endif
+endif
