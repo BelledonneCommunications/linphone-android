@@ -52,128 +52,40 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
+        android:gravity="right"
         android:orientation="vertical" >
 
+        <TextView
+        	android:id="@+id/transfer"
+            android:background="@drawable/options_transfer"
+         	android:text="@string/button_transfer"
+         	android:gravity="center"
+         	android:paddingTop="50dp"
+         	android:textColor="@drawable/text_incall_button_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/addCall"
+            android:background="@drawable/options_add_call_alt"
+         	android:text="@string/button_add_call"
+         	android:gravity="center"
+         	android:paddingTop="50dp"
+         	android:textColor="@drawable/text_incall_button_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+            
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/transfer"
-                android:background="@drawable/options_transfer"
-	            android:text="@string/button_transfer"
-	            android:gravity="center"
-	            android:paddingTop="50dp"
-	            android:textColor="@drawable/text_incall_button_color"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/addCall"
-                android:background="@drawable/options_add_call_alt"
-	            android:text="@string/button_add_call"
-	            android:gravity="center"
-	            android:paddingTop="50dp"
-	            android:textColor="@drawable/text_incall_button_color"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/pause"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_pause"
@@ -184,7 +96,7 @@
                 android:id="@+id/conference"
                 android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_conference"
@@ -196,10 +108,10 @@
                 android:background="@drawable/video_off"
 	            android:text="@string/button_video"
 	            android:gravity="center"
-	            android:paddingTop="35dp"
+	            android:paddingTop="30dp"
 	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <TextView
@@ -207,17 +119,17 @@
                 android:background="@drawable/micro_on"
 	            android:text="@string/button_micro"
 	            android:gravity="center"
-	            android:paddingTop="35dp"
+	            android:paddingTop="30dp"
 	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/hangUp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.94"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_hang_up"
                 android:scaleType="fitXY"
@@ -228,10 +140,10 @@
                 android:background="@drawable/speaker_off"
 	            android:text="@string/button_speaker"
 	            android:gravity="center"
-	            android:paddingTop="35dp"
+	            android:paddingTop="30dp"
 	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <TextView
@@ -239,22 +151,24 @@
                 android:background="@drawable/options"
 	            android:text="@string/button_options"
 	            android:gravity="center"
-	            android:paddingTop="35dp"
+	            android:paddingTop="30dp"
 	            android:textColor="@drawable/text_incall_button_color"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/dialer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/content_description_numpad"
                 android:scaleType="fitXY"
                 android:src="@drawable/dialer_alt" />
+            
         </LinearLayout>
+        
     </LinearLayout>
 
 </RelativeLayout>
