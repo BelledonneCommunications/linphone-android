@@ -52,6 +52,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -124,6 +125,10 @@ public class LinphoneActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (isTablet() && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+		
 		if (!LinphoneManager.isInstanciated()) {
 			Log.e("No service running: avoid crash by starting the launcher", this.getClass().getName());
 			// super.onCreate called earlier
@@ -1339,11 +1344,7 @@ public class LinphoneActivity extends FragmentActivity implements
 				if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 					return true;
 				}
-			} else {
-				if (isTablet()) {
-					return true;
-				}
-				
+			} else if (!isTablet()) {
 				int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 				if (backStackEntryCount <= 1) {
 					showStatusBar();

@@ -75,7 +75,7 @@
 		    android:theme="@style/NoTitle"
             android:noHistory="true"
 			android:launchMode="singleTop"
-            android:screenOrientation="nosensor">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
