@@ -137,7 +137,7 @@
             android:id="@+id/dialer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.24"
+            android:layout_weight="0.245"
             android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_dialer"
             android:scaleType="fitXY"

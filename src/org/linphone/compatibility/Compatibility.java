@@ -37,6 +37,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.preference.Preference;
 import android.view.Display;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /**
  * @author Sylvain Berfini
  */
@@ -241,6 +243,15 @@ public class Compatibility {
 			ApiNinePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
 		} else {
 			ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
+		}
+	}
+	
+
+	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
+		if (Version.sdkAboveOrEqual(16)) {
+			ApiSixteenPlus.removeGlobalLayoutListener(viewTreeObserver, keyboardListener);
+		} else {
+			ApiFivePlus.removeGlobalLayoutListener(viewTreeObserver, keyboardListener);
 		}
 	}
 }

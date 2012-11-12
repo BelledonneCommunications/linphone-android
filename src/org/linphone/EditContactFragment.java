@@ -351,8 +351,13 @@ public class EditContactFragment extends Fragment {
 		          new String[]{RawContacts._ID},
 		          RawContacts.CONTACT_ID + "=?",
 		          new String[]{contactID}, null);
-		if (c != null && c.moveToFirst()) {
-			return c.getString(c.getColumnIndex(RawContacts._ID));
+		if (c != null) {
+			String result = null;
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(RawContacts._ID));
+			}
+			c.close();
+			return result;
 		}
 		return null;
 	}
@@ -362,8 +367,13 @@ public class EditContactFragment extends Fragment {
 		          new String[]{ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
 		          RawContacts.CONTACT_ID + "=?",
 		          new String[]{contactID}, null);
-		if (c != null && c.moveToFirst()) {
-			return c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+		if (c != null) {
+			String result = null;
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+			}
+			c.close();
+			return result;
 		}
 		return null;
 	}
@@ -373,8 +383,13 @@ public class EditContactFragment extends Fragment {
 		          new String[]{ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME},
 		          RawContacts.CONTACT_ID + "=?",
 		          new String[]{contactID}, null);
-		if (c != null && c.moveToFirst()) {
-			return c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+		if (c != null) {
+			String result = null;
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+			}
+			c.close();
+			return result;
 		}
 		return null;
 	}

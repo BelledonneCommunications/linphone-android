@@ -187,6 +187,7 @@ public final class ContactHelper {
 				boolean valid = checkPhotosUris(resolver, c,
 						android.provider.ContactsContract.Data.CONTACT_ID,
 						android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+				c.close();
 				if (valid) return true;
 			}
 			
@@ -202,6 +203,7 @@ public final class ContactHelper {
 			boolean valid = checkPhotosUris(resolver, c,
 					android.provider.ContactsContract.Data.CONTACT_ID,
 					android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+			c.close();
 			if (valid) return true;
 
 			// Finally using phone number
@@ -216,7 +218,7 @@ public final class ContactHelper {
 					android.provider.ContactsContract.PhoneLookup.NUMBER,
 					android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME};
 			c = resolver.query(lookupUri, projection, null, null, null);
-			while (c.moveToNext()) {
+			while (c != null && c.moveToNext()) {
 				long id = c.getLong(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup._ID));
 				String enteredNumber = c.getString(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup.NUMBER));
 				if (!normalizedNumber.equals(PhoneNumberUtils.getStrippedReversed(enteredNumber))) {

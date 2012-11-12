@@ -251,7 +251,8 @@ public class ChatStorage {
 			c.close();
 			return rawImage;
 		}
-		
+
+		c.close();
 		return null;
 	}
 

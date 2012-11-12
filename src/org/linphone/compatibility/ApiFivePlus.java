@@ -36,6 +36,8 @@ import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents.Insert;
 import android.text.ClipboardManager;
 import android.view.Display;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
 /*
 ApiFivePlus.java
@@ -420,5 +422,9 @@ public class ApiFivePlus {
     		.withSelection(select, args) 
             .build()
         );
+	}
+
+	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
+		viewTreeObserver.removeGlobalOnLayoutListener(keyboardListener);
 	}
 }
