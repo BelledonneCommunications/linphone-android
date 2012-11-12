@@ -48,7 +48,7 @@ prepare-mediastreamer2:
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
 generate-libs:
-	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full BUILD_GPLV3_ZRTP=1 USE_JAVAH=1 -j$(NUMCPUS)
+	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full BUILD_WEBRTC_AECM=1 BUILD_GPLV3_ZRTP=1 USE_JAVAH=1 -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path .
