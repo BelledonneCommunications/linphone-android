@@ -42,7 +42,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 /**
  * @author Ghislain MARY
@@ -66,7 +65,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements EcCali
 
 	@Override
 	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SetupActivity.instance());
 		SharedPreferences.Editor editor = prefs.edit();
 		if (status == EcCalibratorStatus.DoneNoEcho) {
 			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), false);
