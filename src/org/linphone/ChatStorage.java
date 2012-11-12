@@ -215,7 +215,7 @@ public class ChatStorage {
 		ArrayList<String> chatList = new ArrayList<String>();
 		
 		Cursor c = db.query(TABLE_NAME, null, null, null, "remoteContact", null, "id DESC");
-		while (c.moveToNext()) {
+		while (c != null && c.moveToNext()) {
 			String remoteContact = c.getString(c.getColumnIndex("remoteContact"));
 			chatList.add(remoteContact);
 		}
