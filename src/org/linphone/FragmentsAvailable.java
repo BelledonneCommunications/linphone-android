@@ -93,7 +93,7 @@ public enum FragmentsAvailable {
 			return fragment == CONTACTS;
 			
 		case EDIT_CONTACT:
-			return fragment == CONTACT;
+			return fragment == CONTACT || fragment == CONTACTS;
 			
 		case CHAT:
 			return fragment == CHATLIST;
