@@ -50,7 +50,7 @@
 	<string name="state_outgoing_progress">sortant</string>
 	
 	<string name="mutemic_button_txt">Silence</string>
-	<string name="speaker_button_txt">Haut parleur</string>
+	<string name="speaker_button_txt">HP</string>
 	<string name="bluetooth_button_txt">Bluetooth</string>
 
 	<string name="CancelButtonText">Annuler</string>
@@ -310,7 +310,7 @@
 	<string name="button_add_call">+ Appel</string>
 	<string name="button_video">Vidéo</string>
 	<string name="button_micro">Micro</string>
-	<string name="button_speaker">Haut parleur</string>
+	<string name="button_speaker">HP</string>
 	<string name="button_options">Options</string>
 	
 	<string name="button_send_message">Envoyer</string>
