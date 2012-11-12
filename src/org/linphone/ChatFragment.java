@@ -117,6 +117,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private Bitmap imageToUpload;
 	private Uri imageToUploadUri;
 	private Thread uploadThread;
+	private TextWatcher textWatcher;
+	private OnGlobalLayoutListener keyboardListener;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -174,9 +176,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		
 		uploadServerUri = getActivity().getResources().getString(R.string.pref_image_sharing_server_key);
-		addVirtualKeyboardVisiblityListener();
 		
-        message.addTextChangedListener(new TextWatcher() {
+        textWatcher = new TextWatcher() {
 			public void afterTextChanged(Editable arg0) {
 				
 			}
@@ -193,13 +194,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					sendMessage.setEnabled(true);
 				}
 			}
-		});
+		};
 		
 		return view;
     }
 	
 	private void addVirtualKeyboardVisiblityListener() {
-		view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+		keyboardListener = new OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
 			    Rect visibleArea = new Rect();
@@ -212,7 +213,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			    	hideKeyboardVisibleMode();
 			    }
 			}
-		}); 
+		};
+		view.getViewTreeObserver().addOnGlobalLayoutListener(keyboardListener); 
+	}
+	
+	private void removeVirtualKeyboardVisiblityListener() {
+		Compatibility.removeGlobalLayoutListener(view.getViewTreeObserver(), keyboardListener);
 	}
 	
 	public void showKeyboardVisibleMode() {
@@ -357,8 +363,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 	@Override
 	public void onPause() {
-		super.onPause();
 		latestImageMessages = null;
+		message.removeTextChangedListener(textWatcher);
+		removeVirtualKeyboardVisiblityListener();
+		
+		super.onPause();
 		
 		if (!message.getText().toString().equals("") && LinphoneActivity.isInstanciated()) {
 			ChatStorage chatStorage = LinphoneActivity.instance().getChatStorage();
@@ -376,6 +385,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onResume() {
 		latestImageMessages = new HashMap<Integer, String>();
+		message.addTextChangedListener(textWatcher);
+		addVirtualKeyboardVisiblityListener();
 		
 		super.onResume();
 
@@ -643,7 +654,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	    Cursor cursor = loader.loadInBackground();
 	    if (cursor != null && cursor.moveToFirst()) {
 		    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		    return cursor.getString(column_index);
+		    String result = cursor.getString(column_index);
+		    cursor.close();
+		    return result;
 	    }
 	    return null;
     }

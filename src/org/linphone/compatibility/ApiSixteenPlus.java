@@ -7,6 +7,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /*
 ApiSixteenPlus.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -75,5 +77,9 @@ public class ApiSixteenPlus {
 		notif.contentIntent = intent;
 
 		return notif;
+	}
+
+	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
+		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);		
 	}
 }
