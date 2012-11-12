@@ -47,11 +47,12 @@ import android.widget.TextView;
 public class AudioCallFragment extends Fragment implements OnClickListener {
 	private static final int rowHeight = 75; // Value set in active_call.xml
 	private static final int rowImageHeight = 75; // Value set in avatar.xml
+	private static final int rowImageHeightTablet = 150; // Value set in avatar.xml
 	private static final int botMarginIfImage = 25;
 	private static final int rowThickRatio = 85; // Ratio dependent from the image
 	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
 	private static final int conferenceMargin = 20;
-	private static final int topMarginWithImage = topMargin + rowImageHeight + botMarginIfImage;
+	private static int topMarginWithImage = topMargin + rowImageHeight + botMarginIfImage;
 	
 	private RelativeLayout callsList;
 	private LayoutInflater inflater;
@@ -70,6 +71,9 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		
         View view = inflater.inflate(R.layout.audio, container, false);
         callsList = (RelativeLayout) view.findViewById(R.id.calls);
+        
+        if (getResources().getBoolean(R.bool.isTablet))
+        	topMarginWithImage = topMargin + rowImageHeightTablet + botMarginIfImage;
         
         return view;
     }

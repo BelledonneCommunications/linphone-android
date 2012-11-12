@@ -25,6 +25,7 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -47,17 +48,21 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.setup);
+		
+		if (getResources().getBoolean(R.bool.isTablet) && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+		
+		setContentView(R.layout.setup);
         
         if (findViewById(R.id.fragmentContainer) != null) {
-            if (savedInstanceState != null) {
-                return;
+            if (savedInstanceState == null) {
+	            WelcomeFragment welcomeFragment = new WelcomeFragment();
+	            getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, welcomeFragment).commit();
+	            currentFragment = SetupFragments.WELCOME;
+            } else {
+            	currentFragment = (SetupFragments) savedInstanceState.getSerializable("CurrentFragment");
             }
-
-            WelcomeFragment welcomeFragment = new WelcomeFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, welcomeFragment).commit();
-            
-            currentFragment = SetupFragments.WELCOME;
         }
         
         mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -65,6 +70,12 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
         initUI();
         instance = this;
 	};
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putSerializable("CurrentFragment", currentFragment);
+		super.onSaveInstanceState(outState);
+	}
 	
 	public static SetupActivity instance() {
 		return instance;
