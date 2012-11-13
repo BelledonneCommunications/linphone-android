@@ -216,8 +216,11 @@ public class ChatStorage {
 		
 		Cursor c = db.query(TABLE_NAME, null, null, null, "remoteContact", null, "id DESC");
 		while (c != null && c.moveToNext()) {
-			String remoteContact = c.getString(c.getColumnIndex("remoteContact"));
-			chatList.add(remoteContact);
+			try {
+				String remoteContact = c.getString(c.getColumnIndex("remoteContact"));
+				chatList.add(remoteContact);
+			} catch (IllegalStateException ise) {
+			}
 		}
 		c.close();
 		
