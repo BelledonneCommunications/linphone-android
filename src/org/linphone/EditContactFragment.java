@@ -103,7 +103,7 @@ public class EditContactFragment extends Fragment {
 		lastName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (lastName.getText().length() > 0) {
+				if (lastName.getText().length() > 0 || firstName.getText().length() > 0) {
 					ok.setEnabled(true);
 				} else {
 					ok.setEnabled(false);
@@ -123,7 +123,7 @@ public class EditContactFragment extends Fragment {
 		firstName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (firstName.getText().length() > 0) {
+				if (firstName.getText().length() > 0 || lastName.getText().length() > 0) {
 					ok.setEnabled(true);
 				} else {
 					ok.setEnabled(false);
