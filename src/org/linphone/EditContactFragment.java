@@ -176,7 +176,6 @@ public class EditContactFragment extends Fragment {
 					if (firstSipAddressIndex == -1) {
 						firstSipAddressIndex = controls.getChildCount();
 					}
-					
 					numberOrAddress = numberOrAddress.replace("sip:", "");
 				}
 				if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSip) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSip)) {
@@ -212,8 +211,6 @@ public class EditContactFragment extends Fragment {
 						nounoa.delete();
 						numbersAndAddresses.remove(nounoa);
 						view.setVisibility(View.GONE);
-						if (isSip) // Add back the add SIP row
-							addEmptyRowToAllowNewNumberOrAddress(controls, true);
 					}
 				});
 				
@@ -240,10 +237,8 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		if (!getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
-			if (firstSipAddressIndex == -1) { // Only add new SIP address field if there is no SIP address yet
-				firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to alwas display phone numbers before SIP accounts
-				addEmptyRowToAllowNewNumberOrAddress(controls, true);
-			}
+			firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to always display phone numbers before SIP accounts
+			addEmptyRowToAllowNewNumberOrAddress(controls, true);
 		}
 	}
 	
@@ -277,18 +272,20 @@ public class EditContactFragment extends Fragment {
 			public void onClick(View v) {
 				// Add a line, and change add button for a delete button
 				add.setImageResource(R.drawable.list_delete);
-				add.setOnClickListener(new OnClickListener() {
+				ImageView delete = add;
+				delete.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						nounoa.delete();
 						numbersAndAddresses.remove(nounoa);
 						view.setVisibility(View.GONE);
-						if (isSip) // Add back the add SIP row
-							addEmptyRowToAllowNewNumberOrAddress(controls, true);
 					}
 				});
-				if (!isSip) { // Only 1 SIP address / contact
+				if (!isSip) {
 					firstSipAddressIndex++;
 					addEmptyRowToAllowNewNumberOrAddress(controls, false);
+				} else {
+					addEmptyRowToAllowNewNumberOrAddress(controls, true);
 				}
 			}
 		});
@@ -474,6 +471,8 @@ public class EditContactFragment extends Fragment {
 		private void addNewNumber() {
 			if (isNewContact) {
 				if (isSipAddress) {
+					if (newNumberOrAddress.startsWith("sip:"))
+						newNumberOrAddress = newNumberOrAddress.substring(4);
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
@@ -489,6 +488,8 @@ public class EditContactFragment extends Fragment {
 				String rawContactId = findRawContactID(String.valueOf(contactID));
 				
 				if (isSipAddress) {
+					if (newNumberOrAddress.startsWith("sip:"))
+						newNumberOrAddress = newNumberOrAddress.substring(4);
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
@@ -505,6 +506,8 @@ public class EditContactFragment extends Fragment {
 		
 		private void updateNumber() {
 			if (isSipAddress) {
+				if (newNumberOrAddress.startsWith("sip:"))
+					newNumberOrAddress = newNumberOrAddress.substring(4);
 				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
