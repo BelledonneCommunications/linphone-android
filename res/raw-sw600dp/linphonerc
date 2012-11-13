@@ -36,14 +36,6 @@ remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 dtmf_player_amp=0.1
 
-el_type=mic
-el_thres=0.03
-el_force=100000
-el_sustain=600
-el_transmit_thres=1.7
-ng_floorgain=0.01
-
-
 [video]
 size=vga
 
