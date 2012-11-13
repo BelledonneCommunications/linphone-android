@@ -107,11 +107,6 @@
 					android:title="@string/pref_codec_g722"/>
 				
 				<CheckBoxPreference 
-				    android:key="@string/pref_codec_silk24_key"
-	                android:defaultValue="@bool/pref_codec_silk24_default"
-					android:title="@string/pref_codec_silk24"/>
-				
-				<CheckBoxPreference 
 				    android:key="@string/pref_codec_silk16_key" 
 	                android:defaultValue="@bool/pref_codec_silk16_default"
 					android:title="@string/pref_codec_silk16"/>
