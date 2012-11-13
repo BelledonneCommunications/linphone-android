@@ -63,6 +63,19 @@ public class EditContactFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (isNewContact) {
+					if (getResources().getBoolean(R.bool.forbid_empty_new_contact_in_editor)) {
+						boolean areAllFielsEmpty = true;
+						for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
+							if (nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals("")) {
+								areAllFielsEmpty = false;
+								break;
+							}
+						}
+						if (areAllFielsEmpty) {
+							getFragmentManager().popBackStackImmediate();
+							return;
+						}
+					}
 					createNewContact();
 				} else {
 					updateExistingContact();
@@ -166,6 +179,9 @@ public class EditContactFragment extends Fragment {
 					
 					numberOrAddress = numberOrAddress.replace("sip:", "");
 				}
+				if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSip) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSip)) {
+					continue;
+				}
 				
 				final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
 				numbersAndAddresses.add(nounoa);
@@ -219,10 +235,15 @@ public class EditContactFragment extends Fragment {
 		}
 
 		// Add one for phone numbers, one for SIP address
-		addEmptyRowToAllowNewNumberOrAddress(controls, false);
-		if (firstSipAddressIndex == -1) { // Only add new SIP address field if there is no SIP address yet
-			firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to alwas display phone numbers before SIP accounts
-			addEmptyRowToAllowNewNumberOrAddress(controls, true);
+		if (!getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)) {
+			addEmptyRowToAllowNewNumberOrAddress(controls, false);
+		}
+		
+		if (!getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
+			if (firstSipAddressIndex == -1) { // Only add new SIP address field if there is no SIP address yet
+				firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to alwas display phone numbers before SIP accounts
+				addEmptyRowToAllowNewNumberOrAddress(controls, true);
+			}
 		}
 	}
 	

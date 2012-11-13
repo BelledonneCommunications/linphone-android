@@ -23,6 +23,9 @@
 	<bool name="use_first_login_activity">true</bool>
 	
 	<bool name="use_android_native_contact_edit_interface">false</bool>
+	<bool name="hide_phone_numbers_in_editor">false</bool>
+	<bool name="hide_sip_addresses_in_editor">false</bool>
+	<bool name="forbid_empty_new_contact_in_editor">false</bool>
 	
 	<bool name="disable_animations">false</bool>
     <bool name="show_statusbar_only_on_dialer">true</bool>
