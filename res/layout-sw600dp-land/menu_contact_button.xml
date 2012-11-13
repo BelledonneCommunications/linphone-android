@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:paddingLeft="20dp"
+        android:paddingLeft="40dp"
         android:textColor="@drawable/text_color"
         android:text="@string/button_contacts"
         android:textSize="18dp" />
