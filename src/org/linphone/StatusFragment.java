@@ -34,6 +34,7 @@ import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -240,15 +241,19 @@ public class StatusFragment extends Fragment {
 	}
 	
 	private String getStatusIconText(LinphoneCore.RegistrationState state) {
+		Context context = getActivity();
+		if (!isAttached)
+			context = LinphoneActivity.instance();
+		
 		try {
 			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
-				return getString(R.string.status_connected);
+				return context.getString(R.string.status_connected);
 			} else if (state == RegistrationState.RegistrationProgress) {
-				return getString(R.string.status_in_progress);
+				return context.getString(R.string.status_in_progress);
 			} else if (state == RegistrationState.RegistrationFailed) {
-				return getString(R.string.status_error);
+				return context.getString(R.string.status_error);
 			} else {
-				return getString(R.string.status_not_connected);
+				return context.getString(R.string.status_not_connected);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
