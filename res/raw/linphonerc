@@ -34,8 +34,6 @@ ringer_dev_id=
 capture_dev_id=
 remote_ring=/data/data/org.linphone/files/ringback.wav
 local_ring=/data/data/org.linphone/files/oldphone_mono.wav
-ec_tail_len=120
-ec_framesize=128
 
 el_type=mic
 el_thres=0.03
