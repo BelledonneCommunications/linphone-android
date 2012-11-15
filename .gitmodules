@@ -57,4 +57,4 @@
 	url = git://git.linphone.org/bcg729.git
 [submodule "submodules/externals/webrtc"]
 	path = submodules/externals/webrtc
-	url = gitosis@git.linphone.org:webrtc
+	url = git://git.linphone.org/webrtc.git
