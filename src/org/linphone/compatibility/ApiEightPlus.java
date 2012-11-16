@@ -34,33 +34,37 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 @TargetApi(8)
 public class ApiEightPlus {
-	
+
 	public static int getRotation(Display display) {
 		return display.getRotation();
 	}
-	
+
 	public static void initPushNotificationService(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		
-		// Starting the push notification service
-		GCMRegistrar.checkDevice(context);
-		GCMRegistrar.checkManifest(context);
-		final String regId = GCMRegistrar.getRegistrationId(context);
-		String newPushSenderID = context.getString(R.string.push_sender_id);
-		String currentPushSenderID = prefs.getString(context.getString(R.string.push_sender_id_key), null);
-		if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
-			GCMRegistrar.register(context, newPushSenderID);
-			
-			Log.d("Push Notification : storing current sender id = " + newPushSenderID);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString(context.getString(R.string.push_sender_id_key), newPushSenderID);
-			
-			editor.commit();
-		} else {
-			Log.d("Push Notification : already registered with id = " + regId);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString(context.getString(R.string.push_reg_id_key), regId);
-			editor.commit();
+
+		try {
+			// Starting the push notification service
+			GCMRegistrar.checkDevice(context);
+			GCMRegistrar.checkManifest(context);
+			final String regId = GCMRegistrar.getRegistrationId(context);
+			String newPushSenderID = context.getString(R.string.push_sender_id);
+			String currentPushSenderID = prefs.getString(context.getString(R.string.push_sender_id_key), null);
+			if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
+				GCMRegistrar.register(context, newPushSenderID);
+
+				Log.d("Push Notification : storing current sender id = " + newPushSenderID);
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putString(context.getString(R.string.push_sender_id_key), newPushSenderID);
+
+				editor.commit();
+			} else {
+				Log.d("Push Notification : already registered with id = " + regId);
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putString(context.getString(R.string.push_reg_id_key), regId);
+				editor.commit();
+			}
+		} catch (java.lang.UnsupportedOperationException e) {
+			Log.i("Push Notification not activated");
 		}
 	}
 }
