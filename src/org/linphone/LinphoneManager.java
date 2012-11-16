@@ -47,6 +47,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.LinphoneSimpleListener.ConnectivityChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
 import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
@@ -58,6 +59,7 @@ import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -66,7 +68,6 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
-import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -866,9 +867,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				Log.i(eventInfo.getTypeName()," connected: wifi only activated, setting network unreachable");
 			}
 		}
+		
+		if (connectivityListener != null) {
+			connectivityListener.onConnectivityChanged(eventInfo, cm);
+		}
 	}
 
-
+	private ConnectivityChangedListener connectivityListener;
+	public void addConnectivityChangedListener(ConnectivityChangedListener l) {
+		connectivityListener = l;
+	}
 
 
 

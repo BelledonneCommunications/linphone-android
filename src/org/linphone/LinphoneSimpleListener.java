@@ -25,6 +25,8 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 public interface LinphoneSimpleListener {
 
@@ -67,4 +69,7 @@ public interface LinphoneSimpleListener {
 		void onDTMFReceived(LinphoneCall call, int dtmf);
 	}
 
+	public static interface ConnectivityChangedListener extends LinphoneSimpleListener {
+		void onConnectivityChanged(NetworkInfo eventInfo, ConnectivityManager cm);
+	}
 }
