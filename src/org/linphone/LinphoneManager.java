@@ -869,7 +869,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		if (connectivityListener != null) {
-			connectivityListener.onConnectivityChanged(eventInfo, cm);
+			connectivityListener.onConnectivityChanged(mServiceContext, eventInfo, cm);
 		}
 	}
 
