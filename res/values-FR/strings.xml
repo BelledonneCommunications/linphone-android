@@ -348,4 +348,9 @@
 	<string name="contact_first_name">Prénom</string>
 	<string name="contact_last_name">Nom</string>
 	
+	<string name="pref_primary_account_title">Compte principal</string>
+	<string name="pref_display_name_title">Nom d\'affichage</string>
+	<string name="pref_user_name_title">Nom d\'utilisateur</string>
+	<string name="pref_expire_title">Expiration</string>
+	
 </resources>

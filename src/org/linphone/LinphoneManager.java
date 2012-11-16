@@ -610,6 +610,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				}
 				
 				LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
+				proxycon.setExpires(getPrefInt(R.string.pref_expire_key, Integer.parseInt(getString(R.string.pref_expire_default))));
 				
 				// Add parameters for push notifications
 				String regId = getPrefString(R.string.push_reg_id_key, null);
@@ -687,7 +688,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		readAndSetAudioAndVideoPorts();
 		
-		int incomingCallTimeout = Integer.parseInt(getPrefString(R.string.pref_incoming_call_timeout_key, "30"));
+		int incomingCallTimeout = Integer.parseInt(getPrefString(R.string.pref_incoming_call_timeout_key, getString(R.string.pref_incoming_call_timeout_default)));
 		mLc.setIncomingTimeout(incomingCallTimeout);
 		
 		try {
@@ -750,6 +751,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
+		
+		String displayName = getPrefString(R.string.pref_display_name_key, getString(R.string.pref_display_name_default));
+		String username = getPrefString(R.string.pref_user_name_key, getString(R.string.pref_user_name_default));
+		mLc.setPrimaryContact(displayName, username);
 	}
 	
 	private void setSignalingTransportsFromConfiguration(Transports t) {

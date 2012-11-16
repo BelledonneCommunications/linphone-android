@@ -266,10 +266,15 @@
 		<PreferenceScreen 
 		    android:title="@string/pref_advanced">
 	
-			<CheckBoxPreference 
-			    android:key="@string/pref_debug_key"
-				android:title="@string/pref_debug" 
-				android:defaultValue="@bool/pref_debug_default"/>
+		    <PreferenceCategory
+		        android:title="@string/pref_debug">
+		        
+				<CheckBoxPreference 
+				    android:key="@string/pref_debug_key"
+					android:title="@string/pref_debug" 
+					android:defaultValue="@bool/pref_debug_default"/>
+			
+			</PreferenceCategory>
 			
 			<CheckBoxPreference 
 			    android:defaultValue="@bool/pref_animation_enable_default"
@@ -286,6 +291,27 @@
 			    android:title="@string/pref_incoming_call_timeout_title"
 			    android:defaultValue="@string/pref_incoming_call_timeout_default"
 			    android:layout="@layout/hidden"/>
+			 
+			 <EditTextPreference 
+				android:key="@string/pref_expire_key"
+				android:title="@string/pref_expire_title"
+			  	android:defaultValue="@string/pref_expire_default"
+			  	android:numeric="integer" />
+			 
+			 <PreferenceCategory
+			     android:title="@string/pref_primary_account_title">
+			     
+			     <EditTextPreference 
+			         android:title="@string/pref_display_name_title"
+			  		 android:defaultValue="@string/pref_display_name_default"
+			         android:key="@string/pref_display_name_key"/>
+			     
+			     <EditTextPreference 
+			         android:title="@string/pref_user_name_title"
+			  		 android:defaultValue="@string/pref_user_name_default"
+			         android:key="@string/pref_user_name_key"/>
+			     
+			 </PreferenceCategory>
 				 
 			 <EditTextPreference 
 				android:key="@string/pref_image_sharing_server_key"
