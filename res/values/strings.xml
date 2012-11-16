@@ -394,4 +394,9 @@
 	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
 	<string name="contact_last_name">Last name</string>
+	
+	<string name="pref_primary_account_title">Primary account</string>
+	<string name="pref_display_name_title">Display name</string>
+	<string name="pref_user_name_title">Username</string>
+	<string name="pref_expire_title">Expire</string>
 </resources>
