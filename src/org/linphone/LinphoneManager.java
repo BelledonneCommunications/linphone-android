@@ -565,12 +565,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public void initAccounts() throws LinphoneCoreException {
-		boolean cleanBefore = true;
+		mLc.clearAuthInfos();
+		mLc.clearProxyConfigs();
+		
 		for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
 			String key = i == 0 ? "" : String.valueOf(i);
 			if (!getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
-				initAccount(key, cleanBefore, i == getPrefInt(R.string.pref_default_account_key, 0));
-				cleanBefore = false;
+				initAccount(key, i == getPrefInt(R.string.pref_default_account_key, 0));
 			}
 			
 		}
@@ -587,12 +588,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-	private void initAccount(String key, boolean cleanBefore, boolean defaultAccount) throws LinphoneCoreException {
-		if (cleanBefore) {
-			mLc.clearAuthInfos();
-			mLc.clearProxyConfigs();
-		}
-		
+	private void initAccount(String key, boolean defaultAccount) throws LinphoneCoreException {
 		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
 		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
