@@ -592,7 +592,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
 		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
-		copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
+		//copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
 		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}
 	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
@@ -665,7 +665,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
-		if (lDefaultProxyConfig !=null) {
+		if (lDefaultProxyConfig != null) {
 			//prefix      
 			String lPrefix = getPrefString(R.string.pref_prefix_key, null);
 			if (lPrefix != null) {
@@ -673,6 +673,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 			//escape +
 			lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key, false));
+		} else if (LinphoneService.isReady()) {
+			LinphoneService.instance().onRegistrationStateChanged(RegistrationState.RegistrationNone, null);
 		}
 	}
 

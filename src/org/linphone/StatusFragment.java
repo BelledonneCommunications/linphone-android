@@ -231,7 +231,7 @@ public class StatusFragment extends Fragment {
 			e.printStackTrace();
 		}
 		
-		return -1;
+		return R.drawable.led_disconnected;
 	}
 	
 	private String getStatusIconText(LinphoneCore.RegistrationState state) {
@@ -253,7 +253,7 @@ public class StatusFragment extends Fragment {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return context.getString(R.string.status_not_connected);
 	}
 	
 	private void startCallQuality() {
