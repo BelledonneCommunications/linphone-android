@@ -1179,6 +1179,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void setAudioModeIncallForGalaxyS() {
 		mAudioManager.setMode(MODE_IN_CALL);
+		/* The microphone gain is way too high on the Galaxy S so correct it here. */
+		LinphoneManager.getLc().setMicrophoneGain(-9.0f);
 	}
 
 	// Called on first launch only
