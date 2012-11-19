@@ -96,7 +96,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + key);
    
     	final Preference disable = advanced.getPreference(2);
-    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account_key), 0) != n);
+    	disable.setEnabled(true);
     	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + key, false));
     	disable.setKey(getString(R.string.pref_disable_account_key) + key);
 
