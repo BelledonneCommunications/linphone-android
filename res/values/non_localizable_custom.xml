@@ -40,6 +40,8 @@
 	
 	<bool name="enable_linphone_friends">false</bool>
 	
+	<bool name="show_current_calls_above_video">false</bool>
+	
 	<!-- Behavior Settings -->
 	<bool name="allow_chat_multiline">false</bool>
 	<bool name="call_last_log_if_adress_is_empty">true</bool>

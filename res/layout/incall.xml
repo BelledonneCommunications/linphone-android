@@ -15,6 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal" />
+	
+		<TableLayout 
+	        android:id="@+id/calls"
+	    	android:paddingTop="40dp"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="top" />
 
         <fragment
             android:id="@+id/status"

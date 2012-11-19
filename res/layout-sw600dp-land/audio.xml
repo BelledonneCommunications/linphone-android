@@ -4,10 +4,4 @@
 	android:layout_height="match_parent"
 	android:background="@drawable/background">
 	
-	<TableLayout
-        android:id="@+id/calls"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="top" />
-	
 </ScrollView>
