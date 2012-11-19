@@ -153,6 +153,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		if (pictureUri != null) {
         	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
         }
+		contactPicture.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}
 	
 	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index, LinphoneCall call, boolean active) {
