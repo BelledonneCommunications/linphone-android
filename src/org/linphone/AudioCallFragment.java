@@ -38,26 +38,16 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
  * @author Sylvain Berfini
  */
 public class AudioCallFragment extends Fragment implements OnClickListener {
-	private static final int rowHeight = 75; // Value set in active_call.xml
-	private static final int rowImageHeight = 75; // Value set in avatar.xml
-	private static final int rowImageHeightTablet = 150; // Value set in avatar.xml
-	private static final int botMarginIfImage = 25;
-	private static final int rowThickRatio = 85; // Ratio dependent from the image
-	private static final int topMargin = (int) ((rowHeight * rowThickRatio) / 100);
-	private static final int conferenceMargin = 20;
-	private static int topMarginWithImage = topMargin + rowImageHeight + botMarginIfImage;
-	
-	private RelativeLayout callsList;
+	private TableLayout callsList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
-	private boolean previousCallIsActive = false;
 	private boolean isConferenceRunning = false;
 	
 	private InCallActivity incallActvityInstance;
@@ -70,10 +60,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		this.container = container;
 		
         View view = inflater.inflate(R.layout.audio, container, false);
-        callsList = (RelativeLayout) view.findViewById(R.id.calls);
-        
-        if (getResources().getBoolean(R.bool.isTablet))
-        	topMarginWithImage = topMargin + rowImageHeightTablet + botMarginIfImage;
+        callsList = (TableLayout) view.findViewById(R.id.calls);
         
         return view;
     }
@@ -92,19 +79,38 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		callsList.addView(conferenceHeader);
 	}
 	
-	private void displayCall(Resources resources, LinearLayout callView, LinphoneCall call, int index) {
+	private void displayCall(Resources resources, LinphoneCall call, int index) {
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
         LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-        Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, callView.getContext().getContentResolver());
 
+        // Control Row
+    	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call_control_row, container, false);
 		setContactName(callView, lAddress, sipUri, resources);
-		boolean hide = displayCallStatusIconAndReturnCallPaused(callView, call);
-		displayOrHideContactPicture(callView, pictureUri, hide);
-		setRowBackgroundAndPadding(callView, resources, index, call, !hide);
+		displayCallStatusIconAndReturnCallPaused(callView, call);
+		setRowBackground(callView, index);
 		registerCallDurationTimer(callView, call);
-		previousCallIsActive = !hide;
-
     	callsList.addView(callView);
+    	
+		// Image Row
+    	LinearLayout imageView = (LinearLayout) inflater.inflate(R.layout.active_call_image_row, container, false);
+        Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, imageView.getContext().getContentResolver());
+		displayOrHideContactPicture(imageView, pictureUri, false);
+    	callsList.addView(imageView);
+    	
+    	callView.setTag(imageView);
+    	callView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (v.getTag() != null) {
+					View imageView = (View) v.getTag();
+					if (imageView.getVisibility() == View.VISIBLE)
+						imageView.setVisibility(View.GONE);
+					else
+						imageView.setVisibility(View.VISIBLE);
+					callsList.invalidate();
+				}
+			}
+		});
 	}
 	
 	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
@@ -153,10 +159,10 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 		if (pictureUri != null) {
         	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
         }
-		contactPicture.setVisibility(hide ? View.GONE : View.VISIBLE);
+		callView.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}
 	
-	private void setRowBackgroundAndPadding(LinearLayout callView, Resources resources, int index, LinphoneCall call, boolean active) {
+	private void setRowBackground(LinearLayout callView, int index) {
 		int backgroundResource;
 		if (index == 0) {
 //			backgroundResource = active ? R.drawable.cell_call_first_highlight : R.drawable.cell_call_first;
@@ -165,21 +171,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
 //			backgroundResource = active ? R.drawable.cell_call_highlight : R.drawable.cell_call;
 			backgroundResource = R.drawable.cell_call;
 		}
-		callView.findViewById(R.id.row).setBackgroundResource(backgroundResource);
-		
-		if (index != 0) {
-			int marginIfConferenceAndCallNotInside = 0;
-			if (isConferenceRunning) {
-				if (!call.isInConference()) {
-					marginIfConferenceAndCallNotInside = conferenceMargin;
-				}
-			}
-    		if (previousCallIsActive) {
-    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, (topMarginWithImage * index) + marginIfConferenceAndCallNotInside), 0, 0);
-    		} else {
-    			callView.setPadding(0, LinphoneUtils.pixelsToDpi(resources, (topMargin * index) + marginIfConferenceAndCallNotInside), 0, 0);
-    		}
-    	}
+		callView.setBackgroundResource(backgroundResource);
 	}
 	
 	private void registerCallDurationTimer(View v, LinphoneCall call) {
@@ -262,8 +254,7 @@ public class AudioCallFragment extends Fragment implements OnClickListener {
         	index++;
         }
         for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
-        	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call, container, false);
-        	displayCall(resources, callView, call, index);
+        	displayCall(resources, call, index);
         	index++;
         }
         
