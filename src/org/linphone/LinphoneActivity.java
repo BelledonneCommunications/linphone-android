@@ -48,6 +48,7 @@ import org.linphone.core.OnlineStatus;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -133,8 +134,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			Log.e("No service running: avoid crash by starting the launcher", this.getClass().getName());
 			// super.onCreate called earlier
 			finish();
-			startActivity(getIntent().setClass(this,
-					LinphoneLauncherActivity.class));
+			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
 			return;
 		}
 
@@ -465,6 +465,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String secondsToDisplayableString(int secs) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
@@ -1364,6 +1365,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		return super.onKeyDown(keyCode, event);
 	}
 
+	@SuppressLint("ValidFragment")
 	class AcceptNewFriendDialog extends DialogFragment {
 		private Contact contact;
 		private String sipUri;

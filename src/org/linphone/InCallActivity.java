@@ -32,6 +32,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.ui.Numpad;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -892,11 +893,20 @@ public class InCallActivity extends FragmentActivity implements
 			displayVideoCallControlsIfHidden();
 		}
 	}
+	
+	public void startIncomingCallActivity() {
+		startActivity(new Intent(this, IncomingCallActivity.class));
+	}
 
 	@Override
 	public void onCallStateChanged(final LinphoneCall call, State state, String message) {		
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
 			finish();
+			return;
+		}
+		
+		if (state == State.IncomingReceived) {
+			startIncomingCallActivity();
 			return;
 		}
 		
@@ -1071,6 +1081,7 @@ public class InCallActivity extends FragmentActivity implements
 		videoCallFragment = fragment;
 	}
 	
+	@SuppressLint("ValidFragment")
 	class AcceptCallUpdateDialog extends DialogFragment {
 
 	    public AcceptCallUpdateDialog() {
