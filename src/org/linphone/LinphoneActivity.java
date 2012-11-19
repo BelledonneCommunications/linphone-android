@@ -23,6 +23,7 @@ import static android.content.Intent.ACTION_MAIN;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
@@ -1267,14 +1268,14 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	@Override
 	protected void onPause() {
+		LinphoneManager.removeListener(this);
+		
 		super.onPause();
 		refreshStatus(OnlineStatus.Away);
 	}
 
 	@Override
 	protected void onDestroy() {
-		LinphoneManager.removeListener(this);
-
 		if (chatStorage != null) {
 			chatStorage.close();
 			chatStorage = null;
@@ -1327,12 +1328,27 @@ public class LinphoneActivity extends FragmentActivity implements
 				((DialerFragment) dialerFragment).newOutgoingCall(intent);
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
-				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-				if (call != null && call.getState() != LinphoneCall.State.IncomingReceived) {
-					if (call.getCurrentParamsCopy().getVideoEnabled()) {
-						startVideoActivity(call);
+				LinphoneCall calls[] = LinphoneManager.getLc().getCalls();
+				if (calls.length > 0) {
+					LinphoneCall call = calls[0];
+					
+					if (call != null && call.getState() != LinphoneCall.State.IncomingReceived) {
+						if (call.getCurrentParamsCopy().getVideoEnabled()) {
+							startVideoActivity(call);
+						} else {
+							startIncallActivity(call);
+						}
+					}
+				}
+				
+				// If a call is ringing, start incomingcallactivity
+				Collection<LinphoneCall.State> incoming = new ArrayList<LinphoneCall.State>();
+				incoming.add(LinphoneCall.State.IncomingReceived);
+				if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
+					if (InCallActivity.isInstanciated()) {
+						InCallActivity.instance().startIncomingCallActivity();
 					} else {
-						startIncallActivity(call);
+						startActivity(new Intent(this, IncomingCallActivity.class));
 					}
 				}
 			}

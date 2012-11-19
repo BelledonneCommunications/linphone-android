@@ -546,6 +546,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			Log.i("Service not ready, discarding call state change to ",state.toString());
 			return;
 		}
+		
 		if (state == LinphoneCall.State.IncomingReceived) {
 			onIncomingReceived();
 		}
@@ -574,6 +575,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
 			mWifiLock.release();
 		}
+		
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (guiListener() != null)

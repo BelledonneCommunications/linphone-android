@@ -1009,7 +1009,6 @@ public class InCallActivity extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		instance = this;
-		LinphoneManager.addListener(this);
 		
 		if (isVideoEnabled) {
 			displayVideoCallControlsIfHidden();
@@ -1019,6 +1018,8 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		
 		super.onResume();
+		
+		LinphoneManager.addListener(this);
 	}
 	
 	@Override
