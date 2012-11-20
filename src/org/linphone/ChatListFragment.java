@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Log;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -236,6 +237,27 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
+
+			List<ChatMessage> messages = LinphoneActivity.instance().getChatMessages(contact);
+			if (messages != null && messages.size() > 0) {
+				int iterator = messages.size() - 1;
+				ChatMessage lastMessage = null;
+				
+				while (iterator >= 0) {
+					lastMessage = messages.get(iterator);
+					if (lastMessage.getMessage() == null) {
+						iterator--;
+					} else {
+						iterator = -1;
+					}
+				}
+				
+				String message = "";
+				message = (lastMessage == null || lastMessage.getMessage() == null) ? "" : lastMessage.getMessage();
+				Log.e("Last message = " + message);
+				TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
+				lastMessageView.setText(message);
+			}
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
 			
@@ -249,6 +271,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			if (isDraft) {
 				view.findViewById(R.id.draft).setVisibility(View.VISIBLE);
 			}
+			
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			TextView unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
