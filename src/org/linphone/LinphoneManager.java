@@ -613,7 +613,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				// Add parameters for push notifications
 				String regId = getPrefString(R.string.push_reg_id_key, null);
 				String appId = getString(R.string.push_sender_id);
-				if (regId != null && getPrefBoolean(R.string.pref_push_notification_key, true)) {
+				if (regId != null && getPrefBoolean(R.string.pref_push_notification_key, mR.getBoolean(R.bool.pref_push_notification_default))) {
 					String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf;";
 					proxycon.setContactParameters(contactInfos);
 				}

@@ -44,16 +44,34 @@
 	    android:text="@string/draft"
 	    android:layout_marginLeft="5dp"
 	    android:layout_marginRight="5dp" />
-    
-	<TextView 
-	    android:id="@+id/sipUri"
-	    android:lines="1"
-	    android:layout_centerVertical="true"
+	
+	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:textAppearance="?android:attr/textAppearanceLarge"
-	    android:textColor="@android:color/black"
+	    android:layout_centerVertical="true"
 	    android:layout_toLeftOf="@id/draft"
-	    android:layout_marginLeft="10dp" />
+	    android:orientation="horizontal">
+    
+		<TextView 
+		    android:id="@+id/sipUri"
+		    android:lines="1"
+		    android:ellipsize="none"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textAppearance="?android:attr/textAppearanceLarge"
+		    android:textColor="@android:color/black"
+		    android:layout_marginLeft="10dp" />
+		
+		<TextView 
+		    android:id="@+id/lastMessage"
+		    android:lines="1"
+		    android:ellipsize="end"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textAppearance="?android:attr/textAppearanceSmall"
+		    android:textColor="@android:color/black"
+		    android:layout_marginLeft="5dp" />
+	    
+	</LinearLayout>
     
 </RelativeLayout>
