@@ -111,6 +111,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			imageSharingServer.setLayoutResource(R.layout.hidden);
 		}
+		
+		if (!getResources().getBoolean(R.bool.enable_push_id)) {
+			findPreference(getString(R.string.pref_push_notification_key)).setLayoutResource(R.layout.hidden);
+		}
 
 		initializeTransportPreferences();
 		
