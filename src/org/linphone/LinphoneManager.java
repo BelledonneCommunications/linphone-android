@@ -611,11 +611,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				proxycon.setExpires(Integer.parseInt(getPrefString(R.string.pref_expire_key, getString(R.string.pref_expire_default))));
 				
 				// Add parameters for push notifications
-				String regId = getPrefString(R.string.push_reg_id_key, null);
-				String appId = getString(R.string.push_sender_id);
-				if (regId != null && getPrefBoolean(R.string.pref_push_notification_key, mR.getBoolean(R.bool.pref_push_notification_default))) {
-					String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf;";
-					proxycon.setContactParameters(contactInfos);
+				if (mR.getBoolean(R.bool.enable_push_id)) {
+					String regId = getPrefString(R.string.push_reg_id_key, null);
+					String appId = getString(R.string.push_sender_id);
+					if (regId != null && getPrefBoolean(R.string.pref_push_notification_key, mR.getBoolean(R.bool.pref_push_notification_default))) {
+						String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf;";
+						proxycon.setContactParameters(contactInfos);
+					}
 				}
 				mLc.addProxyConfig(proxycon);
 				
