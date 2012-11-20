@@ -1243,6 +1243,8 @@ public class LinphoneActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 
+		// Remove to avoid duplication of the listeners
+		LinphoneManager.removeListener(this);
 		LinphoneManager.addListener(this);
 
 		prepareContactsInBackground();
@@ -1267,15 +1269,15 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	@Override
-	protected void onPause() {
-		LinphoneManager.removeListener(this);
-		
+	protected void onPause() {		
 		super.onPause();
 		refreshStatus(OnlineStatus.Away);
 	}
 
 	@Override
 	protected void onDestroy() {
+		LinphoneManager.removeListener(this);
+		
 		if (chatStorage != null) {
 			chatStorage.close();
 			chatStorage = null;

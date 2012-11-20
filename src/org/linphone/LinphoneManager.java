@@ -48,6 +48,7 @@ import java.util.TimerTask;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -943,7 +944,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
-			((LinphoneActivity) listener).onMessageReceived(message.getFrom(), message);
+			((LinphoneOnMessageReceivedListener) listener).onMessageReceived(message.getFrom(), message);
 		}
 	}
 
