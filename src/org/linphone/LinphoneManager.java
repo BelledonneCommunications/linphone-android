@@ -672,6 +672,20 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setVideoPortRange(vPortStart, vPortEnd);
 		}
 	}
+	
+	private int tryToParseIntValue(String valueToParse, String defaultValue) {
+		return tryToParseIntValue(valueToParse, Integer.parseInt(defaultValue));
+	}
+	
+	private int tryToParseIntValue(String valueToParse, int defaultValue) {
+		try {
+			int returned = Integer.parseInt(valueToParse);
+			return returned;
+		} catch (NumberFormatException nfe) {
+			
+		}
+		return defaultValue;
+	}
 
 	public void initFromConf() throws LinphoneConfigException {
 
@@ -688,7 +702,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 		readAndSetAudioAndVideoPorts();
 		
-		int incomingCallTimeout = Integer.parseInt(getPrefString(R.string.pref_incoming_call_timeout_key, getString(R.string.pref_incoming_call_timeout_default)));
+		String defaultIncomingCallTimeout = getString(R.string.pref_incoming_call_timeout_default);
+		int incomingCallTimeout = tryToParseIntValue(getPrefString(R.string.pref_incoming_call_timeout_key, defaultIncomingCallTimeout), defaultIncomingCallTimeout);
 		mLc.setIncomingTimeout(incomingCallTimeout);
 		
 		try {
