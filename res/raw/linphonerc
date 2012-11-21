@@ -1,6 +1,6 @@
 [net]
-download_bw=256
-upload_bw=256
+download_bw=380
+upload_bw=380
 firewall_policy=0
 mtu=1300
 #adaptive_rate_control=1
