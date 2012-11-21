@@ -638,8 +638,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private void readAndSetAudioAndVideoPorts() throws NumberFormatException {
 		int aPortStart, aPortEnd, vPortStart, vPortEnd;
-		aPortStart = aPortEnd = Integer.parseInt(getString(R.string.default_audio_port));
-		vPortStart = vPortEnd = Integer.parseInt(getString(R.string.default_video_port));
+		int defaultAudioPort, defaultVideoPort;
+		defaultAudioPort = Integer.parseInt(getString(R.string.default_audio_port));
+		defaultVideoPort = Integer.parseInt(getString(R.string.default_video_port));
+		aPortStart = aPortEnd = defaultAudioPort;
+		vPortStart = vPortEnd = defaultVideoPort;
 
 		String audioPort = getPrefString(R.string.pref_audio_port_key, String.valueOf(aPortStart));
 		String videoPort = getPrefString(R.string.pref_video_port_key, String.valueOf(vPortStart));
@@ -649,7 +652,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			aPortStart = Integer.parseInt(audioPort.split("-")[0]);
 			aPortEnd = Integer.parseInt(audioPort.split("-")[1]);
 		} else {
-			aPortStart = aPortEnd = Integer.parseInt(audioPort);
+			try {
+				aPortStart = aPortEnd = Integer.parseInt(audioPort);
+			} catch (NumberFormatException nfe) {
+				aPortStart = aPortEnd = defaultAudioPort;
+			}
 		}
 		
 		if (videoPort.contains("-")) {
@@ -657,7 +664,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			vPortStart = Integer.parseInt(videoPort.split("-")[0]);
 			vPortEnd = Integer.parseInt(videoPort.split("-")[1]);
 		} else {
-			vPortStart = vPortEnd = Integer.parseInt(videoPort);
+			try {
+				vPortStart = vPortEnd = Integer.parseInt(videoPort);
+			} catch (NumberFormatException nfe) {
+				vPortStart = vPortEnd = defaultVideoPort;
+			}
 		}
 		
 		if (aPortStart >= aPortEnd) {
