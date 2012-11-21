@@ -608,7 +608,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				}
 				
 				LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
-				proxycon.setExpires(Integer.parseInt(getPrefString(R.string.pref_expire_key, getString(R.string.pref_expire_default))));
+				String defaultExpire = getString(R.string.pref_expire_default);
+				proxycon.setExpires(tryToParseIntValue(getPrefString(R.string.pref_expire_key, defaultExpire), defaultExpire));
 				
 				// Add parameters for push notifications
 				if (mR.getBoolean(R.bool.enable_push_id)) {
