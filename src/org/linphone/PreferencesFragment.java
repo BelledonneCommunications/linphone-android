@@ -394,16 +394,29 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	private void initializeMediaEncryptionPreferences() {
-		LinphoneCore lc = LinphoneManager.getLc();
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		
+		List<CharSequence> mencEntries=new ArrayList<CharSequence>();
+		List<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
+		mencEntries.add(getString(R.string.media_encryption_none));
+		mencEntryValues.add(getString(R.string.pref_media_encryption_key_none));
+		
+		if (lc == null) {
+			CharSequence[] contents=new CharSequence[mencEntries.size()];
+			mencEntries.toArray(contents);
+			mencPref.setEntries(contents);
+			contents=new CharSequence[mencEntryValues.size()];
+			mencEntryValues.toArray(contents);
+			mencPref.setEntryValues(contents);
+			mencPref.setDefaultValue(getString(R.string.media_encryption_none));
+			return;
+		}
+		
 		boolean hasZrtp = lc.mediaEncryptionSupported(MediaEncryption.ZRTP);
 		boolean hasSrtp = lc.mediaEncryptionSupported(MediaEncryption.SRTP);
 		if (!hasSrtp && !hasZrtp){
 			mencPref.setEnabled(false);
 		}else{
-			List<CharSequence> mencEntries=new ArrayList<CharSequence>();
-			List<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
-			mencEntries.add(getString(R.string.media_encryption_none));
-			mencEntryValues.add(getString(R.string.pref_media_encryption_key_none));
 			if (hasSrtp){
 				mencEntries.add(getString(R.string.media_encryption_srtp));
 				mencEntryValues.add(getString(R.string.pref_media_encryption_key_srtp));
