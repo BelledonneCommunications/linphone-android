@@ -101,10 +101,7 @@
 		        android:id="@+id/controls"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:stretchColumns="*"
-		        android:paddingTop="20dp"
-		        android:paddingLeft="10dp"
-		        android:paddingRight="10dp"/>
+		        android:paddingTop="20dp"/>
 
 		</LinearLayout>
     
