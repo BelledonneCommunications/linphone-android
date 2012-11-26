@@ -20,6 +20,7 @@ package org.linphone.ui;
 
 import org.linphone.DialerFragment;
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.R;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -70,6 +71,14 @@ public class AddressText extends EditText implements AddressType {
 	public void setDisplayedName(String displayedName) {
 		this.displayedName = displayedName;
 	}
+	
+	private String getHintText() {
+		String resizedText = getContext().getString(R.string.addressHint);
+		if (getHint() != null) {
+			resizedText = getHint().toString();
+		}
+		return resizedText;
+	}
 
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before,
@@ -77,11 +86,7 @@ public class AddressText extends EditText implements AddressType {
 		clearDisplayedName();
 		pictureUri = null;
 
-		String resizedText = getText().toString();
-		if (resizedText.equals("") && getHint() != null) {
-			resizedText = getHint().toString();
-		}
-		refitText(resizedText, getWidth(), getHeight());
+		refitText(getWidth(), getHeight());
 		
 		if (dialer != null) {
 			dialer.enableDisableAddContact();
@@ -93,19 +98,11 @@ public class AddressText extends EditText implements AddressType {
 	@Override
 	protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
 		if (width != oldWidth) {
-			String resizedText = getText().toString();
-			if (resizedText.equals("") && getHint() != null) {
-				resizedText = getHint().toString();
-			}
-			refitText(resizedText, getWidth(), getHeight());
+			refitText(getWidth(), getHeight());
 		}
 	}
-
-	private void refitText(String text, int textWidth, int textHeight) {
-		if (textWidth <= 0) {
-			return;
-		}
-		
+	
+	private float getOptimizedTextSize(String text, int textWidth, int textHeight) {
 		int targetWidth = textWidth - getPaddingLeft() - getPaddingRight();
 		int targetHeight = textHeight - getPaddingTop() - getPaddingBottom();
 		float hi = 90;
@@ -125,7 +122,19 @@ public class AddressText extends EditText implements AddressType {
 			}
 		}
 		
-		setTextSize(TypedValue.COMPLEX_UNIT_PX, lo);
+		return lo;
+	}
+
+	private void refitText(int textWidth, int textHeight) {
+		if (textWidth <= 0) {
+			return;
+		}
+		
+		float size = getOptimizedTextSize(getHintText(), textWidth, textHeight);
+		float entrySize = getOptimizedTextSize(getText().toString(), textWidth, textHeight);
+		if (entrySize < size)
+			size = entrySize;
+		setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
 	}
 
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -133,11 +142,7 @@ public class AddressText extends EditText implements AddressType {
 		int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
 		int height = getMeasuredHeight();
 		
-		String resizedText = getText().toString();
-		if (resizedText.equals("") && getHint() != null) {
-			resizedText = getHint().toString();
-		}
-		refitText(resizedText, parentWidth, height);
+		refitText(parentWidth, height);
 		setMeasuredDimension(parentWidth, height);
 	}
 
