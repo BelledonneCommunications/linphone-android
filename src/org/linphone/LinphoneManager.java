@@ -1030,6 +1030,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mThis.preventSIPCalls();
 		}
 	}
+	
+	public Context getActivity() {
+		if (LinphoneActivity.isInstanciated())
+			return LinphoneActivity.instance();
+		else if (InCallActivity.isInstanciated())
+			return InCallActivity.instance();
+		else if (IncomingCallActivity.isInstanciated())
+			return IncomingCallActivity.instance();
+		return null;
+	}
 
 	@SuppressLint("Wakelock")
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
@@ -1055,7 +1065,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == CallEnd || state == Error) {
-			TelephonyManager tm = (TelephonyManager) LinphoneActivity.instance().getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 			if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
 				mAudioManager.setMode(MODE_NORMAL);
 			}
@@ -1432,7 +1442,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				boolean sendCamera = mLc.getConferenceSize() == 0;
 				enableCamera(call, sendCamera);
 			}
-			TelephonyManager tm = (TelephonyManager) LinphoneActivity.instance().getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 			if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
 				routeAudioToReceiver();
 			}
