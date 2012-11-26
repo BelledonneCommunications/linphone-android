@@ -46,11 +46,21 @@ import android.widget.Toast;
  */
 public class IncomingCallActivity extends Activity implements LinphoneOnCallStateChangedListener, LinphoneSliderTriggered {
 
+	private static IncomingCallActivity instance;
+	
 	private TextView mNameView;
 	private TextView mNumberView;
 	private AvatarWithShadow mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneSliders mIncomingCallWidget;
+	
+	public static IncomingCallActivity instance() {
+		return instance;
+	}
+	
+	public static boolean isInstanciated() {
+		return instance != null;
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +80,13 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
         mIncomingCallWidget.setOnTriggerListener(this);
 
         super.onCreate(savedInstanceState);
+		instance = this;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		instance = this;
 		LinphoneManager.addListener(this);
 		// Only one call ringing at a time is allowed
 		List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
@@ -107,6 +119,12 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	protected void onPause() {
 		super.onPause();
 		LinphoneManager.removeListener(this);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		instance = null;
 	}
 	
 	@Override
