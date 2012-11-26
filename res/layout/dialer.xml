@@ -9,14 +9,13 @@
         android:id="@+id/Adress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="0.4"
         android:textColor="@android:color/white"
-        android:textSize="30dp"
         android:background="@drawable/dialer_address_background"
         android:inputType="textEmailAddress"
         android:hint="@string/addressHint"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_weight="0.4"
        	android:layout_gravity="center" />
 	
     <org.linphone.ui.Numpad 
