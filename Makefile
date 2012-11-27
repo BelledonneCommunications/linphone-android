@@ -30,7 +30,7 @@ prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
 #libvpx
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
 $(LIBVPX_SRC_DIR)/vp8/common/asm_com_offsets.c.S:
-	cd $(LIBVPX_SRC_DIR) \
+	cd $(LIBVPX_SRC_DIR) && \
 	./configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) --enable-error-concealment && \
 	make asm_com_offsets.asm \
 	|| ( echo "VP8 prepare stage failed." ; exit 1 )
