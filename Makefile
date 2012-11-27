@@ -12,31 +12,55 @@ prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
 	@patch -p0 < $(TOPDIR)/patches/ffmpeg_scalar_product_remove_alignment_hints.patch
 endif
+#libilbc
+LIBILBC_SRC_DIR=$(TOPDIR)/submodules/libilbc-rfc3951
+LIBILBC_BUILD_DIR=$(LIBILBC_SRC_DIR)
+$(LIBILBC_SRC_DIR)/configure:
+	cd $(LIBILBC_SRC_DIR) && ./autogen.sh
 
-prepare-ilbc:
-	@cd $(TOPDIR)/submodules/libilbc-rfc3951 && \
-	./autogen.sh && \
-	./configure && make \
+$(LIBILBC_BUILD_DIR)/Makefile: $(LIBILBC_SRC_DIR)/configure
+	cd $(LIBILBC_BUILD_DIR) && \
+	./configure \
+
+$(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
+	cd $(LIBILBC_BUILD_DIR)/downloads && make \
 	|| ( echo "iLBC prepare stage failed" ; exit 1 )
-
-prepare-vpx:
-	@cd $(TOPDIR)/submodules/externals/libvpx && \
+	
+prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
+#libvpx
+LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
+$(LIBVPX_SRC_DIR)/vp8/common/asm_com_offsets.c.S:
+	cd $(LIBVPX_SRC_DIR) \
 	./configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) --enable-error-concealment && \
-	make clean && \
 	make asm_com_offsets.asm \
 	|| ( echo "VP8 prepare stage failed." ; exit 1 )
+	
+prepare-vpx: $(LIBVPX_SRC_DIR)/vp8/common/asm_com_offsets.c.S
+#SILK
+LIBMSSILK_SRC_DIR=$(TOPDIR)/submodules/mssilk
+LIBMSSILK_BUILD_DIR=$(LIBMSSILK_SRC_DIR)
+$(LIBMSSILK_SRC_DIR)/configure:
+	cd $(LIBMSSILK_SRC_DIR) && ./autogen.sh
 
-prepare-silk:
-	@cd $(TOPDIR)/submodules/mssilk && \
-	./autogen.sh && \
-	./configure --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " && \
-	cd sdk && make extract-sources \
+$(LIBMSSILK_BUILD_DIR)/Makefile: $(LIBMSSILK_SRC_DIR)/configure
+	cd $(LIBMSSILK_BUILD_DIR) && \
+	$(LIBMSSILK_SRC_DIR)/configure --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " 
+
+#make sure to update this path if SILK sdk is changed
+$(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c: $(LIBMSSILK_BUILD_DIR)/Makefile
+	cd $(LIBMSSILK_BUILD_DIR)/sdk && \
+	make extract-sources \
 	|| ( echo "SILK audio plugin prepare state failed." ; exit 1 )
 
-prepare-srtp:
+prepare-silk: $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c
+
+#srtp
+$(TOPDIR)/submodules/externals/srtp/config.h : $(TOPDIR)/submodules/externals/build/srtp/config.h
 	@cd $(TOPDIR)/submodules/externals/srtp/ && \
 	cp ../build/srtp/config.h . \
 	|| ( echo "SRTP prepare state failed." ; exit 1 )
+
+prepare-srtp: $(TOPDIR)/submodules/externals/srtp/config.h
 
 prepare-mediastreamer2:
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/src/ && \
@@ -55,7 +79,7 @@ update-project:
 	touch default.properties
 
 generate-apk:
-	ant clean
+	rm  -f bin/Linphone.ap_ #work around to avoid aptbuilder failure
 	ant debug
 
 install-apk: generate-apk
