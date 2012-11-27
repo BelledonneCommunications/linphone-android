@@ -254,7 +254,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				
 				String message = "";
 				message = (lastMessage == null || lastMessage.getMessage() == null) ? "" : lastMessage.getMessage();
-				Log.e("Last message = " + message);
 				TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
 				lastMessageView.setText(message);
 			}
