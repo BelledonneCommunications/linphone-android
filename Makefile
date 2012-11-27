@@ -89,7 +89,7 @@ update-project:
 	touch default.properties
 
 generate-apk:
-	rm  -f bin/Linphone.ap_ #work around to avoid aptbuilder failure
+	ant partial-clean
 	ant debug
 
 install-apk: generate-apk
