@@ -35,6 +35,10 @@
 			<class name="org.linphone.core.PayloadTypeImpl" />
 		</javah>
 	</target>
+	
+	<target name="partial-clean">
+	    <delete file="bin/${ant.project.name}.ap_" />
+	</target>
 
 	<target name="build-libs">
 		<exec executable="make" failonerror="true">
