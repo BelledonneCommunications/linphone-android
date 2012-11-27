@@ -6,6 +6,16 @@ TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
 
+BUILD_X264=0
+BUILD_AMRNB=light
+BUILD_AMRWB=1
+BUILD_GPLV3_ZRTP=0
+BUILD_SILK=0
+BUILD_G729=0
+BUILD_TUNNEL=0
+BUILD_WEBRTC_AECM=1
+USE_JAVAH=1
+
 all: update-project prepare-sources install-apk run-linphone
 
 prepare-ffmpeg:
@@ -72,7 +82,7 @@ prepare-mediastreamer2:
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
 
 generate-libs:
-	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full BUILD_WEBRTC_AECM=1 BUILD_GPLV3_ZRTP=1 USE_JAVAH=1 -j$(NUMCPUS)
+	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path .
