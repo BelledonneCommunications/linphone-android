@@ -369,6 +369,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		latestImageMessages = null;
 		message.removeTextChangedListener(textWatcher);
 		removeVirtualKeyboardVisiblityListener();
+
+		LinphoneService.instance().removeMessageNotification();
 		
 		super.onPause();
 		
