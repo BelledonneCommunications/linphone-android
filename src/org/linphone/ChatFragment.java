@@ -669,7 +669,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void showPopupMenuAskingImageSize(String filePath, Bitmap image) {
 		fileToUploadPath = filePath;
 		imageToUpload = image;
-		sendImage.showContextMenu();
+		try {
+			sendImage.showContextMenu();
+		} catch (Exception e) {
+			showPopupMenuAskingImageSize(filePath, image);
+		}
 	}
 	
 	private void uploadAndSendImage(final String filePath, final Bitmap image, final ImageSize size) {
