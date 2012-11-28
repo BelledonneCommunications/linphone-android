@@ -88,12 +88,15 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		super.onResume();
 		instance = this;
 		LinphoneManager.addListener(this);
+		
 		// Only one call ringing at a time is allowed
-		List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
-		for (LinphoneCall call : calls) {
-			if (State.IncomingReceived == call.getState()) {
-				mCall = call;
-				break;
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
+			for (LinphoneCall call : calls) {
+				if (State.IncomingReceived == call.getState()) {
+					mCall = call;
+					break;
+				}
 			}
 		}
 		if (mCall == null) {

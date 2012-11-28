@@ -1032,12 +1032,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public Context getActivity() {
-		if (LinphoneActivity.isInstanciated())
-			return LinphoneActivity.instance();
-		else if (InCallActivity.isInstanciated())
-			return InCallActivity.instance();
-		else if (IncomingCallActivity.isInstanciated())
-			return IncomingCallActivity.instance();
+		try {
+			if (LinphoneActivity.isInstanciated())
+				return LinphoneActivity.instance();
+			else if (InCallActivity.isInstanciated())
+				return InCallActivity.instance();
+			else if (IncomingCallActivity.isInstanciated())
+				return IncomingCallActivity.instance();
+		} catch (Exception e) {}
 		return null;
 	}
 
