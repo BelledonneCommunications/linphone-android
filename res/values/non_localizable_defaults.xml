@@ -57,4 +57,7 @@
     
     <bool name="pref_auto_accept_friends_default">false</bool>
     
+    <bool name="pref_sipinfo_dtmf_default">false</bool>
+    <bool name="pref_rfc2833_dtmf_default">true</bool>
+    
 </resources>
