@@ -33,6 +33,7 @@ public class EditContactFragment extends Fragment {
 	private View deleteContact;
 	
 	private boolean isNewContact = true;
+	private Contact contact;
 	private int contactID;
 	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
 	private ArrayList<ContentProviderOperation> ops;
@@ -41,7 +42,7 @@ public class EditContactFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
 		
-		Contact contact = null;
+		contact = null;
 		if (getArguments() != null && getArguments().getSerializable("Contact") != null) {
 			contact = (Contact) getArguments().getSerializable("Contact");
 			isNewContact = false;
@@ -147,6 +148,7 @@ public class EditContactFragment extends Fragment {
 				lastName.setText(ln);
 			} else {
 				lastName.setText(contact.getName());
+				firstName.setText("");
 			}
 		}
 		
@@ -317,7 +319,8 @@ public class EditContactFragment extends Fragment {
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)              
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, getDisplayName())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, firstName.getText().toString())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, lastName.getText().toString())
                 .build()
             );
         }
@@ -331,7 +334,8 @@ public class EditContactFragment extends Fragment {
             ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
         		.withSelection(select, args) 
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, getDisplayName())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, firstName.getText().toString())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, lastName.getText().toString())
                 .build()
             );
         }
@@ -383,8 +387,8 @@ public class EditContactFragment extends Fragment {
 	private String findContactFirstName(String contactID) {
 		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
 		          new String[]{ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
-		          RawContacts.CONTACT_ID + "=?",
-		          new String[]{contactID}, null);
+		          ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?",
+		          new String[]{contactID, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE}, null);
 		if (c != null) {
 			String result = null;
 			if (c.moveToFirst()) {
@@ -399,8 +403,8 @@ public class EditContactFragment extends Fragment {
 	private String findContactLastName(String contactID) {
 		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
 		          new String[]{ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME},
-		          RawContacts.CONTACT_ID + "=?",
-		          new String[]{contactID}, null);
+		          ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?",
+		          new String[]{contactID, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE}, null);
 		if (c != null) {
 			String result = null;
 			if (c.moveToFirst()) {

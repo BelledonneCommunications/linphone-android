@@ -542,13 +542,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	void initMediaEncryption(){
-		String pref = getPrefString(R.string.pref_media_encryption_key,
-				R.string.pref_media_encryption_key_none);
+		String pref = getPrefString(R.string.pref_media_encryption_key, R.string.pref_media_encryption_key_none);
 		MediaEncryption me=MediaEncryption.None;
 		if (pref.equals(getString(R.string.pref_media_encryption_key_srtp)))
-			me=MediaEncryption.SRTP;
+			me = MediaEncryption.SRTP;
 		else if (pref.equals(getString(R.string.pref_media_encryption_key_zrtp)))
-			me=MediaEncryption.ZRTP;
+			me = MediaEncryption.ZRTP;
 		Log.i("Media encryption set to "+pref);
 		mLc.setMediaEncryption(me);
 	}
@@ -585,7 +584,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				lDefaultProxyConfig.setDialPrefix(lPrefix);
 			}
 			//escape +
-			lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key,false));
+			lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key, false));
 		}
 	}
 

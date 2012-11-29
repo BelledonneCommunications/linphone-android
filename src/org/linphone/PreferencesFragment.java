@@ -394,7 +394,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	private void initializeMediaEncryptionPreferences() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LinphoneCore lc = null;
+		try {
+			lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		} catch (Exception e) {}
 		
 		List<CharSequence> mencEntries=new ArrayList<CharSequence>();
 		List<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
