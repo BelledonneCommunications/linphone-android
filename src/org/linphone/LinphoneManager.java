@@ -701,7 +701,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void initFromConf() throws LinphoneConfigException {
 
-		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false));
+		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default)));
 		initFromConfTunnel();
 
 		if (initialTransports == null)
@@ -744,7 +744,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				enableDisableVideoCodecs(videoCodec);
 			}
 
-			boolean useEC = getPrefBoolean(R.string.pref_echo_cancellation_key, false);
+			boolean useEC = getPrefBoolean(R.string.pref_echo_cancellation_key, mR.getBoolean(R.bool.pref_echo_canceller_default));
 			mLc.enableEchoCancellation(useEC);
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
@@ -753,8 +753,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.enableVideo(isVideoEnabled, isVideoEnabled);
 		
 		//stun server
-		String lStun = getPrefString(R.string.pref_stun_server_key, null);
-		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, false);
+		String lStun = getPrefString(R.string.pref_stun_server_key, getString(R.string.default_stun));
+		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, mR.getBoolean(R.bool.pref_ice_enabled_default));
 		mLc.setStunServer(lStun);
 		if (lStun!=null && lStun.length()>0) {
 			mLc.setFirewallPolicy(useICE ? FirewallPolicy.UseIce : FirewallPolicy.UseStun);
@@ -776,7 +776,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			//init network state
 			NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
-			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), false);
+			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), mR.getBoolean(R.bool.pref_wifi_only_default));
 			boolean isConnected = false;
 			if (networkInfo != null) {
 				isConnected = networkInfo.getState() == NetworkInfo.State.CONNECTED && (networkInfo.getTypeName().equals("WIFI") || (networkInfo.getTypeName().equals("mobile") && !wifiOnly));
@@ -789,7 +789,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	private void setSignalingTransportsFromConfiguration(Transports t) {
 		Transports ports = new Transports(t);
-		boolean useStandardPort = getPrefBoolean(R.string.pref_transport_use_standard_ports_key, false);
+		boolean useStandardPort = getPrefBoolean(R.string.pref_transport_use_standard_ports_key, mR.getBoolean(R.bool.pref_transport_use_standard_ports_default));
 		int lPreviousPort = ports.tcp +ports.udp +ports.tls; // assume only one port is active 
 		if (lPreviousPort>0xFFFF) {
 			Log.e("Bad port number ["+lPreviousPort+"] using random instead");
