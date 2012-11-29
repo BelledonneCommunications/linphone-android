@@ -762,6 +762,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
 		}
 		
+		mLc.setUseRfc2833ForDtmfs(getPrefBoolean(R.string.pref_rfc2833_dtmf_key, mR.getBoolean(R.bool.pref_rfc2833_dtmf_default)));
+		mLc.setUseSipInfoForDtmfs(getPrefBoolean(R.string.pref_sipinfo_dtmf_key, mR.getBoolean(R.bool.pref_sipinfo_dtmf_default)));
+
+		String displayName = getPrefString(R.string.pref_display_name_key, getString(R.string.pref_display_name_default));
+		String username = getPrefString(R.string.pref_user_name_key, getString(R.string.pref_user_name_default));
+		mLc.setPrimaryContact(displayName, username);
+		
 		//accounts
 		try {
 			initAccounts();
@@ -778,10 +785,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
 		}
-		
-		String displayName = getPrefString(R.string.pref_display_name_key, getString(R.string.pref_display_name_default));
-		String username = getPrefString(R.string.pref_user_name_key, getString(R.string.pref_user_name_default));
-		mLc.setPrimaryContact(displayName, username);
 	}
 	
 	private void setSignalingTransportsFromConfiguration(Transports t) {

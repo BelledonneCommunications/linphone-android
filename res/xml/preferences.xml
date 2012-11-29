@@ -201,6 +201,16 @@
 			<CheckBoxPreference 
 			    android:key="@string/pref_escape_plus_key"
 				android:title="@string/pref_escape_plus"/>
+			
+			<CheckBoxPreference 
+			    android:key="@string/pref_sipinfo_dtmf_key"
+			    android:defaultValue="@bool/pref_sipinfo_dtmf_default"
+				android:title="@string/pref_sipinfo_dtmf"/>
+			
+			<CheckBoxPreference 
+			    android:key="@string/pref_rfc2833_dtmf_key"
+			    android:defaultValue="@bool/pref_rfc2833_dtmf_default"
+				android:title="@string/pref_rfc2833_dtmf"/>
 				
 	    </PreferenceScreen>
 		

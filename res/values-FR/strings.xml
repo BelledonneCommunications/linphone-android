@@ -130,7 +130,7 @@
 	<string name="menu_about">A propos</string>
 	<string name="pref_audio">Audio</string>
 	<string name="menu_exit">Quitter</string>
-	<string name="pref_prefix">Préfix</string>
+	<string name="pref_prefix">Préfixe</string>
 	<string name="pref_advanced">Avancé</string>
 	<string name="menu_settings">Paramètres</string>
 	<string name="pref_proxy">Serveur mandataire</string>
@@ -352,5 +352,8 @@
 	<string name="pref_display_name_title">Nom d\'affichage</string>
 	<string name="pref_user_name_title">Nom d\'utilisateur</string>
 	<string name="pref_expire_title">Expiration</string>
+	
+	<string name="pref_rfc2833_dtmf">Envoyer les DTMFs RFC2833</string>
+	<string name="pref_inband_dtmf">Envoyer les DTMFs en SIP INFO</string>
 	
 </resources>
