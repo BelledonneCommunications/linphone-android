@@ -259,6 +259,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
+			sipUri.setSelected(true); // For animation
 			
 			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && address.getDisplayName() != null && LinphoneUtils.isSipAddress(address.getDisplayName())) {
 				address.setDisplayName(LinphoneUtils.getUsernameFromAddress(address.getDisplayName()));
