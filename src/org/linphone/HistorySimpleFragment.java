@@ -310,6 +310,8 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			final LinphoneAddress address;
 			
 			TextView contact = (TextView) view.findViewById(R.id.sipUri);
+			contact.setSelected(true); // For animation
+			
 			ImageView detail = (ImageView) view.findViewById(R.id.detail);
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			ImageView callDirection = (ImageView) view.findViewById(R.id.icon);
