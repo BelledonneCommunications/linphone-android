@@ -95,7 +95,8 @@
 	<string name="pref_transport_udp">UDP</string>
 	<string name="pref_transport_tcp">TCP</string>
 	<string name="pref_transport_tls">TLS</string>
-	<string name="pref_transport_use_standard_ports">Use standard ports</string>
+	<string name="pref_transport_use_random_ports">Use random ports</string>
+	<string name="pref_sip_port_title">SIP port to use</string>
 	<string name="at_least_a_protocol">At least one item is required</string>
 
     <string name="first_launch_ok">Registration successful</string>

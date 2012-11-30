@@ -56,6 +56,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 
@@ -204,6 +205,18 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		} else {
 			findPreference(getString(R.string.menu_about_key)).setLayoutResource(R.layout.hidden);
 		}
+		
+		final CheckBoxPreference useRandomPort = (CheckBoxPreference) findPreference(R.string.pref_transport_use_random_ports_key);
+		final Preference sipPort = findPreference(R.string.pref_sip_port_key);
+		sipPort.setEnabled(!useRandomPort.isChecked());
+		useRandomPort.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean isChecked = (Boolean) newValue;
+				sipPort.setEnabled(!isChecked);
+				return true;
+			}
+		});
 	}
 	
 	private void createAddAccountButton() {

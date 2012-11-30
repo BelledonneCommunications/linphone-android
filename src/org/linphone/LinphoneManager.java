@@ -788,11 +788,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	private void setSignalingTransportsFromConfiguration(Transports t) {
 		Transports ports = new Transports(t);
-		boolean useStandardPort = getPrefBoolean(R.string.pref_transport_use_standard_ports_key, mR.getBoolean(R.bool.pref_transport_use_standard_ports_default));
-		int lPreviousPort = ports.tcp +ports.udp +ports.tls; // assume only one port is active 
-		if (lPreviousPort>0xFFFF) {
-			Log.e("Bad port number ["+lPreviousPort+"] using random instead");
+		boolean useRandomPort = getPrefBoolean(R.string.pref_transport_use_random_ports_key, mR.getBoolean(R.bool.pref_transport_use_random_ports_default));
+		int lPreviousPort = tryToParseIntValue(getPrefString(R.string.pref_sip_port_key, getString(R.string.pref_sip_port_default)), 5060);
+		if (lPreviousPort>0xFFFF || useRandomPort) {
 			lPreviousPort=(0xDFFF & (int)Math.random())+1024;
+			Log.w("Using random port " + lPreviousPort);
 		}
 		
 		String transport = getPrefString(R.string.pref_transport_key, getString(R.string.pref_transport_udp_key));
@@ -800,29 +800,17 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		{
 			ports.udp = 0;
 			ports.tls = 0;
-			if (useStandardPort) {
-				ports.tcp = 5060;
-			} else if (ports.tcp==0){
-				ports.tcp=lPreviousPort;
-			}
+			ports.tcp = lPreviousPort;
 		} else if (transport.equals(getString(R.string.pref_transport_udp_key)))
 		{
 			ports.tcp = 0;
 			ports.tls = 0;
-			if (useStandardPort) {
-				ports.udp = 5060;
-			} else if (ports.udp==0) {
-				ports.udp = lPreviousPort;
-			}
+			ports.udp = lPreviousPort;
 		} else if (transport.equals(getString(R.string.pref_transport_tls_key)))
 		{
 			ports.udp = 0;
 			ports.tcp = 0;
-			if (useStandardPort) {
-				ports.tls = 5061;
-			} else if (ports.tls==0) {
-				ports.tls=lPreviousPort;
-			}
+			ports.tls = lPreviousPort;
 		}
 
 		mLc.setSignalingTransportPorts(ports);
