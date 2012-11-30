@@ -233,9 +233,15 @@
 				android:defaultValue="@bool/pref_ice_enabled_default"/>
 			
 			<CheckBoxPreference 
-			    android:key="@string/pref_transport_use_standard_ports_key"
-				android:title="@string/pref_transport_use_standard_ports"
-				android:defaultValue="@bool/pref_transport_use_standard_ports_default"/>
+			    android:key="@string/pref_transport_use_random_ports_key"
+				android:title="@string/pref_transport_use_random_ports"
+				android:defaultValue="@bool/pref_transport_use_random_ports_default"/>
+			
+			<EditTextPreference 
+			    android:key="@string/pref_sip_port_key"
+			    android:title="@string/pref_sip_port_title"
+			    android:defaultValue="@string/pref_sip_port_default"
+				android:numeric="integer"/>
 			
 			<EditTextPreference 
 			    android:key="@string/pref_audio_port_key"

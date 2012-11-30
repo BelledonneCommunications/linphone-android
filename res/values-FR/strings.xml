@@ -76,7 +76,8 @@
 	
 	<string name="pref_network_title">Réseau</string>
 	<string name="pref_transport">Transport</string>
-	<string name="pref_transport_use_standard_ports">Utiliser les ports standards</string>
+	<string name="pref_transport_use_random_ports">Utiliser des ports aléatoires</string>
+	<string name="pref_sip_port_title">Port SIP à utiliser si port aléatoire désactivé</string>
 	<string name="at_least_a_protocol">Au moins un est requis</string>
 
 

@@ -40,7 +40,8 @@
 	<string name="pref_transport_udp_key">pref_transport_udp_key</string>
 	<string name="pref_transport_tcp_key">pref_transport_tcp_key</string>
 	<string name="pref_transport_tls_key">pref_transport_tls_key</string>
-	<string name="pref_transport_use_standard_ports_key">pref_transport_use_standard_ports_key</string>
+	<string name="pref_transport_use_random_ports_key">pref_transport_use_random_ports_key</string>
+	<string name="pref_sip_port_key">pref_sip_port_key</string>
 
     <string name="pref_echo_canceller_calibration_key">pref_echo_canceller_calibration_key</string>
     <string name="pref_prefix_key">pref_prefix_key</string>
