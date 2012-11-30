@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@drawable/background"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="20dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+	    android:gravity="center"
+	    android:orientation="horizontal">
+        
+        <org.linphone.ui.AvatarWithShadow
+		    android:id="@+id/contactPicture"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    linphone:picture="@drawable/unknown_small" />
+	        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+            
+	        <TextView
+	            android:id="@+id/contactName"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceLarge"
+		    	android:textColor="@android:color/black" />
+	        
+	        <TextView
+	            android:id="@+id/contactAddress"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceSmall"
+		    	android:textColor="@android:color/black" />
+        
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+    <RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/logRow"
+	    android:paddingTop="20dp">
+        
+        <TextView
+            android:id="@+id/callDirection"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textSize="13sp"
+	    	android:textColor="@android:color/black" />
+        
+        <TextView
+            android:id="@+id/date"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="13sp"
+	    	android:textColor="@android:color/black" />
+        
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_toLeftOf="@id/date"
+            android:layout_toRightOf="@id/callDirection"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="13sp"
+            android:textColor="@android:color/black" />
+        
+    </RelativeLayout>
+    
+    <RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:paddingTop="20dp">
+        
+        <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/callBackRow"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+            
+	        <ImageView
+	            android:contentDescription="@string/content_description_dial_back"
+	            android:id="@+id/dialBack"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	        <TextView 
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/call"
+		    	android:textColor="@android:color/black"
+		    	android:layout_centerInParent="true" />
+        
+        </RelativeLayout>
+        
+        <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/chatRow"
+		    android:layout_below="@id/callBackRow"
+	    	android:layout_marginTop="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+            
+	        <ImageView
+	            android:contentDescription="@string/content_description_chat"
+	            android:id="@+id/chat"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	        <TextView 
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/chat"
+		    	android:textColor="@android:color/black"
+		    	android:layout_centerInParent="true" />
+        
+        </RelativeLayout>
+        
+        <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/addContactRow"
+		    android:layout_below="@id/chatRow"
+	    	android:layout_marginTop="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+            
+	        <ImageView
+	            android:contentDescription="@string/content_description_add_contact"
+	            android:id="@+id/addToContacts"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	        <TextView 
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/add_to_contacts"
+		    	android:textColor="@android:color/black"
+		    	android:layout_centerInParent="true" />
+        
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+</LinearLayout>
