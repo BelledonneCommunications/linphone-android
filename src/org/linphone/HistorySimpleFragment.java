@@ -362,7 +362,6 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			}
 
 			return view;
-		}
-		  
+		}		  
 	  }
 }

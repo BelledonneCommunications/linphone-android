@@ -167,6 +167,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		if (!Version.hasNeon())
 		{
 			// Android without neon doesn't support H264
+			Log.w("No NEON available, disabling H264");
 			findPreference(R.string.pref_video_codec_h264_key).setEnabled(false);
 			findPreference(R.string.pref_video_codec_h264_key).setDefaultValue(false);
 		}
