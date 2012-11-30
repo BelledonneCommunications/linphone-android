@@ -646,7 +646,8 @@ public class LinphoneActivity extends FragmentActivity implements
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
 
-		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null && lc.getDefaultProxyConfig() != null) {
 			statusFragment.registrationStateChanged(LinphoneManager.getLc().getDefaultProxyConfig().getState());
 		}
 	}
@@ -774,7 +775,9 @@ public class LinphoneActivity extends FragmentActivity implements
 	@Override
 	public void onRegistrationStateChanged(RegistrationState state) {
 		if (statusFragment != null) {
-			statusFragment.registrationStateChanged(state);
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null && lc.getDefaultProxyConfig() != null)
+				statusFragment.registrationStateChanged(lc.getDefaultProxyConfig().getState());
 		}
 	}
 
