@@ -845,22 +845,27 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private void enableDisableVideoCodecs(PayloadType videoCodec) throws LinphoneCoreException {
 		String mime = videoCodec.getMime();
 		int key;
+		int defaultValueKey;
 		
 		if ("MP4V-ES".equals(mime)) {
 			key = R.string.pref_video_codec_mpeg4_key;
+			defaultValueKey = R.bool.pref_video_codec_mpeg4_default;
 		} else if ("H264".equals(mime)) {
 			key = R.string.pref_video_codec_h264_key;
+			defaultValueKey = R.bool.pref_video_codec_h264_default;
 		} else if ("H263-1998".equals(mime)) {
 			key = R.string.pref_video_codec_h263_key;
+			defaultValueKey = R.bool.pref_video_codec_h263_default;
 		} else if ("VP8".equals(mime)) {
 			key = R.string.pref_video_codec_vp8_key;
+			defaultValueKey = R.bool.pref_video_codec_vp8_default;
 		} else {
 			Log.e("Unhandled video codec ", mime);
 			mLc.enablePayloadType(videoCodec, false);
 			return;
 		}
 
-		boolean enable= getPrefBoolean(key,false);
+		boolean enable = getPrefBoolean(key, mR.getBoolean(defaultValueKey));
 		mLc.enablePayloadType(videoCodec, enable);
 	}
 

@@ -16,7 +16,7 @@
 	    android:src="@drawable/call_status_incoming"
 	    android:layout_marginLeft="5dp"/>
 	    
-	<TextView 
+	<TextView
 	    android:id="@+id/sipUri"
 	    android:lines="1"
 	    android:textSize="30sp"
