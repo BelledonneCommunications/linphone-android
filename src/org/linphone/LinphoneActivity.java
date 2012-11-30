@@ -823,12 +823,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCallStateChanged(LinphoneCall call, State state,
-			String message) {
-		if (state == State.Error) {
-			displayCustomToast(message, Toast.LENGTH_LONG);
-		}
-
+	public void onCallStateChanged(LinphoneCall call, State state, String message) {
 		if (state == State.IncomingReceived) {
 			startActivity(new Intent(this, IncomingCallActivity.class));
 		} else if (state == State.OutgoingInit) {
@@ -838,6 +833,12 @@ public class LinphoneActivity extends FragmentActivity implements
 				startIncallActivity(call);
 			}
 		} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
+			// Convert LinphoneCore message for internalization
+			if (message != null && message.equals("Call declined.")) { 
+				displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
+			} else if (message != null && message.equals("User not found.")) {
+				displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
+			}
 			resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 		}
 
