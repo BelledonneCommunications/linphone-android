@@ -354,6 +354,6 @@
 	<string name="pref_expire_title">Expiration</string>
 	
 	<string name="pref_rfc2833_dtmf">Envoyer les DTMFs RFC2833</string>
-	<string name="pref_inband_dtmf">Envoyer les DTMFs en SIP INFO</string>
+	<string name="pref_sipinfo_dtmf">Envoyer les DTMFs en SIP INFO</string>
 	
 </resources>
