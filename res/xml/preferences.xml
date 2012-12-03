@@ -75,26 +75,22 @@
 				    android:key="@string/pref_codec_ilbc_key"
 					android:title="@string/pref_codec_ilbc"
 					android:defaultValue="@bool/pref_codec_ilbc_default"
-					android:shouldDisableView="true"
 					android:summary="@string/pref_ilbc_summary"/>
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_amr_key" 
 					android:title="@string/pref_codec_amr" 
-					android:defaultValue="@bool/pref_codec_amr_default"
-					android:shouldDisableView="true"  />
+					android:defaultValue="@bool/pref_codec_amr_default"  />
 				
 				<CheckBoxPreference 
 				    android:key="@string/pref_codec_g729_key"
 	                android:title="@string/pref_codec_g729"
-	                android:defaultValue="@bool/pref_codec_g729_default"
-	                android:shouldDisableView="true"  />
+	                android:defaultValue="@bool/pref_codec_g729_default"  />
 				
 	            <CheckBoxPreference 
 	                android:key="@string/pref_codec_amrwb_key"
 	                android:title="@string/pref_codec_amrwb"
-	                android:defaultValue="@bool/pref_codec_amrwb_default"
-	                android:shouldDisableView="true"  />
+	                android:defaultValue="@bool/pref_codec_amrwb_default"  />
 	            
 			 	<CheckBoxPreference 
 			 	    android:key="@string/pref_codec_gsm_key"
