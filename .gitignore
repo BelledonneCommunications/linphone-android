@@ -4,6 +4,7 @@ gen
 bin
 doc
 local.properties
+project.properties
 tests/*$py.class
 tests/build.xml
 res/.DS_Store
