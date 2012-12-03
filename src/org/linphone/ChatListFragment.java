@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.Log;
 
 import android.os.Bundle;
 import android.os.Handler;
