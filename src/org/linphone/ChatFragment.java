@@ -311,8 +311,25 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		});
 	}
 
-	public void changeDisplayedChat(String sipUri, String displayName, String pictureUri) {
-		this.sipUri = sipUri;
+	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri) {
+		if (!message.getText().toString().equals("") && LinphoneActivity.isInstanciated()) {
+			ChatStorage chatStorage = LinphoneActivity.instance().getChatStorage();
+			if (chatStorage.getDraft(sipUri) == null) {
+				chatStorage.saveDraft(sipUri, message.getText().toString());
+			} else {
+				chatStorage.updateDraft(sipUri, message.getText().toString());
+			}
+		} else if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().getChatStorage().deleteDraft(sipUri);
+		}
+		
+		sipUri = newSipUri;
+		if (LinphoneActivity.isInstanciated()) {
+			String draft = LinphoneActivity.instance().getChatStorage().getDraft(sipUri);
+			if (draft == null)
+				draft = "";
+			message.setText(draft);
+		}
 		displayChat(displayName, pictureUri);
 	}
 	
