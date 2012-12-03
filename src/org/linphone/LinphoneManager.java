@@ -1034,7 +1034,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				return InCallActivity.instance();
 			else if (IncomingCallActivity.isInstanciated())
 				return IncomingCallActivity.instance();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -1062,9 +1064,12 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == CallEnd || state == Error) {
-			TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-			if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-				mAudioManager.setMode(MODE_NORMAL);
+			Context activity = getActivity();
+			if (activity != null) {
+				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+				if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+					mAudioManager.setMode(MODE_NORMAL);
+				}
 			}
 		}
 
@@ -1432,16 +1437,19 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 
-		public void onCallStateChanged(LinphoneCall call, State state,
-				String message) {
+		public void onCallStateChanged(LinphoneCall call, State state, String message) {
 			if (state == State.OutgoingInit || state == State.IncomingReceived) {
 				setVideoInitiator(state == State.OutgoingInit);
 				boolean sendCamera = mLc.getConferenceSize() == 0;
 				enableCamera(call, sendCamera);
 			}
-			TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-			if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-				routeAudioToReceiver();
+			
+			Context activity = getActivity();
+			if (activity != null) {
+			TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+				if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+					routeAudioToReceiver();
+				}
 			}
 			
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
