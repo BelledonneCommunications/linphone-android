@@ -5,6 +5,7 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
+ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sort | tail -n1)
 
 BUILD_X264=0
 BUILD_AMRNB=light
@@ -85,7 +86,7 @@ generate-libs:
 	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 update-project:
-	$(SDK_PATH)/android update project --path .
+	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 	touch default.properties
 
 generate-apk:
@@ -106,6 +107,7 @@ run-tests:
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
 	@cd $(TOPDIR)/tests/ && \
 	$(SDK_PATH)/android update test-project --path . -m ../ && \
+	ant partial-clean && \
 	ant debug && \
 	ant installd && \
 	ant test
