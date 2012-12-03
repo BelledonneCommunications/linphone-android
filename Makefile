@@ -103,11 +103,11 @@ run-linphone:
 	ant run
 
 run-tests:
+	ant partial-clean && \
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
 	@cd $(TOPDIR)/tests/ && \
 	$(SDK_PATH)/android update test-project --path . -m ../ && \
-	ant partial-clean && \
 	ant debug && \
 	ant installd && \
 	ant test

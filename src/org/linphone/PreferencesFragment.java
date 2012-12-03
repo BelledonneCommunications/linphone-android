@@ -299,6 +299,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 
 	private void detectAudioCodec(int id, String mime, int rate, int channels, boolean hide) {
+		Log.w("Payload type for codec " + mime + " = " + LinphoneManager.getLc().findPayloadType(mime, rate, channels));
 		boolean enable = LinphoneService.isReady() && LinphoneManager.getLc().findPayloadType(mime, rate, channels)!=null;
 		Preference cb = findPreference(id);
 		cb.setEnabled(enable);
