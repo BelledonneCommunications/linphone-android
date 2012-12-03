@@ -15,6 +15,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.RawContacts;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -190,6 +191,7 @@ public class EditContactFragment extends Fragment {
 				final View view = inflater.inflate(R.layout.contact_edit_row, null);
 				
 				final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
+				noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
 				noa.setText(numberOrAddress);
 				noa.addTextChangedListener(new TextWatcher() {
 					@Override
@@ -252,6 +254,7 @@ public class EditContactFragment extends Fragment {
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
 		numbersAndAddresses.add(nounoa);
 		noa.setHint(isSip ? getString(R.string.sip_address) : getString(R.string.phone_number));
+		noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
 		noa.requestFocus();
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
