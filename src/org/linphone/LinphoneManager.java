@@ -1026,7 +1026,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 	
-	public Context getActivity() {
+	public Context getContext() {
 		try {
 			if (LinphoneActivity.isInstanciated())
 				return LinphoneActivity.instance();
@@ -1034,6 +1034,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				return InCallActivity.instance();
 			else if (IncomingCallActivity.isInstanciated())
 				return IncomingCallActivity.instance();
+			else
+				return LinphoneService.instance().getApplicationContext();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1064,7 +1066,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == CallEnd || state == Error) {
-			Context activity = getActivity();
+			Context activity = getContext();
 			if (activity != null) {
 				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 				if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
@@ -1444,7 +1446,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				enableCamera(call, sendCamera);
 			}
 			
-			Context activity = getActivity();
+			Context activity = getContext();
 			if (activity != null) {
 			TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 				if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
