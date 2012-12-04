@@ -406,4 +406,5 @@
 	
 	<string name="error_call_declined">Call declined</string>
 	<string name="error_user_not_found">User not found</string>
+	<string name="error_incompatible_media">Incompatible media parameters</string>
 </resources>
