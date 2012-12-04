@@ -283,7 +283,7 @@
 		        
 				<CheckBoxPreference 
 				    android:key="@string/pref_debug_key"
-					android:title="@string/pref_debug" 
+					android:title="@string/pref_debug"
 					android:defaultValue="@bool/pref_debug_default"/>
 			
 			</PreferenceCategory>

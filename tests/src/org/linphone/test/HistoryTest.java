@@ -26,7 +26,6 @@ public class HistoryTest extends ActivityInstrumentationTestCase2<LinphoneActivi
 	private void selectItemInListOnUIThread(final int item) {
 		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
-			@Override
 			public void run() {
 				ListView list = (ListView) solo.getView(android.R.id.list);
 				list.setSelection(item);
@@ -94,10 +93,14 @@ public class HistoryTest extends ActivityInstrumentationTestCase2<LinphoneActivi
 	}	
 
 	public void testDCallBackFromHistoryEntry() {
+		Context context = getActivity();
+		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.history));
 		
+		solo.clickOnText(context.getString(R.string.button_all_call));
+		solo.sleep(500);
 		solo.clickOnText("cotcot");
 		solo.waitForActivity("InCallActivity", 2000);
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);

@@ -1,8 +1,12 @@
 package org.linphone.test;
 
+import junit.framework.Assert;
+
 import org.linphone.InCallActivity;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.LinphoneCall;
 import org.linphone.setup.SetupActivity;
 
 import android.content.Context;
@@ -24,7 +28,6 @@ public class AccountzFreephonieTest extends ActivityInstrumentationTestCase2<Lin
 	private void selectItemInListOnUIThread(final int item) {
 		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
-			@Override
 			public void run() {
 				ListView list = (ListView) solo.getView(android.R.id.list);
 				list.setSelection(item);
@@ -39,8 +42,9 @@ public class AccountzFreephonieTest extends ActivityInstrumentationTestCase2<Lin
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 		
-		selectItemInListOnUIThread(19);
+		selectItemInListOnUIThread(6);
 		solo.clickOnText(context.getString(R.string.pref_network_title));
+		solo.clickOnText(context.getString(R.string.pref_transport));
 		solo.clickOnText(context.getString(R.string.pref_transport_udp));
 		solo.goBack();
 		selectItemInListOnUIThread(0);
@@ -88,8 +92,9 @@ public class AccountzFreephonieTest extends ActivityInstrumentationTestCase2<Lin
 		selectItemInListOnUIThread(7);
 		solo.clickOnText(context.getString(R.string.pref_delete_account));
 		
-		selectItemInListOnUIThread(19);
+		selectItemInListOnUIThread(6);
 		solo.clickOnText(context.getString(R.string.pref_network_title));
+		solo.clickOnText(context.getString(R.string.pref_transport));
 		solo.clickOnText(context.getString(R.string.pref_transport_tls));
 		solo.goBack();
 		
@@ -104,8 +109,13 @@ public class AccountzFreephonieTest extends ActivityInstrumentationTestCase2<Lin
 		
 		solo.waitForActivity("InCallActivity", 2000);
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
-		solo.waitForText("01", 1, 15000);
-		solo.clickOnView(solo.getView(R.id.hangUp));
+		solo.sleep(2000);
+		try {
+			Assert.assertEquals(LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCalls()[0].getState(), LinphoneCall.State.OutgoingEarlyMedia);
+		} catch (AssertionError ae) {
+		} finally {
+			solo.clickOnView(solo.getView(R.id.hangUp));
+		}
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);

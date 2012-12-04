@@ -178,10 +178,8 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 			
-		switch (id) {
-		case R.id.editContact:
+		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
-			break;
 		}
 	}
 }

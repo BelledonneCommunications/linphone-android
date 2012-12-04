@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
 
 import android.content.Context;
@@ -30,7 +31,6 @@ public class AccountsTest extends
 	private void selectItemInListOnUIThread(final int item) {
 		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
-			@Override
 			public void run() {
 				ListView list = (ListView) solo.getView(android.R.id.list);
 				list.setSelection(item);
@@ -60,7 +60,10 @@ public class AccountsTest extends
 		solo.enterText((EditText) solo.getView(R.id.setup_password), "wizard15");
 		solo.clickOnText(context.getString(R.string.setup_apply));
 		
-		solo.waitForActivity("LinphoneActivity", 2000);
+		if (!Hacks.hasBuiltInEchoCanceller())
+			solo.waitForActivity("LinphoneActivity", 8000);
+		else
+			solo.waitForActivity("LinphoneActivity", 2000);
 		Assert.assertTrue(solo.searchText("wizard15@sip.linphone.org"));
 		
 		int nbAccountsAfter = prefs.getInt(getActivity().getString(R.string.pref_extra_accounts), 0);
@@ -71,8 +74,8 @@ public class AccountsTest extends
 		Assert.assertEquals(stunServer, context.getString(R.string.default_stun));
 		Log.testSuccess("Default stun server is configured");
 		
-		boolean tls = prefs.getBoolean(context.getString(R.string.pref_transport_tls_key), false);
-		Assert.assertEquals(tls, true);
+		String transport = prefs.getString(context.getString(R.string.pref_transport_key), context.getString(R.string.pref_transport_udp_key));
+		Assert.assertEquals(transport, context.getString(R.string.pref_transport_tls_key));
 		Log.testSuccess("TLS is set by default");
 		
 		String proxy = prefs.getString(context.getString(R.string.pref_proxy_key), "");
@@ -122,6 +125,7 @@ public class AccountsTest extends
 		solo.clickOnText("junit@test.linphone.org");
 		selectItemInListOnUIThread(6);
 		solo.clickOnText(context.getString(R.string.pref_default_account));
+		solo.goBack();
 		int defaultAccount = prefs.getInt(context.getString(R.string.pref_default_account_key), 0);
 		solo.sleep(1000);
 		Assert.assertEquals(1, defaultAccount);
