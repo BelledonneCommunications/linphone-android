@@ -165,11 +165,11 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 			if (!LinphoneActivity.isInstanciated()) {
 				return;
 			}
-			
-			if (mCall.getRemoteParams().getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
+			final LinphoneCallParams remoteParams = mCall.getRemoteParams();
+			if (remoteParams != null && remoteParams.getVideoEnabled()
+					&& LinphoneManager.getInstance().isAutoAcceptCamera()) {
 				LinphoneActivity.instance().startVideoActivity(mCall);
-			}
-			else {
+			} else {
 				LinphoneActivity.instance().startIncallActivity(mCall);
 			}
 		}
