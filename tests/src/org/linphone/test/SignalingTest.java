@@ -25,7 +25,6 @@ public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActi
 	private void selectItemInListOnUIThread(final int item) {
 		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
-			@Override
 			public void run() {
 				ListView list = (ListView) solo.getView(android.R.id.list);
 				list.setSelection(item);
@@ -40,7 +39,7 @@ public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActi
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		selectItemInListOnUIThread(19);
+		selectItemInListOnUIThread(6);
 		solo.clickOnText(context.getString(R.string.pref_network_title));
 		solo.sleep(500);
 	}
@@ -70,6 +69,7 @@ public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActi
 		Context context = getActivity();
 		goToNetworkSettings();
 		
+		solo.clickOnText(context.getString(R.string.pref_transport));
 		solo.clickOnText(context.getString(R.string.pref_transport_udp));
 		solo.goBack();
 		solo.goBack();
@@ -84,7 +84,8 @@ public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActi
 	public void testCRegistrationTCP() {
 		Context context = getActivity();
 		goToNetworkSettings();
-		
+
+		solo.clickOnText(context.getString(R.string.pref_transport));
 		solo.clickOnText(context.getString(R.string.pref_transport_tcp));
 		solo.goBack();
 		solo.goBack();
@@ -99,7 +100,8 @@ public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActi
 	public void testERegistrationTLS() {
 		Context context = getActivity();
 		goToNetworkSettings();
-		
+
+		solo.clickOnText(context.getString(R.string.pref_transport));
 		solo.clickOnText(context.getString(R.string.pref_transport_tls));
 		solo.goBack();
 		solo.goBack();

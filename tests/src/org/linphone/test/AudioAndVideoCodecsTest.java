@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -27,7 +28,6 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 	private void selectItemInListOnUIThread(final int item) {
 		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
-			@Override
 			public void run() {
 				ListView list = (ListView) solo.getView(android.R.id.list);
 				list.setSelection(item);
@@ -41,6 +41,10 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo = new Solo(getInstrumentation(), getActivity());
 	}
 	
+	private boolean getBoolean(int key) {
+		return getActivity().getResources().getBoolean(key);
+	}
+	
 	private void goToAudioCodecsSettings() {
 		Context context = getActivity();
 		
@@ -48,8 +52,8 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		selectItemInListOnUIThread(11);
-		solo.clickOnText(context.getString(R.string.pref_codecs));
+		selectItemInListOnUIThread(4);
+		solo.clickOnText(context.getString(R.string.pref_audio));
 		solo.sleep(500);
 	}
 	
@@ -60,8 +64,11 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(R.id.settings));
 
-		selectItemInListOnUIThread(14);
-		solo.clickOnText(context.getString(R.string.pref_video_codecs_title), 2); //Hack: since pref_codecs = pref_video_codecs_title, we have to select the 2nd button
+		selectItemInListOnUIThread(6);
+		if (solo.searchText(context.getString(R.string.pref_video), 2)) // Needed in case pref_video_enable_title contains pref_video
+			solo.clickOnText(context.getString(R.string.pref_video), 2);
+		else
+			solo.clickOnText(context.getString(R.string.pref_video));
 		solo.sleep(500);
 	}
 	
@@ -71,52 +78,62 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		goToAudioCodecsSettings();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_speex16_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_speex16_key), getBoolean(R.bool.pref_codec_speex16_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_speex16));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_speex8_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_speex8_key), getBoolean(R.bool.pref_codec_speex8_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_speex8));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_ilbc_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_ilbc_key), getBoolean(R.bool.pref_codec_ilbc_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_ilbc));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_amr_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_amr_key), getBoolean(R.bool.pref_codec_amr_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_amr));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_gsm_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_amrwb_key), getBoolean(R.bool.pref_codec_amrwb_default))) {
+			solo.clickOnText(context.getString(R.string.pref_codec_amrwb));
+			solo.sleep(500);
+		}
+		
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_g729_key), getBoolean(R.bool.pref_codec_g729_default))) {
+			solo.clickOnText(context.getString(R.string.pref_codec_g729));
+			solo.sleep(500);
+		}
+		
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_gsm_key), getBoolean(R.bool.pref_codec_gsm_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_gsm));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_g722_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_g722_key), getBoolean(R.bool.pref_codec_g722_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_g722));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_silk24_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_silk24_key), getBoolean(R.bool.pref_codec_silk24_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_silk24));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_silk16_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_silk16_key), getBoolean(R.bool.pref_codec_silk16_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_silk16));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_pcmu_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_pcmu_key), getBoolean(R.bool.pref_codec_pcmu_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_pcmu));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_codec_pcma_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_codec_pcma_key), getBoolean(R.bool.pref_codec_pcma_default))) {
 			solo.clickOnText(context.getString(R.string.pref_codec_pcma));
 			solo.sleep(500);
 		}
@@ -128,34 +145,49 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		goToVideoCodecsSettings();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_vp8_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_vp8_key), getBoolean(R.bool.pref_video_codec_vp8_default))) {
 			solo.clickOnText(context.getString(R.string.pref_video_codec_vp8_title));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_h264_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_h264_key), getBoolean(R.bool.pref_video_codec_h264_default))) {
 			solo.clickOnText(context.getString(R.string.pref_video_codec_h264_title));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_mpeg4_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_video_codec_mpeg4_key), getBoolean(R.bool.pref_video_codec_mpeg4_default))) {
 			solo.clickOnText(context.getString(R.string.pref_video_codec_mpeg4_title));
 			solo.sleep(500);
 		}
 	}
 	
 	private void goToDialerAndOutgoingCall(String codecTextToAssert) {
+		Context context = getActivity();
+		
 		solo.clickOnView(solo.getView(R.id.dialer));
 		solo.clickOnView(solo.getView(R.id.Adress));
 		solo.enterText((EditText) solo.getView(R.id.Adress), sipAdressToCall);
 		solo.clickOnView(solo.getView(R.id.Call));
 		
-		solo.waitForActivity("InCallActivity", 2000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
-		solo.clickOnView(solo.getView(R.id.status));
-		solo.waitForText(codecTextToAssert, 1, 6000);
-		Assert.assertTrue(solo.searchText(codecTextToAssert, 1));
-		solo.clickOnView(solo.getView(R.id.hangUp));
+		boolean incompatibleMediaParams = solo.waitForText(context.getString(R.string.error_incompatible_media), 1, 1000);
+		if (!incompatibleMediaParams) { // There is a possiblity the callee doesn't support the codec, in which case we don't have to wait for the incall view
+			solo.waitForActivity("InCallActivity", 1000);
+			solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
+			solo.clickOnView(solo.getView(R.id.status));
+			solo.waitForText(codecTextToAssert, 1, 6000);
+			Assert.assertTrue(solo.searchText(codecTextToAssert, 1));
+			
+			View hangUp = solo.getView(R.id.hangUp);
+			if (hangUp.getVisibility() == View.VISIBLE)
+				solo.clickOnView(hangUp);
+			else { // While on video, menu can hide. Click the first time to display it back, then click again to really hang up
+				solo.clickOnView(hangUp);
+				solo.sleep(500);
+				solo.clickOnView(hangUp);
+			}
+		} else {
+			Log.testFailure("Incompatible media parameters for codec " + codecTextToAssert);
+		}
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
@@ -170,7 +202,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 
 		selectItemInListOnUIThread(4);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (prefs.getBoolean(context.getString(R.string.pref_video_enable_key), false)) {
+		if (prefs.getBoolean(context.getString(R.string.pref_video_enable_key), getBoolean(R.bool.pref_video_enable_default))) {
 			solo.clickOnText(context.getString(R.string.pref_video_enable_title));
 			solo.sleep(500);
 		}
@@ -183,6 +215,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("PCMA");
+		solo.sleep(1000);
 	}
 	
 	public void testCOutgoingAudioCallPCMU() {
@@ -192,6 +225,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("PCMU");
+		solo.sleep(1000);
 	}
 	
 	public void testDOutgoingAudioCallSilk16() {
@@ -201,15 +235,18 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("SILK");
+		solo.sleep(1000);
 	}
 	
 	public void testEOutgoingAudioCallSilk24() {
-		Context context = getActivity();
-		disableAllEnabledAudioCodecs();
-		solo.clickOnText(context.getString(R.string.pref_codec_silk24));
-		solo.goBack();
-		
-		goToDialerAndOutgoingCall("SILK");
+//		Silk24 no longer available
+//		Context context = getActivity();
+//		disableAllEnabledAudioCodecs();
+//		solo.clickOnText(context.getString(R.string.pref_codec_silk24));
+//		solo.goBack();
+//		
+//		goToDialerAndOutgoingCall("SILK");
+//		solo.sleep(1000);
 	}
 	
 	public void testFOutgoingAudioCallG722() {
@@ -219,6 +256,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("G722");
+		solo.sleep(1000);
 	}
 	
 	public void testGOutgoingAudioCallGSM() {
@@ -228,6 +266,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("GSM");
+		solo.sleep(1000);
 	}
 	
 	public void testHOutgoingAudioCallAMR() {
@@ -237,36 +276,60 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("AMR");
+		solo.sleep(1000);
 	}
 	
-	public void testIOutgoingAudioCallILBC() {
+	public void testIOutgoingAudioCallAMRWB() {
+		Context context = getActivity();
+		disableAllEnabledAudioCodecs();
+		solo.clickOnText(context.getString(R.string.pref_codec_amrwb));
+		solo.goBack();
+		
+		goToDialerAndOutgoingCall("AMRWB");
+		solo.sleep(1000);
+	}
+	
+	public void testJOutgoingAudioCallG729() {
+		Context context = getActivity();
+		disableAllEnabledAudioCodecs();
+		solo.clickOnText(context.getString(R.string.pref_codec_g729));
+		solo.goBack();
+		
+		goToDialerAndOutgoingCall("G729");
+		solo.sleep(1000);
+	}
+	
+	public void testKOutgoingAudioCallILBC() {
 		Context context = getActivity();
 		disableAllEnabledAudioCodecs();
 		solo.clickOnText(context.getString(R.string.pref_codec_ilbc));
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("iLBC");
+		solo.sleep(1000);
 	}
 	
-	public void testJOutgoingAudioCallSpeex8() {
+	public void testLOutgoingAudioCallSpeex8() {
 		Context context = getActivity();
 		disableAllEnabledAudioCodecs();
 		solo.clickOnText(context.getString(R.string.pref_codec_speex8));
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("speex");
+		solo.sleep(1000);
 	}
 	
-	public void testKOutgoingAudioCallSpeex16() {
+	public void testMOutgoingAudioCallSpeex16() {
 		Context context = getActivity();
 		disableAllEnabledAudioCodecs();
 		solo.clickOnText(context.getString(R.string.pref_codec_speex16));
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("speex");
+		solo.sleep(1000);
 	}
 	
-	public void testLEnableVideo() {
+	public void testNEnableVideo() {
 		Context context = getActivity();
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
@@ -276,37 +339,40 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.sleep(500);
 		selectItemInListOnUIThread(4);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (!prefs.getBoolean(context.getString(R.string.pref_video_enable_key), true)) {
+		if (!prefs.getBoolean(context.getString(R.string.pref_video_enable_key), getBoolean(R.bool.pref_video_enable_default))) {
 			solo.clickOnText(context.getString(R.string.pref_video_enable_title));
 			solo.sleep(500);
 		}
 	}
 	
-	public void testMOutgoingVideoCallVP8() {
+	public void testOOutgoingVideoCallVP8() {
 		Context context = getActivity();
 		disableAllEnabledVideoCodecs();
 		solo.clickOnText(context.getString(R.string.pref_video_codec_vp8_title));
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("VP8");
+		solo.sleep(1000);
 	}
 	
-	public void testNOutgoingVideoCallH264() {
+	public void testPOutgoingVideoCallH264() {
 		Context context = getActivity();
 		disableAllEnabledVideoCodecs();
 		solo.clickOnText(context.getString(R.string.pref_video_codec_h264_title));
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("H264");
+		solo.sleep(1000);
 	}
 	
-	public void testOOutgoingVideoCallMPG4() {
+	public void testQOutgoingVideoCallMPG4() {
 		Context context = getActivity();
 		disableAllEnabledVideoCodecs();
 		solo.clickOnText(context.getString(R.string.pref_video_codec_mpeg4_title));
 		solo.goBack();
 		
 		goToDialerAndOutgoingCall("MP4V-ES");
+		solo.sleep(1000);
 	}
 	
 	@Override
