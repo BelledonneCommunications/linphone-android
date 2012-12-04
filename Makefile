@@ -5,7 +5,7 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
-ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sort | tail -n1)
+ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sort -V | tail -n1)
 
 BUILD_X264=0
 BUILD_AMRNB=light
