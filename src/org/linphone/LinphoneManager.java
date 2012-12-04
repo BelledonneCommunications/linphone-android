@@ -1008,7 +1008,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == CallEnd || state == Error) {
-			TelephonyManager tm = (TelephonyManager) LinphoneActivity.instance().getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager tm = (TelephonyManager) LinphoneService.instance().getSystemService(Context.TELEPHONY_SERVICE);
 			if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
 				mAudioManager.setMode(MODE_NORMAL);
 			}
@@ -1393,7 +1393,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				boolean sendCamera = mLc.getConferenceSize() == 0;
 				enableCamera(call, sendCamera);
 			}
-			TelephonyManager tm = (TelephonyManager) LinphoneActivity.instance().getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager tm = (TelephonyManager) LinphoneService.instance().getSystemService(Context.TELEPHONY_SERVICE);
 			if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
 				routeAudioToReceiver();
 			}
