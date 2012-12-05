@@ -7,7 +7,7 @@ LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | s
 KEYSTORE=bc-android.keystore
 KEYALIAS=nw8000
 
-all: prepare-sources generate-libs generate-apk install-apk run-linphone
+all: prepare-sources generate-libs update-project generate-apk install-apk run-linphone
 
 prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
