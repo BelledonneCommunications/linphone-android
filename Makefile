@@ -4,6 +4,7 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
+ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sort -V | tail -n1)
 KEYSTORE=bc-android.keystore
 KEYALIAS=nw8000
 
@@ -52,9 +53,7 @@ generate-libs:
 	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_SILK=1 BUILD_AMRNB=full BUILD_G729=1 BUILD_WEBRTC_AECM=1 -j$(NUMCPUS)
 
 update-project:
-	$(SDK_PATH)/android update project --path .
-	echo "key.store=$(KEYSTORE)" > ant.properties
-	echo "key.alias=$(KEYALIAS)" >> ant.properties
+	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 	touch default.properties
 
 generate-apk:
