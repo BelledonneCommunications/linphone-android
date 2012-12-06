@@ -187,7 +187,7 @@ public class EditContactFragment extends Fragment {
 			}
 		}
 		if (newSipOrNumberToAdd != null) {
-			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
+			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, true);
 			if (view != null)
 				controls.addView(view);
 		}
@@ -217,6 +217,10 @@ public class EditContactFragment extends Fragment {
 	}
 	
 	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress) {
+		return displayNumberOrAddress(controls, numberOrAddress, false);
+	}
+	
+	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress, boolean forceAddNumber) {
 		final boolean isSip = numberOrAddress.startsWith("sip:");
 		if (isSip) {
 			if (firstSipAddressIndex == -1) {
@@ -228,7 +232,13 @@ public class EditContactFragment extends Fragment {
 			return null;
 		}
 		
-		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+		NewOrUpdatedNumberOrAddress tempNounoa;
+		if (forceAddNumber) {
+			tempNounoa = new NewOrUpdatedNumberOrAddress(isSip);
+		} else {
+			tempNounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+		}
+		final NewOrUpdatedNumberOrAddress nounoa = tempNounoa;
 		numbersAndAddresses.add(nounoa);
 		
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
@@ -250,6 +260,9 @@ public class EditContactFragment extends Fragment {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+		if (forceAddNumber) {
+			nounoa.setNewNumberOrAddress(noa.getText().toString());
+		}
 		
 		ImageView delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(new OnClickListener() {
