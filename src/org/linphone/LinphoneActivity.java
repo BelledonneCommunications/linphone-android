@@ -1188,7 +1188,9 @@ public class LinphoneActivity extends FragmentActivity implements
 			Intent intent = Compatibility.prepareAddContactIntent(displayName, sipUri);
 			startActivity(intent);
 		} else {
-			changeCurrentFragment(FragmentsAvailable.EDIT_CONTACT, null);
+			Bundle extras = new Bundle();
+			extras.putSerializable("NewSipAdress", sipUri);
+			changeCurrentFragment(FragmentsAvailable.EDIT_CONTACT, extras);
 		}
 	}
 	

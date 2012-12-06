@@ -39,15 +39,22 @@ public class EditContactFragment extends Fragment {
 	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
 	private ArrayList<ContentProviderOperation> ops;
 	private int firstSipAddressIndex = -1;
+	private String newSipOrNumberToAdd;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
 		
 		contact = null;
-		if (getArguments() != null && getArguments().getSerializable("Contact") != null) {
-			contact = (Contact) getArguments().getSerializable("Contact");
-			isNewContact = false;
-			contactID = Integer.parseInt(contact.getID());
+		if (getArguments() != null) {
+			if (getArguments().getSerializable("Contact") != null) {
+				contact = (Contact) getArguments().getSerializable("Contact");
+				isNewContact = false;
+				contactID = Integer.parseInt(contact.getID());
+				contact.refresh(getActivity().getContentResolver());
+			}
+			if (getArguments().getString("NewSipAdress") != null) {
+				newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
+			}
 		}
 		
 		view = inflater.inflate(R.layout.edit_contact, container, false);
@@ -174,52 +181,15 @@ public class EditContactFragment extends Fragment {
 		
 		if (contact != null) {
 			for (String numberOrAddress : contact.getNumerosOrAddresses()) {
-				final boolean isSip = numberOrAddress.startsWith("sip:");
-				if (isSip) {
-					if (firstSipAddressIndex == -1) {
-						firstSipAddressIndex = controls.getChildCount();
-					}
-					numberOrAddress = numberOrAddress.replace("sip:", "");
-				}
-				if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSip) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSip)) {
-					continue;
-				}
-				
-				final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
-				numbersAndAddresses.add(nounoa);
-				
-				final View view = inflater.inflate(R.layout.contact_edit_row, null);
-				
-				final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
-				noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
-				noa.setText(numberOrAddress);
-				noa.addTextChangedListener(new TextWatcher() {
-					@Override
-					public void onTextChanged(CharSequence s, int start, int before, int count) {
-						nounoa.setNewNumberOrAddress(noa.getText().toString());
-					}
-					
-					@Override
-					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-					}
-					
-					@Override
-					public void afterTextChanged(Editable s) {
-					}
-				});
-				
-				ImageView delete = (ImageView) view.findViewById(R.id.delete);
-				delete.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						nounoa.delete();
-						numbersAndAddresses.remove(nounoa);
-						view.setVisibility(View.GONE);
-					}
-				});
-				
-				controls.addView(view);
+				View view = displayNumberOrAddress(controls, numberOrAddress);
+				if (view != null)
+					controls.addView(view);
 			}
+		}
+		if (newSipOrNumberToAdd != null) {
+			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
+			if (view != null)
+				controls.addView(view);
 		}
 		
 		if (!isNewContact) {
@@ -244,6 +214,53 @@ public class EditContactFragment extends Fragment {
 			firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to always display phone numbers before SIP accounts
 			addEmptyRowToAllowNewNumberOrAddress(controls, true);
 		}
+	}
+	
+	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress) {
+		final boolean isSip = numberOrAddress.startsWith("sip:");
+		if (isSip) {
+			if (firstSipAddressIndex == -1) {
+				firstSipAddressIndex = controls.getChildCount();
+			}
+			numberOrAddress = numberOrAddress.replace("sip:", "");
+		}
+		if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSip) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSip)) {
+			return null;
+		}
+		
+		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+		numbersAndAddresses.add(nounoa);
+		
+		final View view = inflater.inflate(R.layout.contact_edit_row, null);
+		
+		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
+		noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
+		noa.setText(numberOrAddress);
+		noa.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				nounoa.setNewNumberOrAddress(noa.getText().toString());
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+		
+		ImageView delete = (ImageView) view.findViewById(R.id.delete);
+		delete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				nounoa.delete();
+				numbersAndAddresses.remove(nounoa);
+				view.setVisibility(View.GONE);
+			}
+		});
+		return view;
 	}
 	
 	private void addEmptyRowToAllowNewNumberOrAddress(final TableLayout controls, final boolean isSip) {
