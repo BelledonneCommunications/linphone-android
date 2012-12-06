@@ -2,7 +2,7 @@
 			****************************
 
 To build liblinphone for Android, you must:
-1) download the Android ndk (>=r5c) from google.
+1) download the latest Android ndk from google.
 2) install the autotools: autoconf, automake, aclocal, libtoolize pkgconfig
 3) run the ./prepare_sources.sh script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
 	$ ./prepare_sources.sh
