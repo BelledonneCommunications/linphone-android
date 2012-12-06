@@ -8,7 +8,9 @@ ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | nl -ba | grep androi
 KEYSTORE=bc-android.keystore
 KEYALIAS=nw8000
 
-all: prepare-sources generate-libs update-project generate-apk install-apk run-linphone
+all: prepare-sources generate-libs update-project generate-apk
+
+install: all install-apk run-linphone
 
 prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
@@ -57,6 +59,7 @@ update-project:
 	touch default.properties
 
 generate-apk:
+	ant clean
 	ant debug
 
 install-apk: generate-apk
