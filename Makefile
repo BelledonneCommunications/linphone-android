@@ -4,7 +4,7 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell grep -e '^.C_INIT' submodules/linphone/configure.ac | sed -e 's/.*linphone]\,\[//' |sed -e 's/\].*//' )
-ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sort -V | tail -n1)
+ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | nl -ba | grep android | sort | tail -n1 | cut -f2-)
 KEYSTORE=bc-android.keystore
 KEYALIAS=nw8000
 
