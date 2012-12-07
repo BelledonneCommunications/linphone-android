@@ -154,10 +154,14 @@ rm -rf $DBASE
 
 DBASE="liblinphone-android-javadoc"
 D="../$DBASE.zip"
+if grep -r "javadoc.dir" local.properties
+then
+	echo "javadoc.dir already defined"
+else
+	echo "javadoc.dir=$DBASE" >> local.properties
+fi
+
 echo "Generating javadoc to $D"
-cat >> local.properties <<EOF
-javadoc.dir=$DBASE
-EOF
 ant javadoc
 rm -rf $D
 zip -rq $D $DBASE
