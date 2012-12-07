@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 
 import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
@@ -253,6 +254,17 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mMsgNotif.setLatestEventInfo(this, title, message, notifContentIntent);
 		
 		notifyWrapper(CUSTOM_NOTIF_ID, mMsgNotif);
+	}
+	
+	public void removeCustomNotification() {
+		mNM.cancel(CUSTOM_NOTIF_ID);
+		resetIntentLaunchedOnNotificationClick();
+	}
+	
+	private void resetIntentLaunchedOnNotificationClick() {
+		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		mNotif.setLatestEventInfo(this, mNotificationTitle, "", mNotifContentIntent);
 	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};
