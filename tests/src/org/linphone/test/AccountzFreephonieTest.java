@@ -17,7 +17,8 @@ import android.widget.ListView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class AccountzFreephonieTest extends ActivityInstrumentationTestCase2<LinphoneActivity> {
-	private static final String numberToCallToTestPSTNGateway = "0952636505";
+	
+	private static final String numberToCallToTestPSTNGateway = "0482532176";
 	private Solo solo;
 	
 	@SuppressWarnings("deprecation")
@@ -111,7 +112,8 @@ public class AccountzFreephonieTest extends ActivityInstrumentationTestCase2<Lin
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
 		solo.sleep(2000);
 		try {
-			Assert.assertEquals(LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCalls()[0].getState(), LinphoneCall.State.OutgoingEarlyMedia);
+			LinphoneCall.State state = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCalls()[0].getState();
+			Assert.assertTrue(state == LinphoneCall.State.OutgoingEarlyMedia || state == LinphoneCall.State.OutgoingRinging || state == LinphoneCall.State.StreamsRunning);
 		} catch (AssertionError ae) {
 		} finally {
 			solo.clickOnView(solo.getView(R.id.hangUp));

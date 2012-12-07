@@ -13,6 +13,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class ChatTest extends ActivityInstrumentationTestCase2<LinphoneActivity> {
 
+	private static final String testTextMessage = "Test";
 	private Solo solo;
 	
 	@SuppressWarnings("deprecation")
@@ -48,7 +49,7 @@ public class ChatTest extends ActivityInstrumentationTestCase2<LinphoneActivity>
 		solo.clickOnText(context.getString(R.string.button_new_chat));
 		solo.sleep(1000);
 		
-		solo.enterText((EditText) solo.getView(R.id.message), "Draft");
+		solo.enterText((EditText) solo.getView(R.id.message), testTextMessage);
 		solo.goBack();
 		solo.sleep(1000);
 		Assert.assertTrue(solo.searchText(context.getString(R.string.draft)));
@@ -63,12 +64,12 @@ public class ChatTest extends ActivityInstrumentationTestCase2<LinphoneActivity>
 		solo.clickOnView(solo.getView(R.id.chat));
 		
 		solo.clickOnText(context.getString(R.string.draft));
-		Assert.assertTrue(solo.searchText("Draft"));
+		Assert.assertTrue(solo.searchText(testTextMessage));
 		Log.testSuccess("Draft successfully restored");
 		
 		solo.clickOnText(context.getString(R.string.button_send_message));
 		solo.sleep(1000);
-		Assert.assertTrue(solo.searchText("Draft"));
+		Assert.assertTrue(solo.searchText(testTextMessage));
 		Log.testSuccess("Chat message sent");
 		
 		solo.goBack();
@@ -86,13 +87,13 @@ public class ChatTest extends ActivityInstrumentationTestCase2<LinphoneActivity>
 		solo.clickOnView(solo.getView(R.id.chat));
 		
 		solo.clickOnText("cotcot");
-		Assert.assertTrue(solo.searchText("Draft"));
-		solo.clickLongOnText("Draft");
+		Assert.assertTrue(solo.searchText(testTextMessage));
+		solo.clickLongOnText(testTextMessage);
 		solo.sleep(1000);
 		
 		solo.clickOnText(context.getString(R.string.delete));
 		solo.sleep(1000);
-		Assert.assertFalse(solo.searchText("Draft"));
+		Assert.assertFalse(solo.searchText(testTextMessage));
 		Log.testSuccess("Chat message successfully deleted");
 	}
 	
@@ -107,11 +108,11 @@ public class ChatTest extends ActivityInstrumentationTestCase2<LinphoneActivity>
 		solo.clickOnText(context.getString(R.string.button_new_chat));
 		solo.sleep(1000);
 		
-		solo.enterText((EditText) solo.getView(R.id.message), "Test");
+		solo.enterText((EditText) solo.getView(R.id.message), testTextMessage);
 		solo.clickOnText(context.getString(R.string.button_send_message));
 		solo.sleep(1000);
 		
-		Assert.assertTrue(solo.searchText("Test", 2));
+		Assert.assertTrue(solo.searchText(testTextMessage, 2));
 		Log.testSuccess("Chat message successfully received");
 		
 		solo.goBack();
