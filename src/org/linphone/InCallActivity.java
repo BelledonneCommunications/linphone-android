@@ -31,7 +31,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.Numpad;
 
@@ -935,7 +934,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCallStateChanged(final LinphoneCall call, State state, String message) {		
+	public void onCallStateChanged(final LinphoneCall call, State state, String message) {
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
 			finish();
 			return;
@@ -951,18 +950,11 @@ public class InCallActivity extends FragmentActivity implements
 			if (isVideoEnabledInCall != isVideoEnabled) {
 				isVideoEnabled = isVideoEnabledInCall;
 				switchVideo(isVideoEnabled);
-			} else {
-				//Hack to fix Galaxy S issue
-				if (Hacks.needGalaxySAudioHack()) {
-					if (isSpeakerEnabled) {
-						LinphoneManager.getInstance().routeAudioToSpeaker();
-					} else {
-						LinphoneManager.getInstance().routeAudioToReceiver();
-					}
-					LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
-				}
 			}
-			
+
+			// The following should not be needed except some devices need it (e.g. Galaxy S).
+			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
 			enableAndRefreshInCallActions();
 			
