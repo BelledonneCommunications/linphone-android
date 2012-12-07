@@ -169,7 +169,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 		solo.enterText((EditText) solo.getView(R.id.Adress), sipAdressToCall);
 		solo.clickOnView(solo.getView(R.id.Call));
 		
-		boolean incompatibleMediaParams = solo.waitForText(context.getString(R.string.error_incompatible_media), 1, 1000);
+		boolean incompatibleMediaParams = solo.waitForText(context.getString(R.string.error_incompatible_media), 1, 1500);
 		if (!incompatibleMediaParams) { // There is a possiblity the callee doesn't support the codec, in which case we don't have to wait for the incall view
 			solo.waitForActivity("InCallActivity", 1000);
 			solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
@@ -182,7 +182,7 @@ public class AudioAndVideoCodecsTest extends ActivityInstrumentationTestCase2<Li
 				solo.clickOnView(hangUp);
 			else { // While on video, menu can hide. Click the first time to display it back, then click again to really hang up
 				solo.clickOnView(hangUp);
-				solo.sleep(500);
+				solo.sleep(1000);
 				solo.clickOnView(hangUp);
 			}
 		} else {
