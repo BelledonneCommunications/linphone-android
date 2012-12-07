@@ -17,15 +17,15 @@ mkdir -p $D/gen
 cat > $D/.classpath <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-        <classpathentry kind="src" path="src"/>
-        <classpathentry kind="src" path="gen"/>
-        <classpathentry kind="src" path="submodules/linphone/coreapi/help/java"/>
-        <classpathentry kind="src" path="submodules/linphone/java/common"/>
-        <classpathentry kind="src" path="submodules/linphone/java/j2se"/>
-        <classpathentry kind="src" path="submodules/linphone/mediastreamer2/java/src"/>
-        <classpathentry excluding="org/linphone/mediastream/MediastreamerActivity.java" kind="src" path="submodules/linphone/mediastreamer2/java/src"/>
-        <classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-        <classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry excluding="org/linphone/mediastream/MediastreamerActivity.java" kind="src" path="submodules/linphone/mediastreamer2/java/src"/>
+	<classpathentry kind="src" path="submodules/linphone/java/j2se"/>
+	<classpathentry kind="src" path="submodules/linphone/java/common"/>
+	<classpathentry kind="src" path="submodules/linphone/java/impl"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="lib" path="libs/aXMLRPC.jar"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
 EOF
 
@@ -39,74 +39,81 @@ grep -R "org.linphone.R" . -l  | grep java | xargs sed -i 's/org\.linphone\.R/or
 cat > $D/AndroidManifest.xml <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.linphone" android:versionCode="1" android:versionName="1.0">
+    package="org.linphone" android:versionCode="1" android:versionName="1.0">
+
+	<uses-sdk android:minSdkVersion="4"/>
+    
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+	<uses-permission android:name="android.permission.READ_CONTACTS"/>
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
+	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+	<uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
+	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+	<uses-permission android:name="android.permission.CAMERA" />
+
+	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
+
     <application>
-    
-    
-        <activity android:name="org.linphone.core.tutorials.TestVideoActivity"
-                  android:label="Video test"
-                  android:theme="@android:style/Theme.NoTitleBar"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-         </activity>
-         <activity android:name="org.linphone.core.tutorials.TutorialHelloWorldActivity"
-                  android:label="Hello World"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-         </activity>
-         <activity android:name="org.linphone.core.tutorials.TutorialRegistrationActivity"
-                  android:label="Registration"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-         </activity>
-         <activity android:name="org.linphone.core.tutorials.TutorialBuddyStatusActivity"
-                  android:label="Buddy status"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-         </activity>
-         <activity android:name="org.linphone.core.tutorials.TutorialChatRoomActivity"
-                  android:label="Chat Room"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-         </activity>
+		<activity android:name="org.linphone.TestConferenceActivity"
+	              android:label="Conf test"
+	              android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+	              android:enabled="false">
+	        <intent-filter>
+	            <action android:name="android.intent.action.MAIN" />
+	            <category android:name="android.intent.category.LAUNCHER" />
+	        </intent-filter>
+	     </activity>
+
+	     <activity android:name="org.linphone.core.tutorials.TutorialHelloWorldActivity"
+	              android:label="Hello World"
+	              android:enabled="false">
+	        <intent-filter>
+	            <action android:name="android.intent.action.MAIN" />
+	            <category android:name="android.intent.category.LAUNCHER" />
+	        </intent-filter>
+	     </activity>
+	     <activity android:name="org.linphone.core.tutorials.TutorialRegistrationActivity"
+	              android:label="Registration"
+	              android:enabled="false">
+	        <intent-filter>
+	            <action android:name="android.intent.action.MAIN" />
+	            <category android:name="android.intent.category.LAUNCHER" />
+	        </intent-filter>
+	     </activity>
+	     <activity android:name="org.linphone.core.tutorials.TutorialBuddyStatusActivity"
+	              android:label="Buddy status"
+	              android:enabled="false">
+	        <intent-filter>
+	            <action android:name="android.intent.action.MAIN" />
+	            <category android:name="android.intent.category.LAUNCHER" />
+	        </intent-filter>
+	     </activity>
+	     <activity android:name="org.linphone.core.tutorials.TutorialChatRoomActivity"
+	              android:label="Chat Room"
+	              android:enabled="false">
+	        <intent-filter>
+	            <action android:name="android.intent.action.MAIN" />
+	            <category android:name="android.intent.category.LAUNCHER" />
+	        </intent-filter>
+	     </activity>
+	     <activity android:name="org.mediastreamer2.test.Ring"
+	              android:label="Ring+Echo"
+	              android:enabled="false">
+	        <intent-filter>
+	            <action android:name="android.intent.action.MAIN" />
+	            <category android:name="android.intent.category.LAUNCHER" />
+	        </intent-filter>
+	     </activity>
     </application>
-
-
-    
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-<uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
-<uses-permission android:name="android.permission.READ_CONTACTS"/>
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-<uses-permission android:name="android.permission.WAKE_LOCK"/>
-<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
-<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
-<uses-permission android:name="android.permission.BOOT_COMPLETED"></uses-permission>
-<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
-<uses-permission android:name="android.permission.CAMERA" />
-
-<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 </manifest>
 EOF
 
 cat > $D/default.properties <<EOF
-split.density=false
-target=android-9
+target=`android list target -c | grep android | tail -n1`
 EOF
 
 mkdir -p $D/.settings
@@ -131,12 +138,10 @@ D="../$DBASE"
 rm -rf $D.zip $D
 copy submodules/linphone/coreapi/help/java $D
 copy libs $D
-copy src/org/linphone/core $D
 copy submodules/linphone/java/j2se $D
 copy submodules/linphone/java/common $D
+copy submodules/linphone/java/impl $D
 copy submodules/linphone/mediastreamer2/java/src $D
-copy res/layout/hello_world.xml $D
-copy res/layout/videotest.xml $D
 
 androidize $D
 
@@ -150,16 +155,10 @@ rm -rf $DBASE
 DBASE="liblinphone-android-javadoc"
 D="../$DBASE.zip"
 echo "Generating javadoc to $D"
-javadoc -quiet -d $DBASE  src/org/linphone/*.java \
-src/org/linphone/ui/*.java \
-src/org/linphone/core/*.java \
-src/org/linphone/core/video/*.java \
-src/org/linphone/core/tutorials/* \
-submodules/linphone/java/common/org/linphone/core/*.java \
-submodules/linphone/java/j2se/org/linphone/core/*.java \
-submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/*.java \
-submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/video/capture/*.java \
-submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/video/display/*.java
+cat >> local.properties <<EOF
+javadoc.dir=$DBASE
+EOF
+ant javadoc
 rm -rf $D
 zip -rq $D $DBASE
 rm -rf $DBASE

@@ -49,6 +49,19 @@
 	<target name="-post-compile" depends="javah, build-libs">
 	</target>
 
+	<target name="javadoc">
+		<echo level="info">Generate Javadoc</echo>
+		<javadoc 
+			destdir="${javadoc.dir}"
+			verbose="off" 
+		    use="true" 
+		    classpath="${sdk.dir}/platforms/${target}/android.jar:libs/aXMLRPC.jar"
+		    sourcepath="${source.dir}:gen"
+			linkoffline="http://developer.android.com/reference file:/${sdk.dir}/docs/reference"
+    		stylesheetfile="${sdk.dir}/docs/assets/android-developer-docs.css">
+    	</javadoc>
+	</target>
+
 	<target name="-package-resources" depends="-crunch">
 		<!-- only package resources if *not* a library project -->
 		<do-only-if-not-library elseText="Library project: do not package resources...">
