@@ -197,8 +197,8 @@
 	
 	<string name="pref_help_proxy">Adresse IP ou nom de domaine du serveur mandataire SIP (facultatif)</string>
 	<string name="pref_help_outbound_proxy">Faire passer tous les appels via le serveur mandataire SIP</string>
-	<string name="pref_help_username">Exemple: john si votre compte est john@sip.linphone.org</string>
-	<string name="pref_help_domain">sip.linphone.org si votre compte est john@sip.linphone.org</string>
+	<string name="pref_help_username">Exemple: john si votre compte est john@sip.example.org</string>
+	<string name="pref_help_domain">sip.example.org si votre compte est john@sip.example.org</string>
 	
 	<string name="delete">Supprimer</string>
 	<string name="chat">Chat</string>
