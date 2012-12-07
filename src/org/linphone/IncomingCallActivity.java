@@ -144,6 +144,10 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		if (call == mCall && State.CallEnd == state) {
 			finish();
 		}
+		if (state == State.StreamsRunning) {
+			// The following should not be needed except some devices need it (e.g. Galaxy S).
+			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+		}
 	}
 
 	private void decline() {
