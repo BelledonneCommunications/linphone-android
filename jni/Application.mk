@@ -79,6 +79,8 @@ linphone-root-dir:=$(APP_PROJECT_PATH)
 
 APP_BUILD_SCRIPT:=$(call my-dir)/Android.mk
 APP_PLATFORM := android-8
-#APP_ABI := armeabi
-APP_ABI := armeabi-v7a armeabi x86
+APP_ABI := armeabi-v7a armeabi
+ifeq ($(BUILD_FOR_X86), 1)
+APP_ABI += x86
+endif
 APP_CFLAGS:=-DDISABLE_NEON
