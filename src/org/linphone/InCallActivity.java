@@ -251,7 +251,7 @@ public class InCallActivity extends FragmentActivity implements
 				
 				if (isVideoEnabled && !isSpeakerEnabled)
 				{
-					toogleSpeaker();
+					toggleSpeaker();
 				} else {
 					if (isSpeakerEnabled) {
 						speaker.setBackgroundResource(R.drawable.speaker_on);
@@ -329,10 +329,10 @@ public class InCallActivity extends FragmentActivity implements
 			switchVideo(isVideoEnabled);
 		} 
 		else if (id == R.id.micro) {
-			toogleMicro();
+			toggleMicro();
 		} 
 		else if (id == R.id.speaker) {
-			toogleSpeaker();
+			toggleSpeaker();
 		} 
 		else if (id == R.id.addCall) {
 			goBackToDialer();
@@ -439,7 +439,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 	}
 	
-	private void toogleMicro() {
+	private void toggleMicro() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		isMicMuted = !isMicMuted;
 		lc.muteMic(isMicMuted);
@@ -450,7 +450,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 	}
 	
-	private void toogleSpeaker() {
+	private void toggleSpeaker() {
 		isSpeakerEnabled = !isSpeakerEnabled;
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
