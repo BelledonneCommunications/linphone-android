@@ -162,6 +162,12 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 			params.setVideoEnabled(false);
 		}
 		
+		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(this);
+		if (isLowBandwidthConnection) {
+			params.enableLowBandwidth(true);
+			Log.d("Low bandwidth enabled in call params");
+		}
+		
 		if (!LinphoneManager.getInstance().acceptCallWithParams(mCall, params)) {
 			// the above method takes care of Samsung Galaxy S
 			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
@@ -170,8 +176,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 				return;
 			}
 			final LinphoneCallParams remoteParams = mCall.getRemoteParams();
-			if (remoteParams != null && remoteParams.getVideoEnabled()
-					&& LinphoneManager.getInstance().isAutoAcceptCamera()) {
+			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
 				LinphoneActivity.instance().startVideoActivity(mCall);
 			} else {
 				LinphoneActivity.instance().startIncallActivity(mCall);

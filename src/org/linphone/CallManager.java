@@ -49,7 +49,7 @@ public class CallManager {
 
 	
 	
-	void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled) throws LinphoneCoreException {
+	void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled, boolean lowBandwidth) throws LinphoneCoreException {
 		LinphoneCore lc = LinphoneManager.getLc();
 		
 		LinphoneCallParams params = lc.createDefaultCallParameters();
@@ -59,6 +59,11 @@ public class CallManager {
 			params.setVideoEnabled(true);
 		} else {
 			params.setVideoEnabled(false);
+		}
+		
+		if (lowBandwidth) {
+			params.enableLowBandwidth(true);
+			Log.d("Low bandwidth enabled in call params");
 		}
 
 		lc.inviteAddressWithParams(lAddress, params);
