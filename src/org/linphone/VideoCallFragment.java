@@ -171,7 +171,11 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
     public boolean onScale(CompatibilityScaleGestureDetector detector) {
     	mZoomFactor *= detector.getScaleFactor();
         // Don't let the object get too small or too large.
-    	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, ((float) mVideoView.getHeight()) / LinphoneManager.getLc().getPreferredVideoSize().height));
+		// Zoom to make the video fill the screen vertically
+		float portraitZoomFactor = ((float) mVideoView.getHeight()) / (float) ((3 * mVideoView.getWidth()) / 4);
+		// Zoom to make the video fill the screen horizontally
+		float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
+    	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, Math.max(portraitZoomFactor, landscapeZoomFactor)));
 
     	LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
         return true;
@@ -187,11 +191,20 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 				} else if(distanceX < 0 && mZoomCenterX > 0) {
 					mZoomCenterX -= 0.01;
 				}
+				if (distanceY < 0 && mZoomCenterY < 1) {
+					mZoomCenterY += 0.01;
+				} else if(distanceY > 0 && mZoomCenterY > 0) {
+					mZoomCenterY -= 0.01;
+				}
 				
 				if (mZoomCenterX > 1)
 					mZoomCenterX = 1;
 				if (mZoomCenterX < 0)
 					mZoomCenterX = 0;
+				if (mZoomCenterY > 1)
+					mZoomCenterY = 1;
+				if (mZoomCenterY < 0)
+					mZoomCenterY = 0;
 				
 				LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
 				return true;
@@ -205,8 +218,12 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	public boolean onDoubleTap(MotionEvent e) {
 		if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
 			if (mZoomFactor == 1.f) {
-				// Zoom to make the video fill the screen in height
-				mZoomFactor = ((float) mVideoView.getHeight()) / LinphoneManager.getLc().getPreferredVideoSize().height;
+				// Zoom to make the video fill the screen vertically
+				float portraitZoomFactor = ((float) mVideoView.getHeight()) / (float) ((3 * mVideoView.getWidth()) / 4);
+				// Zoom to make the video fill the screen horizontally
+				float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
+				
+				mZoomFactor = Math.max(portraitZoomFactor, landscapeZoomFactor);
 			}
 			else {
 				resetZoom();
