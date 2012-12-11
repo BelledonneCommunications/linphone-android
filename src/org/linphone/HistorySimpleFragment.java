@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.linphone.core.CallDirection;
@@ -26,6 +28,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -297,6 +300,40 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 		public long getItemId(int position) {
 			return position;
 		}
+		
+		@SuppressLint("SimpleDateFormat")
+		private String timestampToHumanDate(Calendar cal) {
+			SimpleDateFormat dateFormat;
+			if (isToday(cal)) {
+				return getString(R.string.today);
+			} else if (isYesterday(cal)) {
+				return getString(R.string.yesterday);
+			} else {
+				dateFormat = new SimpleDateFormat(getResources().getString(R.string.history_date_format));
+			}
+			
+			return dateFormat.format(cal.getTime());
+		}
+		
+		private boolean isSameDay(Calendar cal1, Calendar cal2) {
+	        if (cal1 == null || cal2 == null) {
+	            return false;
+	        }
+	        
+	        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+	                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+	                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+	    }
+		
+		private boolean isToday(Calendar cal) {
+	        return isSameDay(cal, Calendar.getInstance());
+	    }
+		
+		private boolean isYesterday(Calendar cal) {
+			Calendar yesterday = Calendar.getInstance();
+			yesterday.roll(Calendar.DAY_OF_MONTH, -1);
+	        return isSameDay(cal, yesterday);
+	    }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
@@ -307,14 +344,33 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 			}
 			
 			final LinphoneCallLog log = mLogs.get(position);
+			long timestamp = log.getTimestamp();
 			final LinphoneAddress address;
 			
 			TextView contact = (TextView) view.findViewById(R.id.sipUri);
-			contact.setSelected(true); // For animation
+			contact.setSelected(true); // For automated horizontal scrolling of long texts
 			
 			ImageView detail = (ImageView) view.findViewById(R.id.detail);
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			ImageView callDirection = (ImageView) view.findViewById(R.id.icon);
+			
+			TextView separator = (TextView) view.findViewById(R.id.separator);
+			Calendar logTime = Calendar.getInstance();
+			logTime.setTimeInMillis(timestamp);
+			separator.setText(timestampToHumanDate(logTime));
+			
+			if (position > 0) {
+				LinphoneCallLog previousLog = mLogs.get(position-1);
+				long previousTimestamp = previousLog.getTimestamp();
+				Calendar previousLogTime = Calendar.getInstance();
+				previousLogTime.setTimeInMillis(previousTimestamp);
+
+				if (isSameDay(previousLogTime, logTime)) {
+					separator.setVisibility(View.GONE);
+				} else {
+					separator.setVisibility(View.VISIBLE);
+				}
+			}
 			
 			if (log.getDirection() == CallDirection.Incoming) {
 				address = log.getFrom();

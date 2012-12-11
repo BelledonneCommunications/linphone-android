@@ -17,8 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.linphone.ui.AvatarWithShadow;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -91,7 +95,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		contactAddress.setText(sipUri);
 		callDirection.setText(status);
 		time.setText(callTime == null ? "" : callTime);
-		date.setText(callDate == null ? "" : callDate);
+		date.setText(timestampToHumanDate(callDate));
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
@@ -124,5 +128,15 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else if (id == R.id.addToContacts) {
 			LinphoneActivity.instance().displayContactsForEdition(sipUri);
 		}
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private String timestampToHumanDate(String timestamp) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(Long.parseLong(timestamp));
+		
+		SimpleDateFormat dateFormat;
+		dateFormat = new SimpleDateFormat(getResources().getString(R.string.history_detail_date_format));
+		return dateFormat.format(cal.getTime());
 	}
 }
