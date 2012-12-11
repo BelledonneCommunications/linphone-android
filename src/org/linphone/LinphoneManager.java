@@ -18,11 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import static android.media.AudioManager.MODE_IN_CALL;
 import static android.media.AudioManager.MODE_NORMAL;
-import static android.media.AudioManager.MODE_RINGTONE;
-import static android.media.AudioManager.ROUTE_EARPIECE;
-import static android.media.AudioManager.ROUTE_SPEAKER;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 import static android.media.AudioManager.VIBRATE_TYPE_RINGER;
@@ -200,42 +196,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
-	private native void hackSpeakerState(boolean speakerOn);
-	private static void sRouteAudioToSpeakerHelperHelper(boolean speakerOn) {
-		getInstance().routeAudioToSpeakerHelperHelper(speakerOn);
-	}
-	private void routeAudioToSpeakerHelperHelper(boolean speakerOn) {
-		boolean different = isSpeakerOn() ^ speakerOn;
-		if (!different) {
-			Log.d("Skipping change audio route by the same route ",
-					speakerOn ? "speaker" : "earpiece");
-			return;
-		}
-		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
-			setAudioModeIncallForGalaxyS();
-
-		if (sLPref.useSpecificAudioModeHack() != -1)
-			mAudioManager.setMode(sLPref.useSpecificAudioModeHack());
-
-		if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
-			mAudioManager.setRouting(
-					MODE_NORMAL,
-					speakerOn? ROUTE_SPEAKER : ROUTE_EARPIECE,
-					AudioManager.ROUTE_ALL);
-		} else {
-			mAudioManager.setSpeakerphoneOn(speakerOn); 
-		}
+	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
+		mLc.enableSpeaker(speakerOn);
+		final LinphoneCall call = mLc.getCurrentCall();
 		for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
 			listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
-		}
-	}
-	private synchronized void routeAudioToSpeakerHelper(boolean speakerOn) {
-		final LinphoneCall call = mLc.getCurrentCall();
-		if (call != null && call.getState() == State.StreamsRunning && Hacks.needPausingCallForSpeakers()) {
-			Log.d("Hack to have speaker=",speakerOn," while on call");
-			hackSpeakerState(speakerOn);
-		} else {
-			routeAudioToSpeakerHelperHelper(speakerOn);
 		}
 	}
 
@@ -262,7 +227,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			throw new RuntimeException("Linphone Manager is already initialized");
 
 		instance = new LinphoneManager(c, listener);
-		instance.startLibLinphone();
+		instance.startLibLinphone(c);
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
@@ -290,11 +255,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	
 	public boolean isSpeakerOn() {
-		if (Hacks.needRoutingAPI() || sLPref.useAudioRoutingAPIHack()) {
-			return mAudioManager.getRouting(MODE_NORMAL) == ROUTE_SPEAKER;
-		} else {
-			return mAudioManager.isSpeakerphoneOn(); 
-		}
+		return mLc.isSpeakerEnabled();
 	}
 
 	
@@ -447,7 +408,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 
-	private synchronized void startLibLinphone() {
+	private synchronized void startLibLinphone(Context c) {
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
@@ -456,6 +417,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
+			mLc.setContext(c);
 
 			mLc.enableIpv6(getPrefBoolean(R.string.pref_ipv6_key, false));
 			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
@@ -1099,11 +1061,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (disableRinging ) {
 			return;
 		}
-		
-		if (Hacks.needGalaxySAudioHack()) {
-			mAudioManager.setMode(MODE_RINGTONE);
-		}
-		
+
+		mLc.startRinging();
+
 		try {
 			if (mAudioManager.shouldVibrate(VIBRATE_TYPE_RINGER) && mVibrator !=null) {
 				long[] patern = {0,1000,1000};
@@ -1178,12 +1138,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_initiate_call_with_video_key, false);
 	}
 
-	public void setAudioModeIncallForGalaxyS() {
-		/* The microphone gain is way too high on the Galaxy S so correct it here. */
-		LinphoneManager.getLc().setMicrophoneGain(-9.0f);
-		mAudioManager.setMode(MODE_IN_CALL);
-	}
-
 	// Called on first launch only
 	public void initializePayloads() {
 		Log.i("Initializing supported payloads");
@@ -1233,9 +1187,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public boolean acceptCallIfIncomingPending() throws LinphoneCoreException {
-		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
-			setAudioModeIncallForGalaxyS();
-		
 		if (mLc.isInComingInvitePending()) {
 			mLc.acceptCall(mLc.getCurrentCall());
 			return true;
@@ -1244,9 +1195,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public boolean acceptCall(LinphoneCall call) {
-		if (Hacks.needGalaxySAudioHack() || sLPref.useGalaxySHack())
-			setAudioModeIncallForGalaxyS();
-
 		try {
 			mLc.acceptCall(call);
 			return true;

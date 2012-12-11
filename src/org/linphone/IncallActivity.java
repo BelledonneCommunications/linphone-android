@@ -852,6 +852,10 @@ public class IncallActivity extends AbstractCalleesActivity implements
 				});
 			}
 		}
+		if (state == State.StreamsRunning) {
+			// The following should not be needed except some devices need it (e.g. Galaxy S).
+			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+		}
 		super.onCallStateChanged(call, state, message);
 	}
 }
