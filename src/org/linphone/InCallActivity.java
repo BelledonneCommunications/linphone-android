@@ -249,15 +249,10 @@ public class InCallActivity extends FragmentActivity implements
 					}
 				}
 				
-				if (isVideoEnabled && !isSpeakerEnabled)
-				{
-					toggleSpeaker();
+				if (isSpeakerEnabled) {
+					speaker.setBackgroundResource(R.drawable.speaker_on);
 				} else {
-					if (isSpeakerEnabled) {
-						speaker.setBackgroundResource(R.drawable.speaker_on);
-					} else {
-						speaker.setBackgroundResource(R.drawable.speaker_off);
-					}
+					speaker.setBackgroundResource(R.drawable.speaker_off);
 				}
 				
 				if (isMicMuted) {
