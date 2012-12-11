@@ -445,7 +445,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 
 		String callTime = secondsToDisplayableString(log.getCallDuration());
-		String callDate = log.getStartDate();
+		String callDate = String.valueOf(log.getTimestamp());
 
 		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
