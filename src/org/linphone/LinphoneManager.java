@@ -142,6 +142,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String basePath;
 	private static boolean sExited;
 	private boolean videoInitiator = false;
+	private String contactParams;
 
 	private WakeLock mIncallWakeLock;
 
@@ -555,6 +556,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.tunnelAddServerAndMirror(host, port, 12345,500);
 		manageTunnelServer(info);
 	}
+	
+	public void setContactParams(String params) {
+		contactParams = params;
+	}
 
 	public void initFromConf() throws LinphoneConfigException {
 
@@ -646,6 +651,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		try {
 			if (lDefaultProxyConfig == null) {
 				lDefaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(lIdentity, lProxy, null,true);
+				if (contactParams != null) {
+					lDefaultProxyConfig.setContactParameters(contactParams);
+				}
 				mLc.addProxyConfig(lDefaultProxyConfig);
 				int defaultAccount = getPrefInt(R.string.pref_default_account, 0);
 				if (defaultAccount == 0 || defaultAccount >= getPrefInt(R.string.pref_extra_accounts, 0)) {
@@ -688,6 +696,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 							lProxy = "sip:" + lProxy;
 						}
 						lDefaultProxyConfig = LinphoneCoreFactory.instance().createProxyConfig(lIdentity, lProxy, null, true);
+						if (contactParams != null) {
+							lDefaultProxyConfig.setContactParameters(contactParams);
+						}
 						mLc.addProxyConfig(lDefaultProxyConfig);
 						
 						//outbound proxy
