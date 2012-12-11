@@ -274,14 +274,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		lAddress.setDisplayName(address.getDisplayedName());
 
+		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(LinphoneService.instance().getApplicationContext());
+		
 		try {
 			if (Version.isVideoCapable()) {
 				boolean prefVideoEnable = isVideoEnabled();
 				int key = R.string.pref_video_initiate_call_with_video_key;
 				boolean prefInitiateWithVideo = getPrefBoolean(key, false);
-				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo);
+				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo, isLowBandwidthConnection);
 			} else {
-				CallManager.getInstance().inviteAddress(lAddress, false);
+				CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
 			}
 			
 
