@@ -414,6 +414,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
 			mLc.setContext(c);
+			try {
+				mLc.setUserAgent("LinphoneAndroid", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
+			} catch (NameNotFoundException e) {
+				Log.e(e, "cannot get version name");
+			}
 
 			mLc.enableIpv6(getPrefBoolean(R.string.pref_ipv6_key, false));
 			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
