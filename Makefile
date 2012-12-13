@@ -98,6 +98,7 @@ install-apk: generate-apk
 	ant installd
 
 release: update-project
+	ant clean
 	ant release
 
 run-linphone:
