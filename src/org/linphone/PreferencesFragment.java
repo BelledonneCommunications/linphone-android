@@ -419,7 +419,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		mencEntries.add(getString(R.string.media_encryption_none));
 		mencEntryValues.add(getString(R.string.pref_media_encryption_key_none));
 		
-		if (lc == null) {
+		if (lc == null || getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 			CharSequence[] contents=new CharSequence[mencEntries.size()];
 			mencEntries.toArray(contents);
 			mencPref.setEntries(contents);
@@ -462,8 +462,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		mencEntries.add(getString(R.string.pref_transport_tcp));
 		mencEntryValues.add(getString(R.string.pref_transport_tcp_key));
 		
-		mencEntries.add(getString(R.string.pref_transport_tls));
-		mencEntryValues.add(getString(R.string.pref_transport_tls_key));
+		if (!getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
+			mencEntries.add(getString(R.string.pref_transport_tls));
+			mencEntryValues.add(getString(R.string.pref_transport_tls_key));
+		}
 		
 		ListPreference transport = (ListPreference) findPreference(pref_transport_key);
 		

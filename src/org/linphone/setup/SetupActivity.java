@@ -230,7 +230,10 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				
 				writePreference(R.string.pref_ice_enable_key, true);
 				writePreference(R.string.pref_push_notification_key, true);
-				writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tls_key));
+				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets))
+					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tcp_key));
+				else
+					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tls_key));
 			}
 		} else {
 			writePreference(getString(R.string.pref_username_key) + newAccountId, username);

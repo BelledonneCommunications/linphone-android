@@ -142,7 +142,11 @@ public class LinphoneActivity extends FragmentActivity implements
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.use_first_login_activity);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		if (useFirstLoginActivity && !pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
-			startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
+			if (pref.getInt(getString(R.string.pref_extra_accounts), -1) > -1) {
+				pref.edit().putBoolean(getString(R.string.first_launch_suceeded_once_key), true);
+			} else {
+				startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
+			}
 		}
 
 		setContentView(R.layout.main);
