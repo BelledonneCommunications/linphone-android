@@ -48,6 +48,7 @@ import android.view.ViewGroup;
  */
 public class EchoCancellerCalibrationFragment extends Fragment implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
+	private boolean mSendEcCalibrationResult = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +74,15 @@ public class EchoCancellerCalibrationFragment extends Fragment implements EcCali
 			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), true);
 		}
 		editor.commit();
-		sendEcCalibrationResult(status, delayMs);
+		if (mSendEcCalibrationResult) {
+			sendEcCalibrationResult(status, delayMs);
+		} else {
+			SetupActivity.instance().isEchoCalibrationFinished();
+		}
+	}
+
+	public void enableEcCalibrationResultSending(boolean enabled) {
+		mSendEcCalibrationResult = enabled;
 	}
 
 	private void sendEcCalibrationResult(EcCalibratorStatus status, int delayMs) {

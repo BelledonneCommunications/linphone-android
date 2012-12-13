@@ -138,7 +138,22 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-	public void logIn(String username, String password, String domain) {
+	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
+		if (!Hacks.hasBuiltInEchoCanceller() && !mPref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
+			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
+			changeFragment(fragment);
+			currentFragment = SetupFragments.ECHO_CANCELLER_CALIBRATION;
+			back.setVisibility(View.VISIBLE);
+			next.setVisibility(View.GONE);
+			next.setEnabled(false);
+			cancel.setEnabled(false);
+		} else {
+			success();
+		}		
+	}
+
+	private void logIn(String username, String password, String domain, boolean sendEcCalibrationResult) {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null && getCurrentFocus() != null) {
 			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -153,30 +168,18 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			Log.e(e, "Error while initializing from config in first login activity");
 			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
 		}
+
+		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+			launchEchoCancellerCalibration(sendEcCalibrationResult);
+		}
 	}
 
 	public void linphoneLogIn(String username, String password) {
-		logIn(username, password, getString(R.string.default_domain));
-		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			if (!Hacks.hasBuiltInEchoCanceller()) {
-				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
-				changeFragment(fragment);
-				currentFragment = SetupFragments.ECHO_CANCELLER_CALIBRATION;
-				back.setVisibility(View.VISIBLE);
-				next.setVisibility(View.GONE);
-				next.setEnabled(false);
-				cancel.setEnabled(false);
-			} else {
-				success();
-			}
-		}
+		logIn(username, password, getString(R.string.default_domain), true);
 	}
 
 	public void genericLogIn(String username, String password, String domain) {
-		logIn(username, password, domain);
-		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			success();
-		}
+		logIn(username, password, domain, false);
 	}
 
 	private void writePreference(int key, String value) {
@@ -269,7 +272,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
 		}
 
-		success();
+		launchEchoCancellerCalibration(true);
 	}
 
 	public void isEchoCalibrationFinished() {
