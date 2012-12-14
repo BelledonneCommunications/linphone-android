@@ -47,14 +47,16 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	private OnClickListener dialListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
+			if (LinphoneActivity.isInstanciated())
+				LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
 		}
 	};
 	
 	private OnClickListener chatListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			LinphoneActivity.instance().displayChat(v.getTag().toString());
+			if (LinphoneActivity.isInstanciated())
+				LinphoneActivity.instance().displayChat(v.getTag().toString());
 		}
 	};
 	
