@@ -49,7 +49,7 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
-	<bool name="disable_all_security_features_for_markets">true</bool>
+	<bool name="disable_all_security_features_for_markets">false</bool>
 	
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 </resources>
