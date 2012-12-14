@@ -366,24 +366,26 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 	
 	private void updateAccountLed(final LedPreference me, final String username, final String domain) {
-		for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-			if (lpc.getIdentity().contains(username) && lpc.getIdentity().contains(domain)) {
-				if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
-					me.setLed(R.drawable.led_connected);
-				} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationFailed) {
-					me.setLed(R.drawable.led_error);
-				} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationProgress) {
-					me.setLed(R.drawable.led_inprogress);
-					mHandler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							updateAccountLed(me, username, domain);
-						}
-					}, 1500);
-				} else {
-					me.setLed(R.drawable.led_disconnected);
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+				if (lpc.getIdentity().contains(username) && lpc.getIdentity().contains(domain)) {
+					if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
+						me.setLed(R.drawable.led_connected);
+					} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationFailed) {
+						me.setLed(R.drawable.led_error);
+					} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationProgress) {
+						me.setLed(R.drawable.led_inprogress);
+						mHandler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								updateAccountLed(me, username, domain);
+							}
+						}, 1500);
+					} else {
+						me.setLed(R.drawable.led_disconnected);
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}

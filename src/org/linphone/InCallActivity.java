@@ -567,7 +567,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		mControls = null;
 		
-		if (isVideoEnabled) {
+		if (isVideoEnabled && mControlsHandler != null) {
 			mControlsHandler.postDelayed(mControls = new Runnable() {
 				public void run() {
 					hideNumpad();
