@@ -44,6 +44,7 @@ import org.linphone.ui.BubbleChat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -73,6 +74,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -197,6 +199,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 			}
 		};
+		
+		// Force hide keyboard
+		if (LinphoneActivity.isInstanciated()) {
+			InputMethodManager imm = (InputMethodManager) LinphoneActivity.instance().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+		}
 
 		// Workaround for SGS3 issue
 		if (savedInstanceState != null) {
