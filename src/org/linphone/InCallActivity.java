@@ -912,16 +912,6 @@ public class InCallActivity extends FragmentActivity implements
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
-		 
-		if (accept) {
-			isSpeakerEnabled = true;
-			LinphoneManager.getInstance().routeAudioToSpeaker();
-			speaker.setBackgroundResource(R.drawable.speaker_on);
-			
-			replaceFragmentAudioByVideo();
-			video.setBackgroundResource(R.drawable.video_off);
-			displayVideoCallControlsIfHidden();
-		}
 	}
 	
 	public void startIncomingCallActivity() {

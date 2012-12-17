@@ -36,7 +36,7 @@ local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 dtmf_player_amp=0.1
 
 [video]
-size=vga
+size=qvga
 
 [misc]
 max_calls=10
