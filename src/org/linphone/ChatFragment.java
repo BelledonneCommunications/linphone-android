@@ -562,7 +562,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void pickImage() {
 	    final List<Intent> cameraIntents = new ArrayList<Intent>();
 	    final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+	    File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
 	    imageToUploadUri = Uri.fromFile(file);
     	captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
 	    cameraIntents.add(captureIntent);
@@ -630,7 +630,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			File sourceFile = new File(filePath); 
 			fileName = sourceFile.getName();
 		} else {
-			fileName = "linphone-android-photo-" + System.currentTimeMillis() + ".jpg";
+			fileName = getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
 		}
 		
 		String response = null;
@@ -711,7 +711,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	    return null;
     }
 	
-	@SuppressLint("NewApi")
 	private void showPopupMenuAskingImageSize(final String filePath, final Bitmap image) {
 		fileToUploadPath = filePath;
 		imageToUpload = image;
@@ -772,7 +771,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
                 
                 if (!uploadThread.isInterrupted() && bm != null) {
 	                url = uploadImage(filePath, bm, COMPRESSOR_QUALITY, outStream.size());
-	                File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+	                File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
 	                file.delete();
                 }
                     
@@ -814,7 +813,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         		showPopupMenuAskingImageSize(filePath, null);
         	}
         	else {
-        		File file = new File(Environment.getExternalStorageDirectory(), "linphone-android-photo-temp.jpg");
+        		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
         		if (file.exists()) {
 	        	    imageToUploadUri = Uri.fromFile(file);
 	        	    String filePath = imageToUploadUri.getPath();
