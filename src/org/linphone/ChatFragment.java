@@ -723,7 +723,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void uploadAndSendImage(final String filePath, final Bitmap image, final ImageSize size) {
 		uploadLayout.setVisibility(View.VISIBLE);
     	textLayout.setVisibility(View.GONE);
-		
+    	
     	uploadThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -748,17 +748,19 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				
 				// Rotate the bitmap if possible/needed, using EXIF data
 				try {
-					ExifInterface exif = new ExifInterface(filePath);
-					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-					Matrix matrix = new Matrix();
-					if (pictureOrientation == 6) {
-						matrix.postRotate(90);
-					} else if (pictureOrientation == 3) {
-						matrix.postRotate(180);
-					} else if (pictureOrientation == 8) {
-						matrix.postRotate(270);
+					if (filePath != null) {
+						ExifInterface exif = new ExifInterface(filePath);
+						int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+						Matrix matrix = new Matrix();
+						if (pictureOrientation == 6) {
+							matrix.postRotate(90);
+						} else if (pictureOrientation == 3) {
+							matrix.postRotate(180);
+						} else if (pictureOrientation == 8) {
+							matrix.postRotate(270);
+						}
+						bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 					}
-					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
