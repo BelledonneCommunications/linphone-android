@@ -209,6 +209,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		// Workaround for SGS3 issue
 		if (savedInstanceState != null) {
 			fileToUploadPath = savedInstanceState.getString("fileToUploadPath");
+			imageToUpload = savedInstanceState.getParcelable("imageToUpload");
 		}
 		if (fileToUploadPath != null || imageToUpload != null) {
 			sendImage.post(new Runnable() {
@@ -225,6 +226,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putString("fileToUploadPath", fileToUploadPath);
+		outState.putParcelable("imageToUpload", imageToUpload);
 		super.onSaveInstanceState(outState);
 	}
 	
