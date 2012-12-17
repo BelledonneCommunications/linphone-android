@@ -103,7 +103,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			if (numberOrAddress.startsWith("sip:")) {
 				displayednumberOrAddress = displayednumberOrAddress.substring(4);
 			}
-			((TextView) v.findViewById(R.id.numeroOrAddress)).setText(displayednumberOrAddress);
+			
+			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
+			tv.setText(displayednumberOrAddress);
+			tv.setSelected(true);
 			
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.dial).setOnClickListener(dialListener);
