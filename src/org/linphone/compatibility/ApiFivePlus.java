@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.CheckBoxPreference;
@@ -274,7 +275,11 @@ public class ApiFivePlus {
 	        	contact = new Contact(id, name);
 	        }
 	        else {
-	        	contact = new Contact(id, name, photo, BitmapFactory.decodeStream(input));
+	        	Bitmap bm = null;
+	        	try {
+	        		bm = BitmapFactory.decodeStream(input);
+	        	} catch (OutOfMemoryError oome) {}
+	        	contact = new Contact(id, name, photo, bm);
 	        }
 	        
 	        return contact;
