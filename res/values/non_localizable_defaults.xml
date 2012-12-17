@@ -52,7 +52,7 @@
     <string name="pref_incoming_call_timeout_default">30</string>
     <string name="pref_image_sharing_server_default">https://www.linphone.org:444/upload.php</string>
     <string name="pref_audio_use_specific_mode_default">0</string>
-    <string name="pref_expire_default">600</string>
+    <string name="pref_expire_default">3600</string>
     <string name="pref_display_name_default">Linphone Android</string>
     <string name="pref_user_name_default">linphone.android</string>
     

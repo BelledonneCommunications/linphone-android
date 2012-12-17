@@ -227,19 +227,20 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			
 			boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 			if (isMainAccountLinphoneDotOrg) {
-				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets))
+				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 					writePreference(R.string.pref_proxy_key, domain + ":5228");
-				else
+					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tcp_key));
+				}
+				else {
 					writePreference(R.string.pref_proxy_key, domain + ":5223");
+					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tls_key));
+				}
+				
+				writePreference(R.string.pref_expire_key, "604800"); // 3600*24*7
 				writePreference(R.string.pref_enable_outbound_proxy_key, true);
 				writePreference(R.string.pref_stun_server_key, getString(R.string.default_stun));
-				
 				writePreference(R.string.pref_ice_enable_key, true);
 				writePreference(R.string.pref_push_notification_key, true);
-				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets))
-					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tcp_key));
-				else
-					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tls_key));
 			}
 		} else {
 			writePreference(getString(R.string.pref_username_key) + newAccountId, username);
