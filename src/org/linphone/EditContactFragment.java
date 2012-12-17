@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.mediastream.Version;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -109,6 +112,16 @@ public class EditContactFragment extends Fragment {
 		});
 		
 		lastName = (EditText) view.findViewById(R.id.contactLastName);
+		// Hack to display keyboard when touching focused edittext on Nexus One
+		if (Version.sdkStrictlyBelow(Version.API11_HONEYCOMB_30)) {
+			lastName.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					InputMethodManager imm = (InputMethodManager) LinphoneActivity.instance().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+				}
+			});
+		}
 		lastName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -171,6 +184,7 @@ public class EditContactFragment extends Fragment {
 		initNumbersFields((TableLayout) view.findViewById(R.id.controls), contact);
 		
 		ops = new ArrayList<ContentProviderOperation>();
+		lastName.requestFocus();
 		
 		return view;
 	}
