@@ -123,8 +123,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private OnGlobalLayoutListener keyboardListener;
 	
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-        Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		sipUri = getArguments().getString("SipUri");
 		String displayName = getArguments().getString("DisplayName");
 		String pictureUri = getArguments().getString("PictureUri");
@@ -198,9 +197,28 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 			}
 		};
+
+		// Workaround for SGS3 issue
+		if (savedInstanceState != null) {
+			fileToUploadPath = savedInstanceState.getString("fileToUploadPath");
+		}
+		if (fileToUploadPath != null || imageToUpload != null) {
+			sendImage.post(new Runnable() {
+				@Override
+				public void run() {
+					sendImage.showContextMenu();
+				}
+			});
+		}
 		
 		return view;
     }
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putString("fileToUploadPath", fileToUploadPath);
+		super.onSaveInstanceState(outState);
+	}
 	
 	private void addVirtualKeyboardVisiblityListener() {
 		keyboardListener = new OnGlobalLayoutListener() {
@@ -683,14 +701,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	    return null;
     }
 	
-	private void showPopupMenuAskingImageSize(String filePath, Bitmap image) {
+	@SuppressLint("NewApi")
+	private void showPopupMenuAskingImageSize(final String filePath, final Bitmap image) {
 		fileToUploadPath = filePath;
 		imageToUpload = image;
 		try {
 			sendImage.showContextMenu();
-		} catch (Exception e) {
-			showPopupMenuAskingImageSize(filePath, image);
-		}
+		} catch (Exception e) { e.printStackTrace(); };
 	}
 	
 	private void uploadAndSendImage(final String filePath, final Bitmap image, final ImageSize size) {
