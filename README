@@ -2,7 +2,7 @@
 			****************************
 
 To build liblinphone for Android, you must:
-0) download the Android sdk with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path.
+0) download the Android sdk with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both 'tools' and 'platform-tools' folders in your path.
 1) download the Android ndk (>=r8b) from google and add it to your path.
 2) install the autotools: autoconf, automake, aclocal, libtoolize pkgconfig
 2bis) on some 64 bits systems you'll need the ia32-libs package

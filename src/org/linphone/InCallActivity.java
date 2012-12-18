@@ -996,7 +996,11 @@ public class InCallActivity extends FragmentActivity implements
 //			}
 		}
 		
-		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
+		mHandler.post(new Runnable() {
+			public void run() {
+				transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
+			}
+		});
 	}
 	
 	private void showAcceptCallUpdateDialog() {
