@@ -18,7 +18,9 @@ BUILD_WEBRTC_AECM=1
 BUILD_FOR_X86=1
 USE_JAVAH=1
 
-all: update-project prepare-sources install-apk run-linphone
+all: update-project prepare-sources generate-apk
+
+install: install-apk run-linphone
 
 prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
@@ -94,7 +96,7 @@ generate-apk:
 	ant partial-clean
 	ant debug
 
-install-apk: generate-apk
+install-apk:
 	ant installd
 
 release: update-project

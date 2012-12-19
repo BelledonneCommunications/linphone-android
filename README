@@ -8,6 +8,8 @@ To build liblinphone for Android, you must:
 2bis) on some 64 bits systems you'll need the ia32-libs package
 3) run the Makefile script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
 	$ make
+4) To install the generated apk into a plugged device, run
+	$ make install
 
 To create an apk with a different package name, you need to edit the custom_rules.xml file:
 1) look for the property named "linphone.package.name" and change it value accordingly
