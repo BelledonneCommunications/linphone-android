@@ -721,8 +721,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onMessageReceived(LinphoneAddress from,
-			LinphoneChatMessage message) {
+	public void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message) {
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
 		}

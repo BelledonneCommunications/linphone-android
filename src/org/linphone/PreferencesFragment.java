@@ -164,13 +164,23 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		}
 
 
-		detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
-		if (!Version.hasNeon())
-		{
-			// Android without neon doesn't support H264
-			Log.w("No NEON available, disabling H264");
-			findPreference(R.string.pref_video_codec_h264_key).setEnabled(false);
-			findPreference(R.string.pref_video_codec_h264_key).setDefaultValue(false);
+		if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
+			Preference prefH264 = findPreference(R.string.pref_video_codec_h264_key);
+			prefH264.setEnabled(false);
+			prefH264.setSummary(R.string.pref_video_codec_h264_unavailable);
+			
+			Preference prefMPEG4 = findPreference(R.string.pref_video_codec_mpeg4_key);
+			prefMPEG4.setEnabled(false);
+			prefMPEG4.setSummary(R.string.pref_video_codec_mpeg4_unavailable);
+		} else {
+			detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
+			if (!Version.hasNeon())
+			{
+				// Android without neon doesn't support H264
+				Log.w("No NEON available, disabling H264");
+				findPreference(R.string.pref_video_codec_h264_key).setEnabled(false);
+				findPreference(R.string.pref_video_codec_h264_key).setDefaultValue(false);
+			}
 		}
 		
 		if (Hacks.needSoftvolume()) {

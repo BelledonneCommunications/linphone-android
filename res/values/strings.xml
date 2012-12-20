@@ -230,6 +230,9 @@
 	<string name="media_encryption_srtp">SRTP</string>
 	<string name="media_encryption_zrtp">ZRTP</string>
 	
+	<string name="pref_video_codec_h264_unavailable">Codec only supported if build from sources</string>
+	<string name="pref_video_codec_mpeg4_unavailable">Codec only supported if build from sources</string>
+	
 	<string name="pref_sipaccounts">SIP Accounts</string>
 	<string name="pref_wifi_only">Use wifi only</string>
 	<string name="pref_push_notification">Enable push notifications</string>
