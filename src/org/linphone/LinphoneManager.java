@@ -86,6 +86,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -920,8 +921,31 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+		if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
+			return;
+		}
+		
+		LinphoneAddress from = message.getFrom();
+		ChatStorage chatStorage = new ChatStorage(mServiceContext);
+
+		String textMessage = message.getMessage();
+		String url = message.getExternalBodyUrl();
+		String notificationText = null;
+		int id = -1;
+		if (textMessage != null && textMessage.length() > 0) {
+			id = chatStorage.saveMessage(from.asStringUriOnly(), "", textMessage);
+			notificationText = textMessage;
+		} else if (url != null && url.length() > 0) {
+			Bitmap bm = ChatFragment.downloadImage(url);
+			id = chatStorage.saveMessage(from.asStringUriOnly(), "", bm);
+			notificationText = url;
+		}
+		
+		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, mServiceContext.getContentResolver());
+		LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), notificationText);
+
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
-			((LinphoneOnMessageReceivedListener) listener).onMessageReceived(message.getFrom(), message);
+			((LinphoneOnMessageReceivedListener) listener).onMessageReceived(from, message, id);
 		}
 	}
 

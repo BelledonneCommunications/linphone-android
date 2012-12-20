@@ -61,7 +61,7 @@ public interface LinphoneSimpleListener {
 	}
 	
 	public static interface LinphoneOnMessageReceivedListener extends LinphoneSimpleListener {
-		void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message);
+		void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message, int id);
 	}
 
 	public static interface LinphoneOnRegistrationStateChangedListener extends LinphoneSimpleListener {
