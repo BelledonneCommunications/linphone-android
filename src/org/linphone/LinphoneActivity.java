@@ -721,24 +721,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message) {
-		if (getResources().getBoolean(R.bool.disable_chat)) {
-			return;
-		}
-
-		String textMessage = message.getMessage();
-		String url = message.getExternalBodyUrl();
-		String notificationText = null;
-		int id = -1;
-		if (textMessage != null && textMessage.length() > 0) {
-			id = getChatStorage().saveMessage(from.asStringUriOnly(), "", textMessage);
-			notificationText = textMessage;
-		} else if (url != null && url.length() > 0) {
-			Bitmap bm = ChatFragment.downloadImage(url);
-			id = getChatStorage().saveMessage(from.asStringUriOnly(), "", bm);
-			notificationText = url;
-		}
-
+	public void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message, int id) {
 		ChatFragment chatFragment = ((ChatFragment) messageListenerFragment);
 		if (messageListenerFragment != null && messageListenerFragment.isVisible() && chatFragment.getSipUri().equals(from.asStringUriOnly())) {
 			chatFragment.onMessageReceived(id, from, message);
@@ -749,8 +732,6 @@ public class LinphoneActivity extends FragmentActivity implements
 				((ChatListFragment) messageListFragment).refresh();
 			}
 		}
-		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(from, getContentResolver());
-		LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), notificationText);
 	}
 
 	public void updateMissedChatCount() {
