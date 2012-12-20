@@ -49,7 +49,9 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
-	<bool name="disable_all_security_features_for_markets">false</bool>
+	
+	<bool name="disable_all_security_features_for_markets">true</bool> <!-- Disable TLS/SRTP/ZRTP -->
+	<bool name="disable_all_patented_codecs_for_markets">true</bool> <!-- Disable MPEG4/H264 -->
 	
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 	<string name="temp_photo_name">linphone-android-photo-temp.jpg</string>
