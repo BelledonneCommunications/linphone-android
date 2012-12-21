@@ -1103,6 +1103,9 @@ public class LinphoneActivity extends FragmentActivity implements
 			public void run() {
 				for (int i = 0; i < sipContactCursor.getCount(); i++) {
 					Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
+					if (contact == null)
+						continue;
+					
 					contact.refresh(getContentResolver());
 					if (!isContactPresenceDisabled) {
 						searchFriendAndAddToContact(contact);
@@ -1111,8 +1114,11 @@ public class LinphoneActivity extends FragmentActivity implements
 				}
 				for (int i = 0; i < contactCursor.getCount(); i++) {
 					Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
+					if (contact == null)
+						continue;
+					
 					for (Contact c : sipContactList) {
-						if (c.getID().equals(contact.getID())) {
+						if (c != null && c.getID().equals(contact.getID())) {
 							contact = c;
 							break;
 						}
