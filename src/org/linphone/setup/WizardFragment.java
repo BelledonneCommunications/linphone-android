@@ -20,8 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.net.URL;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -160,8 +162,10 @@ public class WizardFragment extends Fragment {
 			}
 		};
 		
+		final Context context = SetupActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : SetupActivity.instance();
+		
 		try {
-			XMLRPCClient client = new XMLRPCClient(new URL(getString(R.string.wizard_url)));
+			XMLRPCClient client = new XMLRPCClient(new URL(context.getString(R.string.wizard_url)));
 			
 			XMLRPCCallback listener = new XMLRPCCallback() {
 				Runnable runNotOk = new Runnable() {
@@ -172,7 +176,7 @@ public class WizardFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					SetupActivity.instance().saveCreatedAccount(username, password, getString(R.string.default_domain));
+    					SetupActivity.instance().saveCreatedAccount(username, password, context.getString(R.string.default_domain));
     					SetupActivity.instance().displayWizardConfirm(username);
 					}
 	    		};
