@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.net.URL;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -33,6 +34,7 @@ import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
 import de.timroes.axmlrpc.XMLRPCServerException;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,10 +70,13 @@ public class EchoCancellerCalibrationFragment extends Fragment implements EcCali
 	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SetupActivity.instance());
 		SharedPreferences.Editor editor = prefs.edit();
+		
+		Context context = SetupActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : SetupActivity.instance();
+		
 		if (status == EcCalibratorStatus.DoneNoEcho) {
-			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), false);
+			editor.putBoolean(context.getString(R.string.pref_echo_cancellation_key), false);
 		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
-			editor.putBoolean(getString(R.string.pref_echo_cancellation_key), true);
+			editor.putBoolean(context.getString(R.string.pref_echo_cancellation_key), true);
 		}
 		editor.commit();
 		if (mSendEcCalibrationResult) {
