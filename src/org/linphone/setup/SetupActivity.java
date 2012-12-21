@@ -218,6 +218,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	
 	public void saveCreatedAccount(String username, String password, String domain) {
 		int newAccountId = mPref.getInt(getString(R.string.pref_extra_accounts), 0);
+		if (newAccountId == -1)
+			newAccountId = 0;
 		writePreference(R.string.pref_extra_accounts, newAccountId+1);
 		
 		if (newAccountId == 0) {
