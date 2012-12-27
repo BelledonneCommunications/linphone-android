@@ -410,7 +410,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
 			;
-			LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false));
+			LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false), getString(R.string.app_name));
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
@@ -654,7 +654,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	public void initFromConf() throws LinphoneConfigException {
 
-		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default)));
+		LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default)), getString(R.string.app_name));
 		initFromConfTunnel();
 
 		if (initialTransports == null)
