@@ -24,7 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.linphone.core.Log;
+import org.linphone.mediastream.Log;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

@@ -22,17 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.net.URL;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.Log;
-
-import de.timroes.axmlrpc.XMLRPCCallback;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
-import de.timroes.axmlrpc.XMLRPCServerException;
+import org.linphone.mediastream.Log;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -44,6 +39,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import de.timroes.axmlrpc.XMLRPCCallback;
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
+import de.timroes.axmlrpc.XMLRPCServerException;
 
 /**
  * @author Ghislain MARY

@@ -21,7 +21,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.compatibility.CompatibilityScaleGestureDetector;
 import org.linphone.compatibility.CompatibilityScaleGestureListener;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
