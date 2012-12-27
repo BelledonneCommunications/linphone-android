@@ -21,6 +21,7 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -43,6 +44,9 @@ public class LinphoneLauncherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Used to change for the lifetime of the app the name used to tag the logs
+		new Log(getResources().getString(R.string.app_name));
 		
 		// Hack to avoid to draw twice LinphoneActivity on tablets
         if (getResources().getBoolean(R.bool.isTablet)) {

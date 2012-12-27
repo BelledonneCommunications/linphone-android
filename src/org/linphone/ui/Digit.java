@@ -23,7 +23,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.Log;
+import org.linphone.mediastream.Log;
 
 import android.content.Context;
 import android.util.AttributeSet;

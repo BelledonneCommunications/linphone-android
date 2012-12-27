@@ -1,7 +1,7 @@
 package org.linphone.compatibility;
 
 import org.linphone.R;
-import org.linphone.core.Log;
+import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -35,8 +35,8 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
 import android.app.Activity;

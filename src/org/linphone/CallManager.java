@@ -23,7 +23,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.Log;
+import org.linphone.mediastream.Log;
 
 
 /**

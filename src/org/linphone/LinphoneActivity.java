@@ -44,8 +44,8 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
-import org.linphone.core.Log;
 import org.linphone.core.OnlineStatus;
+import org.linphone.mediastream.Log;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
 
