@@ -58,6 +58,10 @@ ifeq ($(BUILD_G729),1)
 APP_MODULES +=libbcg729 libmsbcg729
 endif
 
+ifneq ($(BUILD_OPUS), 0)
+APP_MODULES += libopus
+endif
+
 ifneq ($(BUILD_WEBRTC_AECM), 0)
 APP_MODULES += libwebrtc_system_wrappers libwebrtc_spl libwebrtc_apm_utility libwebrtc_aecm
 APP_MODULES += libwebrtc_spl_neon libwebrtc_aecm_neon

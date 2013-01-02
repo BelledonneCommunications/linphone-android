@@ -17,12 +17,14 @@ BUILD_AMRWB=0
 BUILD_GPLV3_ZRTP=0
 BUILD_SILK=1
 BUILD_G729=0
+BUILD_OPUS=1
 BUILD_TUNNEL=0
 BUILD_WEBRTC_AECM=1
+BUILD_OPUS=1
 BUILD_FOR_X86=1
 USE_JAVAH=1
 
-NDK_BUILD_OPTIONS=NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
+NDK_BUILD_OPTIONS=NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_OPUS=$(BUILD_OPUS) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 all: update-project prepare-sources generate-apk
 
@@ -74,6 +76,14 @@ $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_S
 
 prepare-silk: $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c
 
+#opus
+LIBOPUS_INCLUDE_DIR=$(TOPDIR)/submodules/externals/opus/include
+$(LIBOPUS_INCLUDE_DIR)/opus/opus.h:
+	cd $(LIBOPUS_INCLUDE_DIR) && \
+	mkdir opus && \
+	cp *.h opus/
+prepare-opus: $(LIBOPUS_INCLUDE_DIR)/opus/opus.h
+
 #srtp
 $(TOPDIR)/submodules/externals/srtp/config.h : $(TOPDIR)/submodules/externals/build/srtp/config.h
 	@cd $(TOPDIR)/submodules/externals/srtp/ && \
@@ -89,7 +99,7 @@ prepare-mediastreamer2:
 	if ! [ -e yuv2rgb.vs.h ]; then echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi && \
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
-prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
+prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-opus prepare-srtp prepare-mediastreamer2
 
 generate-libs:
 	$(NDK_PATH)/ndk-build $(NDK_BUILD_OPTIONS)
