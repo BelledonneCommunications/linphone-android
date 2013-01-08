@@ -363,6 +363,7 @@
 	<string name="error_call_declined">Appel rejeté</string>
 	<string name="error_user_not_found">Utilisateur non trouvé</string>
 	<string name="error_incompatible_media">Paramètres média incompatibles</string>
+	<string name="error_low_bandwidth">Votre correspondant à un débit faible, la vidéo ne peut démarrer</string>
 	
 	<string name="today">Aujourd\'hui</string>
 	<string name="yesterday">Hier</string>
