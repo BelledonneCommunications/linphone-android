@@ -170,7 +170,7 @@ public class PreferencesListFragment extends ListFragment {
     
     private void bindPreferences() {
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
-        if (preferenceScreen != null) {
+        if (preferenceScreen != null && preferencesList != null) {
             preferenceScreen.bind(preferencesList);
         }
     }

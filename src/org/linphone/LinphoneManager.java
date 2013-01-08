@@ -1051,7 +1051,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				}
 			}
 		}
-
 		if (state == State.Connected) {
 			if (Hacks.needSoftvolume() || sLPref.useSoftvolume()) {
 				adjustVolume(0); // Synchronize

@@ -188,10 +188,10 @@ public class InCallActivity extends FragmentActivity implements
 		video.setEnabled(false);
 		micro = (TextView) findViewById(R.id.micro);
 		micro.setOnClickListener(this);
-		micro.setEnabled(false);
+//		micro.setEnabled(false);
 		speaker = (TextView) findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
-		speaker.setEnabled(false);
+//		speaker.setEnabled(false);
 		addCall = (TextView) findViewById(R.id.addCall);
 		addCall.setOnClickListener(this);
 		addCall.setEnabled(false);
