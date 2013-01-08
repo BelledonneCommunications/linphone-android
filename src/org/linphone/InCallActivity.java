@@ -51,6 +51,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -364,6 +366,25 @@ public class InCallActivity extends FragmentActivity implements
 			pauseOrResumeConference();
 		}
 	}
+
+	public void displayCustomToast(final String message, final int duration) {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				LayoutInflater inflater = getLayoutInflater();
+				View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
+
+				TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+				toastText.setText(message);
+
+				final Toast toast = new Toast(getApplicationContext());
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.setDuration(duration);
+				toast.setView(layout);
+				toast.show();
+			}
+		});
+	}
 	
 	private void switchVideo(final boolean displayVideo) {
 		final LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
@@ -381,9 +402,12 @@ public class InCallActivity extends FragmentActivity implements
 					
 					showAudioView();
 				} else {
-					LinphoneManager.getInstance().addVideo();
-					
-					showVideoView();
+					if (!call.getRemoteParams().isLowBandwidthEnabled()) {
+						LinphoneManager.getInstance().addVideo();
+						showVideoView();
+					} else {
+						displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
+					}
 				}
 			}
 		});
