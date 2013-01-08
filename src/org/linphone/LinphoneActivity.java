@@ -1375,7 +1375,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
 			if (event.getRepeatCount() < 1) {
-				statusFragment.openOrCloseStatusBar();
+				statusFragment.openOrCloseStatusBar(true);
 			}
 		}
 		return super.onKeyDown(keyCode, event);

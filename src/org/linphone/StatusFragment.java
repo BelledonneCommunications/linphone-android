@@ -43,6 +43,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -99,12 +100,13 @@ public class StatusFragment extends Fragment {
 		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
 		
 		exit = (TextView) view.findViewById(R.id.exit);
-		exit.setOnClickListener(new OnClickListener() {
+		exit.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public void onClick(View v) {
+			public boolean onTouch(View v, MotionEvent event) {
 				if (LinphoneActivity.isInstanciated()) {
 					LinphoneActivity.instance().exit();
 				}
+				return true;
 			}
 		});
 
@@ -135,7 +137,11 @@ public class StatusFragment extends Fragment {
 	}
 	
 	public void openOrCloseStatusBar() {
-		if (getResources().getBoolean(R.bool.lock_statusbar)) {
+		openOrCloseStatusBar(false);
+	}
+	
+	public void openOrCloseStatusBar(boolean force) {
+		if (getResources().getBoolean(R.bool.lock_statusbar) && !force) {
 			return;
 		}
 		
@@ -535,7 +541,9 @@ public class StatusFragment extends Fragment {
 		private List<CheckBox> checkboxes;
 		
 		AccountsListAdapter() {
-			prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			if (LinphoneActivity.isInstanciated()) {
+				prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
+			}
 			checkboxes = new ArrayList<CheckBox>();
 		}
 		
@@ -612,7 +620,7 @@ public class StatusFragment extends Fragment {
 			isDefault.setChecked(false);
 			isDefault.setEnabled(true);
 			
-			if (prefs.getInt(getString(R.string.pref_default_account_key), 0) == position) {
+			if (prefs != null && prefs.getInt(getString(R.string.pref_default_account_key), 0) == position) {
 				isDefault.setChecked(true);
 				isDefault.setEnabled(false);
 				status.setImageResource(getStatusIconResource(lpc.getState(), true));
