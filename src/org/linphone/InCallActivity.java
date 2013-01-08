@@ -136,7 +136,7 @@ public class InCallActivity extends FragmentActivity implements
             	LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 
             	if (LinphoneUtils.isCallEstablished(call)) {
-	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled();
+	    			isVideoEnabled = call.getCurrentParamsCopy().getVideoEnabled() && !call.getRemoteParams().isLowBandwidthEnabled();
 	    			enableAndRefreshInCallActions();
             	}
             }
