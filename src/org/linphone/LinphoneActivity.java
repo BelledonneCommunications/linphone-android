@@ -1151,7 +1151,9 @@ public class LinphoneActivity extends FragmentActivity implements
 
 				if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 					LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-					if (call.getCurrentParamsCopy().getVideoEnabled()) {
+					if (call.getState() == LinphoneCall.State.IncomingReceived) {
+						startActivity(new Intent(LinphoneActivity.this, IncomingCallActivity.class));
+					} else if (call.getCurrentParamsCopy().getVideoEnabled()) {
 						startVideoActivity(call);
 					} else {
 						startIncallActivity(call);
