@@ -239,7 +239,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 				NetworkInfo eventInfo = cm.getActiveNetworkInfo();
 				
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				if (eventInfo.getTypeName().equals("mobile") && lc != null) {
+				if (eventInfo != null && eventInfo.getTypeName() != null && eventInfo.getTypeName().equals("mobile") && lc != null) {
 					lc.setNetworkReachable(!isSettingActivated);
 				}
 				
