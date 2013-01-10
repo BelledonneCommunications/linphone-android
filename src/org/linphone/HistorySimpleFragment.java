@@ -370,6 +370,8 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 				} else {
 					separator.setVisibility(View.VISIBLE);
 				}
+			} else {
+				separator.setVisibility(View.VISIBLE);
 			}
 			
 			if (log.getDirection() == CallDirection.Incoming) {
