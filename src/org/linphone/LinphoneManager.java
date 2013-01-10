@@ -875,7 +875,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
 			manageTunnelServer(eventInfo);
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
-			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), false);
+			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), mR.getBoolean(R.bool.pref_wifi_only_default));
 			if (eventInfo.getTypeName().equals("WIFI") || (eventInfo.getTypeName().equals("mobile") && !wifiOnly)) {
 				mLc.setNetworkReachable(true);
 				Log.i(eventInfo.getTypeName()," connected: setting network reachable");
