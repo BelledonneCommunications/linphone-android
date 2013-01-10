@@ -366,7 +366,7 @@
 	<string name="button_options">Настройки</string>
 	
 	<string name="button_send_message">Послать</string>
-	<string name="button_send_picture">Картинка</string>
+	<string name="button_send_picture">Рис.</string>
 	<string name="uploading_image">Загружаем&#8230;</string>
 	
 	<string name="call_update_title">Запрошено обновление звонка</string>
