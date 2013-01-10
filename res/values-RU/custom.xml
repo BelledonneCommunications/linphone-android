@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="history_detail_date_format">EEEE d MMM HH:mm</string>
+    
+	<string name="app_name">Linphone</string>
+	<string name="notification_title">Linphone</string>
+	<string name="wait_dialog_text">Загружается</string>
+	<string name="notification_registered">Зарегистрирован в %s </string> 
+	<string name="notification_register_failure">Ошибка регистрации в %s</string>
+	<string name="about_text">Linphone %s SIP (rfc 3261) совместимый телефон под GPL V2 лицензией\n http://www.linphone.org\n\nИнструкции\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+
+    <string name="tunnel_host"></string>
+    <string name="default_tunnel_mode_entry_value">@string/tunnel_mode_entry_value_disabled</string>
+</resources>
+ 
