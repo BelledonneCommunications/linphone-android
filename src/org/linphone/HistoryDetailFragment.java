@@ -93,7 +93,17 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		contactName.setText(displayName == null ? sipUri : displayName);
 		contactAddress.setText(sipUri);
-		callDirection.setText(status);
+		
+		if (status.equals("Missed")) {
+			callDirection.setText(getString(R.string.call_state_missed));
+		} else if (status.equals("Incoming")) {
+			callDirection.setText(getString(R.string.call_state_incoming));
+		} else if (status.equals("Outgoing")) {
+			callDirection.setText(getString(R.string.call_state_outgoing));
+		} else {
+			callDirection.setText(status);
+		}
+		
 		time.setText(callTime == null ? "" : callTime);
 		date.setText(timestampToHumanDate(callDate));
 	}
