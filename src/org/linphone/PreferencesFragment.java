@@ -50,6 +50,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -163,7 +165,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			findPreference(R.string.pref_echo_canceller_calibration_key).setLayoutResource(R.layout.hidden);
 		}
 
-
 		if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
 			Preference prefH264 = findPreference(R.string.pref_video_codec_h264_key);
 			prefH264.setEnabled(false);
@@ -224,6 +225,24 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean isChecked = (Boolean) newValue;
 				sipPort.setEnabled(!isChecked);
+				return true;
+			}
+		});
+		
+		CheckBoxPreference wifiOnly = (CheckBoxPreference) findPreference(R.string.pref_wifi_only_key);
+		wifiOnly.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean isSettingActivated = (Boolean) newValue;
+				
+				ConnectivityManager cm = (ConnectivityManager) LinphoneActivity.instance().getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo eventInfo = cm.getActiveNetworkInfo();
+				
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				if (eventInfo.getTypeName().equals("mobile") && lc != null) {
+					lc.setNetworkReachable(!isSettingActivated);
+				}
+				
 				return true;
 			}
 		});
