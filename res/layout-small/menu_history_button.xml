@@ -23,6 +23,6 @@
         android:paddingBottom="5dp"
         android:textColor="@drawable/text_color"
         android:text="@string/button_history"
-        android:textSize="13dp" />
+        android:textSize="12sp" />
     
 </RelativeLayout>
