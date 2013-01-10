@@ -367,4 +367,8 @@
 	
 	<string name="today">Aujourd\'hui</string>
 	<string name="yesterday">Hier</string>
+	
+	<string name="call_state_missed">Manqué</string>
+	<string name="call_state_outgoing">Émis</string>
+	<string name="call_state_incoming">Reçu</string>
 </resources>

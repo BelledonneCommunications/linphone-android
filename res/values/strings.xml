@@ -414,4 +414,8 @@
 	
 	<string name="today">Today</string>
 	<string name="yesterday">Yesterday</string>
+	
+	<string name="call_state_missed">Missed</string>
+	<string name="call_state_outgoing">Outgoing</string>
+	<string name="call_state_incoming">Incoming</string>
 </resources>
