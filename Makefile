@@ -5,6 +5,7 @@ NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
+LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe)
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
 
 BUILD_X264=0
@@ -90,10 +91,10 @@ generate-libs:
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
-	touch default.properties
 
 generate-apk:
 	ant partial-clean
+	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties
 	ant debug
 
 install-apk:
@@ -101,6 +102,9 @@ install-apk:
 
 release: update-project
 	ant clean
+	echo "What is the version name for the release ?"; \
+    read version; \
+	echo "version.name=$$version" > default.properties
 	ant release
 
 run-linphone:

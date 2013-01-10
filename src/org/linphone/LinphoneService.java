@@ -418,7 +418,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		} catch (NameNotFoundException nnfe) {}
 
 		if (info != null) {
-			Log.i("Linphone version is ", info.versionCode);
+			Log.i("Linphone version is ", info.versionName + " (" + info.versionCode + ")");
 		} else {
 			Log.i("Linphone version is unknown");
 		}

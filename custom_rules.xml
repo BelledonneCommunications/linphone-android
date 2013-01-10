@@ -62,7 +62,7 @@
     	</javadoc>
 	</target>
 
-	<target name="-package-resources" depends="-crunch">
+	<target name="-package-resources" depends="-crunch">	    
 		<!-- only package resources if *not* a library project -->
 		<do-only-if-not-library elseText="Library project: do not package resources...">
 			<exec executable="${aapt}" failonerror="true">
@@ -71,6 +71,8 @@
 				<arg value="-v" />
 				<arg value="--version-code" />
 				<arg value="${version.code}" />
+				<arg value="--version-name" />
+				<arg value="${version.name}" />
 				<arg value="--debug-mode" />
 				<arg value="-m" />
 				<arg value="-u" />
