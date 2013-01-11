@@ -360,7 +360,7 @@ public class InCallActivity extends FragmentActivity implements
 
 		else if (id == R.id.callStatus) {
 			LinphoneCall call = (LinphoneCall) v.getTag();
-			pauseOrResumeCall(call, true);
+			pauseOrResumeCall(call);
 		}
 		else if (id == R.id.conferenceStatus) {
 			pauseOrResumeConference();
@@ -484,10 +484,10 @@ public class InCallActivity extends FragmentActivity implements
 	private void pauseOrResumeCall() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall call = lc.getCurrentCall();
-		pauseOrResumeCall(call, false);
+		pauseOrResumeCall(call);
 	}
 	
-	public void pauseOrResumeCall(LinphoneCall call, boolean leaveConference) {
+	public void pauseOrResumeCall(LinphoneCall call) {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (call != null && LinphoneUtils.isCallRunning(call)) {
 			if (call.isInConference()) {
@@ -515,6 +515,13 @@ public class InCallActivity extends FragmentActivity implements
 					}
 					pause.setImageResource(R.drawable.pause_off);
 				}
+			} else if (call != null) {
+				lc.resumeCall(call);
+				if (isVideoCallPaused) {
+					isVideoCallPaused = false;
+					showVideoView();
+				}
+				pause.setImageResource(R.drawable.pause_off);
 			}
 		}
 	}
