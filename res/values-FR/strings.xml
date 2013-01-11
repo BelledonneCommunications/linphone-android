@@ -183,8 +183,8 @@
 	<string name="pref_media_encryption">Encryption</string>
 	<string name="media_encryption_none">Aucune</string>
 	
-	<string name="pref_video_codec_h264_unavailable">Codec supporté uniquement si compilé depuis les sources</string>
-	<string name="pref_video_codec_mpeg4_unavailable">Codec supporté uniquement si compilé depuis les sources</string>
+	<string name="pref_video_codec_h264_unavailable">Codec désactivé, compilez l\'application depuis le code source pour l\'activer</string>
+	<string name="pref_video_codec_mpeg4_unavailable">Codec désactivé, compilez l\'application depuis le code source pour l\'activer</string>
 	
 	<string name="pref_sipaccounts">Comptes SIP</string>
 	<string name="pref_wifi_only">Wi-Fi uniquement</string>
