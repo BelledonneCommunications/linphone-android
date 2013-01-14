@@ -57,7 +57,11 @@ public class ChatStorage {
 	public void updateMessageStatus(String to, String message, int status) {
 		ContentValues values = new ContentValues();
 		values.put("status", status);
-		db.update(TABLE_NAME, values, "direction LIKE " + OUTGOING + " AND remoteContact LIKE \"" + to + "\" AND message LIKE \"" + message + "\"", null);
+		
+		String where = "direction LIKE ? AND remoteContact LIKE ? AND message LIKE ?";
+		String[] whereArgs = { String.valueOf(OUTGOING), to, message };
+		
+		db.update(TABLE_NAME, values, where, whereArgs);
 	}
 	
 	public void updateMessageStatus(String to, int id, int status) {
