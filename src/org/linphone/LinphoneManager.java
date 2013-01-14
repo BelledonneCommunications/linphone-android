@@ -107,6 +107,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 /**
  * 
@@ -277,20 +278,26 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(LinphoneService.instance().getApplicationContext());
 		
-		try {
-			if (Version.isVideoCapable()) {
-				boolean prefVideoEnable = isVideoEnabled();
-				int key = R.string.pref_video_initiate_call_with_video_key;
-				boolean prefInitiateWithVideo = getPrefBoolean(key, false);
-				CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo, isLowBandwidthConnection);
-			} else {
-				CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
+		if (mLc.isNetworkReachable()) {
+			try {
+				if (Version.isVideoCapable()) {
+					boolean prefVideoEnable = isVideoEnabled();
+					int key = R.string.pref_video_initiate_call_with_video_key;
+					boolean prefInitiateWithVideo = getPrefBoolean(key, false);
+					CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo, isLowBandwidthConnection);
+				} else {
+					CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
+				}
+				
+	
+			} catch (LinphoneCoreException e) {
+				mListenerDispatcher.tryingNewOutgoingCallButCannotGetCallParameters();
+				return;
 			}
-			
-
-		} catch (LinphoneCoreException e) {
-			mListenerDispatcher.tryingNewOutgoingCallButCannotGetCallParameters();
-			return;
+		} else if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+		} else {
+			Log.e("Error: " + getString(R.string.error_network_unreachable));
 		}
 	}
 	

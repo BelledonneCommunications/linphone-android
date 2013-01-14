@@ -458,7 +458,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 	
 	private void sendTextMessage() {
-		if (chatRoom != null && message != null && message.getText().length() > 0) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
+		
+		if (chatRoom != null && message != null && message.getText().length() > 0 && isNetworkReachable) {
 			String messageToSend = message.getText().toString();
 			message.setText("");
 
@@ -472,11 +475,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			
 			displayMessage(newId, messageToSend, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout);
 			scrollToEnd();
+		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
 	}
 	
 	private void sendImageMessage(String url, Bitmap bitmap) {
-		if (chatRoom != null && url != null && url.length() > 0) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
+		
+		if (chatRoom != null && url != null && url.length() > 0 && isNetworkReachable) {
 			LinphoneChatMessage chatMessage = chatRoom.createLinphoneChatMessage("");
 			chatMessage.setExternalBodyUrl(url);
 			chatRoom.sendMessage(chatMessage, this);
@@ -489,6 +497,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			
 			displayImageMessage(newId, bitmap, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout);
 			scrollToEnd();
+		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
 	}
 	
