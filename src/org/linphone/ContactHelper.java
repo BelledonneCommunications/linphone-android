@@ -227,7 +227,7 @@ public final class ContactHelper {
 				
 				Uri contactUri = ContentUris.withAppendedId(android.provider.ContactsContract.Contacts.CONTENT_URI, id);
 				Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-				if (photoUri == null) {
+//				if (photoUri == null) {
 //					continue;
 //				}
 				String[] photoProj = {android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO};
