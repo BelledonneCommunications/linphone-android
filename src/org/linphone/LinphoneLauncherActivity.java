@@ -46,7 +46,7 @@ public class LinphoneLauncherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		// Used to change for the lifetime of the app the name used to tag the logs
-		new Log(getResources().getString(R.string.app_name));
+		new Log(getResources().getString(R.string.app_name), !getResources().getBoolean(R.bool.disable_every_log));
 		
 		// Hack to avoid to draw twice LinphoneActivity on tablets
         if (getResources().getBoolean(R.bool.isTablet)) {

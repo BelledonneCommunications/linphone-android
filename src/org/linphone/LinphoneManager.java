@@ -417,7 +417,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
 			;
-			LinphoneCoreFactory.instance().setDebugMode(getPrefBoolean(R.string.pref_debug_key, false), getString(R.string.app_name));
+			
+			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, false);
+			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
 					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);

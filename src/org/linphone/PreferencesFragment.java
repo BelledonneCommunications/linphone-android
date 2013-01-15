@@ -246,6 +246,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 				return true;
 			}
 		});
+		
+		if (getResources().getBoolean(R.bool.disable_every_log)) {
+			uncheckDisableAndHideCheckbox(R.string.pref_debug_key);
+		}
 	}
 	
 	private void createAddAccountButton() {
