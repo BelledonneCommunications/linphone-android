@@ -634,6 +634,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 	
+	private long hashBitmap(Bitmap bmp){
+		long hash = 31; // Random prime number
+		for(int x = 0; x < bmp.getWidth(); x++){
+			for (int y = 0; y < bmp.getHeight(); y++){
+				hash *= (bmp.getPixel(x,y) + 31);
+			}
+		}
+		return hash;
+	}
+	
 	private String uploadImage(String filePath, Bitmap file, int compressorQuality, final int imageSize) {
 		String fileName;
 		if (filePath != null) {
@@ -641,6 +651,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			fileName = sourceFile.getName();
 		} else {
 			fileName = getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
+		}
+		
+		if (getResources().getBoolean(R.bool.hash_images_as_name_before_upload)) {
+			fileName = String.valueOf(hashBitmap(file)) + ".jpg";
 		}
 		
 		String response = null;
