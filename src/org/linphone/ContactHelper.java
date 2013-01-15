@@ -228,17 +228,19 @@ public final class ContactHelper {
 				Uri contactUri = ContentUris.withAppendedId(android.provider.ContactsContract.Contacts.CONTENT_URI, id);
 				Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
 				if (photoUri == null) {
-					continue;
-				}
+//					continue;
+//				}
 				String[] photoProj = {android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO};
 				Cursor cursor = resolver.query(photoUri, photoProj, null, null, null);
 				valid = testPhotoUriAndCloseCursor(cursor);
+				displayName = c.getString(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME));
 				if (valid) {
-					displayName = c.getString(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME));
 					foundPhotoUri = photoUri;
-					c.close();
-					return true;
+				} else {
+					foundPhotoUri = null;
 				}
+				c.close();
+				return true;
 			}
 			c.close();
 			return false;
