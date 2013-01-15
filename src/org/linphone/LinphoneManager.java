@@ -418,7 +418,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			//traces alway start with traces enable to not missed first initialization
 			;
 			
-			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, false);
+			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default));
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
