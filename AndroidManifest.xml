@@ -122,6 +122,41 @@
 		</receiver>
 		
 		<service android:name="org.linphone.gcm.GCMService" />
+		
+		<activity android:name="org.linphone.tutorials.TutorialLauncherActivity"
+		    android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+		
+		<activity android:name="org.linphone.tutorials.TutorialBuddyStatusActivity"
+		    android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        
+		<activity android:name="org.linphone.tutorials.TutorialChatRoomActivity"
+		    android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        
+		<activity android:name="org.linphone.tutorials.TutorialHelloWorldActivity"
+		    android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        
+		<activity android:name="org.linphone.tutorials.TutorialRegistrationActivity"
+		    android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
 	
 	</application>
 

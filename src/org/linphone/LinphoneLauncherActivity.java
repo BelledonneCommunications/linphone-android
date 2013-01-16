@@ -22,6 +22,7 @@ import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Log;
+import org.linphone.tutorials.TutorialLauncherActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -74,12 +75,18 @@ public class LinphoneLauncherActivity extends Activity {
 	}
 
 	protected void onServiceReady() {
-		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
+		final Class<? extends Activity> classToStart;
+		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
+			classToStart = TutorialLauncherActivity.class;
+		} else {
+			classToStart = LinphoneActivity.class;
+		}
 		
+		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(classToStart);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, LinphoneActivity.class).setData(getIntent().getData()));
+				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, classToStart).setData(getIntent().getData()));
 				finish();
 			}
 		}, 1000);
