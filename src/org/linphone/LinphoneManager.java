@@ -421,6 +421,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
+			mLc.getConfig().setInt("sip", "store_auth_info", 0);
 			mLc.setContext(c);
 			try {
 				String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;

@@ -33,6 +33,7 @@
 			<class name="org.linphone.core.LinphoneFriendImpl" />
 			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
 			<class name="org.linphone.core.PayloadTypeImpl" />
+			<class name="org.linphone.core.LpConfigImpl" />
 		</javah>
 	</target>
 	
