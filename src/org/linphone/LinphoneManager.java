@@ -416,22 +416,24 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			;
 			
 			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default));
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
-			mLc = LinphoneCoreFactory.instance().createLinphoneCore(
-					this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
+			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
 			mLc.setContext(c);
 			try {
-				mLc.setUserAgent("LinphoneAndroid", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
+				String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
+				if (versionName == null) {
+					versionName = String.valueOf(c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionCode);
+				}
+				mLc.setUserAgent("LinphoneAndroid", versionName);
 			} catch (NameNotFoundException e) {
 				Log.e(e, "cannot get version name");
 			}
 
 			mLc.enableIpv6(getPrefBoolean(R.string.pref_ipv6_key, false));
-			mLc.setZrtpSecretsCache(basePath+"/zrtp_secrets");
+			mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
  
 			mLc.setRing(null);
 			mLc.setRootCA(mLinphoneRootCaFile);
@@ -460,7 +462,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
 		}
 		catch (Exception e) {
-			Log.e(e,"Cannot start linphone");
+			Log.e(e, "Cannot start linphone");
 		}
 	}
 
@@ -482,7 +484,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		InputStream lInputStream = mR.openRawResource(ressourceId);
 		int readByte;
 		byte[] buff = new byte[8048];
-		while (( readByte = lInputStream.read(buff))!=-1) {
+		while (( readByte = lInputStream.read(buff)) != -1) {
 			lOutputStream.write(buff,0, readByte);
 		}
 		lOutputStream.flush();
@@ -511,12 +513,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			me = MediaEncryption.SRTP;
 		else if (pref.equals(getString(R.string.pref_media_encryption_key_zrtp)))
 			me = MediaEncryption.ZRTP;
-		Log.i("Media encryption set to "+pref);
+		Log.i("Media encryption set to " + pref);
 		mLc.setMediaEncryption(me);
 	}
 
 	private void initFromConfTunnel(){
-		if (!mLc.isTunnelAvailable()) return;
+		if (!mLc.isTunnelAvailable()) 
+			return;
+		
 		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
 		mLc.tunnelCleanServers();
 		String host = getString(R.string.tunnel_host);
@@ -536,7 +540,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			if (!getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
 				initAccount(key, i == getPrefInt(R.string.pref_default_account_key, 0));
 			}
-			
 		}
 		
 		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
