@@ -19,6 +19,7 @@ LINPHONE_VIDEO=0
 BUILD_X264=0
 endif
 
+include $(linphone-root-dir)/jni/libneon/Android.mk
 
 ##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
