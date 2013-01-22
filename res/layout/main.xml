@@ -109,7 +109,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/missed_calls_bg"
                 android:gravity="center"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:visibility="gone" />
         </RelativeLayout>
 
@@ -143,7 +143,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/missed_calls_bg"
                 android:gravity="center"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:visibility="gone" />
             
         </RelativeLayout>
