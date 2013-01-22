@@ -161,7 +161,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		videoInitiator = b;
 	}
 
-
 	private LinphoneManager(final Context c, LinphoneServiceListener listener) {
 		sExited=false;
 		mServiceContext = c;
