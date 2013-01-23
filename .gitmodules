@@ -1,12 +1,6 @@
 [submodule "linphone"]
 	path = submodules/linphone
-	url = git://git.linphone.org/linphone.git
-[submodule "submodules/externals/osip"]
-	path = submodules/externals/osip
-	url = git://git.linphone.org/osip.git
-[submodule "submodules/externals/exosip"]
-	path = submodules/externals/exosip
-	url = git://git.linphone.org/exosip.git
+	url = gitosis@git.linphone.org:linphone-private
 [submodule "submodules/externals/gsm"]
 	path = submodules/externals/gsm
 	url = git://git.linphone.org/gsm.git
@@ -58,3 +52,9 @@
 [submodule "submodules/externals/webrtc"]
 	path = submodules/externals/webrtc
 	url = git://git.linphone.org/webrtc.git
+[submodule "submodules/belle-sip"]
+	path = submodules/belle-sip
+	url = gitosis@git.linphone.org:belle-sip
+[submodule "submodules/externals/libantlr3c"]
+	path = submodules/externals/libantlr3c
+	url = gitosis@git.linphone.org:libantlr3c

@@ -51,9 +51,9 @@ else
 include $(linphone-root-dir)/submodules/externals/prebuilts/gsm.mk
 endif
 
-include $(linphone-root-dir)/submodules/externals/build/exosip/Android.mk
 
-include $(linphone-root-dir)/submodules/externals/build/osip/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/libantlr3c/Android.mk
+include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
 
 # Openssl
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk),)
