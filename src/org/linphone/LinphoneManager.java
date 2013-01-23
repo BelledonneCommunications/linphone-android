@@ -139,7 +139,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
-	private boolean videoInitiator = false;
 
 	private WakeLock mIncallWakeLock;
 
@@ -151,14 +150,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	}
 	public static void removeListener(LinphoneSimpleListener listener) {
 		simpleListeners.remove(listener);
-	}
-	
-	public boolean isVideoInitiator() {
-		return videoInitiator;
-	}
-	
-	public void setVideoInitiator(boolean b) {
-		videoInitiator = b;
 	}
 
 	private LinphoneManager(final Context c, LinphoneServiceListener listener) {
@@ -1254,7 +1245,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public boolean addVideo() {
 		LinphoneCall call = mLc.getCurrentCall();
 		enableCamera(call, true);
-		setVideoInitiator(true);
 		return reinviteWithVideo();
 	}
 	
@@ -1415,7 +1405,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 		public void onCallStateChanged(LinphoneCall call, State state, String message) {
 			if (state == State.OutgoingInit || state == State.IncomingReceived) {
-				setVideoInitiator(state == State.OutgoingInit);
 				boolean sendCamera = mLc.getConferenceSize() == 0;
 				enableCamera(call, sendCamera);
 			}
