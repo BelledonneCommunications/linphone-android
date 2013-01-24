@@ -57,4 +57,4 @@
 	url = gitosis@git.linphone.org:belle-sip
 [submodule "submodules/externals/libantlr3c"]
 	path = submodules/externals/libantlr3c
-	url = gitosis@git.linphone.org:libantlr3c
+	url = git://git.linphone.org/libantlr3c.git
