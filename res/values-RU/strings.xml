@@ -64,8 +64,8 @@
 	<string name="hangup">Положить трубку</string>
 	<string name="conf_simple_merge_bt_txt">Объединить</string>
 	<string name="conf_simple_transfer_bt_txt">Перевести</string>
-<!--	<string name="conf_simple_no_current_call">Нет активного звонка</string>-->
 	<string name="conf_simple_video_bt_txt">Видео</string>
+<!--	<string name="conf_simple_no_current_call">Нет активного звонка</string>-->
 	<string name="show_send_dtmfs_button">Клавиатура</string>
 
 	<string name="conf_conference">Конференция</string>
@@ -259,7 +259,7 @@
 	<string name="status_in_progress">В процессе регистрации</string>
 	<string name="status_error">Ошибка регистрации</string>
 	
-	<string name="addressHint">Номер адреса</string>
+	<string name="addressHint">Номер или Адрес</string>
 	<string name="conference">Конференция</string>
 	<string name="incoming">Входящий звонок</string>
 	<string name="draft">Черновик</string>
@@ -321,8 +321,8 @@
 	<string name="setup_title">Помощник Настройки учётной записи</string>
 	<string name="setup_welcome">Этот помощник поможет Вам настроить учётную запись SIP для звонков.</string>
 	<string name="setup_create_account">Создать учётную запись на linphone.org</string>
-	<string name="setup_login_linphone">У меня уже есть учётная запись на linphone.org</string>
-	<string name="setup_login_generic">У меня уже есть учётная запись SIP</string>
+	<string name="setup_login_linphone">Существующая учётная запись на linphone.org</string>
+	<string name="setup_login_generic">Существующая учётная запись SIP</string>
 	<string name="setup_linphone_account_hint">Введите имя пользователя и пароль учётной записи linphone.org</string>
 	<string name="setup_general_account_hint">Введите имя пользователя, пароль и сервер учётной записи SIP</string>
 	<string name="setup_apply">Применить</string>
@@ -411,7 +411,12 @@
 	<string name="error_user_not_found">Пользователь не найден</string>
 	<string name="error_incompatible_media">Несовместимые параметры потока</string>
 	<string name="error_low_bandwidth">У ваш собеседника низкая скорость подключения, видео не может быть использовано</string>
+	<string name="error_network_unreachable">Сеть недоступна</string>
 	
 	<string name="today">Сегодня</string>
 	<string name="yesterday">Вчера</string>
+	
+	<string name="call_state_missed">Пропущенный</string>
+	<string name="call_state_outgoing">Исходящий</string>
+	<string name="call_state_incoming">Входящий</string>
 </resources>
