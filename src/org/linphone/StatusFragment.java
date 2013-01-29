@@ -43,7 +43,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -61,7 +60,7 @@ import android.widget.Toast;
 public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText, exit;
+	private TextView statusText;
 	private ImageView statusLed, callQuality, encryption, background;
 	private ListView sliderContentAccounts;
 	private TableLayout callStats;
@@ -98,17 +97,6 @@ public class StatusFragment extends Fragment {
 		});
 		
 		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
-		
-		exit = (TextView) view.findViewById(R.id.exit);
-		exit.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().exit();
-				}
-				return true;
-			}
-		});
 
 		// We create it once to not delay the first display
 		populateSliderContent();
@@ -330,7 +318,6 @@ public class StatusFragment extends Fragment {
 				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			}
 			
-			exit.setVisibility(View.GONE);
 			statusText.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
 			
@@ -338,7 +325,6 @@ public class StatusFragment extends Fragment {
 			statusLed.setImageResource(R.drawable.led_connected);
 			statusText.setText(getString(R.string.status_connected));
 		} else {
-			exit.setVisibility(View.VISIBLE);
 			statusText.setVisibility(View.VISIBLE);
 			background.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);
