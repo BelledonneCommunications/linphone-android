@@ -284,6 +284,11 @@
 				android:defaultValue="@bool/pref_debug_default"/>
 			
 			<CheckBoxPreference 
+			    android:key="@string/pref_background_mode_key"
+				android:title="@string/pref_background_mode"
+				android:defaultValue="@bool/pref_background_mode_default"/>
+			
+			<CheckBoxPreference 
 			    android:defaultValue="@bool/pref_animation_enable_default"
 				android:title="@string/pref_animation_enable_title" 
 				android:key="@string/pref_animation_enable_key" />

@@ -372,4 +372,6 @@
 	<string name="call_state_missed">Manqué</string>
 	<string name="call_state_outgoing">Émis</string>
 	<string name="call_state_incoming">Reçu</string>
+	
+	<string name="pref_background_mode">Actif en arrière plan</string>
 </resources>
