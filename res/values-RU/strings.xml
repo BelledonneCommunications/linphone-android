@@ -321,8 +321,8 @@
 	<string name="setup_title">Помощник Настройки учётной записи</string>
 	<string name="setup_welcome">Этот помощник поможет Вам настроить учётную запись SIP для звонков.</string>
 	<string name="setup_create_account">Создать учётную запись на linphone.org</string>
-	<string name="setup_login_linphone">Существующая учётная запись на linphone.org</string>
-	<string name="setup_login_generic">Существующая учётная запись SIP</string>
+	<string name="setup_login_linphone">Уже есть учётная запись на linphone.org</string>
+	<string name="setup_login_generic">Уже есть учётная запись SIP</string>
 	<string name="setup_linphone_account_hint">Введите имя пользователя и пароль учётной записи linphone.org</string>
 	<string name="setup_general_account_hint">Введите имя пользователя, пароль и сервер учётной записи SIP</string>
 	<string name="setup_apply">Применить</string>
@@ -419,4 +419,6 @@
 	<string name="call_state_missed">Пропущенный</string>
 	<string name="call_state_outgoing">Исходящий</string>
 	<string name="call_state_incoming">Входящий</string>
+	
+	<string name="pref_background_mode">Фоновый режим</string>
 </resources>
