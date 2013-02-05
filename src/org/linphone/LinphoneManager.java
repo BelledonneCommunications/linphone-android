@@ -157,6 +157,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mServiceContext = c;
 		mListenerDispatcher = new ListenerDispatcher(listener);
 		basePath = c.getFilesDir().getAbsolutePath();
+		mLPConfigXsd = basePath + "/lpconfig.xsd";
 		mLinphoneInitialConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
@@ -176,6 +177,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
+	private final String mLPConfigXsd;
 	private final String mLinphoneInitialConfigFile;
 	private final String mLinphoneRootCaFile;
 	private final String mLinphoneConfigFile;
@@ -244,6 +246,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	
 	public static synchronized final LinphoneCore getLc() {
 		return getInstance().mLc;
+	}
+	
+	public String getLPConfigXsdPath() {
+		return mLPConfigXsd;
 	}
 
 	public void newOutgoingCall(AddressType address) {
@@ -407,8 +413,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
 			
-			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default));
+			boolean isDebugLogEnabled = true;//!(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default));
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
+			
+			// Try to get remote provisioning
+			String remote_provisioning = (getPrefString(R.string.pref_remote_provisioning_key, mR.getString(R.string.pref_remote_provisioning_default)));
+			if(remote_provisioning != null && remote_provisioning.length() > 0 && RemoteProvisioning.isAvailable()) {
+				RemoteProvisioning.download(remote_provisioning, mLinphoneConfigFile);
+			}
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
 			mLc.getConfig().setInt("sip", "store_auth_info", 0);
@@ -462,6 +474,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
 		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
+		copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
 		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}
 	private  void copyIfNotExist(int ressourceId,String target) throws IOException {

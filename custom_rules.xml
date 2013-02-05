@@ -6,6 +6,9 @@
 		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
 			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
 			failonerror="false" />
+		<copy file="submodules/linphone/share/xml/lpconfig.xsd"
+			tofile="res/raw/lpconfig.xsd"
+			failonerror="false" />	
 	</target>
 
 	<target name="-post-build" description="Restore file that has been moved so that it was not compiled.">
@@ -34,6 +37,18 @@
 			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
 			<class name="org.linphone.core.PayloadTypeImpl" />
 			<class name="org.linphone.core.LpConfigImpl" />
+		</javah>
+		<javah outputfile="gen/xml2lpc_jni.h">
+			<classpath>
+				<pathelement location="${out.classes.absolute.dir}" />
+			</classpath>
+			<class name="org.linphone.tools.Xml2Lpc" />
+		</javah>
+		<javah outputfile="gen/lpc2xml_jni.h">
+			<classpath>
+				<pathelement location="${out.classes.absolute.dir}" />
+			</classpath>
+			<class name="org.linphone.tools.Lpc2Xml" />
 		</javah>
 	</target>
 	
