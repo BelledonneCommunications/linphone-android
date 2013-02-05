@@ -58,3 +58,6 @@
 [submodule "submodules/externals/webrtc"]
 	path = submodules/externals/webrtc
 	url = git://git.linphone.org/webrtc.git
+[submodule "submodules/externals/libxml2"]
+	path = submodules/externals/libxml2
+	url = git://git.gnome.org/libxml2
