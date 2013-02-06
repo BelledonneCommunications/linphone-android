@@ -36,6 +36,10 @@ SRTP_C_INCLUDE= \
 endif
 #endif
 
+#libxml2
+ifeq ($(BUILD_REMOTE_PROVISIONING),1)
+include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
+endif
 
 # Speex
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/speex.mk),)
@@ -52,7 +56,7 @@ include $(linphone-root-dir)/submodules/externals/prebuilts/gsm.mk
 endif
 
 
-include $(linphone-root-dir)/submodules/externals/build/libantlr3c/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
 include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
 
 # Openssl

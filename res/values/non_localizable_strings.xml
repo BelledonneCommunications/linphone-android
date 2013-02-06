@@ -92,6 +92,7 @@
     <string name="pref_media_encryption_key_none">none</string>
     <string name="pref_media_encryption_key_srtp">srtp</string>
     <string name="pref_media_encryption_key_zrtp">zrtp</string>
+	<string name="pref_background_mode_key">pref_background_mode_key</string>
     
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
@@ -99,6 +100,7 @@
 	
 	<string name="pref_auto_accept_friends_key">pref_auto_accept_friends_key</string>
 	<string name="pref_image_sharing_server_key">pref_image_sharing_server_key</string>
+	<string name="pref_remote_provisioning_key">pref_remote_provisioning_key</string>
 	
     <string name="pref_video_port_key">pref_video_port_key</string>
     <string name="pref_audio_port_key">pref_audio_port_key</string>

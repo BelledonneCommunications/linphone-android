@@ -1,6 +1,11 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp libantlr3c libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon
+APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon
 APP_STL := stlport_static
+
+#remote provisioning
+ifeq ($(BUILD_REMOTE_PROVISIONING),1)
+APP_MODULES += libxml2 libxml2lpc liblpc2xml
+endif
 
 #default values
 ifeq ($(BUILD_AMRNB),)

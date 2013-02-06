@@ -43,7 +43,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -61,7 +60,7 @@ import android.widget.Toast;
 public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText, exit;
+	private TextView statusText;
 	private ImageView statusLed, callQuality, encryption, background;
 	private ListView sliderContentAccounts;
 	private TableLayout callStats;
@@ -98,17 +97,6 @@ public class StatusFragment extends Fragment {
 		});
 		
 		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
-		
-		exit = (TextView) view.findViewById(R.id.exit);
-		exit.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().exit();
-				}
-				return true;
-			}
-		});
 
 		// We create it once to not delay the first display
 		populateSliderContent();
@@ -330,7 +318,6 @@ public class StatusFragment extends Fragment {
 				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			}
 			
-			exit.setVisibility(View.GONE);
 			statusText.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
 			
@@ -338,7 +325,6 @@ public class StatusFragment extends Fragment {
 			statusLed.setImageResource(R.drawable.led_connected);
 			statusText.setText(getString(R.string.status_connected));
 		} else {
-			exit.setVisibility(View.VISIBLE);
 			statusText.setVisibility(View.VISIBLE);
 			background.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);
@@ -554,8 +540,30 @@ public class StatusFragment extends Fragment {
 				CheckBox checkBox = (CheckBox) v;
 				if (checkBox.isChecked()) {
 					SharedPreferences.Editor editor = prefs.edit();
-					int selectedPosition = (Integer) checkBox.getTag();
-					editor.putInt(getString(R.string.pref_default_account_key), selectedPosition);
+					String tag = (String) checkBox.getTag();
+					String sipAddress = tag.split(":")[0];
+					int accountPosition = Integer.parseInt(tag.split(":")[1]);
+					
+					int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+					int accountIndex = 0;
+					for (int i = 0; i < nbAccounts; i++)
+					{
+						String keyUsername = getString(R.string.pref_username_key);
+						String keyDomain = getString(R.string.pref_domain_key);
+						if (i > 0) {
+							keyUsername += i + "";
+							keyDomain += i + "";
+						}
+						String username = prefs.getString(keyUsername, "");
+						String domain = prefs.getString(keyDomain, "");
+						String identity = username + "@" + domain;
+						if (identity.equals(sipAddress)) {
+							accountIndex = i;
+							break;
+						}
+					}
+					
+					editor.putInt(getString(R.string.pref_default_account_key), accountIndex);
 					editor.commit();
 
 					for (CheckBox cb : checkboxes) {
@@ -566,7 +574,7 @@ public class StatusFragment extends Fragment {
 					checkBox.setEnabled(false);
 					
 					LinphoneCore lc = LinphoneManager.getLc();
-					lc.setDefaultProxyConfig((LinphoneProxyConfig) getItem(selectedPosition));
+					lc.setDefaultProxyConfig((LinphoneProxyConfig) getItem(accountPosition));
 					if (lc.isNetworkReachable()) {
 						lc.refreshRegisters();
 					}
@@ -616,17 +624,40 @@ public class StatusFragment extends Fragment {
 			CheckBox isDefault = (CheckBox) view.findViewById(R.id.Default);
 			checkboxes.add(isDefault);
 			
-			isDefault.setTag(position);
+			isDefault.setTag(sipAddress + ":" + position);
 			isDefault.setChecked(false);
 			isDefault.setEnabled(true);
 			
-			if (prefs != null && prefs.getInt(getString(R.string.pref_default_account_key), 0) == position) {
-				isDefault.setChecked(true);
-				isDefault.setEnabled(false);
-				status.setImageResource(getStatusIconResource(lpc.getState(), true));
+			if (prefs != null) {
+				int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+				int accountIndex = 0;
+				for (int i = 0; i < nbAccounts; i++)
+				{
+					String keyUsername = getString(R.string.pref_username_key);
+					String keyDomain = getString(R.string.pref_domain_key);
+					if (i > 0) {
+						keyUsername += i + "";
+						keyDomain += i + "";
+					}
+					String username = prefs.getString(keyUsername, "");
+					String domain = prefs.getString(keyDomain, "");
+					String id = username + "@" + domain;
+					if (id.equals(sipAddress)) {
+						accountIndex = i;
+						break;
+					}
+				}
+				if (prefs.getInt(getString(R.string.pref_default_account_key), 0) == accountIndex) {
+					isDefault.setChecked(true);
+					isDefault.setEnabled(false);
+					status.setImageResource(getStatusIconResource(lpc.getState(), true));
+				} else {
+					status.setImageResource(getStatusIconResource(lpc.getState(), false));
+				}
 			} else {
 				status.setImageResource(getStatusIconResource(lpc.getState(), false));
 			}
+			
 			isDefault.setOnClickListener(defaultListener);
 			
 			return view;

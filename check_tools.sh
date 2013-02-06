@@ -11,22 +11,7 @@ if [ -z ${JAVA} ]; then
 fi
 
 # Check antlr
-antlr_java_prefixes="/usr/share/java /usr/local/share/java /usr/share/java /opt/local/share/java"
-antlr_jar="no"
-for antlr_java_prefix in ${antlr_java_prefixes}
-do
-	antlr_jar=${antlr_java_prefix}/antlr.jar
-	if [ ! -f ${antlr_jar} ]; then
-		antlr_jar="no"	
-	else
-		break;
-	fi
-done
-if test ${antlr_jar} = "no" ; then
-	echo "Could not find antlr.jar. Please install antlr3";
-	exit -1;
-fi
-ANTLR="${JAVA} -jar \"${antlr_jar}\"";
+ANTLR="${JAVA} -jar \"submodules/externals/antlr3/antlr-3.4-complete.jar\"";
 
 # Check NDK
 NDK=$(which ndk-build)
