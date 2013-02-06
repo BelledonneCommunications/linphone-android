@@ -55,6 +55,9 @@
 [submodule "submodules/belle-sip"]
 	path = submodules/belle-sip
 	url = gitosis@git.linphone.org:belle-sip
-[submodule "submodules/externals/libantlr3c"]
-	path = submodules/externals/libantlr3c
-	url = git://git.linphone.org/libantlr3c.git
+[submodule "submodules/externals/antlr3"]
+	path = submodules/externals/antlr3
+	url = git://git.linphone.org/antlr3.git
+[submodule "submodules/externals/libxml2"]
+	path = submodules/externals/libxml2
+	url = git://git.gnome.org/libxml2

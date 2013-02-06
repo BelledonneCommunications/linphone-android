@@ -7,6 +7,8 @@ PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe)
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
+
+BUILD_REMOTE_PROVISIONING=1
 BUILD_X264=0
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=0
@@ -91,20 +93,20 @@ prepare-mediastreamer2:
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
 
-LIBANLTR3C_SRC_DIR=$(TOPDIR)/submodules/externals/libantlr3c
-LIBANTLR3C_BUILD_DIR=$(LIBANTLR3C_SRC_DIR)
-prepare-libantlr3c: $(TOPDIR)/submodules/externals/build/libantlr3c/antlr3config.h
-	cp $(TOPDIR)/submodules/externals/build/libantlr3c/antlr3config.h $(LIBANLTR3C_SRC_DIR)
+ANLTR3_SRC_DIR=$(TOPDIR)/submodules/externals/antlr3/runtime/C/include/
+ANTLR3_BUILD_DIR=$(ANTLR3_SRC_DIR)
+prepare-antlr3: $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h
+	cp $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h $(ANLTR3_SRC_DIR)
 
 BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
 BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
 prepare-belle-sip:
 	$(ANTLR) -make -fo $(BELLESIP_BUILD_DIR)/src/ $(BELLESIP_SRC_DIR)/src/belle_sip_message.g $(BELLESIP_SRC_DIR)/src/belle_sdp.g
 
-prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-libantlr3c prepare-belle-sip
+prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip
 
 generate-libs:
-	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
+	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)

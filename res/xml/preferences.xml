@@ -284,6 +284,11 @@
 				android:defaultValue="@bool/pref_debug_default"/>
 			
 			<CheckBoxPreference 
+			    android:key="@string/pref_background_mode_key"
+				android:title="@string/pref_background_mode"
+				android:defaultValue="@bool/pref_background_mode_default"/>
+			
+			<CheckBoxPreference 
 			    android:defaultValue="@bool/pref_animation_enable_default"
 				android:title="@string/pref_animation_enable_title" 
 				android:key="@string/pref_animation_enable_key" />
@@ -309,6 +314,11 @@
 				android:key="@string/pref_image_sharing_server_key"
 				android:title="@string/pref_image_sharing_server_title"
 			  	android:defaultValue="@string/pref_image_sharing_server_default" />
+			 
+			 <EditTextPreference 
+				android:key="@string/pref_remote_provisioning_key"
+				android:title="@string/pref_remote_provisioning_title"
+			  	android:defaultValue="@string/pref_remote_provisioning_default" />
 			 
 			 <PreferenceCategory
 			     android:title="@string/pref_primary_account_title">

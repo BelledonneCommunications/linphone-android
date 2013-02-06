@@ -1242,6 +1242,10 @@ public class LinphoneActivity extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		if (!LinphoneService.isReady())  {
+			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+		}
 
 		// Remove to avoid duplication of the listeners
 		LinphoneManager.removeListener(this);
@@ -1255,6 +1259,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		chatStorage = new ChatStorage(this);
 
 		updateMissedChatCount();
+		
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
 		if (LinphoneManager.getLc().getCalls().length > 0) {
@@ -1360,7 +1365,11 @@ public class LinphoneActivity extends FragmentActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (currentFragment == FragmentsAvailable.DIALER) {
-				if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
+				boolean isBackgroundModeActive = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_background_mode_key), getResources().getBoolean(R.bool.pref_background_mode_default));
+				if (!isBackgroundModeActive) {
+					stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+					finish();
+				} else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 					return true;
 				}
 			} else if (!isTablet()) {

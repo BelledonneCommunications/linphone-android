@@ -392,6 +392,7 @@
 	<string name="linphone_friend_new_request_desc">wants to share it\'s presence status with you and be aware of yours.</string>
 	<string name="setup_ec_calibration">Echo canceller calibration in progress</string>
     <string name="pref_image_sharing_server_title">Sharing server</string>
+    <string name="pref_remote_provisioning_title">Remote provisioning</string>
 	
 	<string name="delete_contact">Delete contact</string>
 	<string name="sip_address">SIP address</string>
@@ -419,4 +420,6 @@
 	<string name="call_state_missed">Missed</string>
 	<string name="call_state_outgoing">Outgoing</string>
 	<string name="call_state_incoming">Incoming</string>
+	
+	<string name="pref_background_mode">Background mode</string>
 </resources>

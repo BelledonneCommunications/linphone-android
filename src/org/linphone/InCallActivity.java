@@ -323,7 +323,7 @@ public class InCallActivity extends FragmentActivity implements
 		
 		if (id == R.id.video) {
 			isVideoEnabled = !isVideoEnabled;
-			switchVideo(isVideoEnabled);
+			switchVideo(isVideoEnabled, true);
 		} 
 		else if (id == R.id.micro) {
 			toggleMicro();
@@ -386,7 +386,7 @@ public class InCallActivity extends FragmentActivity implements
 		});
 	}
 	
-	private void switchVideo(final boolean displayVideo) {
+	private void switchVideo(final boolean displayVideo, final boolean isInitiator) {
 		final LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 		if (call == null) {
 			return;
@@ -396,10 +396,11 @@ public class InCallActivity extends FragmentActivity implements
 			@Override
 			public void run() {
 				if (!displayVideo) {
-					LinphoneCallParams params = call.getCurrentParamsCopy();
-					params.setVideoEnabled(false);
-					LinphoneManager.getLc().updateCall(call, params);
-					
+					if (isInitiator) {
+						LinphoneCallParams params = call.getCurrentParamsCopy();
+						params.setVideoEnabled(false);
+						LinphoneManager.getLc().updateCall(call, params);
+					}
 					showAudioView();
 				} else {
 					if (!call.getRemoteParams().isLowBandwidthEnabled()) {
@@ -965,7 +966,7 @@ public class InCallActivity extends FragmentActivity implements
 			boolean isVideoEnabledInCall = call.getCurrentParamsCopy().getVideoEnabled();
 			if (isVideoEnabledInCall != isVideoEnabled) {
 				isVideoEnabled = isVideoEnabledInCall;
-				switchVideo(isVideoEnabled);
+				switchVideo(isVideoEnabled, false);
 			}
 
 			// The following should not be needed except some devices need it (e.g. Galaxy S).
