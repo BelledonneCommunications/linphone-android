@@ -95,13 +95,16 @@ prepare-mediastreamer2:
 
 ANLTR3_SRC_DIR=$(TOPDIR)/submodules/externals/antlr3/runtime/C/include/
 ANTLR3_BUILD_DIR=$(ANTLR3_SRC_DIR)
-prepare-antlr3: $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h
+$(ANLTR3_SRC_DIR)/antlr3config.h: $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h
 	cp $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h $(ANLTR3_SRC_DIR)
+prepare-antlr3: $(ANLTR3_SRC_DIR)/antlr3config.h 
+
+%.tokens: %.g
+	$(ANTLR) -make -fo $(dir $^) $^ 
 
 BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
 BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
-prepare-belle-sip:
-	$(ANTLR) -make -fo $(BELLESIP_BUILD_DIR)/src/ $(BELLESIP_SRC_DIR)/src/belle_sip_message.g $(BELLESIP_SRC_DIR)/src/belle_sdp.g
+prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/belle_sdp.tokens
 
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip
 
