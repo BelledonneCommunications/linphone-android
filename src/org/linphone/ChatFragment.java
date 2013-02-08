@@ -524,7 +524,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (message.getText() != null) {
 				displayMessage(id, message.getText(), String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
 			} else if (message.getExternalBodyUrl() != null) {
-				Bitmap bm = downloadImage(message.getExternalBodyUrl());
+				byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
+				Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
 				displayImageMessage(id, bm, String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
 			}
 			scrollToEnd();
