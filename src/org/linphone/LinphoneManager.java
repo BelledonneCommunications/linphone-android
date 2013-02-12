@@ -944,7 +944,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		LinphoneAddress from = message.getFrom();
 		ChatStorage chatStorage = new ChatStorage(mServiceContext);
 
-		String textMessage = message.getMessage();
+		String textMessage = message.getText();
 		String url = message.getExternalBodyUrl();
 		String notificationText = null;
 		int id = -1;
