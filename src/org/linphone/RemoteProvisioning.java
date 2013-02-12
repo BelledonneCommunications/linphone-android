@@ -65,6 +65,8 @@ public class RemoteProvisioning {
 				if(x2l.convert(lp) != 0) {
 					Log.e("Can't convert remote provisioning file to LinphoneConfig");
 					return;
+				} else {
+					lp.sync();
 				}
 				Log.i("Remote provisioning ok");
 	    	} catch (MalformedURLException e) {
