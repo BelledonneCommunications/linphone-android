@@ -521,10 +521,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	public void onMessageReceived(int id, LinphoneAddress from, LinphoneChatMessage message) {
 		if (from.asStringUriOnly().equals(sipUri))  {
-			if (message.getMessage() != null) {
-				displayMessage(id, message.getMessage(), String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
+			if (message.getText() != null) {
+				displayMessage(id, message.getText(), String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
 			} else if (message.getExternalBodyUrl() != null) {
-				Bitmap bm = downloadImage(message.getExternalBodyUrl());
+				byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
+				Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
 				displayImageMessage(id, bm, String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
 			}
 			scrollToEnd();
@@ -533,7 +534,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
-		final String finalMessage = msg.getMessage();
+		final String finalMessage = msg.getText();
 		final String finalImage = msg.getExternalBodyUrl();
 		final State finalState = state;
 		if (LinphoneActivity.isInstanciated() && state != State.InProgress) {
