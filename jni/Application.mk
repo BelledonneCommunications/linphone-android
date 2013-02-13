@@ -2,6 +2,11 @@ APP_PROJECT_PATH := $(call my-dir)/../
 APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2 liblinphone liblinphonenoneon libneon
 APP_STL := stlport_static
 
+#uPnp
+ifeq ($(BUILD_UPNP),1)
+APP_MODULES += libupnp
+endif
+
 #remote provisioning
 ifeq ($(BUILD_REMOTE_PROVISIONING),1)
 APP_MODULES += libxml2 libxml2lpc liblpc2xml
