@@ -1,4 +1,5 @@
 LOCAL_PATH:= $(call my-dir)/../../libxml2
+include $(CLEAR_VARS)
 
 # We need to build this for both the device (as a shared library)
 # and the host (as a static library for tools to use).
