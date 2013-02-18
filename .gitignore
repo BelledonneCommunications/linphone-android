@@ -3,6 +3,7 @@ obj
 gen
 bin
 doc
+default.properties
 local.properties
 project.properties
 tests/*$py.class
