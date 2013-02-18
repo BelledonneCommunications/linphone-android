@@ -562,7 +562,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
 		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
-//		copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
+		copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
 		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}
 	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
