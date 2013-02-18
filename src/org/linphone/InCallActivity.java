@@ -166,6 +166,10 @@ public class InCallActivity extends FragmentActivity implements
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
         }
+        
+        boolean routeToBT = getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
+		if (routeToBT && LinphoneManager.isInstanciated() && !isSpeakerEnabled)
+			LinphoneManager.getInstance().routeToBluetoothIfAvailable();
 	}
 	
 	@Override
@@ -475,11 +479,15 @@ public class InCallActivity extends FragmentActivity implements
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			speaker.setBackgroundResource(R.drawable.speaker_on);
+			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 		} else {
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			speaker.setBackgroundResource(R.drawable.speaker_off);
+			
+			boolean routeToBT = getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
+			if (!routeToBT)
+				LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 		}
-		LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 	}
 	
 	private void pauseOrResumeCall() {
@@ -969,8 +977,13 @@ public class InCallActivity extends FragmentActivity implements
 				switchVideo(isVideoEnabled, false);
 			}
 
-			// The following should not be needed except some devices need it (e.g. Galaxy S).
-			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+			boolean routeToBT = getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
+			if (routeToBT && LinphoneManager.isInstanciated() && !isSpeakerEnabled) {
+				LinphoneManager.getInstance().routeToBluetoothIfAvailable();
+			} else {
+				// The following should not be needed except some devices need it (e.g. Galaxy S).
+				LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+			}
 
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
 			enableAndRefreshInCallActions();
