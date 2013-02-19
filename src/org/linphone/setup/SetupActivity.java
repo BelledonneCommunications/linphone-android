@@ -139,7 +139,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
-		if (!Hacks.hasBuiltInEchoCanceller() && !mPref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+		if (LinphoneManager.getLc().needsEchoCalibration() && !mPref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
