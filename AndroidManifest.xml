@@ -31,6 +31,9 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<!-- Needed to use our own Contact editor -->
 	<uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+	<!-- Needed to route the audio to the bluetooth headset if available -->
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
 	
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     
@@ -102,6 +105,14 @@
 	        
 		<receiver android:name="org.linphone.NetworkManager">
 			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
+		</receiver>
+	
+	    <receiver android:name="org.linphone.BluetoothManager">
+			<intent-filter>
+			    <action android:name="android.bluetooth.device.action.ACL_CONNECTED"/>
+			    <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED"/>
+			    <action android:name="android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED"/>
+		    </intent-filter>
 		</receiver>
 	
 		<receiver android:name="org.linphone.BootReceiver">

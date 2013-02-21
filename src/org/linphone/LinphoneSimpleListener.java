@@ -56,7 +56,7 @@ public interface LinphoneSimpleListener {
 	}
 
 	public static interface LinphoneOnAudioChangedListener extends LinphoneSimpleListener {
-		public enum AudioState {EARPIECE, SPEAKER}
+		public enum AudioState {EARPIECE, SPEAKER, BLUETOOTH}
 		void onAudioStateChanged(AudioState state);
 	}
 	
