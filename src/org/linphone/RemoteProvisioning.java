@@ -19,6 +19,7 @@ public class RemoteProvisioning {
 		String mRPAddress;
 		String mSchema;
 		String mLocalLP;
+		boolean value;
 
 		public RemoteProvisioningThread(final String RPAddress, final String LocalLP, final String schema) {
 			this.mRPAddress = RPAddress;
@@ -28,6 +29,7 @@ public class RemoteProvisioning {
 		
 	    public void run() {
 	    	try {
+	    		value = false;
 	    		Log.i("Download remote provisioning file from " + mRPAddress);
 	    		URL url = new URL(mRPAddress);
 				URLConnection ucon = url.openConnection();
@@ -68,6 +70,7 @@ public class RemoteProvisioning {
 				} else {
 					lp.sync();
 				}
+				value = true;
 				Log.i("Remote provisioning ok");
 	    	} catch (MalformedURLException e) {
 	    		Log.e("Invalid remote provisioning url: " + e.getLocalizedMessage());
@@ -81,7 +84,7 @@ public class RemoteProvisioning {
 	    }
 	};
 	
-	static void download(String address, String lpfile, boolean check) {
+	static boolean download(String address, String lpfile, boolean check) {
 		try {
 			String schema = null;
 			if(check) {
@@ -92,13 +95,15 @@ public class RemoteProvisioning {
 				thread.start();
 				thread.wait();
 			}
+			return thread.value;
 		} catch (InterruptedException e) {
 			Log.e(e);
 		}
+		return false;
 	}
 	
-	static void download(String address, String lpfile) {
-		download(address, lpfile, true);
+	static boolean download(String address, String lpfile) {
+		return download(address, lpfile, true);
 	}
 	
 	static boolean isAvailable() {
