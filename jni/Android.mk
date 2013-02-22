@@ -76,7 +76,7 @@ endif
 include $(linphone-root-dir)/submodules/linphone/oRTP/build/android/Android.mk
 
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/build/android/Android.mk
-include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tests/Android.mk
+include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tools/Android.mk
 
 
 ifeq ($(BUILD_TUNNEL), 1)
