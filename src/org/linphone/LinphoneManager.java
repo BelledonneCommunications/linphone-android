@@ -150,6 +150,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothHeadset mBluetoothHeadset;
 	private BluetoothProfile.ServiceListener mProfileListener;
+	private BroadcastReceiver bluetoothReiceiver = new BluetoothManager();
+	public boolean isBluetoothScoConnected;
 
 	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
 	public static void addListener(LinphoneSimpleListener listener) {
@@ -204,14 +206,14 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			boolean routeToBT = mServiceContext.getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
 			if (!routeToBT || (routeToBT && !routeToBluetoothIfAvailable())) {
 				mLc.enableSpeaker(false);
-				uninitBluetooth();
+				scoDisconnected();
 			} else {
 				Log.d("Routing audio to bluetooth headset");
 				routeToBluetoothEnabled = true;
 			}
 		} else {
 			mLc.enableSpeaker(true);
-			uninitBluetooth();
+			scoDisconnected();
 		}
 		
 		for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
@@ -243,27 +245,40 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void startBluetooth() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30) && mBluetoothAdapter.isEnabled()) {
-			mProfileListener = new BluetoothProfile.ServiceListener() {
-				@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-				public void onServiceConnected(int profile, BluetoothProfile proxy) {
-				    if (profile == BluetoothProfile.HEADSET) {
-				        mBluetoothHeadset = (BluetoothHeadset) proxy;
-				        Log.d("Bluetooth headset connected");
-				        routeToBluetoothIfAvailable();
-				    }
-				}
-				@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-				public void onServiceDisconnected(int profile) {
-				    if (profile == BluetoothProfile.HEADSET) {
-				        mBluetoothHeadset = null;
-				        Log.d("Bluetooth headset disconnected");
-				        routeAudioToReceiver();
-				    }
-				}
-			};
-			mBluetoothAdapter.getProfileProxy(mServiceContext, mProfileListener, BluetoothProfile.HEADSET);
-		} else {
+		if (mBluetoothAdapter.isEnabled()) {
+			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+				mProfileListener = new BluetoothProfile.ServiceListener() {
+					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+					public void onServiceConnected(int profile, BluetoothProfile proxy) {
+					    if (profile == BluetoothProfile.HEADSET) {
+					        mBluetoothHeadset = (BluetoothHeadset) proxy;
+					        Log.d("Bluetooth headset connected");
+					        routeToBluetoothIfAvailable();
+					    }
+					}
+					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+					public void onServiceDisconnected(int profile) {
+					    if (profile == BluetoothProfile.HEADSET) {
+					        mBluetoothHeadset = null;
+					        Log.d("Bluetooth headset disconnected");
+					        routeAudioToReceiver();
+					    }
+					}
+				};
+				mBluetoothAdapter.getProfileProxy(mServiceContext, mProfileListener, BluetoothProfile.HEADSET);
+			} else {
+				@SuppressWarnings("deprecation")
+				String actionScoConnected = AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED;
+				Intent currentValue = mServiceContext.registerReceiver(bluetoothReiceiver, new IntentFilter(actionScoConnected));
+				int state = currentValue == null ? 0 : currentValue.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
+	        	if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
+	        		isBluetoothScoConnected = true;
+	        		scoConnected();
+	        	}
+			}
+		}
+		else {
+			scoDisconnected();
 			routeAudioToReceiver();
 		}
 	}
@@ -271,30 +286,42 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public boolean routeToBluetoothIfAvailable() {
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30) && mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
+		if (mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			mAudioManager.setBluetoothScoOn(true);	
 			mAudioManager.startBluetoothSco();
-
-			boolean connected = false;
-			if (mBluetoothHeadset != null) {
-				List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();                        
-				for (final BluetoothDevice dev : devices) {           
-					connected |= mBluetoothHeadset.getConnectionState(dev) == BluetoothHeadset.STATE_CONNECTED;
-				}
-			}
 			
-			if (!connected) {
-				Log.d("No bluetooth device available");	
-				uninitBluetooth();
+			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+				boolean connected = false;
+				if (mBluetoothHeadset != null) {
+					List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();                        
+					for (final BluetoothDevice dev : devices) {           
+						connected |= mBluetoothHeadset.getConnectionState(dev) == BluetoothHeadset.STATE_CONNECTED;
+					}
+				}
+				
+				if (!connected) {
+					Log.d("No bluetooth device available");	
+					scoDisconnected();
+				}
+				return connected;
+			} else {
+				return isBluetoothScoConnected;
 			}
-			return connected;
 		}
+		
 		return false;
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void uninitBluetooth() {
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30) && mAudioManager != null) {
+	public void scoConnected() {
+		Log.e("Bluetooth sco connected!");
+		mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+		routeToBluetoothIfAvailable();
+	}
+	
+	public void scoDisconnected() {
+		Log.e("Bluetooth sco disconnected!");
+		if (mAudioManager != null) {
+			mAudioManager.setMode(AudioManager.MODE_NORMAL);
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
 		}
