@@ -56,7 +56,7 @@ public class AddressText extends EditText implements AddressType {
 	}
 
 	public void clearDisplayedName() {
-		displayedName = "";
+		displayedName = null;
 	}
 
 	public String getDisplayedName() {
