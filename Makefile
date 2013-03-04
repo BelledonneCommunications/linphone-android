@@ -109,7 +109,7 @@ prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/belle_sip_message.tokens $(BELLESIP_S
 
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip
 
-generate-libs:
+generate-libs: prepare-sources
 	$(NDK_PATH)/ndk-build LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 update-project:
@@ -148,4 +148,7 @@ clean:
 	ant clean
 
 .PHONY: clean
+
+generate-sdk: generate-apk
+	ant liblinphone-sdk
 

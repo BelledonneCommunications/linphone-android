@@ -19,7 +19,7 @@ LINPHONE_VIDEO=0
 BUILD_X264=0
 endif
 
-include $(linphone-root-dir)/jni/libneon/Android.mk
+include $(linphone-root-dir)/submodules/linphone/mediastreamer2/jni/libneon/Android.mk
 
 ##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
@@ -64,13 +64,6 @@ endif
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
 include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
 
-# Openssl
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk),)
-include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk
-include $(linphone-root-dir)/submodules/externals/prebuilts/crypto.mk
-endif
 
 
 include $(linphone-root-dir)/submodules/linphone/oRTP/build/android/Android.mk
@@ -80,6 +73,14 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tools/Android.mk
 
 
 ifeq ($(BUILD_TUNNEL), 1)
+# Openssl
+ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk),)
+include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
+else
+include $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk
+include $(linphone-root-dir)/submodules/externals/prebuilts/crypto.mk
+endif
+#tunnel
 include $(linphone-root-dir)/submodules/tunnel/Android.mk
 endif
 
