@@ -534,7 +534,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			} catch (LinphoneException e) {
 				Log.w("no config ready yet");
 			}
-			
+			boolean routeToBT = mServiceContext.getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
+	        if (routeToBT) {
+	        	startBluetooth();
+	        }
+	        
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -547,10 +551,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
 			
-	        boolean routeToBT = mServiceContext.getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
-	        if (routeToBT) {
-	        	startBluetooth();
-	        }
+	        
 		}
 		catch (Exception e) {
 			Log.e(e, "Cannot start linphone");
@@ -648,10 +649,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	private void initAccount(String key, boolean defaultAccount) throws LinphoneCoreException {
 		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
+		String userid = getPrefString(getString(R.string.pref_auth_userid_key) + key, null);
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
 		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
 		if (username != null && username.length() > 0 && password != null) {
-			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
+			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username
+																						, userid
+																						, password
+																						, null
+																						,null);
 			mLc.addAuthInfo(lAuthInfo);
 			
 			if (domain != null && domain.length() > 0) {
@@ -812,9 +818,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		//stun server
 		String lStun = getPrefString(R.string.pref_stun_server_key, getString(R.string.default_stun));
 		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, mR.getBoolean(R.bool.pref_ice_enabled_default));
+		boolean useUpnp = getPrefBoolean(R.string.pref_upnp_enable_key, mR.getBoolean(R.bool.pref_upnp_enabled_default));
+	
 		mLc.setStunServer(lStun);
-		if (lStun!=null && lStun.length()>0) {
-			mLc.setFirewallPolicy(useICE ? FirewallPolicy.UseIce : FirewallPolicy.UseStun);
+		if (lStun!=null && lStun.length()>0 && useICE) {
+				mLc.setFirewallPolicy(FirewallPolicy.UseIce);
+				if (useUpnp) Log.e("Cannot have both ice and upnp enabled, disabling upnp");
+		} if (useUpnp) {
+			mLc.setFirewallPolicy(FirewallPolicy.UseUpnp);
+		} else if (lStun!=null && lStun.length()>0){
+			mLc.setFirewallPolicy(FirewallPolicy.UseStun);
 		} else {
 			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
 		}

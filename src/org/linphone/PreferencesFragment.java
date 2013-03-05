@@ -247,6 +247,30 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			}
 		});
 		
+		final CheckBoxPreference useIce = (CheckBoxPreference) findPreference(R.string.pref_ice_enable_key);
+		final CheckBoxPreference useUpnp = (CheckBoxPreference) findPreference(R.string.pref_upnp_enable_key);
+		
+		useIce.setEnabled(!useUpnp.isChecked());
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		useUpnp.setEnabled(lc.upnpAvailable() && !useIce.isChecked());
+		
+		useIce.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean isChecked = (Boolean) newValue;
+				useUpnp.setEnabled(!isChecked);
+				return true;
+			}
+		});
+		useUpnp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean isChecked = (Boolean) newValue;
+				useIce.setEnabled(!isChecked);
+				return true;
+			}
+		});
+		
 		if (getResources().getBoolean(R.bool.disable_every_log)) {
 			uncheckDisableAndHideCheckbox(R.string.pref_debug_key);
 		}
