@@ -64,3 +64,6 @@
 [submodule "submodules/externals/libupnp"]
 	path = submodules/externals/libupnp
 	url = git://git.code.sf.net/p/pupnp/code
+[submodule "submodules/externals/cunit"]
+	path = submodules/externals/cunit
+	url = gitosis@git.linphone.org:cunit.git

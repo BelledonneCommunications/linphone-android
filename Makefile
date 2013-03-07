@@ -107,6 +107,14 @@ BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
 BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
 prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/belle_sdp.tokens
 
+prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
+	[ -d $(TOPDIR)/submodules/externals/build/cunit/CUnit ] || mkdir $(TOPDIR)/submodules/externals/build/cunit/CUnit
+	cp $^ $(TOPDIR)/submodules/externals/build/cunit/CUnit
+
+prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc
+#	[ -d $(TOPDIR)/liblinphone_tester/res/raw ] || mkdir $(TOPDIR)/liblinphone_tester/res/raw
+#	cp $^ $(TOPDIR)/liblinphone_tester/res/raw
+
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip
 
 generate-libs: prepare-sources
@@ -114,6 +122,9 @@ generate-libs: prepare-sources
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
+
+liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester
+	$(NDK_PATH)/ndk-build -C liblinphone_tester NDK_DEBUG=1 LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 generate-apk:
 	ant partial-clean
