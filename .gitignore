@@ -3,6 +3,10 @@ obj
 gen
 bin
 doc
+*.orig
+*.rej
+.settings
+.DS_Store
 default.properties
 local.properties
 project.properties
