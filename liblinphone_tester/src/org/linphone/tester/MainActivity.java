@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
 		try {
 			copyFromPackage(R.raw.laure_rc, new File("laure_rc").getName());
 			copyFromPackage(R.raw.marie_rc, new File("marie_rc").getName());
+			copyFromPackage(R.raw.marie_early_rc, new File("marie_early_rc").getName());
 			copyFromPackage(R.raw.multi_account_lrc, new File("multi_account_lrc").getName());
 			copyFromPackage(R.raw.pauline_rc, new File("pauline_rc").getName());
 		} catch (IOException e) {
@@ -47,7 +48,7 @@ public class MainActivity extends Activity {
 		TesterList suitesTest = new TesterList();
 		suitesTest.run(new String[]{"tester", "--list-suites"});
 		LinearLayout layout = ((LinearLayout)findViewById(R.id.suites_list));
-		layout.removeAllViewsInLayout();
+		layout.removeAllViews();
 		addButton(layout, "All", null);
 		for(String str: suitesTest.getList()) {
 			str = str.trim();
