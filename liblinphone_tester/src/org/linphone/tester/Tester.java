@@ -89,11 +89,6 @@ public class Tester {
 	public native int run(String args[]);
 	
 	public void printLog(final int level, final String message) {
-		MainActivity.instance.runOnUiThread(new Runnable() {
-			public void run() {
-				MainActivity.instance.addLog(level, message);
-			}
-		});
 		switch(level) {
 		case 0:
 			android.util.Log.i(TAG, message);

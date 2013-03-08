@@ -7,34 +7,15 @@ import java.io.InputStream;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
-import android.widget.TextView;
-
-import org.linphone.tester.Tester;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 
 public class MainActivity extends Activity {
-	static public MainActivity instance = null;
-	static public Tester tester = new Tester();
-	String mLogs = "";
-	MainThread mThread;
-	
-	private class MainThread extends Thread {
-		MainActivity mActivity;
-		public MainThread(MainActivity activity) {
-			mActivity = activity;
-		}
-		@Override
-		public void run() {
-			String path = mActivity.getFilesDir().getAbsolutePath();
-			tester.run(new String[]{"tester", "--verbose", "--config", path});
-	 		mActivity.runOnUiThread(new Runnable() {
-    			public void run() {
-    				mActivity.done();
-    			}
-    		});
-		}
-	}
 
 	private void copyFromPackage(int ressourceId,String target) throws IOException{
 		FileOutputStream lOutputStream = openFileOutput (target, 0); 
@@ -51,6 +32,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		try {
 			copyFromPackage(R.raw.laure_rc, new File("laure_rc").getName());
 			copyFromPackage(R.raw.marie_rc, new File("marie_rc").getName());
@@ -59,16 +41,40 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		super.onCreate(savedInstanceState);
-		instance = this;
+		
 		setContentView(R.layout.activity_main);
-		((TextView)findViewById(R.id.textView1)).setText(mLogs);
-		if(mThread == null || !mThread.isAlive()) {
-			findViewById(R.id.button1).setEnabled(true);
-		} else {
-			findViewById(R.id.button1).setEnabled(true);
+		
+		TesterList suitesTest = new TesterList();
+		suitesTest.run(new String[]{"tester", "--list-suites"});
+		LinearLayout layout = ((LinearLayout)findViewById(R.id.suites_list));
+		layout.removeAllViewsInLayout();
+		addButton(layout, "All", null);
+		for(String str: suitesTest.getList()) {
+			str = str.trim();
+			addButton(layout, str, str);
 		}
+	}
+	private void addButton(LinearLayout layout, String text, String data) {
+		Button button = new Button(this);
+		button.setText(text);
+		button.setTag(data);
+		button.setGravity(Gravity.CENTER);
+		button.setOnClickListener(new Button.OnClickListener() {
+		    public void onClick(View v) {
+		    	Button button = (Button) v;
+		    	String data = (String)button.getTag();
+		    	if(data == null) {
+		    		Intent intent = new Intent(getBaseContext(), LogsActivity.class);
+		    		intent.putExtra("args", new String[]{});
+		    		startActivity(intent);
+		    	} else {
+		    		Intent intent = new Intent(getBaseContext(), SuitesActivity.class);
+		    		intent.putExtra("suite", data);
+		    		startActivity(intent);
+		    	}
+		    }
+		});
+		layout.addView(button);
 	}
 
 	@Override
@@ -76,22 +82,5 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
-	}
-	
-	public void onBtnClicked(View v) {
-		mLogs = "";
-		((TextView)findViewById(R.id.textView1)).setText(mLogs);
-		findViewById(R.id.button1).setEnabled(false);
-		mThread = new MainThread(this);
-		mThread.start();
-	}
-	
-	public void addLog(int level, String message) {
-		mLogs += message;
-		((TextView)findViewById(R.id.textView1)).append(message);
-	}
-	
-	public void done() {
-		findViewById(R.id.button1).setEnabled(true);
 	}
 }
