@@ -20,7 +20,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="org.linphone.tester.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="nosensor"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,11 +31,15 @@
         </activity>
         <activity
             android:name="org.linphone.tester.LogsActivity"
-            android:label="@string/title_activity_logs" >
+            android:label="@string/title_activity_logs"
+            android:screenOrientation="nosensor"
+            android:launchMode="singleTask">
         </activity>
         <activity
             android:name="org.linphone.tester.SuitesActivity"
-            android:label="@string/title_activity_suites" >
+            android:label="@string/title_activity_suites"
+            android:screenOrientation="nosensor"
+            android:launchMode="singleTask">
         </activity>
     </application>
 

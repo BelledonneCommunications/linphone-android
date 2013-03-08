@@ -1,6 +1,3 @@
-[net]
-mtu=1300
-
 [sip]
 sip_port=5082
 sip_tcp_port=5082
@@ -8,6 +5,7 @@ sip_tls_port=5083
 default_proxy=0
 ping_with_options=0
 register_only_when_network_is_up=0
+incoming_calls_early_media=1
 
 [auth_info_0]
 username=marie

@@ -22,7 +22,7 @@ public class SuitesActivity extends Activity {
 				TesterList suitesTest = new TesterList();
 				suitesTest.run(new String[]{"tester", "--list-tests", mSuite});
 				LinearLayout layout = ((LinearLayout)findViewById(R.id.tests_list));
-				layout.removeAllViewsInLayout();
+				layout.removeAllViews();
 				addButton(layout, "All", null);
 				for(String str: suitesTest.getList()) {
 					str = str.trim();
