@@ -8,6 +8,7 @@ LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe)
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
 
+NDK_DEBUG=0
 BUILD_UPNP=1
 BUILD_REMOTE_PROVISIONING=1
 BUILD_X264=0
