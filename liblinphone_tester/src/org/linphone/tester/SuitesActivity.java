@@ -19,6 +19,7 @@ public class SuitesActivity extends Activity {
 		if (extras != null) {
 			mSuite = extras.getString("suite");
 		    if(mSuite != null) {
+		    	this.setTitle(this.getResources().getString(R.string.app_name) + " | " + mSuite);
 				TesterList suitesTest = new TesterList();
 				suitesTest.run(new String[]{"tester", "--list-tests", mSuite});
 				LinearLayout layout = ((LinearLayout)findViewById(R.id.tests_list));

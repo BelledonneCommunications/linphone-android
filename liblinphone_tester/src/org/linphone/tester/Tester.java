@@ -28,7 +28,7 @@ public class Tester {
 		return System.getProperty("os.arch").contains("armv7");
 	}
 	
-	static	{
+	static	{	         
 		// FFMPEG (audio/video)
 		loadOptionalLibrary("avutil");
 		loadOptionalLibrary("swscale");
