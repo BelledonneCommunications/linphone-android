@@ -7,6 +7,10 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
+    
+    <instrumentation 
+        android:targetPackage="org.linphone.tester" 
+        android:name="org.linphone.tester.TestRunner" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -42,6 +46,8 @@
             android:screenOrientation="nosensor"
             android:launchMode="singleTask">
         </activity>
+        
+        <uses-library android:name="android.test.runner" />
+            
     </application>
-
 </manifest>
