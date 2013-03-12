@@ -37,6 +37,17 @@ public class LogsActivity extends Activity {
 		}
 	}
 	
+	private static String join(String [] array, String separator) {
+		String ret = "";
+		for(int i = 0; i < array.length; ++i) {
+			if(i != 0) {
+				ret += separator;
+			}
+			ret += array[i];
+		}
+		return ret;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +58,7 @@ public class LogsActivity extends Activity {
 		    String[] values = extras.getStringArray("args");
 		    if(values != null) {
 		    	if(mLogsThread == null || !mLogsThread.isAlive()) {
+		    		this.setTitle("Test Logs (" + join(values, " ") + ")");
 		    		mLogs = "";
 		    		((TextView)findViewById(R.id.textView1)).setText(mLogs);
 		    		mLogsThread = new LogsThread(this, values);

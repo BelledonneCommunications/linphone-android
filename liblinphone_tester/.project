@@ -34,7 +34,7 @@
 		<link>
 			<name>mediastreamer2</name>
 			<type>2</type>
-			<location>/Users/ydiorcet/Desktop/linphone-android/submodules/linphone/mediastreamer2/java/src</location>
+			<locationURI>PARENT-1-PROJECT_LOCATION/submodules/linphone/mediastreamer2/java/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
