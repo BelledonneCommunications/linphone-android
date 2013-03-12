@@ -128,6 +128,7 @@ update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester
+	ant javah
 	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) NDK_DEBUG=1 -j$(NUMCPUS)
 
 generate-apk:
@@ -141,7 +142,7 @@ install-apk:
 release: update-project
 	ant clean
 	echo "What is the version name for the release ?"; \
-    read version; \
+	read version; \
 	echo "version.name=$$version" > default.properties
 	ant release
 
