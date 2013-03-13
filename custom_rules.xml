@@ -17,7 +17,7 @@
 			failonerror="false" />
 	</target>
 
-	<target name="javah">
+	<target name="javah" depends="-set-debug-mode,-compile">
 		<echo level="info">Generate JNI header</echo>
 		<javah outputfile="gen/linphonecore_jni.h">
 			<classpath>
@@ -54,15 +54,6 @@
 	
 	<target name="partial-clean">
 	    <delete file="bin/${ant.project.name}.ap_" />
-	</target>
-
-	<target name="build-libs">
-		<exec executable="make" failonerror="true">
-			<arg value="generate-libs" />
-		</exec>
-	</target>
-
-	<target name="-post-compile" depends="javah, build-libs">
 	</target>
 
 	<target name="javadoc">

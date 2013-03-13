@@ -23,7 +23,6 @@ public class TestRunner extends InstrumentationTestRunner {
 		return suite;
 	}
 	
-	
 	public static void addSuites(TestSuite suite, String suiteCheck, String testCheck) {
 		TesterList testerList = new TesterList();
 		testerList.run(new String[]{"tester", "--list-suites"});
@@ -34,6 +33,7 @@ public class TestRunner extends InstrumentationTestRunner {
 			}
 		}
 	}
+	
 	public static void addSuite(TestSuite suite, String suiteStr, String testCheck) {
 		TesterList testerList = new TesterList();
 		testerList.run(new String[]{"tester", "--list-tests", suiteStr});
