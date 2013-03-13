@@ -126,6 +126,7 @@ generate-libs: prepare-sources
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
+	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester
 	ant javah
