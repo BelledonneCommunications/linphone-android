@@ -121,18 +121,20 @@ prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-sr
 
 LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH)
 
-generate-libs: prepare-sources
+generate-libs: prepare-sources javah
 	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
-liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester
-	ant javah
+liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
 	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) NDK_DEBUG=1 -j$(NUMCPUS)
 
-generate-apk:
+javah: 
+	ant javah
+
+generate-apk: generate-libs
 	ant partial-clean
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties
 	ant debug
