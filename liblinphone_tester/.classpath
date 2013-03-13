@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="src" path="mediastreamer2"/>
+	<classpathentry excluding="org/linphone/mediastream/MediastreamerActivity.java" kind="src" path="mediastreamer2"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
