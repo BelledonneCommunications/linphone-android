@@ -12,12 +12,24 @@
 		</exec>
 	</target>
 	<target name="test">
-		<exec executable="adb">
+		<exec executable="adb" failonerror="true" outputproperty="tests.output">
 			<arg value="shell" />
 			<arg value="am" />
 			<arg value="instrument" />
+			<arg value="-r" />
 			<arg value="-w" />
 			<arg value="org.linphone.tester/org.linphone.tester.TestRunner" />
 		</exec>
+		<echo message="${tests.output}"/>
+		<fail message="Tests failed">
+			<condition>
+					<contains string="${tests.output}" substring="FAILURES" />
+			</condition>
+		</fail>
+		<fail message="Tests crashed">
+			<condition>
+					<contains string="${tests.output}" substring="Process crashed" />
+			</condition>
+		</fail>
 	</target>
 </project>
