@@ -16,9 +16,6 @@
 			<arg value="shell" />
 			<arg value="am" />
 			<arg value="instrument" />
-			<arg value="-e" />
-			<arg value="suite" />
-			<arg value="Setup" />
 			<arg value="-w" />
 			<arg value="org.linphone.tester/org.linphone.tester.TestRunner" />
 		</exec>
