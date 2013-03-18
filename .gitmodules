@@ -64,3 +64,6 @@
 [submodule "submodules/externals/libupnp"]
 	path = submodules/externals/libupnp
 	url = git://git.code.sf.net/p/pupnp/code
+[submodule "submodules/externals/axmlrpc"]
+	path = submodules/externals/axmlrpc
+	url = git://git.linphone.org/axmlrpc.git

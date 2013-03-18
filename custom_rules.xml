@@ -71,7 +71,7 @@
 			destdir="${javadoc.dir}"
 			verbose="off" 
 		    use="true" 
-		    classpath="${sdk.dir}/platforms/${target}/android.jar:libs/aXMLRPC.jar:libs/android-support-v4.jar:libs/gcm.jar"
+		    classpath="${sdk.dir}/platforms/${target}/android.jar:libs/android-support-v4.jar:libs/gcm.jar"
 		    sourcepath="${source.dir}:gen"
 			linkoffline="http://developer.android.com/reference file:/${sdk.dir}/docs/reference"
     		stylesheetfile="${sdk.dir}/docs/assets/android-developer-docs.css">
