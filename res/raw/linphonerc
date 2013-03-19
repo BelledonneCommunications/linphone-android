@@ -26,6 +26,7 @@ video_rtp_port=9078
 audio_jitt_comp=60
 video_jitt_comp=60
 nortp_timeout=30
+disable_upnp=1
 
 [sound]
 playback_dev_id=
