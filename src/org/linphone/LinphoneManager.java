@@ -1408,6 +1408,16 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		return false;
 	}
+	
+	public boolean acceptCall(LinphoneCall call) {
+		try {
+			mLc.acceptCall(call);
+			return true;
+		} catch (LinphoneCoreException e) {
+			Log.i(e, "Accept call failed");
+		}
+		return false;
+	}
 
 	public boolean acceptCallWithParams(LinphoneCall call, LinphoneCallParams params) {
 		try {
