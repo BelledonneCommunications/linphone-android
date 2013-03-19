@@ -42,8 +42,10 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.LinphoneSimpleListener.ConnectivityChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.core.CallDirection;
@@ -144,6 +146,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
+	private String contactParams;
 
 	private WakeLock mIncallWakeLock;
 	
@@ -703,6 +706,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 						String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf";
 						proxycon.setContactParameters(contactInfos);
 					}
+				} else if (contactParams != null) {
+					proxycon.setContactParameters(contactParams);
 				}
 				mLc.addProxyConfig(proxycon);
 				
@@ -781,6 +786,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			
 		}
 		return defaultValue;
+	}
+	
+	public void setContactParams(String params) {
+		contactParams = params;
 	}
 
 	public void initFromConf() throws LinphoneConfigException {
@@ -1015,6 +1024,15 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				Log.i(eventInfo.getTypeName()," connected: wifi only activated, setting network unreachable");
 			}
 		}
+		
+		if (connectivityListener != null) {
+			connectivityListener.onConnectivityChanged(mServiceContext, eventInfo, cm);
+		}
+	}
+
+	private ConnectivityChangedListener connectivityListener;
+	public void addConnectivityChangedListener(ConnectivityChangedListener l) {
+		connectivityListener = l;
 	}
 
 	public interface EcCalibrationListener {
@@ -1049,6 +1067,18 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			LinphoneAddress from, String message) {
 		//deprecated
 	}
+
+	@Override
+	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
+		Log.d("DTMF received: " + dtmf);
+		if (dtmfReceivedListener != null)
+			dtmfReceivedListener.onDTMFReceived(call, dtmf);
+	}
+	
+	private LinphoneOnDTMFReceivedListener dtmfReceivedListener;
+	public void setOnDTMFReceivedListener(LinphoneOnDTMFReceivedListener listener) {
+		dtmfReceivedListener = listener;
+	}
 	
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
@@ -1078,11 +1108,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
 			((LinphoneOnMessageReceivedListener) listener).onMessageReceived(from, message, id);
 		}
-	}
-
-	@Override
-	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
-		Log.d("DTMF received: " + dtmf);
 	}
 
 	public String getLastLcStatusMessage() {

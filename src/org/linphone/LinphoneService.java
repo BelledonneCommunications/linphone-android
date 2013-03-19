@@ -291,6 +291,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
 	
+	public void removeCustomNotification() {
+		mNM.cancel(CUSTOM_NOTIF_ID);
+		resetIntentLaunchedOnNotificationClick();
+	}
+	
 	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
