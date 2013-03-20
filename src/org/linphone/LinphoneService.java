@@ -572,10 +572,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		if (state == State.StreamsRunning) {
 			// Workaround bug current call seems to be updated after state changed to streams running
-			refreshIncallIcon(call);
+			if (getResources().getBoolean(R.bool.enable_call_notification))
+				refreshIncallIcon(call);
 			mWifiLock.acquire();
 		} else {
-			refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
+			if (getResources().getBoolean(R.bool.enable_call_notification))
+				refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 		}
 		if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
 			mWifiLock.release();
