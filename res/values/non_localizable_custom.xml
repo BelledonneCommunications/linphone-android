@@ -64,5 +64,7 @@
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 	<string name="temp_photo_name">linphone-android-photo-temp.jpg</string>
 	<string name="temp_photo_name_with_date">linphone-android-photo-%s.jpg</string>
+	
+	<bool name="enable_call_notification">true</bool>
 </resources>
  
