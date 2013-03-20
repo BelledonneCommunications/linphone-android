@@ -666,7 +666,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
-		if (lDefaultProxyConfig !=null) {
+		if (lDefaultProxyConfig != null) {
 			//prefix      
 			String lPrefix = getPrefString(R.string.pref_prefix_key, null);
 			if (lPrefix != null) {
@@ -674,6 +674,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			}
 			//escape +
 			lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key, false));
+		} else if (LinphoneService.isReady()) {
+			LinphoneService.instance().onRegistrationStateChanged(RegistrationState.RegistrationNone, null);
 		}
 	}
 
