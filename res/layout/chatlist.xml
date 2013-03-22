@@ -70,6 +70,7 @@
 	        android:paddingRight="5dp"/>
         
 	    <EditText
+            android:textCursorDrawable="@null"
 	        android:id="@+id/newFastChat"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"

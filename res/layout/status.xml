@@ -169,7 +169,7 @@
 		        android:contentDescription="@string/content_description_led"
 		        android:id="@+id/statusLed"
 		        android:paddingLeft="5dp"
-		        android:src="@drawable/led_error"
+		        android:src="@drawable/led_disconnected"
 		        android:adjustViewBounds="true"
             	android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"

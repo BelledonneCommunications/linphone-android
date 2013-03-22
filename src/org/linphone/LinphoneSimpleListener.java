@@ -25,7 +25,10 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 public interface LinphoneSimpleListener {
 
@@ -66,5 +69,13 @@ public interface LinphoneSimpleListener {
 
 	public static interface LinphoneOnRegistrationStateChangedListener extends LinphoneSimpleListener {
 		void onRegistrationStateChanged(RegistrationState state);
+	}
+
+	public static interface ConnectivityChangedListener extends LinphoneSimpleListener {
+		void onConnectivityChanged(Context context, NetworkInfo eventInfo, ConnectivityManager cm);
+	}
+	
+	public static interface LinphoneOnDTMFReceivedListener extends LinphoneSimpleListener {
+		void onDTMFReceived(LinphoneCall call, int dtmf);
 	}
 }

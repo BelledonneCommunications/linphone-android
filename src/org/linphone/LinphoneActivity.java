@@ -762,6 +762,8 @@ public class LinphoneActivity extends FragmentActivity implements
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc != null && lc.getDefaultProxyConfig() != null)
 				statusFragment.registrationStateChanged(lc.getDefaultProxyConfig().getState());
+			else
+				statusFragment.registrationStateChanged(RegistrationState.RegistrationNone);
 		}
 	}
 
