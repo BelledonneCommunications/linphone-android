@@ -81,6 +81,7 @@
             android:paddingRight="1dp" />
         
         <EditText
+            android:textCursorDrawable="@null"
             android:id="@+id/message"
             android:inputType="textMultiLine"
             android:maxLines="3"

@@ -33,6 +33,7 @@
             android:layout_height="wrap_content">
             
 	        <EditText
+	            android:textCursorDrawable="@null"
 	            android:id="@+id/setup_username"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
@@ -62,6 +63,7 @@
             android:layout_height="wrap_content">
             
 	        <EditText
+	            android:textCursorDrawable="@null"
 	            android:id="@+id/setup_password"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
@@ -74,6 +76,7 @@
             	android:background="@drawable/setup_field_background" />
 	        
 	        <EditText
+	            android:textCursorDrawable="@null"
 	            android:id="@+id/setup_password_confirm"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
@@ -104,6 +107,7 @@
             android:layout_height="wrap_content">
             
         	<EditText
+	            android:textCursorDrawable="@null"
 	            android:id="@+id/setup_email"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
