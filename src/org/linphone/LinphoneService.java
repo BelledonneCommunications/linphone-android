@@ -291,6 +291,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
 	
+	public void removeCustomNotification() {
+		mNM.cancel(CUSTOM_NOTIF_ID);
+		resetIntentLaunchedOnNotificationClick();
+	}
+	
 	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
@@ -513,6 +518,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
 		}
+		if (state == RegistrationState.RegistrationNone) {
+			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+		}
 
 		mHandler.post(new Runnable() {
 			public void run() {
@@ -567,10 +575,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		if (state == State.StreamsRunning) {
 			// Workaround bug current call seems to be updated after state changed to streams running
-			refreshIncallIcon(call);
+			if (getResources().getBoolean(R.bool.enable_call_notification))
+				refreshIncallIcon(call);
 			mWifiLock.acquire();
 		} else {
-			refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
+			if (getResources().getBoolean(R.bool.enable_call_notification))
+				refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 		}
 		if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
 			mWifiLock.release();

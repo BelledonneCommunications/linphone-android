@@ -67,3 +67,6 @@
 [submodule "submodules/externals/cunit"]
 	path = submodules/externals/cunit
 	url = gitosis@git.linphone.org:cunit.git
+[submodule "submodules/externals/axmlrpc"]
+	path = submodules/externals/axmlrpc
+	url = git://git.linphone.org/axmlrpc.git

@@ -16,6 +16,7 @@
         android:gravity="left" />
    	
    	<EditText
+        android:textCursorDrawable="@null"
         android:id="@+id/numoraddr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

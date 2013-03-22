@@ -103,12 +103,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + key);
    
     	final Preference disable = advanced.getPreference(2);
-    	disable.setEnabled(prefs.getInt(getString(R.string.pref_default_account_key), 0) != n);
+    	disable.setEnabled(true);
     	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + key, false));
     	disable.setKey(getString(R.string.pref_disable_account_key) + key);
 
     	final Preference delete = advanced.getPreference(4);
-    	delete.setEnabled(prefs.getInt(getString(R.string.pref_default_account_key), 0) != n);
+    	delete.setEnabled(true);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
@@ -123,22 +123,29 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i+1), false));
 	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i+1), false));
 	        	}
-	        	
-	        	int lastAccount = nbAccounts - 1;
-	        	editor.putString(getString(R.string.pref_username_key) + getAccountNumber(lastAccount), null);
-	        	editor.putString(getString(R.string.pref_auth_userid_key) + getAccountNumber(lastAccount), null);
-        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(lastAccount), null);
-        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(lastAccount), null);
-        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(lastAccount), null);
-        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(lastAccount), false);
-        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(lastAccount), false);
-        		
-        		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account_key), 0);
-        		if (defaultAccount > n) {
-        			editor.putInt(getString(R.string.pref_default_account_key), defaultAccount - 1);
-        		}
-        		
-        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
+
+	        	if (n != 0) {
+		        	int lastAccount = nbAccounts - 1;
+		        	editor.putString(getString(R.string.pref_username_key) + getAccountNumber(lastAccount), null);
+	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(lastAccount), null);
+	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(lastAccount), null);
+	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(lastAccount), null);
+	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(lastAccount), false);
+	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(lastAccount), false);
+	        		
+	        		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account_key), 0);
+	        		if (defaultAccount > n) {
+	        			editor.putInt(getString(R.string.pref_default_account_key), defaultAccount - 1);
+	        		}
+	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
+	        	} else if (n == 0 && nbAccounts <= 1) {
+	        		editor.putString(getString(R.string.pref_username_key), "");
+	        		editor.putString(getString(R.string.pref_passwd_key), "");
+	        		editor.putString(getString(R.string.pref_domain_key), "");
+	        	} else {
+	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
+	        	}
+
 	        	editor.commit();
 	        	
 	        	LinphoneActivity.instance().displaySettings();
@@ -157,7 +164,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putInt(getString(R.string.pref_default_account_key), n);
 				editor.commit();
-				delete.setEnabled(false);
 				disable.setEnabled(false);
 				Compatibility.setPreferenceChecked(disable, false);
 				preference.setEnabled(false);
@@ -179,7 +185,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 
 		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		int n = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
-		String keyUsername = getString(R.string.pref_username_key) + (n-1 == 0 ? "" : Integer.toString(n-1));
+		String keyUsername = getString(R.string.pref_username_key) + getAccountNumber(n-1);
 		
 		if (prefs.getString(keyUsername, "").equals("")) {
 			//If not, we suppress it to not display a blank field

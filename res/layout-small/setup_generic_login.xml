@@ -30,6 +30,7 @@
 	    android:orientation="vertical">
         
         <EditText
+            android:textCursorDrawable="@null"
             android:id="@+id/setup_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
             android:background="@drawable/setup_field_background" />
         
         <EditText
+            android:textCursorDrawable="@null"
             android:id="@+id/setup_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,6 +57,7 @@
             android:background="@drawable/setup_field_background" />
         
         <EditText
+            android:textCursorDrawable="@null"
             android:id="@+id/setup_domain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
