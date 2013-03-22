@@ -243,7 +243,10 @@ public class EditContactFragment extends Fragment {
 			numberOrAddress = numberOrAddress.replace("sip:", "");
 		}
 		if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSip) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSip)) {
-			isSip = !isSip; // If number can't be displayed because we hide a sort of number, change that category
+			if (forceAddNumber)
+				isSip = !isSip; // If number can't be displayed because we hide a sort of number, change that category
+			else
+				return null;
 		}
 		
 		NewOrUpdatedNumberOrAddress tempNounoa;
@@ -341,17 +344,17 @@ public class EditContactFragment extends Fragment {
 		
 		if (isSip) {
 			controls.addView(view, controls.getChildCount());
-			if (deleteContact != null) {
-				// Move to the bottom the remove contact button
-				controls.removeView(deleteContact);
-				controls.addView(deleteContact, controls.getChildCount());
-			}
 		} else {
 			if (firstSipAddressIndex != -1) {
 				controls.addView(view, firstSipAddressIndex);
 			} else {
 				controls.addView(view);
 			}
+		}
+		if (deleteContact != null) {
+			// Move to the bottom the remove contact button
+			controls.removeView(deleteContact);
+			controls.addView(deleteContact, controls.getChildCount());
 		}
 	}
 	
