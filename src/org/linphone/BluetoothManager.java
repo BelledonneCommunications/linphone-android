@@ -14,10 +14,6 @@ import android.os.Build;
 public class BluetoothManager extends BroadcastReceiver {
 	 @SuppressWarnings("deprecation")
 	public void onReceive(Context context, Intent intent) {
-        boolean routeToBT = context.getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
-        if (!routeToBT)
-        	return;
-        
         String action = intent.getAction();
         LinphoneManager lm = LinphoneManager.getInstance();
         
@@ -26,7 +22,6 @@ public class BluetoothManager extends BroadcastReceiver {
             Log.e("Bluetooth Received Event" + " ACTION_ACL_DISCONNECTED" );
             
             if (lm != null) {
-            	lm.isBluetoothScoConnected = false;
             	lm.scoDisconnected();
             	lm.routeAudioToReceiver();
             }
@@ -35,7 +30,6 @@ public class BluetoothManager extends BroadcastReceiver {
             Log.e("Bluetooth Received Event" + " ACTION_ACL_CONNECTED" );
             
             if (lm != null) {
-        		lm.isBluetoothScoConnected = true;
             	lm.scoConnected();
             }
         } 
@@ -44,12 +38,10 @@ public class BluetoothManager extends BroadcastReceiver {
     		Log.e("Bluetooth sco state changed : " + state);
         	if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
         		if (lm != null) {
-            		lm.isBluetoothScoConnected = true;
                 	lm.scoConnected();
                 }
         	} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
         		if (lm != null) {
-        			lm.isBluetoothScoConnected = false;
                 	lm.scoDisconnected();
                 	lm.routeAudioToReceiver();
                 }
@@ -61,7 +53,6 @@ public class BluetoothManager extends BroadcastReceiver {
         			0); //BluetoothAdapter.STATE_DISCONNECTED
         	Log.e("Bluetooth state changed: " + currentConnState);
             if (lm != null && currentConnState == 2) { //BluetoothAdapter.STATE_CONNECTED
-        		lm.isBluetoothScoConnected = true;
             	lm.startBluetooth();
             }
         } 

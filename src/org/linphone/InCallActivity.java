@@ -87,6 +87,8 @@ public class InCallActivity extends FragmentActivity implements
 	private Runnable mControls;
 	private ImageView pause, hangUp, dialer, switchCamera, conference;
 	private TextView video, micro, speaker, options, addCall, transfer;
+	private TextView audioRoute, routeSpeaker, routeReceiver, routeBluetooth;
+	private LinearLayout routeLayout;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
@@ -166,10 +168,6 @@ public class InCallActivity extends FragmentActivity implements
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
         }
-        
-        boolean routeToBT = getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
-		if (routeToBT && LinphoneManager.isInstanciated() && !isSpeakerEnabled)
-			LinphoneManager.getInstance().routeToBluetoothIfAvailable();
 	}
 	
 	@Override
@@ -219,6 +217,20 @@ public class InCallActivity extends FragmentActivity implements
 		dialer.setEnabled(false);
 		numpad = (Numpad) findViewById(R.id.numpad);
 		
+		try {
+			routeLayout = (LinearLayout) findViewById(R.id.routesLayout);
+			audioRoute = (TextView) findViewById(R.id.audioRoute);
+			audioRoute.setOnClickListener(this);
+			routeSpeaker = (TextView) findViewById(R.id.routeSpeaker);
+			routeSpeaker.setOnClickListener(this);
+			routeReceiver = (TextView) findViewById(R.id.routeReceiver);
+			routeReceiver.setOnClickListener(this);
+			routeBluetooth = (TextView) findViewById(R.id.routeBluetooth);
+			routeBluetooth.setOnClickListener(this);
+		} catch (NullPointerException npe) {
+			Log.e("Audio routes menu disabled on tablets for now");
+		}
+		
 		switchCamera = (ImageView) findViewById(R.id.switchCamera);
 		switchCamera.setOnClickListener(this);
 		
@@ -255,10 +267,39 @@ public class InCallActivity extends FragmentActivity implements
 					}
 				}
 				
-				if (isSpeakerEnabled) {
-					speaker.setBackgroundResource(R.drawable.speaker_on);
+				if (LinphoneManager.getInstance().isBluetoothScoConnected) {
+					try {
+						routeLayout.setVisibility(View.VISIBLE);
+					} catch (NullPointerException npe) {}
+					audioRoute.setVisibility(View.VISIBLE);
+					speaker.setVisibility(View.GONE);
 				} else {
-					speaker.setBackgroundResource(R.drawable.speaker_off);
+					try {
+						routeLayout.setVisibility(View.GONE);
+					} catch (NullPointerException npe) {}
+					audioRoute.setVisibility(View.GONE);
+					speaker.setVisibility(View.VISIBLE);
+				}
+				
+				try {
+					if (isSpeakerEnabled) {
+						speaker.setBackgroundResource(R.drawable.speaker_on);
+						routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
+						routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+						routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+					} else {
+						speaker.setBackgroundResource(R.drawable.speaker_off);
+						routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+						if (LinphoneManager.getInstance().isUsingBluetoothAudioRoute) {
+							routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+							routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
+						} else {
+							routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
+							routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+						}
+					}
+				} catch (NullPointerException npe) {
+					Log.e("Audio routes menu disabled on tablets for now");
 				}
 				
 				if (isMicMuted) {
@@ -360,8 +401,32 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		else if (id == R.id.options) {
 			hideOrDisplayCallOptions();
-		} 
-
+		}
+		else if (id == R.id.audioRoute) {
+			hideOrDisplayAudioRoutes();
+		}
+		else if (id == R.id.routeBluetooth) {
+			LinphoneManager.getInstance().routeAudioToBluetooth();
+			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
+			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+			hideOrDisplayAudioRoutes();
+		}
+		else if (id == R.id.routeReceiver) {
+			LinphoneManager.getInstance().routeAudioToReceiver();
+			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+			routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+			hideOrDisplayAudioRoutes();
+		}
+		else if (id == R.id.routeSpeaker) {
+			LinphoneManager.getInstance().routeAudioToSpeaker();
+			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
+			hideOrDisplayAudioRoutes();
+		}
+		
 		else if (id == R.id.callStatus) {
 			LinphoneCall call = (LinphoneCall) v.getTag();
 			pauseOrResumeCall(call);
@@ -483,10 +548,6 @@ public class InCallActivity extends FragmentActivity implements
 		} else {
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			speaker.setBackgroundResource(R.drawable.speaker_off);
-			
-			boolean routeToBT = getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
-			if (!routeToBT)
-				LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 		}
 	}
 	
@@ -878,6 +939,38 @@ public class InCallActivity extends FragmentActivity implements
 		addCall.startAnimation(animation);
 	}
 	
+	private void hideOrDisplayAudioRoutes()
+	{
+		if (isSpeakerEnabled) {
+			speaker.setBackgroundResource(R.drawable.speaker_on);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
+			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+		} else {
+			speaker.setBackgroundResource(R.drawable.speaker_off);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+			if (LinphoneManager.getInstance().isUsingBluetoothAudioRoute) {
+				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
+			} else {
+				routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
+				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+			}
+		}
+		
+		if (routeSpeaker.getVisibility() == View.VISIBLE) {
+			routeSpeaker.setVisibility(View.INVISIBLE);
+			routeBluetooth.setVisibility(View.INVISIBLE);
+			routeReceiver.setVisibility(View.INVISIBLE);
+			audioRoute.setSelected(false);
+		} else {		
+			routeSpeaker.setVisibility(View.VISIBLE);
+			routeBluetooth.setVisibility(View.VISIBLE);
+			routeReceiver.setVisibility(View.VISIBLE);
+			audioRoute.setSelected(true);
+		}
+	}
+	
 	private void hideOrDisplayCallOptions() {
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 		
@@ -895,6 +988,7 @@ public class InCallActivity extends FragmentActivity implements
 					hideAnimatedPortraitCallOptions();
 				}
 			}
+			options.setSelected(false);
 		} else {		
 			if (isAnimationDisabled) {
 				if (isTransferAllowed) {
@@ -909,6 +1003,7 @@ public class InCallActivity extends FragmentActivity implements
 					showAnimatedPortraitCallOptions();
 				}
 			}
+			options.setSelected(true);
 			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
 	}
@@ -977,13 +1072,7 @@ public class InCallActivity extends FragmentActivity implements
 				switchVideo(isVideoEnabled, false);
 			}
 
-			boolean routeToBT = getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
-			if (routeToBT && LinphoneManager.isInstanciated() && !isSpeakerEnabled) {
-				LinphoneManager.getInstance().routeToBluetoothIfAvailable();
-			} else {
-				// The following should not be needed except some devices need it (e.g. Galaxy S).
-				LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
-			}
+			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 
 			isMicMuted = LinphoneManager.getLc().isMicMuted();
 			enableAndRefreshInCallActions();
