@@ -410,8 +410,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 	
-	public void resetCameraFromPreferences() {
-		boolean useFrontCam = getPrefBoolean(R.string.pref_video_use_front_camera_key, false);
+	private void resetCameraFromPreferences() {
+		boolean useFrontCam = getPrefBoolean(R.string.pref_video_use_front_camera_key, mR.getBoolean(R.bool.pref_video_use_front_camera_default));
 		
 		int camId = 0;
 		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
@@ -582,6 +582,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	        if (routeToBT) {
 	        	startBluetooth();
 	        }
+	        resetCameraFromPreferences();
 		}
 		catch (Exception e) {
 			Log.e(e, "Cannot start linphone");
