@@ -55,10 +55,10 @@
     
     <LinearLayout
         android:id="@+id/menu"
+       	android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
         android:gravity="bottom"
         android:orientation="horizontal" >
 
@@ -125,6 +125,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/routesLayout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            
+	        <TextView
+				android:id="@+id/routeBluetooth"
+	           	android:visibility="invisible"
+	       		android:background="@drawable/route_bluetooth_off"
+	        	android:text="@string/button_bluetooth"
+	         	android:gravity="center"
+	         	android:paddingTop="35dp"
+	         	android:textColor="@drawable/text_incall_button_color"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+            
+	        <TextView
+				android:id="@+id/routeReceiver"
+	           	android:visibility="invisible"
+	       		android:background="@drawable/route_receiver_off"
+	        	android:text="@string/button_receiver"
+	         	android:gravity="center"
+	         	android:paddingTop="35dp"
+	         	android:textColor="@drawable/text_incall_button_color"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+            
+	        <TextView
+				android:id="@+id/routeSpeaker"
+	           	android:visibility="invisible"
+	       		android:background="@drawable/route_speaker_off"
+	        	android:text="@string/button_speaker"
+	         	android:gravity="center"
+	         	android:paddingTop="35dp"
+	         	android:textColor="@drawable/text_incall_button_color"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+              
+          <TextView
+	            android:id="@+id/audioRoute"
+	            android:background="@drawable/routes"
+	            android:text="@string/button_route"
+	            android:gravity="center"
+	            android:paddingTop="30dp"
+            	android:textColor="@drawable/text_incall_button_color"
+               	android:layout_width="match_parent"
+               	android:layout_height="wrap_content" />
+              	
+          </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
