@@ -315,6 +315,9 @@
 	<string name="button_video">Vidéo</string>
 	<string name="button_micro">Micro</string>
 	<string name="button_speaker">HP</string>
+	<string name="button_route">Route</string>
+	<string name="button_receiver">Ecouteur</string>
+	<string name="button_bluetooth">Bluetooth</string>
 	<string name="button_options">Options</string>
 	
 	<string name="button_send_message">Envoyer</string>

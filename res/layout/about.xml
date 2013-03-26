@@ -34,11 +34,11 @@
 		android:textColor="@android:color/black"
 		android:id="@+id/AboutText"/>
 	
-	<Button android:id="@+id/about_report_issue"
+	<Button android:id="@+id/exit"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/about_report_issue"
-		android:visibility="gone"
+		android:text="@string/menu_exit"
+		android:visibility="visible"
 		android:layout_marginTop="30sp"/>
 	
 </LinearLayout>
