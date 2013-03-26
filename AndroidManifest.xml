@@ -122,7 +122,8 @@
 		<receiver android:name="org.linphone.PhoneStateChangedReceiver">
 			<intent-filter><action android:name="android.intent.action.PHONE_STATE" /></intent-filter>
 		</receiver>
-		
+		<receiver android:name="KeepAliveHandler" >
+        </receiver>
 		<!-- Needed for push notification -->
 		<receiver android:name="org.linphone.gcm.GCMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
 		  <intent-filter>

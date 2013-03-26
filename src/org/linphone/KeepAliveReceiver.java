@@ -25,7 +25,9 @@ import android.content.Context;
 import android.content.Intent;
 
 
-
+/*
+ * Purpose of this receiver is to disable keep alives when screen is off
+ * */
 public class KeepAliveReceiver extends BroadcastReceiver {
 
 	@Override
