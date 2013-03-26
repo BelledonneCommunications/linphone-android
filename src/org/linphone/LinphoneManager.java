@@ -576,7 +576,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					mLc.iterate();
 				}
 			};
-			mTimer.scheduleAtFixedRate(lTask, 0, 20); 
+			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
+			mTimer.schedule(lTask, 0, 20); 
 
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
