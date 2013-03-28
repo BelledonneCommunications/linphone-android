@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon
+APP_MODULES      :=libspeex libgsm libortp polarssl antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon
 APP_STL := stlport_static
 
 #uPnp
