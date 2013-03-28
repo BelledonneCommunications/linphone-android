@@ -4,8 +4,8 @@ SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
-LINPHONE_VERSION=$(shell cd submodules/linphone && git describe)
-LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe)
+LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
+LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
 
 NDK_DEBUG=0
