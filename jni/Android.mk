@@ -60,7 +60,7 @@ else
 include $(linphone-root-dir)/submodules/externals/prebuilts/gsm.mk
 endif
 
-
+include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
 include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
 
