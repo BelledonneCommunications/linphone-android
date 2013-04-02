@@ -193,8 +193,9 @@ public class ChatStorage {
 				timestamp = c.getString(c.getColumnIndex("time"));
 				int status = c.getInt(c.getColumnIndex("status"));
 				byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
+				int read = c.getInt(c.getColumnIndex("read"));
 				
-				ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status);
+				ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status, read == READ);
 				chatMessages.add(chatMessage);
 			} catch (Exception e) {
 				e.printStackTrace();
