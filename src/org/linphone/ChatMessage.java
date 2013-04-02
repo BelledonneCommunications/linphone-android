@@ -33,8 +33,9 @@ public class ChatMessage {
 	private int status;
 	private int id;
 	private Bitmap image;
+	private boolean isRed;
 	
-	public ChatMessage(int id, String message, byte[] rawImage, String timestamp, boolean incoming, int status) {
+	public ChatMessage(int id, String message, byte[] rawImage, String timestamp, boolean incoming, int status, boolean red) {
 		super();
 		this.id = id;
 		this.message = message;
@@ -42,6 +43,7 @@ public class ChatMessage {
 		this.incoming = incoming;
 		this.status = status;
 		this.image = rawImage != null ? BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length) : null;
+		this.isRed = red;
 	}
 	
 	public int getId() {
@@ -82,5 +84,9 @@ public class ChatMessage {
 
 	public Bitmap getImage() {
 		return image;
+	}
+	
+	public boolean isRed() {
+		return isRed;
 	}
 }

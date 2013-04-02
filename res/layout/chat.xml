@@ -31,7 +31,7 @@
         
     </LinearLayout>
     
-    <ScrollView 
+    <org.linphone.ui.LinphoneScrollView 
         android:id="@+id/chatScrollView"
         android:paddingTop="5dp"
         android:layout_weight="1"
@@ -47,7 +47,7 @@
             
         </RelativeLayout>
         
-    </ScrollView>
+    </org.linphone.ui.LinphoneScrollView>
     
     <RelativeLayout 
         android:id="@+id/messageLayout"
