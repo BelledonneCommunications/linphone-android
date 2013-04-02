@@ -55,13 +55,23 @@ public class ChatStorage {
 	}
 	
 	public void updateMessageStatus(String to, String message, int status) {
-		ContentValues values = new ContentValues();
-		values.put("status", status);
-		
-		String where = "direction LIKE ? AND remoteContact LIKE ? AND message LIKE ?";
 		String[] whereArgs = { String.valueOf(OUTGOING), to, message };
+		Cursor c = db.query(TABLE_NAME, null, "direction LIKE ? AND remoteContact LIKE ? AND message LIKE ?", whereArgs, null, null, "id DESC");
+
+		String id = null;
+		if (c.moveToFirst()) {
+			try {
+				id = c.getString(c.getColumnIndex("id"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		c.close();
 		
-		db.update(TABLE_NAME, values, where, whereArgs);
+		if (id != null && id.length() > 0) {
+			int intID = Integer.parseInt(id);
+			updateMessageStatus(to, intID, status);
+		}
 	}
 	
 	public void updateMessageStatus(String to, int id, int status) {
