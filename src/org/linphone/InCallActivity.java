@@ -407,6 +407,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		else if (id == R.id.routeBluetooth) {
 			LinphoneManager.getInstance().routeAudioToBluetooth();
+			isSpeakerEnabled = false;
 			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
 			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
 			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
@@ -414,6 +415,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		else if (id == R.id.routeReceiver) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
+			isSpeakerEnabled = false;
 			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
 			routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
 			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
@@ -421,6 +423,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		else if (id == R.id.routeSpeaker) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
+			isSpeakerEnabled = true;
 			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
 			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
 			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
@@ -940,24 +943,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void hideOrDisplayAudioRoutes()
-	{
-		if (isSpeakerEnabled) {
-			speaker.setBackgroundResource(R.drawable.speaker_on);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
-			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
-		} else {
-			speaker.setBackgroundResource(R.drawable.speaker_off);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
-			if (LinphoneManager.getInstance().isUsingBluetoothAudioRoute) {
-				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
-			} else {
-				routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
-			}
-		}
-		
+	{		
 		if (routeSpeaker.getVisibility() == View.VISIBLE) {
 			routeSpeaker.setVisibility(View.INVISIBLE);
 			routeBluetooth.setVisibility(View.INVISIBLE);
