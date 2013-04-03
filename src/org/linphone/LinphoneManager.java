@@ -954,7 +954,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mLc.enablePayloadType(videoCodec, enable);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
 	private void doDestroy() {
+		try {
+			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30))
+				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
+		} catch (Exception e) {}
+		
 		try {
 			mTimer.cancel();
 			mLc.destroy();
