@@ -41,9 +41,11 @@ ifeq ($(BUILD_UPNP),1)
 include $(linphone-root-dir)/submodules/externals/build/libupnp/Android.mk
 endif
 
-#libxml2
+#libxml2 + xml2lpc + lpc2xml
 ifeq ($(BUILD_REMOTE_PROVISIONING),1)
 include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
+include $(linphone-root-dir)/submodules/linphone/build/android/xml2lpc.mk
+include $(linphone-root-dir)/submodules/linphone/build/android/lpc2xml.mk
 endif
 
 # Speex
