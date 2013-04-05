@@ -1430,19 +1430,6 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 	}
 
-	@Override
-	public void onUserInteraction() {
-		// TODO Auto-generated method stub
-		super.onUserInteraction();
-		Log.i("User interaction started");
-	}
-
-	@Override
-	protected void onUserLeaveHint() {
-		// TODO Auto-generated method stub
-		super.onUserLeaveHint();
-		Log.i("User interaction stopped");
-	}
 }
 
 interface ContactPicked {
