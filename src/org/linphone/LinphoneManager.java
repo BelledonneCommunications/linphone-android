@@ -571,9 +571,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 				Log.w("no config ready yet");
 			}
 			boolean routeToBT = mServiceContext.getResources().getBoolean(R.bool.route_audio_to_bluetooth_if_available);
-	        if (routeToBT) {
-	        	startBluetooth();
-	        }
+	        	if (routeToBT) {
+	        		startBluetooth();
+	        	}
 	        
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -588,7 +588,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
 			
-	        startBluetooth();
 	        resetCameraFromPreferences();
 		}
 		catch (Exception e) {
