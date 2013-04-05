@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import static android.media.AudioManager.MODE_NORMAL;
+import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 import static org.linphone.R.string.pref_codec_amr_key;
@@ -377,7 +378,9 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
-			if (mR.getBoolean(R.bool.forbid_self_call) && mLc.isMyself(lAddress.asStringUriOnly())) {
+			LinphoneProxyConfig lpc = mLc.getDefaultProxyConfig();
+
+			if (mR.getBoolean(R.bool.forbid_self_call) && lpc!=null && lAddress.asStringUriOnly().equals(lpc.getIdentity())) {
 				mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 				return;
 			}
@@ -1308,8 +1311,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			return;
 		}
 
-		mLc.startRinging();
-
+		if (Hacks.needGalaxySAudioHack()) {
+			mAudioManager.setMode(MODE_RINGTONE);
+		}
+		
 		try {
 			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator !=null) {
 				long[] patern = {0,1000,1000};
