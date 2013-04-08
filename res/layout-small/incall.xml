@@ -47,11 +47,10 @@
         android:id="@+id/numpad"
         android:background="@drawable/dialer_alt_background"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/switchCamera"
-        android:layout_marginBottom="150dp" />
+        android:layout_centerVertical="true" />
 
     <LinearLayout
         android:id="@+id/menu"
