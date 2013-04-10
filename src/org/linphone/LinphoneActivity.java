@@ -232,12 +232,12 @@ public class LinphoneActivity extends FragmentActivity implements
 			return;
 		}
 		
-		findViewById(R.id.status).setVisibility(View.VISIBLE);
 		if (statusFragment != null && !statusFragment.isVisible()) {
 			// Hack to ensure statusFragment is visible after coming back to
 			// dialer from chat
 			statusFragment.getView().setVisibility(View.VISIBLE);
 		}
+		findViewById(R.id.status).setVisibility(View.VISIBLE);
 		findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 
@@ -1384,6 +1384,9 @@ public class LinphoneActivity extends FragmentActivity implements
 					showStatusBar();
 					reloadConfig();
 					updateAnimationsState();
+				} else if (currentFragment == FragmentsAvailable.CHATLIST) {
+					//Hack to ensure display the status bar on some devices
+					showStatusBar();
 				}
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {

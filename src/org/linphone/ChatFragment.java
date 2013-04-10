@@ -324,7 +324,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								@Override
 								public void run() {
 									//Scroll to latest saw message
-									messagesScrollView.scrollTo(0, messagesLayout.getChildAt(MESSAGES_STEP-1).getBottom());
+									if (messagesScrollView != null && messagesLayout != null && messagesLayout.getChildCount() >= MESSAGES_STEP-1)
+										messagesScrollView.scrollTo(0, messagesLayout.getChildAt(MESSAGES_STEP-1).getBottom());
 								}
 							}, 300);
 						}
