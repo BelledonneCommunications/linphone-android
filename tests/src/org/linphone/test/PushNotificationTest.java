@@ -25,7 +25,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
-import org.linphone.core.Log;
+import org.linphone.mediastream.Log;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
