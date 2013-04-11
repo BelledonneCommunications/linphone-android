@@ -247,7 +247,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		String userName = call.getRemoteAddress().getUserName();
 		String domain = call.getRemoteAddress().getDomain();
 		String displayName = call.getRemoteAddress().getDisplayName();
-		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress("sip:" + userName + "@" + domain);
+		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
 		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
