@@ -3,7 +3,7 @@
 	android:id="@+id/contacts"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_weight="0.2"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     
     <ImageView
@@ -12,7 +12,6 @@
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/content_description_contacts"
-		android:scaleType="fitXY"
 		android:src="@drawable/contacts" />
 
     <TextView

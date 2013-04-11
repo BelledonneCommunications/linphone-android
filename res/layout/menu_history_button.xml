@@ -2,7 +2,7 @@
 <RelativeLayout
 	android:id="@+id/history"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     
     <ImageView
@@ -11,7 +11,6 @@
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/content_description_history"
-		android:scaleType="fitXY"
 		android:src="@drawable/history" />
     
     <TextView
