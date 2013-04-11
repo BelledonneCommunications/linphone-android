@@ -571,7 +571,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						displayMessage(id, message.getText(), String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
+						displayMessage(id, message.getText(), String.valueOf(message.getTime()), true, null, messagesLayout);
 					}
 				});
 			} else if (message.getExternalBodyUrl() != null) {
@@ -580,7 +580,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						displayImageMessage(id, bm, String.valueOf(System.currentTimeMillis()), true, null, messagesLayout);
+						displayImageMessage(id, bm, String.valueOf(message.getTime()), true, null, messagesLayout);
 					}
 				});
 			}
