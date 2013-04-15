@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
@@ -86,11 +88,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void displayHistory(String status, String callTime, String callDate) {
-		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
-        	view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
-        }
-		
 		contactName.setText(displayName == null ? sipUri : displayName);
 		contactAddress.setText(sipUri);
 		
@@ -106,6 +103,13 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		time.setText(callTime == null ? "" : callTime);
 		date.setText(timestampToHumanDate(callDate));
+		
+		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
+		String displayName = lAddress.getDisplayName();
+		if (displayName != null) {
+			view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
+		}
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
