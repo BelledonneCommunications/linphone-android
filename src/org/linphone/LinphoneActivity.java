@@ -855,12 +855,12 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	@Override
 	public void setAddresGoToDialerAndCall(String number, String name, Uri photo) {
-		Bundle extras = new Bundle();
-		extras.putString("SipUri", number);
-		extras.putString("DisplayName", name);
-		extras.putString("Photo", photo == null ? null : photo.toString());
-		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
-
+//		Bundle extras = new Bundle();
+//		extras.putString("SipUri", number);
+//		extras.putString("DisplayName", name);
+//		extras.putString("Photo", photo == null ? null : photo.toString());
+//		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
+		
 		AddressType address = new AddressText(this, null);
 		address.setDisplayedName(name);
 		address.setText(number);
@@ -1436,6 +1436,5 @@ public class LinphoneActivity extends FragmentActivity implements
 
 interface ContactPicked {
 	void setAddresGoToDialerAndCall(String number, String name, Uri photo);
-
 	void goToDialer();
 }
