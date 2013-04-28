@@ -1122,11 +1122,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		String notificationText = null;
 		int id = -1;
 		if (textMessage != null && textMessage.length() > 0) {
-			id = chatStorage.saveMessage(from.asStringUriOnly(), "", textMessage);
+			id = chatStorage.saveMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
 			notificationText = textMessage;
 		} else if (url != null && url.length() > 0) {
 			Bitmap bm = ChatFragment.downloadImage(url);
-			id = chatStorage.saveMessage(from.asStringUriOnly(), "", bm);
+			id = chatStorage.saveMessage(from.asStringUriOnly(), "", bm, message.getTime());
 			notificationText = url;
 		}
 		

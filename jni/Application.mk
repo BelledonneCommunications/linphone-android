@@ -13,7 +13,7 @@ endif
 
 #remote provisioning
 ifeq ($(BUILD_REMOTE_PROVISIONING),1)
-APP_MODULES += libxml2 
+APP_MODULES += liblpxml2
 endif
 
 #default values

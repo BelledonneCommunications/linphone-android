@@ -81,7 +81,7 @@ public class ChatStorage {
 		db.update(TABLE_NAME, values, "id LIKE " + id, null);
 	}
 	
-	public int saveMessage(String from, String to, String message) {
+	public int saveMessage(String from, String to, String message, long time) {
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);
@@ -97,11 +97,11 @@ public class ChatStorage {
 			values.put("status", LinphoneChatMessage.State.Idle.toInt());
 		}
 		values.put("message", message);
-		values.put("time", System.currentTimeMillis());
+		values.put("time", time);
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
 	
-	public int saveMessage(String from, String to, Bitmap image) {
+	public int saveMessage(String from, String to, Bitmap image, long time) {
 		if (image == null)
 			return -1;
 		
@@ -124,7 +124,7 @@ public class ChatStorage {
 		image.compress(CompressFormat.JPEG, 100, baos);
 		values.put("image", baos.toByteArray());
 		
-		values.put("time", System.currentTimeMillis());
+		values.put("time", time);
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
 	

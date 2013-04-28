@@ -1304,14 +1304,18 @@ public class InCallActivity extends FragmentActivity implements
 	
 	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
 		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
-		if (lAddress.getDisplayName() == null) {
+		
+		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, callView.getContext().getContentResolver());
+		String displayName = lAddress.getDisplayName();
+
+		if (displayName == null) {
 	        if (resources.getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
 	        	contact.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
 			} else {
 				contact.setText(sipUri);
 			}
 		} else {
-			contact.setText(lAddress.getDisplayName());
+			contact.setText(displayName);
 		}
 	}
 	

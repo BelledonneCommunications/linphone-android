@@ -740,12 +740,12 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	public int onMessageSent(String to, String message) {
 		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveMessage("", to, message);
+		return getChatStorage().saveMessage("", to, message, System.currentTimeMillis());
 	}
 
 	public int onMessageSent(String to, Bitmap image, String imageURL) {
 		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveMessage("", to, image);
+		return getChatStorage().saveMessage("", to, image, System.currentTimeMillis());
 	}
 
 	public void onMessageStateChanged(String to, String message, int newState) {
@@ -855,12 +855,12 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	@Override
 	public void setAddresGoToDialerAndCall(String number, String name, Uri photo) {
-		Bundle extras = new Bundle();
-		extras.putString("SipUri", number);
-		extras.putString("DisplayName", name);
-		extras.putString("Photo", photo == null ? null : photo.toString());
-		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
-
+//		Bundle extras = new Bundle();
+//		extras.putString("SipUri", number);
+//		extras.putString("DisplayName", name);
+//		extras.putString("Photo", photo == null ? null : photo.toString());
+//		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
+		
 		AddressType address = new AddressText(this, null);
 		address.setDisplayedName(name);
 		address.setText(number);
@@ -1437,6 +1437,5 @@ public class LinphoneActivity extends FragmentActivity implements
 
 interface ContactPicked {
 	void setAddresGoToDialerAndCall(String number, String name, Uri photo);
-
 	void goToDialer();
 }
