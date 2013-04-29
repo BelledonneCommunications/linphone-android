@@ -1,7 +1,6 @@
 [net]
 download_bw=380
 upload_bw=380
-firewall_policy=0
 mtu=1300
 
 [sip]

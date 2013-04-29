@@ -869,7 +869,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (lStun!=null && lStun.length()>0 && useICE) {
 				mLc.setFirewallPolicy(FirewallPolicy.UseIce);
 				if (useUpnp) Log.e("Cannot have both ice and upnp enabled, disabling upnp");
-		} if (useUpnp) {
+		} else if (useUpnp) {
 			mLc.setFirewallPolicy(FirewallPolicy.UseUpnp);
 		} else if (lStun!=null && lStun.length()>0){
 			mLc.setFirewallPolicy(FirewallPolicy.UseStun);
