@@ -891,7 +891,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean useRandomPort = getPrefBoolean(R.string.pref_transport_use_random_ports_key, mR.getBoolean(R.bool.pref_transport_use_random_ports_default));
 		int lPreviousPort = tryToParseIntValue(getPrefString(R.string.pref_sip_port_key, getString(R.string.pref_sip_port_default)), 5060);
 		if (lPreviousPort>0xFFFF || useRandomPort) {
-			lPreviousPort=(0xDFFF & (int)Math.random())+1024;
+			lPreviousPort=(int)(Math.random() * (0xFFFF - 1024)) + 1024;
 			Log.w("Using random port " + lPreviousPort);
 		}
 		
