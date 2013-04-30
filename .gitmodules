@@ -72,4 +72,4 @@
 	url = git://git.linphone.org/axmlrpc.git
 [submodule "submodules/externals/polarssl"]
 	path = submodules/externals/polarssl
-	url = git://github.com/polarssl/polarssl.git
+	url = git://git.linphone.org/polarssl.git
