@@ -40,9 +40,10 @@ public class RemoteProvisioning {
 				int bytesRead = 0;
 				String strFileContents = ""; 
 				while( (bytesRead = bis.read(contents)) != -1){ 
-					strFileContents = new String(contents, 0, bytesRead);               
+					strFileContents += new String(contents, 0, bytesRead);               
 				}
 				Log.i("Download Success");
+				Log.i(strFileContents);
 				
 				// Initialize converter
 				LpConfig lp = LinphoneCoreFactory.instance().createLpConfig(mLocalLP);
