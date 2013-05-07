@@ -157,6 +157,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private BroadcastReceiver bluetoothReiceiver = new BluetoothManager();
 	public boolean isBluetoothScoConnected;
 	public boolean isUsingBluetoothAudioRoute;
+	
+	public ChatStorage chatStorage;
 
 	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
 	public static void addListener(LinphoneSimpleListener listener) {
@@ -188,6 +190,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
+		
+		chatStorage = new ChatStorage(mServiceContext);
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -959,6 +963,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
 	private void doDestroy() {
+		if (chatStorage != null) {
+			chatStorage.close();
+			chatStorage = null;
+		}
+		
 		try {
 			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30))
 				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
@@ -1099,7 +1108,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		LinphoneAddress from = message.getFrom();
-		ChatStorage chatStorage = new ChatStorage(mServiceContext);
 
 		String textMessage = message.getText();
 		String url = message.getExternalBodyUrl();

@@ -106,7 +106,6 @@ public class LinphoneActivity extends FragmentActivity implements
 	private FragmentsAvailable currentFragment, nextFragment;
 	private Fragment dialerFragment, messageListenerFragment, messageListFragment, friendStatusListenerFragment;
 	private SavedState dialerSavedState;
-	private ChatStorage chatStorage;
 	private boolean preferLinphoneContacts = false, isAnimationDisabled = false, isContactPresenceDisabled = true;
 	private Handler mHandler = new Handler();
 	private List<Contact> contactList, sipContactList;
@@ -1170,10 +1169,10 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	public ChatStorage getChatStorage() {
-		if (chatStorage == null) {
-			chatStorage = new ChatStorage(this);
+		if (LinphoneManager.getInstance().chatStorage == null) {
+			return new ChatStorage(this);
 		}
-		return chatStorage;
+		return LinphoneManager.getInstance().chatStorage;
 	}
 	
 	public void addContact(String displayName, String sipUri)
@@ -1255,11 +1254,6 @@ public class LinphoneActivity extends FragmentActivity implements
 
 		prepareContactsInBackground();
 
-		if (chatStorage != null) {
-			chatStorage.close();
-		}
-		chatStorage = new ChatStorage(this);
-
 		updateMissedChatCount();
 		
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
@@ -1284,11 +1278,6 @@ public class LinphoneActivity extends FragmentActivity implements
 	@Override
 	protected void onDestroy() {
 		LinphoneManager.removeListener(this);
-		
-		if (chatStorage != null) {
-			chatStorage.close();
-			chatStorage = null;
-		}
 
 		if (mOrientationHelper != null) {
 			mOrientationHelper.disable();
