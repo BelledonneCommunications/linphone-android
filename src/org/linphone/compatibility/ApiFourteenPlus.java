@@ -1,8 +1,10 @@
 package org.linphone.compatibility;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.preference.Preference;
 import android.preference.TwoStatePreference;
+import android.view.View;
 
 /*
 ApiFourteenPlus.java
@@ -34,5 +36,13 @@ public class ApiFourteenPlus {
 	
 	public static boolean isPreferenceChecked(Preference preference) {
 		return ((TwoStatePreference) preference).isChecked();
+	}
+	
+	public static void hideNavigationBar(Activity activity) {
+        activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+	}
+	
+	public static void showNavigationBar(Activity activity) {
+        activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 	}
 }

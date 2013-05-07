@@ -1,6 +1,7 @@
 package org.linphone;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -38,11 +39,14 @@ public class RemoteProvisioning {
 				byte[] contents = new byte[1024];
 			
 				int bytesRead = 0;
-				String strFileContents = ""; 
-				while( (bytesRead = bis.read(contents)) != -1){ 
-					strFileContents = new String(contents, 0, bytesRead);               
+				ByteArrayOutputStream fileContents = new ByteArrayOutputStream(); 
+				while( (bytesRead = bis.read(contents)) != -1) {
+					fileContents.write(contents, 0, bytesRead); 
 				}
+				
+				String strFileContents = fileContents.toString();
 				Log.i("Download Success");
+				Log.i(strFileContents);
 				
 				// Initialize converter
 				LpConfig lp = LinphoneCoreFactory.instance().createLpConfig(mLocalLP);
