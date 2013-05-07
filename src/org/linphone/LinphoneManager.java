@@ -49,6 +49,7 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioS
 import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -1507,9 +1508,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (nearby) {
             params.screenBrightness = 0.1f;
             view.setVisibility(View.INVISIBLE);
+            Compatibility.hideNavigationBar(activity);
 		} else  {
 			params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
             view.setVisibility(View.VISIBLE);
+            Compatibility.showNavigationBar(activity);
 		}
         window.setAttributes(params);
 	}
