@@ -49,6 +49,7 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioS
 import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -157,6 +158,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	private BroadcastReceiver bluetoothReiceiver = new BluetoothManager();
 	public boolean isBluetoothScoConnected;
 	public boolean isUsingBluetoothAudioRoute;
+	
+	public ChatStorage chatStorage;
 
 	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
 	public static void addListener(LinphoneSimpleListener listener) {
@@ -188,6 +191,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
+		
+		chatStorage = new ChatStorage(mServiceContext);
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -907,7 +912,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		boolean useRandomPort = getPrefBoolean(R.string.pref_transport_use_random_ports_key, mR.getBoolean(R.bool.pref_transport_use_random_ports_default));
 		int lPreviousPort = tryToParseIntValue(getPrefString(R.string.pref_sip_port_key, getString(R.string.pref_sip_port_default)), 5060);
 		if (lPreviousPort>0xFFFF || useRandomPort) {
-			lPreviousPort=(0xDFFF & (int)Math.random())+1024;
+			lPreviousPort=(int)(Math.random() * (0xFFFF - 1024)) + 1024;
 			Log.w("Using random port " + lPreviousPort);
 		}
 		
@@ -975,6 +980,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
 	private void doDestroy() {
+		if (chatStorage != null) {
+			chatStorage.close();
+			chatStorage = null;
+		}
+		
 		try {
 			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30))
 				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
@@ -1115,7 +1125,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		LinphoneAddress from = message.getFrom();
-		ChatStorage chatStorage = new ChatStorage(mServiceContext);
 
 		String textMessage = message.getText();
 		String url = message.getExternalBodyUrl();
@@ -1515,9 +1524,11 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		if (nearby) {
             params.screenBrightness = 0.1f;
             view.setVisibility(View.INVISIBLE);
+            Compatibility.hideNavigationBar(activity);
 		} else  {
 			params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
             view.setVisibility(View.VISIBLE);
+            Compatibility.showNavigationBar(activity);
 		}
         window.setAttributes(params);
 	}
