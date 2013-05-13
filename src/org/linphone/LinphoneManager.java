@@ -260,7 +260,6 @@ public final class LinphoneManager implements LinphoneCoreListener {
 					    if (profile == BluetoothProfile.HEADSET) {
 					        mBluetoothHeadset = (BluetoothHeadset) proxy;
 					        Log.d("Bluetooth headset connected");
-			        		isBluetoothScoConnected = true;
 					    }
 					}
 					@TargetApi(Build.VERSION_CODES.HONEYCOMB)

@@ -22,7 +22,6 @@ import java.util.Calendar;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -40,7 +39,6 @@ import android.widget.TextView;
  */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts;
-	private AvatarWithShadow contactPicture;
 	private View view;
 	private TextView contactName, contactAddress, callDirection, time, date;
 	private String sipUri, displayName, pictureUri;
@@ -56,8 +54,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		String callDate = getArguments().getString("CallDate");
 		
 		view = inflater.inflate(R.layout.history_detail, container, false);
-		
-		contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		
 		dialBack = (ImageView) view.findViewById(R.id.dialBack);
 		dialBack.setOnClickListener(this);
