@@ -11,12 +11,12 @@ ifeq ($(BUILD_G729),)
 BUILD_G729=0
 endif
 BUILD_SRTP=1
+
+BUILD_X264=0
+LINPHONE_VIDEO=0
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
 LINPHONE_VIDEO=1
-else
-LINPHONE_VIDEO=0
-BUILD_X264=0
 endif
 
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/src/android/libneon/Android.mk
