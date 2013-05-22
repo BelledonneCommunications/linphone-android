@@ -14,7 +14,7 @@ import android.widget.ListView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class SignalingTest extends ActivityInstrumentationTestCase2<LinphoneActivity> {
-	private static final String sipAdressToCall = "cotcot@sip.linphone.org";
+	private static final String sipAdressToCall = "macmini@sip.linphone.org";
 	private Solo solo;
 	
 	@SuppressWarnings("deprecation")

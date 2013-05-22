@@ -323,7 +323,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			mMsgNotifCount++;
 		}
 		
-		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactoryImpl.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+		Uri pictureUri;
+		try {
+			pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactoryImpl.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+		} catch (LinphoneCoreException e1) {
+			Log.e("Cannot parse from address",e1);
+			pictureUri=null;
+		}
 		Bitmap bm = null;
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);

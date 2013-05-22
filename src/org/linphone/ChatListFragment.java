@@ -20,7 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.mediastream.Log;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -234,7 +236,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			view.setTag(contact);
 			int unreadMessagesCount = LinphoneActivity.instance().getChatStorage().getUnreadMessageCount(contact);
 			
-			LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
+			LinphoneAddress address;
+			try {
+				address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
+			} catch (LinphoneCoreException e) {
+				Log.e("Chat view cannot parse address",e);
+				return view;
+			}
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
 
 			List<ChatMessage> messages = LinphoneActivity.instance().getChatMessages(contact);
