@@ -37,6 +37,8 @@
 			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
 			<class name="org.linphone.core.PayloadTypeImpl" />
 			<class name="org.linphone.core.LpConfigImpl" />
+			<class name="org.linphone.core.LinphoneContentImpl" />
+			<class name="org.linphone.core.LinphoneInfoMessage" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>

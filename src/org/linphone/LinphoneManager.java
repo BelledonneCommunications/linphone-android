@@ -1702,4 +1702,10 @@ public final class LinphoneManager implements LinphoneCoreListener {
 	public void notifyReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneAddress from, byte[] event) {
 	}
+	@Override
+	public void transferState(LinphoneCore lc, LinphoneCall call,
+			State new_call_state) {
+		// TODO Auto-generated method stub
+		
+	}
 }
