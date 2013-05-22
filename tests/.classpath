@@ -4,11 +4,7 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="libs/robotium-solo-3.6.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Linphone-Android-NewUI-Tests/libs/robotium-solo-3.6-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/linphone-android-private"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-4.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
