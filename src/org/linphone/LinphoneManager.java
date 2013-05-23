@@ -59,6 +59,7 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
@@ -70,6 +71,8 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneInfoMessage;
+import org.linphone.core.LinphoneLogHandler;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
@@ -1707,5 +1710,13 @@ public final class LinphoneManager implements LinphoneCoreListener {
 			State new_call_state) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void infoReceived(LinphoneCore lc, LinphoneInfoMessage info) {
+		Log.d("Info message received from "+info.getFrom());
+		LinphoneContent ct=info.getContent();
+		if (ct!=null){
+			Log.d("Info received with body with mime type "+ct.getType()+"/"+ct.getSubtype()+" and data ["+ct.getDataAsString()+"]");
+		}
 	}
 }
