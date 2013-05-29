@@ -192,6 +192,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 		
+		if (mR.getBoolean(R.bool.enable_log_collect)) {
+			LinphoneUtils.clearLogs();
+		}
+		
 		chatStorage = new ChatStorage(mServiceContext);
 	}
 
@@ -341,7 +345,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			Context c, LinphoneServiceListener listener) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
-
+		
 		instance = new LinphoneManager(c, listener);
 		instance.startLibLinphone(c);
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);

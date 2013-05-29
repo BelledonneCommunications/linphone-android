@@ -55,6 +55,7 @@
 	
 	<bool name="hash_images_as_name_before_upload">true</bool>
 	
+	<bool name="enable_log_collect">false</bool>
 	<bool name="disable_every_log">false</bool>
 	<bool name="disable_all_security_features_for_markets">false</bool> <!-- Disable TLS/SRTP/ZRTP -->
 	<bool name="disable_all_patented_codecs_for_markets">false</bool> <!-- Disable MPEG4/H264 -->
