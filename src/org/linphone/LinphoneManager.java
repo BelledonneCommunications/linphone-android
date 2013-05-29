@@ -95,7 +95,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -1118,11 +1117,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 		String notificationText = null;
 		int id = -1;
 		if (textMessage != null && textMessage.length() > 0) {
-			id = chatStorage.saveMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
+			id = chatStorage.saveTextMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
 			notificationText = textMessage;
 		} else if (url != null && url.length() > 0) {
-			Bitmap bm = ChatFragment.downloadImage(url);
-			id = chatStorage.saveMessage(from.asStringUriOnly(), "", bm, message.getTime());
+			//Bitmap bm = ChatFragment.downloadImage(url);
+			id = chatStorage.saveImageMessage(from.asStringUriOnly(), "", null, message.getExternalBodyUrl(), message.getTime());
 			notificationText = url;
 		}
 		

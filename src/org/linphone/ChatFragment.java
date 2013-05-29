@@ -308,10 +308,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		        	if (msg.getMessage() != null) {
 		        		displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout);
 		        	} else {
-		        		displayImageMessage(msg.getId(), msg.getImage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout);
+		        		displayImageMessage(msg.getId(), msg.getImage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout, msg.getUrl());
 		        	}
 		        	
-		        	if (!msg.isRed())
+		        	if (!msg.isRead())
 		        		chatStorage.markMessageAsRead(msg.getId());
 		        }
 		        LinphoneActivity.instance().updateMissedChatCount();
@@ -373,13 +373,43 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		registerForContextMenu(v);
 	}
 	
-	private void displayImageMessage(int id, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, RelativeLayout layout) {
+	private void displayImageMessage(final int id, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, RelativeLayout layout, final String url) {
 		BubbleChat bubble = new BubbleChat(layout.getContext(), id, null, image, time, isIncoming, status, previousMessageID);
 		if (!isIncoming) {
 			lastSentMessageBubble = bubble;
 		}
+
+		final View v = bubble.getView();
+		bubble.setDownloadImageButtonListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						final Bitmap bm = ChatFragment.downloadImage(url);
+						if (bm != null) {
+							LinphoneActivity.instance().getChatStorage().saveImage(id, bm);
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									((ImageView)v.findViewById(R.id.image)).setImageBitmap(bm);
+									v.findViewById(R.id.image).setVisibility(View.VISIBLE);
+									v.findViewById(R.id.download).setVisibility(View.GONE);
+								}
+							});
+						} else {
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									LinphoneActivity.instance().displayCustomToast(getString(R.string.download_image_failed), Toast.LENGTH_LONG);
+								}
+							});
+						}
+					}
+				}).start();
+			}
+		});
 		
-		View v = bubble.getView();
 		previousMessageID = id;
 		layout.addView(v);
 		registerForContextMenu(v);
@@ -541,7 +571,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			latestImageMessages.put(newId, url);
 			
-			displayImageMessage(newId, bitmap, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout);
+			displayImageMessage(newId, bitmap, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout, url);
 			scrollToEnd();
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
@@ -576,13 +606,22 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				});
 			} else if (message.getExternalBodyUrl() != null) {
 				byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
-				final Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						displayImageMessage(id, bm, String.valueOf(message.getTime()), true, null, messagesLayout);
-					}
-				});
+				if (rawImage == null) {
+					mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							displayImageMessage(id, null, String.valueOf(message.getTime()), true, null, messagesLayout, message.getExternalBodyUrl());
+						}
+					});
+				} else {
+					final Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+					mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							displayImageMessage(id, bm, String.valueOf(message.getTime()), true, null, messagesLayout, "");
+						}
+					});
+				}
 			}
 			scrollToEnd();
 		}

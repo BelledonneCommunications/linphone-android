@@ -739,12 +739,12 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	public int onMessageSent(String to, String message) {
 		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveMessage("", to, message, System.currentTimeMillis());
+		return getChatStorage().saveTextMessage("", to, message, System.currentTimeMillis());
 	}
 
 	public int onMessageSent(String to, Bitmap image, String imageURL) {
 		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveMessage("", to, image, System.currentTimeMillis());
+		return getChatStorage().saveImageMessage("", to, image, imageURL, System.currentTimeMillis());
 	}
 
 	public void onMessageStateChanged(String to, String message, int newState) {
