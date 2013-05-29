@@ -26,6 +26,7 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -37,6 +38,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,6 +49,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
+@SuppressLint("SimpleDateFormat")
 public class BubbleChat {
 	private static final HashMap<String, Integer> emoticons = new HashMap<String, Integer>();
 	static {
@@ -81,6 +85,7 @@ public class BubbleChat {
 	
 	private RelativeLayout view;
 	private ImageView statusView;
+	private Button download;
 	
 	public BubbleChat(Context context, int id, String message, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
 		view = new RelativeLayout(context);
@@ -142,6 +147,11 @@ public class BubbleChat {
 		    	imageView.setImageBitmap(image);
 	    	} else if (imageView != null) {
 	    		imageView.setVisibility(View.GONE);
+	    	}
+	    	
+	    	download = (Button) layout.findViewById(R.id.download);
+	    	if (download != null && image == null && message == null) {
+	    		download.setVisibility(View.VISIBLE);
 	    	}
 	    	
 	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
@@ -260,5 +270,11 @@ public class BubbleChat {
 		}
 		
 		return Html.fromHtml(text);
+	}
+
+	public void setDownloadImageButtonListener(OnClickListener onClickListener) {
+		if (download != null) {
+			download.setOnClickListener(onClickListener);
+		}
 	}
 }

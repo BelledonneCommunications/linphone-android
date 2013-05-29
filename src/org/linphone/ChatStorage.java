@@ -81,7 +81,7 @@ public class ChatStorage {
 		db.update(TABLE_NAME, values, "id LIKE " + id, null);
 	}
 	
-	public int saveMessage(String from, String to, String message, long time) {
+	public int saveTextMessage(String from, String to, String message, long time) {
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);
@@ -101,10 +101,7 @@ public class ChatStorage {
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
 	
-	public int saveMessage(String from, String to, Bitmap image, long time) {
-		if (image == null)
-			return -1;
-		
+	public int saveImageMessage(String from, String to, Bitmap image, String url, long time) {
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);
@@ -119,13 +116,28 @@ public class ChatStorage {
 			values.put("read", NOT_READ);
 			values.put("status", LinphoneChatMessage.State.Idle.toInt());
 		}
+		values.put("url", url);
 		
+		if (image != null) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			image.compress(CompressFormat.JPEG, 100, baos);
+			values.put("image", baos.toByteArray());
+		}
+		
+		values.put("time", time);
+		return (int) db.insert(TABLE_NAME, null, values);
+	}
+	
+	public void saveImage(int id, Bitmap image) {
+		if (image == null)
+			return;
+		
+		ContentValues values = new ContentValues();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		image.compress(CompressFormat.JPEG, 100, baos);
 		values.put("image", baos.toByteArray());
 		
-		values.put("time", time);
-		return (int) db.insert(TABLE_NAME, null, values);
+		db.update(TABLE_NAME, values, "id LIKE " + id, null);
 	}
 	
 	public int saveDraft(String to, String message) {
@@ -186,7 +198,7 @@ public class ChatStorage {
 		
 		while (c.moveToNext()) {
 			try {
-				String message, timestamp;
+				String message, timestamp, url;
 				int id = c.getInt(c.getColumnIndex("id"));
 				int direction = c.getInt(c.getColumnIndex("direction"));
 				message = c.getString(c.getColumnIndex("message"));
@@ -194,8 +206,10 @@ public class ChatStorage {
 				int status = c.getInt(c.getColumnIndex("status"));
 				byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
 				int read = c.getInt(c.getColumnIndex("read"));
+				url = c.getString(c.getColumnIndex("url"));
 				
 				ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status, read == READ);
+				chatMessage.setUrl(url);
 				chatMessages.add(chatMessage);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -274,7 +288,7 @@ public class ChatStorage {
 		if (c.moveToFirst()) {
 			byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
 			c.close();
-			return rawImage;
+			return (rawImage == null || rawImage.length == 0) ? null : rawImage;
 		}
 
 		c.close();
@@ -283,7 +297,7 @@ public class ChatStorage {
 
 	class ChatHelper extends SQLiteOpenHelper {
 	
-	    private static final int DATABASE_VERSION = 14;
+	    private static final int DATABASE_VERSION = 15;
 	    private static final String DATABASE_NAME = "linphone-android";
 	    
 	    ChatHelper(Context context) {
@@ -292,7 +306,7 @@ public class ChatStorage {
 	
 	    @Override
 	    public void onCreate(SQLiteDatabase db) {
-	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT, image BLOB, time NUMERIC, read INTEGER, status INTEGER);");
+	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT, image BLOB, url TEXT, time NUMERIC, read INTEGER, status INTEGER);");
 	        db.execSQL("CREATE TABLE " + DRAFT_TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, remoteContact TEXT NOT NULL, message TEXT);");
 	    }
 	
