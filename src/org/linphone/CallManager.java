@@ -49,7 +49,7 @@ public class CallManager {
 
 	
 	
-	void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled, boolean lowBandwidth) throws LinphoneCoreException {
+	public void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled, boolean lowBandwidth) throws LinphoneCoreException {
 		LinphoneCore lc = LinphoneManager.getLc();
 		
 		LinphoneCallParams params = lc.createDefaultCallParameters();

@@ -253,11 +253,18 @@ public class ChatStorage {
 	}
 	
 	public int getUnreadMessageCount() {
-		return db.query(TABLE_NAME, null, "read LIKE " + NOT_READ, null, null, null, null).getCount();
+		Cursor c = db.query(TABLE_NAME, null, "read LIKE " + NOT_READ, null, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
+		
 	}
 
 	public int getUnreadMessageCount(String contact) {
-		return db.query(TABLE_NAME, null, "remoteContact LIKE \"" + contact + "\" AND read LIKE " + NOT_READ, null, null, null, null).getCount();
+		Cursor c = db.query(TABLE_NAME, null, "remoteContact LIKE \"" + contact + "\" AND read LIKE " + NOT_READ, null, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
 	}
 
 	public byte[] getRawImageFromMessage(int id) {
