@@ -133,7 +133,7 @@ import android.widget.Toast;
  * @author Guillaume Beraudo
  *
  */
-public final class LinphoneManager implements LinphoneCoreListener {
+public class LinphoneManager implements LinphoneCoreListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -171,7 +171,7 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		simpleListeners.remove(listener);
 	}
 
-	private LinphoneManager(final Context c, LinphoneServiceListener listener) {
+	protected LinphoneManager(final Context c, LinphoneServiceListener listener) {
 		sExited=false;
 		mServiceContext = c;
 		mListenerDispatcher = new ListenerDispatcher(listener);

@@ -157,7 +157,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			if (findViewById(R.id.fragmentContainer) != null) {
 				dialerFragment = new DialerFragment();
 				dialerFragment.setArguments(getIntent().getExtras());
-				getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment).commit();
+				getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
 				selectMenu(FragmentsAvailable.DIALER);
 			}
 		}
@@ -367,7 +367,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 
 		transaction.addToBackStack(newFragmentType.toString());
-		transaction.replace(R.id.fragmentContainer, newFragment);
+		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
 		getSupportFragmentManager().executePendingTransactions();
 
