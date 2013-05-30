@@ -1363,19 +1363,26 @@ public class LinphoneActivity extends FragmentActivity implements
 				} else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 					return true;
 				}
-			} else if (!isTablet()) {
-				int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-				if (backStackEntryCount <= 1) {
-					showStatusBar();
-				}
-
-				if (currentFragment == FragmentsAvailable.SETTINGS) {
-					showStatusBar();
-					reloadConfig();
-					updateAnimationsState();
-				} else if (currentFragment == FragmentsAvailable.CHATLIST) {
-					//Hack to ensure display the status bar on some devices
-					showStatusBar();
+			} else {
+				if (!isTablet()) {
+					int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+					if (backStackEntryCount <= 1) {
+						showStatusBar();
+					}
+	
+					if (currentFragment == FragmentsAvailable.SETTINGS) {
+						showStatusBar();
+						reloadConfig();
+						updateAnimationsState();
+					} else if (currentFragment == FragmentsAvailable.CHATLIST) {
+						//Hack to ensure display the status bar on some devices
+						showStatusBar();
+					}
+				} else {
+					if (currentFragment == FragmentsAvailable.SETTINGS) {
+						reloadConfig();
+						updateAnimationsState();
+					}
 				}
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {
