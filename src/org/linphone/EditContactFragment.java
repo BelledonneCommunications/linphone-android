@@ -99,10 +99,7 @@ public class EditContactFragment extends Fragment {
 
 		        try {
 		            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-					
-			        if (isNewContact) {
-			        	LinphoneActivity.instance().prepareContactsInBackground();
-			        }
+			        LinphoneActivity.instance().prepareContactsInBackground();
 		        } catch (Exception e) {
 		        	e.printStackTrace();
 		        }
