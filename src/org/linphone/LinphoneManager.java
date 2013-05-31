@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import static android.media.AudioManager.MODE_NORMAL;
 import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
@@ -253,6 +252,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@SuppressWarnings("deprecation")
 	public void startBluetooth() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter.isEnabled()) {
@@ -277,9 +277,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 				};
 				mBluetoothAdapter.getProfileProxy(mServiceContext, mProfileListener, BluetoothProfile.HEADSET);
 			} else {
-				@SuppressWarnings("deprecation")
-				String actionScoConnected = AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED;
-				Intent currentValue = mServiceContext.registerReceiver(bluetoothReiceiver, new IntentFilter(actionScoConnected));
+				try {
+					mServiceContext.unregisterReceiver(bluetoothReiceiver);
+				} catch (Exception e) {}
+				
+				Intent currentValue = mServiceContext.registerReceiver(bluetoothReiceiver, new IntentFilter(AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED));
 				int state = currentValue == null ? 0 : currentValue.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
 	        	if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
 	        		isBluetoothScoConnected = true;
@@ -970,6 +972,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 			chatStorage.close();
 			chatStorage = null;
 		}
+
+		try {
+			mServiceContext.unregisterReceiver(bluetoothReiceiver);
+		} catch (Exception e) {}
 		
 		try {
 			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30))
@@ -1226,7 +1232,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			if (activity != null) {
 				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 				if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-					mAudioManager.setMode(MODE_NORMAL);
+					mAudioManager.setMode(AudioManager.MODE_NORMAL);
 				}
 			}
 		}
@@ -1256,6 +1262,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} else {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
+			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
 		}
 		mListenerDispatcher.onCallStateChanged(call, state, message);
 	}

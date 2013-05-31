@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.compatibility.Compatibility;
 import org.linphone.compatibility.CompatibilityScaleGestureDetector;
 import org.linphone.compatibility.CompatibilityScaleGestureListener;
+import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
@@ -177,8 +178,12 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
     	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, Math.max(portraitZoomFactor, landscapeZoomFactor)));
 
-    	LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
-        return true;
+    	LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+    	if (currentCall != null) {
+    		currentCall.zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+            return true;
+    	}
+        return false;
     }
 
 	@Override
