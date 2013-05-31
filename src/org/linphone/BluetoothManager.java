@@ -32,12 +32,11 @@ import android.os.Build;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class BluetoothManager extends BroadcastReceiver {
-	 @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         LinphoneManager lm = LinphoneManager.getInstance();
         
-        String actionScoConnected = AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED;
         if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
             Log.e("Bluetooth Received Event" + " ACTION_ACL_DISCONNECTED" );
             
@@ -53,7 +52,7 @@ public class BluetoothManager extends BroadcastReceiver {
             	lm.scoConnected();
             }
         } 
-        else if (actionScoConnected.equals(action)) {
+        else if (AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED.equals(action)) {
         	int state = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
     		Log.e("Bluetooth sco state changed : " + state);
         	if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
