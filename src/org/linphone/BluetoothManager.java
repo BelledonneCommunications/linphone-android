@@ -34,6 +34,9 @@ import android.os.Build;
 public class BluetoothManager extends BroadcastReceiver {
 	@SuppressWarnings("deprecation")
 	public void onReceive(Context context, Intent intent) {
+        if (!LinphoneManager.isInstanciated())
+        	return;
+
         String action = intent.getAction();
         LinphoneManager lm = LinphoneManager.getInstance();
         
