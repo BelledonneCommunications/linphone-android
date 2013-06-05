@@ -30,7 +30,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -42,8 +42,9 @@ import android.widget.Toast;
 public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private static SetupActivity instance;
 	private RelativeLayout back, next, cancel;
-	private SetupFragments currentFragment;
+	private SetupFragment currentFragment;
 	private SharedPreferences mPref;
+	private SetupFragment firstFragment;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,14 +54,13 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
         }
 		
 		setContentView(R.layout.setup);
-        
+		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
+				SetupFragment.LINPHONE_LOGIN : SetupFragment.WELCOME;
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState == null) {
-	            WelcomeFragment welcomeFragment = new WelcomeFragment();
-	            getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, welcomeFragment).commit();
-	            currentFragment = SetupFragments.WELCOME;
+            	display(firstFragment);
             } else {
-            	currentFragment = (SetupFragments) savedInstanceState.getSerializable("CurrentFragment");
+            	currentFragment = (SetupFragment) savedInstanceState.getSerializable("CurrentFragment");
             }
         }
         
@@ -103,36 +103,48 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.setup_cancel) {
-			finish();
+			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
+				moveTaskToBack(true);
+			} else {
+				finish();
+			}
 		} else if (id == R.id.setup_next) {
-			if (currentFragment == SetupFragments.WELCOME) {
+			if (currentFragment == SetupFragment.WELCOME) {
 				MenuFragment fragment = new MenuFragment();
 				changeFragment(fragment);
-				currentFragment = SetupFragments.MENU;
+				currentFragment = SetupFragment.MENU;
 				
 				next.setVisibility(View.GONE);
 				back.setVisibility(View.VISIBLE);
-			} else if (currentFragment == SetupFragments.WIZARD_CONFIRM) {
+			} else if (currentFragment == SetupFragment.WIZARD_CONFIRM) {
 				finish();
 			}
 		} else if (id == R.id.setup_back) {
-			handleBackEvent();
+			onBackPressed();
 		}
 	}
-	
-	private void handleBackEvent() {
-		if (currentFragment == SetupFragments.MENU) {
+
+	@Override
+	public void onBackPressed() {
+		if (currentFragment == firstFragment) {
+			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
+				moveTaskToBack(true);
+			} else {
+				finish();
+			}
+		}
+		if (currentFragment == SetupFragment.MENU) {
 			WelcomeFragment fragment = new WelcomeFragment();
 			changeFragment(fragment);
-			currentFragment = SetupFragments.WELCOME;
+			currentFragment = SetupFragment.WELCOME;
 			
 			next.setVisibility(View.VISIBLE);
 			back.setVisibility(View.GONE);
-		} else if (currentFragment == SetupFragments.GENERIC_LOGIN || currentFragment == SetupFragments.LINPHONE_LOGIN || currentFragment == SetupFragments.WIZARD) {
+		} else if (currentFragment == SetupFragment.GENERIC_LOGIN || currentFragment == SetupFragment.LINPHONE_LOGIN || currentFragment == SetupFragment.WIZARD) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
-			currentFragment = SetupFragments.MENU;
-		} else if (currentFragment == SetupFragments.WELCOME) {
+			currentFragment = SetupFragment.MENU;
+		} else if (currentFragment == SetupFragment.WELCOME) {
 			finish();
 		}
 	}
@@ -142,7 +154,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
-			currentFragment = SetupFragments.ECHO_CANCELLER_CALIBRATION;
+			currentFragment = SetupFragment.ECHO_CANCELLER_CALIBRATION;
 			back.setVisibility(View.VISIBLE);
 			next.setVisibility(View.GONE);
 			next.setEnabled(false);
@@ -197,22 +209,40 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		mPref.edit().putBoolean(getString(key), value).commit();
 	}
 
+	private void display(SetupFragment fragment) {
+		switch (fragment) {
+		case WELCOME:
+			displayWelcome();
+			break;
+		case LINPHONE_LOGIN:
+			displayLoginLinphone();
+			break;
+		default:
+			throw new IllegalStateException("Can't handle " + fragment);
+		}
+	}
+
+	public void displayWelcome() {
+		changeFragment(new WelcomeFragment());
+		currentFragment = SetupFragment.WELCOME;
+	}
+
 	public void displayLoginGeneric() {
 		GenericLoginFragment fragment = new GenericLoginFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragments.GENERIC_LOGIN;
+		currentFragment = SetupFragment.GENERIC_LOGIN;
 	}
 	
 	public void displayLoginLinphone() {
 		LinphoneLoginFragment fragment = new LinphoneLoginFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragments.LINPHONE_LOGIN;
+		currentFragment = SetupFragment.LINPHONE_LOGIN;
 	}
 
 	public void displayWizard() {
 		WizardFragment fragment = new WizardFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragments.WIZARD;
+		currentFragment = SetupFragment.WIZARD;
 	}
 	
 	public void saveCreatedAccount(String username, String password, String domain) {
@@ -248,6 +278,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			writePreference(getString(R.string.pref_passwd_key) + newAccountId, password);
 			writePreference(getString(R.string.pref_domain_key) + newAccountId, domain);
 		}
+		String forcedProxy=getResources().getString(R.string.setup_forced_proxy);
+		if (!TextUtils.isEmpty(forcedProxy)) {
+			writePreference(R.string.pref_enable_outbound_proxy_key, true);
+			writePreference(R.string.pref_proxy_key, forcedProxy);
+		}
 	}
 
 	public void displayWizardConfirm(String username) {
@@ -258,7 +293,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		
-		currentFragment = SetupFragments.WIZARD_CONFIRM;
+		currentFragment = SetupFragment.WIZARD_CONFIRM;
 
 		next.setVisibility(View.VISIBLE);
 		next.setEnabled(false);
@@ -284,14 +319,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		success();
 	}
 	
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			handleBackEvent();
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
 	public void success() {
 		writePreference(R.string.first_launch_suceeded_once_key, true);
 		setResult(Activity.RESULT_OK);
