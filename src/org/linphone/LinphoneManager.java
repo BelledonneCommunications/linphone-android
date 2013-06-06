@@ -1712,8 +1712,8 @@ public final class LinphoneManager implements LinphoneCoreListener {
 		
 	}
 	@Override
-	public void infoReceived(LinphoneCore lc, LinphoneInfoMessage info) {
-		Log.d("Info message received from "+info.getFrom());
+	public void infoReceived(LinphoneCore lc, LinphoneCall call, LinphoneInfoMessage info) {
+		Log.d("Info message received from "+call.getRemoteAddress().asString());
 		LinphoneContent ct=info.getContent();
 		if (ct!=null){
 			Log.d("Info received with body with mime type "+ct.getType()+"/"+ct.getSubtype()+" and data ["+ct.getDataAsString()+"]");
