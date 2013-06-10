@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -431,5 +432,9 @@ public class ApiFivePlus {
 
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		viewTreeObserver.removeGlobalOnLayoutListener(keyboardListener);
+	}
+
+	public static void setAudioManagerInCallMode(AudioManager manager) {
+		manager.setMode(AudioManager.MODE_IN_CALL);
 	}
 }

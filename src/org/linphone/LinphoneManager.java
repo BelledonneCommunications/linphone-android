@@ -211,6 +211,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
 		isUsingBluetoothAudioRoute = false;
 		if (mAudioManager != null) {
+			Compatibility.setAudioManagerInCallMode(mAudioManager);
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
 		}
@@ -1211,7 +1212,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		if (state == LinphoneCall.State.Connected) {
-			Log.d("Audio focus requested: " + mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN));
+			if (mLc.getCallsNb() == 1) {
+				Log.d("Audio focus requested: " + (mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
+			}
 		}
 
 		if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
@@ -1227,7 +1230,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == CallEnd || state == Error) {
-			Log.d("Audio focus released: " + mAudioManager.abandonAudioFocus(null));
+			if (mLc.getCallsNb() == 0) {
+				Log.d("Audio focus released: " + (mAudioManager.abandonAudioFocus(null) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
+				mAudioManager.setMode(AudioManager.MODE_NORMAL);
+			}
 			Context activity = getContext();
 			if (activity != null) {
 				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
@@ -1262,7 +1268,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} else {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
-			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+			Compatibility.setAudioManagerInCallMode(mAudioManager);
 		}
 		mListenerDispatcher.onCallStateChanged(call, state, message);
 	}
