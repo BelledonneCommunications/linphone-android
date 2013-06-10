@@ -190,10 +190,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 		
-		if (mR.getBoolean(R.bool.enable_log_collect)) {
-			LinphoneUtils.clearLogs();
-		}
-		
 		chatStorage = new ChatStorage(mServiceContext);
 	}
 
@@ -215,7 +211,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
 		isUsingBluetoothAudioRoute = false;
 		if (mAudioManager != null) {
-			mAudioManager.setMode(AudioManager.MODE_NORMAL);
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
 		}
@@ -1214,6 +1209,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 				return;
 			} 
 		}
+		
+		if (state == LinphoneCall.State.Connected) {
+			Log.d("Audio focus requested: " + mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN));
+		}
 
 		if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
@@ -1228,6 +1227,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 
 		if (state == CallEnd || state == Error) {
+			Log.d("Audio focus released: " + mAudioManager.abandonAudioFocus(null));
 			Context activity = getContext();
 			if (activity != null) {
 				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);

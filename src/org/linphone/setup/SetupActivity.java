@@ -42,9 +42,10 @@ import android.widget.Toast;
 public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private static SetupActivity instance;
 	private RelativeLayout back, next, cancel;
-	private SetupFragment currentFragment;
+	private SetupFragmentsEnum currentFragment;
 	private SharedPreferences mPref;
-	private SetupFragment firstFragment;
+	private SetupFragmentsEnum firstFragment;
+	private boolean accountCreated = false;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,12 +56,12 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		
 		setContentView(R.layout.setup);
 		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
-				SetupFragment.LINPHONE_LOGIN : SetupFragment.WELCOME;
+				SetupFragmentsEnum.LINPHONE_LOGIN : SetupFragmentsEnum.WELCOME;
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState == null) {
             	display(firstFragment);
             } else {
-            	currentFragment = (SetupFragment) savedInstanceState.getSerializable("CurrentFragment");
+            	currentFragment = (SetupFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
             }
         }
         
@@ -109,14 +110,14 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				finish();
 			}
 		} else if (id == R.id.setup_next) {
-			if (currentFragment == SetupFragment.WELCOME) {
+			if (currentFragment == SetupFragmentsEnum.WELCOME) {
 				MenuFragment fragment = new MenuFragment();
 				changeFragment(fragment);
-				currentFragment = SetupFragment.MENU;
+				currentFragment = SetupFragmentsEnum.MENU;
 				
 				next.setVisibility(View.GONE);
 				back.setVisibility(View.VISIBLE);
-			} else if (currentFragment == SetupFragment.WIZARD_CONFIRM) {
+			} else if (currentFragment == SetupFragmentsEnum.WIZARD_CONFIRM) {
 				finish();
 			}
 		} else if (id == R.id.setup_back) {
@@ -133,18 +134,18 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				finish();
 			}
 		}
-		if (currentFragment == SetupFragment.MENU) {
+		if (currentFragment == SetupFragmentsEnum.MENU) {
 			WelcomeFragment fragment = new WelcomeFragment();
 			changeFragment(fragment);
-			currentFragment = SetupFragment.WELCOME;
+			currentFragment = SetupFragmentsEnum.WELCOME;
 			
 			next.setVisibility(View.VISIBLE);
 			back.setVisibility(View.GONE);
-		} else if (currentFragment == SetupFragment.GENERIC_LOGIN || currentFragment == SetupFragment.LINPHONE_LOGIN || currentFragment == SetupFragment.WIZARD) {
+		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN || currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN || currentFragment == SetupFragmentsEnum.WIZARD) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
-			currentFragment = SetupFragment.MENU;
-		} else if (currentFragment == SetupFragment.WELCOME) {
+			currentFragment = SetupFragmentsEnum.MENU;
+		} else if (currentFragment == SetupFragmentsEnum.WELCOME) {
 			finish();
 		}
 	}
@@ -154,7 +155,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
-			currentFragment = SetupFragment.ECHO_CANCELLER_CALIBRATION;
+			currentFragment = SetupFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
 			back.setVisibility(View.VISIBLE);
 			next.setVisibility(View.GONE);
 			next.setEnabled(false);
@@ -209,7 +210,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		mPref.edit().putBoolean(getString(key), value).commit();
 	}
 
-	private void display(SetupFragment fragment) {
+	private void display(SetupFragmentsEnum fragment) {
 		switch (fragment) {
 		case WELCOME:
 			displayWelcome();
@@ -224,28 +225,31 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 
 	public void displayWelcome() {
 		changeFragment(new WelcomeFragment());
-		currentFragment = SetupFragment.WELCOME;
+		currentFragment = SetupFragmentsEnum.WELCOME;
 	}
 
 	public void displayLoginGeneric() {
 		GenericLoginFragment fragment = new GenericLoginFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragment.GENERIC_LOGIN;
+		currentFragment = SetupFragmentsEnum.GENERIC_LOGIN;
 	}
 	
 	public void displayLoginLinphone() {
 		LinphoneLoginFragment fragment = new LinphoneLoginFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragment.LINPHONE_LOGIN;
+		currentFragment = SetupFragmentsEnum.LINPHONE_LOGIN;
 	}
 
 	public void displayWizard() {
 		WizardFragment fragment = new WizardFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragment.WIZARD;
+		currentFragment = SetupFragmentsEnum.WIZARD;
 	}
 	
 	public void saveCreatedAccount(String username, String password, String domain) {
+		if (accountCreated)
+			return;
+		
 		int newAccountId = mPref.getInt(getString(R.string.pref_extra_accounts), 0);
 		if (newAccountId == -1)
 			newAccountId = 0;
@@ -283,6 +287,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			writePreference(R.string.pref_enable_outbound_proxy_key, true);
 			writePreference(R.string.pref_proxy_key, forcedProxy);
 		}
+		accountCreated = true;
 	}
 
 	public void displayWizardConfirm(String username) {
@@ -293,7 +298,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		
-		currentFragment = SetupFragment.WIZARD_CONFIRM;
+		currentFragment = SetupFragmentsEnum.WIZARD_CONFIRM;
 
 		next.setVisibility(View.VISIBLE);
 		next.setEnabled(false);
