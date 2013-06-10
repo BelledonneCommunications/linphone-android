@@ -197,8 +197,6 @@
 	<string name="cont">Continue</string>
 	<string name="never_remind">Never remind me</string>
 	<string name="config_error">%s, do you want to go to the settings page ?</string>
-	<string name="initial_config_error">&lt;P ALIGN=CENTER&gt;No SIP account has been configured yet, do you want to go to the settings page ?&lt;br/&gt;&lt;br/&gt; Need help ?&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
-	<string name="first_launch_message">&lt;P ALIGN=CENTER&gt;Welcome to Linphone SIP phone&lt;br/&gt;&lt;br/&gt; If you are new to SIP, have a look at&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt; </string>
 	<string name="ec_calibration_launch_message">Starting echo cancelation audio calibration </string>
 	<string name="warning_already_incall">Cannot initiate a new call because a call is already engaged</string>
 	<string name="tab_history">History</string>
@@ -319,12 +317,6 @@
 	<string name="content_description_mark"></string>
 	
 	<string name="setup_title">Account Setup Assistant</string>
-	<string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>
-	<string name="setup_create_account">Create an account on linphone.org</string>
-	<string name="setup_login_linphone">I already have a linphone.org account</string>
-	<string name="setup_login_generic">I already have a SIP account</string>
-	<string name="setup_linphone_account_hint">Enter your linphone.org username and password</string>
-	<string name="setup_general_account_hint">Enter your SIP account username, password and domain</string>
 	<string name="setup_apply">Apply</string>
 	<string name="setup_username_hint">username</string>
 	<string name="setup_password_hint">password</string>

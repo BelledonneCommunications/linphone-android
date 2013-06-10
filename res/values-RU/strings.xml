@@ -197,8 +197,6 @@
 	<string name="cont">Продолжить</string>
 	<string name="never_remind">Больше не напоминать</string>
 	<string name="config_error">%s, хотите ли вы перейти к настройкам ?</string>
-	<string name="initial_config_error">&lt;P ALIGN=CENTER&gt;Учётная запись SIP не настроена, хотите ли вы перейти к настройкам page ?&lt;br/&gt;&lt;br/&gt; Нужна помощь ?&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt;</string>
-	<string name="first_launch_message">&lt;P ALIGN=CENTER&gt;Добро пожаловать в SIP телефон Linphone&lt;br/&gt;&lt;br/&gt; Если Вы новичок SIP, посетите&lt;br/&gt; &quot;http://www.linphone.org/m/help&quot;&lt;/p&gt; </string>
 	<string name="ec_calibration_launch_message">Начинаем автоматическую настройку шумоподавления</string>
 	<string name="warning_already_incall">Невозможно начать новый звонок, звонок уже идёт</string>
 	<string name="tab_history">История</string>
@@ -319,12 +317,6 @@
 	<string name="content_description_mark"></string>
 	
 	<string name="setup_title">Помощник Настройки учётной записи</string>
-	<string name="setup_welcome">Этот помощник поможет Вам настроить учётную запись SIP для звонков.</string>
-	<string name="setup_create_account">Создать учётную запись на linphone.org</string>
-	<string name="setup_login_linphone">Уже есть учётная запись на linphone.org</string>
-	<string name="setup_login_generic">Уже есть учётная запись SIP</string>
-	<string name="setup_linphone_account_hint">Введите имя пользователя и пароль учётной записи linphone.org</string>
-	<string name="setup_general_account_hint">Введите имя пользователя, пароль и сервер учётной записи SIP</string>
 	<string name="setup_apply">Применить</string>
 	<string name="setup_username_hint">имя пользователя</string>
 	<string name="setup_password_hint">пароль</string>
