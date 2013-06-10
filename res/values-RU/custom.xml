@@ -10,6 +10,13 @@
 	<string name="notification_register_failure">Ошибка регистрации в %s</string>
 	<string name="about_text">Linphone %s SIP (rfc 3261) совместимый телефон под GPL V2 лицензией\n http://www.linphone.org\n\nИнструкции\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
 
+	<string name="setup_welcome">Этот помощник поможет Вам настроить учётную запись SIP для звонков.</string>
+	<string name="setup_create_account">Создать учётную запись на linphone.org</string>
+	<string name="setup_login_linphone">Уже есть учётная запись на linphone.org</string>
+	<string name="setup_login_generic">Уже есть учётная запись SIP</string>
+	<string name="setup_linphone_account_hint">Введите имя пользователя и пароль учётной записи linphone.org</string>
+	<string name="setup_general_account_hint">Введите имя пользователя, пароль и сервер учётной записи SIP</string>
+	
     <string name="tunnel_host"></string>
     <string name="default_tunnel_mode_entry_value">@string/tunnel_mode_entry_value_disabled</string>
 </resources>
