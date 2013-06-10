@@ -333,7 +333,12 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				options.setEnabled(true);
+				if (getResources().getBoolean(R.bool.disable_options_in_call)) {
+					options.setEnabled(false);
+				} else {
+					options.setEnabled(true);
+				}
+				
 				video.setEnabled(true);
 				micro.setEnabled(true);
 				speaker.setEnabled(true);

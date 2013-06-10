@@ -156,13 +156,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         
         sendImage = (TextView) view.findViewById(R.id.sendPicture);
-        registerForContextMenu(sendImage);
-        sendImage.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				pickImage();
-			}
-		});
+        if (!getResources().getBoolean(R.bool.disable_chat_send_file)) {
+	        registerForContextMenu(sendImage);
+	        sendImage.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					pickImage();
+				}
+			});
+        } else {
+        	sendImage.setEnabled(false);
+        }
         
         cancelUpload = (ImageView) view.findViewById(R.id.cancelUpload);
         cancelUpload.setOnClickListener(new OnClickListener() {

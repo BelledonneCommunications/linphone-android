@@ -25,7 +25,7 @@
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
-	<bool name="use_first_login_activity">true</bool>
+	<bool name="display_account_wizard_at_first_start">true</bool>
 	
 	<bool name="use_android_native_contact_edit_interface">false</bool>
 	<!-- The following settings are only usefull if use_android_native_contact_edit_interface = false -->
@@ -41,11 +41,11 @@
 	<bool name="display_messages_time_and_status">true</bool> <!-- Used to show the time of each message arrival -->
 	<bool name="display_time_aside">false</bool> <!-- if display_messages_time = true, display time on the side of the message instead of below -->
 	
-	<bool name="display_call_stats">true</bool>
-	
 	<bool name="enable_linphone_friends">false</bool>
 	
+	<bool name="display_call_stats">true</bool>
 	<bool name="show_current_calls_above_video">false</bool>
+	<bool name="disable_options_in_call">false</bool>
 	
 	<!-- Behavior Settings -->
 	<bool name="allow_chat_multiline">false</bool>
@@ -55,6 +55,7 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
+	<bool name="disable_chat_send_file">false</bool>
 	
 	<bool name="hash_images_as_name_before_upload">true</bool>
 	
