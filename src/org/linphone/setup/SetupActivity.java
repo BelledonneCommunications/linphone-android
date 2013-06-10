@@ -45,6 +45,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private SetupFragmentsEnum currentFragment;
 	private SharedPreferences mPref;
 	private SetupFragmentsEnum firstFragment;
+	private Fragment fragment;
 	private boolean accountCreated = false;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,15 +111,20 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				finish();
 			}
 		} else if (id == R.id.setup_next) {
-			if (currentFragment == SetupFragmentsEnum.WELCOME) {
-				MenuFragment fragment = new MenuFragment();
-				changeFragment(fragment);
-				currentFragment = SetupFragmentsEnum.MENU;
-				
-				next.setVisibility(View.GONE);
-				back.setVisibility(View.VISIBLE);
-			} else if (currentFragment == SetupFragmentsEnum.WIZARD_CONFIRM) {
-				finish();
+			if (firstFragment == SetupFragmentsEnum.LINPHONE_LOGIN) {
+				LinphoneLoginFragment linphoneFragment = (LinphoneLoginFragment) fragment;
+				linphoneFragment.linphoneLogIn();
+			} else {
+				if (currentFragment == SetupFragmentsEnum.WELCOME) {
+					MenuFragment fragment = new MenuFragment();
+					changeFragment(fragment);
+					currentFragment = SetupFragmentsEnum.MENU;
+					
+					next.setVisibility(View.GONE);
+					back.setVisibility(View.VISIBLE);
+				} else if (currentFragment == SetupFragmentsEnum.WIZARD_CONFIRM) {
+					finish();
+				}
 			}
 		} else if (id == R.id.setup_back) {
 			onBackPressed();
@@ -224,24 +230,25 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	public void displayWelcome() {
-		changeFragment(new WelcomeFragment());
+		fragment = new WelcomeFragment();
+		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.WELCOME;
 	}
 
 	public void displayLoginGeneric() {
-		GenericLoginFragment fragment = new GenericLoginFragment();
+		fragment = new GenericLoginFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.GENERIC_LOGIN;
 	}
 	
 	public void displayLoginLinphone() {
-		LinphoneLoginFragment fragment = new LinphoneLoginFragment();
+		fragment = new LinphoneLoginFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.LINPHONE_LOGIN;
 	}
 
 	public void displayWizard() {
-		WizardFragment fragment = new WizardFragment();
+		fragment = new WizardFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.WIZARD;
 	}
