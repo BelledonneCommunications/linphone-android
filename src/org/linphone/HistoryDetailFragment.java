@@ -85,7 +85,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	
 	private void displayHistory(String status, String callTime, String callDate) {
 		contactName.setText(displayName == null ? sipUri : displayName);
-		contactAddress.setText(sipUri);
+		if (getResources().getBoolean(R.bool.never_display_sip_addresses)) {
+			contactAddress.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+		} else {
+			contactAddress.setText(sipUri);
+		}
 		
 		if (status.equals("Missed")) {
 			callDirection.setText(getString(R.string.call_state_missed));
@@ -136,7 +140,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
 		} else if (id == R.id.addToContacts) {
-			LinphoneActivity.instance().displayContactsForEdition(sipUri);
+			String uriToAdd = sipUri;
+			if (getResources().getBoolean(R.bool.never_display_sip_addresses)) {
+				uriToAdd = LinphoneUtils.getUsernameFromAddress(sipUri);
+			}
+			LinphoneActivity.instance().displayContactsForEdition(uriToAdd);
 		}
 	}
 	

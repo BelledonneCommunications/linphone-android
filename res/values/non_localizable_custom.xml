@@ -40,6 +40,7 @@
 	<bool name="lock_statusbar">false</bool>
 	<bool name="emoticons_in_messages">true</bool>
 	<bool name="only_display_username_if_unknown">true</bool> <!-- Display username for all sip addresses (if not in contact and display name empty) -->
+	<bool name="never_display_sip_addresses">false</bool> <!-- To use only with the above setting set to true -->
 	<bool name="display_messages_time_and_status">true</bool> <!-- Used to show the time of each message arrival -->
 	<bool name="display_time_aside">false</bool> <!-- if display_messages_time = true, display time on the side of the message instead of below -->
 	
