@@ -18,7 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.R;
+import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -26,6 +28,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -47,6 +50,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private SetupFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private boolean accountCreated = false;
+	private Handler mHandler = new Handler();
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -191,9 +195,55 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			launchEchoCancellerCalibration(sendEcCalibrationResult);
 		}
 	}
+	
+	
+	private LinphoneOnRegistrationStateChangedListener registrationListener = new LinphoneOnRegistrationStateChangedListener() {
+		public void onRegistrationStateChanged(RegistrationState state) {
+			if (state == RegistrationState.RegistrationOk) {
+				LinphoneManager.removeListener(registrationListener);
+				
+				if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+					mHandler .post(new Runnable () {
+						public void run() {
+							launchEchoCancellerCalibration(true);
+						}
+					});
+				}
+			} else if (state == RegistrationState.RegistrationFailed) {
+				LinphoneManager.removeListener(registrationListener);
+				deleteCreatedAccount();
+				mHandler.post(new Runnable () {
+					public void run() {
+						Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		}
+	};
+	public void checkAccount(String username, String password, String domain) {
+		LinphoneManager.removeListener(registrationListener);
+		LinphoneManager.addListener(registrationListener);
+		
+		saveCreatedAccount(username, password, domain);
+		LinphoneManager.getInstance().initializePayloads();
 
-	public void linphoneLogIn(String username, String password) {
-		logIn(username, password, getString(R.string.default_domain), true);
+		try {
+			LinphoneManager.getInstance().initFromConf();
+		} catch (Throwable e) {
+			LinphoneManager.removeListener(registrationListener);
+			deleteCreatedAccount();
+			
+			Log.e(e, "Error while initializing from config in first login activity");
+			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
+		}
+	}
+
+	public void linphoneLogIn(String username, String password, boolean validate) {
+		if (validate) {
+			checkAccount(username, password, getString(R.string.default_domain));
+		} else {
+			logIn(username, password, getString(R.string.default_domain), true);
+		}
 	}
 
 	public void genericLogIn(String username, String password, String domain) {
@@ -251,6 +301,14 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		fragment = new WizardFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.WIZARD;
+	}
+	
+	public void deleteCreatedAccount() {
+		if (!accountCreated)
+			return;
+		
+		writePreference(R.string.pref_extra_accounts, 0);
+		accountCreated = false;
 	}
 	
 	public void saveCreatedAccount(String username, String password, String domain) {

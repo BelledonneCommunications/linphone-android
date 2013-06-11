@@ -22,6 +22,7 @@
     <string name="setup_forced_proxy"></string>
     <bool name="setup_cancel_move_to_back">false</bool>
     <bool name="setup_use_linphone_as_first_fragment">false</bool>
+    <bool name="setup_account_validation_mandatory">false</bool>
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>
     <bool name="hide_accounts">false</bool>

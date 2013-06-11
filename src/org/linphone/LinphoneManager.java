@@ -1637,7 +1637,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		public void onRegistrationStateChanged(RegistrationState state,
 				String message) {
 			if (serviceListener != null) serviceListener.onRegistrationStateChanged(state, message);
-			for (LinphoneOnRegistrationStateChangedListener listener : getSimpleListeners(LinphoneActivity.class)) {
+			for (LinphoneOnRegistrationStateChangedListener listener : getSimpleListeners(LinphoneOnRegistrationStateChangedListener.class)) {
 				listener.onRegistrationStateChanged(state);
 			}
 		}
