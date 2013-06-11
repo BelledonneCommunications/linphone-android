@@ -16,6 +16,8 @@
 	<string name="setup_login_generic">J\'ai déjà un compte SIP</string>
 	<string name="setup_linphone_account_hint">Entrez votre nom d\'utilisateur et votre mot de passe linphone.org</string>
 	<string name="setup_general_account_hint">Entrez votre nom d\'utilisateur, votre mot de passe et le domaine de votre compte SIP</string>
+
+        <string name="setup_username_hint">nom d\'utilisateur</string>
 	
     <string name="tunnel_host"></string>
     <string name="default_tunnel_mode_entry_value">@string/tunnel_mode_entry_value_disabled</string>

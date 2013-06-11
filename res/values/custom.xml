@@ -22,6 +22,8 @@
 	<string name="setup_linphone_account_hint">Enter your linphone.org username and password</string>
 	<string name="setup_general_account_hint">Enter your SIP account username, password and domain</string>
 	
+        <string name="setup_username_hint">username</string>
+
     <string name="tunnel_host"></string>
 </resources>
  
