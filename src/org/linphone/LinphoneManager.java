@@ -383,6 +383,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
+			if (mServiceContext.getResources().getBoolean(R.bool.override_domain_using_default_one)) {
+				lAddress.setDomain(mServiceContext.getString(R.string.default_domain));
+			}
 			LinphoneProxyConfig lpc = mLc.getDefaultProxyConfig();
 
 			if (mR.getBoolean(R.bool.forbid_self_call) && lpc!=null && lAddress.asStringUriOnly().equals(lpc.getIdentity())) {
