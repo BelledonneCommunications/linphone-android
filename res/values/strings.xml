@@ -318,7 +318,6 @@
 	
 	<string name="setup_title">Account Setup Assistant</string>
 	<string name="setup_apply">Apply</string>
-	<string name="setup_username_hint">username</string>
 	<string name="setup_password_hint">password</string>
 	<string name="setup_domain_hint">domain</string>
 	<string name="setup_password_confirm_hint">confirm password</string>

@@ -270,7 +270,6 @@
 	
 	<string name="setup_title">Assistant de configuration des comptes</string>
 	<string name="setup_apply">Appliquer</string>
-	<string name="setup_username_hint">nom d\'utilisateur</string>
 	<string name="setup_password_hint">mot de passe</string>
 	<string name="setup_domain_hint">domaine</string>
 	<string name="setup_password_confirm_hint">confirmez le mot de passe</string>
