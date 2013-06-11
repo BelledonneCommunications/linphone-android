@@ -333,16 +333,13 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				if (getResources().getBoolean(R.bool.disable_options_in_call)) {
-					options.setEnabled(false);
-				} else {
-					options.setEnabled(true);
-				}
+				addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls());
+				transfer.setEnabled(getResources().getBoolean(R.bool.allow_transfers));
+				options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
 				
 				video.setEnabled(true);
 				micro.setEnabled(true);
 				speaker.setEnabled(true);
-				addCall.setEnabled(true);
 				transfer.setEnabled(true);
 				pause.setEnabled(true);
 				dialer.setEnabled(true);
