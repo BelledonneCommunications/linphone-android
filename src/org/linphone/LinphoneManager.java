@@ -71,7 +71,6 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
-import org.linphone.core.LinphoneLogHandler;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
@@ -1723,7 +1722,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void transferState(LinphoneCore lc, LinphoneCall call,
 			State new_call_state) {
-		// TODO Auto-generated method stub
 		
 	}
 	@Override
