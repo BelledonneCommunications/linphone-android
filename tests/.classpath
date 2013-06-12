@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="/home/viish/Work/linphone-android/tests/libs/robotium-solo-4.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/viish/Work/linphone-android/tests/libs/robotium-solo-4.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/linphone-android-private"/>
-	<classpathentry kind="lib" path="libs/robotium-solo-4.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
