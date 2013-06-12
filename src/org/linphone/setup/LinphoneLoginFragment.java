@@ -45,7 +45,20 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 		apply = (ImageView) view.findViewById(R.id.setup_apply);
 		apply.setOnClickListener(this);
 		
+		if (getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment)) {
+			view.findViewById(R.id.setup_apply_button).setVisibility(View.GONE);
+		}
+		
 		return view;
+	}
+	
+	public void linphoneLogIn() {
+		if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
+			Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		SetupActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), getResources().getBoolean(R.bool.setup_account_validation_mandatory));
 	}
 
 	@Override
@@ -53,12 +66,7 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.setup_apply) {
-			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
-				Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			SetupActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString());
+			linphoneLogIn();
 		}
 	}
 }

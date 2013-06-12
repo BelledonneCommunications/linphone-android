@@ -138,7 +138,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			return;
 		}
 
-		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.use_first_login_activity);
+		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_wizard_at_first_start);
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		if (useFirstLoginActivity && !pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
 			if (pref.getInt(getString(R.string.pref_extra_accounts), -1) > -1) {
@@ -157,7 +157,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			if (findViewById(R.id.fragmentContainer) != null) {
 				dialerFragment = new DialerFragment();
 				dialerFragment.setArguments(getIntent().getExtras());
-				getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment).commit();
+				getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
 				selectMenu(FragmentsAvailable.DIALER);
 			}
 		}
@@ -367,7 +367,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 
 		transaction.addToBackStack(newFragmentType.toString());
-		transaction.replace(R.id.fragmentContainer, newFragment);
+		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
 		getSupportFragmentManager().executePendingTransactions();
 
@@ -751,12 +751,12 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	public int onMessageSent(String to, String message) {
 		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveMessage("", to, message, System.currentTimeMillis());
+		return getChatStorage().saveTextMessage("", to, message, System.currentTimeMillis());
 	}
 
 	public int onMessageSent(String to, Bitmap image, String imageURL) {
 		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveMessage("", to, image, System.currentTimeMillis());
+		return getChatStorage().saveImageMessage("", to, image, imageURL, System.currentTimeMillis());
 	}
 
 	public void onMessageStateChanged(String to, String message, int newState) {
@@ -1375,19 +1375,26 @@ public class LinphoneActivity extends FragmentActivity implements
 				} else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 					return true;
 				}
-			} else if (!isTablet()) {
-				int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-				if (backStackEntryCount <= 1) {
-					showStatusBar();
-				}
-
-				if (currentFragment == FragmentsAvailable.SETTINGS) {
-					showStatusBar();
-					reloadConfig();
-					updateAnimationsState();
-				} else if (currentFragment == FragmentsAvailable.CHATLIST) {
-					//Hack to ensure display the status bar on some devices
-					showStatusBar();
+			} else {
+				if (!isTablet()) {
+					int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+					if (backStackEntryCount <= 1) {
+						showStatusBar();
+					}
+	
+					if (currentFragment == FragmentsAvailable.SETTINGS) {
+						showStatusBar();
+						reloadConfig();
+						updateAnimationsState();
+					} else if (currentFragment == FragmentsAvailable.CHATLIST) {
+						//Hack to ensure display the status bar on some devices
+						showStatusBar();
+					}
+				} else {
+					if (currentFragment == FragmentsAvailable.SETTINGS) {
+						reloadConfig();
+						updateAnimationsState();
+					}
 				}
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU && statusFragment != null) {

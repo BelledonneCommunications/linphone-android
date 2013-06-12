@@ -101,7 +101,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			
 			String displayednumberOrAddress = numberOrAddress;
 			if (numberOrAddress.startsWith("sip:")) {
-				displayednumberOrAddress = displayednumberOrAddress.substring(4);
+				displayednumberOrAddress = displayednumberOrAddress.replace("sip:", "");
 			}
 			
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
@@ -116,16 +116,19 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			}
 
 			v.findViewById(R.id.chat).setOnClickListener(chatListener);
-			if (LinphoneUtils.isSipAddress(numberOrAddress)) {
-				v.findViewById(R.id.chat).setTag(numberOrAddress);
-			} else {
-				LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-				if (lpc != null) {
-					if (!numberOrAddress.startsWith("sip:")) {
-						numberOrAddress = "sip:" + numberOrAddress;
-					}
-					v.findViewById(R.id.chat).setTag(numberOrAddress + "@" + lpc.getDomain());
+			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+			if (lpc != null) {
+				if (!displayednumberOrAddress.startsWith("sip:")) {
+					numberOrAddress = "sip:" + displayednumberOrAddress;
 				}
+				
+				String tag = numberOrAddress;
+				if (!numberOrAddress.contains("@")) {
+					tag = numberOrAddress + "@" + lpc.getDomain();
+				}
+				v.findViewById(R.id.chat).setTag(tag);
+			} else {
+				v.findViewById(R.id.chat).setTag(numberOrAddress);
 			}
 			
 			final String finalNumberOrAddress = numberOrAddress;

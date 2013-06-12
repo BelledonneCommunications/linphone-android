@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference 
+    <Preference
 	    android:title="@string/menu_about"
 	    android:key="@string/menu_about_key"/>
     
@@ -226,7 +226,9 @@
 			<CheckBoxPreference 
 			    android:title="@string/pref_ice_enable"
 				android:key="@string/pref_ice_enable_key" 
-				android:defaultValue="@bool/pref_ice_enabled_default"/><CheckBoxPreference 
+				android:defaultValue="@bool/pref_ice_enabled_default"/>
+			
+			<CheckBoxPreference 
 			    android:title="@string/pref_upnp_enable"
 				android:key="@string/pref_upnp_enable_key" 
 				android:defaultValue="@bool/pref_upnp_enabled_default"/>

@@ -163,7 +163,7 @@ run-tests:
 	$(SDK_PATH)/android update test-project --path . -m ../ && \
 	ant debug && \
 	ant installd && \
-	ant test
+	adb shell am instrument -w -e size small org.linphone.test/android.test.InstrumentationTestRunner
 
 clean:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)

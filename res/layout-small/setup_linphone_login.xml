@@ -57,6 +57,7 @@
             android:background="@drawable/setup_field_background" />
         
         <RelativeLayout
+            android:id="@+id/setup_apply_button"
             android:layout_marginTop="10dp"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content">

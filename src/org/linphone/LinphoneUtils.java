@@ -21,8 +21,10 @@ package org.linphone;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -331,5 +333,42 @@ public final class LinphoneUtils {
             return false;
         }
     }
+	
+	public static void clearLogs() {
+		try {
+			Runtime.getRuntime().exec(new String[] { "logcat", "-c" });
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void collectLogs(String logTag, String email) {
+        BufferedReader br = null;
+        Process p = null;
+        StringBuilder sb = new StringBuilder();
+
+    	try {
+			p = Runtime.getRuntime().exec(new String[] { "logcat", "-d", "|", "grep", "`adb shell ps | grep org.linphone | cut -c10-15`" });
+	    	br = new BufferedReader(new InputStreamReader(p.getInputStream()), 2048);
+
+            String line;
+	    	while ((line = br.readLine()) != null) {
+	    		sb.append(line);
+	    		sb.append("\r\n");
+	    	}
+	    	
+	    	Intent i = new Intent(Intent.ACTION_SEND);
+	    	i.setType("message/rfc822");
+	    	i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+	    	i.putExtra(Intent.EXTRA_SUBJECT, "Linphone Logs");
+	    	i.putExtra(Intent.EXTRA_TEXT, sb.toString());
+	    	try {
+	    	    LinphoneActivity.instance().startActivity(Intent.createChooser(i, "Send mail..."));
+	    	} catch (android.content.ActivityNotFoundException ex) {
+	    	}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
 

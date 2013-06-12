@@ -9,6 +9,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 
 /*
 ApiElevenPlus.java
@@ -87,5 +88,9 @@ public class ApiElevenPlus {
 		ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); 
 	    ClipData clip = android.content.ClipData.newPlainText("Message", msg);
 	    clipboard.setPrimaryClip(clip);
+	}
+
+	public static void setAudioManagerInCallMode(AudioManager manager) {
+		manager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 	}
 }
