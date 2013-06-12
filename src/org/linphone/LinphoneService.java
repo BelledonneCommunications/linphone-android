@@ -82,7 +82,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	 * setLatestEventInfo and startActivity() which needs a context.
 	 */
 
-	private Handler mHandler = new Handler();
+	public Handler mHandler = new Handler();
 	private static LinphoneService instance;
 
 //	private boolean mTestDelayElapsed; // add a timer for testing

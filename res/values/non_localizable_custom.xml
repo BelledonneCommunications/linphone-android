@@ -8,6 +8,7 @@
 	<string name="push_sender_id">622464153529</string>
 
 	<string name="default_domain">sip.linphone.org</string>
+	<bool name="override_domain_using_default_one">false</bool> <!-- Replace the domain for outgoing calls by the one above -->
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 
 	<!-- Interface settings -->
@@ -19,10 +20,14 @@
     <bool name="hide_camera_settings">false</bool>
     <bool name="replace_wizard_with_old_interface">false</bool>
     <bool name="hide_wizard">false</bool>
+    <string name="setup_forced_proxy"></string>
+    <bool name="setup_cancel_move_to_back">false</bool>
+    <bool name="setup_use_linphone_as_first_fragment">false</bool>
+    <bool name="setup_account_validation_mandatory">false</bool>
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
-	<bool name="use_first_login_activity">true</bool>
+	<bool name="display_account_wizard_at_first_start">true</bool>
 	
 	<bool name="use_android_native_contact_edit_interface">false</bool>
 	<!-- The following settings are only usefull if use_android_native_contact_edit_interface = false -->
@@ -35,14 +40,15 @@
 	<bool name="lock_statusbar">false</bool>
 	<bool name="emoticons_in_messages">true</bool>
 	<bool name="only_display_username_if_unknown">true</bool> <!-- Display username for all sip addresses (if not in contact and display name empty) -->
+	<bool name="never_display_sip_addresses">false</bool> <!-- To use only with the above setting set to true -->
 	<bool name="display_messages_time_and_status">true</bool> <!-- Used to show the time of each message arrival -->
 	<bool name="display_time_aside">false</bool> <!-- if display_messages_time = true, display time on the side of the message instead of below -->
 	
-	<bool name="display_call_stats">true</bool>
-	
 	<bool name="enable_linphone_friends">false</bool>
 	
+	<bool name="display_call_stats">true</bool>
 	<bool name="show_current_calls_above_video">false</bool>
+	<bool name="disable_options_in_call">false</bool>
 	
 	<!-- Behavior Settings -->
 	<bool name="allow_chat_multiline">false</bool>
@@ -52,11 +58,11 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
+	<bool name="disable_chat_send_file">false</bool>
 	
 	<bool name="hash_images_as_name_before_upload">true</bool>
 	
-	<bool name="route_audio_to_bluetooth_if_available">true</bool>
-	
+	<bool name="enable_log_collect">false</bool>
 	<bool name="disable_every_log">false</bool>
 	<bool name="disable_all_security_features_for_markets">false</bool> <!-- Disable TLS/SRTP/ZRTP -->
 	<bool name="disable_all_patented_codecs_for_markets">false</bool> <!-- Disable MPEG4/H264 -->

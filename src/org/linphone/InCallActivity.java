@@ -248,6 +248,20 @@ public class InCallActivity extends FragmentActivity implements
 	        slideOutBottomToTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom_to_top);
 	        slideOutTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
         }
+		
+		if (LinphoneManager.getInstance().isBluetoothScoConnected) {
+			try {
+				routeLayout.setVisibility(View.VISIBLE);
+			} catch (NullPointerException npe) {}
+			audioRoute.setVisibility(View.VISIBLE);
+			speaker.setVisibility(View.GONE);
+		} else {
+			try {
+				routeLayout.setVisibility(View.GONE);
+			} catch (NullPointerException npe) {}
+			audioRoute.setVisibility(View.GONE);
+			speaker.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	private void refreshInCallActions() {
@@ -265,20 +279,6 @@ public class InCallActivity extends FragmentActivity implements
 					} else {
 						video.setBackgroundResource(R.drawable.video_off);
 					}
-				}
-				
-				if (LinphoneManager.getInstance().isBluetoothScoConnected) {
-					try {
-						routeLayout.setVisibility(View.VISIBLE);
-					} catch (NullPointerException npe) {}
-					audioRoute.setVisibility(View.VISIBLE);
-					speaker.setVisibility(View.GONE);
-				} else {
-					try {
-						routeLayout.setVisibility(View.GONE);
-					} catch (NullPointerException npe) {}
-					audioRoute.setVisibility(View.GONE);
-					speaker.setVisibility(View.VISIBLE);
 				}
 				
 				try {
@@ -333,11 +333,13 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				options.setEnabled(true);
+				addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls());
+				transfer.setEnabled(getResources().getBoolean(R.bool.allow_transfers));
+				options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
+				
 				video.setEnabled(true);
 				micro.setEnabled(true);
 				speaker.setEnabled(true);
-				addCall.setEnabled(true);
 				transfer.setEnabled(true);
 				pause.setEnabled(true);
 				dialer.setEnabled(true);
