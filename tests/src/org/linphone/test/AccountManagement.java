@@ -9,12 +9,10 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 
 import android.test.suitebuilder.annotation.LargeTest;
-import android.test.suitebuilder.annotation.MediumTest;
 import android.view.KeyEvent;
 
 public class AccountManagement extends SampleTest {
 
-	@MediumTest
 	@LargeTest
 	public void testAEditAccount() {
 		goToSettings();
@@ -39,7 +37,6 @@ public class AccountManagement extends SampleTest {
 		Assert.assertTrue(proxyConfig.getIdentity(), proxyConfig.getIdentity().contains("new"));
 	}
 
-	@MediumTest
 	@LargeTest
 	public void testBDeleteAccount() {
 		goToSettings();

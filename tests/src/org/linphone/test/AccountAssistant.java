@@ -75,7 +75,6 @@ public class AccountAssistant extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 	
-	@MediumTest
 	@LargeTest
 	public void testDLoginWithGenericAccount() {
 		startWizard();
