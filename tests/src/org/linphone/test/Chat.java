@@ -78,6 +78,33 @@ public class Chat extends SampleTest {
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.chat_test_text_received)));
 	}
 	
+	@MediumTest
+	@LargeTest
+	public void testFDeleteMessage() {
+		goToChat();
+		solo.clickOnText(iContext.getString(org.linphone.test.R.string.account_test_calls_login));
+		
+		solo.clickLongOnText(iContext.getString(R.string.chat_test_text_received));
+		solo.clickOnText(aContext.getString(org.linphone.R.string.delete));
+
+		solo.sleep(1000);
+		Assert.assertFalse(solo.searchText(iContext.getString(R.string.chat_test_text_received)));
+	}
+
+	@SmallTest
+	@MediumTest
+	@LargeTest
+	public void testGDeleteConversation() {
+		goToChat();
+		
+		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));		
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
+		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
+
+		solo.sleep(1000);
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));
+	}
+	
 	@SmallTest
 	@MediumTest
 	@LargeTest
