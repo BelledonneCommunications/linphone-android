@@ -115,7 +115,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				v.findViewById(R.id.dial).setVisibility(View.GONE);
 			}
 
-			v.findViewById(R.id.chat).setOnClickListener(chatListener);
+			v.findViewById(R.id.start_chat).setOnClickListener(chatListener);
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
 				if (!displayednumberOrAddress.startsWith("sip:")) {
@@ -126,9 +126,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				if (!numberOrAddress.contains("@")) {
 					tag = numberOrAddress + "@" + lpc.getDomain();
 				}
-				v.findViewById(R.id.chat).setTag(tag);
+				v.findViewById(R.id.start_chat).setTag(tag);
 			} else {
-				v.findViewById(R.id.chat).setTag(numberOrAddress);
+				v.findViewById(R.id.start_chat).setTag(numberOrAddress);
 			}
 			
 			final String finalNumberOrAddress = numberOrAddress;
@@ -161,7 +161,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			}
 			
 			if (getResources().getBoolean(R.bool.disable_chat)) {
-				v.findViewById(R.id.chat).setVisibility(View.GONE);
+				v.findViewById(R.id.start_chat).setVisibility(View.GONE);
 			}
 			
 			controls.addView(v);

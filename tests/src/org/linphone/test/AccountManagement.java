@@ -11,6 +11,9 @@ import org.linphone.core.LinphoneProxyConfig;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.KeyEvent;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class AccountManagement extends SampleTest {
 
 	@LargeTest
@@ -33,7 +36,7 @@ public class AccountManagement extends SampleTest {
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
 		Assert.assertEquals(proxyConfigs.length, 2);
 		LinphoneProxyConfig proxyConfig = proxyConfigs[1];
-		Assert.assertEquals(proxyConfig.getState(), RegistrationState.RegistrationOk);
+		Assert.assertEquals(RegistrationState.RegistrationOk, proxyConfig.getState());
 		Assert.assertTrue(proxyConfig.getIdentity(), proxyConfig.getIdentity().contains("new"));
 	}
 

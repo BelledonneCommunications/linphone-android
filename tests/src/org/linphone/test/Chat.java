@@ -6,24 +6,16 @@ import org.linphone.LinphoneActivity;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class Chat extends SampleTest {
-
-	@SmallTest
-	@MediumTest
-	@LargeTest
-	public void testAInitLinphoneCore() {		
-		LinphoneTestManager.createAndStart(aContext, iContext);
-		
-		solo.sleep(2000);
-		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc().getProxyConfigList()[0].getState());
-	}
 	
 	@LargeTest
 	public void testBEmptyChatHistory() {
@@ -53,7 +45,6 @@ public class Chat extends SampleTest {
 	public void testDNotEmptyChatHistory() {
 		goToChat();
 		
-		Assert.assertFalse(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.account_test_calls_login)));
 	}
 	
@@ -103,13 +94,6 @@ public class Chat extends SampleTest {
 
 		solo.sleep(1000);
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));
-	}
-	
-	@SmallTest
-	@MediumTest
-	@LargeTest
-	public void testZShutDownLinphoneCore() {
-		LinphoneTestManager.destroy();
 	}
 	
 	private void goToChat() {
