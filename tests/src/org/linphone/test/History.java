@@ -10,6 +10,9 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class History extends SampleTest {
 	
 	@SmallTest
@@ -40,6 +43,7 @@ public class History extends SampleTest {
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
 		
 		solo.sleep(2000);
+		Assert.assertEquals(1, LinphoneTestManager.getLc().getCallsNb());
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, LinphoneTestManager.getLc().getCalls()[0].getState());
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));

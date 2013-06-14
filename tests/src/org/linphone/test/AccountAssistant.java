@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class AccountAssistant extends SampleTest {
 	
 	@SmallTest

@@ -8,6 +8,9 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class Contacts extends SampleTest {
 
 	@MediumTest
@@ -87,6 +90,10 @@ public class Contacts extends SampleTest {
 	@LargeTest
 	public void testFStartChatFromContact() {
 		goToContacts();
+
+		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
+		solo.clickOnView(solo.getView(org.linphone.R.id.start_chat));
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.button_send_message)));
 	}
 
 	@SmallTest

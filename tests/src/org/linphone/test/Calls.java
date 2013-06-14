@@ -5,28 +5,20 @@ import junit.framework.Assert;
 import org.linphone.InCallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class Calls extends SampleTest {
 	
 	@SmallTest
 	@MediumTest
 	@LargeTest
-	public void testAInitLinphoneCore() {		
-		LinphoneTestManager.createAndStart(aContext, iContext);
-		
-		solo.sleep(2000);
-		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc().getProxyConfigList()[0].getState());
-	}
-	
-	@SmallTest
-	@MediumTest
-	@LargeTest
-	public void testBSimpleCall() {
+	public void testASimpleCall() {
 		solo.enterText(0, iContext.getString(R.string.account_test_calls_login) + "@" + iContext.getString(R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
@@ -39,12 +31,5 @@ public class Calls extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
-	}
-	
-	@SmallTest
-	@MediumTest
-	@LargeTest
-	public void testZShutDownLinphoneCore() {
-		LinphoneTestManager.destroy();
 	}
 }

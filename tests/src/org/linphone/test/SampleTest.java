@@ -8,8 +8,9 @@ import android.widget.ListView;
 
 import com.jayway.android.robotium.solo.Solo;
 
-
-
+/**
+ * @author Sylvain Berfini
+ */
 public abstract class SampleTest extends ActivityInstrumentationTestCase2<LinphoneLauncherActivity>{
 
 	protected final int STRING_LENGTH_MAX = 20;
