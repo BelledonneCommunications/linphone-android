@@ -69,10 +69,12 @@ import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
@@ -1731,5 +1733,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (ct!=null){
 			Log.d("Info received with body with mime type "+ct.getType()+"/"+ct.getSubtype()+" and data ["+ct.getDataAsString()+"]");
 		}
+	}
+	@Override
+	public void subscriptionStateChanged(LinphoneCore lc, LinphoneEvent ev,
+			SubscriptionState state) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
+			String eventName, LinphoneContent content) {
+		// TODO Auto-generated method stub
+		
 	}
 }
