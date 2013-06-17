@@ -15,6 +15,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
@@ -25,10 +26,12 @@ import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
@@ -533,6 +536,20 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 	@Override
 	public void infoReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneInfoMessage info) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void subscriptionStateChanged(LinphoneCore lc, LinphoneEvent ev,
+			SubscriptionState state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
+			String eventName, LinphoneContent content) {
 		// TODO Auto-generated method stub
 		
 	}
