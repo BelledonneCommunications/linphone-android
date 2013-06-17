@@ -49,6 +49,9 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 	private static Transports initialTransports;
 	
 	public String lastMessageReceived;
+	public boolean isDTMFReceived = false;
+	public boolean autoAnswer = true;
+	public boolean declineCall = false;
 
 	private Timer mTimer = new Timer("Linphone scheduler");
 	
@@ -62,7 +65,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			throw new RuntimeException("Linphone Manager is already initialized");
 
 		instance = new LinphoneTestManager(ac, ic);
-		instance.startLibLinphone(ac);
+		instance.startLibLinphone(ic);
 		TelephonyManager tm = (TelephonyManager) ac.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
@@ -187,6 +190,9 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		} else {
 			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
 		}
+		
+		mLc.setUseRfc2833ForDtmfs(false);
+		mLc.setUseSipInfoForDtmfs(true);
 		
 		//accounts
 		try {
@@ -411,10 +417,14 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		Log.e("Call state = " + cstate.toString());
 		if (cstate == LinphoneCall.State.IncomingReceived) {
-			try {
-				mLc.acceptCall(call);
-			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+			if (declineCall) {
+				mLc.terminateCall(call);
+			} else if (autoAnswer) {
+				try {
+					mLc.acceptCall(call);
+				} catch (LinphoneCoreException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -471,7 +481,8 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
 		// TODO Auto-generated method stub
-		
+		Log.e("DTMF received = " + dtmf);
+		isDTMFReceived = true;
 	}
 
 	@Override
