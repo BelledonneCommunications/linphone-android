@@ -1,6 +1,7 @@
 package org.linphone.test;
 
 import org.linphone.LinphoneLauncherActivity;
+import org.linphone.LinphoneManager;
 
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
@@ -31,6 +32,7 @@ public abstract class SampleTest extends ActivityInstrumentationTestCase2<Linpho
 
 	@Override
 	public void tearDown() throws Exception {
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().terminateAllCalls();
 		solo.finishOpenedActivities();
 	}
 	
