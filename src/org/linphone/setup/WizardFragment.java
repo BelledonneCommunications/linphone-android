@@ -59,8 +59,7 @@ public class WizardFragment extends Fragment {
 	private TextView errorMessage;
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.setup_wizard, container, false);
 		
 		username = (EditText) view.findViewById(R.id.setup_username);

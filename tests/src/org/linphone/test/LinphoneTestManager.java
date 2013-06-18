@@ -48,7 +48,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 
 	private static LinphoneTestManager instance;
 	private Context mContext, mIContext;
-	private LinphoneCore mLc;
+	private LinphoneCore mLc1, mLc2;
 	private static Transports initialTransports;
 	
 	public String lastMessageReceived;
@@ -63,26 +63,31 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		mIContext = ic;
 	}
 	
-	public static LinphoneTestManager createAndStart(Context ac, Context ic) {
-		if (instance != null)
-			throw new RuntimeException("Linphone Manager is already initialized");
-
-		instance = new LinphoneTestManager(ac, ic);
-		instance.startLibLinphone(ic);
+	public static LinphoneTestManager createAndStart(Context ac, Context ic, int id) {
+		if (instance == null)
+			instance = new LinphoneTestManager(ac, ic);
+		
+		instance.startLibLinphone(ic, id);
 		TelephonyManager tm = (TelephonyManager) ac.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
-		setGsmIdle(gsmIdle);
+		setGsmIdle(gsmIdle, id);
 		
 		if (Version.isVideoCapable())
 			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Version.sdk());
 		return instance;
 	}
 	
-	private synchronized void startLibLinphone(Context c) {
+	private synchronized void startLibLinphone(Context c, int id) {
 		try {
 			LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
 			
-			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this);
+			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this);
+			if (id == 2) {
+				mLc2 = mLc;
+			} else {
+				mLc1 = mLc;
+			}
+			
 			mLc.getConfig().setInt("sip", "store_auth_info", 0);
 			mLc.setContext(c);
 			try {
@@ -103,7 +108,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			mLc.setCpuCount(availableCores);
 			
 			try {
-				initFromConf();
+				initFromConf(mLc);
 			} catch (LinphoneException e) {
 				Log.w("no config ready yet");
 			}
@@ -137,18 +142,18 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		LinphoneManager.getLc().setVideoDevice(camId);
 	}
 	
-	public void initFromConf() throws LinphoneConfigException {
+	public void initFromConf(LinphoneCore mLc) throws LinphoneConfigException {
 		LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
 
 		if (initialTransports == null)
 			initialTransports = mLc.getSignalingTransportPorts();
 		
-		setSignalingTransportsFromConfiguration(initialTransports);
-		initMediaEncryption();
+		setSignalingTransportsFromConfiguration(initialTransports, mLc);
+		initMediaEncryption(mLc);
 
 		mLc.setVideoPolicy(true, true);
 		
-		readAndSetAudioAndVideoPorts();
+		readAndSetAudioAndVideoPorts(mLc);
 		
 		String defaultIncomingCallTimeout = mContext.getString(org.linphone.R.string.pref_incoming_call_timeout_default);
 		int incomingCallTimeout = tryToParseIntValue(defaultIncomingCallTimeout, defaultIncomingCallTimeout);
@@ -157,27 +162,27 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		try {
 			// Configure audio codecs
 //			enableDisableAudioCodec("speex", 32000, 1, R.string.pref_codec_speex32_key);
-			enableDisableAudioCodec("speex", 32000, 1, false);
-			enableDisableAudioCodec("speex", 16000, 1, R.string.pref_codec_speex16_key);
-			enableDisableAudioCodec("speex", 8000, 1, R.string.pref_codec_speex8_key);
-			enableDisableAudioCodec("iLBC", 8000, 1, R.string.pref_codec_ilbc_key);
-			enableDisableAudioCodec("GSM", 8000, 1, R.string.pref_codec_gsm_key);
-			enableDisableAudioCodec("G722", 8000, 1, R.string.pref_codec_g722_key);
-			enableDisableAudioCodec("G729", 8000, 1, R.string.pref_codec_g729_key); 
-			enableDisableAudioCodec("PCMU", 8000, 1, R.string.pref_codec_pcmu_key);
-			enableDisableAudioCodec("PCMA", 8000, 1, R.string.pref_codec_pcma_key);
-			enableDisableAudioCodec("AMR", 8000, 1, R.string.pref_codec_amr_key);
-			enableDisableAudioCodec("AMR-WB", 16000, 1, R.string.pref_codec_amrwb_key);
+			enableDisableAudioCodec("speex", 32000, 1, false, mLc);
+			enableDisableAudioCodec("speex", 16000, 1, R.string.pref_codec_speex16_key, mLc);
+			enableDisableAudioCodec("speex", 8000, 1, R.string.pref_codec_speex8_key, mLc);
+			enableDisableAudioCodec("iLBC", 8000, 1, R.string.pref_codec_ilbc_key, mLc);
+			enableDisableAudioCodec("GSM", 8000, 1, R.string.pref_codec_gsm_key, mLc);
+			enableDisableAudioCodec("G722", 8000, 1, R.string.pref_codec_g722_key, mLc);
+			enableDisableAudioCodec("G729", 8000, 1, R.string.pref_codec_g729_key, mLc); 
+			enableDisableAudioCodec("PCMU", 8000, 1, R.string.pref_codec_pcmu_key, mLc);
+			enableDisableAudioCodec("PCMA", 8000, 1, R.string.pref_codec_pcma_key, mLc);
+			enableDisableAudioCodec("AMR", 8000, 1, R.string.pref_codec_amr_key, mLc);
+			enableDisableAudioCodec("AMR-WB", 16000, 1, R.string.pref_codec_amrwb_key, mLc);
 			//enableDisableAudioCodec("SILK", 24000, 1, R.string.pref_codec_silk24_key);
-			enableDisableAudioCodec("SILK", 24000, 1, false);
-			enableDisableAudioCodec("SILK", 16000, 1, R.string.pref_codec_silk16_key);
+			enableDisableAudioCodec("SILK", 24000, 1, false, mLc);
+			enableDisableAudioCodec("SILK", 16000, 1, R.string.pref_codec_silk16_key, mLc);
 			//enableDisableAudioCodec("SILK", 12000, 1, R.string.pref_codec_silk12_key);
-			enableDisableAudioCodec("SILK", 12000, 1, false);
-			enableDisableAudioCodec("SILK", 8000, 1, R.string.pref_codec_silk8_key);
+			enableDisableAudioCodec("SILK", 12000, 1, false, mLc);
+			enableDisableAudioCodec("SILK", 8000, 1, R.string.pref_codec_silk8_key, mLc);
 
 			// Configure video codecs
 			for (PayloadType videoCodec : mLc.getVideoCodecs()) {
-				enableDisableVideoCodecs(videoCodec);
+				enableDisableVideoCodecs(videoCodec, mLc);
 			}
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(mContext.getString(R.string.wrong_settings),e);
@@ -199,7 +204,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		
 		//accounts
 		try {
-			initAccounts();
+			initAccounts(mLc);
 			
 			//init network state
 			mLc.setNetworkReachable(true); 
@@ -208,32 +213,39 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		}
 	}
 
-	public boolean detectVideoCodec(String mime) {
+	public boolean detectVideoCodec(String mime, LinphoneCore mLc) {
 		for (PayloadType videoCodec : mLc.getVideoCodecs()) {
 			if (mime.equals(videoCodec.getMime())) return true;
 		}
 		return false;
 	}
 	
-	public boolean detectAudioCodec(String mime){
+	public boolean detectAudioCodec(String mime, LinphoneCore mLc){
 		for (PayloadType audioCodec : mLc.getAudioCodecs()) {
 			if (mime.equals(audioCodec.getMime())) return true;
 		}
 		return false;
 	}
 
-	void initMediaEncryption(){
+	void initMediaEncryption(LinphoneCore mLc){
 		MediaEncryption me=MediaEncryption.None;
 		mLc.setMediaEncryption(me);
 	}
 	
-	public void initAccounts() throws LinphoneCoreException {
+	public void initAccounts(LinphoneCore mLc) throws LinphoneCoreException {
 		mLc.clearAuthInfos();
 		mLc.clearProxyConfigs();
 		
-		String username = mIContext.getString(org.linphone.test.R.string.account_test_calls_login);
-		String password = mIContext.getString(org.linphone.test.R.string.account_test_calls_pwd);
-		String domain = mIContext.getString(org.linphone.test.R.string.account_test_calls_domain);
+		String username, password, domain;
+		if (mLc.equals(mLc1)) {
+			username = mIContext.getString(org.linphone.test.R.string.account_test_calls_login);
+			password = mIContext.getString(org.linphone.test.R.string.account_test_calls_pwd);
+			domain = mIContext.getString(org.linphone.test.R.string.account_test_calls_domain);
+		} else {
+			username = mIContext.getString(org.linphone.test.R.string.conference_account_login);
+			password = mIContext.getString(org.linphone.test.R.string.conference_account_password);
+			domain = mIContext.getString(org.linphone.test.R.string.conference_account_domain);
+		}
 		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
 		mLc.addAuthInfo(lAuthInfo);
 		String identity = "sip:" + username +"@" + domain;
@@ -251,7 +263,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		}
 	}
 
-	private void readAndSetAudioAndVideoPorts() throws NumberFormatException {
+	private void readAndSetAudioAndVideoPorts(LinphoneCore mLc) throws NumberFormatException {
 		int aPortStart, aPortEnd, vPortStart, vPortEnd;
 		int defaultAudioPort, defaultVideoPort;
 		defaultAudioPort = Integer.parseInt(mContext.getString(R.string.default_audio_port));
@@ -317,7 +329,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		return instance;
 	}
 	
-	private void setSignalingTransportsFromConfiguration(Transports t) {
+	private void setSignalingTransportsFromConfiguration(Transports t, LinphoneCore mLc) {
 		Transports ports = new Transports(t);
 		boolean useRandomPort = true;
 		int lPreviousPort =  5060;
@@ -333,31 +345,37 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		mLc.setSignalingTransportPorts(ports);
 	}
 	
+	public static synchronized final LinphoneCore getLc(int i) {
+		if (i == 2)
+			return getInstance().mLc2;
+		return getInstance().mLc1;
+	}
+	
 	public static synchronized final LinphoneCore getLc() {
-		return getInstance().mLc;
+		return getLc(1);
 	}
 
-	private void enableDisableAudioCodec(String codec, int rate, int channels, int key) throws LinphoneCoreException {
+	private void enableDisableAudioCodec(String codec, int rate, int channels, int key, LinphoneCore mLc) throws LinphoneCoreException {
 		PayloadType pt = mLc.findPayloadType(codec, rate, channels);
 		if (pt !=null) {
 			boolean enable = true;
 			mLc.enablePayloadType(pt, enable);
 		}
 	}
-	private void enableDisableAudioCodec(String codec, int rate, int channels, boolean enable) throws LinphoneCoreException {
+	private void enableDisableAudioCodec(String codec, int rate, int channels, boolean enable, LinphoneCore mLc) throws LinphoneCoreException {
 		PayloadType pt = mLc.findPayloadType(codec, rate, channels);
 		if (pt !=null) {
 			mLc.enablePayloadType(pt, enable);
 		}
 	}
 
-	private void enableDisableVideoCodecs(PayloadType videoCodec) throws LinphoneCoreException {
+	private void enableDisableVideoCodecs(PayloadType videoCodec, LinphoneCore mLc) throws LinphoneCoreException {
 		boolean enable = true;
 		mLc.enablePayloadType(videoCodec, enable);
 	}
 
 	private int savedMaxCallWhileGsmIncall;
-	private synchronized void preventSIPCalls() {
+	private synchronized void preventSIPCalls(LinphoneCore mLc) {
 		if (savedMaxCallWhileGsmIncall != 0) {
 			Log.w("SIP calls are already blocked due to GSM call running");
 			return;
@@ -365,7 +383,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		savedMaxCallWhileGsmIncall = mLc.getMaxCalls();
 		mLc.setMaxCalls(0);
 	}
-	private synchronized void allowSIPCalls() {
+	private synchronized void allowSIPCalls(LinphoneCore mLc) {
 		if (savedMaxCallWhileGsmIncall == 0) {
 			Log.w("SIP calls are already allowed as no GSM call knowned to be running");
 			return;
@@ -373,26 +391,28 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		mLc.setMaxCalls(savedMaxCallWhileGsmIncall);
 		savedMaxCallWhileGsmIncall = 0;
 	}
-	public static void setGsmIdle(boolean gsmIdle) {
+	public static void setGsmIdle(boolean gsmIdle, int id) {
 		LinphoneTestManager mThis = instance;
 		if (mThis == null) return;
 		if (gsmIdle) {
-			mThis.allowSIPCalls();
+			mThis.allowSIPCalls(LinphoneTestManager.getLc(id));
 		} else {
-			mThis.preventSIPCalls();
+			mThis.preventSIPCalls(LinphoneTestManager.getLc(id));
 		}
 	}
 
 	private void doDestroy() {
 		try {
 			mTimer.cancel();
-			mLc.destroy();
+			mLc1.destroy();
+			mLc2.destroy();
 		} 
 		catch (RuntimeException e) {
 			e.printStackTrace();
 		}
 		finally {
-			mLc = null;
+			mLc1 = null;
+			mLc2 = null;
 			instance = null;
 		}
 	}
@@ -421,10 +441,10 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		Log.e("Call state = " + cstate.toString());
 		if (cstate == LinphoneCall.State.IncomingReceived) {
 			if (declineCall) {
-				mLc.terminateCall(call);
+				lc.terminateCall(call);
 			} else if (autoAnswer) {
 				try {
-					mLc.acceptCall(call);
+					lc.acceptCall(call);
 				} catch (LinphoneCoreException e) {
 					e.printStackTrace();
 				}
