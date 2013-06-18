@@ -46,7 +46,6 @@ public class Conference extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest //TODO REMOVE
 	@LargeTest
 	public void testCRemoveOneFromConference() {
 		startConference();
