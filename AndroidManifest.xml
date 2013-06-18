@@ -34,6 +34,8 @@
 	<!-- Needed to route the audio to the bluetooth headset if available -->
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+	<!-- Needed to pre fill the wizard email field (only if enabled in custom settings) -->
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
 	
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     
