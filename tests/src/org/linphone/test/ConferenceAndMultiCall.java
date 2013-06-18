@@ -12,7 +12,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
-public class Conference extends SampleTest {
+public class ConferenceAndMultiCall extends SampleTest {
 
 	@SmallTest
 	@MediumTest
@@ -56,6 +56,30 @@ public class Conference extends SampleTest {
 		Assert.assertEquals(1, LinphoneTestManager.getLc(2).getCallsNb());
 		Assert.assertEquals(2, LinphoneManager.getLc().getCallsNb());
 		Assert.assertFalse(LinphoneManager.getLc().isInConference());
+		
+		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.sleep(1000);
+		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.waitForActivity("LinphoneActivity", 5000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+	}
+
+	@SmallTest
+	@MediumTest
+	@LargeTest
+	public void testCChangePausedCall() {
+		startConference();
+		
+		solo.sleep(2000);
+		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
+		LinphoneCall call2 = LinphoneTestManager.getLc(2).getCalls()[0];
+		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call2.getState());
+		Assert.assertEquals(LinphoneCall.State.Paused, call1.getState());
+		
+		solo.clickOnView(solo.getView(org.linphone.R.id.callStatus));
+		solo.sleep(2000);
+		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call1.getState());
+		Assert.assertEquals(LinphoneCall.State.Paused, call2.getState());
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.sleep(1000);
