@@ -51,6 +51,7 @@
 	<bool name="disable_options_in_call">false</bool>
 	
 	<!-- Behavior Settings -->
+	<bool name="pre_fill_email_in_wizard">true</bool> <!-- Set the email field of the wizard with one of the gmail account registered on the device -->
 	<bool name="allow_chat_multiline">false</bool>
 	<bool name="call_last_log_if_adress_is_empty">true</bool>
 	<bool name="allow_ringing_while_early_media">true</bool>
