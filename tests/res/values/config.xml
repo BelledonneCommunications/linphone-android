@@ -24,4 +24,8 @@
     <string name="chat_test_text_sent">Ping!</string>
     <string name="chat_test_text_received">Pong!</string>
     
+    <string name="conference_account_login">elviish</string>
+    <string name="conference_account_password">lucifer</string>
+    <string name="conference_account_domain">sip.linphone.org</string>
+    
 </resources>

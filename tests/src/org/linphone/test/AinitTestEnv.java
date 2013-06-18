@@ -17,7 +17,7 @@ public class AinitTestEnv extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testAInitLinphoneCore() {		
-		LinphoneTestManager.createAndStart(aContext, iContext);
+		LinphoneTestManager.createAndStart(aContext, iContext, 1);
 		
 		solo.sleep(2000);
 		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc().getProxyConfigList()[0].getState());
