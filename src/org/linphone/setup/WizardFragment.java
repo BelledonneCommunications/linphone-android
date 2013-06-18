@@ -18,17 +18,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,6 +89,18 @@ public class WizardFragment extends Fragment {
 				createAccount(username.getText().toString(), password.getText().toString(), email.getText().toString(), false);
 			}
     	});
+    	
+    	if (getResources().getBoolean(R.bool.pre_fill_email_in_wizard)) {
+    		Account[] accounts = AccountManager.get(getActivity()).getAccountsByType("com.google");
+    		
+    	    for (Account account: accounts) {
+    	    	if (isEmailCorrect(account.name)) {
+    	            String possibleEmail = account.name;
+    	        	email.setText(possibleEmail);
+    	        	break;
+    	        }
+    	    }
+    	}
     	
 		return view;
 	}
@@ -152,7 +168,8 @@ public class WizardFragment extends Fragment {
 	}
 	
 	private boolean isEmailCorrect(String email) {
-		return email.matches("^[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$");
+    	Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+    	return emailPattern.matcher(email).matches();
 	}
 	
 	private boolean isPasswordCorrect(String password) {
