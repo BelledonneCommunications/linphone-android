@@ -38,6 +38,7 @@
 			<class name="org.linphone.core.PayloadTypeImpl" />
 			<class name="org.linphone.core.LpConfigImpl" />
 			<class name="org.linphone.core.LinphoneInfoMessageImpl" />
+			<class name="org.linphone.core.LinphoneEventImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>
