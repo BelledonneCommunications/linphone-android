@@ -487,12 +487,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		getLc().playDtmf(dtmf, -1);
 	}
 
-	
-	public void changeResolution() {
-		BandwidthManager manager = BandwidthManager.getInstance();
-		manager.setUserRestriction(!manager.isUserRestriction());
-	}
-
 	public void terminateCall() {
 		if (mLc.isIncall()) {
 			mLc.terminateCall(mLc.getCurrentCall());
@@ -1737,13 +1731,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void subscriptionStateChanged(LinphoneCore lc, LinphoneEvent ev,
 			SubscriptionState state) {
-		// TODO Auto-generated method stub
-		
+		Log.d("Subscription state changed to "+state+" event name is "+ev.getEventName());
 	}
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
 			String eventName, LinphoneContent content) {
-		// TODO Auto-generated method stub
-		
+		Log.d("Notify received for event "+eventName);
+		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getDataAsString());
 	}
 }

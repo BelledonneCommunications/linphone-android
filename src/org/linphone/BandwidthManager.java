@@ -27,7 +27,6 @@ public class BandwidthManager {
 	public static final int LOW_RESOLUTION = 1;
 	public static final int LOW_BANDWIDTH = 2;
 
-	private static final int[][] bandwidthes = {{256,256}, {128,128}, {80,80}};
 	private static BandwidthManager instance;
 	
 	private int currentProfile = HIGH_RESOLUTION;
@@ -44,34 +43,6 @@ public class BandwidthManager {
 		// FIXME register a listener on Preference to get notified of change in video enable value
 		
 		// FIXME initially get those values
-	}
-
-	private boolean userRestriction;
-	public boolean isUserRestriction() {return userRestriction;}
-	public void setUserRestriction(boolean limit) {
-		userRestriction = limit;
-		computeNewProfile();
-	}
-	
-	
-	private void computeNewProfile() {
-		int newProfile = userRestriction ? LOW_RESOLUTION : HIGH_RESOLUTION;
-		if (newProfile != currentProfile) {
-			currentProfile = newProfile;
-			onProfileChanged(currentProfile);
-		}
-	}
-
-	private void onProfileChanged(int newProfile) {
-		LinphoneCore lc = LinphoneManager.getLc();
-		lc.setUploadBandwidth(bandwidthes[newProfile][0]);
-		lc.setDownloadBandwidth(bandwidthes[newProfile][1]);
-
-		if (lc.isIncall()) {
-			CallManager.getInstance().reinvite();
-		} else {
-			updateWithProfileSettings(lc, null);
-		}
 	}
 
 
