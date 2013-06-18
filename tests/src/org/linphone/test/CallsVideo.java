@@ -3,15 +3,19 @@ package org.linphone.test;
 import junit.framework.Assert;
 
 import org.linphone.InCallActivity;
+import org.linphone.IncomingCallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCoreException;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.DisplayMetrics;
+import android.view.View;
 
 /**
  * @author Sylvain Berfini
@@ -174,19 +178,58 @@ public class CallsVideo extends SampleTest {
 		LinphoneTestManager.getInstance().declineCall = false;
 	}
 
-	@MediumTest // TODO: Remove
 	@LargeTest
 	public void testIIncomingAudioCall() {
 		LinphoneTestManager.getInstance().declineCall = false; // Just in case
 		LinphoneTestManager.getLc().enableVideo(false, false);
 		
+		solo.sleep(2000);
+		try {
+			LinphoneTestManager.getLc().invite("sip:" + iContext.getString(org.linphone.test.R.string.account_linphone_login) + "@" + iContext.getString(org.linphone.test.R.string.account_linphone_domain));
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+		
+		solo.waitForActivity("IncomingCallActivity", 5000);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+
+		solo.sleep(1000);
+		View topLayout = solo.getView(org.linphone.R.id.topLayout);
+		int topLayoutHeigh = topLayout.getMeasuredHeight();
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int topOffset = dm.heightPixels - topLayoutHeigh;
+		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
+		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
+		
+		assertCallIsCorrectlyRunning();
 	}
 
-	@MediumTest // TODO: Remove
+	@MediumTest
 	@LargeTest
 	public void testJIncomingVideoCall() {
 		LinphoneTestManager.getLc().enableVideo(true, true);
+
+		solo.sleep(2000);
+		try {
+			LinphoneTestManager.getLc().invite("sip:" + iContext.getString(org.linphone.test.R.string.account_linphone_login) + "@" + iContext.getString(org.linphone.test.R.string.account_linphone_domain));
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 		
+		solo.waitForActivity("IncomingCallActivity", 5000);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+
+		solo.sleep(1000);
+		View topLayout = solo.getView(org.linphone.R.id.topLayout);
+		int topLayoutHeigh = topLayout.getMeasuredHeight();
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int topOffset = dm.heightPixels - topLayoutHeigh;
+		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
+		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
+		
+		assertCallIsCorrectlyRunning();
 	}
 	
 	//TODO: Test each video codec
@@ -262,6 +305,11 @@ public class CallsVideo extends SampleTest {
 		
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+		
+		if (call.getState() == LinphoneCall.State.OutgoingProgress) {
+			solo.sleep(3000);
+		}
+		
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());
 	}
 	
