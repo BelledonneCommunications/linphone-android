@@ -1282,6 +1282,7 @@ public class InCallActivity extends FragmentActivity implements
 
         // Control Row
     	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call_control_row, container, false);
+    	callView.setId(index+1);
 		setContactName(callView, lAddress, sipUri, resources);
 		displayCallStatusIconAndReturnCallPaused(callView, call);
 		setRowBackground(callView, index);

@@ -82,7 +82,6 @@ public class Chat extends SampleTest {
 		Assert.assertFalse(solo.searchText(iContext.getString(R.string.chat_test_text_received)));
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testGDeleteConversation() {

@@ -1,5 +1,7 @@
 package org.linphone.test;
 
+import java.util.ArrayList;
+
 import junit.framework.Assert;
 
 import org.linphone.InCallActivity;
@@ -7,8 +9,8 @@ import org.linphone.IncomingCallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -68,7 +70,6 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest //TODO REMOVE
 	@LargeTest
 	public void testDChangePausedCall() {
 		startTwoCalls();
@@ -82,7 +83,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.callStatus));
 		solo.sleep(2000);
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call1.getState());
-		Assert.assertEquals(LinphoneCall.State.Paused, call2.getState());
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call2.getState());
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.sleep(1000);
@@ -94,10 +95,25 @@ public class ConferenceAndMultiCall extends SampleTest {
 	@LargeTest
 	public void testEPauseAllCalls() {
 		startTwoCalls();
-		//TODO
+		
+		solo.sleep(2000);
+		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
+		LinphoneCall call2 = LinphoneTestManager.getLc(2).getCalls()[0];
+		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call2.getState());
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
+		
+		ArrayList<View> views = solo.getViews(solo.getView(2));
+		solo.clickOnView(views.get(2)); // Second call pause button
+		solo.sleep(2000);
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call2.getState());
+		
+		// All calls are paused, one click on hangUp terminates them all
+		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.waitForActivity("LinphoneActivity", 5000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest //TODO REMOVE
 	@LargeTest
 	public void testFAddNewCallAndCancelIt() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
@@ -115,6 +131,11 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.sleep(2000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, LinphoneTestManager.getLc(1).getCalls()[0].getState());
+		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
+		solo.sleep(1000);
+		Assert.assertEquals(LinphoneCall.State.StreamsRunning, LinphoneTestManager.getLc(1).getCalls()[0].getState());
+		
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
@@ -123,16 +144,41 @@ public class ConferenceAndMultiCall extends SampleTest {
 		LinphoneTestManager.getInstance().autoAnswer = true;
 	}
 
-	@SmallTest //TODO REMOVE
 	@LargeTest
-	public void testGIncomingCallWhileInCallAndDecline() {
-		LinphoneTestManager.getInstance().autoAnswer = true; //Just in case
+	public void testGAddNewCallDeclined() {
+		LinphoneTestManager.getInstance().autoAnswer = true; // Just in case
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
 		assertCallIsCorrectlyRunning(1);
-		LinphoneTestManager.getInstance().autoAnswer = false;
+		LinphoneTestManager.getInstance().declineCall = true;
+		
+		solo.clickOnView(solo.getView(org.linphone.R.id.options));
+		solo.clickOnView(solo.getView(org.linphone.R.id.addCall));
+		
+		solo.enterText(0, iContext.getString(org.linphone.test.R.string.conference_account_login) + "@" + iContext.getString(org.linphone.test.R.string.conference_account_domain));
+		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		
+		solo.sleep(2000);
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, LinphoneTestManager.getLc(1).getCalls()[0].getState());
+		
+		solo.sleep(1000);
+		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.waitForActivity("LinphoneActivity", 5000);
+		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+		
+		LinphoneTestManager.getInstance().declineCall = false;
+	}
+
+	@LargeTest
+	public void testHIncomingCallWhileInCallAndDecline() {
+		LinphoneTestManager.getInstance().declineCall = false; //Just in case
+		
+		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
+		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		
+		assertCallIsCorrectlyRunning(1);
 		
 		solo.sleep(2000);
 		try {
@@ -161,9 +207,8 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest //TODO REMOVE
 	@LargeTest
-	public void testHIncomingCallWhileInCallAndAccept() {
+	public void testIIncomingCallWhileInCallAndAccept() {		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
@@ -187,8 +232,10 @@ public class ConferenceAndMultiCall extends SampleTest {
 		int topOffset = dm.heightPixels - topLayoutHeigh;
 		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
 		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
-		
-		assertCallIsCorrectlyRunning(1);
+
+		solo.sleep(1000);
+		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
+		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
 		assertCallIsCorrectlyRunning(2);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -196,11 +243,6 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
-	}
-	
-	@LargeTest
-	public void testIAddNewCallDeclined() {
-		//TODO
 	}
 	
 	private void goToSettings() {
@@ -242,7 +284,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneTestManager.getLc(lcId).getCalls()[0];
 		
-		if (call.getState() == LinphoneCall.State.OutgoingProgress) {
+		if (call.getState() == LinphoneCall.State.OutgoingProgress || call.getState() == LinphoneCall.State.IncomingReceived) {
 			solo.sleep(3000);
 		}
 		
