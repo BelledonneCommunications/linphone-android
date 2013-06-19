@@ -103,7 +103,9 @@
             </intent-filter>
          </activity>
 
-	    <service android:name="org.linphone.LinphoneService" android:stopWithTask="false"/>
+	    <service android:name="org.linphone.LinphoneService"
+	        android:label="@string/service_name"
+	        android:stopWithTask="false"/>
 	        
 		<receiver android:name="org.linphone.NetworkManager">
 			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
