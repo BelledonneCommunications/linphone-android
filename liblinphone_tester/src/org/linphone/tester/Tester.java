@@ -1,7 +1,9 @@
 package org.linphone.tester;
 
-import org.linphone.mediastream.CpuUtils;
+import org.linphone.core.LinphoneCoreFactory;
+
 import org.linphone.mediastream.Version;
+import org.linphone.mediastream.CpuUtils;
 
 import android.util.Log;
 
@@ -28,37 +30,8 @@ public class Tester {
 		return System.getProperty("os.arch").contains("armv7");
 	}
 	
-	static	{	         
-		// FFMPEG (audio/video)
-		loadOptionalLibrary("avutil");
-		loadOptionalLibrary("swscale");
-		loadOptionalLibrary("avcore");
-
-		System.loadLibrary("neon");
-		
-		if (!hasNeonInCpuFeatures()) {
-			boolean noNeonLibrariesLoaded = loadOptionalLibrary("avcodecnoneon");
-			if (!noNeonLibrariesLoaded) {
-				loadOptionalLibrary("avcodec");
-			}
-		} else {
-			loadOptionalLibrary("avcodec");
-		}
- 
-		// OPENSSL (cryptography)
-		// lin prefix avoids collision with libs in /system/lib
-		loadOptionalLibrary("lincrypto");
-		loadOptionalLibrary("linssl");
-
-		// Secure RTP and key negotiation
-		loadOptionalLibrary("srtp");
-		loadOptionalLibrary("zrtpcpp"); // GPLv3+
-
-		// Tunnel
-		loadOptionalLibrary("tunnelclient");
-		
-		// g729 A implementation
-		loadOptionalLibrary("bcg729");
+	static	{
+		LinphoneCoreFactory.instance();
 
 		System.loadLibrary("cunit");
 		
@@ -66,20 +39,15 @@ public class Tester {
 		if (!hasNeonInCpuFeatures()) {
 			try {
 				if (!isArmv7() && !Version.isX86()) {
-					System.loadLibrary("linphonearmv5"); 
 					System.loadLibrary("linphone_testerarmv5");
 				} else {
-					System.loadLibrary("linphonenoneon");
 					System.loadLibrary("linphone_testernoneon");
 				}
-				Log.w("linphone", "No-neon liblinphone loaded");
 			} catch (UnsatisfiedLinkError ule) {
-				Log.w("linphone", "Failed to load no-neon liblinphone, loading neon liblinphone");
-				System.loadLibrary("linphone"); 
+				Log.w("linphone", "Failed to load no-neon liblinphone_tester, loading neon liblinphone_tester");
 				System.loadLibrary("linphone_tester");
 			}
 		} else {
-			System.loadLibrary("linphone"); 
 			System.loadLibrary("linphone_tester");
 		}
 		

@@ -38,6 +38,9 @@ public class MainActivity extends Activity {
 			copyFromPackage(R.raw.marie_early_rc, new File("marie_early_rc").getName());
 			copyFromPackage(R.raw.multi_account_lrc, new File("multi_account_lrc").getName());
 			copyFromPackage(R.raw.pauline_rc, new File("pauline_rc").getName());
+			copyFromPackage(R.raw.rootca, new File("rootca.pem").getName());
+			copyFromPackage(R.raw.cacert, new File("cacert.pem").getName());
+			copyFromPackage(R.raw.tester_hosts, new File("tester_hosts").getName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
