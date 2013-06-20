@@ -29,6 +29,7 @@ import static org.linphone.R.string.pref_codec_speex32_key;
 import static org.linphone.R.string.pref_video_enable_key;
 import static org.linphone.core.LinphoneCall.State.CallEnd;
 import static org.linphone.core.LinphoneCall.State.Error;
+import static org.linphone.core.LinphoneCall.State.CallReleased;
 import static org.linphone.core.LinphoneCall.State.IncomingReceived;
 
 import java.io.File;
@@ -1216,7 +1217,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 		
 		if (state == LinphoneCall.State.Connected) {
 			if (mLc.getCallsNb() == 1) {
-				Log.d("Audio focus requested: " + (mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
+				int res=mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
+				Log.d("Audio focus requested: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
 			}
 		}
 
@@ -1232,9 +1234,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 			stopRinging();
 		}
 
-		if (state == CallEnd || state == Error) {
+		if (state == CallEnd || state == Error || state == CallReleased) {
 			if (mLc.getCallsNb() == 0) {
-				Log.d("Audio focus released: " + (mAudioManager.abandonAudioFocus(null) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
+				int res=mAudioManager.abandonAudioFocus(null);
+				Log.d("Audio focus released: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
 				mAudioManager.setMode(AudioManager.MODE_NORMAL);
 			}
 			Context activity = getContext();
