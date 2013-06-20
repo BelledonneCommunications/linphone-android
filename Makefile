@@ -117,7 +117,7 @@ prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
 	cp $^ $(TOPDIR)/submodules/externals/build/cunit/CUnit
 
 $(TOPDIR)/res/raw/rootca.pem:
-	$(TOPDIR)/submodules/linphone/share/scripts/mk-ca-bundle.pl $@
+	$(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
 
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
 	cp -f $^ $(TOPDIR)/liblinphone_tester/res/raw/.
