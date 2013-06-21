@@ -42,9 +42,7 @@ include $(linphone-root-dir)/submodules/externals/build/libupnp/Android.mk
 endif
 
 #libxml2 
-ifeq ($(BUILD_REMOTE_PROVISIONING),1)
 include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
-endif
 
 # Speex
 ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/speex.mk),)
