@@ -17,6 +17,7 @@
     <bool name="pref_codec_g722_default">false</bool>
     <bool name="pref_codec_silk24_default">false</bool>
     <bool name="pref_codec_silk16_default">true</bool>
+    <bool name="pref_codec_silk8_default">false</bool>
     <bool name="pref_codec_pcmu_default">true</bool>
     <bool name="pref_codec_pcma_default">true</bool>
     
