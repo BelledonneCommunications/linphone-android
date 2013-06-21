@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon
+APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon liblpxml2
 APP_STL := stlport_static
 
 #uPnp
@@ -9,11 +9,6 @@ endif
 
 ifeq ($(BUILD_TLS),1)
 APP_MODULES +=polarssl
-endif
-
-#remote provisioning
-ifeq ($(BUILD_REMOTE_PROVISIONING),1)
-APP_MODULES += liblpxml2
 endif
 
 #default values
