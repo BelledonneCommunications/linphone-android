@@ -31,6 +31,13 @@ ifneq ($(CHECK_MSG),)
 endif
 include check_tools.mk
 
+OPENSSL_DIR=$(shell openssl version -d | sed  "s/OPENSSLDIR: \"\(.*\)\"/\1/")
+ifneq ($(shell ls $(OPENSSL_DIR)/certs),)
+	HTTPS_CA_DIR=$(OPENSSL_DIR)/certs
+else
+	HTTPS_CA_DOR=$(OPENSSL_DIR)
+endif
+
 NDK_BUILD_OPTIONS=NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
 
 all: update-project prepare-sources generate-apk
@@ -117,7 +124,7 @@ prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
 	cp $^ $(TOPDIR)/submodules/externals/build/cunit/CUnit
 
 $(TOPDIR)/res/raw/rootca.pem:
-	$(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
+	 HTTPS_CA_DIR=$(HTTPS_CA_DIR) $(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
 
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
 	cp -f $^ $(TOPDIR)/liblinphone_tester/res/raw/.
