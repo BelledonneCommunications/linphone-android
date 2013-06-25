@@ -45,18 +45,10 @@ endif
 include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
 
 # Speex
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/speex.mk),)
 include $(linphone-root-dir)/submodules/externals/build/speex/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/speex.mk
-endif
 
 # Gsm
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/gsm.mk),)
 include $(linphone-root-dir)/submodules/externals/build/gsm/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/gsm.mk
-endif
 
 include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
@@ -98,19 +90,11 @@ ifeq (,$(DUMP_VAR))
 $(info Build X264 plugin for mediastreamer2)
 endif
 include $(linphone-root-dir)/submodules/msx264/Android.mk
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/x264.mk),)
 include $(linphone-root-dir)/submodules/externals/build/x264/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/x264.mk
-endif
 endif
 
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ffmpeg.mk),)
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg-no-neon/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/ffmpeg.mk
-endif
 
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
 endif #armeabi-v7a
@@ -120,11 +104,7 @@ ifeq ($(BUILD_GPLV3_ZRTP), 1)
 ifeq (,$(DUMP_VAR))
 $(info Build ZRTP support - makes application GPLv3)
 endif
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/zrtpcpp.mk),)
 include $(linphone-root-dir)/submodules/externals/build/libzrtpcpp/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/zrtpcpp.mk
-endif
 endif
 
 ifeq ($(BUILD_SRTP), 1)

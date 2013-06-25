@@ -252,15 +252,15 @@ public class InCallActivity extends FragmentActivity implements
 		if (LinphoneManager.getInstance().isBluetoothScoConnected) {
 			try {
 				routeLayout.setVisibility(View.VISIBLE);
+				audioRoute.setVisibility(View.VISIBLE);
+				speaker.setVisibility(View.GONE);
 			} catch (NullPointerException npe) {}
-			audioRoute.setVisibility(View.VISIBLE);
-			speaker.setVisibility(View.GONE);
 		} else {
 			try {
 				routeLayout.setVisibility(View.GONE);
+				audioRoute.setVisibility(View.GONE);
+				speaker.setVisibility(View.VISIBLE);
 			} catch (NullPointerException npe) {}
-			audioRoute.setVisibility(View.GONE);
-			speaker.setVisibility(View.VISIBLE);
 		}
 	}
 	
