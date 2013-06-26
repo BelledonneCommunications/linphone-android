@@ -148,6 +148,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private String basePath;
 	private static boolean sExited;
 	private String contactParams;
+	private boolean mAudioFocused;
 
 	private WakeLock mIncallWakeLock;
 	
@@ -157,6 +158,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private BroadcastReceiver bluetoothReiceiver = new BluetoothManager();
 	public boolean isBluetoothScoConnected;
 	public boolean isUsingBluetoothAudioRoute;
+	private boolean mBluetoothStarted;
 	
 	public ChatStorage chatStorage;
 
@@ -211,10 +213,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
 		isUsingBluetoothAudioRoute = false;
-		if (mAudioManager != null) {
-			Compatibility.setAudioManagerInCallMode(mAudioManager);
+		if (mAudioManager != null && mBluetoothStarted) {
+			//Compatibility.setAudioManagerInCallMode(mAudioManager);
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
+			mBluetoothStarted=false;
 		}
 		
 		if (!speakerOn) {
@@ -259,6 +262,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 					public void onServiceConnected(int profile, BluetoothProfile proxy) {
 					    if (profile == BluetoothProfile.HEADSET) {
 					        mBluetoothHeadset = (BluetoothHeadset) proxy;
+			        		isBluetoothScoConnected = true;
 					        Log.d("Bluetooth headset connected");
 					    }
 					}
@@ -266,8 +270,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 					public void onServiceDisconnected(int profile) {
 					    if (profile == BluetoothProfile.HEADSET) {
 					        mBluetoothHeadset = null;
-					        Log.d("Bluetooth headset disconnected");
 			        		isBluetoothScoConnected = false;
+					        Log.d("Bluetooth headset disconnected");
 					        routeAudioToReceiver();
 					    }
 					}
@@ -293,10 +297,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public boolean routeAudioToBluetooth() {
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
+		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (bluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			mAudioManager.setBluetoothScoOn(true);	
 			mAudioManager.startBluetoothSco();
+			mBluetoothStarted=true;
 			
 			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 				isUsingBluetoothAudioRoute = false;
@@ -311,7 +316,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 					Log.d("No bluetooth device available");	
 					scoDisconnected();
 				} else {
-					mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+					//Why is this for:
+					//mAudioManager.setMode(AudioManager.MODE_IN_CALL);
 					for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
 						listener.onAudioStateChanged(AudioState.SPEAKER);
 					}
@@ -324,16 +330,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	public void scoConnected() {
-		Log.e("Bluetooth sco connected!");
+		Log.i("Bluetooth sco connected!");
 		isBluetoothScoConnected = true;
 	}
 	
 	public void scoDisconnected() {
-		Log.e("Bluetooth sco disconnected!");
+		Log.w("Bluetooth sco disconnected!");
 		isUsingBluetoothAudioRoute = false;
 		isBluetoothScoConnected = false;
 		if (mAudioManager != null) {
-			mAudioManager.setMode(AudioManager.MODE_NORMAL);
+			//why is this for ?
+			//mAudioManager.setMode(AudioManager.MODE_NORMAL);
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
 		}
@@ -484,12 +491,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		getLc().playDtmf(dtmf, -1);
 	}
 
-	
-	public void changeResolution() {
-		BandwidthManager manager = BandwidthManager.getInstance();
-		manager.setUserRestriction(!manager.isUserRestriction());
-	}
-
 	public void terminateCall() {
 		if (mLc.isIncall()) {
 			mLc.terminateCall(mLc.getCurrentCall());
@@ -579,14 +580,15 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} catch (LinphoneException e) {
 				Log.w("no config ready yet");
 			}
-			
+	        
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
 					mLc.iterate();
 				}
 			};
-			mTimer.scheduleAtFixedRate(lTask, 0, 20); 
+			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
+			mTimer.schedule(lTask, 0, 20); 
 
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -863,9 +865,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 		//stun server
 		String lStun = getPrefString(R.string.pref_stun_server_key, getString(R.string.default_stun));
 		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, mR.getBoolean(R.bool.pref_ice_enabled_default));
+		//boolean useUpnp = getPrefBoolean(R.string.pref_upnp_enable_key, mR.getBoolean(R.bool.pref_upnp_enabled_default));
+	
 		mLc.setStunServer(lStun);
 		if (lStun!=null && lStun.length()>0) {
-			mLc.setFirewallPolicy(useICE ? FirewallPolicy.UseIce : FirewallPolicy.UseStun);
+			mLc.setFirewallPolicy(useICE ? FirewallPolicy.UseIce : FirewallPolicy.UseStun);	
 		} else {
 			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
 		}
@@ -1215,13 +1219,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} 
 		}
 		
-		if (state == LinphoneCall.State.Connected) {
-			if (mLc.getCallsNb() == 1) {
-				int res=mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
-				Log.d("Audio focus requested: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
-			}
-		}
-
 		if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
@@ -1233,24 +1230,34 @@ public class LinphoneManager implements LinphoneCoreListener {
 			//previous state was ringing, so stop ringing
 			stopRinging();
 		}
-
-		if (state == CallEnd || state == Error || state == CallReleased) {
-			if (mLc.getCallsNb() == 0) {
-				int res=mAudioManager.abandonAudioFocus(null);
-				Log.d("Audio focus released: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
-				mAudioManager.setMode(AudioManager.MODE_NORMAL);
+		
+		if (state == LinphoneCall.State.Connected) {
+			if (mLc.getCallsNb() == 1) {
+				requestAudioFocus();
+				Compatibility.setAudioManagerInCallMode(mAudioManager);
 			}
-			Context activity = getContext();
-			if (activity != null) {
-				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-				if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-					mAudioManager.setMode(AudioManager.MODE_NORMAL);
-				}
-			}
-		}
-		if (state == State.Connected) {
+			
 			if (Hacks.needSoftvolume() || sLPref.useSoftvolume()) {
 				adjustVolume(0); // Synchronize
+			}
+		}
+
+		if (state == CallEnd || state == Error) {
+			if (mLc.getCallsNb() == 0) {
+				if (mAudioFocused){
+					int res=mAudioManager.abandonAudioFocus(null);
+					Log.d("Audio focus released a bit later: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
+					mAudioFocused=false;
+				}
+				
+				Context activity = getContext();
+				if (activity != null) {
+					TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+					if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+						mAudioManager.setMode(AudioManager.MODE_NORMAL);
+						Log.d("---AudioManager: back to MODE_NORMAL");
+					}
+				}
 			}
 		}
 
@@ -1274,7 +1281,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} else {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
-			Compatibility.setAudioManagerInCallMode(mAudioManager);
 		}
 		mListenerDispatcher.onCallStateChanged(call, state, message);
 	}
@@ -1319,6 +1325,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 		disableRinging = true;
 	}
 	
+	private void requestAudioFocus(){
+		if (!mAudioFocused){
+			int res=mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
+			Log.d("Audio focus requested: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
+			if (res==AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
+		}
+	}
+	
 	private synchronized void startRinging()  {
 		if (disableRinging ) {
 			return;
@@ -1334,6 +1348,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 				mVibrator.vibrate(patern, 1);
 			}
 			if (mRingerPlayer == null) {
+				requestAudioFocus();
 				mRingerPlayer = new MediaPlayer();
 				mRingerPlayer.setAudioStreamType(STREAM_RING);
 				mListenerDispatcher.onRingerPlayerCreated(mRingerPlayer);
@@ -1358,7 +1373,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (mVibrator!=null) {
 			mVibrator.cancel();
 		}
-
+		
+		if (Hacks.needGalaxySAudioHack())
+			mAudioManager.setMode(AudioManager.MODE_NORMAL);
+		
 		isRinging = false;
 		// You may need to call galaxys audio hack after this method
 		routeAudioToReceiver();
@@ -1620,7 +1638,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			
 			Context activity = getContext();
 			if (activity != null) {
-			TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 				if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
 					routeAudioToReceiver();
 				}
