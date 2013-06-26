@@ -228,7 +228,7 @@ public class InCallActivity extends FragmentActivity implements
 			routeBluetooth = (TextView) findViewById(R.id.routeBluetooth);
 			routeBluetooth.setOnClickListener(this);
 		} catch (NullPointerException npe) {
-			Log.e("Audio routes menu disabled on tablets for now");
+			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (1)");
 		}
 		
 		switchCamera = (ImageView) findViewById(R.id.switchCamera);
@@ -251,16 +251,18 @@ public class InCallActivity extends FragmentActivity implements
 		
 		if (LinphoneManager.getInstance().isBluetoothScoConnected) {
 			try {
-				routeLayout.setVisibility(View.VISIBLE);
+				if (routeLayout != null)
+					routeLayout.setVisibility(View.VISIBLE);
 				audioRoute.setVisibility(View.VISIBLE);
 				speaker.setVisibility(View.GONE);
-			} catch (NullPointerException npe) {}
+			} catch (NullPointerException npe) { Log.e("Bluetooth: Audio routes menu disabled on tablets for now (2)"); }
 		} else {
 			try {
-				routeLayout.setVisibility(View.GONE);
+				if (routeLayout != null)
+					routeLayout.setVisibility(View.GONE);
 				audioRoute.setVisibility(View.GONE);
 				speaker.setVisibility(View.VISIBLE);
-			} catch (NullPointerException npe) {}
+			} catch (NullPointerException npe) { Log.e("Bluetooth: Audio routes menu disabled on tablets for now (3)"); }
 		}
 	}
 	
@@ -299,7 +301,7 @@ public class InCallActivity extends FragmentActivity implements
 						}
 					}
 				} catch (NullPointerException npe) {
-					Log.e("Audio routes menu disabled on tablets for now");
+					Log.e("Bluetooth: Audio routes menu disabled on tablets for now (4)");
 				}
 				
 				if (isMicMuted) {
