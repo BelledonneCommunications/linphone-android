@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
-      android:versionCode="2003" android:installLocation="auto"> 
+      android:versionCode="2100" android:installLocation="auto"> 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
     
     <!-- Permissions for Push Notification -->
@@ -103,7 +103,9 @@
             </intent-filter>
          </activity>
 
-	    <service android:name="org.linphone.LinphoneService" android:stopWithTask="false"/>
+	    <service android:name="org.linphone.LinphoneService"
+	        android:label="@string/service_name"
+	        android:stopWithTask="false"/>
 	        
 		<receiver android:name="org.linphone.NetworkManager">
 			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
