@@ -127,7 +127,9 @@ $(TOPDIR)/res/raw/rootca.pem:
 	 HTTPS_CA_DIR=$(HTTPS_CA_DIR) $(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
 
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
-	cp -f $^ $(TOPDIR)/liblinphone_tester/res/raw/.
+	for file in $^; do \
+	cp -f $$file $(TOPDIR)/liblinphone_tester/res/raw/. \
+	;done	
 
 prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem
 
