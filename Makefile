@@ -100,8 +100,8 @@ prepare-srtp: $(TOPDIR)/submodules/externals/srtp/config.h
 
 prepare-mediastreamer2:
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/src/ && \
-	eval `cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/$$$$builddir/./'` && \
-	eval `cat Makefile.am | grep xxd | grep yuv2rgb.fs | sed 's/$$$$builddir/./'` && \
+	eval `cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/\$$(abs_builddir)/./'` && \
+	eval `cat Makefile.am | grep xxd | grep yuv2rgb.fs | sed 's/\$$(abs_builddir)/./'` && \
 	if ! [ -e yuv2rgb.vs.h ]; then echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi && \
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
