@@ -266,6 +266,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 					public void onServiceConnected(int profile, BluetoothProfile proxy) {
 					    if (profile == BluetoothProfile.HEADSET) {
 					        mBluetoothHeadset = (BluetoothHeadset) proxy;
+			        		isBluetoothScoConnected = true;
 					        Log.d("Bluetooth headset connected");
 					    }
 					}
@@ -273,8 +274,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 					public void onServiceDisconnected(int profile) {
 					    if (profile == BluetoothProfile.HEADSET) {
 					        mBluetoothHeadset = null;
-					        Log.d("Bluetooth headset disconnected");
 			        		isBluetoothScoConnected = false;
+					        Log.d("Bluetooth headset disconnected");
 					        routeAudioToReceiver();
 					    }
 					}
