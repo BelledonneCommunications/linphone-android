@@ -149,6 +149,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private static boolean sExited;
 	private String contactParams;
 	private boolean mAudioFocused;
+	private boolean isNetworkReachable;
 
 	private WakeLock mIncallWakeLock;
 	
@@ -886,16 +887,39 @@ public class LinphoneManager implements LinphoneCoreListener {
 			initAccounts();
 			
 			//init network state
-			NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
-			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), mR.getBoolean(R.bool.pref_wifi_only_default));
-			boolean isConnected = false;
-			if (networkInfo != null) {
-				isConnected = networkInfo.getState() == NetworkInfo.State.CONNECTED && (networkInfo.getTypeName().equals("WIFI") || (networkInfo.getTypeName().equals("mobile") && !wifiOnly));
-			}
-			mLc.setNetworkReachable(isConnected); 
+			updateNetworkReachability();
 		} catch (LinphoneCoreException e) {
 			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
+		}
+	}
+	
+	public void updateNetworkReachability() {
+		ConnectivityManager cm = (ConnectivityManager) mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo eventInfo = cm.getActiveNetworkInfo();
+
+		if (eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
+			Log.i("No connectivity: setting network unreachable");
+			if (isNetworkReachable) {
+				isNetworkReachable = false;
+				mLc.setNetworkReachable(isNetworkReachable);
+			}
+		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
+			manageTunnelServer(eventInfo);
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
+			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), mR.getBoolean(R.bool.pref_wifi_only_default));
+			if ((eventInfo.getTypeName().equals("WIFI")) || (!eventInfo.getTypeName().equals("WIFI") && !wifiOnly)) {
+				if (!isNetworkReachable) {
+					isNetworkReachable = true;
+					mLc.setNetworkReachable(isNetworkReachable);
+					Log.i(eventInfo.getTypeName()," connected: setting network reachable (network = " + eventInfo.getTypeName() + ")");
+				}
+			} else {
+				if (isNetworkReachable) {
+					isNetworkReachable = false;
+					mLc.setNetworkReachable(isNetworkReachable);
+					Log.i(eventInfo.getTypeName()," connected: wifi only activated, setting network unreachable (network = " + eventInfo.getTypeName() + ")");
+				}
+			}
 		}
 	}
 	
@@ -1042,22 +1066,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	*/
 	public void connectivityChanged(ConnectivityManager cm, boolean noConnectivity) {
 		NetworkInfo eventInfo = cm.getActiveNetworkInfo();
-
-		if (noConnectivity || eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
-			Log.i("No connectivity: setting network unreachable");
-			mLc.setNetworkReachable(false);
-		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
-			manageTunnelServer(eventInfo);
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
-			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), mR.getBoolean(R.bool.pref_wifi_only_default));
-			if (eventInfo.getTypeName().equals("WIFI") || (eventInfo.getTypeName().equals("mobile") && !wifiOnly)) {
-				mLc.setNetworkReachable(true);
-				Log.i(eventInfo.getTypeName()," connected: setting network reachable");
-			} else {
-				mLc.setNetworkReachable(false);
-				Log.i(eventInfo.getTypeName()," connected: wifi only activated, setting network unreachable");
-			}
-		}
+		updateNetworkReachability();
 		
 		if (connectivityListener != null) {
 			connectivityListener.onConnectivityChanged(mServiceContext, eventInfo, cm);

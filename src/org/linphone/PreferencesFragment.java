@@ -50,8 +50,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -233,16 +231,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		wifiOnly.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean isSettingActivated = (Boolean) newValue;
-				
-				ConnectivityManager cm = (ConnectivityManager) LinphoneActivity.instance().getSystemService(Context.CONNECTIVITY_SERVICE);
-				NetworkInfo eventInfo = cm.getActiveNetworkInfo();
-				
-				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				if (eventInfo != null && eventInfo.getTypeName() != null && eventInfo.getTypeName().equals("mobile") && lc != null) {
-					lc.setNetworkReachable(!isSettingActivated);
-				}
-				
+				LinphoneManager.getInstance().updateNetworkReachability();
 				return true;
 			}
 		});
