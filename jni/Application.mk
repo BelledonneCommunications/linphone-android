@@ -23,8 +23,8 @@ BUILD_SRTP=1
 endif
 
 ifeq ($(LINPHONE_VIDEO),1)
-APP_MODULES += libavutil libavcore libavcodec libswscale
-APP_MODULES += libavutilnoneon libavcorenoneon libavcodecnoneon libswscalenoneon
+APP_MODULES += liblinavutil liblinavcore liblinavcodec liblinswscale
+APP_MODULES += liblinavcodecnoneon
 APP_MODULES += libvpx
 endif
 
