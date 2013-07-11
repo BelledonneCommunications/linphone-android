@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)/../../ffmpeg
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libavcodec
+LOCAL_MODULE := liblinavcodec
 
 LOCAL_SRC_FILES = \
 	libavcodec/allcodecs.c \
@@ -104,7 +104,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/ \
 	$(LOCAL_PATH)/libavutil 
 
-LOCAL_SHARED_LIBRARIES := libavutil libavcore
+LOCAL_SHARED_LIBRARIES := liblinavutil liblinavcore
 
 include $(BUILD_SHARED_LIBRARY)
 
