@@ -74,6 +74,15 @@ $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_S
 
 prepare-silk: $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c
 
+#Zrtp
+$(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h : $(TOPDIR)/submodules/externals/build/libzrtpcpp/libzrtpcpp-config.h
+	@cd $(TOPDIR)/submodules/externals/libzrtpcpp/ && \
+	cp ../build/libzrtpcpp/libzrtpcpp-config.h . \
+	|| ( echo "ZRTP prepare state failed." ; exit 1 )
+prepare-zrtp: $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h
+
+
+
 #srtp
 $(TOPDIR)/submodules/externals/srtp/config.h : $(TOPDIR)/submodules/externals/build/srtp/config.h
 	@cd $(TOPDIR)/submodules/externals/srtp/ && \
@@ -89,7 +98,7 @@ prepare-mediastreamer2:
 	if ! [ -e yuv2rgb.vs.h ]; then echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi && \
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
-prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2
+prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-zrtp prepare-mediastreamer2
 
 generate-libs:
 	$(NDK_PATH)/ndk-build $(NDK_BUILD_OPTIONS)
