@@ -11,7 +11,7 @@ LOCAL_SRC_FILES := \
 	 	src/ZIDRecord.cpp \
 	 	src/ZrtpCallbackWrapper.cpp \
 	 	src/ZrtpConfigure.cpp \
-	 	src/ZRtp.cpp \
+	 	src/Zrtp.cpp \
 	 	src/ZrtpCrc32.cpp \
 	 	src/ZrtpCWrapper.cpp \
 	 	src/ZrtpPacketClearAck.cpp \
