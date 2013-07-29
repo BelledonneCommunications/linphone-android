@@ -430,7 +430,13 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	public void displayHistoryDetail(String sipUri, LinphoneCallLog log) {
-		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		LinphoneAddress lAddress;
+		try {
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		} catch (LinphoneCoreException e) {
+			Log.e("Cannot display history details",e);
+			return;
+		}
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
 
 		String displayName = lAddress.getDisplayName();
@@ -517,7 +523,13 @@ public class LinphoneActivity extends FragmentActivity implements
 			return;
 		}
 
-		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		LinphoneAddress lAddress;
+		try {
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		} catch (LinphoneCoreException e) {
+			Log.e("Cannot display chat",e);
+			return;
+		}
 		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
 		String displayName = lAddress.getDisplayName();
 		String pictureUri = uri == null ? null : uri.toString();
@@ -1428,6 +1440,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			return view;
 		}
 	}
+
 }
 
 interface ContactPicked {

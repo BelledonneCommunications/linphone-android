@@ -17,7 +17,7 @@
 			failonerror="false" />
 	</target>
 
-	<target name="javah">
+	<target name="javah" depends="-set-debug-mode,-compile">
 		<echo level="info">Generate JNI header</echo>
 		<javah outputfile="gen/linphonecore_jni.h">
 			<classpath>
@@ -37,6 +37,11 @@
 			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
 			<class name="org.linphone.core.PayloadTypeImpl" />
 			<class name="org.linphone.core.LpConfigImpl" />
+			<class name="org.linphone.core.LinphoneInfoMessageImpl" />
+			<class name="org.linphone.core.LinphoneEventImpl" />
+			<class name="org.linphone.core.PresenceModelImpl" />
+			<class name="org.linphone.core.PresenceActivityImpl" />
+			<class name="org.linphone.core.PresenceNoteImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>
@@ -54,15 +59,6 @@
 	
 	<target name="partial-clean">
 	    <delete file="bin/${ant.project.name}.ap_" />
-	</target>
-
-	<target name="build-libs">
-		<exec executable="make" failonerror="true">
-			<arg value="generate-libs" />
-		</exec>
-	</target>
-
-	<target name="-post-compile" depends="javah, build-libs">
 	</target>
 
 	<target name="javadoc">
@@ -121,4 +117,23 @@
 			<arg value="${linphone.package.name}/org.linphone.LinphoneLauncherActivity" />
 		</exec>
 	</target>
+        
+	<target name="liblinphone-sdk">
+         <echo level="info">Creating library output jar file...</echo>
+         <property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone.jar" />
+                    <jar destfile="${out.library.jar.file}">
+                        <fileset dir="${out.classes.absolute.dir}"
+                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class"/>
+                        <fileset dir="submodules/linphone/java" >
+                                <include name="common/org/linphone/core/*.java"/>
+                                <include name="j2se/org/linphone/core/*.java"/>
+                        </fileset>
+         </jar>
+         <zip destfile="liblinphone-sdk-${version.name}.zip">
+                <zipfileset dir="libs" prefix="libs" includes="**/*.so" />
+                <zipfileset dir="${out.absolute.dir}" includes="liblinphone.jar" prefix="libs"/>
+                </zip>
+
+          </target>
+
 </project>

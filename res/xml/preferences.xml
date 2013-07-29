@@ -234,6 +234,11 @@
 				android:defaultValue="@bool/pref_ice_enabled_default"/>
 			
 			<CheckBoxPreference 
+			    android:title="@string/pref_upnp_enable"
+				android:key="@string/pref_upnp_enable_key" 
+				android:defaultValue="@bool/pref_upnp_enabled_default"/>
+			
+			<CheckBoxPreference 
 			    android:key="@string/pref_transport_use_random_ports_key"
 				android:title="@string/pref_transport_use_random_ports"
 				android:defaultValue="@bool/pref_transport_use_random_ports_default"/>

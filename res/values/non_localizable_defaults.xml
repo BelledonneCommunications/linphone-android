@@ -37,6 +37,7 @@
     <bool name="pref_wifi_only_default">false</bool>
 	<string name="default_stun">stun.linphone.org</string>
     <bool name="pref_ice_enabled_default">false</bool>
+    <bool name="pref_upnp_enabled_default">false</bool>
     <bool name="pref_transport_use_random_ports_default">true</bool>
     <string name="pref_sip_port_default">5060</string>
     <string name="pref_transport_default">@string/pref_transport_udp_key</string>

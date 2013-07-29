@@ -34,7 +34,7 @@
    	    android:src="@drawable/call_answer" />
    	
    	<ImageView
-   	    android:id="@+id/chat"
+   	    android:id="@+id/start_chat"
    	    android:layout_width="0dp"
    	    android:layout_height="match_parent"
    	    android:layout_weight="0.2"

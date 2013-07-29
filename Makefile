@@ -11,7 +11,7 @@ ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail 
 NDK_DEBUG=0
 BUILD_UPNP=1
 BUILD_REMOTE_PROVISIONING=1
-BUILD_X264=1
+BUILD_X264=0
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=0
 BUILD_GPLV3_ZRTP=0
@@ -21,8 +21,23 @@ BUILD_TUNNEL=0
 BUILD_WEBRTC_AECM=1
 BUILD_FOR_X86=1
 USE_JAVAH=1
+LINPHONE_VIDEO=1
+BUILD_TLS=1
 
-NDK_BUILD_OPTIONS=NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) -j$(NUMCPUS)
+# Checks
+CHECK_MSG=$(shell ./check_tools.sh)
+ifneq ($(CHECK_MSG),)
+    $(error $(CHECK_MSG))
+endif
+include check_tools.mk
+
+OPENSSL_DIR=$(shell openssl version -d | sed  "s/OPENSSLDIR: \"\(.*\)\"/\1/")
+ifneq ($(shell ls $(OPENSSL_DIR)/certs),)
+	HTTPS_CA_DIR=$(OPENSSL_DIR)/certs
+else
+	HTTPS_CA_DIR=$(OPENSSL_DIR)
+endif
+
 
 all: update-project prepare-sources generate-apk
 
@@ -98,15 +113,49 @@ prepare-mediastreamer2:
 	if ! [ -e yuv2rgb.vs.h ]; then echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi && \
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
-prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-zrtp prepare-mediastreamer2
+ANLTR3_SRC_DIR=$(TOPDIR)/submodules/externals/antlr3/runtime/C/include/
+ANTLR3_BUILD_DIR=$(ANTLR3_SRC_DIR)
+$(ANLTR3_SRC_DIR)/antlr3config.h: $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h
+	cp $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h $(ANLTR3_SRC_DIR)
+prepare-antlr3: $(ANLTR3_SRC_DIR)/antlr3config.h 
 
-generate-libs:
-	$(NDK_PATH)/ndk-build $(NDK_BUILD_OPTIONS)
+%.tokens: %.g
+	$(ANTLR) -make -fo $(dir $^) $^ 
+
+BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
+BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
+prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/belle_sdp.tokens
+
+prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
+	[ -d $(TOPDIR)/submodules/externals/build/cunit/CUnit ] || mkdir $(TOPDIR)/submodules/externals/build/cunit/CUnit
+	cp $^ $(TOPDIR)/submodules/externals/build/cunit/CUnit
+
+$(TOPDIR)/res/raw/rootca.pem:
+	 HTTPS_CA_DIR=$(HTTPS_CA_DIR) $(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
+
+prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
+	for file in $^; do \
+	cp -f $$file $(TOPDIR)/liblinphone_tester/res/raw/. \
+	;done	
+
+prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem
+
+LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) BUILD_TLS=$(BUILD_TLS)
+
+generate-libs: prepare-sources javah
+	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS)
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
+	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
-generate-apk:
+liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
+	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS)
+
+javah: 
+	ant javah
+
+generate-apk: generate-libs
 	ant partial-clean
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties
 	ant debug
@@ -117,7 +166,7 @@ install-apk:
 release: update-project
 	ant clean
 	echo "What is the version name for the release ?"; \
-    read version; \
+	read version; \
 	echo "version.name=$$version" > default.properties
 	ant release
 
@@ -135,8 +184,11 @@ run-tests:
 	adb shell am instrument -w -e size small org.linphone.test/android.test.InstrumentationTestRunner
 
 clean:
-	$(NDK_PATH)/ndk-build $(NDK_BUILD_OPTIONS) clean
+	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
 	ant clean
 
 .PHONY: clean
+
+generate-sdk: generate-apk
+	ant liblinphone-sdk
 
