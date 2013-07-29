@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp libosip2 libeXosip2 libmediastreamer2 liblinphone liblinphonenoneon libneon
+APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon liblpxml2
 APP_STL := stlport_static
 
 #uPnp
@@ -7,9 +7,8 @@ ifeq ($(BUILD_UPNP),1)
 APP_MODULES += libupnp
 endif
 
-#remote provisioning
-ifeq ($(BUILD_REMOTE_PROVISIONING),1)
-APP_MODULES += liblpxml2 libxml2lpc liblpc2xml
+ifeq ($(BUILD_TLS),1)
+APP_MODULES +=polarssl
 endif
 
 #default values
@@ -72,7 +71,10 @@ APP_MODULES += libtunnelclient
 endif
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+ifeq ($(BUILD_TUNNEL), 1)
 APP_MODULES += liblincrypto liblinssl
+endif
+
 APP_MODULES      +=libmsilbc
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
@@ -93,4 +95,3 @@ APP_ABI := armeabi-v7a armeabi
 ifeq ($(BUILD_FOR_X86), 1)
 APP_ABI += x86
 endif
-APP_CFLAGS:=-DDISABLE_NEON

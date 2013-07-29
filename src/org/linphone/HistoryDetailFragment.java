@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 
 import android.annotation.SuppressLint;
@@ -104,11 +105,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		time.setText(callTime == null ? "" : callTime);
 		date.setText(timestampToHumanDate(callDate));
 		
-		LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
-		String displayName = lAddress.getDisplayName();
-		if (displayName != null) {
-			view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
+		LinphoneAddress lAddress;
+		try {
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
+			String displayName = lAddress.getDisplayName();
+			if (displayName != null) {
+				view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
+			}
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
 		}
 	}
 	

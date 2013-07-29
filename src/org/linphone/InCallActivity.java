@@ -1274,10 +1274,17 @@ public class InCallActivity extends FragmentActivity implements
 	
 	private void displayCall(Resources resources, LinphoneCall call, int index) {
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
-        LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+        LinphoneAddress lAddress;
+		try {
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+		} catch (LinphoneCoreException e) {
+			Log.e("Incall activity cannot parse remote address",e);
+			lAddress= LinphoneCoreFactory.instance().createLinphoneAddress("uknown","unknown","unkonown");
+		}
 
         // Control Row
     	LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call_control_row, container, false);
+    	callView.setId(index+1);
 		setContactName(callView, lAddress, sipUri, resources);
 		displayCallStatusIconAndReturnCallPaused(callView, call);
 		setRowBackground(callView, index);

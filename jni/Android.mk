@@ -41,12 +41,8 @@ ifeq ($(BUILD_UPNP),1)
 include $(linphone-root-dir)/submodules/externals/build/libupnp/Android.mk
 endif
 
-#libxml2 + xml2lpc + lpc2xml
-ifeq ($(BUILD_REMOTE_PROVISIONING),1)
+#libxml2 
 include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
-include $(linphone-root-dir)/submodules/linphone/build/android/xml2lpc.mk
-include $(linphone-root-dir)/submodules/linphone/build/android/lpc2xml.mk
-endif
 
 # Speex
 include $(linphone-root-dir)/submodules/externals/build/speex/Android.mk
@@ -54,12 +50,11 @@ include $(linphone-root-dir)/submodules/externals/build/speex/Android.mk
 # Gsm
 include $(linphone-root-dir)/submodules/externals/build/gsm/Android.mk
 
-include $(linphone-root-dir)/submodules/externals/build/exosip/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
+include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
 
-include $(linphone-root-dir)/submodules/externals/build/osip/Android.mk
 
-# Openssl
-include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
 
 include $(linphone-root-dir)/submodules/linphone/oRTP/build/android/Android.mk
 
@@ -68,6 +63,14 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tools/Android.mk
 
 
 ifeq ($(BUILD_TUNNEL), 1)
+# Openssl
+ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk),)
+include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
+else
+include $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk
+include $(linphone-root-dir)/submodules/externals/prebuilts/crypto.mk
+endif
+#tunnel
 include $(linphone-root-dir)/submodules/tunnel/Android.mk
 endif
 

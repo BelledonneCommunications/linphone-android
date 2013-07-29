@@ -71,12 +71,19 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	username.setOnPreferenceChangeListener(preferenceChangedListener);
     	username.setSummary(username.getText());
     	
-    	EditTextPreference password = (EditTextPreference) account.getPreference(1);
+    	EditTextPreference userid = (EditTextPreference) account.getPreference(1);
+    	userid.setText(prefs.getString(getString(R.string.pref_auth_userid_key) + key, ""));
+    	userid.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+    	userid.setKey(getString(R.string.pref_auth_userid_key) + key);
+    	userid.setOnPreferenceChangeListener(preferenceChangedListener);
+    	userid.setSummary(userid.getText());
+    	
+    	EditTextPreference password = (EditTextPreference) account.getPreference(2);
     	password.setText(prefs.getString(getString(R.string.pref_passwd_key) + key, ""));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     	password.setKey(getString(R.string.pref_passwd_key) + key);
     	
-    	EditTextPreference domain = (EditTextPreference) account.getPreference(2);
+    	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
     	domain.setText(prefs.getString(getString(R.string.pref_domain_key) + key, ""));
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	domain.setKey(getString(R.string.pref_domain_key) + key);
@@ -109,13 +116,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
         		
 	        	for (int i = n; i < nbAccounts - 1; i++) {
 	        		editor.putString(getString(R.string.pref_username_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_username_key) + getAccountNumber(i+1), null));
+	        		editor.putString(getString(R.string.pref_auth_userid_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_auth_userid_key) + getAccountNumber(i+1), null));
 	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_passwd_key) + getAccountNumber(i+1), null));
 	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_domain_key) + getAccountNumber(i+1), null));
 	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_proxy_key) + getAccountNumber(i+1), null));
 	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i+1), false));
 	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i+1), false));
 	        	}
-	        	
+
 	        	if (n != 0) {
 		        	int lastAccount = nbAccounts - 1;
 		        	editor.putString(getString(R.string.pref_username_key) + getAccountNumber(lastAccount), null);
@@ -137,7 +145,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	        	} else {
 	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
 	        	}
-	        	
+
 	        	editor.commit();
 	        	
 	        	LinphoneActivity.instance().displaySettings();

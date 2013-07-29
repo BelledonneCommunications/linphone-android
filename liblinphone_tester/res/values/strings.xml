@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">liblinphone tester</string>
+    <string name="all">All</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_logs">LogsActivity</string>
+    <string name="title_activity_suites">SuitesActivity</string>
+
+</resources>

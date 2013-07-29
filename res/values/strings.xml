@@ -418,5 +418,11 @@
 	<string name="pref_background_mode">Background mode</string>
 	
 	<string name="download_image">Download</string>
-	<string name="download_image_failed">Download failed. Check your internet connection or try again later.</string>
+	<string name="download_image_failed">Download failed. Please check your internet access or try again later.</string>
+	
+	<string name="pref_auth_userid">Auth userid*</string>
+	
+	<string name="pref_help_auth_userid">Enter authentication userid (optionnal)</string>
+	
+	<string name="pref_upnp_enable">Enable UPNP</string>
 </resources>

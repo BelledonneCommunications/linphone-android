@@ -40,6 +40,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -58,6 +59,7 @@ import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 
@@ -112,6 +114,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private Notification mCustomNotif;
 	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
+	private PendingIntent mkeepAlivePendingIntent;
 	private String mNotificationTitle;
 
 
@@ -198,6 +201,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 		
 		LinphoneManager.getLc().setPresenceInfo(0, "", OnlineStatus.Online);
+		//make sure the application will at least wakes up every 10 mn
+		Intent intent = new Intent(this, KeepAliveHandler.class);
+	    mkeepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+		((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP
+																							, SystemClock.elapsedRealtime()+600000
+																							, 600000
+																							, mkeepAlivePendingIntent);
 	}
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
@@ -237,7 +247,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		String userName = call.getRemoteAddress().getUserName();
 		String domain = call.getRemoteAddress().getDomain();
 		String displayName = call.getRemoteAddress().getDisplayName();
-		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress("sip:" + userName + "@" + domain);
+		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
 		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
@@ -313,7 +323,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			mMsgNotifCount++;
 		}
 		
-		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactoryImpl.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+		Uri pictureUri;
+		try {
+			pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactoryImpl.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+		} catch (LinphoneCoreException e1) {
+			Log.e("Cannot parse from address",e1);
+			pictureUri=null;
+		}
 		Bitmap bm = null;
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
@@ -474,6 +490,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    mNM.cancel(INCALL_NOTIF_ID);
 	    mNM.cancel(MESSAGE_NOTIF_ID);
 	    mWifiLock.release();
+	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
 		super.onDestroy();
 	}
 	

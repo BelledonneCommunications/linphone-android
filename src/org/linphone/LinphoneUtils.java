@@ -36,6 +36,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -73,7 +74,12 @@ public final class LinphoneUtils {
 	//private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
 	public static boolean isSipAddress(String numberOrAddress) {
-		return LinphoneCoreFactory.instance().createLinphoneAddress(numberOrAddress) != null;
+		try {
+			LinphoneCoreFactory.instance().createLinphoneAddress(numberOrAddress);
+			return true;
+		} catch (LinphoneCoreException e) {
+			return false;
+		}
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {

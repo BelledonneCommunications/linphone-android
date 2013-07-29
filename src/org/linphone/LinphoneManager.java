@@ -59,6 +59,7 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
@@ -69,9 +70,12 @@ import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
@@ -696,10 +700,15 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	private void initAccount(String key, boolean defaultAccount) throws LinphoneCoreException {
 		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
+		String userid = getPrefString(getString(R.string.pref_auth_userid_key) + key, null);
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
 		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
 		if (username != null && username.length() > 0 && password != null) {
-			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
+			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username
+																						, userid
+																						, password
+																						, null
+																						,null);
 			mLc.addAuthInfo(lAuthInfo);
 			
 			if (domain != null && domain.length() > 0) {
@@ -866,11 +875,16 @@ public class LinphoneManager implements LinphoneCoreListener {
 		//stun server
 		String lStun = getPrefString(R.string.pref_stun_server_key, getString(R.string.default_stun));
 		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, mR.getBoolean(R.bool.pref_ice_enabled_default));
-		//boolean useUpnp = getPrefBoolean(R.string.pref_upnp_enable_key, mR.getBoolean(R.bool.pref_upnp_enabled_default));
+		boolean useUpnp = getPrefBoolean(R.string.pref_upnp_enable_key, mR.getBoolean(R.bool.pref_upnp_enabled_default));
 	
 		mLc.setStunServer(lStun);
-		if (lStun!=null && lStun.length()>0) {
-			mLc.setFirewallPolicy(useICE ? FirewallPolicy.UseIce : FirewallPolicy.UseStun);	
+		if (lStun!=null && lStun.length()>0 && useICE) {
+				mLc.setFirewallPolicy(FirewallPolicy.UseIce);
+				if (useUpnp) Log.e("Cannot have both ice and upnp enabled, disabling upnp");
+		} else if (useUpnp) {
+			mLc.setFirewallPolicy(FirewallPolicy.UseUpnp);
+		} else if (lStun!=null && lStun.length()>0){
+			mLc.setFirewallPolicy(FirewallPolicy.UseStun);
 		} else {
 			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
 		}
@@ -1735,5 +1749,29 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneAddress from, byte[] event) {
+	}
+	@Override
+	public void transferState(LinphoneCore lc, LinphoneCall call,
+			State new_call_state) {
+		
+	}
+	@Override
+	public void infoReceived(LinphoneCore lc, LinphoneCall call, LinphoneInfoMessage info) {
+		Log.d("Info message received from "+call.getRemoteAddress().asString());
+		LinphoneContent ct=info.getContent();
+		if (ct!=null){
+			Log.d("Info received with body with mime type "+ct.getType()+"/"+ct.getSubtype()+" and data ["+ct.getDataAsString()+"]");
+		}
+	}
+	@Override
+	public void subscriptionStateChanged(LinphoneCore lc, LinphoneEvent ev,
+			SubscriptionState state) {
+		Log.d("Subscription state changed to "+state+" event name is "+ev.getEventName());
+	}
+	@Override
+	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
+			String eventName, LinphoneContent content) {
+		Log.d("Notify received for event "+eventName);
+		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getDataAsString());
 	}
 }
