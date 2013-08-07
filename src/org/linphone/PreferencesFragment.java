@@ -550,6 +550,8 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 		}
 		
-		createDynamicAccountsPreferences();
+		if (!getResources().getBoolean(R.bool.hide_accounts)) {
+			createDynamicAccountsPreferences();
+		}
 	}
 }

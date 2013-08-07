@@ -112,6 +112,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		} else if (id == R.id.setup_next) {
@@ -141,6 +142,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		}
@@ -326,7 +328,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			writePreference(R.string.pref_domain_key, domain);
 			
 			boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
-			if (isMainAccountLinphoneDotOrg) {
+			boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
+			if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
 				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 					writePreference(R.string.pref_proxy_key, domain + ":5228");
 					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tcp_key));

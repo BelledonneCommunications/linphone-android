@@ -216,6 +216,19 @@
 		        android:adjustViewBounds="true"
 		        android:visibility="gone"
 		        android:layout_alignParentRight="true" />
+		    
+		    <TextView 
+		        android:id="@+id/exit" 
+		        android:text="@string/menu_exit"
+		        android:textColor="@android:color/white"
+		        android:textSize="14dp"
+		        android:layout_centerVertical="true"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="center_vertical"
+		        android:layout_alignParentRight="true"
+		        android:visibility="gone"
+		        android:paddingRight="10dp" />
 		
 		</RelativeLayout>
 		
