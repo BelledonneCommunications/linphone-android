@@ -16,7 +16,7 @@
     <bool name="replace_settings_by_about">false</bool>
     <bool name="replace_chat_by_about">false</bool>
     <bool name="display_about_in_settings">true</bool>
-    <bool name="exit_button_on_dialer">true</bool>
+    <bool name="exit_button_on_dialer">false</bool>
     
     <bool name="hide_camera_settings">false</bool>
     <bool name="replace_wizard_with_old_interface">false</bool>
