@@ -16,6 +16,7 @@
     <bool name="replace_settings_by_about">false</bool>
     <bool name="replace_chat_by_about">false</bool>
     <bool name="display_about_in_settings">true</bool>
+    <bool name="exit_button_on_dialer">true</bool>
     
     <bool name="hide_camera_settings">false</bool>
     <bool name="replace_wizard_with_old_interface">false</bool>
@@ -28,6 +29,7 @@
     <bool name="hide_generic_accounts_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
+	<bool name="use_linphone_server_ports">true</bool>
 	
 	<bool name="use_android_native_contact_edit_interface">false</bool>
 	<!-- The following settings are only usefull if use_android_native_contact_edit_interface = false -->

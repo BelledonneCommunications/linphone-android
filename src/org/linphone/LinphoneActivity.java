@@ -1225,7 +1225,6 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	public void exit() {
-		refreshStatus(OnlineStatus.Offline);
 		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 	}
