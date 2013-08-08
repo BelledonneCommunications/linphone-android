@@ -29,7 +29,6 @@ import static org.linphone.R.string.pref_codec_speex32_key;
 import static org.linphone.R.string.pref_video_enable_key;
 import static org.linphone.core.LinphoneCall.State.CallEnd;
 import static org.linphone.core.LinphoneCall.State.Error;
-import static org.linphone.core.LinphoneCall.State.CallReleased;
 import static org.linphone.core.LinphoneCall.State.IncomingReceived;
 
 import java.io.File;
@@ -164,8 +163,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	public boolean isBluetoothScoConnected;
 	public boolean isUsingBluetoothAudioRoute;
 	private boolean mBluetoothStarted;
-	
-	public ChatStorage chatStorage;
 
 	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
 	public static void addListener(LinphoneSimpleListener listener) {
@@ -189,6 +186,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mRingSoundFile = basePath + "/oldphone_mono.wav"; 
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/toy_mono.wav";
+		mChatDatabaseFile = basePath + "/linphone-history.db";
 
 		sLPref = LinphonePreferenceManager.getInstance(c);
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -197,8 +195,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
-		
-		chatStorage = new ChatStorage(mServiceContext);
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -211,6 +207,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private final String mRingSoundFile; 
 	private final String mRingbackSoundFile;
 	private final String mPauseSoundFile;
+	private final String mChatDatabaseFile;
 
 	private Timer mTimer = new Timer("Linphone scheduler");
 
@@ -575,6 +572,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			mLc.setRing(null);
 			mLc.setRootCA(mLinphoneRootCaFile);
 			mLc.setPlayFile(mPauseSoundFile);
+			mLc.setChatDatabasePath(mChatDatabaseFile);
 
 			int availableCores = Runtime.getRuntime().availableProcessors();
 			Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
@@ -1010,10 +1008,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
 	private void doDestroy() {
-		if (chatStorage != null) {
-			chatStorage.close();
-			chatStorage = null;
-		}
+		ChatStorage.getInstance().close();
 
 		try {
 			mServiceContext.unregisterReceiver(bluetoothReiceiver);
@@ -1147,15 +1142,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		String textMessage = message.getText();
 		String url = message.getExternalBodyUrl();
-		String notificationText = null;
 		int id = -1;
 		if (textMessage != null && textMessage.length() > 0) {
-			id = chatStorage.saveTextMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
-			notificationText = textMessage;
+			id = ChatStorage.getInstance().saveTextMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
 		} else if (url != null && url.length() > 0) {
 			//Bitmap bm = ChatFragment.downloadImage(url);
-			id = chatStorage.saveImageMessage(from.asStringUriOnly(), "", null, message.getExternalBodyUrl(), message.getTime());
-			notificationText = url;
+			id = ChatStorage.getInstance().saveImageMessage(from.asStringUriOnly(), "", null, message.getExternalBodyUrl(), message.getTime());
 		}
 		
 		try {

@@ -1181,10 +1181,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	public ChatStorage getChatStorage() {
-		if (LinphoneManager.getInstance().chatStorage == null) {
-			return new ChatStorage(this);
-		}
-		return LinphoneManager.getInstance().chatStorage;
+		return ChatStorage.getInstance();
 	}
 	
 	public void addContact(String displayName, String sipUri)

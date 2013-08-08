@@ -62,6 +62,7 @@
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
 	<bool name="disable_chat_send_file">false</bool>
+	<bool name="use_linphone_chat_storage">false</bool>
 	
 	<bool name="hash_images_as_name_before_upload">true</bool>
 	
