@@ -36,6 +36,11 @@ SRTP_C_INCLUDE= \
 endif
 #endif
 
+#sqlite
+ifeq ($(BUILD_SQLITE),1)
+include $(linphone-root-dir)/submodules/externals/build/sqlite/Android.mk
+endif
+
 #libupnp
 ifeq ($(BUILD_UPNP),1)
 include $(linphone-root-dir)/submodules/externals/build/libupnp/Android.mk

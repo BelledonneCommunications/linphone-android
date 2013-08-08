@@ -38,5 +38,6 @@ BUILD_TUNNEL          0 (don't build tunnel), 1 (build tunnel) [requires a tunne
 BUILD_WEBRTC_AECM     0 (don't build echo canceler), 1 (build echo canceler)																 | 1
 USE_JAVAH             0 (don't generate header), 1 (generate header for linphone_core_jni) [used to check errors at liblinphone compilation] | 1
 BUILD_FOR_X86		  0 (don't generate liblinphone libraries for x86 architecture), 1 (build liblinphone libraries for x86 architecture)    | 1
+BUILD_SQLITE	      0 (don't build sqlite3), 1 (build sqlite3) [used to store chat messages inside liblinphone]			| 1 
 
 If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
