@@ -1,6 +1,11 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon liblpxml2
+APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon liblpxml2 liblinsqlite
 APP_STL := stlport_static
+
+#sqlite
+ifeq ($(BUILD_SQLITE),1)
+APP_MODULES += liblinsqlite
+endif
 
 #uPnp
 ifeq ($(BUILD_UPNP),1)

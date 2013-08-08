@@ -15,3 +15,5 @@ tests/build.xml
 res/.DS_Store
 bc-android.keystore
 res/raw/lpconfig.xsd
+res/raw/rootca.pem
+submodules/externals/sqlite3/sqlite3.*

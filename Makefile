@@ -7,6 +7,9 @@ PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
+SQLITE_VERSION=3071700
+SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
+SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
 
 NDK_DEBUG=0
 BUILD_UPNP=1
@@ -23,6 +26,7 @@ BUILD_FOR_X86=1
 USE_JAVAH=1
 LINPHONE_VIDEO=1
 BUILD_TLS=1
+BUILD_SQLITE=1
 
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
@@ -106,6 +110,7 @@ $(TOPDIR)/submodules/externals/srtp/config.h : $(TOPDIR)/submodules/externals/bu
 
 prepare-srtp: $(TOPDIR)/submodules/externals/srtp/config.h
 
+#ms2
 prepare-mediastreamer2:
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/src/ && \
 	eval `cat Makefile.am | grep xxd | grep yuv2rgb.vs | sed 's/\$$(abs_builddir)/./'` && \
@@ -113,6 +118,7 @@ prepare-mediastreamer2:
 	if ! [ -e yuv2rgb.vs.h ]; then echo "yuv2rgb.vs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi && \
 	if ! [ -e yuv2rgb.fs.h ]; then echo "yuv2rgb.fs.h creation error (do you have 'xxd' application installed ?)"; exit 1; fi
 
+#antlr3
 ANLTR3_SRC_DIR=$(TOPDIR)/submodules/externals/antlr3/runtime/C/include/
 ANTLR3_BUILD_DIR=$(ANTLR3_SRC_DIR)
 $(ANLTR3_SRC_DIR)/antlr3config.h: $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h
@@ -122,10 +128,12 @@ prepare-antlr3: $(ANLTR3_SRC_DIR)/antlr3config.h
 %.tokens: %.g
 	$(ANTLR) -make -fo $(dir $^) $^ 
 
+#Belle-sip
 BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
 BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
 prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/belle_sdp.tokens
 
+#CUnit
 prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
 	[ -d $(TOPDIR)/submodules/externals/build/cunit/CUnit ] || mkdir $(TOPDIR)/submodules/externals/build/cunit/CUnit
 	cp $^ $(TOPDIR)/submodules/externals/build/cunit/CUnit
@@ -136,11 +144,25 @@ $(TOPDIR)/res/raw/rootca.pem:
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
 	for file in $^; do \
 	cp -f $$file $(TOPDIR)/liblinphone_tester/res/raw/. \
-	;done	
+	;done
 
-prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem
+#SQLite3
+SQLITE_SRC_DIR=$(TOPDIR)/submodules/externals/sqlite3
+SQLITE_BUILD_DIR=$(SQLITE_SRC_DIR)
+prepare-sqlite3: $(SQLITE_BUILD_DIR)/sqlite3.c
 
-LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) BUILD_TLS=$(BUILD_TLS)
+$(SQLITE_BUILD_DIR)/sqlite3.c: $(SQLITE_BASENAME).zip
+	unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
+	mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
+	rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
+
+$(SQLITE_BASENAME).zip:	
+	curl -sO $(SQLITE_URL)
+
+#Build targets
+prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
+
+LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) BUILD_TLS=$(BUILD_TLS) BUILD_SQLITE=$(BUILD_SQLITE)
 
 generate-libs: prepare-sources javah
 	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS)
