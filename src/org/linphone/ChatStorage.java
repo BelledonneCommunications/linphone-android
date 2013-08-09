@@ -328,7 +328,10 @@ public class ChatStorage {
 		ArrayList<String> chatList = new ArrayList<String>();
 		
 		if (useNativeAPI) {
-			//TODO
+			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+			for (LinphoneChatRoom chatroom : chats) {
+				chatList.add(chatroom.getPeerAddress().asStringUriOnly());
+			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, null, null, "remoteContact", null, "id DESC");
 			while (c != null && c.moveToNext()) {
