@@ -281,8 +281,12 @@ public class ChatStorage {
 			c.close();
 		} else {
 			LinphoneChatRoom room = LinphoneManager.getLc().createChatRoom(correspondent);
-			for (LinphoneChatMessage message : room.getHistory()) {
-				ChatMessage chatMessage = new ChatMessage(message.hashCode(), message.getText(), null, String.valueOf(message.getTime()), true, 0, true);
+			LinphoneChatMessage[] history = room.getHistory();
+			for (int i = 0; i < history.length; i++) {
+				LinphoneChatMessage message = history[i];
+				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), null, 
+						String.valueOf(message.getTime()), !message.isOutgoing(), 
+						message.getStatus().toInt(), message.isRead());
 				chatMessage.setUrl(message.getExternalBodyUrl());
 				chatMessages.add(chatMessage);
 			}
