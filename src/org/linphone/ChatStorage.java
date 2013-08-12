@@ -319,7 +319,9 @@ public class ChatStorage {
 	
 	public void removeDiscussion(String correspondent) {
 		if (useNativeAPI) {
-			//TODO
+			LinphoneChatRoom chatroom = LinphoneManager.getLc().createChatRoom(correspondent);
+			chatroom.deleteHistory();
+			chatroom.destroy();
 		} else {
 			db.delete(TABLE_NAME, "remoteContact LIKE \"" + correspondent + "\"", null);
 		}
@@ -331,7 +333,9 @@ public class ChatStorage {
 		if (useNativeAPI) {
 			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
 			for (LinphoneChatRoom chatroom : chats) {
-				chatList.add(chatroom.getPeerAddress().asStringUriOnly());
+				if (chatroom.getHistory().length > 0) {
+					chatList.add(chatroom.getPeerAddress().asStringUriOnly());
+				}
 			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, null, null, "remoteContact", null, "id DESC");
@@ -373,8 +377,11 @@ public class ChatStorage {
 			count = c.getCount();
 			c.close();
 		} else {
-			//TODO
-			count = -1;
+			count = 0;
+			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+			for (LinphoneChatRoom chatroom : chats) {
+				count += chatroom.getUnreadMessagesCount();
+			}
 		}
 		return count;
 	}
@@ -386,8 +393,9 @@ public class ChatStorage {
 			count = c.getCount();
 			c.close();
 		} else {
-			//TODO
-			count = -1;
+			LinphoneChatRoom chatroom = LinphoneManager.getLc().createChatRoom(contact);
+			count = chatroom.getUnreadMessagesCount();
+			chatroom.destroy();
 		}
 		return count;
 	}
