@@ -365,7 +365,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         scrollToEnd();
 	}
 	
+	private int checkId(int id) {
+		if (id <= 0) {
+			return previousMessageID + 1;
+		}
+		return id;
+	}
+	
 	private void displayMessage(int id, String message, String time, boolean isIncoming, LinphoneChatMessage.State status, RelativeLayout layout) {
+		id = checkId(id);
 		BubbleChat bubble = new BubbleChat(layout.getContext(), id, message, null, time, isIncoming, status, previousMessageID);
 		if (!isIncoming) {
 			lastSentMessageBubble = bubble;
@@ -377,13 +385,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		registerForContextMenu(v);
 	}
 	
-	private void displayImageMessage(final int id, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, RelativeLayout layout, final String url) {
+	private void displayImageMessage(int id, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, RelativeLayout layout, final String url) {
+		id = checkId(id);
 		BubbleChat bubble = new BubbleChat(layout.getContext(), id, null, image, time, isIncoming, status, previousMessageID);
 		if (!isIncoming) {
 			lastSentMessageBubble = bubble;
 		}
 
 		final View v = bubble.getView();
+		final int finalId = id;
 		bubble.setDownloadImageButtonListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -392,7 +402,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					public void run() {
 						final Bitmap bm = ChatFragment.downloadImage(url);
 						if (bm != null) {
-							LinphoneActivity.instance().getChatStorage().saveImage(id, bm);
+							LinphoneActivity.instance().getChatStorage().saveImage(finalId, bm);
 							mHandler.post(new Runnable() {
 								@Override
 								public void run() {
