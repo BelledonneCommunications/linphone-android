@@ -290,6 +290,7 @@ public class ChatStorage {
 				chatMessage.setUrl(message.getExternalBodyUrl());
 				chatMessages.add(chatMessage);
 			}
+			room.destroy();
 		}
 		
 		return chatMessages;
