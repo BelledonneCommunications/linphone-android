@@ -178,7 +178,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				progressBar.setProgress(0);
 			}
 		});
-        
+
+        LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			chatRoom = lc.getOrCreateChatRoom(sipUri);
+		}
+		
         if (savedInstanceState != null) {
 			messagesFilterLimit = savedInstanceState.getInt("messagesFilterLimit");
 		}
@@ -487,9 +492,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 	@Override
 	public void onPause() {
-		if (chatRoom != null) {
-			chatRoom.destroy();
-		}
 		latestImageMessages = null;
 		message.removeTextChangedListener(textWatcher);
 		removeVirtualKeyboardVisiblityListener();
@@ -513,11 +515,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onResume() {
-        LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			chatRoom = lc.createChatRoom(sipUri);
-		}
-		
 		latestImageMessages = new HashMap<Integer, String>();
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
