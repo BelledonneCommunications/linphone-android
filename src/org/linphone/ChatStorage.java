@@ -359,12 +359,16 @@ public class ChatStorage {
 	}
 	
 	public void markMessageAsRead(int id) {
-		if (useNativeAPI) {
-			//TODO
-		} else {
+		if (!useNativeAPI) {
 			ContentValues values = new ContentValues();
 			values.put("read", READ);
 			db.update(TABLE_NAME, values, "id LIKE " + id, null);
+		}
+	}
+	
+	public void markConversationAsRead(LinphoneChatRoom chatroom) {
+		if (useNativeAPI) {
+			chatroom.markAsRead();
 		}
 	}
 	

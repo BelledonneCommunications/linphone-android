@@ -182,6 +182,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			chatRoom = lc.getOrCreateChatRoom(sipUri);
+			//Only works if using liblinphone storage
+			LinphoneActivity.instance().getChatStorage().markConversationAsRead(chatRoom);
 		}
 		
         if (savedInstanceState != null) {
@@ -293,7 +295,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				messagesFilterLimit += MESSAGES_STEP;
 			else
 				messagesFilterLimit = messagesList.size();
-		}		
+		}
 		invalidate(messagesFilterLimit);
 	}
 	
@@ -315,11 +317,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		        		displayImageMessage(msg.getId(), msg.getImage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout, msg.getUrl());
 		        	}
 		        	
-		        	if (!msg.isRead())
+		        	if (!msg.isRead()) {
+		        		// Only works if not using liblinphone storage
 		        		chatStorage.markMessageAsRead(msg.getId());
+		        	}
 		        }
 		        LinphoneActivity.instance().updateMissedChatCount();
-			        
+			    
 		        if (limit < messagesList.size()) {
 		        	messagesScrollView.setScrollViewListener(new ScrollViewListener() {
 						@Override
