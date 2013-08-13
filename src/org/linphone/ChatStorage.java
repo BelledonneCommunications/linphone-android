@@ -162,7 +162,7 @@ public class ChatStorage {
 	
 	public void saveImage(int id, Bitmap image) {
 		if (useNativeAPI) {
-			//TODO
+			//Handled before this point
 			return;
 		}
 		
@@ -409,7 +409,7 @@ public class ChatStorage {
 
 	public byte[] getRawImageFromMessage(int id) {
 		if (useNativeAPI) {
-			//TODO
+			//Handled before this point
 			return null;
 		}
 		
