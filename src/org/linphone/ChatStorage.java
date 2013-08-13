@@ -295,11 +295,15 @@ public class ChatStorage {
 		return chatMessages;
 	}
 
-	public String getTextMessageForId(int id) {
+	public String getTextMessageForId(LinphoneChatRoom chatroom, int id) {
 		String message = null;
 		
 		if (useNativeAPI) {
-			//TODO
+			LinphoneChatMessage[] history = chatroom.getHistory();
+			if (history.length > id-1) {
+				LinphoneChatMessage msg = history[id-1];
+				message = msg.getText();
+			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, "id LIKE " + id, null, null, null, null);
 	

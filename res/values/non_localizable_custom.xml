@@ -61,6 +61,7 @@
 	<bool name="allow_edit_in_dialer">true</bool>
 	<bool name="forbid_self_call">false</bool>
 	<bool name="disable_chat">false</bool>
+	<bool name="disable_chat__message_notification">false</bool>
 	<bool name="disable_chat_send_file">false</bool>
 	<bool name="use_linphone_chat_storage">false</bool>
 	
