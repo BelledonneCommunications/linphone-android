@@ -606,7 +606,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 	
 	private void copyTextMessageToClipboard(int id) {
-		String msg = LinphoneActivity.instance().getChatStorage().getTextMessageForId(id);
+		String msg = LinphoneActivity.instance().getChatStorage().getTextMessageForId(chatRoom, id);
 		if (msg != null) {
 			Compatibility.copyTextToClipboard(getActivity(), msg);
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT);
