@@ -354,9 +354,11 @@ public class ChatStorage {
 		return chatList;
 	}
 
-	public void deleteMessage(int id) {
+	public void deleteMessage(LinphoneChatRoom chatroom, int id) {
 		if (useNativeAPI) {
-			//TODO
+			LinphoneChatMessage[] history = chatroom.getHistory();
+			LinphoneChatMessage message = history[id-1];
+			chatroom.deleteMessage(message);
 		} else {
 			db.delete(TABLE_NAME, "id LIKE " + id, null);
 		}
