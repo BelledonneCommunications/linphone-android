@@ -479,7 +479,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_DELETE_MESSAGE:
-			LinphoneActivity.instance().getChatStorage().deleteMessage(item.getGroupId());
+			LinphoneActivity.instance().getChatStorage().deleteMessage(chatRoom, item.getGroupId());
 			invalidate();
 			break;
 		case MENU_SAVE_PICTURE:
