@@ -55,7 +55,7 @@ public class Chat extends SampleTest {
 		goToChat();
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.account_test_calls_login));
 		
-		LinphoneChatRoom chatRoom = LinphoneTestManager.getLc().createChatRoom("sip:" + iContext.getString(R.string.account_linphone_login) + "@" + iContext.getString(R.string.account_linphone_domain));
+		LinphoneChatRoom chatRoom = LinphoneTestManager.getLc().getOrCreateChatRoom("sip:" + iContext.getString(R.string.account_linphone_login) + "@" + iContext.getString(R.string.account_linphone_domain));
 		LinphoneChatMessage msg = chatRoom.createLinphoneChatMessage(iContext.getString(R.string.chat_test_text_received));
 		chatRoom.sendMessage(msg, new LinphoneChatMessage.StateListener() {
 			@Override
