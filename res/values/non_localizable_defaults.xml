@@ -27,6 +27,8 @@
     <bool name="pref_video_initiate_call_with_video_default">true</bool>
     <bool name="pref_video_automatically_share_my_video_default">true</bool>
     <bool name="pref_video_automatically_accept_video_default">true</bool>
+	<!-- Preferred video size -->
+	<string name="pref_preferred_video_size_default">@string/pref_preferred_video_size_vga_key</string>
     <!-- Video codecs -->
     <bool name="pref_video_codec_vp8_default">true</bool>
     <bool name="pref_video_codec_h264_default">false</bool>
