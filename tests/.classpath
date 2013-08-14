@@ -10,6 +10,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/linphone-android-private"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/linphone-android-bellesip"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

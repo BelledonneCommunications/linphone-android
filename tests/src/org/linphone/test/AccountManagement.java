@@ -44,7 +44,7 @@ public class AccountManagement extends SampleTest {
 	public void testBDeleteAccount() {
 		goToSettings();
 		solo.clickOnText(iContext.getString(R.string.account_generic_login) + "new");
-		selectItemInListOnUIThread(7);
+		selectItemInListOnUIThread(8);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_delete_account));
 		
 		solo.goBack();
@@ -58,7 +58,7 @@ public class AccountManagement extends SampleTest {
 	public void testCDisableAccount() {
 		goToSettings();
 		solo.clickOnText(iContext.getString(R.string.account_linphone_login));
-		selectItemInListOnUIThread(5);
+		selectItemInListOnUIThread(6);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_disable_account));
 		
 		solo.goBack();
@@ -72,7 +72,7 @@ public class AccountManagement extends SampleTest {
 	public void testDEnableAccount() {
 		goToSettings();
 		solo.clickOnText(iContext.getString(R.string.account_linphone_login));
-		selectItemInListOnUIThread(5);
+		selectItemInListOnUIThread(6);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_disable_account));
 		
 		solo.goBack();
