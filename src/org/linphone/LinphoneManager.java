@@ -75,6 +75,7 @@ import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.core.SubscriptionState;
+import org.linphone.core.VideoSize;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
@@ -869,6 +870,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		boolean isVideoEnabled = isVideoEnabled();
 		mLc.enableVideo(isVideoEnabled, isVideoEnabled);
+		setPreferredVideoSizeFromConfiguration();
 		
 		//stun server
 		String lStun = getPrefString(R.string.pref_stun_server_key, getString(R.string.default_stun));
@@ -1004,6 +1006,25 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		boolean enable = getPrefBoolean(key, mR.getBoolean(defaultValueKey));
 		mLc.enablePayloadType(videoCodec, enable);
+	}
+
+	private void setPreferredVideoSizeFromConfiguration() {
+		String preferredVideoSize = getPrefString(R.string.pref_preferred_video_size_key, getString(R.string.pref_preferred_video_size_vga_key));
+		int bandwidth = 512 + 60;
+		if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_hd_key))) {
+			preferredVideoSize = "uxga";
+			bandwidth = 1024 + 60;
+		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_vga_key))) {
+			preferredVideoSize = "vga";
+			bandwidth = 512 + 60;
+		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_qvga_key))) {
+			preferredVideoSize = "qvga";
+			bandwidth = 380 + 60;
+		}
+
+		mLc.setPreferredVideoSizeByName(preferredVideoSize);
+		mLc.setUploadBandwidth(bandwidth);
+		mLc.setDownloadBandwidth(bandwidth);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 

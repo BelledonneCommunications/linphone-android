@@ -25,6 +25,7 @@ import static org.linphone.R.string.pref_codec_speex16_key;
 import static org.linphone.R.string.pref_echo_cancellation_key;
 import static org.linphone.R.string.pref_echo_canceller_calibration_key;
 import static org.linphone.R.string.pref_media_encryption_key;
+import static org.linphone.R.string.pref_preferred_video_size_key;
 import static org.linphone.R.string.pref_transport_key;
 import static org.linphone.R.string.pref_video_enable_key;
 
@@ -154,6 +155,8 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 				uncheckDisableAndHideCheckbox(R.string.pref_video_use_front_camera_key);
 			}
 		}
+
+		initializePreferredVideoSizePreferences();
 
 		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
 			doOnFirstLaunch();
@@ -505,7 +508,28 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			//mencPref.setValueIndex(mencPref.findIndexOfValue(getString(R.string.media_encryption_none)));
 		}
 	}
-	
+
+	private void initializePreferredVideoSizePreferences() {
+		List<CharSequence> entries = new ArrayList<CharSequence>();
+		List<CharSequence> values = new ArrayList<CharSequence>();
+		if (Version.isHDVideoCapable()) {
+			entries.add(getString(R.string.pref_preferred_video_size_hd));
+			values.add(getString(R.string.pref_preferred_video_size_hd_key));
+		}
+		entries.add(getString(R.string.pref_preferred_video_size_vga));
+		values.add(getString(R.string.pref_preferred_video_size_vga_key));
+		entries.add(getString(R.string.pref_preferred_video_size_qvga));
+		values.add(getString(R.string.pref_preferred_video_size_qvga_key));
+
+		ListPreference preferredVideoSize = (ListPreference) findPreference(pref_preferred_video_size_key);
+		CharSequence[] content = new CharSequence[entries.size()];
+		entries.toArray(content);
+		preferredVideoSize.setEntries(content);
+		content = new CharSequence[values.size()];
+		values.toArray(content);
+		preferredVideoSize.setEntryValues(content);
+	}
+
 	private void initializeTransportPreferences() {		
 		List<CharSequence> mencEntries=new ArrayList<CharSequence>();
 		List<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
