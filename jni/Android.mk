@@ -17,6 +17,7 @@ LINPHONE_VIDEO=0
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 BUILD_X264=1
 LINPHONE_VIDEO=1
+LINPHONE_HD_VIDEO=1
 endif
 
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/src/android/libneon/Android.mk
