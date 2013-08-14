@@ -20,12 +20,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -113,6 +117,17 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onResume() {
 		super.onResume();
 		
+		//Check if the is the first time we show the chat view since we use liblinphone chat storage
+		boolean useLinphoneStorage = getResources().getBoolean(R.bool.use_linphone_chat_storage);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
+		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
+		if (useLinphoneStorage && updateNeeded) {
+			if (importAndroidStoredMessagedIntoLibLinphoneStorage()) {
+				prefs.edit().putBoolean(getString(R.string.pref_first_time_linphone_chat_storage), false).commit();
+				LinphoneActivity.instance().getChatStorage().restartChatStorage();
+			}
+		}
+		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHATLIST);
 			LinphoneActivity.instance().updateChatListFragment(this);
@@ -198,6 +213,29 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			LinphoneActivity.instance().updateMissedChatCount();
 		}
+	}
+	
+	private boolean importAndroidStoredMessagedIntoLibLinphoneStorage() {
+		//TODO import pictures
+		Log.w("Importing previous messages into new database...");
+		try {
+			ChatStorage db = LinphoneActivity.instance().getChatStorage();
+			List<String> conversations = db.getChatList();
+			for (int j = conversations.size() - 1; j >= 0; j--) {
+				String correspondent = conversations.get(j);
+				LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
+				for (ChatMessage message : db.getMessages(correspondent)) {
+					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), message.isIncoming(), message.isRead());
+					msg.store();
+				}
+				db.removeDiscussion(correspondent);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	class ChatListAdapter extends BaseAdapter {

@@ -26,12 +26,14 @@ import org.linphone.core.LinphoneChatRoom;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.preference.PreferenceManager;
 
 /**
  * @author Sylvain Berfini
@@ -54,10 +56,19 @@ public class ChatStorage {
 			instance = new ChatStorage(LinphoneService.instance().getApplicationContext());
 		return instance;
 	}
+
+	public void restartChatStorage() {
+		if (instance != null)
+			instance.close();
+		instance = new ChatStorage(LinphoneService.instance().getApplicationContext());
+	}
 	
 	private ChatStorage(Context c) {
 	    context = c;
-	    useNativeAPI = c.getResources().getBoolean(R.bool.use_linphone_chat_storage);
+	    boolean useLinphoneStorage = c.getResources().getBoolean(R.bool.use_linphone_chat_storage);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
+		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), true);
+	    useNativeAPI = useLinphoneStorage && !updateNeeded;
 	    
 	    if (!useNativeAPI) {
 		    ChatHelper chatHelper = new ChatHelper(context);
