@@ -26,7 +26,7 @@ BUILD_FOR_X86=1
 USE_JAVAH=1
 LINPHONE_VIDEO=1
 BUILD_TLS=1
-BUILD_SQLITE=1
+BUILD_SQLITE=0
 
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
@@ -203,7 +203,7 @@ run-tests:
 	$(SDK_PATH)/android update test-project --path . -m ../ && \
 	ant debug && \
 	ant installd && \
-	adb shell am instrument -w -e size small org.linphone.test/android.test.InstrumentationTestRunner
+	adb shell am instrument -w -e size large org.linphone.test/android.test.InstrumentationTestRunner
 
 clean:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
