@@ -47,6 +47,17 @@ public class ChatMessage {
 		this.isRead = read;
 	}
 	
+	public ChatMessage(int id, String message, Bitmap image, String timestamp, boolean incoming, int status, boolean read) {
+		super();
+		this.id = id;
+		this.message = message;
+		this.timestamp = timestamp;
+		this.incoming = incoming;
+		this.status = status;
+		this.image = image;
+		this.isRead = read;
+	}
+	
 	public int getId() {
 		return id;
 	}

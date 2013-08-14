@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 
 /**
@@ -284,10 +285,16 @@ public class ChatStorage {
 			LinphoneChatMessage[] history = room.getHistory();
 			for (int i = 0; i < history.length; i++) {
 				LinphoneChatMessage message = history[i];
-				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), null, 
+				
+				Bitmap bm = null;
+				String url = message.getExternalBodyUrl();
+				if (url != null && !url.startsWith("http")) {
+					bm = BitmapFactory.decodeFile(url);
+				}
+				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), bm, 
 						String.valueOf(message.getTime()), !message.isOutgoing(), 
 						message.getStatus().toInt(), message.isRead());
-				chatMessage.setUrl(message.getExternalBodyUrl());
+				chatMessage.setUrl(url);
 				chatMessages.add(chatMessage);
 			}
 		}

@@ -314,7 +314,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				
 				for (int i = messagesList.size() - limit; i < messagesList.size(); i++) {
 		        	ChatMessage msg = messagesList.get(i);
-		        	if (msg.getMessage() != null) {
+		        	if (msg.getMessage() != null && msg.getMessage().length() > 0) {
 		        		displayMessage(msg.getId(), msg.getMessage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout);
 		        	} else {
 		        		displayImageMessage(msg.getId(), msg.getImage(), msg.getTimestamp(), msg.isIncoming(), msg.getStatus(), messagesLayout, msg.getUrl());
@@ -410,7 +410,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						final Bitmap bm = ChatFragment.downloadImage(url);
 						if (bm != null) {
 							if (useLinphoneMessageStorage) {
-								saveImage(bm, finalId);
+								saveImage(bm, finalId, null);
 							} else {
 								LinphoneActivity.instance().getChatStorage().saveImage(finalId, bm);
 							}
@@ -596,7 +596,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (LinphoneActivity.isInstanciated()) {
 				newId = LinphoneActivity.instance().onMessageSent(sipUri, bitmap, url);
 			}
+			newId = checkId(newId);
 			latestImageMessages.put(newId, url);
+			
+			if (useLinphoneMessageStorage)
+				saveImage(bitmap, newId, chatMessage);
 			
 			displayImageMessage(newId, bitmap, String.valueOf(System.currentTimeMillis()), false, State.InProgress, messagesLayout, url);
 			scrollToEnd();
@@ -633,9 +637,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				});
 			} else if (message.getExternalBodyUrl() != null) {
 				Bitmap bm = null;
-				if (useLinphoneMessageStorage) {
-					//TODO: Try to read image from file
-				} else {
+				if (!useLinphoneMessageStorage) {
 					byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
 					if (rawImage != null) {
 						bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
@@ -737,26 +739,42 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void saveImage(int id) {
 		byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
 		Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
-		if (saveImage(bm, id)) {
+		if (saveImage(bm, id, null)) {
 			Toast.makeText(getActivity(), getString(R.string.image_saved), Toast.LENGTH_SHORT).show();
 		} else {
 			Toast.makeText(getActivity(), getString(R.string.image_not_saved), Toast.LENGTH_LONG).show();
 		}
 	}
 	
-	private boolean saveImage(Bitmap bm, int id) {
+	private boolean saveImage(Bitmap bm, int id, LinphoneChatMessage message) {
 		try {
 			String path = Environment.getExternalStorageDirectory().toString();
+			if (!path.endsWith("/"))
+				path += "/";
+			path += "Pictures/";
+			File directory = new File(path);
+			directory.mkdirs();
+			
+			String filename = getString(R.string.picture_name_format).replace("%s", String.valueOf(id));
+			File file = new File(path, filename);
+			
 			OutputStream fOut = null;
-			File file = new File(path, getString(R.string.picture_name_format).replace("%s", String.valueOf(id)));
 			fOut = new FileOutputStream(file);
 
 			bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
 			fOut.flush();
 			fOut.close();
 			
-			//TODO: Update url path in liblinphone database
-
+			if (useLinphoneMessageStorage) {
+				//Update url path in liblinphone database
+				if (message == null) {
+					LinphoneChatMessage[] history = chatRoom.getHistory();
+					message = history[id-1];
+				}
+				message.setExternalBodyUrl(path + filename);
+				chatRoom.updateUrl(message);
+			}
+			
 			MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
 			return true;
 		} catch (Exception e) {
