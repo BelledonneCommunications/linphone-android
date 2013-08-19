@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
+import org.linphone.mediastream.Log;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,8 +32,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 
 /**
@@ -69,6 +70,7 @@ public class ChatStorage {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
 		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), true);
 	    useNativeAPI = useLinphoneStorage && !updateNeeded;
+	    Log.d("Using native API: " + useNativeAPI);
 	    
 	    if (!useNativeAPI) {
 		    ChatHelper chatHelper = new ChatHelper(context);

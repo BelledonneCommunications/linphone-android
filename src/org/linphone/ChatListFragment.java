@@ -26,7 +26,9 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -119,13 +121,38 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		//Check if the is the first time we show the chat view since we use liblinphone chat storage
 		boolean useLinphoneStorage = getResources().getBoolean(R.bool.use_linphone_chat_storage);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
 		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
 		if (useLinphoneStorage && updateNeeded) {
-			if (importAndroidStoredMessagedIntoLibLinphoneStorage()) {
-				prefs.edit().putBoolean(getString(R.string.pref_first_time_linphone_chat_storage), false).commit();
-				LinphoneActivity.instance().getChatStorage().restartChatStorage();
-			}
+			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                private ProgressDialog pd;
+                @Override
+                protected void onPreExecute() {
+                         pd = new ProgressDialog(LinphoneActivity.instance());
+                         pd.setTitle(getString(R.string.wait));
+                         pd.setMessage(getString(R.string.importing_messages));
+                         pd.setCancelable(false);
+                         pd.setIndeterminate(true);
+                         pd.show();
+                }
+                @Override
+                protected Void doInBackground(Void... arg0) {
+                        try {
+                        	if (importAndroidStoredMessagedIntoLibLinphoneStorage()) {
+                				prefs.edit().putBoolean(getString(R.string.pref_first_time_linphone_chat_storage), false).commit();
+                				LinphoneActivity.instance().getChatStorage().restartChatStorage();
+                			}
+                        } catch (Exception e) {
+                               e.printStackTrace();
+                        }
+                        return null;
+                 }
+                 @Override
+                 protected void onPostExecute(Void result) {
+                         pd.dismiss();
+                 }
+			};
+        	task.execute((Void[])null);
 		}
 		
 		if (LinphoneActivity.isInstanciated()) {
@@ -225,7 +252,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				String correspondent = conversations.get(j);
 				LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
 				for (ChatMessage message : db.getMessages(correspondent)) {
-					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), message.isIncoming(), message.isRead());
+					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), message.isRead(), message.isIncoming());
 					msg.store();
 				}
 				db.removeDiscussion(correspondent);
