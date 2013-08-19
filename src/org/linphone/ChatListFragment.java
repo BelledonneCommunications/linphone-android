@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -28,8 +31,10 @@ import org.linphone.mediastream.Log;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -243,7 +248,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	private boolean importAndroidStoredMessagedIntoLibLinphoneStorage() {
-		//TODO import pictures
 		Log.w("Importing previous messages into new database...");
 		try {
 			ChatStorage db = LinphoneActivity.instance().getChatStorage();
@@ -253,6 +257,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
 				for (ChatMessage message : db.getMessages(correspondent)) {
 					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), message.isRead(), message.isIncoming());
+					if (message.getImage() != null) {
+						String path = saveImageAsFile(message.getId(), message.getImage());
+						if (path != null)
+							msg.setExternalBodyUrl(path);
+					}
 					msg.store();
 				}
 				db.removeDiscussion(correspondent);
@@ -263,6 +272,32 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 		
 		return false;
+	}
+	
+	private String saveImageAsFile(int id, Bitmap bm) {
+		try {
+			String path = Environment.getExternalStorageDirectory().toString();
+			if (!path.endsWith("/"))
+				path += "/";
+			path += "Pictures/";
+			File directory = new File(path);
+			directory.mkdirs();
+			
+			String filename = getString(R.string.picture_name_format).replace("%s", String.valueOf(id));
+			File file = new File(path, filename);
+			
+			OutputStream fOut = null;
+			fOut = new FileOutputStream(file);
+
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+			fOut.flush();
+			fOut.close();
+			
+			return path + filename;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	class ChatListAdapter extends BaseAdapter {
