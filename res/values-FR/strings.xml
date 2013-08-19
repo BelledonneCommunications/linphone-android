@@ -371,4 +371,7 @@
 	
 	<string name="download_image">Télécharger</string>
 	<string name="download_image_failed">Téléchargement échoué. Vérifiez votre connexion internet ou reéssayez plus tard.</string>
+	
+	<string name="wait">Merci de patienter...</string>
+	<string name="importing_messages">Mise à jour de la base des messages</string>
 </resources>
