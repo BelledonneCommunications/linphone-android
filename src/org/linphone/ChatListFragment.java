@@ -67,6 +67,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private ImageView clearFastChat;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
+	private boolean useLinphoneStorage;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,7 +105,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		} else {
 			noChatHistory.setVisibility(View.GONE);
 			chatList.setVisibility(View.VISIBLE);
-			chatList.setAdapter(new ChatListAdapter());
+			chatList.setAdapter(new ChatListAdapter(useLinphoneStorage));
 		}
 	}
 	
@@ -125,7 +126,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		super.onResume();
 		
 		//Check if the is the first time we show the chat view since we use liblinphone chat storage
-		boolean useLinphoneStorage = getResources().getBoolean(R.bool.use_linphone_chat_storage);
+		useLinphoneStorage = getResources().getBoolean(R.bool.use_linphone_chat_storage);
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
 		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
 		if (useLinphoneStorage && updateNeeded) {
@@ -256,7 +257,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				String correspondent = conversations.get(j);
 				LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
 				for (ChatMessage message : db.getMessages(correspondent)) {
-					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), message.isRead(), message.isIncoming());
+					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), true, message.isIncoming());
 					if (message.getImage() != null) {
 						String path = saveImageAsFile(message.getId(), message.getImage());
 						if (path != null)
@@ -301,7 +302,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	class ChatListAdapter extends BaseAdapter {
-		ChatListAdapter() {
+		private boolean useNativeAPI;
+		
+		ChatListAdapter(boolean useNativeAPI) {
+			this.useNativeAPI = useNativeAPI;
 		}
 		
 		public int getCount() {
@@ -345,25 +349,38 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
 
-			List<ChatMessage> messages = LinphoneActivity.instance().getChatMessages(contact);
-			if (messages != null && messages.size() > 0) {
-				int iterator = messages.size() - 1;
-				ChatMessage lastMessage = null;
-				
-				while (iterator >= 0) {
-					lastMessage = messages.get(iterator);
-					if (lastMessage.getMessage() == null) {
-						iterator--;
-					} else {
-						iterator = -1;
+			String message = "";
+			if (useNativeAPI) {
+				LinphoneChatRoom chatRoom = LinphoneManager.getLc().getOrCreateChatRoom(contact);
+				LinphoneChatMessage[] history = chatRoom.getHistory(20);
+				if (history != null && history.length > 0) {
+					for (int i = history.length - 1; i >= 0; i--) {
+						LinphoneChatMessage msg = history[i];
+						if (msg.getText() != null && msg.getText().length() > 0) {
+							message = msg.getText();
+							break;
+						}
 					}
 				}
-				
-				String message = "";
-				message = (lastMessage == null || lastMessage.getMessage() == null) ? "" : lastMessage.getMessage();
-				TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
-				lastMessageView.setText(message);
+			} else {
+				List<ChatMessage> messages = LinphoneActivity.instance().getChatMessages(contact);
+				if (messages != null && messages.size() > 0) {
+					int iterator = messages.size() - 1;
+					ChatMessage lastMessage = null;
+					
+					while (iterator >= 0) {
+						lastMessage = messages.get(iterator);
+						if (lastMessage.getMessage() == null) {
+							iterator--;
+						} else {
+							iterator = -1;
+						}
+					}
+					message = (lastMessage == null || lastMessage.getMessage() == null) ? "" : lastMessage.getMessage();
+				}
 			}
+			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
+			lastMessageView.setText(message);
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
 			sipUri.setSelected(true); // For animation
