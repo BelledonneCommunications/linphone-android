@@ -320,9 +320,11 @@ public class ChatStorage {
 		
 		if (useNativeAPI) {
 			LinphoneChatMessage[] history = chatroom.getHistory();
-			if (history.length > id-1) {
-				LinphoneChatMessage msg = history[id-1];
-				message = msg.getText();
+			for (LinphoneChatMessage msg : history) {
+				if (msg.getStorageId() == id) {
+					message = msg.getText();
+					break;
+				}
 			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, "id LIKE " + id, null, null, null, null);
@@ -377,8 +379,12 @@ public class ChatStorage {
 	public void deleteMessage(LinphoneChatRoom chatroom, int id) {
 		if (useNativeAPI) {
 			LinphoneChatMessage[] history = chatroom.getHistory();
-			LinphoneChatMessage message = history[id-1];
-			chatroom.deleteMessage(message);
+			for (LinphoneChatMessage message : history) {
+				if (message.getStorageId() == id) {
+					chatroom.deleteMessage(message);
+					break;
+				}
+			}
 		} else {
 			db.delete(TABLE_NAME, "id LIKE " + id, null);
 		}

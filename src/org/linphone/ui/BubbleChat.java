@@ -87,7 +87,7 @@ public class BubbleChat {
 	private ImageView statusView;
 	private Button download;
 	
-	public BubbleChat(Context context, int id, String message, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
+	public BubbleChat(Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
 		view = new RelativeLayout(context);
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -201,10 +201,10 @@ public class BubbleChat {
 		return view;
 	}
 	
-	private String timestampToHumanDate(Context context, String timestamp) {
+	private String timestampToHumanDate(Context context, long timestamp) {
 		try {
 			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(Long.parseLong(timestamp));
+			cal.setTimeInMillis(timestamp);
 			
 			SimpleDateFormat dateFormat;
 			if (isToday(cal)) {
@@ -215,7 +215,7 @@ public class BubbleChat {
 			
 			return dateFormat.format(cal.getTime());
 		} catch (NumberFormatException nfe) {
-			return timestamp;
+			return String.valueOf(timestamp);
 		}
 	}
 	
