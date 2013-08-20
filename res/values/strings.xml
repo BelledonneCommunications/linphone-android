@@ -421,6 +421,7 @@
 	
 	<string name="pref_background_mode">Background mode</string>
 	
+	<string name="show_image">Show</string>
 	<string name="download_image">Download</string>
 	<string name="download_image_failed">Download failed. Please check your internet access or try again later.</string>
 	

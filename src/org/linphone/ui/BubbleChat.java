@@ -28,8 +28,10 @@ import org.linphone.core.LinphoneChatMessage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -87,7 +89,7 @@ public class BubbleChat {
 	private ImageView statusView;
 	private Button download;
 	
-	public BubbleChat(Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
+	public BubbleChat(final Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, final String url, int previousID) {
 		view = new RelativeLayout(context);
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -147,6 +149,16 @@ public class BubbleChat {
 		    	imageView.setImageBitmap(image);
 	    	} else if (imageView != null) {
 	    		imageView.setVisibility(View.GONE);
+	    	}
+	    	if (imageView != null) {
+	    		imageView.setOnClickListener(new OnClickListener() {
+	    			@Override
+	    			public void onClick(View v) {
+	    				Intent intent = new Intent(Intent.ACTION_VIEW);
+	    				intent.setDataAndType(Uri.parse("file://" + url), "image/*");
+	    				context.startActivity(intent);
+	    			}
+	    		});
 	    	}
 	    	
 	    	download = (Button) layout.findViewById(R.id.download);
@@ -272,9 +284,15 @@ public class BubbleChat {
 		return Html.fromHtml(text);
 	}
 
-	public void setDownloadImageButtonListener(OnClickListener onClickListener) {
+	public void setShowOrDownloadImageButtonListener(OnClickListener onClickListener) {
 		if (download != null) {
 			download.setOnClickListener(onClickListener);
+		}
+	}
+	
+	public void setShowOrDownloadText(String buttonName) {
+		if (download != null) {
+			download.setText(buttonName);
 		}
 	}
 }

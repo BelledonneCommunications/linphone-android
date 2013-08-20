@@ -373,6 +373,7 @@
 	
 	<string name="pref_background_mode">Actif en arrière plan</string>
 	
+	<string name="show_image">Afficher</string>
 	<string name="download_image">Télécharger</string>
 	<string name="download_image_failed">Téléchargement échoué. Vérifiez votre connexion internet ou reéssayez plus tard.</string>
 	
