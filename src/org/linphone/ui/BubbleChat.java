@@ -114,7 +114,8 @@ public class BubbleChat {
     	Spanned text = null;
     	if (message != null) {
 	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-	    		text = getSmiledText(context, getTextWithHttpLinks(message));
+	    		text = getSmiledText(context, getTextWithHttpLinks(message), message);
+	    		//text = getTextWithHttpLinks(message);
 	    	} else {
 	    		text = getTextWithHttpLinks(message);
 	    	}
@@ -245,23 +246,19 @@ public class BubbleChat {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 	
-	public static Spannable getSmiledText(Context context, Spanned text) {
-		SpannableStringBuilder builder = new SpannableStringBuilder(text);
-		int index;
+	public static Spannable getSmiledText(Context context, Spanned spanned, String text) {
+		SpannableStringBuilder builder = new SpannableStringBuilder(spanned);
 
-		for (index = 0; index < builder.length(); index++) {
-		    for (Entry<String, Integer> entry : emoticons.entrySet()) {
-		        int length = entry.getKey().length();
-		        if (index + length > builder.length())
-		            continue;
-		        if (builder.subSequence(index, index + length).toString().equals(entry.getKey())) {
-		            builder.setSpan(new ImageSpan(context, entry.getValue()), index, index + length,
-		            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		            index += length - 1;
-		            break;
-		        }
-		    }
+		for (Entry<String, Integer> entry : emoticons.entrySet()) {
+			String key = entry.getKey();
+			int indexOf = text.indexOf(key);
+			while (indexOf >= 0) {
+				int end = indexOf + key.length();
+				builder.setSpan(new ImageSpan(context, entry.getValue()), indexOf, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				indexOf = text.indexOf(key, end);
+			}
 		}
+		
 		return builder;
 	}
 	
