@@ -29,7 +29,7 @@ public class KeepAliveHandler extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.i("Keep alive handler invoked");
-		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull()!=null) {
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			//first refresh registers
 			LinphoneManager.getLc().refreshRegisters();
 			//make sure iterate will have enough time, device will not sleep until exit from this method
