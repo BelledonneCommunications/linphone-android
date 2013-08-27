@@ -796,7 +796,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				//Update url path in liblinphone database
 				if (message == null) {
 					LinphoneChatMessage[] history = chatRoom.getHistory();
-					message = history[id-1];
+					for (LinphoneChatMessage msg : history) {
+						if (msg.getStorageId() == id) {
+							message = msg;
+							break;
+						}
+					}
 				}
 				message.setExternalBodyUrl(path + filename);
 				chatRoom.updateUrl(message);

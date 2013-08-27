@@ -87,7 +87,7 @@ public class BubbleChat {
 	
 	private RelativeLayout view;
 	private ImageView statusView;
-	private Button download;
+	private Button downloadOrShow;
 	
 	public BubbleChat(final Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, final String url, int previousID) {
 		view = new RelativeLayout(context);
@@ -162,9 +162,9 @@ public class BubbleChat {
 	    		});
 	    	}
 	    	
-	    	download = (Button) layout.findViewById(R.id.download);
-	    	if (download != null && image == null && message == null) {
-	    		download.setVisibility(View.VISIBLE);
+	    	downloadOrShow = (Button) layout.findViewById(R.id.download);
+	    	if (downloadOrShow != null && image == null && message == null) {
+	    		downloadOrShow.setVisibility(View.VISIBLE);
 	    	}
 	    	
 	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
@@ -282,14 +282,14 @@ public class BubbleChat {
 	}
 
 	public void setShowOrDownloadImageButtonListener(OnClickListener onClickListener) {
-		if (download != null) {
-			download.setOnClickListener(onClickListener);
+		if (downloadOrShow != null) {
+			downloadOrShow.setOnClickListener(onClickListener);
 		}
 	}
 	
 	public void setShowOrDownloadText(String buttonName) {
-		if (download != null) {
-			download.setText(buttonName);
+		if (downloadOrShow != null) {
+			downloadOrShow.setText(buttonName);
 		}
 	}
 }
