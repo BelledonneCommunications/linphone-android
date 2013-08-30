@@ -75,7 +75,6 @@ import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.core.SubscriptionState;
-import org.linphone.core.VideoSize;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
@@ -1259,7 +1258,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} 
 		}
 		
-		if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
+		if (state == IncomingReceived && mR.getBoolean(R.bool.auto_answer_calls)) {
+			try {
+				mLc.acceptCall(call);
+			} catch (LinphoneCoreException e) {
+				e.printStackTrace();
+			}
+		}
+		else if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
 				ringingCall = call;
