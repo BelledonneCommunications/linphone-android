@@ -68,15 +68,16 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/build/android/An
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tools/Android.mk
 
 
-ifeq ($(BUILD_TUNNEL), 1)
 # Openssl
-ifeq ($(wildcard $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk),)
-include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
-else
-include $(linphone-root-dir)/submodules/externals/prebuilts/ssl.mk
-include $(linphone-root-dir)/submodules/externals/prebuilts/crypto.mk
+ifneq ($(BUILD_TUNNEL)$(BUILD_GPLV3_ZRTP), 00)
+ifeq (,$(DUMP_VAR))
+$(info Openssl is required)
 endif
+include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
+endif
+
 #tunnel
+ifeq ($(BUILD_TUNNEL), 1)
 include $(linphone-root-dir)/submodules/tunnel/Android.mk
 endif
 
