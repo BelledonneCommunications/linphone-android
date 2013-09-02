@@ -433,4 +433,8 @@
 	
 	<string name="wait">Please wait...</string>
 	<string name="importing_messages">Updating messages database</string>
+	
+	<string name="zrtp_accept">Accept</string>
+	<string name="zrtp_deny">Deny</string>
+	<string name="zrtp_help">You should only accept if you have the same code (see above) as your correspondent</string>
 </resources>

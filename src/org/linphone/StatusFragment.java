@@ -30,18 +30,19 @@ import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,7 +54,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -69,10 +69,6 @@ public class StatusFragment extends Fragment {
 //	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
-	
-	private Toast zrtpToast;
-	private CountDownTimer zrtpHack;
-	private boolean hideZrtpToast = false;
 	private Timer mTimer;
 	private TimerTask mTask;
 	
@@ -358,10 +354,6 @@ public class StatusFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		
-		if (zrtpToast != null) {
-			hideZRTPDialog();
-		}
-		
 		if (mCallQualityUpdater != null) {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater = null;
@@ -399,80 +391,33 @@ public class StatusFragment extends Fragment {
 		}
 	}
 	
-	private void hideZRTPDialog() {
-		hideZrtpToast = true;
-		
-		if (zrtpToast != null) {
-			zrtpToast.cancel();
-		}
-		if (zrtpHack != null) {
-			zrtpHack.cancel();
-		}
-	}
-	
 	private void showZRTPDialog(final LinphoneCall call) {
-        boolean authVerified = call.isAuthenticationTokenVerified();
-        String format = getString(authVerified ? R.string.reset_sas_fmt : R.string.verify_sas_fmt);
-        
-		LayoutInflater inflater = LayoutInflater.from(getActivity());
-		View layout = inflater.inflate(R.layout.zrtp_dialog, (ViewGroup) getActivity().findViewById(R.id.toastRoot));
-		
-		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
-		toastText.setText(String.format(format, call.getAuthenticationToken()));
-		
-		zrtpToast = new Toast(getActivity());
-		zrtpToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0, LinphoneUtils.pixelsToDpi(getResources(), 40));
-		zrtpToast.setDuration(Toast.LENGTH_LONG);
-		
-		ImageView ok = (ImageView) layout.findViewById(R.id.toastOK);
-		ok.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (call != null) {
-					call.setAuthenticationTokenVerified(true);
-				}
-				if (encryption != null) {
-					encryption.setImageResource(R.drawable.security_ok);
-				}
-				hideZRTPDialog();
-			}
-		});
-		
-		ImageView notOk = (ImageView) layout.findViewById(R.id.toastNotOK);
-		notOk.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (call != null) {
-					call.setAuthenticationTokenVerified(false);
-				}
-				if (encryption != null) {
-					encryption.setImageResource(R.drawable.security_pending);
-				}
-				hideZRTPDialog();
-			}
-		});
-		
-		zrtpHack = new CountDownTimer(3000, 1000)
-		{
-		    public void onTick(long millisUntilFinished) 
-		    { 
-		    	if (!hideZrtpToast) {
-		    		zrtpToast.show(); 
-		    	}
-		    }
-		    public void onFinish() { 
-		    	if (!hideZrtpToast) { 
-		    		zrtpToast.show();
-		    		zrtpHack.start();
-		    	}
-		    }
-
-		};
-
-		zrtpToast.setView(layout);
-		hideZrtpToast = false;
-		zrtpToast.show();
-		zrtpHack.start();
+		if (getActivity() == null) {
+			Log.w("Can't display ZRTP popup, no Activity");
+			return;
+		}
+		new AlertDialog.Builder(getActivity())
+	        .setTitle(call.getAuthenticationToken())
+	        .setMessage(getString(R.string.zrtp_help))
+	        .setPositiveButton(R.string.zrtp_accept, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) { 
+	            	call.setAuthenticationTokenVerified(true);
+					if (encryption != null) {
+						encryption.setImageResource(R.drawable.security_ok);
+					}
+	            }
+	         })
+	        .setNegativeButton(R.string.zrtp_deny, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) { 
+	            	if (call != null) {
+						call.setAuthenticationTokenVerified(false);
+						if (encryption != null) {
+							encryption.setImageResource(R.drawable.security_pending);
+						}
+					}
+	            }
+	         })
+	         .show();
 	}
 	
 	private void initCallStatsRefresher(final LinphoneCall call, final View view) {
