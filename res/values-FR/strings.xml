@@ -379,4 +379,8 @@
 	
 	<string name="wait">Merci de patienter...</string>
 	<string name="importing_messages">Mise à jour de la base des messages</string>
+	
+	<string name="zrtp_accept">Accepter</string>
+	<string name="zrtp_deny">Refuser</string>
+	<string name="zrtp_help">Vous ne devriez accepter que si vous avez le même code (ci-dessus) que votre contact</string>
 </resources>

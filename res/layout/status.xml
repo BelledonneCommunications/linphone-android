@@ -40,7 +40,7 @@
 					    	android:id="@+id/call_stats_title"
 					        android:textStyle="bold"
 					        android:textColor="@color/text_default"
-					        android:textSize="18dp"/>
+					        android:textSize="18sp"/>
 				        
 				    </TableRow>
 			    
@@ -55,7 +55,7 @@
 					    	android:text="@string/call_stats_codec"
 					        android:textStyle="bold"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/codec"
@@ -64,7 +64,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 				    
@@ -79,7 +79,7 @@
 					    	android:text="@string/call_stats_upload"
 					        android:textStyle="bold"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/uploadBandwith"
@@ -88,7 +88,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 				    
@@ -103,7 +103,7 @@
 					    	android:text="@string/call_stats_download"
 					        android:textColor="@android:color/white"
 					        android:textStyle="bold"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/downloadBandwith"
@@ -112,7 +112,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 				    
@@ -127,7 +127,7 @@
 					    	android:text="@string/call_stats_ice"
 					        android:textStyle="bold"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/ice"
@@ -136,7 +136,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 			    
@@ -179,7 +179,7 @@
 		        android:id="@+id/statusText" 
 		        android:text="@string/status_not_connected"
 		        android:textColor="@android:color/white"
-		        android:textSize="18dp"
+		        android:textSize="18sp"
 		        android:paddingLeft="5dp"
             	android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"
@@ -205,18 +205,6 @@
 		        android:layout_centerHorizontal="true"
 		        android:visibility="gone" />
 		    
-		    <ImageView
-		        android:contentDescription="@string/content_description_encryption"
-		        android:id="@+id/encryption"
-		        android:paddingRight="5dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_centerVertical="true"
-		        android:src="@drawable/security_pending" 
-		        android:adjustViewBounds="true"
-		        android:visibility="gone"
-		        android:layout_alignParentRight="true" />
-		    
 		    <TextView
 		        android:id="@+id/exit"
 		        android:layout_width="wrap_content"
@@ -229,10 +217,25 @@
 		        android:text="@string/menu_exit"
 		        android:textColor="@android:color/white"
 		        android:visibility="gone"
-		        android:textSize="18dp" />
+		        android:textSize="18sp" />
 		
 		</RelativeLayout>
 		
 	</org.linphone.ui.SlidingDrawer>
+
+    <ImageView
+        android:contentDescription="@string/content_description_encryption"
+        android:id="@+id/encryption"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/security_pending" 
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
 	
 </RelativeLayout>
