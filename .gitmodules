@@ -27,7 +27,7 @@
 	url = git://git.linphone.org/android-openssl.git
 [submodule "submodules/externals/opencore-amr"]
 	path = submodules/externals/opencore-amr
-	url = git://opencore-amr.git.sourceforge.net/gitroot/opencore-amr/opencore-amr
+	url = git://git.code.sf.net/p/opencore-amr/code
 [submodule "submodules/msamr"]
 	path = submodules/msamr
 	url = git://git.linphone.org/msamr
@@ -45,7 +45,7 @@
 	url = git://git.linphone.org/mssilk.git
 [submodule "submodules/externals/vo-amrwbenc"]
 	path = submodules/externals/vo-amrwbenc
-	url = git://opencore-amr.git.sourceforge.net/gitroot/opencore-amr/vo-amrwbenc
+	url = git://git.code.sf.net/p/opencore-amr/vo-amrwbenc
 [submodule "submodules/bcg729"]
 	path = submodules/bcg729
 	url = git://git.linphone.org/bcg729.git
