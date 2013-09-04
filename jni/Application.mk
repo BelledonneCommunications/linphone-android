@@ -76,7 +76,7 @@ APP_MODULES += libtunnelclient
 endif
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-ifeq ($(BUILD_TUNNEL), 1)
+ifeq ($(BUILD_GPLV3_ZRTP), 1)
 APP_MODULES += liblincrypto liblinssl
 endif
 
