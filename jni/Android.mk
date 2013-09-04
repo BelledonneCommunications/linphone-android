@@ -69,7 +69,7 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tools/Android.mk
 
 
 # Openssl
-ifneq ($(BUILD_TUNNEL)$(BUILD_GPLV3_ZRTP), 00)
+ifeq ($(BUILD_GPLV3_ZRTP), 1)
 ifeq (,$(DUMP_VAR))
 $(info Openssl is required)
 endif
