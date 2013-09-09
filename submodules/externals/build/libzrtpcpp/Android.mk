@@ -68,10 +68,10 @@ LOCAL_C_INCLUDES += \
 # Build dynamic and static versions
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 LOCAL_MODULE:= libzrtpcpp
-LOCAL_SHARED_LIBRARIES := liblincrypto liblinssl
+LOCAL_SHARED_LIBRARIES := liblinssl liblincrypto
 include $(BUILD_SHARED_LIBRARY)
 else
-LOCAL_STATIC_LIBRARIES := libcrypto-static libssl-static
+LOCAL_STATIC_LIBRARIES := libssl-static libcrypto-static
 LOCAL_MODULE:= libzrtpcpp-static
 include $(BUILD_STATIC_LIBRARY)
 endif
