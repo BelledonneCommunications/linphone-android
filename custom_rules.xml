@@ -41,6 +41,7 @@
 			<class name="org.linphone.core.LinphoneEventImpl" />
 			<class name="org.linphone.core.PresenceModelImpl" />
 			<class name="org.linphone.core.PresenceActivityImpl" />
+			<class name="org.linphone.core.PresenceServiceImpl" />
 			<class name="org.linphone.core.PresenceNoteImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
