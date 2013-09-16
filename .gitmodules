@@ -73,3 +73,6 @@
 [submodule "submodules/externals/polarssl"]
 	path = submodules/externals/polarssl
 	url = git://git.linphone.org/polarssl.git
+[submodule "submodules/externals/opus"]
+	path = submodules/externals/opus
+	url = git://git.opus-codec.org/opus.git

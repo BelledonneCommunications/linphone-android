@@ -155,6 +155,7 @@
     <string name="pref_codec_ilbc">ilbc</string>
     <string name="pref_codec_speex8">speex 8 Khz</string>
     <string name="pref_codec_speex16">speex 16 Khz</string>
+    <string name="pref_codec_opus">opus 48Khz</string>
     <string name="pref_codec_silk8">silk 8 Khz</string>
     <string name="pref_codec_silk12">silk 12 Khz</string>
     <string name="pref_codec_silk16">silk 16 Khz</string>

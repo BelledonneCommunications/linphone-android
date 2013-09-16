@@ -146,6 +146,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		detectAudioCodec(R.string.pref_codec_silk16_key,"SILK",16000, 1, true);
 		//detectAudioCodec(R.string.pref_codec_silk24_key,"SILK",24000, 1, true);
 		detectAudioCodec(R.string.pref_codec_g729_key,"G729",8000, 1, true);
+		detectAudioCodec(R.string.pref_codec_opus_key,"OPUS",48000, 1, true);
 		
 		// No video
 		if (!Version.isVideoCapable()) {
