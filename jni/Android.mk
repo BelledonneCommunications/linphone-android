@@ -1,28 +1,18 @@
 # script expect linphone-root-dir variable to be set by parent !
 
-#default values
-ifeq ($(BUILD_AMRNB),)
-BUILD_AMRNB=light
-endif
-ifeq ($(BUILD_AMRWB),)
-BUILD_AMRWB=0
-endif
-ifeq ($(BUILD_G729),)
-BUILD_G729=0
-endif
-BUILD_SRTP=1
-
-BUILD_X264=0
-LINPHONE_VIDEO=0
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-BUILD_X264=1
-LINPHONE_VIDEO=1
-LINPHONE_HD_VIDEO=1
-endif
-
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/src/android/libneon/Android.mk
 
-##ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+
+#disable video on non armv7 targets
+ifneq ($(TARGET_ARCH_ABI),armeabi-v7a)
+ifeq (,$(DUMP_VAR))
+$(info Video is disabled for other than armeabi-v7a)
+endif
+_BUILD_X264=0
+_BUILD_VIDEO=0
+endif
+
+
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 	BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
@@ -35,7 +25,7 @@ SRTP_C_INCLUDE= \
 	$(linphone-root-dir)/submodules/externals/srtp/include \
 	$(linphone-root-dir)/submodules/externals/srtp/crypto/include
 endif
-#endif
+
 
 #sqlite
 ifeq ($(BUILD_SQLITE),1)
@@ -88,11 +78,11 @@ endif
 include $(linphone-root-dir)/submodules/mssilk/Android.mk
 endif
 
-
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 include $(linphone-root-dir)/submodules/msilbc/Android.mk
 
-ifeq ($(BUILD_X264), 1)
+ifeq ($(_BUILD_VIDEO),1)
+
+ifeq ($(_BUILD_X264),1)
 ifeq (,$(DUMP_VAR))
 $(info Build X264 plugin for mediastreamer2)
 endif
@@ -104,7 +94,7 @@ include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg-no-neon/Android.mk
 
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
-endif #armeabi-v7a
+endif #_BUILD_VIDEO
 
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)

@@ -2,6 +2,46 @@ APP_PROJECT_PATH := $(call my-dir)/../
 APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon liblpxml2
 APP_STL := stlport_static
 
+#default values:
+
+ifeq ($(BUILD_AMRNB),)
+BUILD_AMRNB=light
+endif
+
+ifeq ($(BUILD_AMRWB),)
+BUILD_AMRWB=0
+endif
+
+ifeq ($(BUILD_SRTP),)
+BUILD_SRTP=1
+endif
+
+ifeq ($(BUILD_X264),)
+BUILD_X264=0
+endif
+
+ifeq ($(BUILD_X264),)
+BUILD_X264=0
+endif
+
+ifeq ($(BUILD_G729),)
+BUILD_G729=0
+endif
+
+ifeq ($(BUILD_VIDEO),)
+BUILD_VIDEO=1
+endif
+
+#since we want to modify BUILD_VIDEO and BUILD_X264 depending on platform, we need to make a copy because the 
+#variables given on command line take precedence over the ones defined internally.
+ifeq ($(BUILD_VIDEO),1)
+_BUILD_VIDEO=1
+endif
+
+ifeq ($(BUILD_X264),1)
+_BUILD_X264=1
+endif
+
 #sqlite
 ifeq ($(BUILD_SQLITE),1)
 APP_MODULES += liblinsqlite
@@ -16,18 +56,7 @@ ifeq ($(BUILD_TLS),1)
 APP_MODULES +=polarssl
 endif
 
-#default values
-ifeq ($(BUILD_AMRNB),)
-BUILD_AMRNB=light
-endif
-ifeq ($(BUILD_AMRWB),)
-BUILD_AMRWB=0
-endif
-ifeq ($(BUILD_SRTP),)
-BUILD_SRTP=1
-endif
-
-ifeq ($(LINPHONE_VIDEO),1)
+ifeq ($(BUILD_VIDEO),1)
 APP_MODULES += liblinavutil liblinavcore liblinavcodec liblinswscale
 APP_MODULES += liblinavcodecnoneon
 APP_MODULES += libvpx
@@ -79,22 +108,16 @@ ifeq ($(BUILD_TUNNEL), 1)
 APP_MODULES += libtunnelclient
 endif
 
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 APP_MODULES += liblincrypto liblinssl
+APP_MODULES      += libzrtpcpp
 endif
 
 APP_MODULES      +=libmsilbc
 
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
-APP_MODULES      += libzrtpcpp
-endif
-
 ifeq ($(BUILD_SRTP), 1)
 APP_MODULES      += libsrtp
 endif
-endif #armeabi-v7a
-
 
 linphone-root-dir:=$(APP_PROJECT_PATH)
 
