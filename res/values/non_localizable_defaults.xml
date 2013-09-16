@@ -7,6 +7,7 @@
     
     <bool name="pref_echo_canceller_default">true</bool>
     <!-- Audio codecs -->
+    <bool name="pref_codec_opus_default">true</bool>
     <bool name="pref_codec_speex16_default">true</bool>
     <bool name="pref_codec_speex8_default">true</bool>
     <bool name="pref_codec_ilbc_default">true</bool>

@@ -62,6 +62,9 @@
 				android:key="@string/pref_codecs_key">
 			     
 				<CheckBoxPreference 
+				    android:key="@string/pref_codec_opus_key"
+					android:defaultValue="@bool/pref_codec_opus_default"
+					android:title="@string/pref_codec_opus"/><CheckBoxPreference 
 				    android:key="@string/pref_codec_speex16_key"
 					android:defaultValue="@bool/pref_codec_speex16_default"
 					android:title="@string/pref_codec_speex16"/>
