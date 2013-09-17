@@ -74,6 +74,7 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -1794,5 +1795,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 			String eventName, LinphoneContent content) {
 		Log.d("Notify received for event "+eventName);
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getDataAsString());
+	}
+	@Override
+	public void publishStateChanged(LinphoneCore lc, LinphoneEvent ev,
+			PublishState state) {
+		// TODO Auto-generated method stub
+		
 	}
 }
