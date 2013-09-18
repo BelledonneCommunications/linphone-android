@@ -39,10 +39,11 @@
 			<class name="org.linphone.core.LpConfigImpl" />
 			<class name="org.linphone.core.LinphoneInfoMessageImpl" />
 			<class name="org.linphone.core.LinphoneEventImpl" />
-			<class name="org.linphone.core.PresenceModelImpl" />
 			<class name="org.linphone.core.PresenceActivityImpl" />
-			<class name="org.linphone.core.PresenceServiceImpl" />
+			<class name="org.linphone.core.PresenceModelImpl" />
 			<class name="org.linphone.core.PresenceNoteImpl" />
+			<class name="org.linphone.core.PresencePersonImpl" />
+			<class name="org.linphone.core.PresenceServiceImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>
