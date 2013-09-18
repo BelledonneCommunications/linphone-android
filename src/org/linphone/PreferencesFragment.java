@@ -60,6 +60,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 
 public class PreferencesFragment extends PreferencesListFragment implements EcCalibrationListener {
 	private Handler mHandler = new Handler();
@@ -196,7 +197,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		}
 		
 		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
-			PreferenceCategory videoSettings = (PreferenceCategory) findPreference(getString(R.string.pref_video_key));
+			PreferenceScreen videoSettings = (PreferenceScreen) findPreference(getString(R.string.pref_video_key));
 			videoSettings.removeAll();
 			videoSettings.setLayoutResource(R.layout.hidden);
 			
