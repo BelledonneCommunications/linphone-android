@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)/../../ffmpeg
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := liblinavcodec
+LOCAL_MODULE := liblinavcodecnoneon
 
 LOCAL_SRC_FILES = \
 	libavcodec/allcodecs.c \
@@ -99,7 +99,7 @@ LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
 
 #for including config.h:
 LOCAL_C_INCLUDES += \
-	$(LOCAL_PATH)/../build/ffmpeg  \
+	$(LOCAL_PATH)/../build/ffmpeg-arm-no-neon \
 	$(LOCAL_PATH)/libavcodec/arm \
 	$(LOCAL_PATH)/ \
 	$(LOCAL_PATH)/libavutil 

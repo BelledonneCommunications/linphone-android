@@ -52,6 +52,10 @@ LOCAL_C_INCLUDES += \
 
 
 # Build dynamic and static versions
+ifeq ($(TARGET_ARCH), x86)
+LOCAL_MODULE:= libsrtp
+include $(BUILD_SHARED_LIBRARY)
+else
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 LOCAL_MODULE:= libsrtp
 include $(BUILD_SHARED_LIBRARY)
@@ -59,5 +63,4 @@ else
 LOCAL_MODULE:= libsrtp-static
 include $(BUILD_STATIC_LIBRARY)
 endif
-
-
+endif

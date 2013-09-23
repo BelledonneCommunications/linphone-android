@@ -8,7 +8,6 @@ LOCAL_MODULE := liblinavutil
 LOCAL_SRC_FILES = \
 	libavutil/adler32.c \
 	libavutil/aes.c \
-	libavutil/arm/cpu.c \
 	libavutil/avstring.c \
 	libavutil/base64.c \
 	libavutil/cpu.c \
@@ -33,13 +32,12 @@ LOCAL_SRC_FILES = \
 	libavutil/rc4.c \
 	libavutil/sha.c \
 	libavutil/tree.c \
-	libavutil/utils.c 
+	libavutil/utils.c \
+	libavutil/x86/cpu.c
 
 LOCAL_CFLAGS += -DHAVE_AV_CONFIG_H
 
-LOCAL_ARM_MODE := arm
-
 #for including config.h:
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg  $(LOCAL_PATH)/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../build/ffmpeg-x86 $(LOCAL_PATH)/
 include $(BUILD_SHARED_LIBRARY)
 

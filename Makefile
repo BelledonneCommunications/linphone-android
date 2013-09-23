@@ -56,6 +56,7 @@ prepare-ffmpeg:
 ifeq ($(PATCH_FFMPEG),)
 	@patch -p0 < $(TOPDIR)/patches/ffmpeg_scalar_product_remove_alignment_hints.patch
 endif
+
 #libilbc
 LIBILBC_SRC_DIR=$(TOPDIR)/submodules/libilbc-rfc3951
 LIBILBC_BUILD_DIR=$(LIBILBC_SRC_DIR)
@@ -71,15 +72,41 @@ $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
 	|| ( echo "iLBC prepare stage failed" ; exit 1 )
 	
 prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
+
 #libvpx
+PREPARE_VPX_DEPS := prepare-vpx-arm
+CLEAN_VPX_DEPS := clean-vpx-arm
+ifeq ($(BUILD_FOR_X86), 1)
+	PREPARE_VPX_DEPS += prepare-vpx-x86
+	CLEAN_VPX_DEPS += clean-vpx-x86
+endif
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
-$(LIBVPX_SRC_DIR)/vp8/common/asm_com_offsets.c.S:
-	cd $(LIBVPX_SRC_DIR) && \
-	./configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) --enable-error-concealment && \
-	make asm_com_offsets.asm \
-	|| ( echo "VP8 prepare stage failed." ; exit 1 )
-	
-prepare-vpx: $(LIBVPX_SRC_DIR)/vp8/common/asm_com_offsets.c.S
+LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment
+
+prepare-vpx-arm:
+	mkdir -p submodules/externals/build/libvpx/arm && \
+	cd submodules/externals/build/libvpx/arm && \
+	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
+	make -j ${NUMCPUS} \
+	|| ( echo "Prepare stage of libvpx for arm failed." ; exit 1 )
+
+prepare-vpx-x86:
+	mkdir -p submodules/externals/build/libvpx/x86 && \
+	cd submodules/externals/build/libvpx/x86 && \
+	$(LIBVPX_SRC_DIR)/configure --target=x86-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) --extra-cflags="--sysroot=$(NDK_PATH)/platforms/android-18/arch-x86" && \
+	make -j${NUMCPUS} \
+	|| ( echo "Prepare stage of libvpx for x86 failed." ; exit 1 )
+
+prepare-vpx: $(PREPARE_VPX_DEPS)
+
+clean-vpx-arm:
+	rm -rf submodules/externals/build/libvpx/arm
+
+clean-vpx-x86:
+	rm -rf submodules/externals/build/libvpx/x86
+
+clean-vpx: $(CLEAN_VPX_DEPS)
+
 #SILK
 LIBMSSILK_SRC_DIR=$(TOPDIR)/submodules/mssilk
 LIBMSSILK_BUILD_DIR=$(LIBMSSILK_SRC_DIR)
@@ -214,9 +241,11 @@ run-tests:
 	ant installd && \
 	adb shell am instrument -w -e size large org.linphone.test/android.test.InstrumentationTestRunner
 
-clean:
+clean-ndk-build:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
 	ant clean
+
+clean: clean-ndk-build clean-vpx
 
 .PHONY: clean
 
