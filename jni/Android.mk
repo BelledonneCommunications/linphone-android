@@ -3,13 +3,21 @@
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/src/android/libneon/Android.mk
 
 
-#disable video on non armv7 targets
-ifneq ($(TARGET_ARCH_ABI),armeabi-v7a)
-ifeq (,$(DUMP_VAR))
-$(info Video is disabled for other than armeabi-v7a)
-endif
+#enable video on armv7 and x86 targets only
 _BUILD_X264=0
 _BUILD_VIDEO=0
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+_BUILD_X264=1
+_BUILD_VIDEO=1
+endif
+ifeq ($(TARGET_ARCH_ABI),x86)
+_BUILD_X264=1
+_BUILD_VIDEO=1
+endif
+ifeq ($(_BUILD_VIDEO),0)
+ifeq (,$(DUMP_VAR))
+$(info Video is disabled for targets other than armeabi-v7a and x86)
+endif
 endif
 
 
@@ -90,10 +98,17 @@ include $(linphone-root-dir)/submodules/msx264/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/x264/Android.mk
 endif
 
-include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
-include $(linphone-root-dir)/submodules/externals/build/ffmpeg-no-neon/Android.mk
+ifeq ($(TARGET_ARCH),arm)
+include $(linphone-root-dir)/submodules/externals/build/ffmpeg-arm/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/ffmpeg-arm-no-neon/Android.mk
+endif
+ifeq ($(TARGET_ARCH),x86)
+include $(linphone-root-dir)/submodules/externals/build/ffmpeg-x86/Android-no-neon.mk
+include $(linphone-root-dir)/submodules/externals/build/ffmpeg-x86/Android.mk
+endif
 
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
+
 endif #_BUILD_VIDEO
 
 
@@ -108,10 +123,16 @@ ifeq ($(BUILD_SRTP), 1)
 include $(linphone-root-dir)/submodules/externals/build/srtp/Android.mk
 endif
 
+ifeq ($(TARGET_ARCH), arm)
 ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
 include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
 endif
 include $(linphone-root-dir)/submodules/linphone/build/android/Android-no-neon.mk
+endif
+ifeq ($(TARGET_ARCH), x86)
+include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
+include $(linphone-root-dir)/submodules/linphone/build/android/Android-no-neon.mk
+endif
 
 _BUILD_AMR=0
 ifneq ($(BUILD_AMRNB), 0)
