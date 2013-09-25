@@ -3,7 +3,6 @@ SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
-PATCH_FFMPEG=$(shell cd submodules/externals/ffmpeg && git status | grep neon)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 BELLESIP_VERSION=$(shell cat submodules/belle-sip/VERSION)
@@ -52,11 +51,6 @@ all: update-project prepare-sources generate-apk
 
 install: install-apk run-linphone
 
-prepare-ffmpeg:
-ifeq ($(PATCH_FFMPEG),)
-	@patch -p0 < $(TOPDIR)/patches/ffmpeg_scalar_product_remove_alignment_hints.patch
-endif
-
 #libilbc
 LIBILBC_SRC_DIR=$(TOPDIR)/submodules/libilbc-rfc3951
 LIBILBC_BUILD_DIR=$(LIBILBC_SRC_DIR)
@@ -72,6 +66,45 @@ $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
 	|| ( echo "iLBC prepare stage failed" ; exit 1 )
 	
 prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
+
+#ffmpeg
+BUILD_FFMPEG_DEPS=$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone.so
+ifeq ($(BUILD_FOR_X86), 1)
+	BUILD_FFMPEG_DEPS+=$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone.so
+endif
+FFMPEG_SRC_DIR=$(TOPDIR)/submodules/externals/ffmpeg
+FFMPEG_BUILD_DIR=$(TOPDIR)/submodules/externals/build/ffmpeg
+FFMPEG_CONFIGURE_OPTIONS=--target-os=linux --enable-cross-compile --enable-runtime-cpudetect \
+	--disable-everything --disable-doc --disable-ffplay --disable-ffmpeg --disable-ffprobe --disable-ffserver \
+	--disable-avdevice --disable-avfilter --disable-avformat --disable-swresample --disable-network \
+	--enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
+	--build-suffix=-linphone --disable-static --enable-shared
+FFMPEG_ARM_CONFIGURE_OPTIONS=--enable-pic
+FFMPEG_X86_CONFIGURE_OPTIONS=--disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
+
+$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt:
+	@patch -p0 < $(TOPDIR)/patches/ffmpeg_non_versioned_soname.patch
+	touch $@
+
+$(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone.so:
+	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
+	cd $(FFMPEG_BUILD_DIR)/arm && \
+	$(FFMPEG_SRC_DIR)/configure --arch=arm --sysroot=$(NDK_PATH)/platforms/android-18/arch-arm --cross-prefix=$(NDK_PATH)/toolchains/arm-linux-androideabi-4.6/prebuilt/linux-x86_64/bin/arm-linux-androideabi- $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS) && \
+	make -j ${NUMCPUS} \
+	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
+
+$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone.so:
+	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
+	cd $(FFMPEG_BUILD_DIR)/x86 && \
+	$(FFMPEG_SRC_DIR)/configure --arch=x86 --sysroot=$(NDK_PATH)/platforms/android-18/arch-x86 --cross-prefix=$(NDK_PATH)/toolchains/x86-4.6/prebuilt/linux-x86_64/bin/i686-linux-android- $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS) && \
+	make -j ${NUMCPUS} \
+	|| ( echo "Build of ffmpeg for x86 failed." ; exit 1 )
+
+build-ffmpeg: $(BUILD_FFMPEG_DEPS)
+
+clean-ffmpeg:
+	rm -rf $(FFMPEG_BUILD_DIR)/arm && \
+	rm -rf $(FFMPEG_BUILD_DIR)/x86
 
 #libvpx
 PREPARE_VPX_DEPS := prepare-vpx-arm
@@ -192,7 +225,7 @@ $(SQLITE_BASENAME).zip:
 	curl -sO $(SQLITE_URL)
 
 #Build targets
-prepare-sources: prepare-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
+prepare-sources: build-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
 LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) \
 				BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) \
@@ -246,6 +279,8 @@ clean-ndk-build:
 	ant clean
 
 clean: clean-ndk-build clean-vpx
+
+veryclean: clean clean-ffmpeg
 
 .PHONY: clean
 

@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblinphonenoneon libneon liblpxml2
+APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone libneon liblpxml2
 APP_STL := stlport_static
 
 #default values:
@@ -57,8 +57,7 @@ APP_MODULES +=polarssl
 endif
 
 ifeq ($(BUILD_VIDEO),1)
-APP_MODULES += liblinavutil liblinavcore liblinavcodec liblinswscale
-APP_MODULES += liblinavcodecnoneon
+APP_MODULES += libavutil-linphone libavcodec-linphone libswscale-linphone
 APP_MODULES += libvpx
 endif
 

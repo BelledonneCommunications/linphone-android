@@ -98,15 +98,7 @@ include $(linphone-root-dir)/submodules/msx264/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/x264/Android.mk
 endif
 
-ifeq ($(TARGET_ARCH),arm)
-include $(linphone-root-dir)/submodules/externals/build/ffmpeg-arm/Android.mk
-include $(linphone-root-dir)/submodules/externals/build/ffmpeg-arm-no-neon/Android.mk
-endif
-ifeq ($(TARGET_ARCH),x86)
-include $(linphone-root-dir)/submodules/externals/build/ffmpeg-x86/Android-no-neon.mk
-include $(linphone-root-dir)/submodules/externals/build/ffmpeg-x86/Android.mk
-endif
-
+include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
 
 endif #_BUILD_VIDEO
@@ -123,16 +115,7 @@ ifeq ($(BUILD_SRTP), 1)
 include $(linphone-root-dir)/submodules/externals/build/srtp/Android.mk
 endif
 
-ifeq ($(TARGET_ARCH), arm)
-ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
 include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
-endif
-include $(linphone-root-dir)/submodules/linphone/build/android/Android-no-neon.mk
-endif
-ifeq ($(TARGET_ARCH), x86)
-include $(linphone-root-dir)/submodules/linphone/build/android/Android.mk
-include $(linphone-root-dir)/submodules/linphone/build/android/Android-no-neon.mk
-endif
 
 _BUILD_AMR=0
 ifneq ($(BUILD_AMRNB), 0)
