@@ -20,10 +20,6 @@ ifeq ($(BUILD_X264),)
 BUILD_X264=0
 endif
 
-ifeq ($(BUILD_X264),)
-BUILD_X264=0
-endif
-
 ifeq ($(BUILD_G729),)
 BUILD_G729=0
 endif
