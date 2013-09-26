@@ -107,38 +107,33 @@ clean-ffmpeg:
 	rm -rf $(FFMPEG_BUILD_DIR)/x86
 
 #libvpx
-PREPARE_VPX_DEPS := prepare-vpx-arm
-CLEAN_VPX_DEPS := clean-vpx-arm
+BUILD_VPX_DEPS=$(LIBVPX_BUILD_DIR)/arm/libvpx.a
 ifeq ($(BUILD_FOR_X86), 1)
-	PREPARE_VPX_DEPS += prepare-vpx-x86
-	CLEAN_VPX_DEPS += clean-vpx-x86
+	BUILD_VPX_DEPS+=$(LIBVPX_BUILD_DIR)/x86/libvpx.a
 endif
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
+LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
 LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment
 
-prepare-vpx-arm:
+$(LIBVPX_BUILD_DIR)/arm/libvpx.a:
 	mkdir -p submodules/externals/build/libvpx/arm && \
 	cd submodules/externals/build/libvpx/arm && \
 	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
 	make -j ${NUMCPUS} \
-	|| ( echo "Prepare stage of libvpx for arm failed." ; exit 1 )
+	|| ( echo "Build of libvpx for arm failed." ; exit 1 )
 
-prepare-vpx-x86:
+$(LIBVPX_BUILD_DIR)/x86/libvpx.a:
 	mkdir -p submodules/externals/build/libvpx/x86 && \
 	cd submodules/externals/build/libvpx/x86 && \
 	$(LIBVPX_SRC_DIR)/configure --target=x86-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) --extra-cflags="--sysroot=$(NDK_PATH)/platforms/android-18/arch-x86" && \
 	make -j${NUMCPUS} \
-	|| ( echo "Prepare stage of libvpx for x86 failed." ; exit 1 )
+	|| ( echo "Build of libvpx for x86 failed." ; exit 1 )
 
-prepare-vpx: $(PREPARE_VPX_DEPS)
+build-vpx: $(BUILD_VPX_DEPS)
 
-clean-vpx-arm:
-	rm -rf submodules/externals/build/libvpx/arm
-
-clean-vpx-x86:
+clean-vpx:
+	rm -rf submodules/externals/build/libvpx/arm && \
 	rm -rf submodules/externals/build/libvpx/x86
-
-clean-vpx: $(CLEAN_VPX_DEPS)
 
 #SILK
 LIBMSSILK_SRC_DIR=$(TOPDIR)/submodules/mssilk
@@ -225,7 +220,7 @@ $(SQLITE_BASENAME).zip:
 	curl -sO $(SQLITE_URL)
 
 #Build targets
-prepare-sources: build-ffmpeg prepare-ilbc prepare-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
+prepare-sources: build-ffmpeg prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
 LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) \
 				BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) \
@@ -278,9 +273,9 @@ clean-ndk-build:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
 	ant clean
 
-clean: clean-ndk-build clean-vpx
+clean: clean-ndk-build
 
-veryclean: clean clean-ffmpeg
+veryclean: clean clean-ffmpeg clean-vpx
 
 .PHONY: clean
 
