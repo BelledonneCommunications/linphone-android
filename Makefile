@@ -1,6 +1,22 @@
 NDK_PATH=$(shell dirname `which ndk-build`)
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
+ARM_COMPILER_PATH=`find "$(NDK_PATH)" -name "arm-linux-androideabi-gcc*" -print -quit`
+ARM_TOOLCHAIN_PATH=$(shell dirname $(ARM_COMPILER_PATH))/arm-linux-androideabi-
+ARM_SYSROOT=`find "${NDK_PATH}" -name arch-arm -print | \
+	awk '{n = split($$0,a,"/"); \
+	split(a[n-1],b,"-"); \
+	print $$0 " " b[2]}' | \
+	sort -g -k 2 | \
+	awk '{ print $$1 }' | tail -1`
+X86_COMPILER_PATH=`find "$(NDK_PATH)" -name "i686-linux-android-gcc*" -print -quit`
+X86_TOOLCHAIN_PATH=$(shell dirname $(X86_COMPILER_PATH))/i686-linux-android-
+X86_SYSROOT=`find "${NDK_PATH}" -name arch-x86 -print | \
+	awk '{n = split($$0,a,"/"); \
+	split(a[n-1],b,"-"); \
+	print $$0 " " b[2]}' | \
+	sort -g -k 2 | \
+	awk '{ print $$1 }' | tail -1`
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
@@ -17,7 +33,7 @@ NDK_DEBUG=0
 BUILD_VIDEO=1
 BUILD_UPNP=1
 BUILD_REMOTE_PROVISIONING=1
-BUILD_X264=0
+BUILD_X264=1
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=0
 BUILD_GPLV3_ZRTP=0
@@ -79,8 +95,8 @@ FFMPEG_CONFIGURE_OPTIONS=--target-os=linux --enable-cross-compile --enable-runti
 	--disable-avdevice --disable-avfilter --disable-avformat --disable-swresample --disable-network \
 	--enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
 	--build-suffix=-linphone --disable-static --enable-shared
-FFMPEG_ARM_CONFIGURE_OPTIONS=--enable-pic
-FFMPEG_X86_CONFIGURE_OPTIONS=--disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
+FFMPEG_ARM_CONFIGURE_OPTIONS=--arch=arm --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
+FFMPEG_X86_CONFIGURE_OPTIONS=--arch=x86 --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH) --disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
 
 $(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt:
 	@patch -p0 < $(TOPDIR)/patches/ffmpeg_non_versioned_soname.patch
@@ -89,14 +105,14 @@ $(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt:
 $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone.so:
 	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
 	cd $(FFMPEG_BUILD_DIR)/arm && \
-	$(FFMPEG_SRC_DIR)/configure --arch=arm --sysroot=$(NDK_PATH)/platforms/android-18/arch-arm --cross-prefix=$(NDK_PATH)/toolchains/arm-linux-androideabi-4.6/prebuilt/linux-x86_64/bin/arm-linux-androideabi- $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS) && \
+	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS) && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
 
 $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone.so:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
-	$(FFMPEG_SRC_DIR)/configure --arch=x86 --sysroot=$(NDK_PATH)/platforms/android-18/arch-x86 --cross-prefix=$(NDK_PATH)/toolchains/x86-4.6/prebuilt/linux-x86_64/bin/i686-linux-android- $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS) && \
+	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS) && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for x86 failed." ; exit 1 )
 
@@ -115,8 +131,8 @@ endif
 X264_SRC_DIR=$(TOPDIR)/submodules/externals/x264
 X264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/x264
 X264_CONFIGURE_OPTIONS=--disable-shared
-X264_ARM_CONFIGURE_OPTIONS=--host=arm-none-linux-gnueabi --sysroot=$(NDK_PATH)/platforms/android-18/arch-arm --cross-prefix=$(NDK_PATH)/toolchains/arm-linux-androideabi-4.6/prebuilt/linux-x86_64/bin/arm-linux-androideabi- --enable-pic
-X264_X86_CONFIGURE_OPTIONS=--host=i686-linux-gnueabi --sysroot=$(NDK_PATH)/platforms/android-18/arch-x86 --cross-prefix=$(NDK_PATH)/toolchains/x86-4.6/prebuilt/linux-x86_64/bin/i686-linux-android-
+X264_ARM_CONFIGURE_OPTIONS=--host=arm-none-linux-gnueabi --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
+X264_X86_CONFIGURE_OPTIONS=--host=i686-linux-gnueabi --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH)
 
 $(X264_BUILD_DIR)/arm/libx264.a:
 	mkdir -p $(X264_BUILD_DIR)/arm && \
@@ -162,7 +178,7 @@ $(LIBVPX_BUILD_DIR)/arm/libvpx.a:
 $(LIBVPX_BUILD_DIR)/x86/libvpx.a:
 	mkdir -p $(LIBVPX_BUILD_DIR)/x86 && \
 	cd $(LIBVPX_BUILD_DIR)/x86 && \
-	$(LIBVPX_SRC_DIR)/configure --target=x86-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) --extra-cflags="--sysroot=$(NDK_PATH)/platforms/android-18/arch-x86" && \
+	$(LIBVPX_SRC_DIR)/configure --target=x86-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) --extra-cflags="--sysroot=$(X86_SYSROOT)" && \
 	make -j${NUMCPUS} \
 	|| ( echo "Build of libvpx for x86 failed." ; exit 1 )
 
