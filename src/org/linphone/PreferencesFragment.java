@@ -178,10 +178,10 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			prefMPEG4.setSummary(R.string.pref_video_codec_mpeg4_unavailable);
 		} else {
 			detectVideoCodec(R.string.pref_video_codec_h264_key, "H264");
-			if (!Version.hasNeon())
+			if (!Version.hasFastCpuWithAsmOptim())
 			{
 				// Android without neon doesn't support H264
-				Log.w("No NEON available, disabling H264");
+				Log.w("CPU does not have asm optimisations available, disabling H264");
 				findPreference(R.string.pref_video_codec_h264_key).setEnabled(false);
 				findPreference(R.string.pref_video_codec_h264_key).setDefaultValue(false);
 			}

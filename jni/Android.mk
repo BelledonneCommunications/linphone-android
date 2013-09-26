@@ -4,15 +4,9 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/src/android/libn
 
 
 #enable video on armv7 and x86 targets only
+ifeq ($(TARGET_ARCH_ABI), armeabi)
 _BUILD_X264=0
 _BUILD_VIDEO=0
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-_BUILD_X264=1
-_BUILD_VIDEO=1
-endif
-ifeq ($(TARGET_ARCH_ABI),x86)
-_BUILD_X264=1
-_BUILD_VIDEO=1
 endif
 ifeq ($(_BUILD_VIDEO),0)
 ifeq (,$(DUMP_VAR))
