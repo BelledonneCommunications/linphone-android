@@ -1,0 +1,35 @@
+--- submodules/externals/libvpx/build/make/configure.sh.orig	2013-09-27 16:49:14.000000000 +0200
++++ submodules/externals/libvpx/build/make/configure.sh	2013-09-27 16:49:01.000000000 +0200
+@@ -1052,6 +1052,32 @@
+             os2)
+                 AS=${AS:-nasm}
+                 ;;
++            android*)
++                SDK_PATH=${sdk_path}
++                COMPILER_LOCATION=`find "${SDK_PATH}" \
++                                   -name "i686-linux-android-gcc*" -print -quit`
++                TOOLCHAIN_PATH=${COMPILER_LOCATION%/*}/i686-linux-android-
++                CC=${TOOLCHAIN_PATH}gcc
++                CXX=${TOOLCHAIN_PATH}g++
++                AR=${TOOLCHAIN_PATH}ar
++                LD=${TOOLCHAIN_PATH}gcc
++                STRIP=${TOOLCHAIN_PATH}strip
++                NM=${TOOLCHAIN_PATH}nm
++
++                if [ -z "${alt_libc}" ]; then
++                    alt_libc=`find "${SDK_PATH}" -name arch-x86 -print | \
++                              awk '{n = split($0,a,"/"); \
++                                    split(a[n-1],b,"-"); \
++                                    print $0 " " b[2]}' | \
++                              sort -g -k 2 | \
++                              awk '{ print $1 }' | tail -1`
++                fi
++
++                add_cflags "--sysroot=${alt_libc}"
++                add_ldflags "--sysroot=${alt_libc}"
++
++                soft_enable realtime_only
++            ;;
+         esac
+ 
+         AS="${alt_as:-${AS:-auto}}"
