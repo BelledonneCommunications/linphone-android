@@ -130,7 +130,7 @@ ifeq ($(BUILD_FOR_X86), 1)
 endif
 X264_SRC_DIR=$(TOPDIR)/submodules/externals/x264
 X264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/x264
-X264_CONFIGURE_OPTIONS=--disable-shared
+X264_CONFIGURE_OPTIONS=
 X264_ARM_CONFIGURE_OPTIONS=--host=arm-none-linux-gnueabi --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
 X264_X86_CONFIGURE_OPTIONS=--host=i686-linux-gnueabi --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH)
 
