@@ -138,7 +138,7 @@ $(X264_BUILD_DIR)/arm/libx264.a:
 	mkdir -p $(X264_BUILD_DIR)/arm && \
 	cd $(X264_SRC_DIR) && \
 	$(X264_SRC_DIR)/configure $(X264_CONFIGURE_OPTIONS) $(X264_ARM_CONFIGURE_OPTIONS) && \
-	make -j $(NUMCPUS) && \
+	make -j $(NUMCPUS) STRIP= && \
 	cp libx264.a $(X264_BUILD_DIR)/arm/libx264.a && \
 	make clean \
 	|| ( echo "Build of x264 for arm failed." ; exit 1 )
@@ -147,7 +147,7 @@ $(X264_BUILD_DIR)/x86/libx264.a:
 	mkdir -p $(X264_BUILD_DIR)/x86 && \
 	cd $(X264_SRC_DIR) && \
 	$(X264_SRC_DIR)/configure $(X264_CONFIGURE_OPTIONS) $(X264_X86_CONFIGURE_OPTIONS) && \
-	make -j $(NUMCPUS) && \
+	make -j $(NUMCPUS) STRIP= && \
 	cp libx264.a $(X264_BUILD_DIR)/x86/libx264.a && \
 	make clean \
 	|| ( echo "Build of x264 for x86 failed." ; exit 1 )
@@ -166,7 +166,7 @@ ifeq ($(BUILD_FOR_X86), 1)
 endif
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
 LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
-LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment
+LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-debug
 
 $(LIBVPX_BUILD_DIR)/arm/libvpx.a:
 	mkdir -p $(LIBVPX_BUILD_DIR)/arm && \
