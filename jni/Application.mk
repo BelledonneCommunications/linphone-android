@@ -28,16 +28,6 @@ ifeq ($(BUILD_VIDEO),)
 BUILD_VIDEO=1
 endif
 
-#since we want to modify BUILD_VIDEO and BUILD_X264 depending on platform, we need to make a copy because the 
-#variables given on command line take precedence over the ones defined internally.
-ifeq ($(BUILD_VIDEO),1)
-_BUILD_VIDEO=1
-endif
-
-ifeq ($(BUILD_X264),1)
-_BUILD_X264=1
-endif
-
 #sqlite
 ifeq ($(BUILD_SQLITE),1)
 APP_MODULES += liblinsqlite
