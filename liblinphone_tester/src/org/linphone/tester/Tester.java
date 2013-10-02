@@ -3,7 +3,6 @@ package org.linphone.tester;
 import org.linphone.core.LinphoneCoreFactory;
 
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.CpuUtils;
 
 import android.util.Log;
 
@@ -17,12 +16,6 @@ public class Tester {
 			Log.w("Unable to load optional library lib", s);
 		}
 		return false;
-	}
-	
-	public static boolean hasNeonInCpuFeatures()
-	{
-		CpuUtils cpu = new CpuUtils();
-		return cpu.isCpuNeon();
 	}
 	
 	public static boolean isArmv7()
