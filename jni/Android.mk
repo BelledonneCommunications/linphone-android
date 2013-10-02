@@ -1,8 +1,5 @@
 # script expect linphone-root-dir variable to be set by parent !
 
-include $(linphone-root-dir)/submodules/linphone/mediastreamer2/src/android/libneon/Android.mk
-
-
 #enable video on armv7 and x86 targets only
 #since we want to modify BUILD_VIDEO and BUILD_X264 depending on platform, we need to make a copy because the
 #variables given on command line take precedence over the ones defined internally.
