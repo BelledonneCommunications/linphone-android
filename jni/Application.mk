@@ -94,7 +94,7 @@ APP_MODULES += libtunnelclient
 endif
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
-APP_MODULES += liblincrypto liblinssl
+APP_MODULES += libcrypto-linphone libssl-linphone
 APP_MODULES      += libzrtpcpp
 endif
 

@@ -64,16 +64,7 @@ LOCAL_C_INCLUDES += \
         $(LOCAL_EXTERNALS)/openssl/include 
 
 
-
-# Build dynamic and static versions
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-LOCAL_MODULE:= libzrtpcpp
-LOCAL_SHARED_LIBRARIES := liblinssl liblincrypto
+LOCAL_MODULE := libzrtpcpp
+LOCAL_MODULE_FILENAME := libzrtpcpp-$(TARGET_ARCH_ABI)
+LOCAL_SHARED_LIBRARIES := libssl-linphone libcrypto-linphone
 include $(BUILD_SHARED_LIBRARY)
-else
-LOCAL_STATIC_LIBRARIES := libssl-static libcrypto-static
-LOCAL_MODULE:= libzrtpcpp-static
-include $(BUILD_STATIC_LIBRARY)
-endif
-
-
