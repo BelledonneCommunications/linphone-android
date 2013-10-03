@@ -83,9 +83,9 @@ $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
 prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
 
 #ffmpeg
-BUILD_FFMPEG_DEPS=$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone.so
+BUILD_FFMPEG_DEPS=$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so
 ifeq ($(BUILD_FOR_X86), 1)
-	BUILD_FFMPEG_DEPS+=$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone.so
+	BUILD_FFMPEG_DEPS+=$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so
 endif
 FFMPEG_SRC_DIR=$(TOPDIR)/submodules/externals/ffmpeg
 FFMPEG_BUILD_DIR=$(TOPDIR)/submodules/externals/build/ffmpeg
@@ -93,22 +93,22 @@ FFMPEG_CONFIGURE_OPTIONS=--target-os=linux --enable-cross-compile --enable-runti
 	--disable-everything --disable-doc --disable-ffplay --disable-ffmpeg --disable-ffprobe --disable-ffserver \
 	--disable-avdevice --disable-avfilter --disable-avformat --disable-swresample --disable-network \
 	--enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
-	--build-suffix=-linphone --disable-static --enable-shared
-FFMPEG_ARM_CONFIGURE_OPTIONS=--arch=arm --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
-FFMPEG_X86_CONFIGURE_OPTIONS=--arch=x86 --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH) --disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
+	--disable-static --enable-shared
+FFMPEG_ARM_CONFIGURE_OPTIONS=--build-suffix=-linphone-arm --arch=arm --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
+FFMPEG_X86_CONFIGURE_OPTIONS=--build-suffix=-linphone-x86 --arch=x86 --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH) --disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
 
 $(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt:
 	@patch -p0 < $(TOPDIR)/patches/ffmpeg_non_versioned_soname.patch
 	touch $@
 
-$(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone.so:
+$(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so:
 	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
 	cd $(FFMPEG_BUILD_DIR)/arm && \
 	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS) && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
 
-$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone.so:
+$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
 	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS) && \
