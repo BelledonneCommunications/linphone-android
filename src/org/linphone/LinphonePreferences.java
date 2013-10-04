@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LpConfig;
+import org.linphone.mediastream.Log;
 
 import android.content.res.Resources;
 
@@ -36,7 +37,7 @@ public class LinphonePreferences {
 	public static final synchronized LinphonePreferences getInstance() {
 		if (instance == null) {
 			instance = new LinphonePreferences();
-			instance.Load();
+			instance.load();
 		}
 		return instance;
 	}
@@ -81,18 +82,30 @@ public class LinphonePreferences {
 		return changesDict.containsKey(key);
 	}
 	
-	public void Load() {
-		Resources res = LinphoneService.instance().getResources();
-		for (String key : res.getStringArray(R.array.lpconfig_net_keys)) {
-			dict.put(key, config.getString("net", key, null));
+	public void load() {
+		Log.w("Preferences loading...");
+		loadSection("sip", R.array.lpconfig_sip_keys);
+	}
+	
+	private void loadSection(String section, int resourcesID) {
+		Log.w("Preferences loading for section " + section);
+		for (String key : LinphoneService.instance().getResources().getStringArray(resourcesID)) {
+			Log.w("Looking for value for key " + key);
+			String value = config.getString("sip", key, "");
+			if (value != null && value.length() > 0) {
+				Log.w("Value read for key " + key + " : " + value);
+				dict.put(key, value);
+			}
 		}
 	}
 	
-	public void Save() {
+	public void save() {
+		Log.w("Preferences saving...");
 		Resources res = LinphoneService.instance().getResources();
-		for (String key : res.getStringArray(R.array.lpconfig_net_keys)) {
+		for (String key : res.getStringArray(R.array.lpconfig_sip_keys)) {
 			if (hasValueChanged(key)) {
-				config.setString("net", key, getNew(key));
+				Log.w("Saving changed preference : " + getNew(key));
+				config.setString("sip", key, getNew(key));
 			}
 		}
 		config.sync();
