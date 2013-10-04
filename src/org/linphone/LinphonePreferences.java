@@ -83,18 +83,18 @@ public class LinphonePreferences {
 	}
 	
 	public void load() {
-		Log.w("Preferences loading...");
 		loadSection("sip", R.array.lpconfig_sip_keys);
 	}
 	
 	private void loadSection(String section, int resourcesID) {
 		Log.w("Preferences loading for section " + section);
 		for (String key : LinphoneService.instance().getResources().getStringArray(resourcesID)) {
-			Log.w("Looking for value for key " + key);
 			String value = config.getString("sip", key, "");
 			if (value != null && value.length() > 0) {
 				Log.w("Value read for key " + key + " : " + value);
 				dict.put(key, value);
+			} else {
+				Log.w("Value not found for key " + key);
 			}
 		}
 	}

@@ -139,10 +139,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		// In case restart after a crash. Main in LinphoneActivity
 		LinphonePreferenceManager.getInstance(this);
 
-		// Set default preferences
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
-
-		
 		mNotificationTitle = getString(R.string.app_name);
 
 		// Dump some debugging information to the logs

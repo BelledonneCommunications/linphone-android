@@ -124,9 +124,6 @@
 	
     
 	<!-- LP Config preferences names -->
-	<string name="lpconfig_net_downloadbw_key">download_bw</string>
-	<string name="lpconfig_net_uloadbw_key">upload_bw</string>
-	
 	<string-array name="lpconfig_net_keys">
 	</string-array>
 	

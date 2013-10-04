@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		// FIXME: first display doesn't match the linphonerc values
 		
 		if (pref.hasKey()) {
-			Log.w("Preference key = " + pref.getKey());
 			pref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -59,7 +58,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			});
 		} else {
 			if (pref instanceof PreferenceCategory) {
-				Log.w("Preference is a category (" + pref.getTitle() + "), let's recurse!");
 				PreferenceCategory cat = (PreferenceCategory) pref;
 				int count = cat.getPreferenceCount();
 				for (int i = 0; i < count; i++) {
@@ -67,7 +65,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 					setListenerForPreference(p);
 				}
 			} else if (pref instanceof PreferenceScreen) {
-				Log.w("Preference is a screen (" + pref.getTitle() + "), let's recurse!");
 				PreferenceScreen screen = (PreferenceScreen) pref;
 				int count = screen.getPreferenceCount();
 				for (int i = 0; i < count; i++) {
