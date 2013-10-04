@@ -545,7 +545,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
 			
-			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default));
+			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log));
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			// Try to get remote provisioning
@@ -567,7 +567,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 				Log.e(e, "cannot get version name");
 			}
 
-			mLc.enableIpv6(getPrefBoolean(R.string.pref_ipv6_key, false));
 			mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
  
 			mLc.setRing(null);
@@ -645,17 +644,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 			if (mime.equals(audioCodec.getMime())) return true;
 		}
 		return false;
-	}
-
-	void initMediaEncryption(){
-		String pref = getPrefString(R.string.pref_media_encryption_key, R.string.pref_media_encryption_key_none);
-		MediaEncryption me=MediaEncryption.None;
-		if (pref.equals(getString(R.string.pref_media_encryption_key_srtp)))
-			me = MediaEncryption.SRTP;
-		else if (pref.equals(getString(R.string.pref_media_encryption_key_zrtp)))
-			me = MediaEncryption.ZRTP;
-		Log.i("Media encryption set to " + pref);
-		mLc.setMediaEncryption(me);
 	}
 
 	private void initFromConfTunnel(){
@@ -827,75 +815,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			initialTransports = mLc.getSignalingTransportPorts();
 		
 		setSignalingTransportsFromConfiguration(initialTransports);
-		initMediaEncryption();
-
-		mLc.setVideoPolicy(isAutoInitiateVideoCalls(), isAutoAcceptCamera());
-		
-		readAndSetAudioAndVideoPorts();
-		
-		String defaultIncomingCallTimeout = getString(R.string.pref_incoming_call_timeout_default);
-		int incomingCallTimeout = tryToParseIntValue(getPrefString(R.string.pref_incoming_call_timeout_key, defaultIncomingCallTimeout), defaultIncomingCallTimeout);
-		mLc.setIncomingTimeout(incomingCallTimeout);
-		
-		try {
-			// Configure audio codecs
-//			enableDisableAudioCodec("speex", 32000, 1, R.string.pref_codec_speex32_key);
-			enableDisableAudioCodec("speex", 32000, 1, false);
-			enableDisableAudioCodec("speex", 16000, 1, R.string.pref_codec_speex16_key);
-			enableDisableAudioCodec("speex", 8000, 1, R.string.pref_codec_speex8_key);
-			enableDisableAudioCodec("iLBC", 8000, 1, R.string.pref_codec_ilbc_key);
-			enableDisableAudioCodec("GSM", 8000, 1, R.string.pref_codec_gsm_key);
-			enableDisableAudioCodec("G722", 8000, 1, R.string.pref_codec_g722_key);
-			enableDisableAudioCodec("G729", 8000, 1, R.string.pref_codec_g729_key); 
-			enableDisableAudioCodec("PCMU", 8000, 1, R.string.pref_codec_pcmu_key);
-			enableDisableAudioCodec("PCMA", 8000, 1, R.string.pref_codec_pcma_key);
-			enableDisableAudioCodec("AMR", 8000, 1, R.string.pref_codec_amr_key);
-			enableDisableAudioCodec("AMR-WB", 16000, 1, R.string.pref_codec_amrwb_key);
-			//enableDisableAudioCodec("SILK", 24000, 1, R.string.pref_codec_silk24_key);
-			enableDisableAudioCodec("SILK", 24000, 1, false);
-			enableDisableAudioCodec("SILK", 16000, 1, R.string.pref_codec_silk16_key);
-			//enableDisableAudioCodec("SILK", 12000, 1, R.string.pref_codec_silk12_key);
-			enableDisableAudioCodec("SILK", 12000, 1, false);
-			enableDisableAudioCodec("SILK", 8000, 1, R.string.pref_codec_silk8_key);
-			enableDisableAudioCodec("OPUS", 48000, 1, R.string.pref_codec_opus_key);
-
-			// Configure video codecs
-			for (PayloadType videoCodec : mLc.getVideoCodecs()) {
-				enableDisableVideoCodecs(videoCodec);
-			}
-
-			boolean useEC = getPrefBoolean(R.string.pref_echo_cancellation_key, mR.getBoolean(R.bool.pref_echo_canceller_default));
-			mLc.enableEchoCancellation(useEC);
-		} catch (LinphoneCoreException e) {
-			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
-		}
-		boolean isVideoEnabled = isVideoEnabled();
-		mLc.enableVideo(isVideoEnabled, isVideoEnabled);
 		setPreferredVideoSizeFromConfiguration();
-		
-		//stun server
-		String lStun = getPrefString(R.string.pref_stun_server_key, getString(R.string.default_stun));
-		boolean useICE = getPrefBoolean(R.string.pref_ice_enable_key, mR.getBoolean(R.bool.pref_ice_enabled_default));
-		boolean useUpnp = getPrefBoolean(R.string.pref_upnp_enable_key, mR.getBoolean(R.bool.pref_upnp_enabled_default));
-	
-		mLc.setStunServer(lStun);
-		if (lStun!=null && lStun.length()>0 && useICE) {
-				mLc.setFirewallPolicy(FirewallPolicy.UseIce);
-				if (useUpnp) Log.e("Cannot have both ice and upnp enabled, disabling upnp");
-		} else if (useUpnp) {
-			mLc.setFirewallPolicy(FirewallPolicy.UseUpnp);
-		} else if (lStun!=null && lStun.length()>0){
-			mLc.setFirewallPolicy(FirewallPolicy.UseStun);
-		} else {
-			mLc.setFirewallPolicy(FirewallPolicy.NoFirewall);
-		}
-		
-		mLc.setUseRfc2833ForDtmfs(getPrefBoolean(R.string.pref_rfc2833_dtmf_key, mR.getBoolean(R.bool.pref_rfc2833_dtmf_default)));
-		mLc.setUseSipInfoForDtmfs(getPrefBoolean(R.string.pref_sipinfo_dtmf_key, mR.getBoolean(R.bool.pref_sipinfo_dtmf_default)));
-
-		String displayName = getPrefString(R.string.pref_display_name_key, getString(R.string.pref_display_name_default));
-		String username = getPrefString(R.string.pref_user_name_key, getString(R.string.pref_user_name_default));
-		mLc.setPrimaryContact(displayName, username);
 		
 		//accounts
 		try {

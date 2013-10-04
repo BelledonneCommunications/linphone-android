@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Root">
 
 	<PreferenceCategory 
 	    android:title="@string/pref_preferences">
 	    
 		<ListPreference 
 		    android:title="@string/pref_media_encryption"
-			android:key="@string/pref_media_encryption_key"
-			android:defaultValue="@string/pref_media_encryption_default" />
+			android:key="@string/lpconfig_sip_media_enc_key" />
 	    
 	</PreferenceCategory>
 
