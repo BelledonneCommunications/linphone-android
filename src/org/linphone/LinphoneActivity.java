@@ -289,7 +289,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			dialerFragment = newFragment;
 			break;
 		case SETTINGS:
-			newFragment = new PreferencesFragment();
+			newFragment = new SettingsFragment();
 			break;
 		case ACCOUNT_SETTINGS:
 			newFragment = new AccountPreferencesFragment();

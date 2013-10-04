@@ -204,7 +204,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private final String mLPConfigXsd;
 	private final String mLinphoneInitialConfigFile;
 	private final String mLinphoneRootCaFile;
-	private final String mLinphoneConfigFile;
+	public final String mLinphoneConfigFile;
 	private final String mRingSoundFile; 
 	private final String mRingbackSoundFile;
 	private final String mPauseSoundFile;

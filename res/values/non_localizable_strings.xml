@@ -94,7 +94,6 @@
     <string name="pref_stun_server_key">pref_stun_server_key</string>
     <string name="pref_ice_enable_key">pref_ice_enable_key</string>
     <string name="pref_video_codec_vp8_key">pref_video_codec_vp8_key</string>
-    <string name="pref_media_encryption_key">pref_media_encryption_key</string>
     <string name="pref_media_encryption_key_none">none</string>
     <string name="pref_media_encryption_key_srtp">srtp</string>
     <string name="pref_media_encryption_key_zrtp">zrtp</string>
@@ -121,4 +120,36 @@
 	<string name="pref_upnp_enable_key">pref_upnp_enable_key</string>
 	
 	<string name="pref_first_time_linphone_chat_storage">pref_first_time_linphone_chat_storage</string>
+	
+	<!-- LP Config bindings from Android preferences -->
+    <string name="pref_media_encryption_key">lpconfig_sip_media_enc_key</string>
+    
+	<!-- LP Config preferences names -->
+	<string name="lpconfig_net_downloadbw_key">download_bw</string>
+	<string name="lpconfig_net_uloadbw_key">upload_bw</string>
+	
+	<string-array name="lpconfig_net_keys">
+	</string-array>
+	
+	<string name="lpconfig_sip_media_enc_key">media_encryption</string>
+	<string-array name="lpconfig_sip_keys">
+	    <item>@string/lpconfig_sip_media_enc_key</item>
+	</string-array>
+	
+	<string-array name="lpconfig_rtp_keys">
+	    <item></item>
+	</string-array>
+	
+	<string-array name="lpconfig_sound_keys">
+	    <item></item>
+	</string-array>
+	
+	<string-array name="lpconfig_video_keys">
+	    <item></item>
+	</string-array>
+	
+	<string-array name="lpconfig_misc_keys">
+	    <item></item>
+	</string-array>
+	
 </resources>
