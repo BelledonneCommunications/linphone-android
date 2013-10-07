@@ -259,7 +259,7 @@ $(TOPDIR)/res/raw/rootca.pem:
 
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
 	for file in $^; do \
-	cp -f $$file $(TOPDIR)/liblinphone_tester/res/raw/. \
+	cp -f $$file $(TOPDIR)/liblinphone_tester/assets/rc_files/. \
 	;done
 
 #SQLite3

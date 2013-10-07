@@ -1,5 +1,7 @@
 package org.linphone.tester;
 
+import java.io.IOException;
+
 import junit.framework.TestSuite;
 import android.os.Bundle;
 import android.test.InstrumentationTestRunner;
@@ -13,6 +15,7 @@ public class TestRunner extends InstrumentationTestRunner {
 	public void onCreate(Bundle arguments) {
 		mSuite = arguments.getString("suite");
 		mTest = arguments.getString("test");
+		
 		super.onCreate(arguments);
 	}
 	

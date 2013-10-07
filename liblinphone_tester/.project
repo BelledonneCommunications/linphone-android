@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>linphone</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOCATION/submodules/linphone/java</locationURI>
+		</link>
+		<link>
 			<name>mediastreamer2</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOCATION/submodules/linphone/mediastreamer2/java/src</locationURI>

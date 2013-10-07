@@ -24,6 +24,7 @@ public class Tester {
 	}
 	
 	static	{
+		
 		LinphoneCoreFactory.instance();
 
 		System.loadLibrary("cunit");
