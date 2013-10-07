@@ -7,7 +7,9 @@ import java.io.InputStream;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -16,34 +18,9 @@ import android.widget.LinearLayout;
 
 public class MainActivity extends Activity {
 
-	private void copyFromPackage(int ressourceId,String target) throws IOException{
-		FileOutputStream lOutputStream = openFileOutput (target, 0); 
-		InputStream lInputStream = getResources().openRawResource(ressourceId);
-		int readByte;
-		byte[] buff = new byte[8048];
-		while (( readByte = lInputStream.read(buff)) != -1) {
-			lOutputStream.write(buff,0, readByte);
-		}
-		lOutputStream.flush();
-		lOutputStream.close();
-		lInputStream.close();
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		try {
-			copyFromPackage(R.raw.laure_rc, new File("laure_rc").getName());
-			copyFromPackage(R.raw.marie_rc, new File("marie_rc").getName());
-			copyFromPackage(R.raw.marie_early_rc, new File("marie_early_rc").getName());
-			copyFromPackage(R.raw.multi_account_lrc, new File("multi_account_lrc").getName());
-			copyFromPackage(R.raw.pauline_rc, new File("pauline_rc").getName());
-			copyFromPackage(R.raw.rootca, new File("rootca.pem").getName());
-			copyFromPackage(R.raw.cacert, new File("cacert.pem").getName());
-			copyFromPackage(R.raw.tester_hosts, new File("tester_hosts").getName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		setContentView(R.layout.activity_main);
 		
