@@ -1370,20 +1370,22 @@ public class LinphoneActivity extends FragmentActivity implements
 					}
 					
 					fragmentsHistory.remove(fragmentsHistory.size() - 1);
-					FragmentsAvailable newFragmentType = fragmentsHistory.get(fragmentsHistory.size() - 1);
-					LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-					if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
-						ll.setVisibility(View.VISIBLE);
-					} else {
-						if (newFragmentType == FragmentsAvailable.DIALER 
-								|| newFragmentType == FragmentsAvailable.ABOUT 
-								|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
-								|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
-								|| newFragmentType == FragmentsAvailable.SETTINGS 
-								|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
-							ll.setVisibility(View.GONE);
+					if (fragmentsHistory.size() > 0) {
+						FragmentsAvailable newFragmentType = fragmentsHistory.get(fragmentsHistory.size() - 1);
+						LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+						if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
+							ll.setVisibility(View.VISIBLE);
 						} else {
-							ll.setVisibility(View.INVISIBLE);
+							if (newFragmentType == FragmentsAvailable.DIALER 
+									|| newFragmentType == FragmentsAvailable.ABOUT 
+									|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
+									|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
+									|| newFragmentType == FragmentsAvailable.SETTINGS 
+									|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
+								ll.setVisibility(View.GONE);
+							} else {
+								ll.setVisibility(View.INVISIBLE);
+							}
 						}
 					}
 				}
