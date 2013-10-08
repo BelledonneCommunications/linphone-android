@@ -68,7 +68,7 @@
 
 		<activity android:name="org.linphone.LinphoneActivity"
 		    android:theme="@style/NoTitle"
-            android:screenOrientation="nosensor"
+            android:screenOrientation="behind"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
