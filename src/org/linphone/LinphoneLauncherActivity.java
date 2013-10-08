@@ -59,7 +59,6 @@ public class LinphoneLauncherActivity extends Activity {
         
 		mHandler = new Handler();
 
-
 		if (getResources().getBoolean(R.bool.enable_push_id)) {
 			Compatibility.initPushNotificationService(this);
 		}

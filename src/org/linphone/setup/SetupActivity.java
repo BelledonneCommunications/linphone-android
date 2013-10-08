@@ -109,13 +109,13 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.setup_cancel) {
+			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-			LinphonePreferences.instance().firstLaunchSuccessful();
 		} else if (id == R.id.setup_next) {
 			if (firstFragment == SetupFragmentsEnum.LINPHONE_LOGIN) {
 				LinphoneLoginFragment linphoneFragment = (LinphoneLoginFragment) fragment;
@@ -140,13 +140,13 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		if (currentFragment == firstFragment) {
+			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-			LinphonePreferences.instance().firstLaunchSuccessful();
 		}
 		if (currentFragment == SetupFragmentsEnum.MENU) {
 			WelcomeFragment fragment = new WelcomeFragment();
