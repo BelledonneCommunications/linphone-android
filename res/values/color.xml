@@ -25,4 +25,6 @@
     <color name="transparent">#00000000</color>
     
     <color name="landscape_background">#CCCCCC</color>
+    
+    <color name="text_contrast">#ff000000</color> <!-- If background is white, set to black, else set to white -->
 </resources>
