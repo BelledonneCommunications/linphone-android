@@ -50,7 +50,6 @@ import org.linphone.ui.PreferencesListFragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -160,9 +159,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 
 		initializePreferredVideoSizePreferences();
 
-		if (prefs().getBoolean(LinphoneActivity.PREF_FIRST_LAUNCH,true)) {
-			doOnFirstLaunch();
-		}
 		if (Hacks.hasBuiltInEchoCanceller()) {
 			uncheckDisableAndHideCheckbox(R.string.pref_echo_cancellation_key);
 			findPreference(R.string.pref_echo_canceller_calibration_key).setLayoutResource(R.layout.hidden);
@@ -275,9 +271,8 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		addAccount.setTitle(getString(R.string.pref_add_account));
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
-	        	SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-	    		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
-	    		prefs.edit().putInt(getString(R.string.pref_extra_accounts), nbAccounts+1).commit();
+	    		nbAccounts = LinphonePreferences.instance().getAccountCount();
+	    		LinphonePreferences.instance().setAccountCount(nbAccounts + 1);
 	    		
 	        	addExtraAccountPreferencesButton(accounts, nbAccounts, true);
 	        	LinphoneActivity.instance().displayAccountSettings(nbAccounts);
@@ -291,10 +286,6 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		PreferenceCategory p = (PreferenceCategory) findPreference(key);
 		p.removeAll();
 		p.setLayoutResource(R.layout.hidden);
-	}
-
-	private void doOnFirstLaunch() {
-		prefs().edit().putBoolean(LinphoneActivity.PREF_FIRST_LAUNCH, false).commit();
 	}
 
 	private synchronized void startEcCalibration() {
@@ -341,16 +332,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		Preference box = findPreference(key);
 		box.setEnabled(enabled);
 		Compatibility.setPreferenceChecked(box, value);
-		writeBoolean(key, value);
 		if (hidden) box.setLayoutResource(R.layout.hidden);
-	}
-
-	private void writeBoolean(int key, boolean value) {
-		prefs().edit().putBoolean(getString(key), value).commit();
-	}
-
-	private SharedPreferences prefs() {
-		return getPreferenceManager().getSharedPreferences();
 	}
 
 	private void detectAudioCodec(int id, String mime, int rate, int channels, boolean hide) {
@@ -372,8 +354,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		accounts.removeAll();
 		
 		// Get already configured extra accounts
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+		nbAccounts = LinphonePreferences.instance().getAccountCount();
 		for (int i = 0; i < nbAccounts; i++) {
 			// For each, add menus to configure it
 			addExtraAccountPreferencesButton(accounts, i, false);
@@ -385,30 +366,20 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	}
 	
 	private void addExtraAccountPreferencesButton(PreferenceCategory parent, final int n, boolean isNewAccount) {
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 		if (isNewAccount) {
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putInt(getString(R.string.pref_extra_accounts), n+1);
-			editor.commit();
+			LinphonePreferences.instance().setAccountCount(n+1);
 		}
 		
-		final LedPreference me = new LedPreference(mContext);
-		String keyUsername = getString(R.string.pref_username_key);
-		String keyDomain = getString(R.string.pref_domain_key);
-		if (n > 0) {
-			keyUsername += n + "";
-			keyDomain += n + "";
-		}
-		
-		String username = prefs.getString(keyUsername, "");
-		String domain = prefs.getString(keyDomain, "");
+		final LedPreference led = new LedPreference(mContext);
+		String username = LinphonePreferences.instance().getAccountUsername(n);
+		String domain = LinphonePreferences.instance().getAccountDomain(n);
 		if (username == null) {
-			me.setTitle(getString(R.string.pref_sipaccount));
+			led.setTitle(getString(R.string.pref_sipaccount));
 		} else {
-			me.setTitle(username + "@" + domain);
+			led.setTitle(username + "@" + domain);
 		}
 		
-		me.setOnPreferenceClickListener(new OnPreferenceClickListener() 
+		led.setOnPreferenceClickListener(new OnPreferenceClickListener() 
 		{
 			public boolean onPreferenceClick(Preference preference) {
 				LinphoneActivity.instance().displayAccountSettings(n);
@@ -416,8 +387,8 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 			}
 		});
 		
-		updateAccountLed(me, username, domain);
-		parent.addPreference(me);
+		updateAccountLed(led, username, domain);
+		parent.addPreference(led);
 	}
 	
 	private void updateAccountLed(final LedPreference me, final String username, final String domain) {

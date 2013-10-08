@@ -19,14 +19,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.core.LinphoneCoreException;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -57,27 +55,13 @@ public class GCMService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		Log.d("Registered push notification : " + regId);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(context.getString(R.string.push_reg_id_key), regId);
-		editor.commit();
-		
-		if (LinphoneManager.isInstanciated()) {
-			try {
-				LinphoneManager.getInstance().initAccounts();
-			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
-			}
-		}
+		LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
 		Log.w("Unregistered push notification : " + regId);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(context.getString(R.string.push_reg_id_key), null);
-		editor.commit();
+		LinphonePreferences.instance().setPushNotificationRegistrationID(null);
 	}
 	
 	protected String[] getSenderIds(Context context) {

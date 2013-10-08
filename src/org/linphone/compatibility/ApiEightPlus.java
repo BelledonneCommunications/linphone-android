@@ -1,12 +1,11 @@
 package org.linphone.compatibility;
 
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.Display;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -40,28 +39,21 @@ public class ApiEightPlus {
 	}
 
 	public static void initPushNotificationService(Context context) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
 		try {
 			// Starting the push notification service
 			GCMRegistrar.checkDevice(context);
 			GCMRegistrar.checkManifest(context);
 			final String regId = GCMRegistrar.getRegistrationId(context);
 			String newPushSenderID = context.getString(R.string.push_sender_id);
-			String currentPushSenderID = prefs.getString(context.getString(R.string.push_sender_id_key), null);
+			String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
 			if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
 				GCMRegistrar.register(context, newPushSenderID);
 
 				Log.d("Push Notification : storing current sender id = " + newPushSenderID);
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putString(context.getString(R.string.push_sender_id_key), newPushSenderID);
-
-				editor.commit();
+				LinphonePreferences.instance().setPushNotificationRegistrationID(newPushSenderID);
 			} else {
 				Log.d("Push Notification : already registered with id = " + regId);
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putString(context.getString(R.string.push_reg_id_key), regId);
-				editor.commit();
+				LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
 			}
 		} catch (java.lang.UnsupportedOperationException e) {
 			Log.i("Push Notification not activated");

@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
-import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
@@ -53,14 +52,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment.SavedState;
@@ -139,10 +136,9 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_wizard_at_first_start);
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-		if (useFirstLoginActivity && !pref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
-			if (pref.getInt(getString(R.string.pref_extra_accounts), -1) > -1) {
-				pref.edit().putBoolean(getString(R.string.first_launch_suceeded_once_key), true);
+		if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
+			if (LinphonePreferences.instance().getAccountCount() > 0) {
+				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
 				startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
 			}
@@ -320,8 +316,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	private void updateAnimationsState() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		isAnimationDisabled = getResources().getBoolean(R.bool.disable_animations) || !prefs.getBoolean(getString(R.string.pref_animation_enable_key), false);
+		isAnimationDisabled = getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
 		isContactPresenceDisabled = !getResources().getBoolean(R.bool.enable_linphone_friends);
 	}
 
@@ -674,30 +669,13 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	public void applyConfigChangesIfNeeded() {
 		if (nextFragment != FragmentsAvailable.SETTINGS && nextFragment != FragmentsAvailable.ACCOUNT_SETTINGS) {
-			reloadConfig();
 			updateAnimationsState();
 		}
 	}
 
+	@Deprecated
 	private void reloadConfig() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-
-		if (lc != null && (lc.isInComingInvitePending() || lc.isIncall())) {
-			Log.w("Call in progress => settings not applied");
-			return;
-		}
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-			lc.setVideoPolicy(LinphoneManager.getInstance().isAutoInitiateVideoCalls(), LinphoneManager.getInstance().isAutoAcceptCamera());
-		} catch (LinphoneException e) {
-			if (!(e instanceof LinphoneConfigException)) {
-				Log.e(e, "Cannot update config");
-				return;
-			}
-
-			LinphoneActivity.instance().showPreferenceErrorDialog(e.getMessage());
-		}
+		// Nothing to do here anymore
 	}
 
 	public void displayAccountSettings(int accountNumber) {
@@ -996,8 +974,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		}
 
 		sipUri = sipUri.replace("<", "").replace(">", "");
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (prefs.getBoolean(getString(R.string.pref_auto_accept_friends_key), false)) {
+		if (LinphonePreferences.instance().shouldAutomaticallyAcceptFriendsRequests()) {
 			Contact contact = findContactWithSipAddress(sipUri);
 			if (contact != null) {
 				friend.enableSubscribes(true);
@@ -1364,7 +1341,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (currentFragment == FragmentsAvailable.DIALER) {
-				boolean isBackgroundModeActive = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_background_mode_key), getResources().getBoolean(R.bool.pref_background_mode_default));
+				boolean isBackgroundModeActive = LinphonePreferences.instance().isBackgroundModeEnabled();
 				if (!isBackgroundModeActive) {
 					stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 					finish();

@@ -7,71 +7,54 @@ import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceScreen;
+import android.preference.Preference.OnPreferenceClickListener;
 
 public class SettingsFragment extends PreferencesListFragment implements EcCalibrationListener {
-	private LinphonePreferences mPrefs;
-	
-	@Override
-	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-		
-	}
-	
 	public SettingsFragment() {
-		super(R.xml.settings);
+		super(R.xml.preferences);
 	}
 	
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		PreferenceScreen screen = getPreferenceScreen();
 		
-		mPrefs = LinphonePreferences.getInstance();
-		mPrefs.load();
-		
-		// Init some settings
-		initMediaEncryptionPreference((ListPreference) screen.findPreference(getString(R.string.lpconfig_sip_media_enc_key)));
-
-		// Sets default values and value change listener for each of them
-		setListenerForPreference(screen);
+		// Init the settings page interface
+		initSettings();
+		hideSettings();
+		setListeners();
 	}
 	
-	private void setListenerForPreference(Preference pref) {
-		// FIXME: first display doesn't match the linphonerc values
+	// Inits the values or the listener on some settings
+	private void initSettings() {
+		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
+		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
 		
-		if (pref.hasKey()) {
-			pref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					Log.w("New value for preference key " + preference.getKey() + ":" + newValue.toString());
-					mPrefs.set(preference.getKey(), newValue.toString()); 
+		// Add action on About button
+		findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				if (LinphoneActivity.isInstanciated()) {
+					LinphoneActivity.instance().displayAbout();
 					return true;
 				}
-			});
-		} else {
-			if (pref instanceof PreferenceCategory) {
-				PreferenceCategory cat = (PreferenceCategory) pref;
-				int count = cat.getPreferenceCount();
-				for (int i = 0; i < count; i++) {
-					Preference p = cat.getPreference(i);
-					setListenerForPreference(p);
-				}
-			} else if (pref instanceof PreferenceScreen) {
-				PreferenceScreen screen = (PreferenceScreen) pref;
-				int count = screen.getPreferenceCount();
-				for (int i = 0; i < count; i++) {
-					Preference p = screen.getPreference(i);
-					setListenerForPreference(p);
-				}
+				return false;
 			}
+		});
+		
+		// Disable sip port choice if port is random
+		findPreference(getString(R.string.pref_sip_port_key)).setEnabled(!((CheckBoxPreference)findPreference(getString(R.string.pref_transport_use_random_ports_key))).isChecked());
+	}
+	
+	// Read the values set in resources and hides the settings accordingly
+	private void hideSettings() {
+		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
+			findPreference(getString(R.string.menu_about_key)).setLayoutResource(R.layout.hidden);
 		}
 	}
 	
@@ -81,18 +64,13 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		} catch (Exception e) {}
 		
-		List<CharSequence> mencEntries=new ArrayList<CharSequence>();
-		List<CharSequence> mencEntryValues=new ArrayList<CharSequence>();
+		List<CharSequence> mencEntries = new ArrayList<CharSequence>();
+		List<CharSequence> mencEntryValues = new ArrayList<CharSequence>();
 		mencEntries.add(getString(R.string.media_encryption_none));
 		mencEntryValues.add(getString(R.string.pref_media_encryption_key_none));
 		
 		if (lc == null || getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-			CharSequence[] contents = new CharSequence[mencEntries.size()];
-			mencEntries.toArray(contents);
-			pref.setEntries(contents);
-			contents = new CharSequence[mencEntryValues.size()];
-			mencEntryValues.toArray(contents);
-			pref.setEntryValues(contents);
+			setListPreferenceValues(pref, mencEntries, mencEntryValues);
 			return;
 		}
 		
@@ -109,18 +87,49 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				mencEntries.add(getString(R.string.media_encryption_zrtp));
 				mencEntryValues.add(getString(R.string.pref_media_encryption_key_zrtp));
 			}
-			CharSequence[] contents=new CharSequence[mencEntries.size()];
-			mencEntries.toArray(contents);
-			pref.setEntries(contents);
-			contents=new CharSequence[mencEntryValues.size()];
-			mencEntryValues.toArray(contents);
-			pref.setEntryValues(contents);
+			setListPreferenceValues(pref, mencEntries, mencEntryValues);
 		}
 	}
 	
+	private void initializeTransportPreferences(ListPreference pref) {
+		List<CharSequence> mencEntries = new ArrayList<CharSequence>();
+		List<CharSequence> mencEntryValues = new ArrayList<CharSequence>();
+		mencEntries.add(getString(R.string.pref_transport_udp));
+		mencEntryValues.add(getString(R.string.pref_transport_udp_key));
+		mencEntries.add(getString(R.string.pref_transport_tcp));
+		mencEntryValues.add(getString(R.string.pref_transport_tcp_key));
+		
+		if (!getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
+			mencEntries.add(getString(R.string.pref_transport_tls));
+			mencEntryValues.add(getString(R.string.pref_transport_tls_key));
+		}
+		setListPreferenceValues(pref, mencEntries, mencEntryValues);
+	}
+	
+	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
+		CharSequence[] contents = new CharSequence[entries.size()];
+		entries.toArray(contents);
+		pref.setEntries(contents);
+		contents = new CharSequence[values.size()];
+		values.toArray(contents);
+		pref.setEntryValues(contents);
+	}
+	
+	private void setListeners() {
+		
+	}
+	
 	@Override
-	public void onDestroy() {
-		LinphonePreferences.getInstance().save();
-		super.onDestroy();
+	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
+		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
+		}
 	}
 }

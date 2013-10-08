@@ -17,97 +17,182 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.util.HashMap;
-import java.util.Map;
-
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LpConfig;
-import org.linphone.mediastream.Log;
-
-import android.content.res.Resources;
 
 /**
  * @author Sylvain Berfini
  */
 public class LinphonePreferences {
 	private static LinphonePreferences instance;
-	private Map<String,String> dict, changesDict;
-	private LpConfig config;
 	
-	public static final synchronized LinphonePreferences getInstance() {
+	public static final synchronized LinphonePreferences instance() {
 		if (instance == null) {
 			instance = new LinphonePreferences();
-			instance.load();
 		}
 		return instance;
 	}
 	
 	private LinphonePreferences() {
-		dict = new HashMap<String,String>();
-		changesDict = new HashMap<String,String>();
-		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() == null) {
-			config = LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
-		} else {
-			config = LinphoneManager.getLc().getConfig();
-		}
+		
 	}
 	
-	public String get(String key) {
-		if (dict.containsKey(key)) {
-			return dict.get(key);
-		}
+	public boolean isFirstLaunch() {
+		return false;
+	}
+	
+	public void firstLaunchSuccessful() {
+	}
+
+	public boolean isDebugEnabled() {
+		return false;
+	}
+
+	public String getRemoteProvisioningUrl() {
 		return null;
 	}
-	
-	public String getNew(String key) {
-		if (changesDict.containsKey(key)) {
-			return changesDict.get(key);
-		} else if (dict.containsKey(key)) {
-			return dict.get(key);
-		}
+
+	public String getTunnelMode() {
 		return null;
 	}
-	
-	public void set(String key, String value) {
-		if (dict.containsKey(key)) {
-            if (dict.get(key) != value || value.length() == 0) {
-                changesDict.put(key, value);
-            }
-        } else {
-            changesDict.put(key, value);
-        }
+
+	public boolean useFrontCam() {
+		return false;
+	}
+
+	public boolean isVideoEnabled() {
+		return false;
+	}
+
+	public boolean shouldInitiateVideoCall() {
+		return false;
+	}
+
+	public boolean shouldAutomaticallyAcceptVideoRequests() {
+		return false;
+	}
+
+	public void setPushNotificationRegistrationID(String regId) {
+		
+	}
+
+	public String getPushNotificationRegistrationID() {
+		return null;
+	}
+
+	public boolean shouldStartAtStartup() {
+		return false;
+	}
+
+	public String getSharingPictureServerUrl() {
+		return null;
+	}
+
+	public boolean shouldUseLinphoneToStoreChatHistory() {
+		return false;
+	}
+
+	public boolean areAnimationsEnabled() {
+		return false;
+	}
+
+	public boolean shouldAutomaticallyAcceptFriendsRequests() {
+		return false;
+	}
+
+	public boolean isBackgroundModeEnabled() {
+		return false;
+	}
+
+	public boolean shouldOnlyRegisterOnWifiNetwork() {
+		return false;
+	}
+
+	public boolean shouldUseSoftvolume() {
+		return false;
+	}
+
+	public String getRingtone(String defaultRingtone) {
+		return defaultRingtone;
 	}
 	
-	public boolean hasValueChanged(String key) {
-		return changesDict.containsKey(key);
+	public void setRingtone(String ringtone) {
+		
+	}
+
+	// Accounts
+	public void setAccountUsername(int n, String string) {
+		
+	}
+
+	public String getAccountUsername(int i) {
+		return null;
+	}
+
+	public void setAccountUserId(int n, String string) {
+		
+	}
+
+	public String getAccountUserId(int n) {
+		return null;
+	}
+
+	public void setAccountPassword(int n, String string) {
+		
+	}
+
+	public String getAccountPassword(int n) {
+		return null;
+	}
+
+	public void setAccountDomain(int n, String string) {
+		
+	}
+
+	public String getAccountDomain(int i) {
+		return null;
+	}
+
+	public void setAccountProxy(int n, String string) {
+		
+	}
+
+	public String getAccountProxy(int n) {
+		return null;
+	}
+
+	public void setAccountOutboundProxyEnabled(int n, Boolean newValue) {
+		
+	}
+
+	public boolean isAccountOutboundProxySet(int n) {
+		return false;
+	}
+
+	public void setAccountEnabled(int n, Boolean newValue) {
+		
 	}
 	
-	public void load() {
-		loadSection("sip", R.array.lpconfig_sip_keys);
+	public void setDefaultAccount(int accountIndex) {
+		
 	}
-	
-	private void loadSection(String section, int resourcesID) {
-		Log.w("Preferences loading for section " + section);
-		for (String key : LinphoneService.instance().getResources().getStringArray(resourcesID)) {
-			String value = config.getString("sip", key, "");
-			if (value != null && value.length() > 0) {
-				Log.w("Value read for key " + key + " : " + value);
-				dict.put(key, value);
-			} else {
-				Log.w("Value not found for key " + key);
-			}
-		}
+
+	public int getDefaultAccountIndex() {
+		return 0;
 	}
-	
-	public void save() {
-		Log.w("Preferences saving...");
-		Resources res = LinphoneService.instance().getResources();
-		for (String key : res.getStringArray(R.array.lpconfig_sip_keys)) {
-			if (hasValueChanged(key)) {
-				Log.w("Saving changed preference : " + getNew(key));
-				config.setString("sip", key, getNew(key));
-			}
-		}
-		config.sync();
+
+	public void setAccountCount(int i) {
+		
 	}
+
+	public int getAccountCount() {
+		return 0;
+	}
+
+	public boolean isAccountEnabled(int n) {
+		return false;
+	}
+
+	public void deleteAccount(int n) {
+		
+	}
+	// End of Accounts
 }
