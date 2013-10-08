@@ -172,6 +172,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mPauseSoundFile = basePath + "/toy_mono.wav";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 
+		mPrefs = LinphonePreferences.instance();
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
