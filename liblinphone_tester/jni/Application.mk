@@ -4,4 +4,4 @@ APP_PROJECT_PATH := $(LOCAL_PATH)/../
 APP_BUILD_SCRIPT := $(LOCAL_PATH)/Android.mk
 APP_OPTIM := debug
 
-APP_MODULES += cunit liblinphone_tester liblinphone_testernoneon
+APP_MODULES += cunit liblinphone_tester 
