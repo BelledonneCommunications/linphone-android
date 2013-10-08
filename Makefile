@@ -258,6 +258,7 @@ $(TOPDIR)/res/raw/rootca.pem:
 	 HTTPS_CA_DIR=$(HTTPS_CA_DIR) $(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
 
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
+	mkdir -p liblinphone_tester/assets/rc_files 
 	for file in $^; do \
 	cp -f $$file $(TOPDIR)/liblinphone_tester/assets/rc_files/. \
 	;done
