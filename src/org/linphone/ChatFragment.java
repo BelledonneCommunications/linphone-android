@@ -48,7 +48,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -61,7 +60,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
@@ -194,8 +192,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
         displayChat(displayName, pictureUri);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
-		uploadServerUri = prefs.getString(getString(R.string.pref_image_sharing_server_key), getString(R.string.pref_image_sharing_server_default));
+		uploadServerUri = LinphonePreferences.instance().getSharingPictureServerUrl();
 		
         textWatcher = new TextWatcher() {
 			public void afterTextChanged(Editable arg0) {

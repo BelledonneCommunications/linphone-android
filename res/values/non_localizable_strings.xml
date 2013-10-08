@@ -121,31 +121,4 @@
 	<string name="pref_upnp_enable_key">pref_upnp_enable_key</string>
 	
 	<string name="pref_first_time_linphone_chat_storage">pref_first_time_linphone_chat_storage</string>
-	
-    
-	<!-- LP Config preferences names -->
-	<string-array name="lpconfig_net_keys">
-	</string-array>
-	
-	<string name="lpconfig_sip_media_enc_key">media_encryption</string>
-	<string-array name="lpconfig_sip_keys">
-	    <item>@string/lpconfig_sip_media_enc_key</item>
-	</string-array>
-	
-	<string-array name="lpconfig_rtp_keys">
-	    <item></item>
-	</string-array>
-	
-	<string-array name="lpconfig_sound_keys">
-	    <item></item>
-	</string-array>
-	
-	<string-array name="lpconfig_video_keys">
-	    <item></item>
-	</string-array>
-	
-	<string-array name="lpconfig_misc_keys">
-	    <item></item>
-	</string-array>
-	
 </resources>

@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.PreferencesListFragment;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -36,7 +35,6 @@ import android.text.InputType;
  */
 public class AccountPreferencesFragment extends PreferencesListFragment {
 	private int n;
-	private String key;
 	
 	public AccountPreferencesFragment() {
 		super(R.xml.account_preferences);
@@ -48,122 +46,116 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		
 		PreferenceScreen screen = getPreferenceScreen();
 		n = getArguments().getInt("Account", 0);
-		key = getAccountNumber(n);
 		manageAccountPreferencesFields(screen);
 	}
 	
-	OnPreferenceChangeListener preferenceChangedListener = new OnPreferenceChangeListener() {
+	OnPreferenceChangeListener usernameChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			preference.setSummary(newValue.toString());
+			LinphonePreferences.instance().setAccountUsername(n, newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener useridChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setAccountUserId(n, newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener passwordChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setAccountPassword(n, newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener domainChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setAccountDomain(n, newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener proxyChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setAccountProxy(n, newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener outboundProxyChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setAccountOutboundProxyEnabled(n, (Boolean)newValue);
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setAccountEnabled(n, (Boolean)newValue);
 			return true;
 		}		
 	};
 	
 	private void manageAccountPreferencesFields(PreferenceScreen parent) {
-    	final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		
     	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().getPreference(0);
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
-    	username.setText(prefs.getString(getString(R.string.pref_username_key) + key, ""));
+    	username.setText(LinphonePreferences.instance().getAccountUsername(n));
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	username.setKey(getString(R.string.pref_username_key) + key);
-    	username.setOnPreferenceChangeListener(preferenceChangedListener);
+    	username.setOnPreferenceChangeListener(usernameChangedListener);
     	username.setSummary(username.getText());
     	
     	EditTextPreference userid = (EditTextPreference) account.getPreference(1);
-    	userid.setText(prefs.getString(getString(R.string.pref_auth_userid_key) + key, ""));
+    	userid.setText(LinphonePreferences.instance().getAccountUserId(n));
     	userid.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	userid.setKey(getString(R.string.pref_auth_userid_key) + key);
-    	userid.setOnPreferenceChangeListener(preferenceChangedListener);
+    	userid.setOnPreferenceChangeListener(useridChangedListener);
     	userid.setSummary(userid.getText());
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-    	password.setText(prefs.getString(getString(R.string.pref_passwd_key) + key, ""));
+    	password.setText(LinphonePreferences.instance().getAccountPassword(n));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    	password.setKey(getString(R.string.pref_passwd_key) + key);
+    	password.setOnPreferenceChangeListener(passwordChangedListener);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
-    	domain.setText(prefs.getString(getString(R.string.pref_domain_key) + key, ""));
+    	domain.setText(LinphonePreferences.instance().getAccountDomain(n));
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	domain.setKey(getString(R.string.pref_domain_key) + key);
-    	domain.setOnPreferenceChangeListener(preferenceChangedListener);
+    	domain.setOnPreferenceChangeListener(domainChangedListener);
     	domain.setSummary(domain.getText());
 
     	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().getPreference(1);
     	EditTextPreference proxy = (EditTextPreference) advanced.getPreference(0);
-    	proxy.setText(prefs.getString(getString(R.string.pref_proxy_key) + key, ""));
+    	proxy.setText(LinphonePreferences.instance().getAccountProxy(n));
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	proxy.setKey(getString(R.string.pref_proxy_key) + key);
-    	proxy.setOnPreferenceChangeListener(preferenceChangedListener);
+    	proxy.setOnPreferenceChangeListener(proxyChangedListener);
     	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
     	
     	Preference outboundProxy = advanced.getPreference(1);
-    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false));
-    	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + key);
-   
+    	Compatibility.setPreferenceChecked(outboundProxy, LinphonePreferences.instance().isAccountOutboundProxySet(n));
+    	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
+    	
     	final Preference disable = advanced.getPreference(2);
     	disable.setEnabled(true);
-    	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + key, false));
-    	disable.setKey(getString(R.string.pref_disable_account_key) + key);
+    	Compatibility.setPreferenceChecked(disable, !LinphonePreferences.instance().isAccountEnabled(n));
 
     	final Preference delete = advanced.getPreference(4);
     	delete.setEnabled(true);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
-	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
-        		SharedPreferences.Editor editor = prefs.edit();
-        		
-	        	for (int i = n; i < nbAccounts - 1; i++) {
-	        		editor.putString(getString(R.string.pref_username_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_username_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_auth_userid_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_auth_userid_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_passwd_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_domain_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_proxy_key) + getAccountNumber(i+1), null));
-	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i+1), false));
-	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i+1), false));
-	        	}
-
-	        	if (n != 0) {
-		        	int lastAccount = nbAccounts - 1;
-		        	editor.putString(getString(R.string.pref_username_key) + getAccountNumber(lastAccount), null);
-	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(lastAccount), null);
-	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(lastAccount), null);
-	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(lastAccount), null);
-	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(lastAccount), false);
-	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(lastAccount), false);
-	        		
-	        		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account_key), 0);
-	        		if (defaultAccount > n) {
-	        			editor.putInt(getString(R.string.pref_default_account_key), defaultAccount - 1);
-	        		}
-	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
-	        	} else if (n == 0 && nbAccounts <= 1) {
-	        		editor.putString(getString(R.string.pref_username_key), "");
-	        		editor.putString(getString(R.string.pref_passwd_key), "");
-	        		editor.putString(getString(R.string.pref_domain_key), "");
-	        	} else {
-	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
-	        	}
-
-	        	editor.commit();
-	        	
+	        	LinphonePreferences.instance().deleteAccount(n);
 	        	LinphoneActivity.instance().displaySettings();
-	        	
 	        	return true;
 	        }
         });
     	
     	Preference mainAccount = advanced.getPreference(3);
-    	Compatibility.setPreferenceChecked(mainAccount, prefs.getInt(getString(R.string.pref_default_account_key), 0) == n);
+    	Compatibility.setPreferenceChecked(mainAccount, LinphonePreferences.instance().getDefaultAccountIndex() == n);
     	mainAccount.setEnabled(!Compatibility.isPreferenceChecked(mainAccount));
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
 			public boolean onPreferenceClick(Preference preference) {
-				
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putInt(getString(R.string.pref_default_account_key), n);
-				editor.commit();
+				LinphonePreferences.instance().setDefaultAccount(n);
 				disable.setEnabled(false);
 				Compatibility.setPreferenceChecked(disable, false);
 				preference.setEnabled(false);
@@ -172,30 +164,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		});
 	}
 	
-	private String getAccountNumber(int n) {
-		if (n > 0)
-			return Integer.toString(n);
-		else
-			return "";
-	}
-	
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		int n = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
-		String keyUsername = getString(R.string.pref_username_key) + getAccountNumber(n-1);
-		
-		if (prefs.getString(keyUsername, "").equals("")) {
+		int n = LinphonePreferences.instance().getAccountCount();
+		if (LinphonePreferences.instance().getAccountUsername(n).equals("")) {
 			//If not, we suppress it to not display a blank field
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putInt(getString(R.string.pref_extra_accounts), n-1);
-			editor.commit();
-		}
-		
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().applyConfigChangesIfNeeded();
+			LinphonePreferences.instance().setAccountCount(n-1);
 		}
 	}
 }

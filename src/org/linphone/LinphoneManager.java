@@ -21,12 +21,6 @@ package org.linphone;
 import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
-import static org.linphone.R.string.pref_codec_amr_key;
-import static org.linphone.R.string.pref_codec_amrwb_key;
-import static org.linphone.R.string.pref_codec_ilbc_key;
-import static org.linphone.R.string.pref_codec_speex16_key;
-import static org.linphone.R.string.pref_codec_speex32_key;
-import static org.linphone.R.string.pref_video_enable_key;
 import static org.linphone.core.LinphoneCall.State.CallEnd;
 import static org.linphone.core.LinphoneCall.State.Error;
 import static org.linphone.core.LinphoneCall.State.IncomingReceived;
@@ -51,7 +45,6 @@ import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
@@ -61,11 +54,8 @@ import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
-import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.GlobalState;
-import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -95,8 +85,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.hardware.Sensor;
@@ -111,7 +99,6 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -142,16 +129,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private Context mServiceContext;
 	private AudioManager mAudioManager;
 	private PowerManager mPowerManager;
-	private ConnectivityManager mConnectivityManager;
-	private SharedPreferences mPref;
 	private Resources mR;
+	private LinphonePreferences mPrefs;
 	private LinphoneCore mLc;
-	private static Transports initialTransports;
-	private static LinphonePreferenceManager sLPref;
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
-	private String contactParams;
 	private boolean mAudioFocused;
 	private boolean isNetworkReachable;
 
@@ -189,12 +172,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mPauseSoundFile = basePath + "/toy_mono.wav";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 
-		sLPref = LinphonePreferenceManager.getInstance(c);
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
-		mPref = PreferenceManager.getDefaultSharedPreferences(c);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 	}
 
@@ -210,7 +190,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
 
-	private Timer mTimer = new Timer("Linphone scheduler");
+	private Timer mTimer;
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
@@ -414,9 +394,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (mLc.isNetworkReachable()) {
 			try {
 				if (Version.isVideoCapable()) {
-					boolean prefVideoEnable = isVideoEnabled();
-					int key = R.string.pref_video_initiate_call_with_video_key;
-					boolean prefInitiateWithVideo = getPrefBoolean(key, false);
+					boolean prefVideoEnable = mPrefs.isVideoEnabled();
+					boolean prefInitiateWithVideo = mPrefs.shouldInitiateVideoCall();
 					CallManager.getInstance().inviteAddress(lAddress, prefVideoEnable && prefInitiateWithVideo, isLowBandwidthConnection);
 				} else {
 					CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
@@ -435,7 +414,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 	
 	private void resetCameraFromPreferences() {
-		boolean useFrontCam = getPrefBoolean(R.string.pref_video_use_front_camera_key, mR.getBoolean(R.bool.pref_video_use_front_camera_default));
+		boolean useFrontCam = mPrefs.useFrontCam();
 		
 		int camId = 0;
 		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
@@ -469,6 +448,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		return false;
 	}
+	
 	public void enableCamera(LinphoneCall call, boolean enable) {
 		if (call != null) {
 			call.enableCamera(enable);
@@ -507,7 +487,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			return false;
 		}
 
-		String pref = getPrefString(R.string.pref_tunnel_mode_key, R.string.default_tunnel_mode_entry_value);
+		String pref = mPrefs.getTunnelMode();
 
 		if (getString(R.string.tunnel_mode_entry_value_always).equals(pref)) {
 			return true;
@@ -532,7 +512,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			mLc.tunnelEnable(true);
 		} else {
 			Log.i("Tunnel should not be used");
-			String pref = getPrefString(R.string.pref_tunnel_mode_key, R.string.default_tunnel_mode_entry_value);
+			String pref = mPrefs.getTunnelMode();
 			mLc.tunnelEnable(false);
 			if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
 				mLc.tunnelAutoDetect();
@@ -549,53 +529,18 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			// Try to get remote provisioning
-			String remote_provisioning = (getPrefString(R.string.pref_remote_provisioning_key, mR.getString(R.string.pref_remote_provisioning_default)));
+			String remote_provisioning = mPrefs.getRemoteProvisioningUrl();
 			if(remote_provisioning != null && remote_provisioning.length() > 0 && RemoteProvisioning.isAvailable()) {
 				RemoteProvisioning.download(remote_provisioning, mLinphoneConfigFile);
 			}
 			
-			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
-			mLc.getConfig().setInt("sip", "store_auth_info", 0);
-			mLc.setContext(c);
-			try {
-				String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
-				if (versionName == null) {
-					versionName = String.valueOf(c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionCode);
-				}
-				mLc.setUserAgent("LinphoneAndroid", versionName);
-			} catch (NameNotFoundException e) {
-				Log.e(e, "cannot get version name");
-			}
-
-			mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
- 
-			mLc.setRing(null);
-			mLc.setRootCA(mLinphoneRootCaFile);
-			mLc.setPlayFile(mPauseSoundFile);
-			mLc.setChatDatabasePath(mChatDatabaseFile);
-
-			int availableCores = Runtime.getRuntime().availableProcessors();
-			Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
-			mLc.setCpuCount(availableCores);
-			
-			try {
-				initFromConf();
-			} catch (LinphoneException e) {
-				Log.w("no config ready yet");
-			}
-	        
-			TimerTask lTask = new TimerTask() {
-				@Override
-				public void run() {
-					mLc.iterate();
-				}
-			};
-			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
-			mTimer.schedule(lTask, 0, 20); 
+			initLiblinphone(c);
 
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
+	        
+			updateNetworkReachability();
 			
 	        startBluetooth();
 	        resetCameraFromPreferences();
@@ -603,6 +548,44 @@ public class LinphoneManager implements LinphoneCoreListener {
 		catch (Exception e) {
 			Log.e(e, "Cannot start linphone");
 		}
+	}
+	
+	public synchronized void initLiblinphone(Context c) throws LinphoneCoreException {
+		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
+		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
+		
+		mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
+		mLc.setContext(c);
+		try {
+			String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
+			if (versionName == null) {
+				versionName = String.valueOf(c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionCode);
+			}
+			mLc.setUserAgent("LinphoneAndroid", versionName);
+		} catch (NameNotFoundException e) {
+			Log.e(e, "cannot get version name");
+		}
+
+		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
+
+		mLc.setRing(null);
+		mLc.setRootCA(mLinphoneRootCaFile);
+		mLc.setPlayFile(mPauseSoundFile);
+		mLc.setChatDatabasePath(mChatDatabaseFile);
+
+		int availableCores = Runtime.getRuntime().availableProcessors();
+		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
+		mLc.setCpuCount(availableCores);
+        
+		TimerTask lTask = new TimerTask() {
+			@Override
+			public void run() {
+				mLc.iterate();
+			}
+		};
+		/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
+		mTimer = new Timer("Linphone scheduler");
+		mTimer.schedule(lTask, 0, 20); 
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
@@ -613,12 +596,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
 		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 	}
+	
 	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {		
 		   copyFromPackage(ressourceId,lFileToCopy.getName()); 
 		}
 	}
+	
 	private void copyFromPackage(int ressourceId,String target) throws IOException{
 		FileOutputStream lOutputStream = mServiceContext.openFileOutput (target, 0); 
 		InputStream lInputStream = mR.openRawResource(ressourceId);
@@ -645,188 +630,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		return false;
 	}
-
-	private void initFromConfTunnel(){
-		if (!mLc.isTunnelAvailable()) 
-			return;
-		
-		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
-		mLc.tunnelCleanServers();
-		String host = getString(R.string.tunnel_host);
-		if (host == null || host.length() == 0)
-			host = mPref.getString(getString(R.string.pref_tunnel_host_key), "");
-		int port = Integer.parseInt(getPrefString(R.string.pref_tunnel_port_key, "443"));
-		mLc.tunnelAddServerAndMirror(host, port, 12345,500);
-		manageTunnelServer(info);
-	}
-	
-	public void initAccounts() throws LinphoneCoreException {
-		mLc.clearAuthInfos();
-		mLc.clearProxyConfigs();
-		
-		for (int i = 0; i < getPrefExtraAccountsNumber(); i++) {
-			String key = i == 0 ? "" : String.valueOf(i);
-			if (!getPrefBoolean(getString(R.string.pref_disable_account_key) + key, false)) {
-				initAccount(key, i == getPrefInt(R.string.pref_default_account_key, 0));
-			}
-		}
-		
-		LinphoneProxyConfig lDefaultProxyConfig = mLc.getDefaultProxyConfig();
-		if (lDefaultProxyConfig != null) {
-			//prefix      
-			String lPrefix = getPrefString(R.string.pref_prefix_key, null);
-			if (lPrefix != null) {
-				lDefaultProxyConfig.setDialPrefix(lPrefix);
-			}
-			//escape +
-			lDefaultProxyConfig.setDialEscapePlus(getPrefBoolean(R.string.pref_escape_plus_key, false));
-		} else if (LinphoneService.isReady()) {
-			LinphoneService.instance().onRegistrationStateChanged(RegistrationState.RegistrationNone, null);
-		}
-	}
-
-	private void initAccount(String key, boolean defaultAccount) throws LinphoneCoreException {
-		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
-		String userid = getPrefString(getString(R.string.pref_auth_userid_key) + key, null);
-		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
-		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
-		if (username != null && username.length() > 0 && password != null) {
-			LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username
-																						, userid
-																						, password
-																						, null
-																						,null);
-			mLc.addAuthInfo(lAuthInfo);
-			
-			if (domain != null && domain.length() > 0) {
-				String identity = "sip:" + username +"@" + domain;
-				String proxy = getPrefString(getString(R.string.pref_proxy_key) + key, null);
-				if (proxy == null || proxy.length() == 0) {
-					proxy = "sip:" + domain;
-				}
-				if (!proxy.startsWith("sip:")) {
-					proxy = "sip:" + proxy;
-				}
-				
-				LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
-				String defaultExpire = getString(R.string.pref_expire_default);
-				proxycon.setExpires(tryToParseIntValue(getPrefString(R.string.pref_expire_key, defaultExpire), defaultExpire));
-				
-				// Add parameters for push notifications
-				if (mR.getBoolean(R.bool.enable_push_id)) {
-					String regId = getPrefString(R.string.push_reg_id_key, null);
-					String appId = getString(R.string.push_sender_id);
-					if (regId != null && getPrefBoolean(R.string.pref_push_notification_key, mR.getBoolean(R.bool.pref_push_notification_default))) {
-						String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf";
-						proxycon.setContactParameters(contactInfos);
-					}
-				} else if (contactParams != null) {
-					proxycon.setContactParameters(contactParams);
-				}
-				mLc.addProxyConfig(proxycon);
-				
-				//outbound proxy
-				if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false)) {
-					proxycon.setRoute(proxy);
-				} else {
-					proxycon.setRoute(null);
-				}
-				proxycon.done();
-				
-				if (defaultAccount) {
-					mLc.setDefaultProxyConfig(proxycon);
-				}
-			}
-		}
-	}
-
-	private void readAndSetAudioAndVideoPorts() throws NumberFormatException {
-		int aPortStart, aPortEnd, vPortStart, vPortEnd;
-		int defaultAudioPort, defaultVideoPort;
-		defaultAudioPort = Integer.parseInt(getString(R.string.default_audio_port));
-		defaultVideoPort = Integer.parseInt(getString(R.string.default_video_port));
-		aPortStart = aPortEnd = defaultAudioPort;
-		vPortStart = vPortEnd = defaultVideoPort;
-
-		String audioPort = getPrefString(R.string.pref_audio_port_key, String.valueOf(aPortStart));
-		String videoPort = getPrefString(R.string.pref_video_port_key, String.valueOf(vPortStart));
-
-		if (audioPort.contains("-")) {
-			// Port range
-			aPortStart = Integer.parseInt(audioPort.split("-")[0]);
-			aPortEnd = Integer.parseInt(audioPort.split("-")[1]);
-		} else {
-			try {
-				aPortStart = aPortEnd = Integer.parseInt(audioPort);
-			} catch (NumberFormatException nfe) {
-				aPortStart = aPortEnd = defaultAudioPort;
-			}
-		}
-		
-		if (videoPort.contains("-")) {
-			// Port range
-			vPortStart = Integer.parseInt(videoPort.split("-")[0]);
-			vPortEnd = Integer.parseInt(videoPort.split("-")[1]);
-		} else {
-			try {
-				vPortStart = vPortEnd = Integer.parseInt(videoPort);
-			} catch (NumberFormatException nfe) {
-				vPortStart = vPortEnd = defaultVideoPort;
-			}
-		}
-		
-		if (aPortStart >= aPortEnd) {
-			mLc.setAudioPort(aPortStart);
-		} else {
-			mLc.setAudioPortRange(aPortStart, aPortEnd);
-		}
-	
-		if (vPortStart >= vPortEnd) {
-			mLc.setVideoPort(vPortStart);
-		} else {
-			mLc.setVideoPortRange(vPortStart, vPortEnd);
-		}
-	}
-	
-	private int tryToParseIntValue(String valueToParse, String defaultValue) {
-		return tryToParseIntValue(valueToParse, Integer.parseInt(defaultValue));
-	}
-	
-	private int tryToParseIntValue(String valueToParse, int defaultValue) {
-		try {
-			int returned = Integer.parseInt(valueToParse);
-			return returned;
-		} catch (NumberFormatException nfe) {
-			
-		}
-		return defaultValue;
-	}
-	
-	public void setContactParams(String params) {
-		contactParams = params;
-	}
-
-	public void initFromConf() throws LinphoneConfigException {
-		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && getPrefBoolean(R.string.pref_debug_key, mR.getBoolean(R.bool.pref_debug_default));
-		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
-		initFromConfTunnel();
-
-		if (initialTransports == null)
-			initialTransports = mLc.getSignalingTransportPorts();
-		
-		setSignalingTransportsFromConfiguration(initialTransports);
-		setPreferredVideoSizeFromConfiguration();
-		
-		//accounts
-		try {
-			initAccounts();
-			
-			//init network state
-			updateNetworkReachability();
-		} catch (LinphoneCoreException e) {
-			throw new LinphoneConfigException(getString(R.string.wrong_settings),e);
-		}
-	}
 	
 	public void updateNetworkReachability() {
 		ConnectivityManager cm = (ConnectivityManager) mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -840,8 +643,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			}
 		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
 			manageTunnelServer(eventInfo);
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mServiceContext);
-			boolean wifiOnly = pref.getBoolean(getString(R.string.pref_wifi_only_key), mR.getBoolean(R.bool.pref_wifi_only_default));
+			boolean wifiOnly = LinphonePreferences.instance().shouldOnlyRegisterOnWifiNetwork();
 			if ((eventInfo.getTypeName().equals("WIFI")) || (!eventInfo.getTypeName().equals("WIFI") && !wifiOnly)) {
 				if (!isNetworkReachable) {
 					isNetworkReachable = true;
@@ -856,96 +658,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 				}
 			}
 		}
-	}
-	
-	private void setSignalingTransportsFromConfiguration(Transports t) {
-		Transports ports = new Transports(t);
-		boolean useRandomPort = getPrefBoolean(R.string.pref_transport_use_random_ports_key, mR.getBoolean(R.bool.pref_transport_use_random_ports_default));
-		int lPreviousPort = tryToParseIntValue(getPrefString(R.string.pref_sip_port_key, getString(R.string.pref_sip_port_default)), 5060);
-		if (lPreviousPort>0xFFFF || useRandomPort) {
-			lPreviousPort=(int)(Math.random() * (0xFFFF - 1024)) + 1024;
-			Log.w("Using random port " + lPreviousPort);
-		}
-		
-		String transport = getPrefString(R.string.pref_transport_key, getString(R.string.pref_transport_udp_key));
-		if (transport.equals(getString(R.string.pref_transport_tcp_key)))
-		{
-			ports.udp = 0;
-			ports.tls = 0;
-			ports.tcp = lPreviousPort;
-		} else if (transport.equals(getString(R.string.pref_transport_udp_key)))
-		{
-			ports.tcp = 0;
-			ports.tls = 0;
-			ports.udp = lPreviousPort;
-		} else if (transport.equals(getString(R.string.pref_transport_tls_key)))
-		{
-			ports.udp = 0;
-			ports.tcp = 0;
-			ports.tls = lPreviousPort;
-		}
-
-		mLc.setSignalingTransportPorts(ports);
-	}
-
-	private void enableDisableAudioCodec(String codec, int rate, int channels, int key) throws LinphoneCoreException {
-		PayloadType pt = mLc.findPayloadType(codec, rate, channels);
-		if (pt !=null) {
-			boolean enable= getPrefBoolean(key,false);
-			mLc.enablePayloadType(pt, enable);
-		}
-	}
-	private void enableDisableAudioCodec(String codec, int rate, int channels, boolean enable) throws LinphoneCoreException {
-		PayloadType pt = mLc.findPayloadType(codec, rate, channels);
-		if (pt !=null) {
-			mLc.enablePayloadType(pt, enable);
-		}
-	}
-
-	private void enableDisableVideoCodecs(PayloadType videoCodec) throws LinphoneCoreException {
-		String mime = videoCodec.getMime();
-		int key;
-		int defaultValueKey;
-		
-		if ("MP4V-ES".equals(mime)) {
-			key = R.string.pref_video_codec_mpeg4_key;
-			defaultValueKey = R.bool.pref_video_codec_mpeg4_default;
-		} else if ("H264".equals(mime)) {
-			key = R.string.pref_video_codec_h264_key;
-			defaultValueKey = R.bool.pref_video_codec_h264_default;
-		} else if ("H263-1998".equals(mime)) {
-			key = R.string.pref_video_codec_h263_key;
-			defaultValueKey = R.bool.pref_video_codec_h263_default;
-		} else if ("VP8".equals(mime)) {
-			key = R.string.pref_video_codec_vp8_key;
-			defaultValueKey = R.bool.pref_video_codec_vp8_default;
-		} else {
-			Log.e("Unhandled video codec ", mime);
-			mLc.enablePayloadType(videoCodec, false);
-			return;
-		}
-
-		boolean enable = getPrefBoolean(key, mR.getBoolean(defaultValueKey));
-		mLc.enablePayloadType(videoCodec, enable);
-	}
-
-	private void setPreferredVideoSizeFromConfiguration() {
-		String preferredVideoSize = getPrefString(R.string.pref_preferred_video_size_key, getString(R.string.pref_preferred_video_size_vga_key));
-		int bandwidth = 512 + 60;
-		if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_hd_key))) {
-			preferredVideoSize = "uxga";
-			bandwidth = 1024 + 60;
-		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_vga_key))) {
-			preferredVideoSize = "vga";
-			bandwidth = 512 + 60;
-		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_qvga_key))) {
-			preferredVideoSize = "qvga";
-			bandwidth = 380 + 60;
-		}
-
-		mLc.setPreferredVideoSizeByName(preferredVideoSize);
-		mLc.setUploadBandwidth(bandwidth);
-		mLc.setDownloadBandwidth(bandwidth);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
@@ -984,28 +696,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private String getString(int key) {
 		return mR.getString(key);
 	}
-	private boolean getPrefBoolean(int key, boolean value) {
-		return mPref.getBoolean(mR.getString(key), value);
-	}
-	private boolean getPrefBoolean(String key, boolean value) {
-		return mPref.getBoolean(key, value);
-	}
-	private String getPrefString(int key, String value) {
-		return mPref.getString(mR.getString(key), value);
-	}
-	private int getPrefInt(int key, int value) {
-		return mPref.getInt(mR.getString(key), value);
-	}
-	private String getPrefString(int key, int value) {
-		return mPref.getString(mR.getString(key), mR.getString(value));
-	}
-	private String getPrefString(String key, String value) {
-		return mPref.getString(key, value);
-	}
-	private int getPrefExtraAccountsNumber() {
-		return mPref.getInt(getString(R.string.pref_extra_accounts), 1);
-	}
-
 
 	/* Simple implementation as Android way seems very complicate:
 	For example: with wifi and mobile actives; when pulling mobile down:
@@ -1205,7 +895,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 				Compatibility.setAudioManagerInCallMode(mAudioManager);
 			}
 			
-			if (Hacks.needSoftvolume() || sLPref.useSoftvolume()) {
+			if (Hacks.needSoftvolume() || LinphonePreferences.instance().shouldUseSoftvolume()) {
 				adjustVolume(0); // Synchronize
 			}
 		}
@@ -1370,55 +1060,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	public static boolean reinviteWithVideo() {
 		return CallManager.getInstance().reinviteWithVideo();
-	}
-
-	public boolean isVideoEnabled() {
-		return getPrefBoolean(R.string.pref_video_enable_key, false);
-	}
-	
-	public boolean isAutoAcceptCamera() {
-		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_automatically_accept_video_key, false);
-	}
-	
-	public boolean isAutoInitiateVideoCalls() {
-		return isVideoEnabled() && getPrefBoolean(R.string.pref_video_initiate_call_with_video_key, false);
-	}
-
-	// Called on first launch only
-	public void initializePayloads() {
-		Log.i("Initializing supported payloads");
-		Editor e = mPref.edit();
-		boolean fastCpu = Version.hasFastCpu();
-
-		e.putBoolean(getString(R.string.pref_codec_gsm_key), true);
-		e.putBoolean(getString(R.string.pref_codec_pcma_key), true);
-		e.putBoolean(getString(R.string.pref_codec_pcmu_key), true);
-		e.putBoolean(getString(R.string.pref_codec_speex8_key), true);
-		e.putBoolean(getString(R.string.pref_codec_g722_key), false);
-		e.putBoolean(getString(pref_codec_speex16_key), fastCpu);
-		e.putBoolean(getString(pref_codec_speex32_key), fastCpu);
-
-		boolean ilbc = LinphoneService.isReady() && LinphoneManager.getLc()
-		.findPayloadType("iLBC", 8000, 1)!=null;
-		e.putBoolean(getString(pref_codec_ilbc_key), ilbc);
-		
-		boolean amr = LinphoneService.isReady() && LinphoneManager.getLc()
-		.findPayloadType("AMR", 8000, 1)!=null;
-		e.putBoolean(getString(pref_codec_amr_key), amr);
-
-        boolean amrwb = LinphoneService.isReady() && LinphoneManager.getLc()
-        .findPayloadType("AMR-WB", 16000, 1)!=null;
-        e.putBoolean(getString(pref_codec_amrwb_key), amrwb);
-        
-        boolean g729 = LinphoneService.isReady() && LinphoneManager.getLc()
-        .findPayloadType("G729", 8000, 1)!=null;
-        e.putBoolean(getString(R.string.pref_codec_g729_key), g729);
-
-		if (Version.sdkStrictlyBelow(5) || !Version.hasNeon() || !Hacks.hasCamera()) {
-			e.putBoolean(getString(pref_video_enable_key), false);
-		}
-		
-		e.commit();
 	}
 
 	/**

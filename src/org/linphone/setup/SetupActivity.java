@@ -18,10 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.content.Context;
@@ -115,6 +115,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
+			LinphonePreferences.instance().firstLaunchSuccessful();
 		} else if (id == R.id.setup_next) {
 			if (firstFragment == SetupFragmentsEnum.LINPHONE_LOGIN) {
 				LinphoneLoginFragment linphoneFragment = (LinphoneLoginFragment) fragment;
@@ -145,6 +146,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
+			LinphonePreferences.instance().firstLaunchSuccessful();
 		}
 		if (currentFragment == SetupFragmentsEnum.MENU) {
 			WelcomeFragment fragment = new WelcomeFragment();
@@ -184,14 +186,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		}
 
         saveCreatedAccount(username, password, domain);
-		LinphoneManager.getInstance().initializePayloads();
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-		} catch (Throwable e) {
-			Log.e(e, "Error while initializing from config in first login activity");
-			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-		}
 
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			launchEchoCancellerCalibration(sendEcCalibrationResult);
@@ -227,17 +221,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		LinphoneManager.addListener(registrationListener);
 		
 		saveCreatedAccount(username, password, domain);
-		LinphoneManager.getInstance().initializePayloads();
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-		} catch (Throwable e) {
-			LinphoneManager.removeListener(registrationListener);
-			deleteCreatedAccount();
-			
-			Log.e(e, "Error while initializing from config in first login activity");
-			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-		}
 	}
 
 	public void linphoneLogIn(String username, String password, boolean validate) {
@@ -375,16 +358,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	
 	public void isAccountVerified() {
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
-		
-		LinphoneManager.getInstance().initializePayloads();
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-		} catch (Throwable e) {
-			Log.e(e, "Error while initializing from config in first login activity");
-			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-		}
-
 		launchEchoCancellerCalibration(true);
 	}
 
