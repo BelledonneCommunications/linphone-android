@@ -17,7 +17,7 @@
     	android:scrollHorizontally="true"
     	android:fadingEdge="horizontal"
         android:singleLine="true"
-		android:textColor="@android:color/black"
+		android:textColor="@color/text_contrast"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:gravity="left" />
    	
