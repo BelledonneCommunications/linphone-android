@@ -101,6 +101,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	private LinearLayout menu, mark;
 	private RelativeLayout contacts, history, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment, nextFragment;
+	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListenerFragment, messageListFragment, friendStatusListenerFragment;
 	private SavedState dialerSavedState;
 	private boolean preferLinphoneContacts = false, isAnimationDisabled = false, isContactPresenceDisabled = true;
@@ -146,9 +147,11 @@ public class LinphoneActivity extends FragmentActivity implements
 
 		setContentView(R.layout.main);
 		instance = this;
+		fragmentsHistory = new ArrayList<FragmentsAvailable>();
 		initButtons();
 
 		currentFragment = nextFragment = FragmentsAvailable.DIALER;
+		fragmentsHistory.add(currentFragment);
 		if (savedInstanceState == null) {
 			if (findViewById(R.id.fragmentContainer) != null) {
 				dialerFragment = new DialerFragment();
@@ -422,6 +425,10 @@ public class LinphoneActivity extends FragmentActivity implements
 		getSupportFragmentManager().executePendingTransactions();
 		
 		currentFragment = newFragmentType;
+		if (currentFragment == FragmentsAvailable.DIALER) {
+			fragmentsHistory.clear();
+		}
+		fragmentsHistory.add(currentFragment);
 	}
 
 	public void displayHistoryDetail(String sipUri, LinphoneCallLog log) {
@@ -671,11 +678,6 @@ public class LinphoneActivity extends FragmentActivity implements
 		if (nextFragment != FragmentsAvailable.SETTINGS && nextFragment != FragmentsAvailable.ACCOUNT_SETTINGS) {
 			updateAnimationsState();
 		}
-	}
-
-	@Deprecated
-	private void reloadConfig() {
-		// Nothing to do here anymore
 	}
 
 	public void displayAccountSettings(int accountNumber) {
@@ -1357,7 +1359,6 @@ public class LinphoneActivity extends FragmentActivity implements
 	
 					if (currentFragment == FragmentsAvailable.SETTINGS) {
 						showStatusBar();
-						reloadConfig();
 						updateAnimationsState();
 					} else if (currentFragment == FragmentsAvailable.CHATLIST) {
 						//Hack to ensure display the status bar on some devices
@@ -1365,8 +1366,25 @@ public class LinphoneActivity extends FragmentActivity implements
 					}
 				} else {
 					if (currentFragment == FragmentsAvailable.SETTINGS) {
-						reloadConfig();
 						updateAnimationsState();
+					}
+					
+					fragmentsHistory.remove(fragmentsHistory.size() - 1);
+					FragmentsAvailable newFragmentType = fragmentsHistory.get(fragmentsHistory.size() - 1);
+					LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+					if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
+						ll.setVisibility(View.VISIBLE);
+					} else {
+						if (newFragmentType == FragmentsAvailable.DIALER 
+								|| newFragmentType == FragmentsAvailable.ABOUT 
+								|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
+								|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
+								|| newFragmentType == FragmentsAvailable.SETTINGS 
+								|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
+							ll.setVisibility(View.GONE);
+						} else {
+							ll.setVisibility(View.INVISIBLE);
+						}
 					}
 				}
 			}
