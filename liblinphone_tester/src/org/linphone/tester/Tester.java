@@ -1,7 +1,6 @@
 package org.linphone.tester;
 
 import org.linphone.core.LinphoneCoreFactory;
-
 import org.linphone.mediastream.Version;
 
 import android.util.Log;
@@ -24,27 +23,24 @@ public class Tester {
 	}
 	
 	static	{
-		
+
 		LinphoneCoreFactory.instance();
 
 		System.loadLibrary("cunit");
-		
-		//Main library
-		if (!hasNeonInCpuFeatures()) {
-			try {
-				if (!isArmv7() && !Version.isX86()) {
-					System.loadLibrary("linphone_testerarmv5");
-				} else {
-					System.loadLibrary("linphone_testernoneon");
-				}
-			} catch (UnsatisfiedLinkError ule) {
-				Log.w("linphone", "Failed to load no-neon liblinphone_tester, loading neon liblinphone_tester");
-				System.loadLibrary("linphone_tester");
-			}
-		} else {
-			System.loadLibrary("linphone_tester");
+		String eabi = "armeabi";
+		if (Version.isX86()) {
+			eabi = "x86";
+		} else if (Version.isArmv7()) {
+			eabi = "armeabi-v7a";
 		}
-		
+		try {
+			System.loadLibrary("linphone_tester-"+eabi);
+
+		} catch (UnsatisfiedLinkError ule) {
+			Log.w("linphone", "Failed to load liblinphone_tester-"+eabi);
+			System.loadLibrary("linphone_tester"); 
+		}
+
 		Version.dumpCapabilities();
 	}
 	
