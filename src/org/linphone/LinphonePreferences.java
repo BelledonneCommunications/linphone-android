@@ -1,4 +1,11 @@
 package org.linphone;
+
+import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCore.Transports;
+import org.linphone.core.LinphoneCoreFactory;
+
+import android.content.Context;
+
 /*
 ChatListFragment.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -23,6 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 public class LinphonePreferences {
 	private static LinphonePreferences instance;
+	private Context mContext;
 	
 	public static final synchronized LinphonePreferences instance() {
 		if (instance == null) {
@@ -33,6 +41,14 @@ public class LinphonePreferences {
 	
 	private LinphonePreferences() {
 		
+	}
+	
+	private String getString(int key) {
+		if (mContext == null) {
+			mContext = LinphoneService.instance();
+		}
+		
+		return mContext.getString(key);
 	}
 	
 	public boolean isFirstLaunch() {
@@ -46,8 +62,12 @@ public class LinphonePreferences {
 		return false;
 	}
 
+	public void setRemoteProvisioningUrl(String url) {
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().setString("app", "remote_provisioning", url);
+	}
+	
 	public String getRemoteProvisioningUrl() {
-		return null;
+		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile).getString("app", "remote_provisioning", null);
 	}
 
 	public String getTunnelMode() {
@@ -78,12 +98,20 @@ public class LinphonePreferences {
 		return null;
 	}
 
-	public boolean shouldStartAtStartup() {
-		return false;
+	public boolean isAutoStartEnabled() {
+		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().getBool("app", "auto_start", false);
+	}
+	
+	public void setAutoStart(boolean autoStartEnabled) {
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().setBool("app", "auto_start", autoStartEnabled);
 	}
 
 	public String getSharingPictureServerUrl() {
-		return null;
+		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().getString("app", "sharing_server", null);
+	}
+	
+	public void setSharingPictureServerUrl(String url) {
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().setString("app", "sharing_server", url);
 	}
 
 	public boolean shouldUseLinphoneToStoreChatHistory() {
@@ -195,4 +223,100 @@ public class LinphonePreferences {
 		
 	}
 	// End of Accounts
+	
+	public MediaEncryption getMediaEncryption() {
+		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMediaEncryption();
+	}
+	
+	public void setMediaEncryption(MediaEncryption menc) {
+		if (menc == null)
+			return;
+		
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setMediaEncryption(menc);
+	}
+	
+	public String getTransport() {
+		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		String transport = getString(R.string.pref_transport_udp);
+		if (transports.tcp > 0)
+			transport = getString(R.string.pref_transport_tcp_key);
+		else if (transports.tls > 0)
+			transport = getString(R.string.pref_transport_tls_key);
+		return transport;
+	}
+	
+	public void setTransport(String transportKey) {
+		if (transportKey == null)
+			return;
+		
+		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		if (transports.udp > 0) {
+			if (transportKey.equals(getString(R.string.pref_transport_tcp_key))) {
+				transports.tcp = transports.udp;
+				transports.udp = transports.tls;
+			} else if (transportKey.equals(getString(R.string.pref_transport_tls_key))) {
+				transports.tls = transports.udp;
+				transports.udp = transports.tcp;
+			}
+		} else if (transports.tcp > 0) {
+			if (transportKey.equals(getString(R.string.pref_transport_udp_key))) {
+				transports.udp = transports.tcp;
+				transports.tcp = transports.tls;
+			} else if (transportKey.equals(getString(R.string.pref_transport_tls_key))) {
+				transports.tls = transports.tcp;
+				transports.tcp = transports.udp;
+			}
+		} else if (transports.tls > 0) {
+			if (transportKey.equals(getString(R.string.pref_transport_udp_key))) {
+				transports.udp = transports.tls;
+				transports.tls = transports.tcp;
+			} else if (transportKey.equals(getString(R.string.pref_transport_tcp_key))) {
+				transports.tcp = transports.tls;
+				transports.tls = transports.udp;
+			}
+		}
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setSignalingTransportPorts(transports);
+	}
+
+	public String getStunServer() {
+		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getStunServer();
+	}
+	
+	public void setStunServer(String stun) {
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setStunServer(stun);
+	}
+
+	public String getExpire() {
+		return null;
+	}
+	
+	public void setExpire(String expire) {
+		
+	}
+
+	public String getSipPortIfNotRandom() {
+		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		int port;
+		if (transports.udp > 0)
+			port = transports.udp;
+		else if (transports.tcp > 0)
+			port = transports.tcp;
+		else
+			port = transports.tls;
+		return String.valueOf(port);
+	}
+	
+	public void setSipPortIfNotRandom(int port) {
+		if (port <= 0)
+			return;
+		
+		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		if (transports.udp > 0)
+			transports.udp = port;
+		else if (transports.tcp > 0)
+			transports.tcp = port;
+		else
+			transports.udp = port;
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setSignalingTransportPorts(transports);
+	}
 }
