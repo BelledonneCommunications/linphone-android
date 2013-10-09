@@ -7,13 +7,19 @@ import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 
 public class SettingsFragment extends PreferencesListFragment implements EcCalibrationListener {
 	public SettingsFragment() {
@@ -26,8 +32,8 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		
 		// Init the settings page interface
 		initSettings();
-		hideSettings();
 		setListeners();
+		hideSettings();
 	}
 	
 	// Inits the values or the listener on some settings
@@ -49,13 +55,135 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		
 		// Disable sip port choice if port is random
 		findPreference(getString(R.string.pref_sip_port_key)).setEnabled(!((CheckBoxPreference)findPreference(getString(R.string.pref_transport_use_random_ports_key))).isChecked());
+
+		if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
+			Preference prefH264 = findPreference(getString(R.string.pref_video_codec_h264_key));
+			prefH264.setEnabled(false);
+			prefH264.setSummary(R.string.pref_video_codec_h264_unavailable);
+			
+			Preference prefMPEG4 = findPreference(getString(R.string.pref_video_codec_mpeg4_key));
+			prefMPEG4.setEnabled(false);
+			prefMPEG4.setSummary(R.string.pref_video_codec_mpeg4_unavailable);
+		} else {
+			if (!Version.hasFastCpuWithAsmOptim())
+			{
+				// Android without neon doesn't support H264
+				Log.w("CPU does not have asm optimisations available, disabling H264");
+				findPreference(getString(R.string.pref_video_codec_h264_key)).setEnabled(false);
+				findPreference(getString(R.string.pref_video_codec_h264_key)).setDefaultValue(false);
+			}
+		}
+	}
+	
+	private void setListeners() {
+		
 	}
 	
 	// Read the values set in resources and hides the settings accordingly
 	private void hideSettings() {
 		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
-			findPreference(getString(R.string.menu_about_key)).setLayoutResource(R.layout.hidden);
+			hidePreference(R.string.menu_about_key);
 		}
+		
+		if (getResources().getBoolean(R.bool.hide_accounts)) {	
+			emptyAndHidePreference(R.string.pref_sipaccounts_key);
+		}
+		
+		if (getResources().getBoolean(R.bool.hide_wizard)) {
+			hidePreference(R.string.setup_key);
+		}
+		
+		if (getResources().getBoolean(R.bool.disable_animations)) {
+			uncheckAndHidePreference(R.string.pref_animation_enable_key);
+		}
+		
+		if (!getResources().getBoolean(R.bool.enable_linphone_friends)) {
+			emptyAndHidePreference(R.string.pref_linphone_friend_key);
+		}
+
+		if (getResources().getBoolean(R.bool.disable_chat)) {
+			findPreference(getString(R.string.pref_image_sharing_server_key)).setLayoutResource(R.layout.hidden);
+		}
+		
+		if (!getResources().getBoolean(R.bool.enable_push_id)) {
+			hidePreference(R.string.pref_push_notification_key);
+		}
+
+		if (!Version.isVideoCapable()) {
+			uncheckAndHidePreference(R.string.pref_video_enable_key);
+		} else {
+			if (!AndroidCameraConfiguration.hasFrontCamera()) {
+				uncheckAndHidePreference(R.string.pref_video_use_front_camera_key);
+			}
+		}
+		
+		if (Hacks.hasBuiltInEchoCanceller()) {
+			uncheckAndHidePreference(R.string.pref_echo_cancellation_key);
+			hidePreference(R.string.pref_echo_canceller_calibration_key);
+		}
+		
+		if (!LinphoneManager.getLc().isTunnelAvailable()) {
+			emptyAndHidePreference(R.string.pref_tunnel_key);
+		}
+		
+		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
+			emptyAndHidePreference(R.string.pref_video_key);
+			hidePreference(R.string.pref_video_enable_key);
+		}
+		
+		if (getResources().getBoolean(R.bool.disable_every_log)) {
+			uncheckAndHidePreference(R.string.pref_debug_key);
+		}
+		
+		if (!LinphoneManager.getLc().upnpAvailable()) {
+			uncheckAndHidePreference(R.string.pref_upnp_enable_key);
+		}
+	}
+	
+	private void uncheckAndHidePreference(int preferenceKey) {
+		Preference preference = findPreference(getString(preferenceKey));
+		if (!(preference instanceof CheckBoxPreference))
+			return;
+		
+		CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+		checkBoxPreference.setChecked(false);
+		hidePreference(checkBoxPreference);
+	}
+	
+	private void emptyAndHidePreference(int preferenceKey) {
+		Preference preference = findPreference(getString(preferenceKey));
+		if (preference instanceof PreferenceCategory)
+			emptyAndHidePreferenceCategory(preferenceKey);
+		else if (preference instanceof PreferenceScreen)
+			emptyAndHidePreferenceScreen(preferenceKey);
+	}
+	
+	private void emptyAndHidePreferenceCategory(int preferenceKey) {
+		Preference preference = findPreference(getString(preferenceKey));
+		if (!(preference instanceof PreferenceCategory))
+			return;
+		
+		PreferenceCategory preferenceCategory = (PreferenceCategory) preference;
+		preferenceCategory.removeAll();
+		hidePreference(preferenceCategory);
+	}
+	
+	private void emptyAndHidePreferenceScreen(int preferenceKey) {
+		Preference preference = findPreference(getString(preferenceKey));
+		if (!(preference instanceof PreferenceScreen))
+			return;
+		
+		PreferenceScreen preferenceScreen = (PreferenceScreen) preference;
+		preferenceScreen.removeAll();
+		hidePreference(preferenceScreen);
+	}
+	
+	private void hidePreference(int preferenceKey) {
+		hidePreference(findPreference(getString(preferenceKey)));
+	}
+	
+	private void hidePreference(Preference preference) {
+		preference.setLayoutResource(R.layout.hidden);
 	}
 	
 	private void initMediaEncryptionPreference(ListPreference pref) {
@@ -113,10 +241,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		contents = new CharSequence[values.size()];
 		values.toArray(contents);
 		pref.setEntryValues(contents);
-	}
-	
-	private void setListeners() {
-		
 	}
 	
 	@Override
