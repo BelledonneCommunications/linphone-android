@@ -17,13 +17,17 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceScreen;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 
 public class SettingsFragment extends PreferencesListFragment implements EcCalibrationListener {
+	private LinphonePreferences mPrefs;
+	
 	public SettingsFragment() {
 		super(R.xml.preferences);
+		mPrefs = LinphonePreferences.instance();
 	}
 	
 	@Override
@@ -41,6 +45,11 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
 		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
 		
+		findPreference(getString(R.string.pref_stun_server_key)).setSummary(mPrefs.getStunServer());
+		findPreference(getString(R.string.pref_image_sharing_server_key)).setSummary(mPrefs.getSharingPictureServerUrl());
+		findPreference(getString(R.string.pref_remote_provisioning_key)).setSummary(mPrefs.getRemoteProvisioningUrl());
+		findPreference(getString(R.string.pref_expire_key)).setSummary(mPrefs.getExpire());
+		
 		// Add action on About button
 		findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
@@ -54,8 +63,10 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		});
 		
 		// Disable sip port choice if port is random
-		findPreference(getString(R.string.pref_sip_port_key)).setEnabled(!((CheckBoxPreference)findPreference(getString(R.string.pref_transport_use_random_ports_key))).isChecked());
-
+		Preference sipPort = findPreference(getString(R.string.pref_sip_port_key));
+		sipPort.setEnabled(!((CheckBoxPreference)findPreference(getString(R.string.pref_transport_use_random_ports_key))).isChecked());
+		sipPort.setSummary(mPrefs.getSipPortIfNotRandom());
+		
 		if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
 			Preference prefH264 = findPreference(getString(R.string.pref_video_codec_h264_key));
 			prefH264.setEnabled(false);
@@ -75,8 +86,16 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		}
 	}
 	
+	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
-		
+		findPreference(getString(R.string.pref_stun_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setStunServer(newValue.toString());
+				preference.setSummary(newValue.toString());
+				return true;
+			}
+		});
 	}
 	
 	// Read the values set in resources and hides the settings accordingly
@@ -187,16 +206,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	}
 	
 	private void initMediaEncryptionPreference(ListPreference pref) {
-		LinphoneCore lc = null;
-		try {
-			lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		} catch (Exception e) {}
-		
 		List<CharSequence> mencEntries = new ArrayList<CharSequence>();
 		List<CharSequence> mencEntryValues = new ArrayList<CharSequence>();
 		mencEntries.add(getString(R.string.media_encryption_none));
 		mencEntryValues.add(getString(R.string.pref_media_encryption_key_none));
-		
+
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null || getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 			setListPreferenceValues(pref, mencEntries, mencEntryValues);
 			return;
@@ -217,6 +232,8 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 			setListPreferenceValues(pref, mencEntries, mencEntryValues);
 		}
+		
+		pref.setSummary(mPrefs.getMediaEncryption().toString());
 	}
 	
 	private void initializeTransportPreferences(ListPreference pref) {
@@ -232,6 +249,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			mencEntryValues.add(getString(R.string.pref_transport_tls_key));
 		}
 		setListPreferenceValues(pref, mencEntries, mencEntryValues);
+		pref.setSummary(mPrefs.getTransport());
 	}
 	
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
