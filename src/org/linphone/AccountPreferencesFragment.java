@@ -18,10 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -92,19 +92,27 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener outboundProxyChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountOutboundProxyEnabled(n, (Boolean)newValue);
+			LinphonePreferences.instance().setAccountOutboundProxyEnabled(n, (Boolean) newValue);
 			return true;
 		}		
 	};
 	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountEnabled(n, (Boolean)newValue);
+			LinphonePreferences.instance().setAccountEnabled(n, (Boolean) newValue);
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener deleteChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			return true;
 		}		
 	};
 	
 	private void manageAccountPreferencesFields(PreferenceScreen parent) {
+		boolean isDefaultAccount = LinphonePreferences.instance().getDefaultAccountIndex() == n;
+		
     	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().getPreference(0);
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
     	username.setText(LinphonePreferences.instance().getAccountUsername(n));
@@ -136,13 +144,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	proxy.setOnPreferenceChangeListener(proxyChangedListener);
     	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
     	
-    	Preference outboundProxy = advanced.getPreference(1);
-    	Compatibility.setPreferenceChecked(outboundProxy, LinphonePreferences.instance().isAccountOutboundProxySet(n));
+    	CheckBoxPreference outboundProxy = (CheckBoxPreference) advanced.getPreference(1);
+    	outboundProxy.setChecked(LinphonePreferences.instance().isAccountOutboundProxySet(n));
     	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
     	
-    	final Preference disable = advanced.getPreference(2);
+    	final CheckBoxPreference disable = (CheckBoxPreference) advanced.getPreference(2);
     	disable.setEnabled(true);
-    	Compatibility.setPreferenceChecked(disable, !LinphonePreferences.instance().isAccountEnabled(n));
+    	disable.setChecked(!LinphonePreferences.instance().isAccountEnabled(n));
+    	disable.setOnPreferenceChangeListener(disableChangedListener);
 
     	final Preference delete = advanced.getPreference(4);
     	delete.setEnabled(true);
@@ -154,15 +163,15 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	        }
         });
     	
-    	Preference mainAccount = advanced.getPreference(3);
-    	Compatibility.setPreferenceChecked(mainAccount, LinphonePreferences.instance().getDefaultAccountIndex() == n);
-    	mainAccount.setEnabled(!Compatibility.isPreferenceChecked(mainAccount));
+    	CheckBoxPreference mainAccount = (CheckBoxPreference) advanced.getPreference(3);
+    	mainAccount.setChecked(isDefaultAccount);
+    	mainAccount.setEnabled(!mainAccount.isChecked());
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
 			public boolean onPreferenceClick(Preference preference) {
 				LinphonePreferences.instance().setDefaultAccount(n);
 				disable.setEnabled(false);
-				Compatibility.setPreferenceChecked(disable, false);
+				disable.setChecked(false);
 				preference.setEnabled(false);
 				return true;
 			}

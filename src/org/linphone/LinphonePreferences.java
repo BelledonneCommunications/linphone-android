@@ -60,14 +60,15 @@ public class LinphonePreferences {
 	}
 	
 	public boolean isFirstLaunch() {
-		return false;
+		return getLc().getConfig().getBool("app", "first_launch", true);
 	}
 	
-	public void firstLaunchSuccessful() {
+	public void firstLaunchSuccessful() { 
+		getLc().getConfig().setBool("app", "first_launch", false);
 	}
 
 	public boolean isDebugEnabled() {
-		return true;
+		return true; //TODO
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
@@ -79,31 +80,31 @@ public class LinphonePreferences {
 	}
 
 	public String getTunnelMode() {
-		return null;
+		return null; //TODO
 	}
 
 	public boolean useFrontCam() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean isVideoEnabled() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean shouldInitiateVideoCall() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean shouldAutomaticallyAcceptVideoRequests() {
-		return false;
+		return false; //TODO
 	}
 
 	public void setPushNotificationRegistrationID(String regId) {
-		
+		 //TODO
 	}
 
 	public String getPushNotificationRegistrationID() {
-		return null;
+		return null; //TODO
 	}
 
 	public boolean isAutoStartEnabled() {
@@ -123,35 +124,35 @@ public class LinphonePreferences {
 	}
 
 	public boolean shouldUseLinphoneToStoreChatHistory() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean areAnimationsEnabled() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean shouldAutomaticallyAcceptFriendsRequests() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean isBackgroundModeEnabled() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean shouldOnlyRegisterOnWifiNetwork() {
-		return false;
+		return false; //TODO
 	}
 
 	public boolean shouldUseSoftvolume() {
-		return false;
+		return false; //TODO
 	}
 
 	public String getRingtone(String defaultRingtone) {
-		return defaultRingtone;
+		return defaultRingtone; //TODO
 	}
 	
 	public void setRingtone(String ringtone) {
-		
+		 //TODO
 	}
 
 	// Accounts
@@ -177,7 +178,7 @@ public class LinphonePreferences {
 	private boolean tempOutboundProxy;
 	
 	/**
-	 * Saves a created account or an edited account
+	 * Creates a new account using values previously set using setNew* functions
 	 * @throws LinphoneCoreException 
 	 */
 	public void saveNewAccount() throws LinphoneCoreException {
@@ -208,7 +209,7 @@ public class LinphonePreferences {
 	}
 	
 	public void setAccountUsername(int n, String username) {
-		
+		getAuthInfo(n).setUsername(username);
 	}
 
 	public String getAccountUsername(int n) {
@@ -220,7 +221,7 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountUserId(int n, String userId) {
-		
+		getAuthInfo(n).setUserId(userId);
 	}
 
 	public String getAccountUserId(int n) {
@@ -232,7 +233,7 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountPassword(int n, String password) {
-		
+		getAuthInfo(n).setPassword(password);
 	}
 
 	public String getAccountPassword(int n) {
@@ -244,7 +245,7 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountDomain(int n, String domain) {
-		
+		 //TODO
 	}
 
 	public String getAccountDomain(int n) {
@@ -256,7 +257,7 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountProxy(int n, String proxy) {
-		
+		 //TODO
 	}
 
 	public String getAccountProxy(int n) {
@@ -268,15 +269,11 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
-		
+		 //TODO
 	}
 
 	public boolean isAccountOutboundProxySet(int n) {
 		return getProxyConfig(n).getRoute() != null;
-	}
-
-	public void setAccountEnabled(int n, Boolean enabled) {
-		
 	}
 	
 	public void setDefaultAccount(int accountIndex) {
@@ -289,23 +286,33 @@ public class LinphonePreferences {
 		LinphoneProxyConfig defaultPrxCfg = getLc().getDefaultProxyConfig();
 		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		for (int i = 0; i < prxCfgs.length; i++) {
-			if (defaultPrxCfg.equals(prxCfgs[i])) {
+			if (defaultPrxCfg.getIdentity().equals(prxCfgs[i].getIdentity())) {
 				return i;
 			}
 		}
-		return -1;
+		return 0;
 	}
 
 	public int getAccountCount() {
 		return getLc().getProxyConfigList().length;
 	}
 
+	public void setAccountEnabled(int n, boolean disabled) {
+		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		try {
+			prxCfg.enableRegister(!disabled);
+			prxCfg.done();
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean isAccountEnabled(int n) {
-		return false;
+		return getProxyConfig(n).registerEnabled();
 	}
 
 	public void deleteAccount(int n) {
-		
+		 //TODO
 	}
 	// End of Accounts
 	
@@ -372,11 +379,11 @@ public class LinphonePreferences {
 	}
 
 	public String getExpire() {
-		return null;
+		return null; //TODO
 	}
 	
 	public void setExpire(String expire) {
-		
+		 //TODO
 	}
 
 	public String getSipPortIfNotRandom() {
@@ -405,11 +412,51 @@ public class LinphonePreferences {
 		getLc().setSignalingTransportPorts(transports);
 	}
 
-	public void setIceEnabled(boolean b) {
-		
+	public void setIceEnabled(boolean enabled) {
+		 //TODO
+	}
+	
+	public boolean isIceEnabled() {
+		return false; //TODO
+	}
+
+	public void setUpnpEnabled(boolean enabled) {
+		 //TODO
+	}
+	
+	public boolean isUpnpEnabled() {
+		return false; //TODO
 	}
 
 	public void setPushNotificationEnabled(boolean b) {
-		
+		 //TODO
+	}
+	
+	public boolean isPushNotificationEnabled() {
+		return false; //TODO
+	}
+
+	public void useRandomPort(boolean enabled) {
+		//TODO
+	}
+	
+	public boolean isUsingRandomPort() {
+		return false; //TODO
+	}
+
+	public void useIpv6(Boolean newValue) {
+		 //TODO
+	}
+	
+	public boolean isUsingIpv6() {
+		return false; //TODO
+	}
+
+	public void setWifiOnlyEnabled(Boolean newValue) {
+		 //TODO
+	}
+
+	public boolean isWifiOnlyEnabled() {
+		return false; //TODO
 	}
 }
