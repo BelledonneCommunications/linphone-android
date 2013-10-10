@@ -600,7 +600,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	
 	private void copyIfNotExist(int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
-		Log.w("File " + target + " exists ? " + lFileToCopy.exists());
 		if (!lFileToCopy.exists()) {
 			copyFromPackage(ressourceId,lFileToCopy.getName()); 
 		}

@@ -46,11 +46,10 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	// Inits the values or the listener on some settings
 	private void initSettings() {
 		//initAccounts(); Init accounts on Resume instead of on Create to update the account list when coming back from wizard
-		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
-		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
+		
+		initNetworkSettings();
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 		
-		findPreference(getString(R.string.pref_stun_server_key)).setSummary(mPrefs.getStunServer());
 		findPreference(getString(R.string.pref_image_sharing_server_key)).setSummary(mPrefs.getSharingPictureServerUrl());
 		findPreference(getString(R.string.pref_remote_provisioning_key)).setSummary(mPrefs.getRemoteProvisioningUrl());
 		findPreference(getString(R.string.pref_expire_key)).setSummary(mPrefs.getExpire());
@@ -75,11 +74,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 		
-		// Disable sip port choice if port is random
-		Preference sipPort = findPreference(getString(R.string.pref_sip_port_key));
-		sipPort.setEnabled(!((CheckBoxPreference)findPreference(getString(R.string.pref_transport_use_random_ports_key))).isChecked());
-		sipPort.setSummary(mPrefs.getSipPortIfNotRandom());
-		
 		if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
 			Preference prefH264 = findPreference(getString(R.string.pref_video_codec_h264_key));
 			prefH264.setEnabled(false);
@@ -98,27 +92,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		}
 	}
-	
+
 	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
-		findPreference(getString(R.string.pref_stun_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setStunServer(newValue.toString());
-				preference.setSummary(newValue.toString());
-				return true;
-			}
-		});
-		findPreference(getString(R.string.pref_transport_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setTransport(newValue.toString());
-				preference.setSummary(mPrefs.getTransport());
-				return true;
-			}
-		});
+		setNetworkPreferencesListener();
 	}
-	
+
 	// Read the values set in resources and hides the settings accordingly
 	private void hideSettings() {
 		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
@@ -231,6 +210,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		accounts.removeAll();
 		
 		// Get already configured extra accounts
+		int defaultAccountID = mPrefs.getDefaultAccountIndex();
 		int nbAccounts = mPrefs.getAccountCount();
 		for (int i = 0; i < nbAccounts; i++) {
 			final int accountId = i;
@@ -243,6 +223,10 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				account.setTitle(getString(R.string.pref_sipaccount));
 			} else {
 				account.setTitle(username + "@" + domain);
+			}
+			
+			if (defaultAccountID == i) {
+				account.setSummary(R.string.pref_default_account);
 			}
 			
 			account.setOnPreferenceClickListener(new OnPreferenceClickListener() 
@@ -284,7 +268,15 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			setListPreferenceValues(pref, entries, values);
 		}
 		
-		pref.setSummary(mPrefs.getMediaEncryption().toString());
+		MediaEncryption value = mPrefs.getMediaEncryption();
+		pref.setSummary(value.toString());
+		
+		String key = getString(R.string.pref_media_encryption_key_none);
+		if (value.toString().equals(getString(R.string.media_encryption_srtp)))
+			key = getString(R.string.pref_media_encryption_key_srtp);
+		else if (value.toString().equals(getString(R.string.media_encryption_zrtp)))
+			key = getString(R.string.pref_media_encryption_key_zrtp);
+		pref.setDefaultValue(key);
 	}
 	
 	private void initializeTransportPreferences(ListPreference pref) {
@@ -300,7 +292,14 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			values.add(getString(R.string.pref_transport_tls_key));
 		}
 		setListPreferenceValues(pref, entries, values);
-		pref.setSummary(mPrefs.getTransport());
+		String value = mPrefs.getTransport();
+		pref.setSummary(value);
+		String key = getString(R.string.pref_transport_udp_key);
+		if (value.equals(getString(R.string.pref_transport_tcp)))
+			key = getString(R.string.pref_transport_tcp_key);
+		else if (value.equals(getString(R.string.pref_transport_tls)))
+			key = getString(R.string.pref_transport_tls_key);
+		pref.setDefaultValue(key);
 	}
 
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
@@ -325,6 +324,124 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		contents = new CharSequence[values.size()];
 		values.toArray(contents);
 		pref.setEntryValues(contents);
+	}
+	
+	private void initNetworkSettings() {
+		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
+		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
+		
+		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key))).setChecked(mPrefs.isIceEnabled());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key))).setChecked(mPrefs.isUpnpEnabled());
+
+		CheckBoxPreference randomPort = (CheckBoxPreference) findPreference(getString(R.string.pref_transport_use_random_ports_key));
+		randomPort.setChecked(mPrefs.isUsingRandomPort());
+		
+		// Disable sip port choice if port is random
+		Preference sipPort = findPreference(getString(R.string.pref_sip_port_key));
+		sipPort.setEnabled(!randomPort.isChecked());
+		sipPort.setSummary(mPrefs.getSipPortIfNotRandom());
+		sipPort.setDefaultValue(mPrefs.getSipPortIfNotRandom());
+		
+		Preference stun = findPreference(getString(R.string.pref_stun_server_key));
+		stun.setSummary(mPrefs.getStunServer());
+		stun.setDefaultValue(mPrefs.getStunServer());
+		
+		((CheckBoxPreference) findPreference(getString(R.string.pref_push_notification_key))).setChecked(mPrefs.isPushNotificationEnabled());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_ipv6_key))).setChecked(mPrefs.isUsingIpv6());
+	}
+	
+	private void setNetworkPreferencesListener() {
+		findPreference(getString(R.string.pref_wifi_only_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setWifiOnlyEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_stun_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setStunServer(newValue.toString());
+				preference.setSummary(newValue.toString());
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_ice_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setIceEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_upnp_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setUpnpEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_transport_use_random_ports_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.useRandomPort((Boolean) newValue);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_sip_port_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setSipPortIfNotRandom((Integer) newValue);
+				preference.setSummary(newValue.toString());
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_transport_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setTransport(newValue.toString());
+				preference.setSummary(mPrefs.getTransport());
+				return true;
+			}
+		});	
+		
+		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = newValue.toString();
+				MediaEncryption menc = MediaEncryption.None;
+				if (value.equals(getString(R.string.pref_media_encryption_key_srtp)))
+					menc = MediaEncryption.SRTP;
+				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
+					menc = MediaEncryption.ZRTP;
+				mPrefs.setMediaEncryption(menc);
+				
+				preference.setSummary(mPrefs.getMediaEncryption().toString());
+				return true;
+			}
+		});	
+		
+		findPreference(getString(R.string.pref_push_notification_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setPushNotificationEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_ipv6_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.useIpv6((Boolean) newValue);
+				return true;
+			}
+		});
 	}
 	
 	@Override

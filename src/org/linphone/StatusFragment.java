@@ -588,12 +588,18 @@ public class StatusFragment extends Fragment {
 					break;
 				}
 			}
-			if (LinphonePreferences.instance().getDefaultAccountIndex() == accountIndex) {
-				isDefault.setChecked(true);
-				isDefault.setEnabled(false);
-				status.setImageResource(getStatusIconResource(lpc.getState(), true));
+			
+			// Force led if account is disabled
+			if (!LinphonePreferences.instance().isAccountEnabled(accountIndex)) {
+				status.setImageResource(getStatusIconResource(RegistrationState.RegistrationNone, false));
 			} else {
-				status.setImageResource(getStatusIconResource(lpc.getState(), false));
+				if (LinphonePreferences.instance().getDefaultAccountIndex() == accountIndex) {
+					isDefault.setChecked(true);
+					isDefault.setEnabled(false);
+					status.setImageResource(getStatusIconResource(lpc.getState(), true));
+				} else {
+					status.setImageResource(getStatusIconResource(lpc.getState(), false));
+				}
 			}
 			
 			isDefault.setOnClickListener(defaultListener);
