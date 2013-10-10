@@ -525,7 +525,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			
 			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log));
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
@@ -593,15 +592,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.oldphone_mono,mRingSoundFile);
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
+		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
 		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
-		copyIfNotExist(R.raw.lpconfig, new File(mLPConfigXsd).getName());
-		copyIfNotExist(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
+		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
+		copyIfNotExist(R.raw.rootca, mLinphoneRootCaFile);
 	}
 	
-	private  void copyIfNotExist(int ressourceId,String target) throws IOException {
+	private void copyIfNotExist(int ressourceId,String target) throws IOException {
 		File lFileToCopy = new File(target);
-		if (!lFileToCopy.exists()) {		
-		   copyFromPackage(ressourceId,lFileToCopy.getName()); 
+		Log.w("File " + target + " exists ? " + lFileToCopy.exists());
+		if (!lFileToCopy.exists()) {
+			copyFromPackage(ressourceId,lFileToCopy.getName()); 
 		}
 	}
 	
