@@ -1,0 +1,13 @@
+[net]
+download_bw=380
+upload_bw=380
+
+[sip]
+sip_random_port=1
+contact=sip:unknown@unknown-host
+use_info=0
+use_ipv6=0
+keepalive_period=30000
+
+[video]
+size=qvga

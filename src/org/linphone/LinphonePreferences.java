@@ -1,8 +1,12 @@
 package org.linphone;
 
+import org.linphone.core.LinphoneAuthInfo;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.Transports;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
 
 import android.content.Context;
 
@@ -51,6 +55,10 @@ public class LinphonePreferences {
 		return mContext.getString(key);
 	}
 	
+	private LinphoneCore getLc() {
+		return LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+	}
+	
 	public boolean isFirstLaunch() {
 		return false;
 	}
@@ -59,11 +67,11 @@ public class LinphonePreferences {
 	}
 
 	public boolean isDebugEnabled() {
-		return false;
+		return true;
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().setString("app", "remote_provisioning", url);
+		getLc().getConfig().setString("app", "remote_provisioning", url);
 	}
 	
 	public String getRemoteProvisioningUrl() {
@@ -99,19 +107,19 @@ public class LinphonePreferences {
 	}
 
 	public boolean isAutoStartEnabled() {
-		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().getBool("app", "auto_start", false);
+		return getLc().getConfig().getBool("app", "auto_start", false);
 	}
 	
 	public void setAutoStart(boolean autoStartEnabled) {
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().setBool("app", "auto_start", autoStartEnabled);
+		getLc().getConfig().setBool("app", "auto_start", autoStartEnabled);
 	}
 
 	public String getSharingPictureServerUrl() {
-		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().getString("app", "sharing_server", null);
+		return getLc().getConfig().getString("app", "sharing_server", null);
 	}
 	
 	public void setSharingPictureServerUrl(String url) {
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().getConfig().setString("app", "sharing_server", url);
+		getLc().getConfig().setString("app", "sharing_server", url);
 	}
 
 	public boolean shouldUseLinphoneToStoreChatHistory() {
@@ -147,72 +155,149 @@ public class LinphonePreferences {
 	}
 
 	// Accounts
-	public void setAccountUsername(int n, String string) {
+	private LinphoneProxyConfig getProxyConfig(int n) {
+		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
+		if (n < 0 || n >= prxCfgs.length)
+			return null;
+		return prxCfgs[n];
+	}
+	
+	private LinphoneAuthInfo getAuthInfo(int n) {
+		LinphoneAuthInfo[] authsInfos = getLc().getAuthInfosList();
+		if (n < 0 || n >= authsInfos.length)
+			return null;
+		return authsInfos[n];
+	}
+	
+	private String tempUsername;
+	private String tempUserId;
+	private String tempPassword;
+	private String tempDomain;
+	private String tempProxy;
+	private boolean tempOutboundProxy;
+	
+	/**
+	 * Saves a created account or an edited account
+	 * @throws LinphoneCoreException 
+	 */
+	public void saveNewAccount() throws LinphoneCoreException {
+		String identity = "sip:" + tempUsername + "@" + tempDomain;
+		String proxy = "sip:";
+		proxy += tempProxy == null ? tempDomain : tempProxy;
+		String route = tempOutboundProxy ? tempProxy : null;
+		
+		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, route, true);
+		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null);
+		
+		getLc().addProxyConfig(prxCfg);
+		getLc().addAuthInfo(authInfo);
+		
+		if (getAccountCount() == 1)
+			getLc().setDefaultProxyConfig(prxCfg);
+		
+		tempUsername = null;
+		tempUserId = null;
+		tempPassword = null;
+		tempDomain = null;
+		tempProxy = null;
+		tempOutboundProxy = false;
+	}
+	
+	public void setNewAccountUsername(String username) {
+		tempUsername = username;
+	}
+	
+	public void setAccountUsername(int n, String username) {
 		
 	}
 
-	public String getAccountUsername(int i) {
-		return null;
+	public String getAccountUsername(int n) {
+		return getAuthInfo(n).getUsername();
 	}
 
-	public void setAccountUserId(int n, String string) {
+	public void setNewAccountUserId(String userId) {
+		tempUserId = userId;
+	}
+
+	public void setAccountUserId(int n, String userId) {
 		
 	}
 
 	public String getAccountUserId(int n) {
-		return null;
+		return getAuthInfo(n).getUserId();
 	}
 
-	public void setAccountPassword(int n, String string) {
+	public void setNewAccountPassword(String password) {
+		tempPassword = password;
+	}
+
+	public void setAccountPassword(int n, String password) {
 		
 	}
 
 	public String getAccountPassword(int n) {
-		return null;
+		return getAuthInfo(n).getPassword();
 	}
 
-	public void setAccountDomain(int n, String string) {
+	public void setNewAccountDomain(String domain) {
+		tempDomain = domain;
+	}
+
+	public void setAccountDomain(int n, String domain) {
 		
 	}
 
-	public String getAccountDomain(int i) {
-		return null;
+	public String getAccountDomain(int n) {
+		return getProxyConfig(n).getDomain();
 	}
 
-	public void setAccountProxy(int n, String string) {
+	public void setNewAccountProxy(String proxy) {
+		tempProxy = proxy;
+	}
+
+	public void setAccountProxy(int n, String proxy) {
 		
 	}
 
 	public String getAccountProxy(int n) {
-		return null;
+		return getProxyConfig(n).getProxy();
 	}
 
-	public void setAccountOutboundProxyEnabled(int n, Boolean newValue) {
+	public void setNewAccountOutboundProxyEnabled(boolean enabled) {
+		tempOutboundProxy = enabled;
+	}
+
+	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
 		
 	}
 
 	public boolean isAccountOutboundProxySet(int n) {
-		return false;
+		return getProxyConfig(n).getRoute() != null;
 	}
 
-	public void setAccountEnabled(int n, Boolean newValue) {
+	public void setAccountEnabled(int n, Boolean enabled) {
 		
 	}
 	
 	public void setDefaultAccount(int accountIndex) {
-		
+		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
+		if (accountIndex >= 0 && accountIndex < prxCfgs.length)
+			getLc().setDefaultProxyConfig(prxCfgs[accountIndex]);
 	}
 
 	public int getDefaultAccountIndex() {
-		return 0;
-	}
-
-	public void setAccountCount(int i) {
-		
+		LinphoneProxyConfig defaultPrxCfg = getLc().getDefaultProxyConfig();
+		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
+		for (int i = 0; i < prxCfgs.length; i++) {
+			if (defaultPrxCfg.equals(prxCfgs[i])) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public int getAccountCount() {
-		return 0;
+		return getLc().getProxyConfigList().length;
 	}
 
 	public boolean isAccountEnabled(int n) {
@@ -225,23 +310,23 @@ public class LinphonePreferences {
 	// End of Accounts
 	
 	public MediaEncryption getMediaEncryption() {
-		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMediaEncryption();
+		return getLc().getMediaEncryption();
 	}
 	
 	public void setMediaEncryption(MediaEncryption menc) {
 		if (menc == null)
 			return;
 		
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setMediaEncryption(menc);
+		getLc().setMediaEncryption(menc);
 	}
 	
 	public String getTransport() {
-		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		Transports transports = getLc().getSignalingTransportPorts();
 		String transport = getString(R.string.pref_transport_udp);
 		if (transports.tcp > 0)
-			transport = getString(R.string.pref_transport_tcp_key);
+			transport = getString(R.string.pref_transport_tcp);
 		else if (transports.tls > 0)
-			transport = getString(R.string.pref_transport_tls_key);
+			transport = getString(R.string.pref_transport_tls);
 		return transport;
 	}
 	
@@ -249,7 +334,7 @@ public class LinphonePreferences {
 		if (transportKey == null)
 			return;
 		
-		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		Transports transports = getLc().getSignalingTransportPorts();
 		if (transports.udp > 0) {
 			if (transportKey.equals(getString(R.string.pref_transport_tcp_key))) {
 				transports.tcp = transports.udp;
@@ -275,15 +360,15 @@ public class LinphonePreferences {
 				transports.tls = transports.udp;
 			}
 		}
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setSignalingTransportPorts(transports);
+		getLc().setSignalingTransportPorts(transports);
 	}
 
 	public String getStunServer() {
-		return LinphoneManager.getLcIfManagerNotDestroyedOrNull().getStunServer();
+		return getLc().getStunServer();
 	}
 	
 	public void setStunServer(String stun) {
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setStunServer(stun);
+		getLc().setStunServer(stun);
 	}
 
 	public String getExpire() {
@@ -295,7 +380,7 @@ public class LinphonePreferences {
 	}
 
 	public String getSipPortIfNotRandom() {
-		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		Transports transports = getLc().getSignalingTransportPorts();
 		int port;
 		if (transports.udp > 0)
 			port = transports.udp;
@@ -310,13 +395,21 @@ public class LinphonePreferences {
 		if (port <= 0)
 			return;
 		
-		Transports transports = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getSignalingTransportPorts();
+		Transports transports = getLc().getSignalingTransportPorts();
 		if (transports.udp > 0)
 			transports.udp = port;
 		else if (transports.tcp > 0)
 			transports.tcp = port;
 		else
 			transports.udp = port;
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().setSignalingTransportPorts(transports);
+		getLc().setSignalingTransportPorts(transports);
+	}
+
+	public void setIceEnabled(boolean b) {
+		
+	}
+
+	public void setPushNotificationEnabled(boolean b) {
+		
 	}
 }

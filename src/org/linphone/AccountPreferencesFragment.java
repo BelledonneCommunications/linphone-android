@@ -53,6 +53,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			LinphonePreferences.instance().setAccountUsername(n, newValue.toString());
+			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
@@ -60,6 +61,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			LinphonePreferences.instance().setAccountUserId(n, newValue.toString());
+			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
@@ -67,6 +69,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			LinphonePreferences.instance().setAccountPassword(n, newValue.toString());
+			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
@@ -74,6 +77,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			LinphonePreferences.instance().setAccountDomain(n, newValue.toString());
+			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
@@ -81,6 +85,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			LinphonePreferences.instance().setAccountProxy(n, newValue.toString());
+			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
@@ -162,16 +167,5 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		int n = LinphonePreferences.instance().getAccountCount();
-		if (LinphonePreferences.instance().getAccountUsername(n).equals("")) {
-			//If not, we suppress it to not display a blank field
-			LinphonePreferences.instance().setAccountCount(n-1);
-		}
 	}
 }

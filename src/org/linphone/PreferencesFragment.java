@@ -272,7 +272,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 		addAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	    		nbAccounts = LinphonePreferences.instance().getAccountCount();
-	    		LinphonePreferences.instance().setAccountCount(nbAccounts + 1);
+	    		//LinphonePreferences.instance().setAccountCount(nbAccounts + 1);
 	    		
 	        	addExtraAccountPreferencesButton(accounts, nbAccounts, true);
 	        	LinphoneActivity.instance().displayAccountSettings(nbAccounts);
@@ -367,7 +367,7 @@ public class PreferencesFragment extends PreferencesListFragment implements EcCa
 	
 	private void addExtraAccountPreferencesButton(PreferenceCategory parent, final int n, boolean isNewAccount) {
 		if (isNewAccount) {
-			LinphonePreferences.instance().setAccountCount(n+1);
+			//LinphonePreferences.instance().setAccountCount(n+1);
 		}
 		
 		final LedPreference led = new LedPreference(mContext);
