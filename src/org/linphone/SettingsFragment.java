@@ -331,8 +331,19 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
 		
 		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
-		((CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key))).setChecked(mPrefs.isIceEnabled());
-		((CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key))).setChecked(mPrefs.isUpnpEnabled());
+		
+		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
+		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
+		CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
+		ice.setChecked(mPrefs.isIceEnabled());
+		if (mPrefs.isIceEnabled()) {
+			upnp.setEnabled(false);
+		} else {
+			upnp.setChecked(mPrefs.isUpnpEnabled());
+			if (mPrefs.isUpnpEnabled()) {
+				ice.setEnabled(false);
+			}
+		}
 
 		CheckBoxPreference randomPort = (CheckBoxPreference) findPreference(getString(R.string.pref_transport_use_random_ports_key));
 		randomPort.setChecked(mPrefs.isUsingRandomPort());
@@ -372,6 +383,10 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		findPreference(getString(R.string.pref_ice_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
+				boolean value = (Boolean) newValue;
+				upnp.setChecked(false);
+				upnp.setEnabled(!value);
 				mPrefs.setIceEnabled((Boolean) newValue);
 				return true;
 			}
@@ -380,7 +395,11 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		findPreference(getString(R.string.pref_upnp_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setUpnpEnabled((Boolean) newValue);
+				CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
+				boolean value = (Boolean) newValue;
+				ice.setChecked(false);
+				ice.setEnabled(!value);
+				mPrefs.setUpnpEnabled(value);
 				return true;
 			}
 		});

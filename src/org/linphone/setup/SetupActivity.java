@@ -302,6 +302,15 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			}
 		}
 		
+		if (getResources().getBoolean(R.bool.enable_push_id)) {
+			String regId = mPrefs.getPushNotificationRegistrationID();
+			String appId = getString(R.string.push_sender_id);
+			if (regId != null && mPrefs.isPushNotificationEnabled()) {
+				String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId + ";pn-msg-str=IM_MSG;pn-call-str=IC_MSG;pn-call-snd=ring.caf;pn-msg-snd=msg.caf";
+				mPrefs.setNewAccountContactParameters(contactInfos);
+			}
+		}
+		
 		try {
 			mPrefs.saveNewAccount();
 			accountCreated = true;
