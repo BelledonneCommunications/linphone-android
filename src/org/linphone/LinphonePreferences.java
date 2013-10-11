@@ -2,11 +2,14 @@ package org.linphone;
 
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LpConfig;
+import org.linphone.mediastream.Log;
 
 import android.content.Context;
 
@@ -59,24 +62,36 @@ public class LinphonePreferences {
 		return LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 	}
 	
+	private LpConfig getConfig() {
+		LinphoneCore lc = getLc();
+		if (lc != null)
+			return lc.getConfig();
+		
+		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
+	}
+	
 	public boolean isFirstLaunch() {
-		return getLc().getConfig().getBool("app", "first_launch", true);
+		return getConfig().getBool("app", "first_launch", true);
 	}
 	
 	public void firstLaunchSuccessful() { 
-		getLc().getConfig().setBool("app", "first_launch", false);
+		getConfig().setBool("app", "first_launch", false);
+	}
+	
+	public void setDebugEnabled(boolean enabled) {
+		getConfig().setBool("app", "debug", enabled);
 	}
 
 	public boolean isDebugEnabled() {
-		return true; //TODO
+		return getConfig().getBool("app", "debug", false);
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
-		getLc().getConfig().setString("app", "remote_provisioning", url);
+		getConfig().setString("app", "remote_provisioning", url);
 	}
 	
 	public String getRemoteProvisioningUrl() {
-		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile).getString("app", "remote_provisioning", null);
+		return getConfig().getString("app", "remote_provisioning", null);
 	}
 
 	public String getTunnelMode() {
@@ -99,48 +114,40 @@ public class LinphonePreferences {
 		return false; //TODO
 	}
 
-	public void setPushNotificationRegistrationID(String regId) {
-		 //TODO
-	}
-
-	public String getPushNotificationRegistrationID() {
-		return null; //TODO
-	}
-
 	public boolean isAutoStartEnabled() {
-		return getLc().getConfig().getBool("app", "auto_start", false);
+		return getConfig().getBool("app", "auto_start", false);
 	}
 	
 	public void setAutoStart(boolean autoStartEnabled) {
-		getLc().getConfig().setBool("app", "auto_start", autoStartEnabled);
+		getConfig().setBool("app", "auto_start", autoStartEnabled);
 	}
 
 	public String getSharingPictureServerUrl() {
-		return getLc().getConfig().getString("app", "sharing_server", null);
+		return getConfig().getString("app", "sharing_server", null);
 	}
 	
 	public void setSharingPictureServerUrl(String url) {
-		getLc().getConfig().setString("app", "sharing_server", url);
+		getConfig().setString("app", "sharing_server", url);
 	}
 
-	public boolean shouldUseLinphoneToStoreChatHistory() {
-		return false; //TODO
+	public void setAnimationsEnabled(boolean enabled) {
+		getConfig().setBool("app", "animations", enabled);
 	}
-
+	
 	public boolean areAnimationsEnabled() {
-		return false; //TODO
+		return getConfig().getBool("app", "animations", false);
 	}
 
 	public boolean shouldAutomaticallyAcceptFriendsRequests() {
 		return false; //TODO
 	}
 
-	public boolean isBackgroundModeEnabled() {
-		return false; //TODO
+	public void setBackgroundModeEnabled(boolean enabled) {
+		getConfig().setBool("app", "background_mode", enabled);
 	}
-
-	public boolean shouldOnlyRegisterOnWifiNetwork() {
-		return false; //TODO
+	
+	public boolean isBackgroundModeEnabled() {
+		return getConfig().getBool("app", "background_mode", true);
 	}
 
 	public boolean shouldUseSoftvolume() {
@@ -148,11 +155,14 @@ public class LinphonePreferences {
 	}
 
 	public String getRingtone(String defaultRingtone) {
-		return defaultRingtone; //TODO
+		String ringtone = getLc().getRing();
+		if (ringtone == null || ringtone.length() == 0)
+			ringtone = defaultRingtone;
+		return ringtone;
 	}
 	
 	public void setRingtone(String ringtone) {
-		 //TODO
+		 getLc().setRing(ringtone);
 	}
 
 	// Accounts
@@ -176,6 +186,7 @@ public class LinphonePreferences {
 	private String tempDomain;
 	private String tempProxy;
 	private boolean tempOutboundProxy;
+	private String tempContactsParams;
 	
 	/**
 	 * Creates a new account using values previously set using setNew* functions
@@ -188,6 +199,9 @@ public class LinphonePreferences {
 		String route = tempOutboundProxy ? tempProxy : null;
 		
 		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, route, true);
+		if (tempContactsParams != null)
+			prxCfg.setContactParameters(tempContactsParams);
+		
 		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null);
 		
 		getLc().addProxyConfig(prxCfg);
@@ -202,6 +216,7 @@ public class LinphonePreferences {
 		tempDomain = null;
 		tempProxy = null;
 		tempOutboundProxy = false;
+		tempContactsParams = null;
 	}
 	
 	public void setNewAccountUsername(String username) {
@@ -272,6 +287,10 @@ public class LinphonePreferences {
 		 //TODO
 	}
 
+	public void setNewAccountContactParameters(String contactParams) {
+		tempContactsParams = contactParams;
+	}
+
 	public boolean isAccountOutboundProxySet(int n) {
 		return getProxyConfig(n).getRoute() != null;
 	}
@@ -284,6 +303,9 @@ public class LinphonePreferences {
 
 	public int getDefaultAccountIndex() {
 		LinphoneProxyConfig defaultPrxCfg = getLc().getDefaultProxyConfig();
+		if (defaultPrxCfg == null)
+			return 0;
+		
 		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		for (int i = 0; i < prxCfgs.length; i++) {
 			if (defaultPrxCfg.getIdentity().equals(prxCfgs[i].getIdentity())) {
@@ -294,7 +316,7 @@ public class LinphonePreferences {
 	}
 
 	public int getAccountCount() {
-		return getLc().getProxyConfigList().length;
+		return Math.min(getLc().getProxyConfigList().length, getLc().getAuthInfosList().length);
 	}
 
 	public void setAccountEnabled(int n, boolean disabled) {
@@ -312,7 +334,12 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
-		 //TODO
+		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
+		if (proxyCfg != null)
+			getLc().removeProxyConfig(proxyCfg);
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		if (authInfo != null)
+			getLc().removeAuthInfo(authInfo);
 	}
 	// End of Accounts
 	
@@ -413,29 +440,62 @@ public class LinphonePreferences {
 	}
 
 	public void setIceEnabled(boolean enabled) {
-		 //TODO
+		if (enabled) {
+			getLc().setFirewallPolicy(FirewallPolicy.UseIce);
+		} else {
+			String stun = getStunServer();
+			if (stun != null && stun.length() > 0) {
+				getLc().setFirewallPolicy(FirewallPolicy.UseStun);
+			} else {
+				getLc().setFirewallPolicy(FirewallPolicy.NoFirewall);
+			}
+		 }
 	}
 	
 	public boolean isIceEnabled() {
-		return false; //TODO
+		return getLc().getFirewallPolicy() == FirewallPolicy.UseIce;
 	}
 
 	public void setUpnpEnabled(boolean enabled) {
-		 //TODO
+		if (enabled) {
+			if (isIceEnabled()) {
+				Log.e("Cannot have both ice and upnp enabled, disabling upnp");
+			} else {
+				getLc().setFirewallPolicy(FirewallPolicy.UseUpnp);
+			}
+		}
+		else {
+			String stun = getStunServer();
+			if (stun != null && stun.length() > 0) {
+				getLc().setFirewallPolicy(FirewallPolicy.UseStun);
+			} else {
+				getLc().setFirewallPolicy(FirewallPolicy.NoFirewall);
+			}
+		}
 	}
 	
 	public boolean isUpnpEnabled() {
-		return false; //TODO
+		return getLc().upnpAvailable() && getLc().getFirewallPolicy() == FirewallPolicy.UseUpnp;
 	}
 
-	public void setPushNotificationEnabled(boolean b) {
-		 //TODO
+	// Push Notifications
+	public void setPushNotificationEnabled(boolean enable) {
+		 getConfig().setBool("app", "push_notification", enable);
 	}
 	
 	public boolean isPushNotificationEnabled() {
-		return false; //TODO
+		return getConfig().getBool("app", "push_notification", false);
 	}
 
+	public void setPushNotificationRegistrationID(String regId) {
+		 getConfig().setString("app", "push_notification_regid", regId);
+	}
+
+	public String getPushNotificationRegistrationID() {
+		return getConfig().getString("app", "push_notification_regid", null);
+	}
+	// End of Push Notifications
+	
 	public void useRandomPort(boolean enabled) {
 		//TODO
 	}
@@ -444,19 +504,19 @@ public class LinphonePreferences {
 		return false; //TODO
 	}
 
-	public void useIpv6(Boolean newValue) {
-		 //TODO
+	public void useIpv6(Boolean enable) {
+		 getLc().enableIpv6(enable);
 	}
 	
 	public boolean isUsingIpv6() {
 		return false; //TODO
 	}
 
-	public void setWifiOnlyEnabled(Boolean newValue) {
-		 //TODO
+	public void setWifiOnlyEnabled(Boolean enable) {
+		getConfig().setBool("app", "wifi_only", enable);
 	}
 
 	public boolean isWifiOnlyEnabled() {
-		return false; //TODO
+		return getConfig().getBool("app", "wifi_only", false);
 	}
 }

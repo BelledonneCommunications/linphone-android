@@ -536,6 +536,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 			
 			initLiblinphone(c);
 
+			if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
+				Compatibility.initPushNotificationService(mServiceContext);
+			}
+
 			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
@@ -644,7 +648,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			}
 		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
 			manageTunnelServer(eventInfo);
-			boolean wifiOnly = LinphonePreferences.instance().shouldOnlyRegisterOnWifiNetwork();
+			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
 			if ((eventInfo.getTypeName().equals("WIFI")) || (!eventInfo.getTypeName().equals("WIFI") && !wifiOnly)) {
 				if (!isNetworkReachable) {
 					isNetworkReachable = true;
