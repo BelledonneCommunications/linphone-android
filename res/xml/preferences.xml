@@ -54,63 +54,7 @@
 	
 			<PreferenceCategory
 				android:title="@string/pref_codecs" 
-				android:key="@string/pref_codecs_key">
-			     
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_opus"
-				    android:key="@string/pref_codec_opus_key"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_speex16"
-				    android:key="@string/pref_codec_speex16_key"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_speex8"
-				    android:key="@string/pref_codec_speex8_key"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_ilbc"
-				    android:key="@string/pref_codec_ilbc_key"
-					android:summary="@string/pref_ilbc_summary"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_amr"
-				    android:key="@string/pref_codec_amr_key"/>
-				
-				<CheckBoxPreference 
-	                android:title="@string/pref_codec_g729"
-				    android:key="@string/pref_codec_g729_key"/>
-				
-	            <CheckBoxPreference 
-	                android:title="@string/pref_codec_amrwb"
-	                android:key="@string/pref_codec_amrwb_key"/>
-	            
-			 	<CheckBoxPreference 
-					android:title="@string/pref_codec_gsm"
-			 	    android:key="@string/pref_codec_gsm_key"/>
-			 	
-				<CheckBoxPreference 
-				    android:key="@string/pref_codec_g722_key"
-					android:defaultValue="@bool/pref_codec_g722_default"
-					android:title="@string/pref_codec_g722"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_silk8"
-				    android:key="@string/pref_codec_silk8_key"/>
-
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_silk16"
-				    android:key="@string/pref_codec_silk16_key"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_pcmu"
-				    android:key="@string/pref_codec_pcmu_key"/>
-				
-				<CheckBoxPreference 
-					android:title="@string/pref_codec_pcma"
-				    android:key="@string/pref_codec_pcma_key"/>
-				
-			</PreferenceCategory>
+				android:key="@string/pref_codecs_key"/>
 		
 		</PreferenceScreen>
 		
@@ -153,26 +97,7 @@
 					android:title="@string/pref_video_codecs_title"
 					android:key="@string/pref_video_codecs_key"
 				    android:dependency="@string/pref_video_enable_key"
-					android:shouldDisableView="true" >
-				
-					<CheckBoxPreference 
-						android:title="@string/pref_video_codec_vp8_title"
-					    android:key="@string/pref_video_codec_vp8_key"/>
-					
-					<CheckBoxPreference 
-						android:title="@string/pref_video_codec_h264_title"
-					    android:key="@string/pref_video_codec_h264_key"/>
-					
-					<CheckBoxPreference 
-						android:title="@string/pref_video_codec_mpeg4_title"
-					    android:key="@string/pref_video_codec_mpeg4_key"/>
-					
-		 			<CheckBoxPreference 
-						android:title="@string/pref_video_codec_h263_title"
-		 			    android:key="@string/pref_video_codec_h263_key"
-						android:layout="@layout/hidden"/>
-		 			
-				</PreferenceCategory>
+					android:shouldDisableView="true"/>
 				
 		</PreferenceScreen>
 		

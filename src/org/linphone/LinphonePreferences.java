@@ -322,7 +322,13 @@ public class LinphonePreferences {
 	// End of accounts settings
 	
 	// Audio settings
+	public void setEchoCancellation(boolean enable) {
+		getLc().enableEchoCancellation(enable);
+	}
 	
+	public boolean isEchoCancellationEnabled() {
+		return getLc().isEchoCancellationEnabled();
+	}
 	// End of audio settings
 	
 	// Video settings
