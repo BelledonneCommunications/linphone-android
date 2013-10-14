@@ -4,7 +4,6 @@ upload_bw=512
 firewall_policy=0
 
 [sip]
-sip_random_port=1
 contact=sip:unknown@unknown-host
 use_info=0
 use_ipv6=0
