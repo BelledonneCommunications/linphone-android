@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.LinphoneManager.EcCalibrationListener;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
+import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -27,6 +33,7 @@ import android.preference.PreferenceScreen;
 public class SettingsFragment extends PreferencesListFragment implements EcCalibrationListener {
 	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
+	private Handler mHandler = new Handler();
 	
 	public SettingsFragment() {
 		super(R.xml.preferences);
@@ -219,7 +226,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		for (int i = 0; i < nbAccounts; i++) {
 			final int accountId = i;
 			// For each, add menus to configure it
-			Preference account = new Preference(LinphoneService.instance());
+			LedPreference account = new LedPreference(LinphoneService.instance());
 			String username = mPrefs.getAccountUsername(accountId);
 			String domain = mPrefs.getAccountDomain(accountId);
 			
@@ -240,7 +247,45 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 					return false;
 				}
 			});
+			updateAccountLed(account, username, domain, mPrefs.isAccountEnabled(i));
 			accounts.addPreference(account);
+		}
+	}
+	
+	private void updateAccountLed(final LedPreference me, final String username, final String domain, boolean enabled) {
+		if (!enabled) {
+			me.setLed(R.drawable.led_disconnected);
+			return;
+		}
+		
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+				LinphoneAddress addr = null;
+				try {
+					addr = LinphoneCoreFactory.instance().createLinphoneAddress(lpc.getIdentity());
+				} catch (LinphoneCoreException e) {
+					me.setLed(R.drawable.led_disconnected);
+					return;
+				}
+				if (addr.getUserName().equals(username) && addr.getDomain().equals(domain)) {
+					if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
+						me.setLed(R.drawable.led_connected);
+					} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationFailed) {
+						me.setLed(R.drawable.led_error);
+					} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationProgress) {
+						me.setLed(R.drawable.led_inprogress);
+						mHandler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								updateAccountLed(me, username, domain, true);
+							}
+						}, 500);
+					} else {
+						me.setLed(R.drawable.led_disconnected);
+					}
+					break;
+				}
+			}
 		}
 	}
 	
@@ -568,6 +613,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		super.onResume();
 		
 		initAccounts();
+		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 		}

@@ -201,7 +201,16 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountDomain(int n, String domain) {
-		 //TODO
+		String identity = "sip:" + getAccountUsername(n) + "@" + domain;
+		String proxy = "sip:" + domain;
+		
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.setIdentity(identity);
+			prxCfg.setProxy(proxy);
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getAccountDomain(int n) {
@@ -213,7 +222,12 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountProxy(int n, String proxy) {
-		 //TODO
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.setProxy("sip:" + proxy);
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getAccountProxy(int n) {
@@ -225,7 +239,15 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
-		 //TODO
+		try {
+			if (enabled) {
+				getProxyConfig(n).setRoute(getAccountProxy(n));
+			} else {
+				getProxyConfig(n).setRoute(null);
+			}
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setNewAccountContactParameters(String contactParams) {
