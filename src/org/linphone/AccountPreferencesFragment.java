@@ -96,6 +96,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			return true;
 		}		
 	};
+	OnPreferenceChangeListener expiresChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			LinphonePreferences.instance().setExpires(n, newValue.toString());
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
 	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -148,22 +156,17 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	outboundProxy.setChecked(LinphonePreferences.instance().isAccountOutboundProxySet(n));
     	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
     	
-    	final CheckBoxPreference disable = (CheckBoxPreference) advanced.getPreference(2);
+    	EditTextPreference expires = (EditTextPreference) advanced.getPreference(2);
+    	expires.setText(LinphonePreferences.instance().getExpires(n));
+    	expires.setOnPreferenceChangeListener(expiresChangedListener);
+    	expires.setSummary(LinphonePreferences.instance().getExpires(n));
+    	
+    	final CheckBoxPreference disable = (CheckBoxPreference) advanced.getPreference(3);
     	disable.setEnabled(true);
     	disable.setChecked(!LinphonePreferences.instance().isAccountEnabled(n));
     	disable.setOnPreferenceChangeListener(disableChangedListener);
-
-    	final Preference delete = advanced.getPreference(4);
-    	delete.setEnabled(true);
-    	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-	        public boolean onPreferenceClick(Preference preference) {
-	        	LinphonePreferences.instance().deleteAccount(n);
-	        	LinphoneActivity.instance().displaySettings();
-	        	return true;
-	        }
-        });
     	
-    	CheckBoxPreference mainAccount = (CheckBoxPreference) advanced.getPreference(3);
+    	CheckBoxPreference mainAccount = (CheckBoxPreference) advanced.getPreference(4);
     	mainAccount.setChecked(isDefaultAccount);
     	mainAccount.setEnabled(!mainAccount.isChecked());
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
@@ -176,5 +179,15 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
+
+    	final Preference delete = advanced.getPreference(5);
+    	delete.setEnabled(true);
+    	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        public boolean onPreferenceClick(Preference preference) {
+	        	LinphonePreferences.instance().deleteAccount(n);
+	        	LinphoneActivity.instance().displaySettings();
+	        	return true;
+	        }
+        });
 	}
 }

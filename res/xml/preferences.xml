@@ -278,11 +278,6 @@
 			    android:title="@string/pref_incoming_call_timeout_title"
 			    android:key="@string/pref_incoming_call_timeout_key"
 			    android:layout="@layout/hidden"/>
-			 
-			 <EditTextPreference 
-				android:title="@string/pref_expire_title"
-				android:key="@string/pref_expire_key"
-			  	android:numeric="integer" />
 				 
 			 <EditTextPreference 
 				android:title="@string/pref_image_sharing_server_title"

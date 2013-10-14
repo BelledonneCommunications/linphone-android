@@ -289,7 +289,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 				mPrefs.setTransport(getString(R.string.pref_transport_tls_key));
 			}
 			
-			mPrefs.setExpire("604800");
+			mPrefs.setNewAccountExpires("604800");
 			mPrefs.setNewAccountOutboundProxyEnabled(true);
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
