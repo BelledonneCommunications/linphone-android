@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @author Sylvain Berfini
  */
 public class LinphonePreferences {
+	private static final int LINPHONE_CORE_RANDOM_PORT = -1;
 	private static LinphonePreferences instance;
 	private Context mContext;
 	
@@ -403,11 +404,19 @@ public class LinphonePreferences {
 	}
 	
 	public void useRandomPort(boolean enabled) {
-		getConfig().setBool("sip", "sip_random_port", enabled); //FIXME
+		getConfig().setBool("app", "random_port", enabled);
+		if (enabled) {
+			setSipPort(LINPHONE_CORE_RANDOM_PORT);
+		} else {
+			if (getTransport().equals(getString(R.string.pref_transport_tls)))
+				setSipPort(5061);
+			else
+				setSipPort(5060);
+		}
 	}
 	
 	public boolean isUsingRandomPort() {
-		return getConfig().getBool("sip", "sip_random_port", true); //FIXME
+		return getConfig().getBool("app", "random_port", true);
 	}
 	
 	public String getSipPort() {
@@ -423,9 +432,6 @@ public class LinphonePreferences {
 	}
 	
 	public void setSipPort(int port) {
-		if (port <= 0)
-			return;
-		
 		Transports transports = getLc().getSignalingTransportPorts();
 		if (transports.udp > 0)
 			transports.udp = port;

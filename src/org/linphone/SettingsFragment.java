@@ -466,7 +466,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		findPreference(getString(R.string.pref_sip_port_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setSipPort((Integer) newValue);
+				int port = -1;
+				try {
+					port = Integer.parseInt(newValue.toString());
+				} catch (NumberFormatException nfe) { }
+				
+				mPrefs.setSipPort(port);
 				preference.setSummary(newValue.toString());
 				return true;
 			}
