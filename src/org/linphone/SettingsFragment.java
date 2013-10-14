@@ -11,6 +11,7 @@ import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -54,6 +55,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private void initSettings() {
 		//initAccounts(); Init accounts on Resume instead of on Create to update the account list when coming back from wizard
 		
+		initAudioSettings();
 		initNetworkSettings();
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 		
@@ -100,6 +102,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 
 	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
+		setAudioPreferencesListener();
 		setNetworkPreferencesListener();
 		setAdvancedPreferencesListener();
 	}
@@ -375,6 +378,63 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		pref.setEntryValues(contents);
 	}
 	
+	private void initAudioSettings() {
+		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_codecs_key));
+		codecs.removeAll();
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		for(final PayloadType pt : lc.getAudioCodecs()) {
+			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
+			codec.setTitle(pt.getMime());
+			codec.setSummary(pt.getRate() + " Hz");
+			codec.setChecked(lc.isPayloadTypeEnabled(pt));
+			
+			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					boolean enable = (Boolean) newValue;
+					try {
+						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
+					} catch (LinphoneCoreException e) {
+						e.printStackTrace();
+					}
+					return true;
+				}
+			});
+			
+			codecs.addPreference(codec);
+		}
+		
+		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
+		echoCancellation.setChecked(mPrefs.isEchoCancellationEnabled());
+	}
+	
+	private void setAudioPreferencesListener() {
+		findPreference(getString(R.string.pref_echo_cancellation_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enabled = (Boolean) newValue;
+				mPrefs.setEchoCancellation(enabled);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_echo_canceller_calibration_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				synchronized (SettingsFragment.this) {
+					try {
+						LinphoneManager.getInstance().startEcCalibration(SettingsFragment.this);
+						preference.setSummary(R.string.ec_calibrating);
+					} catch (LinphoneCoreException e) {
+						Log.w(e, "Cannot calibrate EC");
+					}
+				}
+				return true;
+			}
+		});
+	}
+	
 	private void initNetworkSettings() {
 		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
 		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
@@ -609,8 +669,24 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	}
 	
 	@Override
-	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-		
+	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
+		mHandler.post(new Runnable() {
+			public void run() {
+				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
+				Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
+				
+				if (status == EcCalibratorStatus.DoneNoEcho) {
+					echoCancellerCalibration.setSummary(R.string.no_echo);
+					echoCancellation.setChecked(false);
+				} else if (status == EcCalibratorStatus.Done) {
+					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+					echoCancellation.setChecked(true);
+				} else if (status == EcCalibratorStatus.Failed) {
+					echoCancellerCalibration.setSummary(R.string.failed);
+					echoCancellation.setChecked(true);
+				}
+			}
+		});
 	}
 	
 	@Override
