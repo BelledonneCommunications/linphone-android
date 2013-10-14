@@ -36,6 +36,11 @@
         	android:dialogMessage="@string/pref_help_outbound_proxy"
         	android:summary="@string/pref_help_outbound_proxy"
             android:persistent="true"/>
+			 
+		 <EditTextPreference 
+			android:title="@string/pref_expire_title"
+			android:key="@string/pref_expire_key"
+		  	android:numeric="integer" />
         
         <CheckBoxPreference
         	android:title="@string/pref_disable_account"

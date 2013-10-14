@@ -50,9 +50,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		initNetworkSettings();
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 		
-		findPreference(getString(R.string.pref_image_sharing_server_key)).setSummary(mPrefs.getSharingPictureServerUrl());
-		findPreference(getString(R.string.pref_remote_provisioning_key)).setSummary(mPrefs.getRemoteProvisioningUrl());
-		findPreference(getString(R.string.pref_expire_key)).setSummary(mPrefs.getExpire());
+		initAdvancedSettings();
 		
 		// Add action on About button
 		findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -96,6 +94,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
 		setNetworkPreferencesListener();
+		setAdvancedPreferencesListener();
 	}
 
 	// Read the values set in resources and hides the settings accordingly
@@ -203,6 +202,11 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	
 	private void hidePreference(Preference preference) {
 		preference.setLayoutResource(R.layout.hidden);
+	}
+	
+	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
+		findPreference(getString(pref)).setDefaultValue(value);
+		findPreference(getString(pref)).setSummary(value);
 	}
 	
 	private void initAccounts() {
@@ -351,8 +355,8 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		// Disable sip port choice if port is random
 		Preference sipPort = findPreference(getString(R.string.pref_sip_port_key));
 		sipPort.setEnabled(!randomPort.isChecked());
-		sipPort.setSummary(mPrefs.getSipPortIfNotRandom());
-		sipPort.setDefaultValue(mPrefs.getSipPortIfNotRandom());
+		sipPort.setSummary(mPrefs.getSipPort());
+		sipPort.setDefaultValue(mPrefs.getSipPort());
 		
 		Preference stun = findPreference(getString(R.string.pref_stun_server_key));
 		stun.setSummary(mPrefs.getStunServer());
@@ -407,7 +411,9 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		findPreference(getString(R.string.pref_transport_use_random_ports_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean randomPort = (Boolean) newValue;
 				mPrefs.useRandomPort((Boolean) newValue);
+				findPreference(getString(R.string.pref_sip_port_key)).setEnabled(!randomPort);
 				return true;
 			}
 		});
@@ -415,7 +421,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		findPreference(getString(R.string.pref_sip_port_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setSipPortIfNotRandom((Integer) newValue);
+				mPrefs.setSipPort((Integer) newValue);
 				preference.setSummary(newValue.toString());
 				return true;
 			}
@@ -458,6 +464,95 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.useIpv6((Boolean) newValue);
+				return true;
+			}
+		});
+	}
+	
+	private void initAdvancedSettings() {
+		((CheckBoxPreference)findPreference(getString(R.string.pref_debug_key))).setChecked(mPrefs.isDebugEnabled());
+		((CheckBoxPreference)findPreference(getString(R.string.pref_background_mode_key))).setChecked(mPrefs.isBackgroundModeEnabled());
+		((CheckBoxPreference)findPreference(getString(R.string.pref_animation_enable_key))).setChecked(mPrefs.areAnimationsEnabled());
+		((CheckBoxPreference)findPreference(getString(R.string.pref_autostart_key))).setChecked(mPrefs.isAutoStartEnabled());
+		setPreferenceDefaultValueAndSummary(R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
+		setPreferenceDefaultValueAndSummary(R.string.pref_remote_provisioning_key, mPrefs.getRemoteProvisioningUrl());
+		setPreferenceDefaultValueAndSummary(R.string.pref_display_name_key, mPrefs.getDefaultDisplayName());
+		setPreferenceDefaultValueAndSummary(R.string.pref_user_name_key, mPrefs.getDefaultUsername());
+	}
+	
+	private void setAdvancedPreferencesListener() {
+		findPreference(getString(R.string.pref_debug_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean value = (Boolean) newValue;
+				mPrefs.setDebugEnabled(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_background_mode_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean value = (Boolean) newValue;
+				mPrefs.setBackgroundModeEnabled(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_animation_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean value = (Boolean) newValue;
+				mPrefs.setAnimationsEnabled(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_autostart_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean value = (Boolean) newValue;
+				mPrefs.setAutoStart(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_image_sharing_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = (String) newValue;
+				mPrefs.setSharingPictureServerUrl(value);
+				preference.setSummary(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_remote_provisioning_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = (String) newValue;
+				mPrefs.setRemoteProvisioningUrl(value);
+				preference.setSummary(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_display_name_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = (String) newValue;
+				mPrefs.setDefaultDisplayName(value);
+				preference.setSummary(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_user_name_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = (String) newValue;
+				mPrefs.setDefaultUsername(value);
+				preference.setSummary(value);
 				return true;
 			}
 		});

@@ -572,7 +572,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
 
-		mLc.setRing(null);
+		mLc.setRing(mPrefs.getRingtone(null));
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
