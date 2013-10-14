@@ -40,6 +40,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		super(R.xml.account_preferences);
 	}
 	
+	@Override
+	public void onDestroy() {
+		LinphoneManager.getLc().refreshRegisters();
+		super.onDestroy();
+	}
+	
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -69,7 +75,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			LinphonePreferences.instance().setAccountPassword(n, newValue.toString());
-			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
