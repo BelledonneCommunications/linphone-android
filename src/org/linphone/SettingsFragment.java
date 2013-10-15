@@ -1,5 +1,24 @@
 package org.linphone;
 
+/*
+SettingsFragment.java
+Copyright (C) 2013  Belledonne Communications, Grenoble, France
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +50,9 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 
+/**
+ * @author Sylvain Berfini
+ */
 public class SettingsFragment extends PreferencesListFragment implements EcCalibrationListener {
 	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
@@ -53,7 +75,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	
 	// Inits the values or the listener on some settings
 	private void initSettings() {
-		//initAccounts(); Init accounts on Resume instead of on Create to update the account list when coming back from wizard
+		//Init accounts on Resume instead of on Create to update the account list when coming back from wizard
 		
 		initAudioSettings();
 		initVideoSettings();

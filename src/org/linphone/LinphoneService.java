@@ -611,10 +611,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		void onCallStateChanged(LinphoneCall call, State state, String message);
 	}
 
-	public void changeRingtone(String ringtone) {
-		LinphonePreferences.instance().setRingtone(ringtone);
-	}
-
 	public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
 		String uriString = LinphonePreferences.instance().getRingtone(android.provider.Settings.System.DEFAULT_RINGTONE_URI.toString());
 		try {

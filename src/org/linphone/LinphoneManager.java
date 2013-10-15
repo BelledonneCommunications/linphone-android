@@ -536,6 +536,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 			
 			initLiblinphone(c);
 
+			PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
+			if (prefMigrator.isMigrationNeeded()) {
+				prefMigrator.doMigration();
+			}
+
 			if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 				Compatibility.initPushNotificationService(mServiceContext);
 			}
@@ -864,7 +869,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 				return InCallActivity.instance();
 			else if (IncomingCallActivity.isInstanciated())
 				return IncomingCallActivity.instance();
-			else
+			else if (mServiceContext != null)
+				return mServiceContext;
+			else if (LinphoneService.isReady())
 				return LinphoneService.instance().getApplicationContext();
 		} catch (Exception e) {
 			e.printStackTrace();
