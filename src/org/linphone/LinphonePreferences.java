@@ -419,7 +419,21 @@ public class LinphonePreferences {
 	// End of video settings
 	
 	// Call settings
+	public boolean useRfc2833Dtmfs() {
+		return getLc().getUseRfc2833ForDtmfs();
+	}
 	
+	public void sendDtmfsAsRfc2833(boolean use) {
+		getLc().setUseRfc2833ForDtmfs(use);
+	}
+	
+	public boolean useSipInfoDtmfs() {
+		return getLc().getUseSipInfoForDtmfs();
+	}
+	
+	public void sendDTMFsAsSipInfo(boolean use) {
+		getLc().setUseSipInfoForDtmfs(use);
+	}
 	// End of call settings
 	
 	// Network settings
