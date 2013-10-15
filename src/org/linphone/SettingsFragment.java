@@ -56,9 +56,8 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		//initAccounts(); Init accounts on Resume instead of on Create to update the account list when coming back from wizard
 		
 		initAudioSettings();
+		initVideoSettings();
 		initNetworkSettings();
-		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
-		
 		initAdvancedSettings();
 		
 		// Add action on About button
@@ -80,29 +79,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	        	return true;
 			}
 		});
-		
-		if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
-			Preference prefH264 = findPreference(getString(R.string.pref_video_codec_h264_key));
-			prefH264.setEnabled(false);
-			prefH264.setSummary(R.string.pref_video_codec_h264_unavailable);
-			
-			Preference prefMPEG4 = findPreference(getString(R.string.pref_video_codec_mpeg4_key));
-			prefMPEG4.setEnabled(false);
-			prefMPEG4.setSummary(R.string.pref_video_codec_mpeg4_unavailable);
-		} else {
-			if (!Version.hasFastCpuWithAsmOptim())
-			{
-				// Android without neon doesn't support H264
-				Log.w("CPU does not have asm optimisations available, disabling H264");
-				findPreference(getString(R.string.pref_video_codec_h264_key)).setEnabled(false);
-				findPreference(getString(R.string.pref_video_codec_h264_key)).setDefaultValue(false);
-			}
-		}
 	}
 
 	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
 		setAudioPreferencesListener();
+		setVideoPreferencesListener();
 		setNetworkPreferencesListener();
 		setAdvancedPreferencesListener();
 	}
@@ -344,6 +326,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			values.add(getString(R.string.pref_transport_tls_key));
 		}
 		setListPreferenceValues(pref, entries, values);
+		
 		String value = mPrefs.getTransport();
 		pref.setSummary(value);
 		String key = getString(R.string.pref_transport_udp_key);
@@ -365,8 +348,16 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		values.add(getString(R.string.pref_preferred_video_size_vga_key));
 		entries.add(getString(R.string.pref_preferred_video_size_qvga));
 		values.add(getString(R.string.pref_preferred_video_size_qvga_key));
-
 		setListPreferenceValues(pref, entries, values);
+		
+		String value = mPrefs.getPreferredVideoSize();
+		pref.setSummary(value);
+		String key = getString(R.string.pref_preferred_video_size_qvga_key);
+		if (value.equals(getString(R.string.pref_preferred_video_size_vga)))
+			key = getString(R.string.pref_preferred_video_size_vga_key);
+		else if (value.equals(getString(R.string.pref_preferred_video_size_hd)))
+			key = getString(R.string.pref_preferred_video_size_hd_key);
+		pref.setDefaultValue(key);
 	}
 	
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
@@ -430,6 +421,110 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 						Log.w(e, "Cannot calibrate EC");
 					}
 				}
+				return true;
+			}
+		});
+	}
+	
+	private void initVideoSettings() {
+		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
+
+		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_video_codecs_key));
+		codecs.removeAll();
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		for(final PayloadType pt : lc.getVideoCodecs()) {
+			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
+			codec.setTitle(pt.getMime());
+			
+			if (!pt.getMime().equals("VP8")) {
+				if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
+					continue;
+				} else {
+					if (!Version.hasFastCpuWithAsmOptim() && pt.getMime().equals("H264"))
+					{
+						// Android without neon doesn't support H264
+						Log.w("CPU does not have asm optimisations available, disabling H264");
+						continue;
+					}
+				}
+			}
+			codec.setChecked(lc.isPayloadTypeEnabled(pt));
+			
+			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					boolean enable = (Boolean) newValue;
+					try {
+						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
+					} catch (LinphoneCoreException e) {
+						e.printStackTrace();
+					}
+					return true;
+				}
+			});
+			
+			codecs.addPreference(codec);
+		}
+		
+		((CheckBoxPreference) findPreference(getString(R.string.pref_video_enable_key))).setChecked(mPrefs.isVideoEnabled());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_video_use_front_camera_key))).setChecked(mPrefs.useFrontCam());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_share_my_video_key))).setChecked(mPrefs.shouldAutomaticallyShareMyVideo());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_accept_video_key))).setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
+	}
+	
+	private void setVideoPreferencesListener() {
+		findPreference(getString(R.string.pref_video_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enable = (Boolean) newValue;
+				mPrefs.enableVideo(enable);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_video_use_front_camera_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enable = (Boolean) newValue;
+				mPrefs.setFrontCamAsDefault(enable);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_video_initiate_call_with_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enable = (Boolean) newValue;
+				mPrefs.setInitiateVideoCall(enable);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_video_automatically_share_my_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enable = (Boolean) newValue;
+				mPrefs.setAutomaticallyShareMyVideo(enable);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_video_automatically_accept_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enable = (Boolean) newValue;
+				mPrefs.setAutomaticallyAcceptVideoRequests(enable);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_preferred_video_size_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setPreferredVideoSize(newValue.toString());
+				preference.setSummary(mPrefs.getPreferredVideoSize());
 				return true;
 			}
 		});

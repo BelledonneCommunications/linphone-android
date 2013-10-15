@@ -8,6 +8,7 @@
 	<string name="push_sender_id">622464153529</string>
 
 	<string name="default_domain">sip.linphone.org</string>
+	<string name="default_stun">stun.linphone.org</string>
 	<bool name="override_domain_using_default_one">false</bool> <!-- Replace the domain for outgoing calls by the one above -->
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 

@@ -580,6 +580,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 		int availableCores = Runtime.getRuntime().availableProcessors();
 		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
 		mLc.setCpuCount(availableCores);
+		
+		int camId = 0;
+		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
+		for (AndroidCamera androidCamera : cameras) {
+			if (androidCamera.frontFacing == mPrefs.useFrontCam())
+				camId = androidCamera.id;
+		}
+		LinphoneManager.getLc().setVideoDevice(camId);
         
 		TimerTask lTask = new TimerTask() {
 			@Override
@@ -597,7 +605,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
-		copyFromPackage(R.raw.linphonerc, new File(mLinphoneInitialConfigFile).getName());
+		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneInitialConfigFile).getName());
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
 		copyIfNotExist(R.raw.rootca, mLinphoneRootCaFile);
 	}
