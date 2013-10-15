@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-	    	android:textColor="@color/text_contrast" />
+	    	android:textColor="@android:color/black" />
         
     </LinearLayout>
     
