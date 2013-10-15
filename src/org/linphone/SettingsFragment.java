@@ -244,7 +244,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 			
 			if (defaultAccountID == i) {
-				account.setSummary(R.string.pref_default_account);
+				account.setSummary(R.string.default_account_flag);
 			}
 			
 			account.setOnPreferenceClickListener(new OnPreferenceClickListener() 
