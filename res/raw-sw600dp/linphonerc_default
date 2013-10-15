@@ -11,3 +11,6 @@ keepalive_period=30000
 
 [video]
 size=qvga
+
+[app]
+sharing_server=https://www.linphone.org:444/upload.php

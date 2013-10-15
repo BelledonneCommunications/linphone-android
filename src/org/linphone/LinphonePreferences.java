@@ -333,19 +333,70 @@ public class LinphonePreferences {
 	
 	// Video settings
 	public boolean useFrontCam() {
-		return false; //TODO
+		return getConfig().getBool("app", "front_camera_default", true);
 	}
-
+	
+	public void setFrontCamAsDefault(boolean frontcam) {
+		getConfig().setBool("app", "front_camera_default", frontcam);
+	}
+	
 	public boolean isVideoEnabled() {
-		return false; //TODO
+		return getLc().isVideoSupported() && getLc().isVideoEnabled();
+	}
+	
+	public void enableVideo(boolean enable) {
+		if (enable) {
+			getLc().enableVideo(shouldAutomaticallyShareMyVideo(), true);
+		} else {
+			getLc().enableVideo(false, false);
+		}
 	}
 
 	public boolean shouldInitiateVideoCall() {
-		return false; //TODO
+		return getLc().getVideoAutoInitiatePolicy();
+	}
+	
+	public void setInitiateVideoCall(boolean initiate) {
+		getLc().setVideoPolicy(initiate, shouldAutomaticallyAcceptVideoRequests());
 	}
 
 	public boolean shouldAutomaticallyAcceptVideoRequests() {
+		return getLc().getVideoAutoAcceptPolicy();
+	}
+	
+	public void setAutomaticallyAcceptVideoRequests(boolean accept) {
+		getLc().setVideoPolicy(shouldInitiateVideoCall(), accept);
+	}
+	
+	public boolean shouldAutomaticallyShareMyVideo() {
 		return false; //TODO
+	}
+	
+	public void setAutomaticallyShareMyVideo(boolean accept) {
+		//TODO
+	}
+	
+	public String getPreferredVideoSize() {
+		//LinphoneCore can only return video size (width and height), not the name
+		return getConfig().getString("video", "size", "qvga");
+	}
+	
+	public void setPreferredVideoSize(String preferredVideoSize) {
+		int bandwidth = 512 + 60;
+		if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_hd_key))) {
+			preferredVideoSize = "uxga";
+			bandwidth = 1024 + 60;
+		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_vga_key))) {
+			preferredVideoSize = "vga";
+			bandwidth = 512 + 60;
+		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_qvga_key))) {
+			preferredVideoSize = "qvga";
+			bandwidth = 380 + 60;
+		}
+
+		getLc().setPreferredVideoSizeByName(preferredVideoSize);
+		getLc().setUploadBandwidth(bandwidth);
+		getLc().setDownloadBandwidth(bandwidth);
 	}
 	// End of video settings
 	
