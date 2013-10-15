@@ -1,21 +1,8 @@
 package org.linphone;
 
-import org.linphone.core.LinphoneAuthInfo;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.FirewallPolicy;
-import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.core.LinphoneCore.Transports;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.LpConfig;
-import org.linphone.mediastream.Log;
-
-import android.content.Context;
-
 /*
-ChatListFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+LinphonePreferences.java
+Copyright (C) 2013  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -31,6 +18,20 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAuthInfo;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.FirewallPolicy;
+import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCore.Transports;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LpConfig;
+import org.linphone.mediastream.Log;
+
+import android.content.Context;
 
 /**
  * @author Sylvain Berfini
@@ -53,7 +54,7 @@ public class LinphonePreferences {
 	
 	private String getString(int key) {
 		if (mContext == null) {
-			mContext = LinphoneService.instance();
+			mContext = LinphoneManager.getInstance().getContext();
 		}
 		
 		return mContext.getString(key);
@@ -69,6 +70,10 @@ public class LinphonePreferences {
 			return lc.getConfig();
 		
 		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
+	}
+	
+	public void removePreviousVersionAuthInfoRemoval() {
+		getConfig().setBool("sip", "store_auth_info", true);
 	}
 	
 	// App settings
@@ -110,8 +115,18 @@ public class LinphonePreferences {
 	
 	private LinphoneAuthInfo getAuthInfo(int n) {
 		LinphoneAuthInfo[] authsInfos = getLc().getAuthInfosList();
-		if (n < 0 || n >= authsInfos.length)
+		// In case you have multiple proxy configs with same auth info
+		if (n > 0 && n >= authsInfos.length) {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			try {
+				LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
+				return getLc().findAuthInfo(addr.getUserName(), null);
+			} catch (LinphoneCoreException e) { }
 			return null;
+		}
+		else if (n < 0) {
+			return null;
+		}
 		return authsInfos[n];
 	}
 	
@@ -170,7 +185,8 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountUsername(int n) {
-		return getAuthInfo(n).getUsername();
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		return authInfo == null ? null : authInfo.getUsername();
 	}
 
 	public void setNewAccountUserId(String userId) {
@@ -182,7 +198,8 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountUserId(int n) {
-		return getAuthInfo(n).getUserId();
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		return authInfo == null ? null : authInfo.getUserId();
 	}
 
 	public void setNewAccountPassword(String password) {
@@ -194,7 +211,8 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountPassword(int n) {
-		return getAuthInfo(n).getPassword();
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		return authInfo == null ? null : authInfo.getPassword();
 	}
 
 	public void setNewAccountDomain(String domain) {
@@ -294,7 +312,7 @@ public class LinphonePreferences {
 	}
 
 	public int getAccountCount() {
-		return Math.min(getLc().getProxyConfigList().length, getLc().getAuthInfosList().length);
+		return getLc().getProxyConfigList().length;
 	}
 
 	public void setAccountEnabled(int n, boolean disabled) {
@@ -461,14 +479,20 @@ public class LinphonePreferences {
 	}
 	
 	public void useRandomPort(boolean enabled) {
+		useRandomPort(enabled, true);
+	}
+	
+	public void useRandomPort(boolean enabled, boolean apply) {
 		getConfig().setBool("app", "random_port", enabled);
-		if (enabled) {
-			setSipPort(LINPHONE_CORE_RANDOM_PORT);
-		} else {
-			if (getTransport().equals(getString(R.string.pref_transport_tls)))
-				setSipPort(5061);
-			else
-				setSipPort(5060);
+		if (apply) {
+			if (enabled) {
+				setSipPort(LINPHONE_CORE_RANDOM_PORT);
+			} else {
+				if (getTransport().equals(getString(R.string.pref_transport_tls)))
+					setSipPort(5061);
+				else
+					setSipPort(5060);
+			}
 		}
 	}
 	
