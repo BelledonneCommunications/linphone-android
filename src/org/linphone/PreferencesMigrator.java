@@ -46,7 +46,6 @@ public class PreferencesMigrator {
 	public boolean isMigrationNeeded() {
 		int accountNumber = mOldPrefs.getInt(getString(R.string.pref_extra_accounts), -1);
 		boolean migrationNeeded = accountNumber != -1;
-		Log.w("Preference migration needed ? " + migrationNeeded);
 		return migrationNeeded;
 	}
 	
