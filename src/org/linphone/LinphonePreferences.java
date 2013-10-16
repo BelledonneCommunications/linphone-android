@@ -287,8 +287,30 @@ public class LinphonePreferences {
 	
 	public void setExpires(int n, String expire) {
 		try {
-			getProxyConfig(n).setExpires(Integer.parseInt(expire));
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.setExpires(Integer.parseInt(expire));
+			prxCfg.done();
 		} catch (NumberFormatException nfe) { }
+	}
+	
+	public String getPrefix(int n) {
+		return getProxyConfig(n).getDialPrefix();
+	}
+	
+	public void setPrefix(int n, String prefix) {
+		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.setDialPrefix(prefix);
+		prxCfg.done();
+	}
+	
+	public boolean getReplacePlusByZeroZero(int n) {
+		return getProxyConfig(n).getDialEscapePlus();
+	}
+	
+	public void setReplacePlusByZeroZero(int n, boolean replace) {
+		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.setDialEscapePlus(replace);
+		prxCfg.done();
 	}
 	
 	public void setDefaultAccount(int accountIndex) {
@@ -592,7 +614,6 @@ public class LinphonePreferences {
 		getLc().setMediaEncryption(menc);
 	}
 	
-	// Push Notifications
 	public void setPushNotificationEnabled(boolean enable) {
 		 getConfig().setBool("app", "push_notification", enable);
 	}
@@ -608,7 +629,6 @@ public class LinphonePreferences {
 	public String getPushNotificationRegistrationID() {
 		return getConfig().getString("app", "push_notification_regid", null);
 	}
-	// End of Push Notifications
 	
 	public void useIpv6(Boolean enable) {
 		 getLc().enableIpv6(enable);
@@ -617,7 +637,6 @@ public class LinphonePreferences {
 	public boolean isUsingIpv6() {
 		return getLc().isIpv6Enabled();
 	}
-
 	// End of network settings
 	
 	// Advanced settings

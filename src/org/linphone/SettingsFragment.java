@@ -555,11 +555,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	}
 	
 	private void initCallSettings() {
-		/*
-		setPreferenceDefaultValueAndSummary(R.string.pref_prefix_key, mPrefs.getPrefix());
-		((CheckBoxPreference) findPreference(getString(R.string.pref_escape_plus))).setChecked(mPrefs.replacePlusByZeroZero());
-		*/
-		
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
 		if (mPrefs.useRfc2833Dtmfs()) {
@@ -574,27 +569,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	}
 	
 	private void setCallPreferencesListener() {
-		/*
-		findPreference(getString(R.string.pref_prefix_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				String value = newValue.toString();
-				preference.setSummary(value);
-				mPrefs.setPrefix(value);
-				return true;
-			}
-		});
-		
-		findPreference(getString(R.string.pref_escape_plus)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean value = (Boolean) newValue;
-				mPrefs.setReplacePlusByZeroZero(value);
-				return true;
-			}
-		});
-		*/
-		
 		findPreference(getString(R.string.pref_rfc2833_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
