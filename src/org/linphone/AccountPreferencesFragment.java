@@ -35,9 +35,11 @@ import android.text.InputType;
  */
 public class AccountPreferencesFragment extends PreferencesListFragment {
 	private int n;
+	private LinphonePreferences mPrefs;
 	
 	public AccountPreferencesFragment() {
 		super(R.xml.account_preferences);
+		mPrefs = LinphonePreferences.instance();
 	}
 	
 	@Override
@@ -58,7 +60,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener usernameChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountUsername(n, newValue.toString());
+			mPrefs.setAccountUsername(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -66,7 +68,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener useridChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountUserId(n, newValue.toString());
+			mPrefs.setAccountUserId(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -74,14 +76,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener passwordChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountPassword(n, newValue.toString());
+			mPrefs.setAccountPassword(n, newValue.toString());
 			return true;
 		}		
 	};
 	OnPreferenceChangeListener domainChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountDomain(n, newValue.toString());
+			mPrefs.setAccountDomain(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -89,7 +91,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener proxyChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountProxy(n, newValue.toString());
+			mPrefs.setAccountProxy(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -97,22 +99,39 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener outboundProxyChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountOutboundProxyEnabled(n, (Boolean) newValue);
+			mPrefs.setAccountOutboundProxyEnabled(n, (Boolean) newValue);
 			return true;
 		}		
 	};
 	OnPreferenceChangeListener expiresChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setExpires(n, newValue.toString());
+			mPrefs.setExpires(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
 	};
+	OnPreferenceChangeListener prefixChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			String value = newValue.toString();
+			preference.setSummary(value);
+			mPrefs.setPrefix(n, value);
+			return true;
+		}
+	};
+	OnPreferenceChangeListener escapeChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean value = (Boolean) newValue;
+			mPrefs.setReplacePlusByZeroZero(n, value);
+			return true;
+		}
+	};
 	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			LinphonePreferences.instance().setAccountEnabled(n, (Boolean) newValue);
+			mPrefs.setAccountEnabled(n, (Boolean) newValue);
 			return true;
 		}		
 	};
@@ -124,60 +143,71 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	};
 	
 	private void manageAccountPreferencesFields(PreferenceScreen parent) {
-		boolean isDefaultAccount = LinphonePreferences.instance().getDefaultAccountIndex() == n;
+		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
 		
-    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().getPreference(0);
+    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
-    	username.setText(LinphonePreferences.instance().getAccountUsername(n));
+    	username.setText(mPrefs.getAccountUsername(n));
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	username.setOnPreferenceChangeListener(usernameChangedListener);
     	username.setSummary(username.getText());
     	
     	EditTextPreference userid = (EditTextPreference) account.getPreference(1);
-    	userid.setText(LinphonePreferences.instance().getAccountUserId(n));
+    	userid.setText(mPrefs.getAccountUserId(n));
     	userid.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	userid.setOnPreferenceChangeListener(useridChangedListener);
     	userid.setSummary(userid.getText());
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-    	password.setText(LinphonePreferences.instance().getAccountPassword(n));
+    	password.setText(mPrefs.getAccountPassword(n));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     	password.setOnPreferenceChangeListener(passwordChangedListener);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
-    	domain.setText(LinphonePreferences.instance().getAccountDomain(n));
+    	domain.setText(mPrefs.getAccountDomain(n));
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	domain.setOnPreferenceChangeListener(domainChangedListener);
     	domain.setSummary(domain.getText());
-
-    	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().getPreference(1);
+		
+    	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_advanced_key));
     	EditTextPreference proxy = (EditTextPreference) advanced.getPreference(0);
-    	proxy.setText(LinphonePreferences.instance().getAccountProxy(n));
+    	proxy.setText(mPrefs.getAccountProxy(n));
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	proxy.setOnPreferenceChangeListener(proxyChangedListener);
     	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
     	
     	CheckBoxPreference outboundProxy = (CheckBoxPreference) advanced.getPreference(1);
-    	outboundProxy.setChecked(LinphonePreferences.instance().isAccountOutboundProxySet(n));
+    	outboundProxy.setChecked(mPrefs.isAccountOutboundProxySet(n));
     	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
     	
     	EditTextPreference expires = (EditTextPreference) advanced.getPreference(2);
-    	expires.setText(LinphonePreferences.instance().getExpires(n));
+    	expires.setText(mPrefs.getExpires(n));
     	expires.setOnPreferenceChangeListener(expiresChangedListener);
-    	expires.setSummary(LinphonePreferences.instance().getExpires(n));
+    	expires.setSummary(mPrefs.getExpires(n));
+
+    	EditTextPreference prefix = (EditTextPreference) advanced.getPreference(3);
+    	String prefixValue = mPrefs.getPrefix(n);
+    	prefix.setSummary(prefixValue);
+    	prefix.setText(prefixValue);
+    	prefix.setOnPreferenceChangeListener(prefixChangedListener);
     	
-    	final CheckBoxPreference disable = (CheckBoxPreference) advanced.getPreference(3);
+    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(4);
+		escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
+		escape.setOnPreferenceChangeListener(escapeChangedListener);
+    	
+    	PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
+    	final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);
     	disable.setEnabled(true);
-    	disable.setChecked(!LinphonePreferences.instance().isAccountEnabled(n));
+    	disable.setChecked(!mPrefs.isAccountEnabled(n));
     	disable.setOnPreferenceChangeListener(disableChangedListener);
     	
-    	CheckBoxPreference mainAccount = (CheckBoxPreference) advanced.getPreference(4);
+    	CheckBoxPreference mainAccount = (CheckBoxPreference) manage.getPreference(1);
     	mainAccount.setChecked(isDefaultAccount);
     	mainAccount.setEnabled(!mainAccount.isChecked());
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
 			public boolean onPreferenceClick(Preference preference) {
-				LinphonePreferences.instance().setDefaultAccount(n);
+				mPrefs.setDefaultAccount(n);
 				disable.setEnabled(false);
 				disable.setChecked(false);
 				preference.setEnabled(false);
@@ -185,11 +215,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			}
 		});
 
-    	final Preference delete = advanced.getPreference(5);
+    	final Preference delete = manage.getPreference(2);
     	delete.setEnabled(true);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
-	        	LinphonePreferences.instance().deleteAccount(n);
+	        	mPrefs.deleteAccount(n);
 	        	LinphoneActivity.instance().displaySettings();
 	        	return true;
 	        }

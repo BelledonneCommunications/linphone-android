@@ -430,6 +430,7 @@
 	<string name="pref_help_auth_userid">Enter authentication userid (optionnal)</string>
 	
 	<string name="pref_upnp_enable">Enable UPNP</string>
+	<string name="pref_manage">Manage</string>
 	
 	<string name="wait">Please wait...</string>
 	<string name="importing_messages">Updating messages database</string>

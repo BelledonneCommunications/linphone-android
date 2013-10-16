@@ -103,14 +103,6 @@
 		
 		<PreferenceScreen 
 		    android:title="@string/call">
-				
-			<EditTextPreference 
-			    android:title="@string/pref_prefix"
-				android:key="@string/pref_prefix_key"/>
-	
-			<CheckBoxPreference 
-				android:title="@string/pref_escape_plus"
-			    android:key="@string/pref_escape_plus_key"/>
 			
 			<CheckBoxPreference 
 				android:title="@string/pref_sipinfo_dtmf"

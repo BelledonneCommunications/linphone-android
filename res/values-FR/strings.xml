@@ -371,6 +371,7 @@
 	<string name="call_state_incoming">Reçu</string>
 	
 	<string name="pref_background_mode">Actif en arrière plan</string>
+	<string name="pref_manage">Gestion</string>
 	
 	<string name="show_image">Afficher</string>
 	<string name="download_image">Télécharger</string>
