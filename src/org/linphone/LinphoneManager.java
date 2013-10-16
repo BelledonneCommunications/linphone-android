@@ -85,6 +85,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.hardware.Sensor;
@@ -99,6 +100,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -164,7 +166,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mListenerDispatcher = new ListenerDispatcher(listener);
 		basePath = c.getFilesDir().getAbsolutePath();
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
-		mLinphoneInitialConfigFile = basePath + "/linphonerc";
+		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
 		mRingSoundFile = basePath + "/oldphone_mono.wav"; 
@@ -183,7 +185,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private static final int dbStep = 4;
 	/** Called when the activity is first created. */
 	private final String mLPConfigXsd;
-	private final String mLinphoneInitialConfigFile;
+	private final String mLinphoneFactoryConfigFile;
 	private final String mLinphoneRootCaFile;
 	public final String mLinphoneConfigFile;
 	private final String mRingSoundFile; 
@@ -529,18 +531,20 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			// Try to get remote provisioning
+			// First check if there is a remote provisioning url in the old preferences API
+			
 			String remote_provisioning = mPrefs.getRemoteProvisioningUrl();
 			if(remote_provisioning != null && remote_provisioning.length() > 0 && RemoteProvisioning.isAvailable()) {
 				RemoteProvisioning.download(remote_provisioning, mLinphoneConfigFile);
 			}
 			
 			initLiblinphone(c);
-
+			
 			PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 			if (prefMigrator.isMigrationNeeded()) {
 				prefMigrator.doMigration();
 			}
-
+			
 			if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 				Compatibility.initPushNotificationService(mServiceContext);
 			}
@@ -563,7 +567,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
 		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 		
-		mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneInitialConfigFile, null);
+		mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null);
 		mLc.setContext(c);
 		try {
 			String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
@@ -610,7 +614,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
-		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneInitialConfigFile).getName());
+		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
 		copyIfNotExist(R.raw.rootca, mLinphoneRootCaFile);
 	}
