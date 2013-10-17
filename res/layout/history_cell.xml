@@ -22,7 +22,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_weight="0.3"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
-	    android:textColor="@android:color/black"
+	    android:textColor="@color/text_contrast"
 	    android:layout_marginLeft="10dp" />
 	
 	<ImageView 

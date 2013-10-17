@@ -2,7 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/pref_sipaccount">
+        android:title="@string/pref_sipaccount"
+		android:key="@string/pref_sipaccount_key">
         
         <EditTextPreference 
         	android:title="@string/pref_username"
@@ -24,7 +25,8 @@
     </PreferenceCategory>
     
     <PreferenceCategory
-        android:title="@string/pref_advanced">
+    	android:title="@string/pref_advanced"
+		android:key="@string/pref_advanced_key">
         
         <EditTextPreference
         	android:title="@string/pref_proxy"
@@ -36,7 +38,26 @@
         	android:dialogMessage="@string/pref_help_outbound_proxy"
         	android:summary="@string/pref_help_outbound_proxy"
             android:persistent="true"/>
+			 
+		<EditTextPreference 
+			android:title="@string/pref_expire_title"
+			android:key="@string/pref_expire_key"
+		  	android:numeric="integer" />
+		
+		<EditTextPreference 
+		    android:title="@string/pref_prefix"
+			android:key="@string/pref_prefix_key"/>
+
+		<CheckBoxPreference 
+			android:title="@string/pref_escape_plus"
+		    android:key="@string/pref_escape_plus_key"/>
         
+    </PreferenceCategory>
+    
+	<PreferenceCategory
+       	android:title="@string/pref_manage"
+		android:key="@string/pref_manage_key">
+       
         <CheckBoxPreference
         	android:title="@string/pref_disable_account"
             android:persistent="true"/>

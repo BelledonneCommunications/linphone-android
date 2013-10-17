@@ -156,7 +156,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	
 	private void answer() {
 		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
-		if (mCall != null && mCall.getRemoteParams() != null && mCall.getRemoteParams().getVideoEnabled() && LinphoneManager.isInstanciated() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
+		if (mCall != null && mCall.getRemoteParams() != null && mCall.getRemoteParams().getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
 			params.setVideoEnabled(true);
 		} else {
 			params.setVideoEnabled(false);
@@ -176,7 +176,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 				return;
 			}
 			final LinphoneCallParams remoteParams = mCall.getRemoteParams();
-			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
+			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
 				LinphoneActivity.instance().startVideoActivity(mCall);
 			} else {
 				LinphoneActivity.instance().startIncallActivity(mCall);

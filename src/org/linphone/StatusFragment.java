@@ -38,10 +38,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -485,13 +483,9 @@ public class StatusFragment extends Fragment {
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {
-		private SharedPreferences prefs;
 		private List<CheckBox> checkboxes;
 		
 		AccountsListAdapter() {
-			if (LinphoneActivity.isInstanciated()) {
-				prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
-			}
 			checkboxes = new ArrayList<CheckBox>();
 		}
 		
@@ -501,23 +495,16 @@ public class StatusFragment extends Fragment {
 			public void onClick(View v) {
 				CheckBox checkBox = (CheckBox) v;
 				if (checkBox.isChecked()) {
-					SharedPreferences.Editor editor = prefs.edit();
 					String tag = (String) checkBox.getTag();
 					String sipAddress = tag.split(":")[0];
 					int accountPosition = Integer.parseInt(tag.split(":")[1]);
 					
-					int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+					int nbAccounts = LinphonePreferences.instance().getAccountCount();
 					int accountIndex = 0;
 					for (int i = 0; i < nbAccounts; i++)
 					{
-						String keyUsername = getString(R.string.pref_username_key);
-						String keyDomain = getString(R.string.pref_domain_key);
-						if (i > 0) {
-							keyUsername += i + "";
-							keyDomain += i + "";
-						}
-						String username = prefs.getString(keyUsername, "");
-						String domain = prefs.getString(keyDomain, "");
+						String username = LinphonePreferences.instance().getAccountUsername(i);
+						String domain = LinphonePreferences.instance().getAccountDomain(i);
 						String identity = username + "@" + domain;
 						if (identity.equals(sipAddress)) {
 							accountIndex = i;
@@ -525,8 +512,7 @@ public class StatusFragment extends Fragment {
 						}
 					}
 					
-					editor.putInt(getString(R.string.pref_default_account_key), accountIndex);
-					editor.commit();
+					LinphonePreferences.instance().setDefaultAccount(accountIndex);
 
 					for (CheckBox cb : checkboxes) {
 						cb.setChecked(false);
@@ -590,34 +576,30 @@ public class StatusFragment extends Fragment {
 			isDefault.setChecked(false);
 			isDefault.setEnabled(true);
 			
-			if (prefs != null) {
-				int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
-				int accountIndex = 0;
-				for (int i = 0; i < nbAccounts; i++)
-				{
-					String keyUsername = getString(R.string.pref_username_key);
-					String keyDomain = getString(R.string.pref_domain_key);
-					if (i > 0) {
-						keyUsername += i + "";
-						keyDomain += i + "";
-					}
-					String username = prefs.getString(keyUsername, "");
-					String domain = prefs.getString(keyDomain, "");
-					String id = username + "@" + domain;
-					if (id.equals(sipAddress)) {
-						accountIndex = i;
-						break;
-					}
+			int nbAccounts = LinphonePreferences.instance().getAccountCount();
+			int accountIndex = 0;
+			for (int i = 0; i < nbAccounts; i++)
+			{
+				String username = LinphonePreferences.instance().getAccountUsername(i);
+				String domain = LinphonePreferences.instance().getAccountDomain(i);
+				String id = username + "@" + domain;
+				if (id.equals(sipAddress)) {
+					accountIndex = i;
+					break;
 				}
-				if (prefs.getInt(getString(R.string.pref_default_account_key), 0) == accountIndex) {
+			}
+			
+			// Force led if account is disabled
+			if (!LinphonePreferences.instance().isAccountEnabled(accountIndex)) {
+				status.setImageResource(getStatusIconResource(RegistrationState.RegistrationNone, false));
+			} else {
+				if (LinphonePreferences.instance().getDefaultAccountIndex() == accountIndex) {
 					isDefault.setChecked(true);
 					isDefault.setEnabled(false);
 					status.setImageResource(getStatusIconResource(lpc.getState(), true));
 				} else {
 					status.setImageResource(getStatusIconResource(lpc.getState(), false));
 				}
-			} else {
-				status.setImageResource(getStatusIconResource(lpc.getState(), false));
 			}
 			
 			isDefault.setOnClickListener(defaultListener);
