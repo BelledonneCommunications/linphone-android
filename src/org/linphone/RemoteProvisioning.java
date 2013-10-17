@@ -45,8 +45,7 @@ public class RemoteProvisioning {
 				}
 				
 				String strFileContents = fileContents.toString();
-				Log.i("Download Success");
-				Log.i(strFileContents);
+				Log.i("Remote provisioning download successful");
 				
 				// Initialize converter
 				LpConfig lp = LinphoneCoreFactory.instance().createLpConfig(mLocalLP);

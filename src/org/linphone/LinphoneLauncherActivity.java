@@ -20,7 +20,6 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Log;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
@@ -58,11 +57,6 @@ public class LinphoneLauncherActivity extends Activity {
 		setContentView(R.layout.launcher);
         
 		mHandler = new Handler();
-
-
-		if (getResources().getBoolean(R.bool.enable_push_id)) {
-			Compatibility.initPushNotificationService(this);
-		}
 		
 		if (LinphoneService.isReady()) {
 			onServiceReady();

@@ -101,7 +101,6 @@
 	<string name="pref_preferred_video_size_hd">HD</string>
 	<string name="pref_preferred_video_size_vga">VGA (640x480)</string>
 	<string name="pref_preferred_video_size_qvga">QVGA (320x240)</string>
-
     <string name="pref_video_settings_title">Paramètres vidéo</string>
     <string name="pref_video_automatically_share_my_video_title">Partager ma vidéo</string>
     <string name="pref_video_automatically_accept_video_title">Accepter appels vidéo</string>
@@ -372,6 +371,7 @@
 	<string name="call_state_incoming">Reçu</string>
 	
 	<string name="pref_background_mode">Actif en arrière plan</string>
+	<string name="pref_manage">Gestion</string>
 	
 	<string name="show_image">Afficher</string>
 	<string name="download_image">Télécharger</string>
@@ -379,6 +379,7 @@
 	
 	<string name="wait">Merci de patienter...</string>
 	<string name="importing_messages">Mise à jour de la base des messages</string>
+	<string name="default_account_flag">Compte par défaut</string>
 	
 	<string name="zrtp_accept">Accepter</string>
 	<string name="zrtp_deny">Refuser</string>

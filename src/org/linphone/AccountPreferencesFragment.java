@@ -18,11 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.ui.PreferencesListFragment;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -36,10 +35,17 @@ import android.text.InputType;
  */
 public class AccountPreferencesFragment extends PreferencesListFragment {
 	private int n;
-	private String key;
+	private LinphonePreferences mPrefs;
 	
 	public AccountPreferencesFragment() {
 		super(R.xml.account_preferences);
+		mPrefs = LinphonePreferences.instance();
+	}
+	
+	@Override
+	public void onDestroy() {
+		LinphoneManager.getLc().refreshRegisters();
+		super.onDestroy();
 	}
 	
 	public void onCreate(Bundle savedInstanceState) 
@@ -48,154 +54,175 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		
 		PreferenceScreen screen = getPreferenceScreen();
 		n = getArguments().getInt("Account", 0);
-		key = getAccountNumber(n);
 		manageAccountPreferencesFields(screen);
 	}
 	
-	OnPreferenceChangeListener preferenceChangedListener = new OnPreferenceChangeListener() {
+	OnPreferenceChangeListener usernameChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountUsername(n, newValue.toString());
 			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener useridChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountUserId(n, newValue.toString());
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener passwordChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountPassword(n, newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener domainChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountDomain(n, newValue.toString());
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener proxyChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountProxy(n, newValue.toString());
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener outboundProxyChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountOutboundProxyEnabled(n, (Boolean) newValue);
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener expiresChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setExpires(n, newValue.toString());
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener prefixChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			String value = newValue.toString();
+			preference.setSummary(value);
+			mPrefs.setPrefix(n, value);
+			return true;
+		}
+	};
+	OnPreferenceChangeListener escapeChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean value = (Boolean) newValue;
+			mPrefs.setReplacePlusByZeroZero(n, value);
+			return true;
+		}
+	};
+	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountEnabled(n, (Boolean) newValue);
+			return true;
+		}		
+	};
+	OnPreferenceChangeListener deleteChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			return true;
 		}		
 	};
 	
 	private void manageAccountPreferencesFields(PreferenceScreen parent) {
-    	final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
 		
-    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().getPreference(0);
+    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
-    	username.setText(prefs.getString(getString(R.string.pref_username_key) + key, ""));
+    	username.setText(mPrefs.getAccountUsername(n));
     	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	username.setKey(getString(R.string.pref_username_key) + key);
-    	username.setOnPreferenceChangeListener(preferenceChangedListener);
+    	username.setOnPreferenceChangeListener(usernameChangedListener);
     	username.setSummary(username.getText());
     	
     	EditTextPreference userid = (EditTextPreference) account.getPreference(1);
-    	userid.setText(prefs.getString(getString(R.string.pref_auth_userid_key) + key, ""));
+    	userid.setText(mPrefs.getAccountUserId(n));
     	userid.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	userid.setKey(getString(R.string.pref_auth_userid_key) + key);
-    	userid.setOnPreferenceChangeListener(preferenceChangedListener);
+    	userid.setOnPreferenceChangeListener(useridChangedListener);
     	userid.setSummary(userid.getText());
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-    	password.setText(prefs.getString(getString(R.string.pref_passwd_key) + key, ""));
+    	password.setText(mPrefs.getAccountPassword(n));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    	password.setKey(getString(R.string.pref_passwd_key) + key);
+    	password.setOnPreferenceChangeListener(passwordChangedListener);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
-    	domain.setText(prefs.getString(getString(R.string.pref_domain_key) + key, ""));
+    	domain.setText(mPrefs.getAccountDomain(n));
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	domain.setKey(getString(R.string.pref_domain_key) + key);
-    	domain.setOnPreferenceChangeListener(preferenceChangedListener);
+    	domain.setOnPreferenceChangeListener(domainChangedListener);
     	domain.setSummary(domain.getText());
-
-    	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().getPreference(1);
+		
+    	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_advanced_key));
     	EditTextPreference proxy = (EditTextPreference) advanced.getPreference(0);
-    	proxy.setText(prefs.getString(getString(R.string.pref_proxy_key) + key, ""));
+    	proxy.setText(mPrefs.getAccountProxy(n));
     	proxy.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-    	proxy.setKey(getString(R.string.pref_proxy_key) + key);
-    	proxy.setOnPreferenceChangeListener(preferenceChangedListener);
+    	proxy.setOnPreferenceChangeListener(proxyChangedListener);
     	proxy.setSummary("".equals(proxy.getText()) || (proxy.getText() == null) ? getString(R.string.pref_help_proxy) : proxy.getText());
     	
-    	Preference outboundProxy = advanced.getPreference(1);
-    	Compatibility.setPreferenceChecked(outboundProxy, prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false));
-    	outboundProxy.setKey(getString(R.string.pref_enable_outbound_proxy_key) + key);
-   
-    	final Preference disable = advanced.getPreference(2);
-    	disable.setEnabled(true);
-    	Compatibility.setPreferenceChecked(disable, prefs.getBoolean(getString(R.string.pref_disable_account_key) + key, false));
-    	disable.setKey(getString(R.string.pref_disable_account_key) + key);
-
-    	final Preference delete = advanced.getPreference(4);
-    	delete.setEnabled(true);
-    	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-	        public boolean onPreferenceClick(Preference preference) {
-	        	int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
-        		SharedPreferences.Editor editor = prefs.edit();
-        		
-	        	for (int i = n; i < nbAccounts - 1; i++) {
-	        		editor.putString(getString(R.string.pref_username_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_username_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_auth_userid_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_auth_userid_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_passwd_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_domain_key) + getAccountNumber(i+1), null));
-	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(i), prefs.getString(getString(R.string.pref_proxy_key) + getAccountNumber(i+1), null));
-	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(i+1), false));
-	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i), prefs.getBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(i+1), false));
-	        	}
-
-	        	if (n != 0) {
-		        	int lastAccount = nbAccounts - 1;
-		        	editor.putString(getString(R.string.pref_username_key) + getAccountNumber(lastAccount), null);
-	        		editor.putString(getString(R.string.pref_passwd_key) + getAccountNumber(lastAccount), null);
-	        		editor.putString(getString(R.string.pref_domain_key) + getAccountNumber(lastAccount), null);
-	        		editor.putString(getString(R.string.pref_proxy_key) + getAccountNumber(lastAccount), null);
-	        		editor.putBoolean(getString(R.string.pref_enable_outbound_proxy_key) + getAccountNumber(lastAccount), false);
-	        		editor.putBoolean(getString(R.string.pref_disable_account_key) + getAccountNumber(lastAccount), false);
-	        		
-	        		int defaultAccount = prefs.getInt(getString(R.string.pref_default_account_key), 0);
-	        		if (defaultAccount > n) {
-	        			editor.putInt(getString(R.string.pref_default_account_key), defaultAccount - 1);
-	        		}
-	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
-	        	} else if (n == 0 && nbAccounts <= 1) {
-	        		editor.putString(getString(R.string.pref_username_key), "");
-	        		editor.putString(getString(R.string.pref_passwd_key), "");
-	        		editor.putString(getString(R.string.pref_domain_key), "");
-	        	} else {
-	        		editor.putInt(getString(R.string.pref_extra_accounts), nbAccounts - 1);
-	        	}
-
-	        	editor.commit();
-	        	
-	        	LinphoneActivity.instance().displaySettings();
-	        	
-	        	return true;
-	        }
-        });
+    	CheckBoxPreference outboundProxy = (CheckBoxPreference) advanced.getPreference(1);
+    	outboundProxy.setChecked(mPrefs.isAccountOutboundProxySet(n));
+    	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
     	
-    	Preference mainAccount = advanced.getPreference(3);
-    	Compatibility.setPreferenceChecked(mainAccount, prefs.getInt(getString(R.string.pref_default_account_key), 0) == n);
-    	mainAccount.setEnabled(!Compatibility.isPreferenceChecked(mainAccount));
+    	EditTextPreference expires = (EditTextPreference) advanced.getPreference(2);
+    	expires.setText(mPrefs.getExpires(n));
+    	expires.setOnPreferenceChangeListener(expiresChangedListener);
+    	expires.setSummary(mPrefs.getExpires(n));
+
+    	EditTextPreference prefix = (EditTextPreference) advanced.getPreference(3);
+    	String prefixValue = mPrefs.getPrefix(n);
+    	prefix.setSummary(prefixValue);
+    	prefix.setText(prefixValue);
+    	prefix.setOnPreferenceChangeListener(prefixChangedListener);
+    	
+    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(4);
+		escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
+		escape.setOnPreferenceChangeListener(escapeChangedListener);
+    	
+    	PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
+    	final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);
+    	disable.setEnabled(true);
+    	disable.setChecked(!mPrefs.isAccountEnabled(n));
+    	disable.setOnPreferenceChangeListener(disableChangedListener);
+    	
+    	CheckBoxPreference mainAccount = (CheckBoxPreference) manage.getPreference(1);
+    	mainAccount.setChecked(isDefaultAccount);
+    	mainAccount.setEnabled(!mainAccount.isChecked());
     	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
     	{
 			public boolean onPreferenceClick(Preference preference) {
-				
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putInt(getString(R.string.pref_default_account_key), n);
-				editor.commit();
+				mPrefs.setDefaultAccount(n);
 				disable.setEnabled(false);
-				Compatibility.setPreferenceChecked(disable, false);
+				disable.setChecked(false);
 				preference.setEnabled(false);
 				return true;
 			}
 		});
-	}
-	
-	private String getAccountNumber(int n) {
-		if (n > 0)
-			return Integer.toString(n);
-		else
-			return "";
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
 
-		SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		int n = prefs.getInt(getString(R.string.pref_extra_accounts), 1);
-		String keyUsername = getString(R.string.pref_username_key) + getAccountNumber(n-1);
-		
-		if (prefs.getString(keyUsername, "").equals("")) {
-			//If not, we suppress it to not display a blank field
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putInt(getString(R.string.pref_extra_accounts), n-1);
-			editor.commit();
-		}
-		
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().applyConfigChangesIfNeeded();
-		}
+    	final Preference delete = manage.getPreference(2);
+    	delete.setEnabled(true);
+    	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        public boolean onPreferenceClick(Preference preference) {
+	        	mPrefs.deleteAccount(n);
+	        	LinphoneActivity.instance().displaySettings();
+	        	return true;
+	        }
+        });
 	}
 }

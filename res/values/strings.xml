@@ -118,7 +118,6 @@
     <string name="pref_video_codec_mpeg4_title">MPEG4</string>
     <string name="pref_video_codec_h264_title">H264</string>
     <string name="pref_video_codecs_title">Codecs</string>
-    <string name="pref_video_codecs_key">pref_video_codecs_key</string>
 	<string name="pref_preferred_video_size">Preferred video size</string>
 	<string name="pref_preferred_video_size_hd">HD</string>
 	<string name="pref_preferred_video_size_vga">VGA (640x480)</string>
@@ -426,14 +425,16 @@
 	<string name="download_image">Download</string>
 	<string name="download_image_failed">Download failed. Please check your internet access or try again later.</string>
 	
-	<string name="pref_auth_userid">Auth userid*</string>
+	<string name="pref_auth_userid">Auth userid</string>
 	
 	<string name="pref_help_auth_userid">Enter authentication userid (optionnal)</string>
 	
 	<string name="pref_upnp_enable">Enable UPNP</string>
+	<string name="pref_manage">Manage</string>
 	
 	<string name="wait">Please wait...</string>
 	<string name="importing_messages">Updating messages database</string>
+	<string name="default_account_flag">Default account</string>
 	
 	<string name="zrtp_accept">Accept</string>
 	<string name="zrtp_deny">Deny</string>

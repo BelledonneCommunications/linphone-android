@@ -37,7 +37,6 @@ import org.linphone.ui.Numpad;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -45,7 +44,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -127,8 +125,7 @@ public class InCallActivity extends FragmentActivity implements
         isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
         showCallListInVideo = getApplicationContext().getResources().getBoolean(R.bool.show_current_calls_above_video);
         
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !prefs.getBoolean(getString(R.string.pref_animation_enable_key), false);
+        isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
         cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
         
         if (findViewById(R.id.fragmentContainer) != null) {
@@ -273,7 +270,7 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				if (!isVideoActivatedInSettings()) {
+				if (!LinphonePreferences.instance().isVideoEnabled()) {
 					video.setEnabled(false);
 				} else {
 					if (isVideoEnabled) {
@@ -354,12 +351,6 @@ public class InCallActivity extends FragmentActivity implements
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
 		status = statusFragment;
-	}
-	
-	private boolean isVideoActivatedInSettings() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean settingsVideoEnabled = prefs.getBoolean(getString(R.string.pref_video_enable_key), false);
-		return settingsVideoEnabled;
 	}
 
 	@Override
@@ -1087,7 +1078,7 @@ public class InCallActivity extends FragmentActivity implements
 		
 		if (state == State.CallUpdatedByRemote) {
 			// If the correspondent proposes video while audio call
-			boolean isVideoEnabled = LinphoneManager.getInstance().isVideoEnabled();
+			boolean isVideoEnabled = LinphonePreferences.instance().isVideoEnabled();
 			if (!isVideoEnabled) {
 				acceptCallUpdate(false);
 				return;
@@ -1095,7 +1086,7 @@ public class InCallActivity extends FragmentActivity implements
 			
 			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
 			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
-			boolean autoAcceptCameraPolicy = LinphoneManager.getInstance().isAutoAcceptCamera();
+			boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
 			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 				mHandler.post(new Runnable() {
 					public void run() {
