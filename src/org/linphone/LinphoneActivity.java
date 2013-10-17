@@ -126,6 +126,8 @@ public class LinphoneActivity extends FragmentActivity implements
 
 		if (isTablet() && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 		
 		if (!LinphoneManager.isInstanciated()) {
