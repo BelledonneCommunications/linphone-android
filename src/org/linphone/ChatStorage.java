@@ -68,7 +68,7 @@ public class ChatStorage {
 	    context = c;
 	    boolean useLinphoneStorage = c.getResources().getBoolean(R.bool.use_linphone_chat_storage);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneService.instance());
-		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), true);
+		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), !LinphonePreferences.instance().isFirstLaunch());
 	    useNativeAPI = useLinphoneStorage && !updateNeeded;
 	    Log.d("Using native API: " + useNativeAPI);
 	    

@@ -381,6 +381,10 @@
 	<string name="importing_messages">Mise à jour de la base des messages</string>
 	<string name="default_account_flag">Compte par défaut</string>
 	
+	<string name="setup_remote_provisioning">Télécharger ma configuration</string>
+	<string name="setup_remote_provisioning_hint">Cet assistant va télécharger une configuration existante.</string>
+	<string name="setup_remote_provisioning_url_hint">addresse où télécharger la configuration</string>
+	
 	<string name="zrtp_accept">Accepter</string>
 	<string name="zrtp_deny">Refuser</string>
 	<string name="zrtp_help">Vous ne devriez accepter que si vous avez le même code (ci-dessus) que votre contact</string>
