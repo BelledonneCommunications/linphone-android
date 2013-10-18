@@ -88,6 +88,30 @@
         
         </RelativeLayout>
         
+        <RelativeLayout
+            android:id="@+id/setup_remote_provisioning_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="0.7"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            
+	        <ImageView
+	            android:id="@+id/setup_remote_provisioning"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	         <TextView 
+		    	android:layout_centerInParent="true"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/setup_remote_provisioning"
+			    android:textColor="@android:color/black"/>
+        
+        </RelativeLayout>
+        
         <View
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"

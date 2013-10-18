@@ -153,7 +153,10 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			
 			next.setVisibility(View.VISIBLE);
 			back.setVisibility(View.GONE);
-		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN || currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN || currentFragment == SetupFragmentsEnum.WIZARD) {
+		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN 
+				|| currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN 
+				|| currentFragment == SetupFragmentsEnum.WIZARD 
+				|| currentFragment == SetupFragmentsEnum.REMOTE_PROVISIONING) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
 			currentFragment = SetupFragmentsEnum.MENU;
@@ -267,6 +270,12 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		fragment = new WizardFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.WIZARD;
+	}
+
+	public void displayRemoteProvisioning() {
+		fragment = new RemoteProvisioningFragment();
+		changeFragment(fragment);
+		currentFragment = SetupFragmentsEnum.REMOTE_PROVISIONING;
 	}
 	
 	public void saveCreatedAccount(String username, String password, String domain) {

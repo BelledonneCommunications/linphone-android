@@ -436,6 +436,10 @@
 	<string name="importing_messages">Updating messages database</string>
 	<string name="default_account_flag">Default account</string>
 	
+	<string name="setup_remote_provisioning">Download provisioning</string>
+	<string name="setup_remote_provisioning_hint">This assistant will download an existing configuration.</string>
+	<string name="setup_remote_provisioning_url_hint">provisioning url</string>
+	
 	<string name="zrtp_accept">Accept</string>
 	<string name="zrtp_deny">Deny</string>
 	<string name="zrtp_help">You should only accept if you have the same code (see above) as your correspondent</string>

@@ -28,6 +28,7 @@
     <bool name="setup_account_validation_mandatory">false</bool>
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>
+    <bool name="hide_remote_provisioning_in_wizard">false</bool>
     <bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
 	<bool name="use_linphone_server_ports">true</bool>
