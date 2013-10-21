@@ -90,21 +90,4 @@
     <!-- version-tag: custom -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
 
-	<target name="liblinphone-sdk">
-         <echo level="info">Creating library output jar file...</echo>
-         <property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone.jar" />
-                    <jar destfile="${out.library.jar.file}">
-                        <fileset dir="${out.classes.absolute.dir}"
-                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class"/>
-                        <fileset dir="submodules/linphone/java" >
-                        	<include name="common/org/linphone/core/*.java"/>
-                        	<include name="j2se/org/linphone/core/*.java"/>
-                        </fileset>
-         </jar>
-         <zip destfile="liblinphone-sdk-${version.name}.zip">
-    		<zipfileset dir="libs" prefix="libs" includes="**/*.so" />
-    		<zipfileset dir="${out.absolute.dir}" includes="liblinphone.jar" prefix="libs"/>
-  		</zip>
-  
-	    </target>
 </project>
