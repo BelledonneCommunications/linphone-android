@@ -280,18 +280,32 @@ $(SQLITE_BASENAME).zip:
 #Build targets
 prepare-sources: build-ffmpeg build-x264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
-LIBLINPHONE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) LINPHONE_VERSION=$(LINPHONE_VERSION) BUILD_UPNP=$(BUILD_UPNP) BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_X264=$(BUILD_X264) \
-				BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_TUNNEL=$(BUILD_TUNNEL) \
-				BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_FOR_X86=$(BUILD_FOR_X86) USE_JAVAH=$(USE_JAVAH) BUILD_TLS=$(BUILD_TLS) BUILD_SQLITE=$(BUILD_SQLITE) \
-				BELLESIP_VERSION=$(BELLESIP_VERSION) BUILD_OPUS=$(BUILD_OPUS) BUILD_VIDEO=$(BUILD_VIDEO)
+GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
+	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
+	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) \
+	BUILD_UPNP=$(BUILD_UPNP) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM)
+
+LIBLINPHONE_OPTIONS = $(GENERATE_OPTIONS) \
+	LINPHONE_VERSION=$(LINPHONE_VERSION) BELLESIP_VERSION=$(BELLESIP_VERSION) USE_JAVAH=$(USE_JAVAH) \
+	BUILD_REMOTE_PROVISIONING=$(BUILD_REMOTE_PROVISIONING) BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_TLS=$(BUILD_TLS) BUILD_SQLITE=$(BUILD_SQLITE)
+
+MEDIASTREAMER2_OPTIONS = $(GENERATE_OPTIONS) BUILD_MEDIASTREAMER2_SDK=1
 
 
 generate-libs: prepare-sources javah
 	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS)
 
+generate-mediastreamer2-libs: prepare-sources
+	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
+	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS)
+
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
+
+update-mediastreamer2-project:
+	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
+	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
 	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS)
@@ -302,6 +316,12 @@ javah:
 generate-apk: generate-libs
 	ant partial-clean
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties
+	ant debug
+
+generate-mediastreamer2-apk: generate-mediastreamer2-libs
+	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
+	ant partial-clean && \
+	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties && \
 	ant debug
 
 install-apk:
@@ -330,6 +350,8 @@ run-tests:
 clean-ndk-build:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
 	ant clean
+	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
+	ant clean
 
 clean: clean-ndk-build
 
@@ -340,3 +362,8 @@ veryclean: clean clean-ffmpeg clean-x264 clean-vpx
 generate-sdk: generate-apk
 	ant liblinphone-sdk
 
+linphone-sdk: generate-sdk
+
+mediastreamer2-sdk: update-mediastreamer2-project generate-mediastreamer2-apk
+	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
+	ant mediastreamer2-sdk

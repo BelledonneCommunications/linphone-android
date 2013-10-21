@@ -50,9 +50,11 @@ include $(linphone-root-dir)/submodules/externals/build/speex/Android.mk
 # Gsm
 include $(linphone-root-dir)/submodules/externals/build/gsm/Android.mk
 
+ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
 include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
+endif
 
 
 

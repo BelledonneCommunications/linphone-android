@@ -1,6 +1,14 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_MODULES      :=libspeex libgsm libortp antlr3 libbellesip libmediastreamer2 liblinphone liblpxml2
 APP_STL := stlport_static
+
+ifeq ($(BUILD_MEDIASTREAMER2_SDK),)
+BUILD_MEDIASTREAMER2_SDK=0
+endif
+
+APP_MODULES :=libspeex libgsm libortp libmediastreamer2
+ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
+APP_MODULES += antlr3 libbellesip liblinphone liblpxml2
+endif
 
 #default values:
 
@@ -28,6 +36,7 @@ ifeq ($(BUILD_VIDEO),)
 BUILD_VIDEO=1
 endif
 
+ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 #sqlite
 ifeq ($(BUILD_SQLITE),1)
 APP_MODULES += liblinsqlite
@@ -40,6 +49,7 @@ endif
 
 ifeq ($(BUILD_TLS),1)
 APP_MODULES +=polarssl
+endif
 endif
 
 ifeq ($(BUILD_VIDEO),1)
@@ -85,12 +95,14 @@ APP_MODULES += libwebrtc_system_wrappers libwebrtc_spl libwebrtc_apm_utility lib
 APP_MODULES += libwebrtc_spl_neon libwebrtc_aecm_neon
 endif
 
+ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 ifeq ($(RING),yes)
 APP_MODULES      += libring
 endif
 
 ifeq ($(BUILD_TUNNEL), 1)
 APP_MODULES += libtunnelclient
+endif
 endif
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)

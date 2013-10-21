@@ -11,7 +11,9 @@ To build liblinphone for Android, you must:
 4) To install the generated apk into a plugged device, run
 	$ make install
 5) (Optional) To generate a liblinphone SDK zip containing a full jar and native libraries, run
-	$ make generate-sdk
+	$ make linphone-sdk
+6) (Optional) To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run
+	$ make mediastreamer2-sdk
 
 
 
