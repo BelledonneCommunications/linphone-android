@@ -76,3 +76,6 @@
 [submodule "submodules/externals/opus"]
 	path = submodules/externals/opus
 	url = git://git.opus-codec.org/opus.git
+[submodule "submodules/msisac"]
+	path = submodules/msisac
+	url = git://git.linphone.org/msisac.git
