@@ -241,16 +241,23 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountProxy(int n, String proxy) {
+		if (!proxy.startsWith("sip:")) {
+			proxy = "sip:" + proxy;
+		}
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
-			prxCfg.setProxy("sip:" + proxy);
+			prxCfg.setProxy(proxy);
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public String getAccountProxy(int n) {
-		return getProxyConfig(n).getProxy();
+		String proxy = getProxyConfig(n).getProxy();
+		if (proxy != null && proxy.startsWith("sip:")) {
+			proxy = proxy.substring(4);
+		}
+		return proxy;
 	}
 
 	public void setNewAccountOutboundProxyEnabled(boolean enabled) {
@@ -260,7 +267,11 @@ public class LinphonePreferences {
 	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
 		try {
 			if (enabled) {
-				getProxyConfig(n).setRoute(getAccountProxy(n));
+				String route = getAccountProxy(n);
+				if (!route.startsWith("sip:")) {
+					route = "sip:" + route;
+				}
+				getProxyConfig(n).setRoute(route);
 			} else {
 				getProxyConfig(n).setRoute(null);
 			}
