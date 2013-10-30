@@ -10,7 +10,7 @@ use_ipv6=0
 keepalive_period=30000
 
 [video]
-size=qvga
+size=vga
 
 [app]
 sharing_server=https://www.linphone.org:444/upload.php
