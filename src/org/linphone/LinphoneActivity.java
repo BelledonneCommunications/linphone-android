@@ -68,6 +68,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -166,12 +167,21 @@ public class LinphoneActivity extends FragmentActivity implements
 		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
 
-		int rotation = Compatibility.getRotation(getWindowManager().getDefaultDisplay());
-		// Inverse landscape rotation to initiate linphoneCore correctly
-		if (rotation == 270)
+		int rotation = getWindowManager().getDefaultDisplay().getRotation();
+		switch (rotation) {
+		case Surface.ROTATION_0:
+			rotation = 0;
+			break;
+		case Surface.ROTATION_90:
 			rotation = 90;
-		else if (rotation == 90)
+			break;
+		case Surface.ROTATION_180:
+			rotation = 180;
+			break;
+		case Surface.ROTATION_270:
 			rotation = 270;
+			break;
+		}
 
 		LinphoneManager.getLc().setDeviceRotation(rotation);
 		mAlwaysChangingPhoneAngle = rotation;

@@ -34,10 +34,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 @TargetApi(8)
 public class ApiEightPlus {
 
-	public static int getRotation(Display display) {
-		return display.getRotation();
-	}
-
 	public static void initPushNotificationService(Context context) {
 		try {
 			// Starting the push notification service
