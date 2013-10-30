@@ -332,10 +332,6 @@ public class ApiFivePlus {
 		return null;
 	}
 	
-	public static int getRotation(Display display) {
-		return display.getOrientation();
-	}
-	
 	public static Notification createMessageNotification(Context context, String title, String msg, PendingIntent intent) {
 		Notification notif = new Notification();
 		notif.icon = R.drawable.chat_icon_over;

@@ -159,14 +159,6 @@ public class Compatibility {
 		return null;
 	}
 
-	public static int getRotation(Display display) {
-		if (Version.sdkStrictlyBelow(Version.API08_FROYO_22)) {
-			return ApiFivePlus.getRotation(display);
-		} else {
-			return ApiEightPlus.getRotation(display);
-		}
-	}
-	
 	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
 		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			ApiElevenPlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
