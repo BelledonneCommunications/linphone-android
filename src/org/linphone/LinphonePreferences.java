@@ -86,14 +86,10 @@ public class LinphonePreferences {
 	}
 
 	public String getRingtone(String defaultRingtone) {
-		String ringtone = getLc().getRing();
+		String ringtone = getConfig().getString("app", "ringtone", defaultRingtone);
 		if (ringtone == null || ringtone.length() == 0)
 			ringtone = defaultRingtone;
 		return ringtone;
-	}
-	
-	public void setRingtone(String ringtone) {
-		 getLc().setRing(ringtone);
 	}
 
 	public boolean shouldAutomaticallyAcceptFriendsRequests() {
@@ -177,7 +173,15 @@ public class LinphonePreferences {
 	}
 	
 	public void setAccountUsername(int n, String username) {
-		getAuthInfo(n).setUsername(username);
+		String identity = "sip:" + username + "@" + getAccountDomain(n);
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.setIdentity(identity);
+			prxCfg.done();
+			getAuthInfo(n).setUsername(username);
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getAccountUsername(int n) {
@@ -223,6 +227,7 @@ public class LinphonePreferences {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setIdentity(identity);
 			prxCfg.setProxy(proxy);
+			prxCfg.done();
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
@@ -243,6 +248,7 @@ public class LinphonePreferences {
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setProxy(proxy);
+			prxCfg.done();
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
@@ -262,15 +268,17 @@ public class LinphonePreferences {
 
 	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
 		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			if (enabled) {
-				String route = getAccountProxy(n);
+				String route = prxCfg.getProxy();
 				if (!route.startsWith("sip:")) {
 					route = "sip:" + route;
 				}
-				getProxyConfig(n).setRoute(route);
+				prxCfg.setRoute(route);
 			} else {
-				getProxyConfig(n).setRoute(null);
+				prxCfg.setRoute(null);
 			}
+			prxCfg.done();
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
