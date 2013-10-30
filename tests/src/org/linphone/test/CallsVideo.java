@@ -7,10 +7,10 @@ import org.linphone.IncomingCallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.PayloadType;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -339,86 +339,112 @@ public class CallsVideo extends SampleTest {
 		solo.sleep(500);
 	}
 	
+	private boolean isAudioCodecEnabled(String mime, int rate) {
+		LinphoneCore lc = LinphoneTestManager.getLc();
+		for (final PayloadType pt : lc.getAudioCodecs()) {
+			if (pt.getMime().equals(mime) && pt.getRate() == rate)
+				return lc.isPayloadTypeEnabled(pt);
+		}
+		return false;
+	}
+	
 	private void disableAllEnabledAudioCodecs() {
 		goToAudioCodecsSettings();
 			
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(aContext);
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_speex16_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_speex16_default))) {
+		if (isAudioCodecEnabled("opus", 48000)) {
+			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_opus));
+			solo.sleep(500);
+		}
+		
+		if (isAudioCodecEnabled("speex", 16000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_speex16));
 			solo.sleep(500);
 		}
 			
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_speex8_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_speex8_default))) {
+		if (isAudioCodecEnabled("speex", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_speex8));
 			solo.sleep(500);
 		}
 		
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_ilbc_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_ilbc_default))) {
+		if (isAudioCodecEnabled("ilbc", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_ilbc));
 			solo.sleep(500);
 		}
 			
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_amr_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_amr_default))) {
+		if (isAudioCodecEnabled("AMR", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_amr));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_amrwb_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_amrwb_default))) {
+		if (isAudioCodecEnabled("AMRWB", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_amrwb));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_g729_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_g729_default))) {
+		if (isAudioCodecEnabled("G729", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_g729));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_gsm_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_gsm_default))) {
+		if (isAudioCodecEnabled("GSM", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_gsm));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_g722_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_g722_default))) {
+		if (isAudioCodecEnabled("G722", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_g722));
 			solo.sleep(500);
 		}
 			
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_silk24_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_silk24_default))) {
+		if (isAudioCodecEnabled("SILK", 24000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_silk24));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_silk16_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_silk16_default))) {
+		if (isAudioCodecEnabled("SILK", 16000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_silk16));
 			solo.sleep(500);
 		}
+		
+		if (isAudioCodecEnabled("SILK", 8000)) {
+			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_silk8));
+			solo.sleep(500);
+		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_pcmu_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_pcmu_default))) {
+		if (isAudioCodecEnabled("PCMU", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_pcmu));
 			solo.sleep(500);
 		}
 			
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_codec_pcma_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_codec_pcma_default))) {
+		if (isAudioCodecEnabled("PCMA", 8000)) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_pcma));
 			solo.sleep(500);
 		}
 	}	
 	
+	private boolean isVideoCodecEnabled(String mime) {
+		LinphoneCore lc = LinphoneTestManager.getLc();
+		for (final PayloadType pt : lc.getVideoCodecs()) {
+			if (pt.getMime().equals(mime))
+				return lc.isPayloadTypeEnabled(pt);
+		}
+		return false;
+	}
+	
 	private void disableAllEnabledVideoCodecs() {
 		goToVideoCodecsSettings();
 			
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(aContext);
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_video_codec_vp8_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_video_codec_vp8_default))) {
+		if (isVideoCodecEnabled("VP8")) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_vp8_title));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_video_codec_h264_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_video_codec_h264_default))) {
+		if (isVideoCodecEnabled("H264")) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_h264_title));
 			solo.sleep(500);
 		}
 				
-		if (prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_video_codec_mpeg4_key), aContext.getResources().getBoolean(org.linphone.R.bool.pref_video_codec_mpeg4_default))) {
+		if (isVideoCodecEnabled("MP4V-ES")) {
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_mpeg4_title));
 			solo.sleep(500);
 		}
