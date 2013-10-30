@@ -26,6 +26,7 @@ import static org.linphone.core.LinphoneCall.State.Error;
 import static org.linphone.core.LinphoneCall.State.IncomingReceived;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,6 +96,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -201,7 +203,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			//Compatibility.setAudioManagerInCallMode(mAudioManager);
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
-			mBluetoothStarted=false;
+			mBluetoothStarted = false;
 		}
 		
 		if (!speakerOn) {
@@ -579,7 +581,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
 
-		mLc.setRing(mPrefs.getRingtone(null));
+		mLc.setRing(null);
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
@@ -608,9 +610,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
-		copyIfNotExist(R.raw.oldphone_mono,mRingSoundFile);
-		copyIfNotExist(R.raw.ringback,mRingbackSoundFile);
-		copyIfNotExist(R.raw.toy_mono,mPauseSoundFile);
+		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
+		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
+		copyIfNotExist(R.raw.toy_mono, mPauseSoundFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
@@ -1007,14 +1009,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 	
 	private void requestAudioFocus(){
 		if (!mAudioFocused){
-			int res=mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
+			int res = mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
 			Log.d("Audio focus requested: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
-			if (res==AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
+			if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
 		}
 	}
 	
 	private synchronized void startRinging()  {
-		if (disableRinging ) {
+		if (disableRinging) {
 			return;
 		}
 
@@ -1023,7 +1025,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		
 		try {
-			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator !=null) {
+			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {
 				long[] patern = {0,1000,1000};
 				mVibrator.vibrate(patern, 1);
 			}
@@ -1031,7 +1033,20 @@ public class LinphoneManager implements LinphoneCoreListener {
 				requestAudioFocus();
 				mRingerPlayer = new MediaPlayer();
 				mRingerPlayer.setAudioStreamType(STREAM_RING);
-				mListenerDispatcher.onRingerPlayerCreated(mRingerPlayer);
+				
+				String ringtone = LinphonePreferences.instance().getRingtone(android.provider.Settings.System.DEFAULT_RINGTONE_URI.toString());
+				try {
+					if (ringtone.startsWith("content://")) {
+						mRingerPlayer.setDataSource(mServiceContext, Uri.parse(ringtone));
+					} else {
+						FileInputStream fis = new FileInputStream(ringtone);
+						mRingerPlayer.setDataSource(fis.getFD());
+						fis.close();
+					}
+				} catch (IOException e) {
+					Log.e(e, "Cannot set ringtone");
+				}
+				
 				mRingerPlayer.prepare();
 				mRingerPlayer.setLooping(true);
 				mRingerPlayer.start();
@@ -1045,12 +1060,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	private synchronized void stopRinging() {
-		if (mRingerPlayer !=null) {
+		if (mRingerPlayer != null) {
 			mRingerPlayer.stop();
 			mRingerPlayer.release();
-			mRingerPlayer=null;
+			mRingerPlayer = null;
 		}
-		if (mVibrator!=null) {
+		if (mVibrator != null) {
 			mVibrator.cancel();
 		}
 		
@@ -1295,10 +1310,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 			for (LinphoneOnRegistrationStateChangedListener listener : getSimpleListeners(LinphoneOnRegistrationStateChangedListener.class)) {
 				listener.onRegistrationStateChanged(state);
 			}
-		}
-
-		public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
-			if (serviceListener != null) serviceListener.onRingerPlayerCreated(mRingerPlayer);
 		}
 
 		public void tryingNewOutgoingCallButAlreadyInCall() {
