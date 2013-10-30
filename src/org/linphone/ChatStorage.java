@@ -28,6 +28,7 @@ import org.linphone.mediastream.Log;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -64,11 +65,21 @@ public class ChatStorage {
 		instance = new ChatStorage(LinphoneService.instance().getApplicationContext());
 	}
 	
+	private boolean isVersionUsingNewChatStorage() {
+		try {
+			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 	private ChatStorage(Context c) {
 	    context = c;
 	    boolean useLinphoneStorage = c.getResources().getBoolean(R.bool.use_linphone_chat_storage);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneService.instance());
 		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), !LinphonePreferences.instance().isFirstLaunch());
+		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
 	    useNativeAPI = useLinphoneStorage && !updateNeeded;
 	    Log.d("Using native API: " + useNativeAPI);
 	    

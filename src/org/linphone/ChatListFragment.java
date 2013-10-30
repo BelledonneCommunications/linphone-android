@@ -30,7 +30,9 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -120,6 +122,16 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 		});
 	}
+	
+	private boolean isVersionUsingNewChatStorage() {
+		try {
+			Context context = LinphoneActivity.instance();
+			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 
 	@Override
 	public void onResume() {
@@ -129,6 +141,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		useLinphoneStorage = getResources().getBoolean(R.bool.use_linphone_chat_storage);
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
 		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
+		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
 		if (useLinphoneStorage && updateNeeded) {
 			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 private ProgressDialog pd;
