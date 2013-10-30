@@ -348,14 +348,14 @@ run-basic-tests:
 	adb shell am instrument -w -e size small org.linphone.test/android.test.InstrumentationTestRunner
 
 run-all-tests:
-        ant partial-clean && \
-        $(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
-        $(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
-        @cd $(TOPDIR)/tests/ && \
-        $(SDK_PATH)/android update test-project --path . -m ../ && \
-        ant debug && \
-        ant installd && \
-        adb shell am instrument -w -e size large org.linphone.test/android.test.InstrumentationTestRunner
+	ant partial-clean && \
+	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
+	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
+	@cd $(TOPDIR)/tests/ && \
+	$(SDK_PATH)/android update test-project --path . -m ../ && \
+	ant debug && \
+	ant installd && \
+	adb shell am instrument -w -e size large org.linphone.test/android.test.InstrumentationTestRunner
 
 clean-ndk-build:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
