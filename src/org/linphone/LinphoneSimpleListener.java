@@ -26,7 +26,6 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -41,7 +40,6 @@ public interface LinphoneSimpleListener {
 		void tryingNewOutgoingCallButWrongDestinationAddress();
 		void tryingNewOutgoingCallButAlreadyInCall();
 		void onRegistrationStateChanged(RegistrationState state, String message);
-		void onRingerPlayerCreated(MediaPlayer mRingerPlayer);
 		void onDisplayStatus(String message);
 	}
 

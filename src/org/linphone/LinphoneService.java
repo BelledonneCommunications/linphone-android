@@ -18,8 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -51,7 +49,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
@@ -609,21 +606,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		void onDisplayStatus(String message);
 		void onGlobalStateChangedToOn(String message);
 		void onCallStateChanged(LinphoneCall call, State state, String message);
-	}
-
-	public void onRingerPlayerCreated(MediaPlayer mRingerPlayer) {
-		String uriString = LinphonePreferences.instance().getRingtone(android.provider.Settings.System.DEFAULT_RINGTONE_URI.toString());
-		try {
-			if (uriString.startsWith("content://")) {
-				mRingerPlayer.setDataSource(this, Uri.parse(uriString));
-			} else {
-				FileInputStream fis = new FileInputStream(uriString);
-				mRingerPlayer.setDataSource(fis.getFD());
-				fis.close();
-			}
-		} catch (IOException e) {
-			Log.e(e, "Cannot set ringtone");
-		}
 	}
 
 	public void tryingNewOutgoingCallButAlreadyInCall() {
