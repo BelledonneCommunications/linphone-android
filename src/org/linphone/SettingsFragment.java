@@ -398,7 +398,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		codecs.removeAll();
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		for(final PayloadType pt : lc.getAudioCodecs()) {
+		for (final PayloadType pt : lc.getAudioCodecs()) {
 			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
 			codec.setTitle(pt.getMime());
 			codec.setSummary(pt.getRate() + " Hz");
@@ -457,7 +457,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		codecs.removeAll();
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		for(final PayloadType pt : lc.getVideoCodecs()) {
+		for (final PayloadType pt : lc.getVideoCodecs()) {
 			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
 			codec.setTitle(pt.getMime());
 			
