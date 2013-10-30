@@ -99,10 +99,6 @@ public class LinphonePreferences {
 	public boolean shouldAutomaticallyAcceptFriendsRequests() {
 		return false; //TODO
 	}
-
-	public boolean shouldUseSoftvolume() {
-		return false; //TODO
-	}
 	// End of app settings
 	
 	// Accounts settings

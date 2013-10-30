@@ -917,7 +917,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 				Compatibility.setAudioManagerInCallMode(mAudioManager);
 			}
 			
-			if (Hacks.needSoftvolume() || LinphonePreferences.instance().shouldUseSoftvolume()) {
+			if (Hacks.needSoftvolume()) {
 				adjustVolume(0); // Synchronize
 			}
 		}
