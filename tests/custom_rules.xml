@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="custom_rules">
+	<target name="test">
+		<exec executable="adb" failonerror="true" outputproperty="tests.output">
+			<arg value="shell" />
+			<arg value="am" />
+			<arg value="instrument" />
+			<arg value="-w" />
+			<arg value="org.linphone.test/android.test.InstrumentationTestRunner" />
+		</exec>
+		<echo message="${tests.output}"/>
+		<fail message="Tests failed">
+			<condition>
+				<contains string="${tests.output}" substring="FAILURES" />
+			</condition>
+		</fail>
+		<fail message="Tests crashed">
+			<condition>
+				<contains string="${tests.output}" substring="INSTRUMENTATION_CODE:" />
+			</condition>
+		</fail>
+	</target>
+</project>
