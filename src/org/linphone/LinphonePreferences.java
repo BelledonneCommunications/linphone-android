@@ -116,10 +116,11 @@ public class LinphonePreferences {
 			} catch (LinphoneCoreException e) { }
 			return null;
 		}
-		else if (n < 0) {
+		else if (n < 0 || n >= authsInfos.length) {
 			return null;
 		}
-		return authsInfos[n];
+		
+		return null;
 	}
 	
 	private String tempUsername;
@@ -174,11 +175,12 @@ public class LinphonePreferences {
 	
 	public void setAccountUsername(int n, String username) {
 		String identity = "sip:" + username + "@" + getAccountDomain(n);
+		LinphoneAuthInfo info = getAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
-			getAuthInfo(n).setUsername(username);
+			info.setUsername(username);
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
@@ -574,6 +576,15 @@ public class LinphonePreferences {
 		getLc().setSignalingTransportPorts(transports);
 	}
 
+	public String getTransportKey() {
+		Transports transports = getLc().getSignalingTransportPorts();
+		String transport = getString(R.string.pref_transport_udp_key);
+		if (transports.tcp > 0)
+			transport = getString(R.string.pref_transport_tcp_key);
+		else if (transports.tls > 0)
+			transport = getString(R.string.pref_transport_tls_key);
+		return transport;
+	}
 	
 	public String getTransport() {
 		Transports transports = getLc().getSignalingTransportPorts();
