@@ -7,7 +7,7 @@ run-basic-tests:
 	$(SDK_PATH)/android update test-project --path . -m ../
 	ant debug
 	ant installd
-	adb shell am instrument -w -e size small org.linphone.test/android.test.InstrumentationTestRunner
+	ant test
 
 run-all-tests:
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
