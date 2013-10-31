@@ -369,12 +369,12 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
-		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-		if (proxyCfg != null)
-			getLc().removeProxyConfig(proxyCfg);
 		LinphoneAuthInfo authInfo = getAuthInfo(n);
 		if (authInfo != null)
 			getLc().removeAuthInfo(authInfo);
+		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
+		if (proxyCfg != null)
+			getLc().removeProxyConfig(proxyCfg);
 	}
 	// End of accounts settings
 	
