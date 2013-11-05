@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.linphone.FragmentsAvailable;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 
@@ -51,7 +52,7 @@ public class AccountManagement extends SampleTest {
 		solo.goBack();
 		
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
-		Assert.assertEquals(proxyConfigs.length, 1);
+		Assert.assertEquals(1, proxyConfigs.length);
 	}
 
 	@LargeTest
@@ -64,8 +65,7 @@ public class AccountManagement extends SampleTest {
 		solo.goBack();
 		solo.goBack();
 		
-		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
-		Assert.assertEquals(proxyConfigs.length, 0);
+		Assert.assertFalse(LinphonePreferences.instance().isAccountEnabled(0));
 	}
 	
 	@LargeTest
@@ -78,8 +78,7 @@ public class AccountManagement extends SampleTest {
 		solo.goBack();
 		solo.goBack();
 		
-		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
-		Assert.assertEquals(proxyConfigs.length, 1);
+		Assert.assertTrue(LinphonePreferences.instance().isAccountEnabled(0));
 	}
 	
 	private void goToSettings() {
