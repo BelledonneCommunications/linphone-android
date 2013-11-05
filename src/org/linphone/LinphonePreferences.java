@@ -123,18 +123,13 @@ public class LinphonePreferences {
 	 * Useful to edit a authInfo (you should call saveAuthInfo after the modifications to save them).
 	 */
 	private LinphoneAuthInfo getClonedAuthInfo(int n) {
-		LinphoneProxyConfig prxCfg = getProxyConfig(n);
-		try {
-			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
-			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
-			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
-			getLc().removeAuthInfo(authInfo);
-			return cloneAuthInfo;
-		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
-		}
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		if (authInfo == null)
+			return null;
 		
-		return null;
+		LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
+		getLc().removeAuthInfo(authInfo);
+		return cloneAuthInfo;
 	}
 	
 	/**
