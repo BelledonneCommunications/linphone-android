@@ -24,6 +24,7 @@ import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -402,6 +403,13 @@ public class LinphonePreferences {
 		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
+		
+		if (getLc().getProxyConfigList().length == 0) {
+			// TODO: remove once issue http://bugs.linphone.org/view.php?id=984 will be fixed
+			LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
+		} else {
+			getLc().refreshRegisters();
+		}
 	}
 	// End of accounts settings
 	
