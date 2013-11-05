@@ -339,11 +339,11 @@ run-linphone:
 
 run-basic-tests:
 	ant partial-clean
-	$(MAKE) -C tests
+	$(MAKE) -C tests run-basic-tests
 
 run-all-tests:
 	ant partial-clean 
-	$(MAKE) -C tests
+	$(MAKE) -C tests run-all-tests
 
 clean-ndk-build:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
