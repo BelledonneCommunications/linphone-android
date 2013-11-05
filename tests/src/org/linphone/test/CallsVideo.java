@@ -51,6 +51,7 @@ public class CallsVideo extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
 		assertCallIsCorrectlyRunning();
+		assertCallIsRunningWithVideo();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
@@ -61,7 +62,7 @@ public class CallsVideo extends SampleTest {
 	@LargeTest
 	public void testCDTMFRFC2833InPCMUCall() {
 		disableAllEnabledAudioCodecs();
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_pcmu));
+		solo.clickOnText("PCMU");
 		goBackToDialerAfterCodecChanges();
 		solo.sleep(1000);
 		
@@ -138,6 +139,7 @@ public class CallsVideo extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
 		assertCallIsCorrectlyRunning();
+		assertCallIsRunningWithVideo();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
@@ -236,6 +238,7 @@ public class CallsVideo extends SampleTest {
 		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
 		
 		assertCallIsCorrectlyRunning();
+		assertCallIsRunningWithVideo();
 	}
 	
 	//TODO: Test each video codec
@@ -295,6 +298,7 @@ public class CallsVideo extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
 		assertCallIsCorrectlyRunning();
+		assertCallIsRunningWithVideo();
 		
 		Assert.assertTrue(solo.getView(org.linphone.R.id.video).isEnabled());
 		solo.clickOnView(solo.getView(org.linphone.R.id.video));
@@ -303,6 +307,11 @@ public class CallsVideo extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
+	}
+	
+	private void assertCallIsRunningWithVideo() {
+		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+		Assert.assertTrue(call.getCurrentParamsCopy().getVideoEnabled());
 	}
 	
 	private void assertCallIsCorrectlyRunning() {
@@ -320,7 +329,6 @@ public class CallsVideo extends SampleTest {
 		}
 		
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());
-		Assert.assertTrue(call.getCurrentParamsCopy().getVideoEnabled());
 	}
 	
 	private void goToSettings() {
