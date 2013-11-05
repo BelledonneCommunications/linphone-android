@@ -4,13 +4,12 @@ import junit.framework.Assert;
 
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -51,24 +50,23 @@ public class AccountAssistant extends SampleTest {
 
 		solo.sleep(3000); //Wait for registration to be done
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
-		Assert.assertEquals(proxyConfigs.length, 1);
+		Assert.assertEquals(1, proxyConfigs.length);
 		LinphoneProxyConfig proxyConfig = proxyConfigs[0];
 		Assert.assertEquals(RegistrationState.RegistrationOk, proxyConfig.getState());
 		
 		//Check the wizard added sip.linphone.org custom settings
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		String stunServer = prefs.getString(aContext.getString(org.linphone.R.string.pref_stun_server_key), "");
-		Assert.assertEquals(stunServer, aContext.getString(org.linphone.R.string.default_stun));
+		LinphonePreferences prefs = LinphonePreferences.instance();
+		String stunServer = prefs.getStunServer();
+		Assert.assertEquals(aContext.getString(org.linphone.R.string.default_stun), stunServer);
 				
-		String transport = prefs.getString(aContext.getString(org.linphone.R.string.pref_transport_key), aContext.getString(org.linphone.R.string.pref_transport_udp_key));
-		Assert.assertEquals(transport, aContext.getString(org.linphone.R.string.pref_transport_tls_key));
+		String transport = prefs.getTransportKey();
+		Assert.assertEquals(aContext.getString(org.linphone.R.string.pref_transport_tls_key), transport);
 				
-		String proxy = prefs.getString(aContext.getString(org.linphone.R.string.pref_proxy_key), "");
-		Assert.assertEquals(proxy, aContext.getString(org.linphone.R.string.default_domain) + ":5223");
-		boolean outboundproxy = prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_enable_outbound_proxy_key), false);
-		Assert.assertEquals(outboundproxy, true);
+		String proxy = prefs.getAccountProxy(0);
+		Assert.assertEquals(aContext.getString(org.linphone.R.string.default_domain) + ":5223", proxy);
+		Assert.assertEquals(true, prefs.isAccountOutboundProxySet(0));
 				
-		boolean ice = prefs.getBoolean(aContext.getString(org.linphone.R.string.pref_ice_enable_key), false);
+		boolean ice = prefs.isIceEnabled();
 		Assert.assertEquals(ice, true);
 	}
 	

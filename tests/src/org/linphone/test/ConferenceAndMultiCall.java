@@ -11,6 +11,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -45,6 +46,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testBSimpleConference() {
+		LinphoneTestManager.getInstance().declineCall = false; // Just in case
 		startConference();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -255,14 +257,13 @@ public class ConferenceAndMultiCall extends SampleTest {
 	private void startTwoCalls() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
-		
 		assertCallIsCorrectlyRunning(1);
+		
 		solo.clickOnView(solo.getView(org.linphone.R.id.options));
 		solo.clickOnView(solo.getView(org.linphone.R.id.addCall));
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.conference_account_login) + "@" + iContext.getString(org.linphone.test.R.string.conference_account_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
-		
 		assertCallIsCorrectlyRunning(2);
 	}
 	
@@ -280,12 +281,16 @@ public class ConferenceAndMultiCall extends SampleTest {
 	private void assertCallIsCorrectlyRunning(int lcId) {
 		solo.waitForActivity("InCallActivity", 5000);
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
-		
+
 		solo.sleep(2000);
+		Assert.assertEquals(1, LinphoneTestManager.getLc(lcId).getCallsNb());
 		LinphoneCall call = LinphoneTestManager.getLc(lcId).getCalls()[0];
 		
-		if (call.getState() == LinphoneCall.State.OutgoingProgress || call.getState() == LinphoneCall.State.IncomingReceived) {
-			solo.sleep(3000);
+		int retry = 0;
+		while ((call.getState() == LinphoneCall.State.OutgoingProgress || call.getState() == LinphoneCall.State.IncomingReceived) && retry < 5) {
+			solo.sleep(1000);
+			retry++;
+			Log.w("Call in progress but not running, retry = " + retry);
 		}
 		
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());

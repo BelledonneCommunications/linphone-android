@@ -106,21 +106,38 @@ public class LinphonePreferences {
 	}
 	
 	private LinphoneAuthInfo getAuthInfo(int n) {
-		LinphoneAuthInfo[] authsInfos = getLc().getAuthInfosList();
-		// In case you have multiple proxy configs with same auth info
-		if (n > 0 && n >= authsInfos.length) {
-			LinphoneProxyConfig prxCfg = getProxyConfig(n);
-			try {
-				LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
-				return getLc().findAuthInfo(addr.getUserName(), null);
-			} catch (LinphoneCoreException e) { }
-			return null;
-		}
-		else if (n < 0 || n >= authsInfos.length) {
-			return null;
+		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		try {
+			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
+			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
+			return authInfo;
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Removes a authInfo from the core and returns a copy of it.
+	 * Useful to edit a authInfo (you should call saveAuthInfo after the modifications to save them).
+	 */
+	private LinphoneAuthInfo getClonedAuthInfo(int n) {
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		if (authInfo == null)
+			return null;
+		
+		LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
+		getLc().removeAuthInfo(authInfo);
+		return cloneAuthInfo;
+	}
+	
+	/**
+	 * Saves a authInfo into the core.
+	 * Useful to save the changes made to a cloned authInfo.
+	 */
+	private void saveAuthInfo(LinphoneAuthInfo authInfo) {
+		getLc().addAuthInfo(authInfo);
 	}
 	
 	private String tempUsername;
@@ -151,7 +168,7 @@ public class LinphonePreferences {
 			} catch (NumberFormatException nfe) { }
 		}
 		
-		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null);
+		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
 		
 		getLc().addProxyConfig(prxCfg);
 		getLc().addAuthInfo(authInfo);
@@ -175,12 +192,14 @@ public class LinphonePreferences {
 	
 	public void setAccountUsername(int n, String username) {
 		String identity = "sip:" + username + "@" + getAccountDomain(n);
-		LinphoneAuthInfo info = getAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
+		LinphoneAuthInfo info = getClonedAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
+			
 			info.setUsername(username);
+			saveAuthInfo(info);
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
@@ -196,7 +215,9 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountUserId(int n, String userId) {
-		getAuthInfo(n).setUserId(userId);
+		LinphoneAuthInfo info = getClonedAuthInfo(n);
+		info.setUserId(userId);
+		saveAuthInfo(info);
 	}
 
 	public String getAccountUserId(int n) {
@@ -209,7 +230,9 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountPassword(int n, String password) {
-		getAuthInfo(n).setPassword(password);
+		LinphoneAuthInfo info = getClonedAuthInfo(n);
+		info.setPassword(password);
+		saveAuthInfo(info);
 	}
 
 	public String getAccountPassword(int n) {
@@ -226,6 +249,10 @@ public class LinphonePreferences {
 		String proxy = "sip:" + domain;
 		
 		try {
+			LinphoneAuthInfo authInfo = getClonedAuthInfo(n);
+			authInfo.setDomain(domain);
+			saveAuthInfo(authInfo);
+			
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setIdentity(identity);
 			prxCfg.setProxy(proxy);
