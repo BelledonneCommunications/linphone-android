@@ -10,6 +10,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.PayloadType;
+import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -42,6 +43,8 @@ public class CallsAudio extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testBOutgoingCallWithDefaultConfig() {
+		LinphoneTestManager.getInstance().declineCall = false; // Just in case
+		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
@@ -56,7 +59,7 @@ public class CallsAudio extends SampleTest {
 	@LargeTest
 	public void testCDTMFRFC2833InPCMUCall() {
 		disableAllEnabledAudioCodecs();
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_pcmu));
+		solo.clickOnText("PCMU");
 		goBackToDialerAfterCodecChanges();
 		solo.sleep(1000);
 		
@@ -360,8 +363,11 @@ public class CallsAudio extends SampleTest {
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 		
-		if (call.getState() == LinphoneCall.State.OutgoingProgress) {
-			solo.sleep(3000);
+		int retry = 0;
+		while ((call.getState() == LinphoneCall.State.OutgoingProgress || call.getState() == LinphoneCall.State.IncomingReceived) && retry < 5) {
+			solo.sleep(1000);
+			retry++;
+			Log.w("Call in progress but not running, retry = " + retry);
 		}
 		
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());
@@ -395,72 +401,72 @@ public class CallsAudio extends SampleTest {
 		goToAudioCodecsSettings();
 			
 		if (isAudioCodecEnabled("opus", 48000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_opus));
+			solo.clickOnText("opus");
 			solo.sleep(500);
 		}
 		
 		if (isAudioCodecEnabled("speex", 16000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_speex16));
+			solo.clickOnText("speex");
 			solo.sleep(500);
 		}
 			
 		if (isAudioCodecEnabled("speex", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_speex8));
+			solo.clickOnText("speex", 1);
 			solo.sleep(500);
 		}
 		
-		if (isAudioCodecEnabled("ilbc", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_ilbc));
+		if (isAudioCodecEnabled("iLBC", 8000)) {
+			solo.clickOnText("iLBC");
 			solo.sleep(500);
 		}
 			
 		if (isAudioCodecEnabled("AMR", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_amr));
+			solo.clickOnText("AMR");
 			solo.sleep(500);
 		}
 				
 		if (isAudioCodecEnabled("AMRWB", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_amrwb));
+			solo.clickOnText("AMRWB");
 			solo.sleep(500);
 		}
 				
 		if (isAudioCodecEnabled("G729", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_g729));
+			solo.clickOnText("G729");
 			solo.sleep(500);
 		}
 				
 		if (isAudioCodecEnabled("GSM", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_gsm));
+			solo.clickOnText("GSM");
 			solo.sleep(500);
 		}
 				
 		if (isAudioCodecEnabled("G722", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_g722));
+			solo.clickOnText("G722");
 			solo.sleep(500);
 		}
 			
 		if (isAudioCodecEnabled("SILK", 24000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_silk24));
+			solo.clickOnText("SILK");
 			solo.sleep(500);
 		}
 				
 		if (isAudioCodecEnabled("SILK", 16000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_silk16));
+			solo.clickOnText("SILK", 1);
 			solo.sleep(500);
 		}
 		
 		if (isAudioCodecEnabled("SILK", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_silk8));
+			solo.clickOnText("SILK", 2);
 			solo.sleep(500);
 		}
 				
 		if (isAudioCodecEnabled("PCMU", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_pcmu));
+			solo.clickOnText("PCMU");
 			solo.sleep(500);
 		}
 			
 		if (isAudioCodecEnabled("PCMA", 8000)) {
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_codec_pcma));
+			solo.clickOnText("PCMA");
 			solo.sleep(500);
 		}
 	}

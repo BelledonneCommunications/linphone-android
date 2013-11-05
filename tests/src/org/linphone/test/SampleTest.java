@@ -2,6 +2,7 @@ package org.linphone.test;
 
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.core.LinphoneCore;
 
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
@@ -32,7 +33,10 @@ public abstract class SampleTest extends ActivityInstrumentationTestCase2<Linpho
 
 	@Override
 	public void tearDown() throws Exception {
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().terminateAllCalls();
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.terminateAllCalls();
+		}
 		solo.finishOpenedActivities();
 	}
 	

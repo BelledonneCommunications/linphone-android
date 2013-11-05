@@ -20,6 +20,7 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -37,15 +38,13 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.TelephonyManager;
 
 public class LinphoneTestManager implements LinphoneCoreListener {
 
 	private static LinphoneTestManager instance;
-	private Context mIContext;
+	private Context mAContext, mIContext;
 	private LinphoneCore mLc1, mLc2;
 	
 	public String lastMessageReceived;
@@ -53,10 +52,12 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 	public boolean autoAnswer = true;
 	public boolean declineCall = false;
 
-	private Timer mTimer = new Timer("Linphone scheduler");
+	private Timer mTimer1 = new Timer("Linphone scheduler 1");
+	private Timer mTimer2 = new Timer("Linphone scheduler 2");
 	
 	private LinphoneTestManager(Context ac, Context ic) {
 		mIContext = ic;
+		mAContext = ac;
 	}
 	
 	public static LinphoneTestManager createAndStart(Context ac, Context ic, int id) {
@@ -77,7 +78,8 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		try {
 			LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
 			
-			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this);
+			String basePath = mAContext.getFilesDir().getAbsolutePath();
+			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc" + id, null, null);
 			if (id == 2) {
 				mLc2 = mLc;
 			} else {
@@ -114,11 +116,13 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 					mLc.iterate();
 				}
 			};
-			mTimer.scheduleAtFixedRate(lTask, 0, 20); 
-
-			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
 			
+			if (id == 2) {
+				mTimer2.scheduleAtFixedRate(lTask, 0, 20); 
+			} else {
+				mTimer1.scheduleAtFixedRate(lTask, 0, 20); 
+			}
+
 	        resetCameraFromPreferences();
 		}
 		catch (Exception e) {
@@ -137,8 +141,17 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		LinphoneManager.getLc().setVideoDevice(camId);
 	}
 	
-	public void initFromConf(LinphoneCore mLc) throws LinphoneConfigException {
+	public void initFromConf(LinphoneCore mLc) throws LinphoneConfigException, LinphoneCoreException {
 		LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
+
+		// Use TCP with Random port
+		Transports transports = getLc().getSignalingTransportPorts();
+		transports.tcp = -1;
+		transports.udp = 0;
+		transports.tls = 0;
+		mLc.setSignalingTransportPorts(transports);
+		
+		initAccounts(mLc);
 
 		mLc.setVideoPolicy(true, true);
 		boolean isVideoEnabled = true;
@@ -169,7 +182,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		mLc.setMediaEncryption(me);
 	}
 	
-	public void initAccounts(LinphoneCore mLc) throws LinphoneCoreException {
+	private void initAccounts(LinphoneCore mLc) throws LinphoneCoreException {
 		mLc.clearAuthInfos();
 		mLc.clearProxyConfigs();
 		
@@ -183,7 +196,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			password = mIContext.getString(org.linphone.test.R.string.conference_account_password);
 			domain = mIContext.getString(org.linphone.test.R.string.conference_account_domain);
 		}
-		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null);
+		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null, domain);
 		mLc.addAuthInfo(lAuthInfo);
 		String identity = "sip:" + username +"@" + domain;
 		String proxy = "sip:" + domain;
@@ -243,7 +256,8 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 
 	private void doDestroy() {
 		try {
-			mTimer.cancel();
+			mTimer1.cancel();
+			mTimer2.cancel();
 			mLc1.destroy();
 			mLc2.destroy();
 		} 
