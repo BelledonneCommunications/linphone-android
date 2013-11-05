@@ -244,8 +244,10 @@ public class StatusFragment extends Fragment {
 	
 	private String getStatusIconText(LinphoneCore.RegistrationState state) {
 		Context context = getActivity();
-		if (!isAttached)
+		if (!isAttached && LinphoneActivity.isInstanciated())
 			context = LinphoneActivity.instance();
+		else if (!isAttached && LinphoneService.isReady())
+			context = LinphoneService.instance();
 		
 		try {
 			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
