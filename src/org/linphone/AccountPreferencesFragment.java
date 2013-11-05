@@ -135,12 +135,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			return true;
 		}		
 	};
-	OnPreferenceChangeListener deleteChangedListener = new OnPreferenceChangeListener() {
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			return true;
-		}		
-	};
 	
 	private void manageAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
