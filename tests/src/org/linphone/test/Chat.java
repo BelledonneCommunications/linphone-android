@@ -2,6 +2,7 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
+import org.linphone.ChatStorage;
 import org.linphone.LinphoneActivity;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
@@ -17,8 +18,22 @@ import android.test.suitebuilder.annotation.SmallTest;
  */
 public class Chat extends SampleTest {
 	
+	@SmallTest
+	@MediumTest
 	@LargeTest
-	public void testBEmptyChatHistory() {
+	public void testAEmptyChatHistory() {
+		goToChat();
+		
+		ChatStorage chatStorage = ChatStorage.getInstance();
+		for (String conversation : chatStorage.getChatList()) {
+			chatStorage.removeDiscussion(conversation);
+		}
+		
+		Assert.assertEquals(0, chatStorage.getUnreadMessageCount());
+	}
+	
+	@LargeTest
+	public void testBDisplayEmptyChatHistory() {
 		goToChat();
 		
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));
@@ -42,7 +57,7 @@ public class Chat extends SampleTest {
 	}
 	
 	@LargeTest
-	public void testDNotEmptyChatHistory() {
+	public void testDIsNotEmptyChatHistory() {
 		goToChat();
 		
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.account_test_calls_login)));
