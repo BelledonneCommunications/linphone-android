@@ -374,7 +374,7 @@ generate-sdk: generate-apk
 
 linphone-sdk: generate-sdk
 
-liblinphone-android-sdk: generate-apk
+linphone-android-sdk: generate-apk
 	ant liblinphone-android-sdk
 
 mediastreamer2-sdk: update-mediastreamer2-project generate-mediastreamer2-apk
