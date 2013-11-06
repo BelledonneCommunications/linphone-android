@@ -208,14 +208,22 @@ $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_S
 	make extract-sources \
 	|| ( echo "SILK audio plugin prepare state failed." ; exit 1 )
 
+ifeq ($(BUILD_SILK), 1)
 prepare-silk: $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c
+else
+prepare-silk:
+endif
 
 #Zrtp
 $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h : $(TOPDIR)/submodules/externals/build/libzrtpcpp/libzrtpcpp-config.h
 	@cd $(TOPDIR)/submodules/externals/libzrtpcpp/ && \
 	cp ../build/libzrtpcpp/libzrtpcpp-config.h . \
 	|| ( echo "ZRTP prepare state failed." ; exit 1 )
+ifeq ($(BUILD_GPLV3_ZRTP), 1)
 prepare-zrtp: $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h
+else
+prepare-zrtp:
+endif
 
 
 
@@ -267,7 +275,11 @@ prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)
 #SQLite3
 SQLITE_SRC_DIR=$(TOPDIR)/submodules/externals/sqlite3
 SQLITE_BUILD_DIR=$(SQLITE_SRC_DIR)
+ifeq ($(BUILD_SQLITE), 1)
 prepare-sqlite3: $(SQLITE_BUILD_DIR)/sqlite3.c
+else
+prepare-sqlite3:
+endif
 
 $(SQLITE_BUILD_DIR)/sqlite3.c: $(SQLITE_BASENAME).zip
 	unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
