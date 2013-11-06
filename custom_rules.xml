@@ -137,4 +137,17 @@
 		</zip>
 	</target>
 
+	<target name="liblinphone-android-sdk">
+                <echo level="info">Creating library output jar file...</echo>
+                <property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone.jar" />
+                <jar destfile="${out.library.jar.file}">
+                        <fileset dir="${out.classes.absolute.dir}"
+                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class"/>
+                        <fileset dir="submodules/linphone/java" >
+                                <include name="common/org/linphone/core/*.java"/>
+                                <include name="j2se/org/linphone/core/*.java"/>
+                        </fileset>
+                </jar>
+        </target>
+
 </project>
