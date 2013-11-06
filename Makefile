@@ -200,7 +200,7 @@ $(LIBMSSILK_SRC_DIR)/configure:
 
 $(LIBMSSILK_BUILD_DIR)/Makefile: $(LIBMSSILK_SRC_DIR)/configure
 	cd $(LIBMSSILK_BUILD_DIR) && \
-	$(LIBMSSILK_SRC_DIR)/configure --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" " 
+	$(LIBMSSILK_SRC_DIR)/configure --without-mediastreamer --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" "
 
 #make sure to update this path if SILK sdk is changed
 $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c: $(LIBMSSILK_BUILD_DIR)/Makefile
