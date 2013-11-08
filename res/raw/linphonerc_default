@@ -13,3 +13,8 @@ size=qvga
 
 [app]
 sharing_server=https://www.linphone.org:444/upload.php
+tunnel=disabled
+
+[tunnel]
+host=
+port=443

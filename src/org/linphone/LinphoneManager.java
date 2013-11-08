@@ -492,9 +492,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
 		mLc.tunnelCleanServers();
 		String host = mPrefs.getTunnelHost();
-		int port = mPrefs.getTunnelPort();
-		mLc.tunnelAddServerAndMirror(host, port, 12345, 500);
-		manageTunnelServer(info);
+		if (host != null) {
+			int port = mPrefs.getTunnelPort();
+			mLc.tunnelAddServerAndMirror(host, port, 12345, 500);
+			manageTunnelServer(info);
+		}
 	}
 
 	private boolean isTunnelNeeded(NetworkInfo info) {
