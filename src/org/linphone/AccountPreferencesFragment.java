@@ -92,7 +92,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			mPrefs.setAccountProxy(n, newValue.toString());
-			preference.setSummary(newValue.toString());
+			preference.setSummary(mPrefs.getAccountProxy(n));
 			return true;
 		}		
 	};
