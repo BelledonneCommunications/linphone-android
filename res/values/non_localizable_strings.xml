@@ -16,7 +16,7 @@
 		<item>@string/tunnel_mode_entry_value_disabled</item>
 		<item >@string/tunnel_mode_entry_value_3G_only</item>
 		<item>@string/tunnel_mode_entry_value_always</item>
-	<item>@string/tunnel_mode_entry_value_auto</item>
+		<item>@string/tunnel_mode_entry_value_auto</item>
 	</string-array> 
 		<string name="pref_tunnel_host_key">pref_tunnel_host_key</string>
 		<string name="pref_tunnel_port_key">pref_tunnel_port_key</string>
