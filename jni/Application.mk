@@ -95,6 +95,11 @@ APP_MODULES += libwebrtc_system_wrappers libwebrtc_spl libwebrtc_apm_utility lib
 APP_MODULES += libwebrtc_spl_neon libwebrtc_aecm_neon
 endif
 
+ifeq ($(BUILD_WEBRTC_ISAC), 1)
+APP_MODULES += libwebrtc_spl libwebrtc_isacfix libmsisac
+APP_MODULES += libwebrtc_spl_neon libwebrtc_isacfix_neon
+endif
+
 ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 ifeq ($(RING),yes)
 APP_MODULES      += libring
