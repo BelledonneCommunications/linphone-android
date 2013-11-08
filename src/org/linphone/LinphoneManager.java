@@ -139,6 +139,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private static boolean sExited;
 	private boolean mAudioFocused;
 	private boolean isNetworkReachable;
+	private ConnectivityManager mConnectivityManager;
 
 	private WakeLock mIncallWakeLock;
 	
@@ -178,6 +179,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 	}
 
@@ -483,6 +485,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
+	private void initTunnelFromConf() {
+		if (!mLc.isTunnelAvailable()) 
+			return;
+		
+		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+		mLc.tunnelCleanServers();
+		String host = mPrefs.getTunnelHost();
+		int port = mPrefs.getTunnelPort();
+		mLc.tunnelAddServerAndMirror(host, port, 12345, 500);
+		manageTunnelServer(info);
+	}
 
 	private boolean isTunnelNeeded(NetworkInfo info) {
 		if (info == null) {
@@ -505,7 +518,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		return false;
 	}
 
-	public void manageTunnelServer(NetworkInfo info) {
+	private void manageTunnelServer(NetworkInfo info) {
 		if (mLc == null) return;
 		if (!mLc.isTunnelAvailable()) return;
 
@@ -597,6 +610,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 				camId = androidCamera.id;
 		}
 		LinphoneManager.getLc().setVideoDevice(camId);
+		
+		initTunnelFromConf();
         
 		TimerTask lTask = new TimerTask() {
 			@Override

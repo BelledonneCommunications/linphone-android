@@ -77,6 +77,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private void initSettings() {
 		//Init accounts on Resume instead of on Create to update the account list when coming back from wizard
 		
+		initTunnelSettings();
 		initAudioSettings();
 		initVideoSettings();
 		initCallSettings();
@@ -106,6 +107,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 
 	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
+		setTunnelPreferencesListener();
 		setAudioPreferencesListener();
 		setVideoPreferencesListener();
 		setCallPreferencesListener();
@@ -223,6 +225,43 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
 		findPreference(getString(pref)).setDefaultValue(value);
 		findPreference(getString(pref)).setSummary(value);
+	}
+	
+	private void initTunnelSettings() {
+		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
+		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, mPrefs.getTunnelHost());
+		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_mode_key, mPrefs.getTunnelMode());
+	}
+	
+	private void setTunnelPreferencesListener() {
+		findPreference(getString(R.string.pref_tunnel_host_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String host = newValue.toString();
+				mPrefs.setTunnelHost(host);
+				return true;
+			}
+		});
+		findPreference(getString(R.string.pref_tunnel_port_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				try { 
+					int port = Integer.parseInt(newValue.toString());
+					mPrefs.setTunnelPort(port);
+					return true;
+				} catch (NumberFormatException nfe) {
+					return false;
+				}
+			}
+		});
+		findPreference(getString(R.string.pref_tunnel_mode_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String mode = newValue.toString();
+				mPrefs.setTunnelMode(mode);
+				return true;
+			}
+		});
 	}
 	
 	private void initAccounts() {

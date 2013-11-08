@@ -23,7 +23,8 @@
 
             <EditTextPreference 
                 android:title="@string/pref_tunnel_port"
-				android:key="@string/pref_tunnel_port_key"/>
+				android:key="@string/pref_tunnel_port_key"
+				android:numeric="integer"/>
 
             <ListPreference 
                 android:title="@string/pref_tunnel_mode"
