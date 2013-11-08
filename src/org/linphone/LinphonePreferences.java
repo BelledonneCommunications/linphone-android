@@ -272,9 +272,13 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountProxy(int n, String proxy) {
+		if (proxy == null || proxy.length() <= 0) {
+			proxy = getAccountDomain(n);
+		}
 		if (!proxy.startsWith("sip:")) {
 			proxy = "sip:" + proxy;
 		}
+		
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setProxy(proxy);
