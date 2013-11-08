@@ -229,7 +229,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	
 	private void initTunnelSettings() {
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
-		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, mPrefs.getTunnelHost());
+		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_mode_key, mPrefs.getTunnelMode());
 	}
 	
@@ -239,6 +239,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String host = newValue.toString();
 				mPrefs.setTunnelHost(host);
+				preference.setSummary(host);
 				return true;
 			}
 		});
@@ -248,6 +249,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				try { 
 					int port = Integer.parseInt(newValue.toString());
 					mPrefs.setTunnelPort(port);
+					preference.setSummary(String.valueOf(port));
 					return true;
 				} catch (NumberFormatException nfe) {
 					return false;
@@ -259,6 +261,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String mode = newValue.toString();
 				mPrefs.setTunnelMode(mode);
+				preference.setSummary(mode);
 				return true;
 			}
 		});

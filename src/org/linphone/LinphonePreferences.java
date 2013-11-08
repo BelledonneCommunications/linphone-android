@@ -769,7 +769,7 @@ public class LinphonePreferences {
 	
 	// Tunnel settings
 	public String getTunnelMode() {
-		return getConfig().getString("app", "tunnel", getString(R.string.default_tunnel_mode_entry_value));
+		return getConfig().getString("app", "tunnel", null);
 	}
 	
 	public void setTunnelMode(String mode) {
@@ -777,7 +777,7 @@ public class LinphonePreferences {
 	}
 	
 	public String getTunnelHost() {
-		return getConfig().getString("tunnel", "host", getString(R.string.tunnel_host));
+		return getConfig().getString("tunnel", "host", null);
 	}
 	
 	public void setTunnelHost(String host) {
