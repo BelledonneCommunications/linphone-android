@@ -465,11 +465,13 @@ public class LinphonePreferences {
 	}
 	
 	public boolean shouldAutomaticallyShareMyVideo() {
-		return false; //TODO
+		return getConfig().getBool("video", "capture", true);
 	}
 	
 	public void setAutomaticallyShareMyVideo(boolean accept) {
-		//TODO
+		getConfig().setBool("video", "capture", accept);
+		if (isVideoEnabled())
+			enableVideo(true);
 	}
 	
 	public String getPreferredVideoSize() {
