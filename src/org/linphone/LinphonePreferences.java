@@ -778,6 +778,7 @@ public class LinphonePreferences {
 	
 	public void setTunnelMode(String mode) {
 		getConfig().setString("app", "tunnel", mode);
+		LinphoneManager.getInstance().initTunnelFromConf();
 	}
 	
 	public String getTunnelHost() {
@@ -786,6 +787,7 @@ public class LinphonePreferences {
 	
 	public void setTunnelHost(String host) {
 		getConfig().setString("tunnel", "host", host);
+		LinphoneManager.getInstance().initTunnelFromConf();
 	}
 	
 	public int getTunnelPort() {
@@ -794,6 +796,7 @@ public class LinphonePreferences {
 	
 	public void setTunnelPort(int port) {
 		getConfig().setInt("tunnel", "port", port);
+		LinphoneManager.getInstance().initTunnelFromConf();
 	}
 	// End of tunnel settings
 }
