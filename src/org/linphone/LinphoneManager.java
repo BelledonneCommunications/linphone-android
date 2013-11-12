@@ -371,7 +371,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	public void newOutgoingCall(AddressType address) {
 		String to = address.getText().toString();
-
+		newOutgoingCall(to, address.getDisplayedName());
+	}
+	
+	public void newOutgoingCall(String to, String displayName) {
 //		if (mLc.isIncall()) {
 //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
 //			return;
@@ -392,7 +395,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 			return;
 		}
-		lAddress.setDisplayName(address.getDisplayedName());
+		lAddress.setDisplayName(displayName);
 
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(LinphoneService.instance().getApplicationContext());
 		
