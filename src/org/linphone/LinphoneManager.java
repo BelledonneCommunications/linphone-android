@@ -485,7 +485,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-	private void initTunnelFromConf() {
+	public void initTunnelFromConf() {
 		if (!mLc.isTunnelAvailable()) 
 			return;
 		
