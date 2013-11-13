@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.net.URL;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.linphone.LinphoneManager;
@@ -26,11 +27,15 @@ import org.linphone.R;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -57,6 +62,9 @@ public class WizardFragment extends Fragment {
 	private boolean confirmPasswordOk = false;
 	private ImageView createAccount;
 	private TextView errorMessage;
+	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '_', '-' };
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +73,20 @@ public class WizardFragment extends Fragment {
 		username = (EditText) view.findViewById(R.id.setup_username);
     	ImageView usernameOkIV = (ImageView) view.findViewById(R.id.setup_username_ok);
     	addXMLRPCUsernameHandler(username, usernameOkIV);
+    	InputFilter filter = new InputFilter(){
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if (end > start) {
+                    for (int index = start; index < end; index++) {                                         
+                        if (!new String(acceptedChars).contains(String.valueOf(source.charAt(index)))) { 
+                            return ""; 
+                        }               
+                    }
+                }
+                return null;
+            }
+        };
+    	username.setFilters(new InputFilter[] { filter });
 
     	password = (EditText) view.findViewById(R.id.setup_password);
     	passwordConfirm = (EditText) view.findViewById(R.id.setup_password_confirm);
@@ -85,7 +107,19 @@ public class WizardFragment extends Fragment {
     	createAccount.setEnabled(false);
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				createAccount(username.getText().toString(), password.getText().toString(), email.getText().toString(), false);
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						createAccount(username.getText().toString().toLowerCase(Locale.getDefault()), password.getText().toString(), email.getText().toString(), false);
+					}
+				});
+				builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+					}
+				});
+				builder.setMessage(getString(R.string.setup_confirm_username).replace("%s", username.getText().toString().toLowerCase(Locale.getDefault())));
+				AlertDialog dialog = builder.create();
+				dialog.show();
 			}
     	});
     	
@@ -228,22 +262,20 @@ public class WizardFragment extends Fragment {
 	
 	private void addXMLRPCUsernameHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable arg0) {
+			public void afterTextChanged(Editable s) {
 				
 			}
 
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				
 			}
 
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) 
-			{
+			public void onTextChanged(CharSequence s, int start, int count, int after) {
 				usernameOk = false;
-				if (isUsernameCorrect(field.getText().toString()))
-				{
-					isUsernameRegistred(field.getText().toString(), icon);
-				}
-				else {
+				String username = field.getText().toString().toLowerCase(Locale.getDefault());
+				if (isUsernameCorrect(username)) {
+					isUsernameRegistred(username, icon);
+				} else {
 					errorMessage.setText(R.string.wizard_username_incorrect);
 					icon.setImageResource(R.drawable.wizard_notok);
 				}
@@ -253,15 +285,15 @@ public class WizardFragment extends Fragment {
 	
 	private void addXMLRPCEmailHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable arg0) {
+			public void afterTextChanged(Editable s) {
 				
 			}
 
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				
 			}
 
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) 
+			public void onTextChanged(CharSequence s, int start, int count, int after) 
 			{
 				emailOk = false;
 				if (isEmailCorrect(field.getText().toString())) {
@@ -280,15 +312,15 @@ public class WizardFragment extends Fragment {
 	
 	private void addXMLRPCPasswordHandler(final EditText field1, final ImageView icon) {
 		TextWatcher passwordListener = new TextWatcher() {
-			public void afterTextChanged(Editable arg0) {
+			public void afterTextChanged(Editable s) {
 				
 			}
 
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				
 			}
 
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) 
+			public void onTextChanged(CharSequence s, int start, int count, int after) 
 			{
 				passwordOk = false;
 				if (isPasswordCorrect(field1.getText().toString())) {
@@ -309,15 +341,15 @@ public class WizardFragment extends Fragment {
 	
 	private void addXMLRPCConfirmPasswordHandler(final EditText field1, final EditText field2, final ImageView icon) {
 		TextWatcher passwordListener = new TextWatcher() {
-			public void afterTextChanged(Editable arg0) {
+			public void afterTextChanged(Editable s) {
 				
 			}
 
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				
 			}
 
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) 
+			public void onTextChanged(CharSequence s, int start, int count, int after) 
 			{
 				confirmPasswordOk = false;
 				if (field1.getText().toString().equals(field2.getText().toString())) {

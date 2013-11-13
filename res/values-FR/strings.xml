@@ -384,6 +384,7 @@
 	<string name="setup_remote_provisioning">Télécharger ma configuration</string>
 	<string name="setup_remote_provisioning_hint">Cet assistant va télécharger une configuration existante.</string>
 	<string name="setup_remote_provisioning_url_hint">addresse où télécharger la configuration</string>
+	<string name="setup_confirm_username">Votre nom d\'utilisateur sera %s (les majuscules sont interdites). Acceptez-vous ?</string>
 	
 	<string name="zrtp_accept">Accepter</string>
 	<string name="zrtp_deny">Refuser</string>
