@@ -97,7 +97,6 @@
 	            android:id="@+id/setup_password_confirm"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_below="@id/setup_password"
 	            android:hint="@string/setup_password_confirm_hint"
 	            android:inputType="textPassword"
 	            android:paddingLeft="10dp"
