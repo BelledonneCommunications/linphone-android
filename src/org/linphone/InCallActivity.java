@@ -124,6 +124,7 @@ public class InCallActivity extends FragmentActivity implements
         isVideoEnabled = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("VideoEnabled");
         isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
         showCallListInVideo = getApplicationContext().getResources().getBoolean(R.bool.show_current_calls_above_video);
+        isSpeakerEnabled = getResources().getBoolean(R.bool.isTablet); // Speaker default value to true if tablet, else false
         
         isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
         cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
