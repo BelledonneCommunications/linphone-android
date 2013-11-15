@@ -92,12 +92,16 @@ endif
 
 ifneq ($(BUILD_WEBRTC_AECM), 0)
 APP_MODULES += libwebrtc_system_wrappers libwebrtc_spl libwebrtc_apm_utility libwebrtc_aecm
+ifneq (,$(findstring armeabi,$(TARGET_ARCH_ABI)))
 APP_MODULES += libwebrtc_spl_neon libwebrtc_aecm_neon
+endif
 endif
 
 ifeq ($(BUILD_WEBRTC_ISAC), 1)
 APP_MODULES += libwebrtc_spl libwebrtc_isacfix libmsisac
+ifneq (,$(findstring armeabi,$(TARGET_ARCH_ABI)))
 APP_MODULES += libwebrtc_spl_neon libwebrtc_isacfix_neon
+endif
 endif
 
 ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)

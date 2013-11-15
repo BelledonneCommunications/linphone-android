@@ -147,8 +147,6 @@ WEBRTC_BUILD_NEON_LIBS=false
 # AECM
 ifneq ($(BUILD_WEBRTC_AECM),0)
 
-    ifneq ($(TARGET_ARCH), x86)
-
         ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
             $(info $(TARGET_ARCH_ABI): Build NEON modules for AECM)
             WEBRTC_BUILD_NEON_LIBS=true
@@ -159,7 +157,6 @@ ifneq ($(BUILD_WEBRTC_AECM),0)
         include $(linphone-root-dir)/submodules/externals/build/webrtc/system_wrappers/Android.mk
         include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_processing/utility/Android.mk
         include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_processing/aecm/Android.mk
-    endif
 endif
 
 # iSAC
