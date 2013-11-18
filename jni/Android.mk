@@ -168,7 +168,7 @@ ifneq ($(BUILD_WEBRTC_ISAC),0)
         WEBRTC_BUILD_NEON_LIBS=true
     endif
 
-     $(info $(TARGET_ARCH_ABI): Build proprietary iSAC plugin for mediastreamer2)
+     $(info $(TARGET_ARCH_ABI): Build iSAC plugin for mediastreamer2)
      include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_coding/codecs/isac/fix/source/Android.mk
      include $(linphone-root-dir)/submodules/msisac/Android.mk
 endif
