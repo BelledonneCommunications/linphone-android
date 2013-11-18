@@ -395,6 +395,19 @@ public class LinphonePreferences {
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
+		
+		// If default proxy config is disabled, try to set another one as default proxy
+		if (disabled && getLc().getDefaultProxyConfig().getIdentity().equals(prxCfg.getIdentity())) {
+			int count = getLc().getProxyConfigList().length;
+			if (count > 1) {
+				for (int i = 0; i < count; i++) {
+					if (isAccountEnabled(i)) {
+						getLc().setDefaultProxyConfig(getProxyConfig(i));
+						break;
+					}
+				}
+			}
+		}
 	}
 	
 	public boolean isAccountEnabled(int n) {
