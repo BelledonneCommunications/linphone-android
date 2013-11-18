@@ -247,7 +247,6 @@ public class LinphonePreferences {
 
 	public void setAccountDomain(int n, String domain) {
 		String identity = "sip:" + getAccountUsername(n) + "@" + domain;
-		String proxy = "sip:" + domain;
 		
 		try {
 			LinphoneAuthInfo authInfo = getClonedAuthInfo(n);
@@ -256,7 +255,6 @@ public class LinphonePreferences {
 			
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setIdentity(identity);
-			prxCfg.setProxy(proxy);
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
@@ -283,6 +281,9 @@ public class LinphonePreferences {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.setProxy(proxy);
 			prxCfg.done();
+			if (isAccountOutboundProxySet(n)) {
+				setAccountOutboundProxyEnabled(n, true);
+			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
@@ -318,12 +319,12 @@ public class LinphonePreferences {
 		}
 	}
 
-	public void setNewAccountContactParameters(String contactParams) {
-		tempContactsParams = contactParams;
-	}
-
 	public boolean isAccountOutboundProxySet(int n) {
 		return getProxyConfig(n).getRoute() != null;
+	}
+
+	public void setNewAccountContactParameters(String contactParams) {
+		tempContactsParams = contactParams;
 	}
 	
 	public String getExpires(int n) {
