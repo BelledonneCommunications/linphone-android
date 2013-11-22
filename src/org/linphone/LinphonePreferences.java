@@ -65,7 +65,7 @@ public class LinphonePreferences {
 		return LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 	}
 	
-	private LpConfig getConfig() {
+	public LpConfig getConfig() {
 		LinphoneCore lc = getLc();
 		if (lc != null)
 			return lc.getConfig();
@@ -91,6 +91,11 @@ public class LinphonePreferences {
 		if (ringtone == null || ringtone.length() == 0)
 			ringtone = defaultRingtone;
 		return ringtone;
+	}
+	
+	public void setRingtone(String ringtonePath) {
+		getConfig().setString("app", "ringtone", ringtonePath);
+		
 	}
 
 	public boolean shouldAutomaticallyAcceptFriendsRequests() {
@@ -327,6 +332,12 @@ public class LinphonePreferences {
 		tempContactsParams = contactParams;
 	}
 	
+	public void setAccountContactParameters(int n, String contactParams) {
+		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.setContactParameters(contactParams);
+		prxCfg.done();
+	}
+	
 	public String getExpires(int n) {
 		return String.valueOf(getProxyConfig(n).getExpires());
 	}
@@ -387,17 +398,17 @@ public class LinphonePreferences {
 		return getLc().getProxyConfigList().length;
 	}
 
-	public void setAccountEnabled(int n, boolean disabled) {
+	public void setAccountEnabled(int n, boolean enabled) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
 		try {
-			prxCfg.enableRegister(!disabled);
+			prxCfg.enableRegister(enabled);
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
 		
 		// If default proxy config is disabled, try to set another one as default proxy
-		if (disabled && getLc().getDefaultProxyConfig().getIdentity().equals(prxCfg.getIdentity())) {
+		if (!enabled && getLc().getDefaultProxyConfig().getIdentity().equals(prxCfg.getIdentity())) {
 			int count = getLc().getProxyConfigList().length;
 			if (count > 1) {
 				for (int i = 0; i < count; i++) {
@@ -815,4 +826,5 @@ public class LinphonePreferences {
 		LinphoneManager.getInstance().initTunnelFromConf();
 	}
 	// End of tunnel settings
+
 }
