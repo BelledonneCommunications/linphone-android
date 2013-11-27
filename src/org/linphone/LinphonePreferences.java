@@ -278,7 +278,7 @@ public class LinphonePreferences {
 		if (proxy == null || proxy.length() <= 0) {
 			proxy = getAccountDomain(n);
 		}
-		if (!proxy.startsWith("sip:")) {
+		if (!proxy.contains("sip:")) {
 			proxy = "sip:" + proxy;
 		}
 		
