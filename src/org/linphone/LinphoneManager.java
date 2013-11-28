@@ -138,7 +138,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private String basePath;
 	private static boolean sExited;
 	private boolean mAudioFocused;
-	private boolean isNetworkReachable;
+	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
 
 	private WakeLock mIncallWakeLock;
@@ -679,25 +679,29 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		if (eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
 			Log.i("No connectivity: setting network unreachable");
-			if (isNetworkReachable) {
-				isNetworkReachable = false;
-				mLc.setNetworkReachable(isNetworkReachable);
-			}
+			mLc.setNetworkReachable(false);
 		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
 			manageTunnelServer(eventInfo);
+			
 			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
-			if ((eventInfo.getTypeName().equals("WIFI")) || (!eventInfo.getTypeName().equals("WIFI") && !wifiOnly)) {
-				if (!isNetworkReachable) {
-					isNetworkReachable = true;
-					mLc.setNetworkReachable(isNetworkReachable);
-					Log.i(eventInfo.getTypeName()," connected: setting network reachable (network = " + eventInfo.getTypeName() + ")");
+			if (wifiOnly){
+				if (eventInfo.getType()==ConnectivityManager.TYPE_WIFI)
+					mLc.setNetworkReachable(true);
+				else {
+					Log.i("Wifi-only mode, setting network not reachable");
+					mLc.setNetworkReachable(false);
 				}
-			} else {
-				if (isNetworkReachable) {
-					isNetworkReachable = false;
-					mLc.setNetworkReachable(isNetworkReachable);
-					Log.i(eventInfo.getTypeName()," connected: wifi only activated, setting network unreachable (network = " + eventInfo.getTypeName() + ")");
+			}else{
+				int curtype=eventInfo.getType();
+				
+				if (curtype!=mLastNetworkType){
+					//if kind of network has changed, we need to notify network_reachable(false) to make sure all current connections are destroyed.
+					//they will be re-created during setNetworkReachable(true).
+					Log.i("Connectivity has changed.");
+					mLc.setNetworkReachable(false);
 				}
+				mLc.setNetworkReachable(true);
+				mLastNetworkType=curtype;
 			}
 		}
 	}
