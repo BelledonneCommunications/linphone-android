@@ -481,7 +481,7 @@ public class StatusFragment extends Fragment {
 				});
 			}
 		};
-		mTimer.scheduleAtFixedRate(mTask, 0, 1500);
+		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {
