@@ -88,9 +88,11 @@ public class BubbleChat {
 	private RelativeLayout view;
 	private ImageView statusView;
 	private Button downloadOrShow;
+	private String imageUrl;
 	
-	public BubbleChat(final Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, final String url, int previousID) {
+	public BubbleChat(final Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, String url, int previousID) {
 		view = new RelativeLayout(context);
+		imageUrl = url;
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	
@@ -156,7 +158,7 @@ public class BubbleChat {
 	    			@Override
 	    			public void onClick(View v) {
 	    				Intent intent = new Intent(Intent.ACTION_VIEW);
-	    				intent.setDataAndType(Uri.parse("file://" + url), "image/*");
+	    				intent.setDataAndType(Uri.parse("file://" + imageUrl), "image/*");
 	    				context.startActivity(intent);
 	    			}
 	    		});
@@ -291,5 +293,9 @@ public class BubbleChat {
 		if (downloadOrShow != null) {
 			downloadOrShow.setText(buttonName);
 		}
+	}
+
+	public void updateUrl(String newFileUrl) {
+		imageUrl = newFileUrl;
 	}
 }
