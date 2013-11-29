@@ -184,7 +184,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (lc != null) {
 			chatRoom = lc.getOrCreateChatRoom(sipUri);
 			//Only works if using liblinphone storage
-			LinphoneActivity.instance().getChatStorage().markConversationAsRead(chatRoom);
+			chatRoom.markAsRead();
 		}
 		
         if (savedInstanceState != null) {
@@ -315,7 +315,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			    
 				if (start != 0) {
 			        messagesScrollView.setScrollViewListener(new ScrollViewListener() {
-							@Override
+						@Override
 						public void OnScrollToTop(final int previousHeight) {
 							invalidate();
 							mHandler.postDelayed(new Runnable() {
@@ -650,6 +650,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			@Override
 			public void run() {
 				messagesScrollView.fullScroll(View.FOCUS_DOWN);
+				
+				//Only works if using liblinphone storage
+				chatRoom.markAsRead();
 			}
 		}, 100);
 	}
