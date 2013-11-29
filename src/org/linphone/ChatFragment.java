@@ -392,7 +392,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 	private void displayImageMessage(int id, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, RelativeLayout layout, final String url, boolean show) {
 		id = checkId(id);
-		BubbleChat bubble = new BubbleChat(layout.getContext(), id, null, image, time, isIncoming, status, url, previousMessageID);
+		final BubbleChat bubble = new BubbleChat(layout.getContext(), id, null, image, time, isIncoming, status, url, previousMessageID);
 		if (!isIncoming) {
 			lastSentMessageBubble = bubble;
 		}
@@ -411,7 +411,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							final Bitmap bm = ChatFragment.downloadImage(url);
 							if (bm != null) {
 								if (useLinphoneMessageStorage) {
-									saveImage(bm, finalId, null);
+									String newFileUrl = saveImage(bm, finalId, null);
+									bubble.updateUrl(newFileUrl);
 								} else {
 									LinphoneActivity.instance().getChatStorage().saveImage(finalId, bm);
 								}
