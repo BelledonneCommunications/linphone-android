@@ -18,6 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.LinphoneCoreFactoryImpl;
+import org.linphone.core.LpConfig;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +30,9 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		if (LinphonePreferences.instance().isAutoStartEnabled()) {
+		String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
+		LpConfig lpConfig = LinphoneCoreFactoryImpl.instance().createLpConfig(path);
+		if (lpConfig.getBool("app", "auto_start", false)) {
 			Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
 			context.startService(lLinphoneServiceIntent);;
