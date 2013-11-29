@@ -311,7 +311,7 @@ public class LinphonePreferences {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			if (enabled) {
 				String route = prxCfg.getProxy();
-				if (!route.startsWith("sip:")) {
+				if (!route.contains("sip:")) {
 					route = "sip:" + route;
 				}
 				prxCfg.setRoute(route);
