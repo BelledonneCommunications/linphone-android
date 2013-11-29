@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatMessage.State;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -88,11 +89,15 @@ public class BubbleChat {
 	private RelativeLayout view;
 	private ImageView statusView;
 	private Button downloadOrShow;
-	private String imageUrl;
+	private String imageUrl, textMessage;
+	private LinphoneChatMessage.State state;
+	private LinphoneChatMessage nativeMessage;
 	
 	public BubbleChat(final Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, String url, int previousID) {
 		view = new RelativeLayout(context);
 		imageUrl = url;
+		textMessage = message;
+		state = status;
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	
@@ -198,6 +203,8 @@ public class BubbleChat {
 	}
 	
 	public void updateStatusView(LinphoneChatMessage.State status) {
+		state = status;
+		
 		if (statusView == null) {
 			return;
 		}
@@ -297,5 +304,25 @@ public class BubbleChat {
 
 	public void updateUrl(String newFileUrl) {
 		imageUrl = newFileUrl;
+	}
+	
+	public String getTextMessage() {
+		return textMessage;
+	}
+	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public State getStatus() {
+		return state;
+	}
+	
+	public LinphoneChatMessage getNativeMessageObject() {
+		return nativeMessage;
+	}
+	
+	public void setNativeMessageObject(LinphoneChatMessage message) {
+		nativeMessage = message;
 	}
 }
