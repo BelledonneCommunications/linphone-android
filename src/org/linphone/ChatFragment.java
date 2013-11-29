@@ -269,13 +269,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void showKeyboardVisibleMode() {
 		LinphoneActivity.instance().hideMenu(true);
 		contactPicture.setVisibility(View.GONE);
-		//scrollToEnd();
+		scrollToEnd();
 	}
 	
 	public void hideKeyboardVisibleMode() {
 		LinphoneActivity.instance().hideMenu(false);
 		contactPicture.setVisibility(View.VISIBLE);
-		//scrollToEnd();
+		scrollToEnd();
 	}
 	
 	private void invalidate() {
@@ -624,7 +624,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			latestImageMessages.put(newId, url);
 			
 			if (useLinphoneMessageStorage)
-				saveImage(bitmap, newId, chatMessage);
+				url = saveImage(bitmap, newId, chatMessage);
 			
 			displayImageMessage(newId, bitmap, System.currentTimeMillis(), false, State.InProgress, messagesLayout, url);
 			scrollToEnd();
@@ -763,14 +763,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void saveImage(int id) {
 		byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
 		Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
-		if (saveImage(bm, id, null)) {
+		if (saveImage(bm, id, null) != null) {
 			Toast.makeText(getActivity(), getString(R.string.image_saved), Toast.LENGTH_SHORT).show();
 		} else {
 			Toast.makeText(getActivity(), getString(R.string.image_not_saved), Toast.LENGTH_LONG).show();
 		}
 	}
 	
-	private boolean saveImage(Bitmap bm, int id, LinphoneChatMessage message) {
+	private String saveImage(Bitmap bm, int id, LinphoneChatMessage message) {
 		try {
 			String path = Environment.getExternalStorageDirectory().toString();
 			if (!path.endsWith("/"))
@@ -805,11 +805,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			
 			MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
-			return true;
+			return file.getAbsolutePath();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		return null;
 	}
 	
 	private long hashBitmap(Bitmap bmp){
