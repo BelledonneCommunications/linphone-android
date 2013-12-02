@@ -268,11 +268,14 @@ prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
 $(TOPDIR)/res/raw/rootca.pem:
 	 HTTPS_CA_DIR=$(HTTPS_CA_DIR) $(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
 
-prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/submodules/linphone/tester/certificates/* $(TOPDIR)/res/raw/rootca.pem
-	mkdir -p liblinphone_tester/assets/rc_files 
+prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)/submodules/linphone/tester/*_rc  $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/res/raw/rootca.pem
+	rm -rf liblinphone_tester/assets/config_files
+	mkdir -p liblinphone_tester/assets/config_files 
 	for file in $^; do \
-	cp -f $$file $(TOPDIR)/liblinphone_tester/assets/rc_files/. \
+	cp -rf $$file $(TOPDIR)/liblinphone_tester/assets/config_files/. \
 	;done
+	cp -rf $(TOPDIR)/submodules/linphone/tester/certificates $(TOPDIR)/liblinphone_tester/assets/config_files
+
 
 #SQLite3
 SQLITE_SRC_DIR=$(TOPDIR)/submodules/externals/sqlite3

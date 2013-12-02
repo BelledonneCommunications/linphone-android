@@ -26,7 +26,7 @@ public class Tester {
 
 		LinphoneCoreFactory.instance();
 
-		System.loadLibrary("cunit");
+		System.loadLibrary("cunit"); 
 		String eabi = "armeabi";
 		if (Version.isX86()) {
 			eabi = "x86";
