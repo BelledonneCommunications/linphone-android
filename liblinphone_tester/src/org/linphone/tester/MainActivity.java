@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -23,7 +24,11 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
-		
+		try {
+			TestUnit.copyAssetsFromPackage(getApplicationContext());
+		} catch (IOException e) {
+			Log.e("liblinphone_tester", "Cannot install rc files",e);
+		}
 		TesterList suitesTest = new TesterList();
 		suitesTest.run(new String[]{"tester", "--list-suites"});
 		LinearLayout layout = ((LinearLayout)findViewById(R.id.suites_list));
