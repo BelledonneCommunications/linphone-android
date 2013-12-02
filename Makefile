@@ -96,7 +96,7 @@ FFMPEG_BUILD_DIR=$(TOPDIR)/submodules/externals/build/ffmpeg
 FFMPEG_CONFIGURE_OPTIONS=--target-os=linux --enable-cross-compile --enable-runtime-cpudetect \
 	--disable-everything --disable-doc --disable-ffplay --disable-ffmpeg --disable-ffprobe --disable-ffserver \
 	--disable-avdevice --disable-avfilter --disable-avformat --disable-swresample --disable-network \
-	--enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
+	--enable-decoder=mjpeg --enable-encoder=mjpeg --enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
 	--disable-static --enable-shared
 FFMPEG_ARM_CONFIGURE_OPTIONS=--build-suffix=-linphone-arm --arch=arm --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
 FFMPEG_X86_CONFIGURE_OPTIONS=--build-suffix=-linphone-x86 --arch=x86 --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH) --disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
