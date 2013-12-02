@@ -34,9 +34,9 @@ public class KeepAliveHandler extends BroadcastReceiver {
 			LinphoneManager.getLc().refreshRegisters();
 			//make sure iterate will have enough time, device will not sleep until exit from this method
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				Log.e("Cannot sleep for 10s", e);
+				Log.e("Cannot sleep for 2s", e);
 			}
 			
 		}
