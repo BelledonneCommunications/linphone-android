@@ -277,6 +277,8 @@ prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/*_lrc $(TOPDIR)
 	cp -rf $$file $(TOPDIR)/liblinphone_tester/assets/config_files/. \
 	;done
 	cp -rf $(TOPDIR)/submodules/linphone/tester/certificates $(TOPDIR)/liblinphone_tester/assets/config_files
+	cp -rf $(TOPDIR)/submodules/linphone/tester/sounds $(TOPDIR)/liblinphone_tester/assets/config_files
+	cp -rf $(TOPDIR)/submodules/linphone/tester/images $(TOPDIR)/liblinphone_tester/assets/config_files
 
 
 #SQLite3
