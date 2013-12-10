@@ -6,6 +6,10 @@ To build liblinphone for Android, you must:
 1) download the Android ndk (>=r9) from google and add it to your path.
 2) install yasm, curl, ant and the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig
 	On 64 bits linux systems you'll need the ia32-libs package
+	With the latest Debian (multiarch), you need this:
+		dpkg --add-architecture i386
+		aptitude update
+		aptitude install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
 3) run the Makefile script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
 	$ make
 4) To install the generated apk into a plugged device, run
