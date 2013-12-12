@@ -167,7 +167,7 @@ public class LinphonePreferences {
 		
 		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, route, true);
 		if (tempContactsParams != null)
-			prxCfg.setContactParameters(tempContactsParams);
+			prxCfg.setContactUriParameters(tempContactsParams);
 		if (tempExpire != null) {
 			try {
 				prxCfg.setExpires(Integer.parseInt(tempExpire));
@@ -334,7 +334,7 @@ public class LinphonePreferences {
 	
 	public void setAccountContactParameters(int n, String contactParams) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
-		prxCfg.setContactParameters(contactParams);
+		prxCfg.setContactUriParameters(contactParams);
 		prxCfg.done();
 	}
 	
