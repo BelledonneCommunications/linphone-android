@@ -75,3 +75,4 @@ BUILD_SQLITE
 	default value: 1
 
 If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
+When using the ndk-r9b you may have an issue when compiling with x264. If so, use ndk-r9 instead. 
