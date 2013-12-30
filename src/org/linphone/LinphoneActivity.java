@@ -825,7 +825,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			// Convert LinphoneCore message for internalization
 			if (message != null && message.equals("Call declined.")) { 
 				displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
-			} else if (message != null && message.equals("User not found.")) {
+			} else if (message != null && message.equals("Not Found")) {
 				displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
 			} else if (message != null && message.equals("Incompatible media parameters.")) {
 				displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_LONG);
