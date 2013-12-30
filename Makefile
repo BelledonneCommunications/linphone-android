@@ -27,6 +27,7 @@ ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail 
 SQLITE_VERSION=3071700
 SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
+ENABLE_GPL_THIRD_PARTIES=1
 
 #default options, can be overidden using make OPTION=value .
 
@@ -66,9 +67,7 @@ else
 	HTTPS_CA_DIR=$(OPENSSL_DIR)
 endif
 
-
 all: update-project prepare-sources generate-apk
-
 install: install-apk run-linphone
 
 #libilbc
@@ -302,10 +301,17 @@ $(SQLITE_BASENAME).zip:
 #Build targets
 prepare-sources: build-ffmpeg build-x264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
+ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
 	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) \
 	BUILD_UPNP=$(BUILD_UPNP) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
+else
+GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
+	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
+	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=0 \
+	BUILD_UPNP=$(BUILD_UPNP) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
+endif
 
 LIBLINPHONE_OPTIONS = $(GENERATE_OPTIONS) \
 	LINPHONE_VERSION=$(LINPHONE_VERSION) BELLESIP_VERSION=$(BELLESIP_VERSION) USE_JAVAH=$(USE_JAVAH) \
@@ -324,6 +330,28 @@ generate-mediastreamer2-libs: prepare-sources
 	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS)
 
 update-project:
+ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
+	@echo "***************************************************************************"
+	@echo "***** CAUTION, this liblinphone SDK is built using 3rd party GPL code *****"
+	@echo "*****    Even if you acquired a proprietary license from Belledonne   *****"
+	@echo "*****          Communications, this SDK is GPL and GPL only.          *****"
+	@echo "*****           To disable 3rd party gpl code, please use:            *****"
+	@echo "*****                 $$ make ENABLE_GPL_THIRD_PARTIES=0               *****"
+	@echo "***************************************************************************"
+else
+ifeq ($(BUILD_X264),1)
+	@echo "*****************************************************************"
+	@echo "*****        X264 is not available in non-gpl build.        *****"
+	@echo "*****************************************************************"
+endif
+	@echo
+	@echo "*****************************************************************"
+	@echo "*****      Linphone SDK without 3rd party GPL software      *****"
+	@echo "***** If you acquired a proprietary license from Belledonne *****"
+	@echo "*****     Communications, this SDK can be used to create    *****"
+	@echo "*****       a proprietary linphone-based application.       *****"
+	@echo "*****************************************************************"
+endif
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
@@ -379,7 +407,7 @@ clean: clean-ndk-build
 
 veryclean: clean clean-ffmpeg clean-x264 clean-vpx
 
-.PHONY: clean
+.PHONY: clean install-apk run-linphone
 
 generate-sdk: generate-apk
 	ant liblinphone-sdk
