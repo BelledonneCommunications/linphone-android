@@ -219,15 +219,15 @@ endif
 
 
 #Zrtp
-$(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h : $(TOPDIR)/submodules/externals/build/libzrtpcpp/libzrtpcpp-config.h
-	@cd $(TOPDIR)/submodules/externals/libzrtpcpp/ && \
-	cp ../build/libzrtpcpp/libzrtpcpp-config.h . \
+#$(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h : $(TOPDIR)/submodules/externals/build/libzrtpcpp/libzrtpcpp-config.h
+#	@cd $(TOPDIR)/submodules/externals/libzrtpcpp/ && \
+#	cp ../build/libzrtpcpp/libzrtpcpp-config.h . \
 	|| ( echo "ZRTP prepare state failed." ; exit 1 )
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
-prepare-zrtp: $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h
-else
+#ifeq ($(BUILD_GPLV3_ZRTP), 1)
+#prepare-zrtp: $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h
+#else
 prepare-zrtp:
-endif
+#endif
 
 
 

@@ -20,7 +20,8 @@ endif
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 	BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
-	$(linphone-root-dir)/submodules/externals/libzrtpcpp/src
+	$(linphone-root-dir)/submodules/externals/libzrtpcpp/zrtp \
+	$(linphone-root-dir)/submodules/externals/libzrtpcpp/zrtp/libzrtpcpp
 endif
 
 ifeq ($(BUILD_SRTP), 1)
