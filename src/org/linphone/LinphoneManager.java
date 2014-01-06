@@ -1421,4 +1421,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom cr) {
+		// TODO Auto-generated method stub
+		
+	}
 }

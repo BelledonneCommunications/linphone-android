@@ -1,3 +1,4 @@
+
 NDK_PATH=$(shell dirname `which ndk-build`)
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
@@ -31,16 +32,26 @@ ENABLE_GPL_THIRD_PARTIES=1
 
 #default options, can be overidden using make OPTION=value .
 
+ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
+BUILD_X264=1
+BUILD_G729=1
+BUILD_ZRTP=1
+else
+#x264 and g729 requires additional licensing agreements.
+BUILD_X264=0
+BUILD_G729=0
+#zrtpcpp is GPL.
+BUILD_ZRTP=0
+endif
+
 NDK_DEBUG=0
 BUILD_VIDEO=1
 BUILD_UPNP=1
 BUILD_REMOTE_PROVISIONING=1
-BUILD_X264=1
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=1
-BUILD_GPLV3_ZRTP=1
+
 BUILD_SILK=1
-BUILD_G729=1
 BUILD_TUNNEL=0
 BUILD_WEBRTC_AECM=1
 BUILD_OPUS=1
@@ -68,6 +79,24 @@ else
 endif
 
 all: update-project prepare-sources generate-apk
+ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
+	@echo "***************************************************************************"
+	@echo "***** CAUTION, this liblinphone SDK is built using 3rd party GPL code *****"
+	@echo "*****    Even if you acquired a proprietary license from Belledonne   *****"
+	@echo "*****          Communications, this SDK is GPL and GPL only.          *****"
+	@echo "*****           To disable 3rd party gpl code, please use:            *****"
+	@echo "*****                 $$ make ENABLE_GPL_THIRD_PARTIES=0               *****"
+	@echo "***************************************************************************"
+else
+	@echo
+	@echo "*****************************************************************"
+	@echo "*****      Linphone SDK without 3rd party GPL software      *****"
+	@echo "***** If you acquired a proprietary license from Belledonne *****"
+	@echo "*****     Communications, this SDK can be used to create    *****"
+	@echo "*****       a proprietary linphone-based application.       *****"
+	@echo "*****************************************************************"
+endif
+
 install: install-apk run-linphone
 
 #libilbc
@@ -223,7 +252,7 @@ endif
 #	@cd $(TOPDIR)/submodules/externals/libzrtpcpp/ && \
 #	cp ../build/libzrtpcpp/libzrtpcpp-config.h . \
 	|| ( echo "ZRTP prepare state failed." ; exit 1 )
-#ifeq ($(BUILD_GPLV3_ZRTP), 1)
+#ifeq ($(BUILD_ZRTP), 1)
 #prepare-zrtp: $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h
 #else
 prepare-zrtp:
@@ -301,17 +330,12 @@ $(SQLITE_BASENAME).zip:
 #Build targets
 prepare-sources: build-ffmpeg build-x264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
-ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
+
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
 	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) \
-	BUILD_UPNP=$(BUILD_UPNP) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
-else
-GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
-	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
-	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=0 \
-	BUILD_UPNP=$(BUILD_UPNP) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
-endif
+	BUILD_UPNP=$(BUILD_UPNP) BUILD_ZRTP=$(BUILD_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
+
 
 LIBLINPHONE_OPTIONS = $(GENERATE_OPTIONS) \
 	LINPHONE_VERSION=$(LINPHONE_VERSION) BELLESIP_VERSION=$(BELLESIP_VERSION) USE_JAVAH=$(USE_JAVAH) \
@@ -330,28 +354,6 @@ generate-mediastreamer2-libs: prepare-sources
 	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS)
 
 update-project:
-ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
-	@echo "***************************************************************************"
-	@echo "***** CAUTION, this liblinphone SDK is built using 3rd party GPL code *****"
-	@echo "*****    Even if you acquired a proprietary license from Belledonne   *****"
-	@echo "*****          Communications, this SDK is GPL and GPL only.          *****"
-	@echo "*****           To disable 3rd party gpl code, please use:            *****"
-	@echo "*****                 $$ make ENABLE_GPL_THIRD_PARTIES=0               *****"
-	@echo "***************************************************************************"
-else
-ifeq ($(BUILD_X264),1)
-	@echo "*****************************************************************"
-	@echo "*****        X264 is not available in non-gpl build.        *****"
-	@echo "*****************************************************************"
-endif
-	@echo
-	@echo "*****************************************************************"
-	@echo "*****      Linphone SDK without 3rd party GPL software      *****"
-	@echo "***** If you acquired a proprietary license from Belledonne *****"
-	@echo "*****     Communications, this SDK can be used to create    *****"
-	@echo "*****       a proprietary linphone-based application.       *****"
-	@echo "*****************************************************************"
-endif
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
