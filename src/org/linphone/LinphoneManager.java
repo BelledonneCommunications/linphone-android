@@ -40,6 +40,7 @@ import java.util.TimerTask;
 import org.linphone.LinphoneSimpleListener.ConnectivityChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneOnComposingReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
@@ -1421,9 +1422,15 @@ public class LinphoneManager implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private LinphoneOnComposingReceivedListener composingReceivedListener;
+	public void setOnComposingReceivedListener(LinphoneOnComposingReceivedListener listener) {
+		composingReceivedListener = listener;
+	}
 	@Override
 	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom cr) {
-		// TODO Auto-generated method stub
-		
+		Log.d("Composing received for chatroom " + cr.getPeerAddress().asStringUriOnly());
+		if (composingReceivedListener != null)
+			composingReceivedListener.onComposingReceived(cr);
 	}
 }

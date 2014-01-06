@@ -444,4 +444,6 @@
 	<string name="zrtp_accept">Accept</string>
 	<string name="zrtp_deny">Deny</string>
 	<string name="zrtp_help">You should only accept if you have the same code (see above) as your correspondent</string>
+	
+	<string name="remote_composing">Remote is writing...</string>
 </resources>
