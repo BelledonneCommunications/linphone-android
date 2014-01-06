@@ -17,7 +17,7 @@ endif
 endif
 
 
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
+ifeq ($(BUILD_ZRTP), 1)
 	BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
 	$(linphone-root-dir)/submodules/externals/libzrtpcpp/zrtp \
@@ -65,14 +65,6 @@ include $(linphone-root-dir)/submodules/linphone/mediastreamer2/build/android/An
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/tools/Android.mk
 
 
-# Openssl
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
-ifeq (,$(DUMP_VAR))
-$(info Openssl is required)
-endif
-include $(linphone-root-dir)/submodules/externals/openssl/Android.mk
-endif
-
 #tunnel
 ifeq ($(BUILD_TUNNEL), 1)
 include $(linphone-root-dir)/submodules/tunnel/Android.mk
@@ -103,9 +95,9 @@ include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
 endif #_BUILD_VIDEO
 
 
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
+ifeq ($(BUILD_ZRTP), 1)
 ifeq (,$(DUMP_VAR))
-$(info $(TARGET_ARCH_ABI): Build ZRTP support - makes application GPLv3)
+$(info $(TARGET_ARCH_ABI): Build ZRTP support)
 endif
 include $(linphone-root-dir)/submodules/externals/build/libzrtpcpp/Android.mk
 endif
