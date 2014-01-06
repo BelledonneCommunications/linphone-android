@@ -389,4 +389,6 @@
 	<string name="zrtp_accept">Accepter</string>
 	<string name="zrtp_deny">Refuser</string>
 	<string name="zrtp_help">Vous ne devriez accepter que si vous avez le même code (ci-dessus) que votre contact</string>
+	
+	<string name="remote_composing">Votre correspondant est en train de taper...</string>
 </resources>

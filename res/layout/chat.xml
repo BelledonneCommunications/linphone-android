@@ -37,7 +37,7 @@
         android:layout_weight="1"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dip">
-    
+        
         <RelativeLayout
 	        android:id="@+id/messages"
 		    android:layout_width="match_parent"
@@ -48,6 +48,14 @@
         </RelativeLayout>
         
     </org.linphone.ui.LinphoneScrollView>
+        
+    <TextView 
+        android:id="@+id/remoteComposing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+    	android:textColor="@color/text_contrast"
+        android:text="@string/remote_composing" />
     
     <RelativeLayout 
         android:id="@+id/messageLayout"

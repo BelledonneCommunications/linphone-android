@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.linphone.LinphoneSimpleListener.LinphoneOnComposingReceivedListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
@@ -85,7 +86,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.StateListener {
+public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.StateListener, LinphoneOnComposingReceivedListener {
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_SAVE_PICTURE = 1;
@@ -105,7 +106,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private String sipUri;
 	private EditText message;
 	private ImageView cancelUpload;
-	private TextView sendImage, sendMessage, contactName;
+	private TextView sendImage, sendMessage, contactName, remoteComposing;
 	private AvatarWithShadow contactPicture;
 	private RelativeLayout messagesLayout, uploadLayout, textLayout;
 	private LinphoneScrollView messagesScrollView;
@@ -142,6 +143,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         
         sendMessage = (TextView) view.findViewById(R.id.sendMessage);
         sendMessage.setOnClickListener(this);
+        
+        remoteComposing = (TextView) view.findViewById(R.id.remoteComposing);
+        remoteComposing.setVisibility(View.GONE);
         
         message = (EditText) view.findViewById(R.id.message);
         if (!getActivity().getResources().getBoolean(R.bool.allow_chat_multiline)) {
@@ -208,6 +212,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				if (message.getText().toString().equals("")) {
 					sendMessage.setEnabled(false);
 				} else {
+					if (chatRoom != null)
+						chatRoom.compose();
 					sendMessage.setEnabled(true);
 				}
 			}
@@ -555,6 +561,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneService.instance().removeMessageNotification();
 		
+		if (LinphoneManager.isInstanciated())
+			LinphoneManager.getInstance().setOnComposingReceivedListener(null);
+		
 		super.onPause();
 		
 		if (!message.getText().toString().equals("") && LinphoneActivity.isInstanciated()) {
@@ -576,6 +585,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
 		
+		if (LinphoneManager.isInstanciated())
+			LinphoneManager.getInstance().setOnComposingReceivedListener(this);
+		
 		super.onResume();
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -587,6 +599,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			String draft = LinphoneActivity.instance().getChatStorage().getDraft(sipUri);
 			message.setText(draft);
 		}
+		
+		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -1081,5 +1095,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		MEDIUM,
 		LARGE,
 		REAL;
+	}
+
+	@Override
+	public void onComposingReceived(LinphoneChatRoom room) {
+		if (chatRoom != null && room != null && chatRoom.getPeerAddress().asStringUriOnly().equals(room.getPeerAddress().asStringUriOnly())) {
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
+				}
+			});
+		}
 	}
 }

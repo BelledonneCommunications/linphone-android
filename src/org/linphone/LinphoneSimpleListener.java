@@ -22,6 +22,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 
@@ -75,5 +76,8 @@ public interface LinphoneSimpleListener {
 	
 	public static interface LinphoneOnDTMFReceivedListener extends LinphoneSimpleListener {
 		void onDTMFReceived(LinphoneCall call, int dtmf);
+	}
+	public static interface LinphoneOnComposingReceivedListener extends LinphoneSimpleListener {
+		void onComposingReceived(LinphoneChatRoom room);
 	}
 }
