@@ -35,13 +35,13 @@ ENABLE_GPL_THIRD_PARTIES=1
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
 BUILD_X264=1
 BUILD_G729=1
-BUILD_ZRTP=1
+BUILD_GPLV3_ZRTP=1
 else
 #x264 and g729 requires additional licensing agreements.
 BUILD_X264=0
 BUILD_G729=0
 #zrtpcpp is GPL.
-BUILD_ZRTP=0
+BUILD_GPLV3_ZRTP=0
 endif
 
 NDK_DEBUG=0
@@ -252,7 +252,7 @@ endif
 #	@cd $(TOPDIR)/submodules/externals/libzrtpcpp/ && \
 #	cp ../build/libzrtpcpp/libzrtpcpp-config.h . \
 	|| ( echo "ZRTP prepare state failed." ; exit 1 )
-#ifeq ($(BUILD_ZRTP), 1)
+#ifeq ($(BUILD_GPLV3_ZRTP), 1)
 #prepare-zrtp: $(TOPDIR)/submodules/externals/libzrtpcpp/libzrtpcpp-config.h
 #else
 prepare-zrtp:
@@ -334,7 +334,7 @@ prepare-sources: build-ffmpeg build-x264 prepare-ilbc build-vpx prepare-silk pre
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
 	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) \
-	BUILD_UPNP=$(BUILD_UPNP) BUILD_ZRTP=$(BUILD_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
+	BUILD_UPNP=$(BUILD_UPNP) BUILD_GPLV3_ZRTP=$(BUILD_GPLV3_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
 
 
 LIBLINPHONE_OPTIONS = $(GENERATE_OPTIONS) \
