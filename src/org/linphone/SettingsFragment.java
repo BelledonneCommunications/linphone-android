@@ -412,8 +412,13 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		}
 		entries.add(getString(R.string.pref_preferred_video_size_vga));
 		values.add(getString(R.string.pref_preferred_video_size_vga_key));
+		entries.add(getString(R.string.pref_preferred_video_size_cif));
+		values.add(getString(R.string.pref_preferred_video_size_cif_key));
 		entries.add(getString(R.string.pref_preferred_video_size_qvga));
 		values.add(getString(R.string.pref_preferred_video_size_qvga_key));
+		entries.add(getString(R.string.pref_preferred_video_size_qcif));
+		values.add(getString(R.string.pref_preferred_video_size_qcif_key));		
+
 		setListPreferenceValues(pref, entries, values);
 		
 		String value = mPrefs.getPreferredVideoSize();
