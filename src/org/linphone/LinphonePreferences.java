@@ -512,9 +512,15 @@ public class LinphonePreferences {
 		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_vga_key))) {
 			preferredVideoSize = "vga";
 			bandwidth = 512;
+		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_cif_key))) {
+			preferredVideoSize = "cif";
+			bandwidth = 512;
 		} else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_qvga_key))) {
 			preferredVideoSize = "qvga";
 			bandwidth = 380;
+		}  else if (preferredVideoSize.equals(getString(R.string.pref_preferred_video_size_qcif_key))) {
+			preferredVideoSize = "qcif";
+			bandwidth = 256;
 		}
 
 		getLc().setPreferredVideoSizeByName(preferredVideoSize);
