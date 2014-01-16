@@ -466,11 +466,7 @@ public class LinphonePreferences {
 	}
 	
 	public void enableVideo(boolean enable) {
-		if (enable) {
-			getLc().enableVideo(shouldAutomaticallyShareMyVideo(), true);
-		} else {
-			getLc().enableVideo(false, false);
-		}
+		getLc().enableVideo(enable, enable);
 	}
 
 	public boolean shouldInitiateVideoCall() {
@@ -487,16 +483,6 @@ public class LinphonePreferences {
 	
 	public void setAutomaticallyAcceptVideoRequests(boolean accept) {
 		getLc().setVideoPolicy(shouldInitiateVideoCall(), accept);
-	}
-	
-	public boolean shouldAutomaticallyShareMyVideo() {
-		return getConfig().getBool("video", "capture", true);
-	}
-	
-	public void setAutomaticallyShareMyVideo(boolean accept) {
-		getConfig().setBool("video", "capture", accept);
-		if (isVideoEnabled())
-			enableVideo(true);
 	}
 	
 	public String getPreferredVideoSize() {
