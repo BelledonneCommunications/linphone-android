@@ -58,7 +58,6 @@ include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
 endif
 
 
-
 include $(linphone-root-dir)/submodules/linphone/oRTP/build/android/Android.mk
 
 include $(linphone-root-dir)/submodules/linphone/mediastreamer2/build/android/Android.mk

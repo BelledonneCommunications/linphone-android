@@ -1,5 +1,5 @@
 APP_PROJECT_PATH := $(call my-dir)/../
-APP_STL := stlport_static
+NDK_TOOLCHAIN_VERSION := 4.8
 
 ifeq ($(BUILD_MEDIASTREAMER2_SDK),)
 BUILD_MEDIASTREAMER2_SDK=0
