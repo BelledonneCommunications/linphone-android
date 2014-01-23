@@ -586,7 +586,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
 		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 		
-		mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null);
+		mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 		mLc.setContext(c);
 		try {
 			String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
