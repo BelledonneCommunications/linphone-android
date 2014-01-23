@@ -23,18 +23,15 @@ import java.net.URL;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneManager.EcCalibrationListener;
-import org.linphone.LinphoneService;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.mediastream.Log;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,17 +64,11 @@ public class EchoCancellerCalibrationFragment extends Fragment implements EcCali
 
 	@Override
 	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SetupActivity.instance());
-		SharedPreferences.Editor editor = prefs.edit();
-		
-		Context context = SetupActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : SetupActivity.instance();
-		
 		if (status == EcCalibratorStatus.DoneNoEcho) {
-			editor.putBoolean(context.getString(R.string.pref_echo_cancellation_key), false);
+			LinphonePreferences.instance().setEchoCancellation(false);
 		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
-			editor.putBoolean(context.getString(R.string.pref_echo_cancellation_key), true);
+			LinphonePreferences.instance().setEchoCancellation(true);
 		}
-		editor.commit();
 		if (mSendEcCalibrationResult) {
 			sendEcCalibrationResult(status, delayMs);
 		} else {

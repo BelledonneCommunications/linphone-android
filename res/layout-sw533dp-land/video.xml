@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <org.linphone.mediastream.video.display.GL2JNIView 
+        android:visibility="visible" 
+        android:layout_height="match_parent" 
+        android:layout_width="match_parent" 
+        android:id="@+id/videoSurface" />
+	
+	<SurfaceView
+	    android:id="@+id/videoCaptureSurface"
+	    android:layout_width="218dp"
+	    android:layout_height="160dp"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentRight="true" />
+
+</RelativeLayout>

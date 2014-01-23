@@ -82,12 +82,14 @@
             android:paddingTop="40dp">
         
 	        <LinearLayout
+	            android:orientation="horizontal"
 	            android:id="@+id/fragmentContainer"
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            android:layout_weight="0.67" />
 	        
 	        <LinearLayout
+	            android:orientation="horizontal"
 	            android:id="@+id/fragmentContainer2"
 	            android:visibility="gone"
 	            android:layout_width="match_parent"
