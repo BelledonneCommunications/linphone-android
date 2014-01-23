@@ -34,7 +34,6 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
@@ -153,7 +152,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		}
 		
-		if (Hacks.hasBuiltInEchoCanceller()) {
+		if (LinphoneManager.getLc().needsEchoCalibration()) {
 			uncheckAndHidePreference(R.string.pref_echo_cancellation_key);
 			hidePreference(R.string.pref_echo_canceller_calibration_key);
 		}
