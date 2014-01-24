@@ -7,6 +7,9 @@ import org.linphone.LinphoneActivity;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.widget.ScrollView;
 
 /**
  * @author Sylvain Berfini
@@ -103,6 +106,10 @@ public class Contacts extends SampleTest {
 		goToContacts();
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
+		
+		//Scroll down a bit on some small screens to see the delete button
+		((ScrollView)solo.getView(aContext.getString(org.linphone.R.id.controlsScrollView))).fullScroll(View.FOCUS_DOWN);
+		
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
 		

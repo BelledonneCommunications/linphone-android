@@ -12,6 +12,7 @@ import org.linphone.mediastream.Log;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
@@ -48,7 +49,7 @@ public class Chat extends SampleTest {
 		solo.enterText(0, "sip:" + iContext.getString(R.string.account_test_calls_login) + "@" + iContext.getString(R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.newDiscussion));
 		
-		solo.enterText(0, iContext.getString(R.string.chat_test_text_sent));
+		solo.enterText((EditText)solo.getView(org.linphone.R.id.message), iContext.getString(R.string.chat_test_text_sent));
 		solo.clickOnView(solo.getView(org.linphone.R.id.sendMessage));
 		
 		solo.sleep(1000);

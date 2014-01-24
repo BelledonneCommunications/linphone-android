@@ -78,8 +78,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		try {
 			LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
 			
-			String basePath = mAContext.getFilesDir().getAbsolutePath();
-			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc" + id, null, null, c);
+			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, c);
 			if (id == 2) {
 				mLc2 = mLc;
 			} else {
@@ -154,8 +153,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		initAccounts(mLc);
 
 		mLc.setVideoPolicy(true, true);
-		boolean isVideoEnabled = true;
-		mLc.enableVideo(isVideoEnabled, isVideoEnabled);
+		mLc.enableVideo(true, true);
 		
 		mLc.setUseRfc2833ForDtmfs(false);
 		mLc.setUseSipInfoForDtmfs(true);
