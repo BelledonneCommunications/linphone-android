@@ -12,6 +12,7 @@ local.properties
 project.properties
 tests/*$py.class
 tests/build.xml
+tests/project.properties
 res/.DS_Store
 bc-android.keystore
 res/raw/lpconfig.xsd
