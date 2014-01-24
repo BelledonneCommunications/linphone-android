@@ -27,14 +27,21 @@ public class CallsVideo extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testAInit() {
-		LinphoneTestManager.getLc().enableVideo(true, true); // Just in case
 		
-		//Disable video
+		//Enable video
 		goToSettings();
 
 		selectItemInListOnUIThread(3);
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_enable_title));
 		solo.sleep(500);
+		
+		// enable auto accept and auto share video
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video), 2);
+		solo.sleep(500);
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_initiate_call_with_video_title));
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_automatically_accept_video_title));
+		solo.sleep(500);
+		solo.goBack();
 		
 		solo.goBack();
 		solo.sleep(1000);
