@@ -79,7 +79,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
 			
 			String basePath = mAContext.getFilesDir().getAbsolutePath();
-			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc" + id, null, null);
+			final LinphoneCore mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc" + id, null, null, c);
 			if (id == 2) {
 				mLc2 = mLc;
 			} else {
