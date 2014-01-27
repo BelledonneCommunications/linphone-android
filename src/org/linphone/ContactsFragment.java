@@ -57,7 +57,17 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private AlphabetIndexer indexer;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
 	private String sipAddressToAdd;
+
+	private static ContactsFragment instance;
 	
+	static final boolean isInstanciated() {
+		return instance != null;
+	}
+
+	public static final ContactsFragment instance() {
+		return instance;
+	}
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
@@ -166,6 +176,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	
 	@Override
 	public void onResume() {
+		instance = this;
 		super.onResume();
 		
 		if (editConsumed) {
@@ -179,6 +190,12 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 		
 		invalidate();
+	}
+	
+	@Override
+	public void onPause() {
+		instance = null;
+		super.onPause();
 	}
 	
 	public void invalidate() {

@@ -27,7 +27,6 @@ public class CallsVideo extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testAInit() {
-		
 		//Enable video
 		goToSettings();
 
@@ -46,6 +45,8 @@ public class CallsVideo extends SampleTest {
 		solo.goBack();
 		solo.sleep(1000);
 		Assert.assertTrue(LinphoneManager.getLc().isVideoEnabled());
+		Assert.assertTrue(LinphoneManager.getLc().getVideoAutoAcceptPolicy());
+		Assert.assertTrue(LinphoneManager.getLc().getVideoAutoInitiatePolicy());
 	}
 	
 	@SmallTest
@@ -53,6 +54,7 @@ public class CallsVideo extends SampleTest {
 	@LargeTest
 	public void testBOutgoingCallWithDefaultConfig() {
 		LinphoneTestManager.getInstance().declineCall = false; // Just in case
+		LinphoneTestManager.getLc().enableVideo(true, true);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));

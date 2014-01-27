@@ -2,6 +2,7 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
+import org.linphone.ContactsFragment;
 import org.linphone.LinphoneActivity;
 
 import android.test.suitebuilder.annotation.LargeTest;
@@ -50,6 +51,10 @@ public class Contacts extends SampleTest {
 		solo.enterText(2, iContext.getString(org.linphone.test.R.string.contact_number));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
 		
+		if (ContactsFragment.instance() != null) {
+			ContactsFragment.instance().invalidate();
+			solo.sleep(1000);
+		}
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 
