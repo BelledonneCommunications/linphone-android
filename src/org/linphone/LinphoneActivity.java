@@ -92,7 +92,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
-	private static final int callActivity = 19;
+	private static final int CALL_ACTIVITY = 19;
 
 	private static LinphoneActivity instance;
 
@@ -887,14 +887,14 @@ public class LinphoneActivity extends FragmentActivity implements
 		Intent intent = new Intent(this, InCallActivity.class);
 		intent.putExtra("VideoEnabled", true);
 		startOrientationSensor();
-		startActivityForResult(intent, callActivity);
+		startActivityForResult(intent, CALL_ACTIVITY);
 	}
 
 	public void startIncallActivity(LinphoneCall currentCall) {
 		Intent intent = new Intent(this, InCallActivity.class);
 		intent.putExtra("VideoEnabled", false);
 		startOrientationSensor();
-		startActivityForResult(intent, callActivity);
+		startActivityForResult(intent, CALL_ACTIVITY);
 	}
 
 	/**
@@ -1227,7 +1227,7 @@ public class LinphoneActivity extends FragmentActivity implements
 				changeCurrentFragment(newFragment, null, true);
 				selectMenu(newFragment);
 			}
-		} else if (requestCode == callActivity) {
+		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
 			boolean callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				initInCallMenuLayout(callTransfer);
