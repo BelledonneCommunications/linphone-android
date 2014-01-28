@@ -405,29 +405,16 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
-		if (Version.isHDVideoCapable()) {
-			entries.add(getString(R.string.pref_preferred_video_size_hd));
-			values.add(getString(R.string.pref_preferred_video_size_hd_key));
+		for (String name : LinphoneManager.getLc().getSupportedVideoSizes()) {
+			entries.add(name);
+			values.add(name);
 		}
-		entries.add(getString(R.string.pref_preferred_video_size_vga));
-		values.add(getString(R.string.pref_preferred_video_size_vga_key));
-		entries.add(getString(R.string.pref_preferred_video_size_cif));
-		values.add(getString(R.string.pref_preferred_video_size_cif_key));
-		entries.add(getString(R.string.pref_preferred_video_size_qvga));
-		values.add(getString(R.string.pref_preferred_video_size_qvga_key));
-		entries.add(getString(R.string.pref_preferred_video_size_qcif));
-		values.add(getString(R.string.pref_preferred_video_size_qcif_key));		
 
 		setListPreferenceValues(pref, entries, values);
 		
 		String value = mPrefs.getPreferredVideoSize();
 		pref.setSummary(value);
-		String key = getString(R.string.pref_preferred_video_size_qvga_key);
-		if (value.equals(getString(R.string.pref_preferred_video_size_vga)))
-			key = getString(R.string.pref_preferred_video_size_vga_key);
-		else if (value.equals(getString(R.string.pref_preferred_video_size_hd)))
-			key = getString(R.string.pref_preferred_video_size_hd_key);
-		pref.setDefaultValue(key);
+		pref.setDefaultValue(value);
 	}
 	
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
