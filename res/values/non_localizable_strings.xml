@@ -67,11 +67,6 @@
     <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
     <string name="pref_video_enable_key">pref_video_enable_key</string>
 	<string name="pref_preferred_video_size_key">pref_preferred_video_size_key</string>
-	<string name="pref_preferred_video_size_hd_key">pref_preferred_video_size_hd_key</string>
-	<string name="pref_preferred_video_size_vga_key">pref_preferred_video_size_vga_key</string>
-	<string name="pref_preferred_video_size_cif_key">pref_preferred_video_size_cif_key</string>
-	<string name="pref_preferred_video_size_qvga_key">pref_preferred_video_size_qvga_key</string>
-	<string name="pref_preferred_video_size_qcif_key">pref_preferred_video_size_qcif_key</string>
     <string name="pref_animation_enable_key">pref_animation_enable_key</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
