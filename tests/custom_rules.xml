@@ -6,6 +6,9 @@
 			<arg value="am" />
 			<arg value="instrument" />
 			<arg value="-w" />
+			<arg value="-e" />
+			<arg value="size" />
+			<arg value="small" />
 			<arg value="org.linphone.test/android.test.InstrumentationTestRunner" />
 		</exec>
 		<echo message="${tests.output}"/>
