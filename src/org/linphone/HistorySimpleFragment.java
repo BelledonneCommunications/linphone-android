@@ -130,8 +130,14 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (LinphoneActivity.isInstanciated())
+		
+		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
 		
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
