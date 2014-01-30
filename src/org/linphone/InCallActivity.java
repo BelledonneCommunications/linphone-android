@@ -262,6 +262,8 @@ public class InCallActivity extends FragmentActivity implements
 				speaker.setVisibility(View.VISIBLE);
 			} catch (NullPointerException npe) { Log.e("Bluetooth: Audio routes menu disabled on tablets for now (3)"); }
 		}
+		
+		LinphoneManager.getInstance().changeStatusToOnThePhone();
 	}
 	
 	private void refreshInCallActions() {
@@ -1172,6 +1174,8 @@ public class InCallActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onDestroy() {
+		LinphoneManager.getInstance().changeStatusToOnline();
+		
 		if (mControlsHandler != null && mControls != null) {
 			mControlsHandler.removeCallbacks(mControls);
 		}
