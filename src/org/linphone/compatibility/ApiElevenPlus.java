@@ -1,5 +1,7 @@
 package org.linphone.compatibility;
 
+import java.util.ArrayList;
+
 import org.linphone.R;
 
 import android.annotation.TargetApi;
@@ -7,9 +9,17 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.CommonDataKinds.SipAddress;
+import android.provider.ContactsContract.Intents.Insert;
 
 /*
 ApiElevenPlus.java
@@ -92,5 +102,39 @@ public class ApiElevenPlus {
 
 	public static void setAudioManagerInCallMode(AudioManager manager) {
 		manager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+	}
+	
+	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
+		Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
+		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
+		
+		if (sipUri != null && sipUri.startsWith("sip:")) {
+			sipUri = sipUri.substring(4);
+		}
+		
+		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
+		ContentValues sipAddressRow = new ContentValues();
+		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
+		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+		data.add(sipAddressRow);
+		intent.putParcelableArrayListExtra(Insert.DATA, data);
+		
+		return intent;
+	}
+	
+	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipUri) {
+		Intent intent = new Intent(Intent.ACTION_EDIT, Contacts.CONTENT_URI);
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
+		intent.setData(contactUri);
+		
+		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
+		ContentValues sipAddressRow = new ContentValues();
+		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
+		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+		data.add(sipAddressRow);
+		data.add(sipAddressRow);
+		intent.putParcelableArrayListExtra(Insert.DATA, data);
+		
+		return intent;
 	}
 }

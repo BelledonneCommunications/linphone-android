@@ -37,7 +37,6 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.Preference;
-import android.view.Display;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /**
@@ -51,10 +50,11 @@ public class Compatibility {
 	}
 	
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			return ApiElevenPlus.prepareAddContactIntent(displayName, sipUri);
+		} else {
 			return ApiFivePlus.prepareAddContactIntent(displayName, sipUri);
 		}
-		return null;
 	}
 	
 	public static Intent prepareEditContactIntent(int id) {
@@ -65,31 +65,35 @@ public class Compatibility {
 	}
 	
 	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipAddress) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
-			return ApiFivePlus.prepareEditContactIntentWithSipAddress(id, sipAddress);
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			return ApiElevenPlus.prepareEditContactIntentWithSipAddress(id, sipAddress);
+		} else {
+			return ApiFivePlus.prepareEditContactIntent(id);	
 		}
-		return null;
 	}
 	
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.extractContactNumbersAndAddresses(id, cr);
+		} else {
 			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
 		}
-		return null;
 	}
 	
 	public static Cursor getContactsCursor(ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getContactsCursor(cr);
+		} else {
 			return ApiFivePlus.getContactsCursor(cr);
 		}
-		return null;
 	}
 	
 	public static Cursor getSIPContactsCursor(ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getSIPContactsCursor(cr);
+		} else {
 			return ApiFivePlus.getSIPContactsCursor(cr);
 		}
-		return null;
 	}
 	
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {
@@ -114,10 +118,11 @@ public class Compatibility {
 	}
 	
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
+		} else {
 			return ApiFivePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
 		}
-		return null;
 	}
 	
 	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {

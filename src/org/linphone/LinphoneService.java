@@ -33,10 +33,10 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.OnlineStatus;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -156,8 +156,9 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		LinphoneManager.createAndStart(this, this);
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mWifiLock = mWifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, this.getPackageName()+"-wifi-call-lock");
-		mWifiLock.setReferenceCounted(false);
+		if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
+			startWifiLock();
+		}
 		instance = this; // instance is ready once linphone manager has been created
 		
 
@@ -189,7 +190,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			}, 5000);
 		}
 		
-		LinphoneManager.getLc().setPresenceInfo(0, "", OnlineStatus.Online);
 		//make sure the application will at least wakes up every 10 mn
 		Intent intent = new Intent(this, KeepAliveHandler.class);
 	    mkeepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -197,6 +197,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 																							, SystemClock.elapsedRealtime()+600000
 																							, 600000
 																							, mkeepAlivePendingIntent);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+	private void startWifiLock() {
+		mWifiLock = mWifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, this.getPackageName()+"-wifi-call-lock");
+		mWifiLock.setReferenceCounted(false);
 	}
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
@@ -470,7 +476,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	@Override
 	public synchronized void onDestroy() {
-		LinphoneManager.getLc().setPresenceInfo(0, "", OnlineStatus.Offline);
 		instance = null;
 		LinphoneManager.destroy();
 

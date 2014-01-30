@@ -9,7 +9,6 @@ import java.util.Set;
 import org.linphone.Contact;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
-import org.linphone.mediastream.Version;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -18,7 +17,6 @@ import android.app.PendingIntent;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,12 +30,9 @@ import android.preference.Preference;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
-import android.provider.ContactsContract.Intents.Insert;
 import android.text.ClipboardManager;
-import android.view.Display;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
@@ -73,22 +68,9 @@ public class ApiFivePlus {
 		Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
 		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
 		
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			if (sipUri != null && sipUri.startsWith("sip:")) {
-				sipUri = sipUri.substring(4);
-			}
-			
-			ArrayList<ContentValues> data = new ArrayList<ContentValues>();
-			ContentValues sipAddressRow = new ContentValues();
-			sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
-			sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
-			data.add(sipAddressRow);
-			intent.putParcelableArrayListExtra(Insert.DATA, data);
-		} else {
-			// VoIP field not available, we store the address in the IM field
-			intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, sipUri);
-			intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
-		}
+		// VoIP field not available, we store the address in the IM field
+		intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, sipUri);
+		intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
 		  
 		return intent;
 	}
@@ -106,24 +88,13 @@ public class ApiFivePlus {
 		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
 		intent.setData(contactUri);
 		
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			ArrayList<ContentValues> data = new ArrayList<ContentValues>();
-			ContentValues sipAddressRow = new ContentValues();
-			sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
-			sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
-			data.add(sipAddressRow);
-			data.add(sipAddressRow);
-			intent.putParcelableArrayListExtra(Insert.DATA, data);
-		} else {
-			// VoIP field not available, we store the address in the IM field
-			intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, sipUri);
-			intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
-		}
+		// VoIP field not available, we store the address in the IM field
+		intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, sipUri);
+		intent.putExtra(ContactsContract.Intents.Insert.IM_PROTOCOL, "sip");
 		
 		return intent;
 	}
 	
-	@SuppressWarnings("resource")
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
 		List<String> list = new ArrayList<String>();
 
@@ -141,41 +112,21 @@ public class ApiFivePlus {
 		}
 		
 		// SIP addresses
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			String selection = new StringBuilder()
-				.append(Data.CONTACT_ID)
-				.append(" = ? AND ")
-				.append(Data.MIMETYPE)
-				.append(" = '")
-				.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-				.append("'")
-				.toString();
-			projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
-			c = cr.query(uri, projection, selection, new String[]{id}, null);
-			if (c != null) {
-				int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
-				while (c.moveToNext()) {
-					list.add("sip:" + c.getString(nbId)); 
-				}
-				c.close();
+		String selection = new StringBuilder()
+			.append(Data.CONTACT_ID).append(" =  ? AND ")
+			.append(Data.MIMETYPE).append(" = '")
+			.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+			.append("' AND lower(")
+			.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
+			.append(") = 'sip'")
+			.toString();
+		c = cr.query(uri, projection, selection, new String[]{id}, null);
+		if (c != null) {
+			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
+			while (c.moveToNext()) {
+				list.add("sip:" + c.getString(nbId)); 
 			}
-		} else {
-			String selection = new StringBuilder()
-				.append(Data.CONTACT_ID).append(" =  ? AND ")
-				.append(Data.MIMETYPE).append(" = '")
-				.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
-				.append("' AND lower(")
-				.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
-				.append(") = 'sip'")
-				.toString();
-			c = cr.query(uri, projection, selection, new String[]{id}, null);
-			if (c != null) {
-				int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
-				while (c.moveToNext()) {
-					list.add("sip:" + c.getString(nbId)); 
-				}
-				c.close();
-			}
+			c.close();
 		}
 
 		return list;
@@ -185,45 +136,30 @@ public class ApiFivePlus {
 		String req = Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
                 + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL";
 		
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			req += " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL)";
-        } else {
-        	req += " OR (" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                    + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
-        }
+    	req += " OR (" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
 		
 		return getGeneralContactCursor(cr, req, true);
 	}
 
 	public static Cursor getSIPContactsCursor(ContentResolver cr) {
 		String req = null;
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL";
-        } else {
-        	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                    + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
-        }
+    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
 		
 		return getGeneralContactCursor(cr, req, true);
 	}
 	
 	private static Cursor getSIPContactCursor(ContentResolver cr, String id) {
 		String req = null;
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " LIKE '" + id + "'";
-        } else {
-        	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                    + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
-                    + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
-        }
+    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
+                + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
 		
 		return getGeneralContactCursor(cr, req, false);
 	}
 	
-	private static Cursor getGeneralContactCursor(ContentResolver cr, String select, boolean shouldGroupBy) {
+	public static Cursor getGeneralContactCursor(ContentResolver cr, String select, boolean shouldGroupBy) {
 		
 		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
 		
