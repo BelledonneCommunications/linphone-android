@@ -346,8 +346,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
 		
-		if (Version.isVideoCapable() && getLc().isVideoSupported())
-			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Version.sdk());
 		return instance;
 	}
 
