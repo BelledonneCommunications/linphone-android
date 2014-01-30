@@ -187,6 +187,10 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
 			onlyDisplayLinphoneContacts = LinphoneActivity.instance().isLinphoneContactsPrefered();
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
 		}
 		
 		invalidate();

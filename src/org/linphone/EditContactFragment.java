@@ -186,6 +186,17 @@ public class EditContactFragment extends Fragment {
 		return view;
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if (LinphoneActivity.isInstanciated()) {
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
+	}
+	
 	private void initNumbersFields(final TableLayout controls, final Contact contact) {
 		controls.removeAllViews();
 		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();

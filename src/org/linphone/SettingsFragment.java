@@ -891,6 +891,10 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
 		}
 	}
 }

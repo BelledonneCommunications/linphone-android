@@ -24,7 +24,6 @@ import org.linphone.ui.AddressText;
 import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -133,27 +132,9 @@ public class DialerFragment extends Fragment {
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().updateDialerFragment(this);
-			LinphoneActivity.instance().showStatusBar();
-		}
-	}
-	
-	@Override
-	public void onDetach() {
-		if (LinphoneActivity.isInstanciated()) {
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
-		}
-		super.onDetach();
-	}
-	
-	@Override
 	public void onResume() {
 		super.onResume();
+		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
@@ -171,16 +152,6 @@ public class DialerFragment extends Fragment {
 			shouldEmptyAddressField = true;
 		}
 		resetLayout(isCallTransferOngoing);
-	}
-	
-	@Override
-	public void onPause() {
-		if (LinphoneActivity.isInstanciated()) {
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
-		}
-		super.onPause();
 	}
 	
 	public void resetLayout(boolean callTransfer) {
