@@ -69,8 +69,6 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle, id);
 		
-		if (Version.isVideoCapable())
-			AndroidVideoApi5JniWrapper.setAndroidSdkVersion(Version.sdk());
 		return instance;
 	}
 	
