@@ -227,7 +227,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		return getResources().getBoolean(R.bool.isTablet);
 	}
 
-	private void hideStatusBar() {
+	public void hideStatusBar() {
 		if (isTablet()) {
 			return;
 		}
@@ -236,7 +236,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
 	}
 
-	private void showStatusBar() {
+	public void showStatusBar() {
 		if (isTablet()) {
 			return;
 		}
@@ -343,13 +343,6 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
-		if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-			if (newFragmentType == FragmentsAvailable.DIALER) {
-				showStatusBar();
-			} else {
-				hideStatusBar();
-			}
-		}
 		if (statusFragment != null) {
 			statusFragment.closeStatusBar();
 		}
@@ -1250,6 +1243,8 @@ public class LinphoneActivity extends FragmentActivity implements
 		
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
+		LinphoneManager.getInstance().changeStatusToOnline();
+		
 		if (LinphoneManager.getLc().getCalls().length > 0) {
 			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 			LinphoneCall.State callState = call.getState();
@@ -1257,14 +1252,6 @@ public class LinphoneActivity extends FragmentActivity implements
 				startActivity(new Intent(this, IncomingCallActivity.class));
 			}
 		}
-
-		LinphoneManager.getInstance().changeStatusToOnline();
-	}
-
-	@Override
-	protected void onPause() {		
-		super.onPause();
-		LinphoneManager.getInstance().changeStatusToAway();
 	}
 
 	@Override
@@ -1356,20 +1343,7 @@ public class LinphoneActivity extends FragmentActivity implements
 					return true;
 				}
 			} else {
-				if (!isTablet()) {
-					int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-					if (backStackEntryCount <= 1) {
-						showStatusBar();
-					}
-	
-					if (currentFragment == FragmentsAvailable.SETTINGS) {
-						showStatusBar();
-						updateAnimationsState();
-					} else if (currentFragment == FragmentsAvailable.CHATLIST) {
-						//Hack to ensure display the status bar on some devices
-						showStatusBar();
-					}
-				} else {
+				if (isTablet()) {
 					if (currentFragment == FragmentsAvailable.SETTINGS) {
 						updateAnimationsState();
 					}

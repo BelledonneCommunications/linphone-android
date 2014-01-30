@@ -137,7 +137,18 @@ public class DialerFragment extends Fragment {
 		super.onAttach(activity);
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().updateDialerFragment(this);
+			LinphoneActivity.instance().showStatusBar();
 		}
+	}
+	
+	@Override
+	public void onDetach() {
+		if (LinphoneActivity.isInstanciated()) {
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
+		super.onDetach();
 	}
 	
 	@Override
@@ -146,6 +157,7 @@ public class DialerFragment extends Fragment {
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
+			LinphoneActivity.instance().showStatusBar();
 		}
 		
 		// Force speaker for tablets
@@ -159,6 +171,16 @@ public class DialerFragment extends Fragment {
 			shouldEmptyAddressField = true;
 		}
 		resetLayout(isCallTransferOngoing);
+	}
+	
+	@Override
+	public void onPause() {
+		if (LinphoneActivity.isInstanciated()) {
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
+		super.onPause();
 	}
 	
 	public void resetLayout(boolean callTransfer) {
