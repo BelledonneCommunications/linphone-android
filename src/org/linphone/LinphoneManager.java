@@ -352,25 +352,35 @@ public class LinphoneManager implements LinphoneCoreListener {
 		
 		return instance;
 	}
+	
+	private boolean isPresenceModelActivitySet() {
+		return isInstanciated() && getLc().getPresenceModel() != null || getLc().getPresenceModel().getActivity() != null;
+	}
 
 	public void changeStatusToOnline() {
-		if (LinphoneManager.isInstanciated()) {
+		if (isInstanciated() && isPresenceModelActivitySet() && getLc().getPresenceModel().getActivity().getType() != PresenceActivityType.Online) {
+			getLc().getPresenceModel().getActivity().setType(PresenceActivityType.Online);
+		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
 			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Online, null);
-			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceModel(model);
+			getLc().setPresenceModel(model);
 		}
 	}
 
-	public void changeStatusToAway() {
-		if (LinphoneManager.isInstanciated()) {
-			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Away, null);
-			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceModel(model);
+	public void changeStatusToOnThePhone() {
+		if (isInstanciated() && isPresenceModelActivitySet() && getLc().getPresenceModel().getActivity().getType() != PresenceActivityType.OnThePhone) {
+			getLc().getPresenceModel().getActivity().setType(PresenceActivityType.OnThePhone);
+		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
+			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.OnThePhone, null);
+			getLc().setPresenceModel(model);
 		}
 	}
 	
 	public void changeStatusToOffline() {
-		if (LinphoneManager.isInstanciated()) {
+		if (isInstanciated() && isPresenceModelActivitySet() && getLc().getPresenceModel().getActivity().getType() != PresenceActivityType.Offline) {
+			getLc().getPresenceModel().getActivity().setType(PresenceActivityType.Offline);
+		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
 			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Offline, null);
-			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceModel(model);
+			getLc().setPresenceModel(model);
 		}
 	}
 
