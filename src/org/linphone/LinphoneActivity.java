@@ -43,7 +43,6 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
-import org.linphone.core.OnlineStatus;
 import org.linphone.mediastream.Log;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
@@ -975,12 +974,6 @@ public class LinphoneActivity extends FragmentActivity implements
 		return preferLinphoneContacts;
 	}
 
-	private void refreshStatus(OnlineStatus status) {
-		if (LinphoneManager.isInstanciated()) {
-			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceInfo(0, "", status);
-		}
-	}
-
 	public void onNewSubscriptionRequestReceived(LinphoneFriend friend,
 			String sipUri) {
 		if (isContactPresenceDisabled) {
@@ -1265,13 +1258,13 @@ public class LinphoneActivity extends FragmentActivity implements
 			}
 		}
 
-		refreshStatus(OnlineStatus.Online);
+		LinphoneManager.getInstance().changeStatusToOnline();
 	}
 
 	@Override
 	protected void onPause() {		
 		super.onPause();
-		refreshStatus(OnlineStatus.Away);
+		LinphoneManager.getInstance().changeStatusToAway();
 	}
 
 	@Override

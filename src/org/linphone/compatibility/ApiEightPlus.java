@@ -6,7 +6,6 @@ import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.view.Display;
 
 import com.google.android.gcm.GCMRegistrar;
 

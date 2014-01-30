@@ -60,17 +60,19 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.PresenceActivityType;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -346,7 +348,30 @@ public class LinphoneManager implements LinphoneCoreListener {
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
 		
+		getInstance().changeStatusToOnline();
+		
 		return instance;
+	}
+
+	public void changeStatusToOnline() {
+		if (LinphoneManager.isInstanciated()) {
+			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Online, null);
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceModel(model);
+		}
+	}
+
+	public void changeStatusToAway() {
+		if (LinphoneManager.isInstanciated()) {
+			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Away, null);
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceModel(model);
+		}
+	}
+	
+	public void changeStatusToOffline() {
+		if (LinphoneManager.isInstanciated()) {
+			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Offline, null);
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().setPresenceModel(model);
+		}
 	}
 
 	public static synchronized final LinphoneManager getInstance() {
@@ -734,7 +759,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	public static synchronized void destroy() {
 		if (instance == null) return;
-		sExited=true;
+		getInstance().changeStatusToOffline();
+		sExited = true;
 		instance.doDestroy();
 	}
 

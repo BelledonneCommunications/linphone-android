@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneFriend;
-import org.linphone.core.OnlineStatus;
+import org.linphone.core.PresenceActivityType;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -278,13 +278,14 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneFriend friend = contact.getFriend();
 			if (!LinphoneActivity.instance().isContactPresenceDisabled() && friend != null) {
 				friendStatus.setVisibility(View.VISIBLE);
-				if (friend.getStatus() == OnlineStatus.Online) {
+				PresenceActivityType presenceActivity = friend.getPresenceModel().getActivity().getType();
+				if (presenceActivity == PresenceActivityType.Online) {
 					friendStatus.setImageResource(R.drawable.led_connected);
-				} else if (friend.getStatus() == OnlineStatus.Busy || friend.getStatus() == OnlineStatus.DoNotDisturb) {
+				} else if (presenceActivity == PresenceActivityType.Busy) {
 					friendStatus.setImageResource(R.drawable.led_error);
-				} else if (friend.getStatus() == OnlineStatus.Away || friend.getStatus() == OnlineStatus.BeRightBack) {
+				} else if (presenceActivity == PresenceActivityType.Away) {
 					friendStatus.setImageResource(R.drawable.led_inprogress);
-				} else if (friend.getStatus() == OnlineStatus.Offline) {
+				} else if (presenceActivity == PresenceActivityType.Offline) {
 					friendStatus.setImageResource(R.drawable.led_disconnected);
 				} else {
 					friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
