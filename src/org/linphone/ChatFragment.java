@@ -194,7 +194,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         if (savedInstanceState != null) {
 			messagesFilterLimit = savedInstanceState.getInt("messagesFilterLimit");
 		}
-        displayChat(displayName, pictureUri);
+        displayChatHeader(displayName, pictureUri);
 		
 		uploadServerUri = LinphonePreferences.instance().getSharingPictureServerUrl();
 		
@@ -341,7 +341,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		});
 	}
 	
-	private void displayChat(String displayName, String pictureUri) {
+	private void displayChatHeader(String displayName, String pictureUri) {
 		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
         	contactName.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
 		} else if (displayName == null) {
@@ -355,14 +355,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         } else {
         	contactPicture.setImageResource(R.drawable.unknown_small);
         }
-        
-        if (messagesFilterLimit == 0)
-        	invalidate();
-        else {
-        	invalidate(messagesFilterLimit);
-        }
-        
-        scrollToEnd();
 	}
 	
 	private int checkId(int id) {
@@ -494,7 +486,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				draft = "";
 			message.setText(draft);
 		}
-		displayChat(displayName, pictureUri);
+		
+		displayChatHeader(displayName, pictureUri);
+		displayMessages();
 	}
 	
 	@Override
@@ -601,11 +595,22 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		
 		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
+		
+		displayMessages();
 	}
 
 	@Override
 	public void onClick(View v) {
 		sendTextMessage();
+	}
+	
+	private void displayMessages() {
+		messagesLayout.removeAllViews();
+		messagesArePresentButHidden = false;
+		messagesFilterLimit = 0;
+		previousMessageID = 0;
+		invalidate();
+		scrollToEnd();
 	}
 	
 	private void sendTextMessage() {
