@@ -746,7 +746,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
 	private void doDestroy() {
-		ChatStorage.getInstance().close();
+		if (LinphoneService.isReady()) // indeed, no need to crash
+			ChatStorage.getInstance().close();
 
 		try {
 			mServiceContext.unregisterReceiver(bluetoothReiceiver);
