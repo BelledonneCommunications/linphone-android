@@ -483,7 +483,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
 	    mNM.cancel(MESSAGE_NOTIF_ID);
-	    mWifiLock.release();
+	    
+	    if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
+			mWifiLock.release();
+		}
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
 		super.onDestroy();
 	}
@@ -588,13 +591,17 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			// Workaround bug current call seems to be updated after state changed to streams running
 			if (getResources().getBoolean(R.bool.enable_call_notification))
 				refreshIncallIcon(call);
-			mWifiLock.acquire();
+			if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
+				mWifiLock.acquire();
+			}
 		} else {
 			if (getResources().getBoolean(R.bool.enable_call_notification))
 				refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 		}
 		if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
-			mWifiLock.release();
+			if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
+				mWifiLock.release();
+			}
 		}
 		
 		mHandler.post(new Runnable() {
