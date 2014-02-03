@@ -4,20 +4,20 @@ SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 ARM_COMPILER_PATH=`find "$(NDK_PATH)" -name "arm-linux-androideabi-gcc*" -print -quit`
 ARM_TOOLCHAIN_PATH=$(shell dirname $(ARM_COMPILER_PATH))/arm-linux-androideabi-
-ARM_SYSROOT=`find "${NDK_PATH}" -name arch-arm -print | \
+ARM_SYSROOT=$(shell find "${NDK_PATH}" -name arch-arm -print | \
 	awk '{n = split($$0,a,"/"); \
 	split(a[n-1],b,"-"); \
 	print $$0 " " b[2]}' | \
 	sort -g -k 2 | \
-	awk '{ print $$1 }' | tail -1`
+	awk '{ print $$1 }' | tail -1)
 X86_COMPILER_PATH=`find "$(NDK_PATH)" -name "i686-linux-android-gcc*" -print -quit`
 X86_TOOLCHAIN_PATH=$(shell dirname $(X86_COMPILER_PATH))/i686-linux-android-
-X86_SYSROOT=`find "${NDK_PATH}" -name arch-x86 -print | \
+X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
 	awk '{n = split($$0,a,"/"); \
 	split(a[n-1],b,"-"); \
 	print $$0 " " b[2]}' | \
 	sort -g -k 2 | \
-	awk '{ print $$1 }' | tail -1`
+	awk '{ print $$1 }' | tail -1)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
 TOPDIR=$(shell pwd)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
