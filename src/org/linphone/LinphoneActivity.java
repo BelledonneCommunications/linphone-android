@@ -819,7 +819,7 @@ public class LinphoneActivity extends FragmentActivity implements
 				displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
 			} else if (message != null && message.equals("Not Found")) {
 				displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
-			} else if (message != null && message.equals("Incompatible media parameters.")) {
+			} else if (message != null && message.equals("Unsupported media type")) {
 				displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_LONG);
 			}
 			resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
