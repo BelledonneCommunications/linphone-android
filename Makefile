@@ -290,7 +290,7 @@ prepare-antlr3: $(ANLTR3_SRC_DIR)/antlr3config.h
 #Belle-sip
 BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
 BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
-prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/belle_sdp.tokens
+prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/grammars/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/grammars/belle_sdp.tokens 
 
 #CUnit
 prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
