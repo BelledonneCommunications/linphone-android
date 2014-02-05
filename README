@@ -35,6 +35,12 @@ To create an apk with a different package name, you need to edit the custom_rule
 If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
 When using the ndk-r9b or ndk-r9c you may have an issue when compiling with x264. If so, use ndk-r9 instead.
 
+If you built the app using eclipse, ensure you ran at least once the make command (see above steps 0 to 3) ! Else you'll have this exceptions:
+FATAL EXCEPTION: main
+java.lang.ExceptionInInitializerError
+...
+Caused by: java.lang.UnsatisfiedLinkError: Couldn't load linphone-armeabi-v7a: findLibrary returned null
+...
 
 			   CUSTOMIZATION
 			*****************************
@@ -98,7 +104,3 @@ BUILD_OPUS
 
 BUILD_UPNP
 	values: 0 (don't build upnp), 1 (do build upnp), default value: 1
-
-BUILD_OPENSLES_SOUNDCARD
-	values: 0 (don't build ms2 opensles soundcard, requiered to be able to run the app on Android 2.2), 1 (do build ms2 opensles soundcard, used on Android >= 4.4 devices)
-	default value: 1
