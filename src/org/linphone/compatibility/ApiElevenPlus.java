@@ -51,7 +51,7 @@ public class ApiElevenPlus {
 			PendingIntent intent) {
 		String title;
 		if (msgCount == 1) {
-			title = "Unread message from %s".replace("%s", msgSender);
+			title = msgSender;
 		} else {
 			title = "%i unread messages"
 					.replace("%i", String.valueOf(msgCount));
@@ -60,6 +60,7 @@ public class ApiElevenPlus {
 		Notification notif = new Notification.Builder(context)
 						.setContentTitle(title)
 						.setContentText(msg)
+						.setContentIntent(intent)
 						.setSmallIcon(R.drawable.chat_icon_over)
 						.setAutoCancel(true)
 						.setDefaults(
@@ -68,7 +69,6 @@ public class ApiElevenPlus {
 										| Notification.DEFAULT_VIBRATE)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).getNotification();
-		notif.contentIntent = intent;
 
 		return notif;
 	}
@@ -81,10 +81,37 @@ public class ApiElevenPlus {
 		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
 						.setContentText(msg).setSmallIcon(iconID)
 						.setAutoCancel(false)
+						.setContentIntent(intent)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).getNotification();
-		notif.contentIntent = intent;
 
+		return notif;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent) {
+		Notification notif;
+		
+		if (largeIcon != null) {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setLargeIcon(largeIcon)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .getNotification();
+		} else {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .getNotification();
+		}
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		
 		return notif;
 	}
 
