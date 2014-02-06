@@ -88,12 +88,6 @@ public class ApiElevenPlus {
 		return notif;
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void setNotificationLatestEventInfo(Notification notif,
-			Context context, String title, String content, PendingIntent intent) {
-		notif.setLatestEventInfo(context, title, content, intent);
-	}
-
 	public static void copyTextToClipboard(Context context, String msg) {
 		ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); 
 	    ClipData clip = android.content.ClipData.newPlainText("Message", msg);

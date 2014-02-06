@@ -141,18 +141,17 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
-		
-		mNotif = new Notification();
-		mNotif.icon = R.drawable.status_level;
-		mNotif.when = System.currentTimeMillis();
-		mNotif.iconLevel=IC_LEVEL_ORANGE;
-		mNotif.flags |= Notification.FLAG_ONGOING_EVENT;
 
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
+
+		Bitmap bm = null;
+		try {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+		} catch (Exception e) {
+		}
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent);
 
 		LinphoneManager.createAndStart(this, this);
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -279,20 +278,17 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	public void addNotification(Intent onClickIntent, int iconResourceID, String title, String message) {
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		if (mCustomNotif == null) {
-			mCustomNotif = new Notification();
+		Bitmap bm = null;
+		try {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+		} catch (Exception e) {
 		}
-			
-		mCustomNotif.icon = iconResourceID;
-		mCustomNotif.iconLevel = 0;
-		mCustomNotif.when = System.currentTimeMillis();
-		mCustomNotif.flags &= Notification.FLAG_ONGOING_EVENT;
+		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent);
 		
 		mCustomNotif.defaults |= Notification.DEFAULT_VIBRATE;
 		mCustomNotif.defaults |= Notification.DEFAULT_SOUND;
 		mCustomNotif.defaults |= Notification.DEFAULT_LIGHTS;
 		
-		Compatibility.setNotificationLatestEventInfo(mCustomNotif, this, title, message, notifContentIntent);
 		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
 	
@@ -441,8 +437,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	}
 
 	private synchronized void sendNotification(int level, int textId) {
-		mNotif.iconLevel = level;
-		mNotif.when=System.currentTimeMillis();
 		String text = getString(textId);
 		if (text.contains("%s") && LinphoneManager.getLc() != null) {
 			// Test for null lc is to avoid a NPE when Android mess up badly with the String resources.
@@ -450,8 +444,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			String id = lpc != null ? lpc.getIdentity() : "";
 			text = String.format(text, id);
 		}
-		
-		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, text, mNotifContentIntent);
+
+		Bitmap bm = null;
+		try {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+		} catch (Exception e) {
+		}
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent);
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
 
@@ -462,7 +461,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	 * stop linphone as soon as it is started. Transport configured with TLS.
 	 */
 	private synchronized void notifyWrapper(int id, Notification notification) {
-		if (instance != null) {
+		if (instance != null && notification != null) {
 			mNM.notify(id, notification);
 		} else {
 			Log.i("Service not ready, discarding notification");
@@ -532,6 +531,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
 		}
+		
 		if (state == RegistrationState.RegistrationNone) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
 		}
@@ -553,7 +553,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private void resetIntentLaunchedOnNotificationClick() {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		Compatibility.setNotificationLatestEventInfo(mNotif, this, mNotificationTitle, "", mNotifContentIntent);
+		
+		if (mNotif != null) {
+			mNotif.contentIntent = mNotifContentIntent;
+		}
+		notifyWrapper(NOTIF_ID, mNotif);
 	}
 	
 	protected void onIncomingReceived() {
