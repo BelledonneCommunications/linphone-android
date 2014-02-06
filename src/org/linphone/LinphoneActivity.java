@@ -1306,7 +1306,7 @@ public class LinphoneActivity extends FragmentActivity implements
 			}
 		} else {
 			if (dialerFragment != null) {
-				if (extras.containsKey("SipUriOrNumber")) {
+				if (extras != null && extras.containsKey("SipUriOrNumber")) {
 					if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
 						((DialerFragment) dialerFragment).newOutgoingCall(extras.getString("SipUriOrNumber"));
 					} else {
