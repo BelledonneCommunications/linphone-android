@@ -282,8 +282,12 @@ public class LinphoneActivity extends FragmentActivity implements
 			newFragment = new HistoryDetailFragment();
 			break;
 		case CONTACTS:
-			newFragment = new ContactsFragment();
-			friendStatusListenerFragment = newFragment;
+			if (getResources().getBoolean(R.bool.use_android_native_contact_edit_interface)) {
+				
+			} else {
+				newFragment = new ContactsFragment();
+				friendStatusListenerFragment = newFragment;
+			}
 			break;
 		case CONTACT:
 			newFragment = new ContactFragment();
@@ -1302,7 +1306,15 @@ public class LinphoneActivity extends FragmentActivity implements
 			}
 		} else {
 			if (dialerFragment != null) {
-				((DialerFragment) dialerFragment).newOutgoingCall(intent);
+				if (extras.containsKey("SipUriOrNumber")) {
+					if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
+						((DialerFragment) dialerFragment).newOutgoingCall(extras.getString("SipUriOrNumber"));
+					} else {
+						((DialerFragment) dialerFragment).displayTextInAddressBar(extras.getString("SipUriOrNumber"));
+					}
+				} else {
+					((DialerFragment) dialerFragment).newOutgoingCall(intent);
+				}
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall calls[] = LinphoneManager.getLc().getCalls();

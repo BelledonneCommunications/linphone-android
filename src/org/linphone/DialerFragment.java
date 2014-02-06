@@ -185,6 +185,16 @@ public class DialerFragment extends Fragment {
 		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));	
 	}
 	
+	public void displayTextInAddressBar(String numberOrSipAddress) {
+		shouldEmptyAddressField = false;
+		mAddress.setText(numberOrSipAddress);
+	}
+	
+	public void newOutgoingCall(String numberOrSipAddress) {
+		displayTextInAddressBar(numberOrSipAddress);
+		LinphoneManager.getInstance().newOutgoingCall(mAddress);
+	}
+	
 	public void newOutgoingCall(Intent intent) {
 		if (intent != null && intent.getData() != null) {
 			String scheme = intent.getData().getScheme();
