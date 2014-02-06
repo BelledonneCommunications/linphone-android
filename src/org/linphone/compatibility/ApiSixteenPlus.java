@@ -74,6 +74,32 @@ public class ApiSixteenPlus {
 
 		return notif;
 	}
+	
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent) {
+		Notification notif;
+		
+		if (largeIcon != null) {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setLargeIcon(largeIcon)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .build();
+		} else {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .build();
+		}
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		
+		return notif;
+	}
 
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);		

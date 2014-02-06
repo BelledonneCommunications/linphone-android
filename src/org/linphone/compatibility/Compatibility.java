@@ -134,7 +134,7 @@ public class Compatibility {
 			title = "%i unread messages".replace("%i", String.valueOf(msgCount));
 		}
 		
-		if (Version.sdkAboveOrEqual(16)) {
+		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
@@ -147,7 +147,7 @@ public class Compatibility {
 	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 		Notification notif = null;
 		
-		if (Version.sdkAboveOrEqual(16)) {
+		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
@@ -155,6 +155,16 @@ public class Compatibility {
 			notif = ApiFivePlus.createInCallNotification(context, title, msg, iconID, intent);
 		}
 		return notif;
+	}
+
+	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent) {
+		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+			return ApiSixteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			return ApiElevenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent);
+		} else {
+			return ApiFivePlus.createNotification(context, title, message, icon, iconLevel, intent);
+		}
 	}
 
 	public static String refreshContactName(ContentResolver cr, String id) {
@@ -264,14 +274,6 @@ public class Compatibility {
 			ApiElevenPlus.setAudioManagerInCallMode(manager);
 		} else {
 			ApiFivePlus.setAudioManagerInCallMode(manager);
-		}
-	}
-
-	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent) {
-		if (Version.sdkAboveOrEqual(18)) {
-			return ApiEighteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent);
-		} else {
-			return ApiFivePlus.createNotification(context, title, message, icon, iconLevel, intent);
 		}
 	}
 }
