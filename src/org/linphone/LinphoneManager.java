@@ -150,6 +150,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private BluetoothHeadset mBluetoothHeadset;
 	private BluetoothProfile.ServiceListener mProfileListener;
 	private BroadcastReceiver bluetoothReiceiver = new BluetoothManager();
+	private BroadcastReceiver bluetoothActionReceiver = new BluetoothActionReceiver();
 	public boolean isBluetoothScoConnected;
 	public boolean isUsingBluetoothAudioRoute;
 	private boolean mBluetoothStarted;
@@ -252,14 +253,16 @@ public class LinphoneManager implements LinphoneCoreListener {
 					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 					public void onServiceConnected(int profile, BluetoothProfile proxy) {
 					    if (profile == BluetoothProfile.HEADSET) {
+					        Log.d("Bluetooth headset connected");
+							mServiceContext.registerReceiver(bluetoothActionReceiver, new IntentFilter(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT));
 					        mBluetoothHeadset = (BluetoothHeadset) proxy;
 			        		isBluetoothScoConnected = true;
-					        Log.d("Bluetooth headset connected");
 					    }
 					}
 					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 					public void onServiceDisconnected(int profile) {
 					    if (profile == BluetoothProfile.HEADSET) {
+							mServiceContext.unregisterReceiver(bluetoothActionReceiver);
 					        mBluetoothHeadset = null;
 			        		isBluetoothScoConnected = false;
 					        Log.d("Bluetooth headset disconnected");
@@ -746,6 +749,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		try {
 			mServiceContext.unregisterReceiver(bluetoothReiceiver);
+		} catch (Exception e) {}
+		
+		try {
+			mServiceContext.unregisterReceiver(bluetoothActionReceiver);
 		} catch (Exception e) {}
 		
 		try {
