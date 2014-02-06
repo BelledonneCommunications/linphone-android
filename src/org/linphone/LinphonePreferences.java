@@ -810,4 +810,7 @@ public class LinphonePreferences {
 	}
 	// End of tunnel settings
 
+	public boolean interceptOutgoingGSMCalls() {
+		return getConfig().getBool("app", "intercept_outgoing_gsm_calls", false);
+	}
 }
