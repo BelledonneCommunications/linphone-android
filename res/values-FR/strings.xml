@@ -391,4 +391,5 @@
 	<string name="zrtp_help">Vous ne devriez accepter que si vous avez le même code (ci-dessus) que votre contact</string>
 	
 	<string name="remote_composing">Votre correspondant est en train de taper...</string>
+	<string name="unread_messages">%i messages non lus</string>
 </resources>

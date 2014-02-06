@@ -40,7 +40,7 @@ public class ApiSixteenPlus {
 		if (msgCount == 1) {
 			title = msgSender;
 		} else {
-			title = "%i unread messages"
+			title = context.getString(R.string.unread_messages)
 					.replace("%i", String.valueOf(msgCount));
 		}
 
