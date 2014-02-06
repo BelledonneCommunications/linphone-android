@@ -156,7 +156,7 @@ clean-ffmpeg:
 
 #x264
 ifeq ($(BUILD_X264), 1)
-BUILD_X264_DEPS=$(X264_BUILD_DIR)/arm/libx264.a
+BUILD_X264_DEPS=$(X264_SRC_DIR)/log2f_fix_patch_applied.txt $(X264_BUILD_DIR)/arm/libx264.a
 ifeq ($(BUILD_FOR_X86), 1)
 	BUILD_X264_DEPS+=$(X264_BUILD_DIR)/x86/libx264.a
 endif
@@ -165,6 +165,10 @@ X264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/x264
 X264_CONFIGURE_OPTIONS=
 X264_ARM_CONFIGURE_OPTIONS=--host=arm-none-linux-gnueabi --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
 X264_X86_CONFIGURE_OPTIONS=--host=i686-linux-gnueabi --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH)
+
+$(X264_SRC_DIR)/log2f_fix_patch_applied.txt:
+	@patch -p0 < $(TOPDIR)/patches/x264_log2f_fix.patch
+	touch $@
 
 $(X264_BUILD_DIR)/arm/libx264.a:
 	mkdir -p $(X264_BUILD_DIR)/arm && \
