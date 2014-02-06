@@ -164,14 +164,6 @@ public class Compatibility {
 		return null;
 	}
 
-	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			ApiElevenPlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
-		} else {
-			ApiFivePlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
-		}
-	}
-
 	public static CompatibilityScaleGestureDetector getScaleGestureDetector(Context context, CompatibilityScaleGestureListener listener) {
 		if (Version.sdkAboveOrEqual(Version.API08_FROYO_22)) {
 			CompatibilityScaleGestureDetector csgd = new CompatibilityScaleGestureDetector(context);
@@ -272,6 +264,14 @@ public class Compatibility {
 			ApiElevenPlus.setAudioManagerInCallMode(manager);
 		} else {
 			ApiFivePlus.setAudioManagerInCallMode(manager);
+		}
+	}
+
+	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent) {
+		if (Version.sdkAboveOrEqual(18)) {
+			return ApiEighteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent);
+		} else {
+			return ApiFivePlus.createNotification(context, title, message, icon, iconLevel, intent);
 		}
 	}
 }

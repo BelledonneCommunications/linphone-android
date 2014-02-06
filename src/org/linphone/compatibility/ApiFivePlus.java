@@ -297,10 +297,6 @@ public class ApiFivePlus {
 		return notif;
 	}
 
-	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
-		notif.setLatestEventInfo(context, title, content, intent);
-	}
-
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
 		((CheckBoxPreference) preference).setChecked(checked);
 	}
@@ -369,5 +365,16 @@ public class ApiFivePlus {
 	public static void setAudioManagerInCallMode(AudioManager manager) {
 		/* Do not use MODE_IN_CALL, because it is reserved to GSM. This is causing conflicts on audio system resulting in silenced audio.*/
 		//manager.setMode(AudioManager.MODE_IN_CALL);
+	}
+
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, PendingIntent intent) {
+		Notification notif = new Notification();
+		notif.icon = icon;
+		notif.iconLevel = level;
+		notif.when = System.currentTimeMillis();
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		notif.setLatestEventInfo(context, title, message, intent);
+		
+		return notif;
 	}
 }
