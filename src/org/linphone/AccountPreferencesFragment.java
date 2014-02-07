@@ -131,7 +131,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			mPrefs.setAccountEnabled(n, (Boolean) newValue);
+			boolean value = (Boolean) newValue;
+			mPrefs.setAccountEnabled(n, !value);
 			return true;
 		}		
 	};
