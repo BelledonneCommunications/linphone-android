@@ -58,6 +58,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreFactoryImpl;
@@ -1473,5 +1474,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.d("Composing received for chatroom " + cr.getPeerAddress().asStringUriOnly());
 		if (composingReceivedListener != null)
 			composingReceivedListener.onComposingReceived(cr);
+	}
+	@Override
+	public void configuringStatus(LinphoneCore lc,
+			RemoteProvisioningState state, String message) {
+		Log.d("Remote provisioning status = " + state.toString());
 	}
 }
