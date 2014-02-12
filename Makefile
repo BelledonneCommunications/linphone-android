@@ -1,4 +1,3 @@
-
 NDK_PATH=$(shell dirname `which ndk-build`)
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
@@ -406,8 +405,9 @@ run-all-tests:
 clean-ndk-build:
 	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
 	ant clean
-	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
-	ant clean
+	@if [ -f $(TOPDIR)/submodules/linphone/mediastreamer2/java/project.properties ]; then \
+	  cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && ant clean; \
+	fi
 
 clean: clean-ndk-build
 
