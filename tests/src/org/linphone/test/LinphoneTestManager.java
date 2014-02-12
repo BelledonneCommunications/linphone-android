@@ -20,6 +20,7 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -430,8 +431,15 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom cr) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void configuringStatus(LinphoneCore lc,
+			RemoteProvisioningState state, String message) {
 		// TODO Auto-generated method stub
 	}
 }
