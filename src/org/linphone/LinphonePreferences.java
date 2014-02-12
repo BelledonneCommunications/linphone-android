@@ -400,12 +400,8 @@ public class LinphonePreferences {
 
 	public void setAccountEnabled(int n, boolean enabled) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
-		try {
-			prxCfg.enableRegister(enabled);
-			prxCfg.done();
-		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
-		}
+		prxCfg.enableRegister(enabled);
+		prxCfg.done();
 		
 		// If default proxy config is disabled, try to set another one as default proxy
 		if (!enabled && getLc().getDefaultProxyConfig().getIdentity().equals(prxCfg.getIdentity())) {
