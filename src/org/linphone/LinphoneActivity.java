@@ -49,6 +49,7 @@ import org.linphone.ui.AddressText;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -283,7 +284,12 @@ public class LinphoneActivity extends FragmentActivity implements
 			break;
 		case CONTACTS:
 			if (getResources().getBoolean(R.bool.use_android_native_contact_edit_interface)) {
-				
+				Intent i = new Intent();
+			    i.setComponent(new ComponentName("com.android.contacts", "com.android.contacts.DialtactsContactsEntryActivity"));
+			    i.setAction("android.intent.action.MAIN");
+			    i.addCategory("android.intent.category.LAUNCHER");
+			    i.addCategory("android.intent.category.DEFAULT");
+			    startActivity(i);
 			} else {
 				newFragment = new ContactsFragment();
 				friendStatusListenerFragment = newFragment;
