@@ -100,7 +100,7 @@
 	        android:stopWithTask="false"/>
 	       
 	    <receiver android:name="org.linphone.AndroidCallInterceptor">
-            <intent-filter android:priority="0">
+            <intent-filter android:priority="99">
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
