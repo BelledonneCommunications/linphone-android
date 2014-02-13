@@ -32,7 +32,7 @@ public class AndroidCallInterceptor extends BroadcastReceiver {
 			phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 		}
 		
-		if (context.getResources().getBoolean(R.bool.intercept_outgoing_gsm_calls) || LinphonePreferences.instance().interceptOutgoingGSMCalls()) {
+		if (context.getResources().getBoolean(R.bool.intercept_outgoing_gsm_calls)) {
 			setResultData(null);
 			Intent i = new Intent();
 			i.setClass(context, LinphoneActivity.class);
