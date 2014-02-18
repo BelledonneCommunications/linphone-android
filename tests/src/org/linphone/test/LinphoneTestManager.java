@@ -8,6 +8,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneManager.LinphoneConfigException;
 import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -33,8 +34,6 @@ import org.linphone.core.PayloadType;
 import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.capture.AndroidVideoApi5JniWrapper;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 
@@ -45,20 +44,22 @@ import android.telephony.TelephonyManager;
 public class LinphoneTestManager implements LinphoneCoreListener {
 
 	private static LinphoneTestManager instance;
-	private Context mAContext, mIContext;
+	private Context mIContext;
 	private LinphoneCore mLc1, mLc2;
 	
 	public String lastMessageReceived;
 	public boolean isDTMFReceived = false;
 	public boolean autoAnswer = true;
 	public boolean declineCall = false;
+	
+	private final String linphoneRootCaFile;
 
 	private Timer mTimer1 = new Timer("Linphone scheduler 1");
 	private Timer mTimer2 = new Timer("Linphone scheduler 2");
 	
 	private LinphoneTestManager(Context ac, Context ic) {
 		mIContext = ic;
-		mAContext = ac;
+		linphoneRootCaFile = ac.getFilesDir().getAbsolutePath() + "/rootca.pem";
 	}
 	
 	public static LinphoneTestManager createAndStart(Context ac, Context ic, int id) {
@@ -97,10 +98,16 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 
 			mLc.enableIpv6(false);
 			mLc.setRing(null);
+			mLc.setRootCA(linphoneRootCaFile);
 
 			int availableCores = Runtime.getRuntime().availableProcessors();
 			Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
 			mLc.setCpuCount(availableCores);
+			
+			Transports t = mLc.getSignalingTransportPorts();
+			t.udp = -1;
+			t.tcp = -1;
+			mLc.setSignalingTransportPorts(t);
 			
 			try {
 				initFromConf(mLc);
@@ -141,13 +148,6 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 	
 	public void initFromConf(LinphoneCore mLc) throws LinphoneConfigException, LinphoneCoreException {
 		LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
-
-		// Use TCP with Random port
-		Transports transports = getLc().getSignalingTransportPorts();
-		transports.tcp = -1;
-		transports.udp = 0;
-		transports.tls = 0;
-		mLc.setSignalingTransportPorts(transports);
 		
 		initAccounts(mLc);
 
@@ -175,7 +175,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 	}
 
 	void initMediaEncryption(LinphoneCore mLc){
-		MediaEncryption me=MediaEncryption.None;
+		MediaEncryption me = MediaEncryption.None;
 		mLc.setMediaEncryption(me);
 	}
 	
@@ -193,11 +193,14 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			password = mIContext.getString(org.linphone.test.R.string.conference_account_password);
 			domain = mIContext.getString(org.linphone.test.R.string.conference_account_domain);
 		}
+		
 		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null, domain);
 		mLc.addAuthInfo(lAuthInfo);
 		String identity = "sip:" + username +"@" + domain;
 		String proxy = "sip:" + domain;
-		LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, null, true);
+		LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
+		proxyAddr.setTransport(TransportType.LinphoneTransportTls);
+		LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), proxyAddr.asStringUriOnly(), true);
 		mLc.addProxyConfig(proxycon);
 		mLc.setDefaultProxyConfig(proxycon);
 		

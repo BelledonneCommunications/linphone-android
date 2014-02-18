@@ -59,11 +59,11 @@ public class AccountAssistant extends SampleTest {
 		String stunServer = prefs.getStunServer();
 		Assert.assertEquals(aContext.getString(org.linphone.R.string.default_stun), stunServer);
 				
-		String transport = prefs.getTransportKey();
+		String transport = prefs.getAccountTransportKey(0);
 		Assert.assertEquals(aContext.getString(org.linphone.R.string.pref_transport_tls_key), transport);
 				
 		String proxy = prefs.getAccountProxy(0);
-		Assert.assertEquals(aContext.getString(org.linphone.R.string.default_domain) + ":5223", proxy);
+		Assert.assertEquals("<sip:" + aContext.getString(org.linphone.R.string.default_domain) + ":5223;transport=tls>", proxy);
 		Assert.assertEquals(true, prefs.isAccountOutboundProxySet(0));
 				
 		boolean ice = prefs.isIceEnabled();
