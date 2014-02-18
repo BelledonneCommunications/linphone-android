@@ -377,30 +377,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			key = getString(R.string.pref_media_encryption_key_zrtp);
 		pref.setDefaultValue(key);
 	}
-	
-	private void initializeTransportPreferences(ListPreference pref) {
-		List<CharSequence> entries = new ArrayList<CharSequence>();
-		List<CharSequence> values = new ArrayList<CharSequence>();
-		entries.add(getString(R.string.pref_transport_udp));
-		values.add(getString(R.string.pref_transport_udp_key));
-		entries.add(getString(R.string.pref_transport_tcp));
-		values.add(getString(R.string.pref_transport_tcp_key));
-		
-		if (!getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-			entries.add(getString(R.string.pref_transport_tls));
-			values.add(getString(R.string.pref_transport_tls_key));
-		}
-		setListPreferenceValues(pref, entries, values);
-		
-		String value = mPrefs.getTransport();
-		pref.setSummary(value);
-		String key = getString(R.string.pref_transport_udp_key);
-		if (value.equals(getString(R.string.pref_transport_tcp)))
-			key = getString(R.string.pref_transport_tcp_key);
-		else if (value.equals(getString(R.string.pref_transport_tls)))
-			key = getString(R.string.pref_transport_tls_key);
-		pref.setDefaultValue(key);
-	}
 
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
@@ -631,8 +607,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	
 	private void initNetworkSettings() {
 		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
-		initializeTransportPreferences((ListPreference) findPreference(getString(R.string.pref_transport_key)));
-		
+
 		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
 		
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
@@ -730,15 +705,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
-		findPreference(getString(R.string.pref_transport_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setTransport(newValue.toString());
-				preference.setSummary(mPrefs.getTransport());
-				return true;
-			}
-		});	
 		
 		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
