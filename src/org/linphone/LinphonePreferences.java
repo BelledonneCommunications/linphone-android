@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -154,6 +155,7 @@ public class LinphonePreferences {
 	private boolean tempOutboundProxy;
 	private String tempContactsParams;
 	private String tempExpire;
+	private TransportType tempTransport;
 	
 	/**
 	 * Creates a new account using values previously set using setNew* functions
@@ -163,9 +165,15 @@ public class LinphonePreferences {
 		String identity = "sip:" + tempUsername + "@" + tempDomain;
 		String proxy = "sip:";
 		proxy += tempProxy == null ? tempDomain : tempProxy;
+		LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
 		String route = tempOutboundProxy ? tempProxy : null;
 		
-		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxy, route, true);
+		if (tempTransport == null) {
+			tempTransport = TransportType.LinphoneTransportUdp;
+		}
+		proxyAddr.setTransport(tempTransport);
+		
+		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), route, true);
 		if (tempContactsParams != null)
 			prxCfg.setContactUriParameters(tempContactsParams);
 		if (tempExpire != null) {
@@ -190,6 +198,80 @@ public class LinphonePreferences {
 		tempOutboundProxy = false;
 		tempContactsParams = null;
 		tempExpire = null;
+		tempTransport = null;
+	}
+	
+	public void setNewAccountTransport(TransportType transport) {
+		tempTransport = transport;
+	}
+	
+	public void setAccountTransport(int n, String transport) {
+		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
+		
+		if (proxyConfig != null && transport != null) {
+			LinphoneAddress proxyAddr;
+			try {
+				proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getProxy());
+				
+				if (transport.equals(getString(R.string.pref_transport_udp_key))) {
+					proxyAddr.setTransport(TransportType.LinphoneTransportUdp);
+				} else if (transport.equals(getString(R.string.pref_transport_tcp_key))) {
+					proxyAddr.setTransport(TransportType.LinphoneTransportTcp);
+				} else if (transport.equals(getString(R.string.pref_transport_tls_key))) {
+					proxyAddr.setTransport(TransportType.LinphoneTransportTls);
+				}
+				
+				LinphoneProxyConfig prxCfg = getProxyConfig(n);
+				prxCfg.setProxy(proxyAddr.asStringUriOnly());
+				prxCfg.done();
+				
+				if (isAccountOutboundProxySet(n)) {
+					setAccountOutboundProxyEnabled(n, true);
+				}
+			} catch (LinphoneCoreException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public TransportType getAccountTransport(int n) {
+		TransportType transport = null;
+		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
+		
+		if (proxyConfig != null) {
+			LinphoneAddress proxyAddr;
+			try {
+				proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getProxy());
+				transport = proxyAddr.getTransport();
+			} catch (LinphoneCoreException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return transport;
+	}
+	
+	public String getAccountTransportKey(int n) {
+		TransportType transport = getAccountTransport(n);
+		String key = getString(R.string.pref_transport_udp_key);
+		
+		if (transport != null && transport == TransportType.LinphoneTransportTcp)
+			key = getString(R.string.pref_transport_tcp_key);
+		else if (transport != null && transport == TransportType.LinphoneTransportTls)
+			key = getString(R.string.pref_transport_tls_key);
+		
+		return key;
+	}
+	
+	public String getAccountTransportString(int n) {
+		TransportType transport = getAccountTransport(n);
+		
+		if (transport != null && transport == TransportType.LinphoneTransportTcp)
+			return getString(R.string.pref_transport_tcp);
+		else if (transport != null && transport == TransportType.LinphoneTransportTls)
+			return getString(R.string.pref_transport_tls);
+		
+		return getString(R.string.pref_transport_udp);
 	}
 	
 	public void setNewAccountUsername(String username) {
@@ -278,14 +360,21 @@ public class LinphonePreferences {
 		if (proxy == null || proxy.length() <= 0) {
 			proxy = getAccountDomain(n);
 		}
+		
 		if (!proxy.contains("sip:")) {
 			proxy = "sip:" + proxy;
 		}
 		
 		try {
+			LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
+			if (!proxy.contains("transport=")) {
+				proxyAddr.setTransport(getAccountTransport(n));
+			}
+			
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
-			prxCfg.setProxy(proxy);
+			prxCfg.setProxy(proxyAddr.asStringUriOnly());
 			prxCfg.done();
+			
 			if (isAccountOutboundProxySet(n)) {
 				setAccountOutboundProxyEnabled(n, true);
 			}
@@ -296,9 +385,6 @@ public class LinphonePreferences {
 
 	public String getAccountProxy(int n) {
 		String proxy = getProxyConfig(n).getProxy();
-		if (proxy != null && proxy.startsWith("sip:")) {
-			proxy = proxy.substring(4);
-		}
 		return proxy;
 	}
 
@@ -311,9 +397,6 @@ public class LinphonePreferences {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			if (enabled) {
 				String route = prxCfg.getProxy();
-				if (!route.contains("sip:")) {
-					route = "sip:" + route;
-				}
 				prxCfg.setRoute(route);
 			} else {
 				prxCfg.setRoute(null);
@@ -568,14 +651,6 @@ public class LinphonePreferences {
 		}
 	}
 	
-	public boolean isUpnpEnabled() {
-		return getLc().upnpAvailable() && getLc().getFirewallPolicy() == FirewallPolicy.UseUpnp;
-	}
-	
-	public boolean isIceEnabled() {
-		return getLc().getFirewallPolicy() == FirewallPolicy.UseIce;
-	}
-	
 	public void useRandomPort(boolean enabled) {
 		useRandomPort(enabled, true);
 	}
@@ -586,92 +661,39 @@ public class LinphonePreferences {
 			if (enabled) {
 				setSipPort(LINPHONE_CORE_RANDOM_PORT);
 			} else {
-				if (getTransport().equals(getString(R.string.pref_transport_tls)))
-					setSipPort(5061);
-				else
-					setSipPort(5060);
+				setSipPort(5060);
 			}
 		}
 	}
-	
+
 	public boolean isUsingRandomPort() {
 		return getConfig().getBool("app", "random_port", true);
 	}
-	
+
 	public String getSipPort() {
 		Transports transports = getLc().getSignalingTransportPorts();
 		int port;
 		if (transports.udp > 0)
 			port = transports.udp;
-		else if (transports.tcp > 0)
-			port = transports.tcp;
 		else
-			port = transports.tls;
+			port = transports.tcp;
 		return String.valueOf(port);
 	}
-	
+
 	public void setSipPort(int port) {
 		Transports transports = getLc().getSignalingTransportPorts();
-		if (transports.udp > 0)
-			transports.udp = port;
-		else if (transports.tcp > 0)
-			transports.tcp = port;
-		else
-			transports.tls = port;
+		transports.udp = port;
+		transports.tcp = port;
+		transports.tls = LINPHONE_CORE_RANDOM_PORT;
 		getLc().setSignalingTransportPorts(transports);
 	}
-
-	public String getTransportKey() {
-		Transports transports = getLc().getSignalingTransportPorts();
-		String transport = getString(R.string.pref_transport_udp_key);
-		if (transports.tcp > 0)
-			transport = getString(R.string.pref_transport_tcp_key);
-		else if (transports.tls > 0)
-			transport = getString(R.string.pref_transport_tls_key);
-		return transport;
+	
+	public boolean isUpnpEnabled() {
+		return getLc().upnpAvailable() && getLc().getFirewallPolicy() == FirewallPolicy.UseUpnp;
 	}
 	
-	public String getTransport() {
-		Transports transports = getLc().getSignalingTransportPorts();
-		String transport = getString(R.string.pref_transport_udp);
-		if (transports.tcp > 0)
-			transport = getString(R.string.pref_transport_tcp);
-		else if (transports.tls > 0)
-			transport = getString(R.string.pref_transport_tls);
-		return transport;
-	}
-	
-	public void setTransport(String transportKey) {
-		if (transportKey == null)
-			return;
-		
-		Transports transports = getLc().getSignalingTransportPorts();
-		if (transports.udp > 0) {
-			if (transportKey.equals(getString(R.string.pref_transport_tcp_key))) {
-				transports.tcp = transports.udp;
-				transports.udp = transports.tls;
-			} else if (transportKey.equals(getString(R.string.pref_transport_tls_key))) {
-				transports.tls = transports.udp;
-				transports.udp = transports.tcp;
-			}
-		} else if (transports.tcp > 0) {
-			if (transportKey.equals(getString(R.string.pref_transport_udp_key))) {
-				transports.udp = transports.tcp;
-				transports.tcp = transports.tls;
-			} else if (transportKey.equals(getString(R.string.pref_transport_tls_key))) {
-				transports.tls = transports.tcp;
-				transports.tcp = transports.udp;
-			}
-		} else if (transports.tls > 0) {
-			if (transportKey.equals(getString(R.string.pref_transport_udp_key))) {
-				transports.udp = transports.tls;
-				transports.tls = transports.tcp;
-			} else if (transportKey.equals(getString(R.string.pref_transport_tcp_key))) {
-				transports.tcp = transports.tls;
-				transports.tls = transports.udp;
-			}
-		}
-		getLc().setSignalingTransportPorts(transports);
+	public boolean isIceEnabled() {
+		return getLc().getFirewallPolicy() == FirewallPolicy.UseIce;
 	}
 	
 	public MediaEncryption getMediaEncryption() {

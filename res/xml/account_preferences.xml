@@ -28,6 +28,10 @@
     	android:title="@string/pref_advanced"
 		android:key="@string/pref_advanced_key">
         
+		<ListPreference 
+		    android:title="@string/pref_transport"
+			android:key="@string/pref_transport_key"/> 
+        
         <EditTextPreference
         	android:title="@string/pref_proxy"
         	android:summary="@string/pref_help_proxy"

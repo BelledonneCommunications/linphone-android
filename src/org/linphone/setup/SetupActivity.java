@@ -21,6 +21,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.R;
+import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 
@@ -291,11 +292,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 				mPrefs.setNewAccountProxy(domain + ":5228");
-				mPrefs.setTransport(getString(R.string.pref_transport_tcp_key));
+				mPrefs.setNewAccountTransport(TransportType.LinphoneTransportTcp);
 			}
 			else {
 				mPrefs.setNewAccountProxy(domain + ":5223");
-				mPrefs.setTransport(getString(R.string.pref_transport_tls_key));
+				mPrefs.setNewAccountTransport(TransportType.LinphoneTransportTls);
 			}
 			
 			mPrefs.setNewAccountExpires("604800");
