@@ -1210,7 +1210,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void adjustVolume(int i) {
-		if (Build.VERSION.SDK_INT<15) {
+		if (Build.VERSION.SDK_INT < 15) {
 			int oldVolume = mAudioManager.getStreamVolume(LINPHONE_VOLUME_STREAM);
 			int maxVolume = mAudioManager.getStreamMaxVolume(LINPHONE_VOLUME_STREAM);
 
@@ -1221,7 +1221,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			mLc.setPlaybackGain((nextVolume - maxVolume)* dbStep);
 		} else
 			// starting from ICS, volume must be adjusted by the application, at least for STREAM_VOICE_CALL volume stream
-			mAudioManager.adjustStreamVolume(LINPHONE_VOLUME_STREAM, i<0?AudioManager.ADJUST_LOWER:AudioManager.ADJUST_RAISE, 0);
+			mAudioManager.adjustStreamVolume(LINPHONE_VOLUME_STREAM, i < 0 ? AudioManager.ADJUST_LOWER : AudioManager.ADJUST_RAISE, 0);
 	}
 
 	public static Boolean isProximitySensorNearby(final SensorEvent event) {

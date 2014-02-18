@@ -69,7 +69,6 @@ public final class LinphoneUtils {
 
 	private LinphoneUtils(){}
 
-	private static boolean preventVolumeBarToDisplay = false;
 	//private static final String sipAddressRegExp = "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
 	//private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
@@ -121,7 +120,7 @@ public final class LinphoneUtils {
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 			LinphoneManager.getInstance().adjustVolume(-1);
 		}
-		return preventVolumeBarToDisplay;
+		return true;
 	}
 
 
