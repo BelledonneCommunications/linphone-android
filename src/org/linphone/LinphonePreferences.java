@@ -166,12 +166,13 @@ public class LinphonePreferences {
 		String proxy = "sip:";
 		proxy += tempProxy == null ? tempDomain : tempProxy;
 		LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
-		String route = tempOutboundProxy ? tempProxy : null;
 		
 		if (tempTransport == null) {
 			tempTransport = TransportType.LinphoneTransportUdp;
 		}
 		proxyAddr.setTransport(tempTransport);
+		
+		String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
 		
 		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), route, true);
 		if (tempContactsParams != null)
