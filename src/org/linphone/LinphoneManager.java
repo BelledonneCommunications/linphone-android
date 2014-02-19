@@ -601,6 +601,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 				prefMigrator.doMigration();
 			}
 			
+			int migrationResult = getLc().migrateToMultiTransport();
+			Log.d("Migration to multi transport result = " + migrationResult);
+			
 			if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 				Compatibility.initPushNotificationService(mServiceContext);
 			}
