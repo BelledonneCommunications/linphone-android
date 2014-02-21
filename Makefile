@@ -210,7 +210,7 @@ LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
 LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-debug
 
 $(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt:
-	@patch -p0 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
+	@patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
 	touch $@
 
 $(LIBVPX_BUILD_DIR)/arm/libvpx.a:

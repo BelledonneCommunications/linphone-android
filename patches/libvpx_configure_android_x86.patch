@@ -1,10 +1,10 @@
---- submodules/externals/libvpx/build/make/configure.sh.orig	2013-09-27 16:49:14.000000000 +0200
-+++ submodules/externals/libvpx/build/make/configure.sh	2013-09-27 16:49:01.000000000 +0200
-@@ -1052,6 +1052,32 @@
+--- a/submodules/externals/libvpx/build/make/configure.sh
++++ b/submodules/externals/libvpx/build/make/configure.sh
+@@ -1037,6 +1037,33 @@ EOF
              os2)
                  AS=${AS:-nasm}
                  ;;
-+            android*)
++	    android*)
 +                SDK_PATH=${sdk_path}
 +                COMPILER_LOCATION=`find "${SDK_PATH}" \
 +                                   -name "i686-linux-android-gcc*" -print -quit`
@@ -30,6 +30,7 @@
 +
 +                soft_enable realtime_only
 +            ;;
++
          esac
  
          AS="${alt_as:-${AS:-auto}}"
