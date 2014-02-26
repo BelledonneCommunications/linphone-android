@@ -21,7 +21,6 @@ package org.linphone;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.linphone.LinphoneManager.NewOutgoingCallUiListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
@@ -76,14 +75,20 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	/* Listener needs to be implemented in the Service as it calls
 	 * setLatestEventInfo and startActivity() which needs a context.
 	 */
-
-	public Handler mHandler = new Handler();
+	public static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
+	
 	private static LinphoneService instance;
+	
+	private final static int NOTIF_ID=1;
+	private final static int INCALL_NOTIF_ID=2;
+	private final static int MESSAGE_NOTIF_ID=3;
+	private final static int CUSTOM_NOTIF_ID=4;
 
-//	private boolean mTestDelayElapsed; // add a timer for testing
-	private boolean mTestDelayElapsed = true; // no timer
-	private WifiManager mWifiManager ;
-	private WifiLock mWifiLock ;
+	private static final int IC_LEVEL_ORANGE=0;
+	/*private static final int IC_LEVEL_GREEN=1;
+	private static final int IC_LEVEL_RED=2;*/
+	private static final int IC_LEVEL_OFFLINE=3;
+	
 	public static boolean isReady() {
 		return instance != null && instance.mTestDelayElapsed;
 	}
@@ -97,11 +102,13 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		throw new RuntimeException("LinphoneService not instantiated yet");
 	}
 
-	
-	private final static int NOTIF_ID=1;
-	private final static int INCALL_NOTIF_ID=2;
-	private final static int MESSAGE_NOTIF_ID=3;
-	private final static int CUSTOM_NOTIF_ID=4;
+	public Handler mHandler = new Handler();
+
+//	private boolean mTestDelayElapsed; // add a timer for testing
+	private boolean mTestDelayElapsed = true; // no timer
+	private WifiManager mWifiManager;
+	private WifiLock mWifiLock;
+	private NotificationManager mNM;
 
 	private Notification mNotif;
 	private Notification mIncallNotif;
@@ -112,13 +119,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private PendingIntent mkeepAlivePendingIntent;
 	private String mNotificationTitle;
 
-
-	private static final int IC_LEVEL_ORANGE=0;
-	/*private static final int IC_LEVEL_GREEN=1;
-	private static final int IC_LEVEL_RED=2;*/
-	private static final int IC_LEVEL_OFFLINE=3;
-
-	
 	public int getMessageNotifCount() {
 		return mMsgNotifCount;
 	}
@@ -342,7 +342,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		int.class, Notification.class};
 	private static final Class<?>[] mStopFgSign = new Class[] {boolean.class};
 
-	private NotificationManager mNM;
 	private Method mSetForeground;
 	private Method mStartForeground;
 	private Method mStopForeground;
@@ -406,11 +405,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			invokeMethod(mSetForeground, mSetForegroundArgs);
 		}
 	}
-
-
-
-
-	public static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
+	
 	private void dumpDeviceInformation() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");
@@ -420,8 +415,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		sb.append("SDK=").append(Build.VERSION.SDK_INT);
 		Log.i(sb.toString());
 	}
-
-
 
 	private void dumpInstalledLinphoneInformation() {
 		PackageInfo info = null;
@@ -490,31 +483,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		super.onDestroy();
 	}
 	
-	private static final LinphoneGuiListener guiListener() {
-		return null;
-	}	
-
 	public void onDisplayStatus(final String message) {
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (guiListener() != null) guiListener().onDisplayStatus(message);				
-			}
-		});
 	}
 
 	public void onGlobalStateChanged(final GlobalState state, final String message) {
 		if (state == GlobalState.GlobalOn) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
-
-			// Slightly delay the propagation of the state change.
-			// This is to let the linphonecore finish to be created
-			// in the java part.
-			mHandler.postDelayed(new Runnable() {
-				public void run() {
-					if (guiListener() != null)
-						guiListener().onGlobalStateChangedToOn(message);				
-				}
-			}, 50);
 		}
 	}
 
@@ -607,53 +581,19 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 				mWifiLock.release();
 			}
 		}
-		
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (guiListener() != null)
-					guiListener().onCallStateChanged(call, state, message);
-			}
-		});
-	}
-
-
-	
-	public interface LinphoneGuiListener extends NewOutgoingCallUiListener {
-		void onDisplayStatus(String message);
-		void onGlobalStateChangedToOn(String message);
-		void onCallStateChanged(LinphoneCall call, State state, String message);
 	}
 
 	public void tryingNewOutgoingCallButAlreadyInCall() {
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (guiListener() != null)
-					guiListener().onAlreadyInCall();			
-			}
-		});
 	}
 
 	public void tryingNewOutgoingCallButCannotGetCallParameters() {
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (guiListener() != null)
-					guiListener().onCannotGetCallParameters();			
-			}
-		});
 	}
 
 	public void tryingNewOutgoingCallButWrongDestinationAddress() {
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (guiListener() != null)
-					guiListener().onWrongDestinationAddress();			
-			}
-		});
 	}
 
 	public void onCallEncryptionChanged(final LinphoneCall call, final boolean encrypted,
 			final String authenticationToken) {
-		// IncallActivity registers itself to this event and handle it.
 	}
 }
 
