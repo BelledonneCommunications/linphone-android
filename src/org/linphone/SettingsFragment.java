@@ -42,6 +42,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -222,14 +223,18 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	}
 	
 	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
-		findPreference(getString(pref)).setDefaultValue(value);
-		findPreference(getString(pref)).setSummary(value);
+		EditTextPreference etPref = (EditTextPreference) findPreference(getString(pref));
+		etPref.setText(value);
+		etPref.setSummary(value);
 	}
 	
 	private void initTunnelSettings() {
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
-		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_mode_key, mPrefs.getTunnelMode());
+		ListPreference tunnelModePref = (ListPreference) findPreference(getString(R.string.pref_tunnel_mode_key));
+		String tunnelMode = mPrefs.getTunnelMode();
+		tunnelModePref.setSummary(tunnelMode);
+		tunnelModePref.setValue(tunnelMode);
 	}
 	
 	private void setTunnelPreferencesListener() {
@@ -375,7 +380,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			key = getString(R.string.pref_media_encryption_key_srtp);
 		else if (value.toString().equals(getString(R.string.media_encryption_zrtp)))
 			key = getString(R.string.pref_media_encryption_key_zrtp);
-		pref.setDefaultValue(key);
+		pref.setValue(key);
 	}
 
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
@@ -627,14 +632,14 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		randomPort.setChecked(mPrefs.isUsingRandomPort());
 		
 		// Disable sip port choice if port is random
-		Preference sipPort = findPreference(getString(R.string.pref_sip_port_key));
+		EditTextPreference sipPort = (EditTextPreference) findPreference(getString(R.string.pref_sip_port_key));
 		sipPort.setEnabled(!randomPort.isChecked());
 		sipPort.setSummary(mPrefs.getSipPort());
-		sipPort.setDefaultValue(mPrefs.getSipPort());
+		sipPort.setText(mPrefs.getSipPort());
 		
-		Preference stun = findPreference(getString(R.string.pref_stun_server_key));
+		EditTextPreference stun = (EditTextPreference) findPreference(getString(R.string.pref_stun_server_key));
 		stun.setSummary(mPrefs.getStunServer());
-		stun.setDefaultValue(mPrefs.getStunServer());
+		stun.setText(mPrefs.getStunServer());
 		
 		((CheckBoxPreference) findPreference(getString(R.string.pref_push_notification_key))).setChecked(mPrefs.isPushNotificationEnabled());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_ipv6_key))).setChecked(mPrefs.isUsingIpv6());
