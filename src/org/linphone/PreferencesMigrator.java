@@ -44,8 +44,7 @@ public class PreferencesMigrator {
 	
 	public boolean isMigrationNeeded() {
 		int accountNumber = mOldPrefs.getInt(getString(R.string.pref_extra_accounts), -1);
-		boolean migrationNeeded = accountNumber != -1;
-		return migrationNeeded;
+		return accountNumber != -1;
 	}
 	
 	public void doMigration() {
@@ -66,6 +65,16 @@ public class PreferencesMigrator {
 		
 		doAccountsMigration();
 		deleteAllOldPreferences();
+	}
+
+	public void migrateRemoteProvisioningUriIfNeeded() {
+		String oldUri = mNewPrefs.getConfig().getString("app", "remote_provisioning", null);
+		String currentUri = mNewPrefs.getRemoteProvisioningUrl();
+		if (oldUri != null && oldUri.length() > 0 && currentUri == null) {
+			mNewPrefs.setRemoteProvisioningUrl(oldUri);
+			mNewPrefs.getConfig().setString("app", "remote_provisioning", null);
+			mNewPrefs.getConfig().sync();
+		}
 	}
 	
 	private void doAccountsMigration() {

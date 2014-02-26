@@ -479,6 +479,9 @@ public class LinphonePreferences {
 	}
 
 	public int getAccountCount() {
+		if (getLc() == null || getLc().getProxyConfigList() == null)
+			return 0;
+		
 		return getLc().getProxyConfigList().length;
 	}
 
@@ -776,11 +779,13 @@ public class LinphonePreferences {
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
-		getConfig().setString("app", "remote_provisioning", url);
+		if (url != null && url.length() == 0)
+			url = null;
+		getConfig().setString("misc", "config-uri", url);
 	}
 	
 	public String getRemoteProvisioningUrl() {
-		return getConfig().getString("app", "remote_provisioning", null);
+		return getConfig().getString("misc", "config-uri", null);
 	}
 
 	public void setDefaultDisplayName(String displayName) {

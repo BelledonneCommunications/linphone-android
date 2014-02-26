@@ -42,6 +42,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 			// Restart Linphone
 			Intent intent = new Intent();
 			intent.setClass(getActivity(), LinphoneLauncherActivity.class);
+			getActivity().finish();
 			LinphoneActivity.instance().exit();
 			startActivity(intent);
 		}

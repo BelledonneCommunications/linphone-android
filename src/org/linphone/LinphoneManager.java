@@ -341,8 +341,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 	}
 
-	public synchronized static final LinphoneManager createAndStart(
-			Context c, LinphoneServiceListener listener) {
+	public synchronized static final LinphoneManager createAndStart(Context c, LinphoneServiceListener listener) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
 		
@@ -352,13 +351,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
 		
-		getInstance().changeStatusToOnline();
-		
 		return instance;
 	}
 	
 	private boolean isPresenceModelActivitySet() {
-		return isInstanciated() && getLc().getPresenceModel() != null || getLc().getPresenceModel().getActivity() != null;
+		return getLc().getPresenceModel() != null || getLc().getPresenceModel().getActivity() != null;
 	}
 
 	public void changeStatusToOnline() {
@@ -586,59 +583,48 @@ public class LinphoneManager implements LinphoneCoreListener {
 			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log));
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
-			// Try to get remote provisioning
-			// First check if there is a remote provisioning url in the old preferences API
+			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
+			initLiblinphone();
 			
-			String remote_provisioning = mPrefs.getRemoteProvisioningUrl();
-			if(remote_provisioning != null && remote_provisioning.length() > 0 && RemoteProvisioning.isAvailable()) {
-				RemoteProvisioning.download(remote_provisioning, mLinphoneConfigFile);
-			}
-			
-			initLiblinphone(c);
-			
-			PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
-			if (prefMigrator.isMigrationNeeded()) {
-				prefMigrator.doMigration();
-			}
-			
-			int migrationResult = getLc().migrateToMultiTransport();
-			Log.d("Migration to multi transport result = " + migrationResult);
-			
-			if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
-				Compatibility.initPushNotificationService(mServiceContext);
-			}
-
-			IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-	        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
-	        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
-	        
-			updateNetworkReachability();
-			
-	        startBluetooth();
-	        resetCameraFromPreferences();
+			TimerTask lTask = new TimerTask() {
+				@Override
+				public void run() {
+					mLc.iterate();
+				}
+			};
+			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
+			mTimer = new Timer("Linphone scheduler");
+			mTimer.schedule(lTask, 0, 20); 
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			Log.e(e, "Cannot start linphone");
 		}
 	}
 	
-	public synchronized void initLiblinphone(Context c) throws LinphoneCoreException {
+	private synchronized void initLiblinphone() throws LinphoneCoreException {
 		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
 		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
+
+		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
+		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
 		
-		mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
-		mLc.setContext(c);
+		if (prefMigrator.isMigrationNeeded()) {
+			prefMigrator.doMigration();
+		}
+
+		mLc.setContext(mServiceContext);
+		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
+		
 		try {
-			String versionName = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
+			String versionName = mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionName;
 			if (versionName == null) {
-				versionName = String.valueOf(c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionCode);
+				versionName = String.valueOf(mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionCode);
 			}
 			mLc.setUserAgent("LinphoneAndroid", versionName);
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-
-		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
 
 		mLc.setRing(null);
 		mLc.setRootCA(mLinphoneRootCaFile);
@@ -649,25 +635,23 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
 		mLc.setCpuCount(availableCores);
 		
-		int camId = 0;
-		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
-		for (AndroidCamera androidCamera : cameras) {
-			if (androidCamera.frontFacing == mPrefs.useFrontCam())
-				camId = androidCamera.id;
-		}
-		LinphoneManager.getLc().setVideoDevice(camId);
-		
 		initTunnelFromConf();
+		
+		int migrationResult = getLc().migrateToMultiTransport();
+		Log.d("Migration to multi transport result = " + migrationResult);
+		
+		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
+			Compatibility.initPushNotificationService(mServiceContext);
+		}
+
+		IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
         
-		TimerTask lTask = new TimerTask() {
-			@Override
-			public void run() {
-				mLc.iterate();
-			}
-		};
-		/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
-		mTimer = new Timer("Linphone scheduler");
-		mTimer.schedule(lTask, 0, 20); 
+		updateNetworkReachability();
+		
+        startBluetooth();
+        resetCameraFromPreferences();
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
@@ -890,19 +874,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 	public String getLastLcStatusMessage() {
 		return lastLcStatusMessage;
 	}
+	
 	public void displayStatus(final LinphoneCore lc, final String message) {
 		Log.i(message);
 		lastLcStatusMessage=message;
 		mListenerDispatcher.onDisplayStatus(message);
 	}
 
-
 	public void globalState(final LinphoneCore lc, final LinphoneCore.GlobalState state, final String message) {
 		Log.i("new state [",state,"]");
 		mListenerDispatcher.onGlobalStateChanged(state, message);
 	}
-
-
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String message) {
 		Log.i("new state ["+state+"]");
@@ -1465,8 +1447,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void publishStateChanged(LinphoneCore lc, LinphoneEvent ev,
 			PublishState state) {
-		// TODO Auto-generated method stub
-		
+		Log.d("Publish state changed to " + state + " for event name " + ev.getEventName());
 	}
 	
 	private LinphoneOnComposingReceivedListener composingReceivedListener;
@@ -1482,6 +1463,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void configuringStatus(LinphoneCore lc,
 			RemoteProvisioningState state, String message) {
-		Log.d("Remote provisioning status = " + state.toString());
+		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
 	}
 }

@@ -85,7 +85,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private WifiManager mWifiManager ;
 	private WifiLock mWifiLock ;
 	public static boolean isReady() {
-		return instance!=null && instance.mTestDelayElapsed;
+		return instance != null && instance.mTestDelayElapsed;
 	}
 
 	/**
