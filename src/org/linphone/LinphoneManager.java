@@ -1464,5 +1464,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 	public void configuringStatus(LinphoneCore lc,
 			RemoteProvisioningState state, String message) {
 		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
+		
+		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
+			if (mR.getBoolean(R.bool.remove_remote_provisioning_after_success)) {
+				LinphonePreferences.instance().setRemoteProvisioningUrl(null);
+			}
+			
+			if (mR.getBoolean(R.bool.show_login_wizard_after_remote_provisioning_without_credentials)) {
+				if (lc.getProxyConfigList() == null || lc.getProxyConfigList().length == 0) {
+					
+				}
+			}
+		}
 	}
 }
