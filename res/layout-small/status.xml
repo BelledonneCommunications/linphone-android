@@ -40,7 +40,7 @@
 					    	android:id="@+id/call_stats_title"
 					        android:textStyle="bold"
 					        android:textColor="@color/text_default"
-					        android:textSize="18dp"/>
+					        android:textSize="18sp"/>
 				        
 				    </TableRow>
 			    
@@ -55,7 +55,7 @@
 					    	android:text="@string/call_stats_codec"
 					        android:textStyle="bold"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/codec"
@@ -64,7 +64,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 				    
@@ -79,7 +79,7 @@
 					    	android:text="@string/call_stats_upload"
 					        android:textStyle="bold"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/uploadBandwith"
@@ -88,7 +88,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 				    
@@ -103,7 +103,7 @@
 					    	android:text="@string/call_stats_download"
 					        android:textColor="@android:color/white"
 					        android:textStyle="bold"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/downloadBandwith"
@@ -112,7 +112,7 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 				    
@@ -127,7 +127,7 @@
 					    	android:text="@string/call_stats_ice"
 					        android:textStyle="bold"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
 				        
 				        <TextView 
 				            android:id="@+id/ice"
@@ -136,7 +136,32 @@
 						    android:paddingLeft="5dp"
 					    	android:gravity="right|center_vertical"
 					        android:textColor="@android:color/white"
-					        android:textSize="12dp"/>
+					        android:textSize="12sp"/>
+				        
+				    </TableRow>
+				    
+				    <TableRow
+				        android:id="@+id/video_resolution_layout"
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content">
+				        
+				        <TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+					    	android:gravity="left|center_vertical"
+					    	android:text="@string/call_stats_video_resolution"
+					        android:textStyle="bold"
+					        android:textColor="@android:color/white"
+					        android:textSize="12sp"/>
+				        
+				        <TextView 
+				            android:id="@+id/video_resolution"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="5dp"
+					    	android:gravity="right|center_vertical"
+					        android:textColor="@android:color/white"
+					        android:textSize="12sp"/>
 				        
 				    </TableRow>
 			    
@@ -179,7 +204,7 @@
 		        android:id="@+id/statusText" 
 		        android:text="@string/status_not_connected"
 		        android:textColor="@android:color/white"
-		        android:textSize="14dp"
+		        android:textSize="14sp"
 		        android:paddingLeft="5dp"
             	android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"
@@ -221,7 +246,7 @@
 		        android:id="@+id/exit" 
 		        android:text="@string/menu_exit"
 		        android:textColor="@android:color/white"
-		        android:textSize="14dp"
+		        android:textSize="14sp"
 		        android:layout_centerVertical="true"
 		        android:layout_width="wrap_content"
 		        android:layout_height="match_parent"
