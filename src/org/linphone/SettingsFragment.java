@@ -395,7 +395,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		
 		String value = mPrefs.getPreferredVideoSize();
 		pref.setSummary(value);
-		pref.setDefaultValue(value);
+		pref.setValue(value);
 	}
 	
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
