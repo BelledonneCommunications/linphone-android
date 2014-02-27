@@ -55,33 +55,30 @@
     
     <LinearLayout
         android:id="@+id/menu"
-       	android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
         android:orientation="horizontal" >
 
-        <ImageView
+        <TextView
             android:id="@+id/pause"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_pause"
-            android:scaleType="fitXY"
-            android:src="@drawable/pause_off" />
+            android:background="@drawable/pause_off"
+            android:gravity="center"
+            android:paddingTop="30dp" />
            
-        <ImageView
+        <TextView
             android:id="@+id/conference"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_conference"
-            android:scaleType="fitXY"
-            android:src="@drawable/conference" />
+            android:background="@drawable/conference"
+            android:gravity="center"
+            android:paddingTop="30dp" />
 
         <TextView
         	android:id="@+id/video"
@@ -105,15 +102,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageView
+        <TextView
             android:id="@+id/hangUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.94"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_hang_up"
-            android:scaleType="fitXY"
-            android:src="@drawable/hangup" />
+            android:background="@drawable/hangup"
+            android:gravity="center"
+            android:paddingTop="30dp" />
 
         <TextView
             android:id="@+id/speaker"
@@ -219,15 +215,14 @@
               	
           </LinearLayout>
 
-          <ImageView
-              android:id="@+id/dialer"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:adjustViewBounds="true"
-              android:contentDescription="@string/content_description_numpad"
-              android:scaleType="fitXY"
-              android:src="@drawable/dialer_alt" />
+          <TextView
+          	android:id="@+id/dialer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/dialer_alt"
+          	android:gravity="center"
+            android:paddingTop="30dp" />
            
        </LinearLayout>
 
