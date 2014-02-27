@@ -207,46 +207,34 @@
         	android:background="@android:color/black"
             android:orientation="horizontal" >
 
-            <ImageView
+            <TextView
                 android:id="@+id/pause"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_pause"
-                android:scaleType="fitXY"
-                android:src="@drawable/pause_off" />
+                android:background="@drawable/pause_off" />
             
-            <ImageView
+            <TextView
                 android:id="@+id/conference"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_conference"
-                android:scaleType="fitXY"
-                android:src="@drawable/conference" />
+                android:background="@drawable/conference" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/hangUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.97"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_hang_up"
-                android:scaleType="fitXY"
-                android:src="@drawable/hangup" />
+                android:background="@drawable/hangup" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/dialer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_numpad"
-                android:scaleType="fitXY"
-                android:src="@drawable/dialer_alt" />
+                android:background="@drawable/dialer_alt" />
             
         </LinearLayout>
         

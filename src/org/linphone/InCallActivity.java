@@ -83,8 +83,8 @@ public class InCallActivity extends FragmentActivity implements
 	private Handler mHandler = new Handler();
 	private Handler mControlsHandler = new Handler();
 	private Runnable mControls;
-	private ImageView pause, hangUp, dialer, switchCamera, conference;
-	private TextView video, micro, speaker, options, addCall, transfer;
+	private ImageView switchCamera;
+	private TextView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference;
 	private TextView audioRoute, routeSpeaker, routeReceiver, routeBluetooth;
 	private LinearLayout routeLayout;
 	private StatusFragment status;
@@ -203,14 +203,14 @@ public class InCallActivity extends FragmentActivity implements
 		options = (TextView) findViewById(R.id.options);
 		options.setOnClickListener(this);
 		options.setEnabled(false);
-		pause = (ImageView) findViewById(R.id.pause);
+		pause = (TextView) findViewById(R.id.pause);
 		pause.setOnClickListener(this);
 		pause.setEnabled(false);
-		hangUp = (ImageView) findViewById(R.id.hangUp);
+		hangUp = (TextView) findViewById(R.id.hangUp);
 		hangUp.setOnClickListener(this);
-		conference = (ImageView) findViewById(R.id.conference);
+		conference = (TextView) findViewById(R.id.conference);
 		conference.setOnClickListener(this);
-		dialer = (ImageView) findViewById(R.id.dialer);
+		dialer = (TextView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
 		dialer.setEnabled(false);
 		numpad = (Numpad) findViewById(R.id.numpad);
@@ -319,9 +319,9 @@ public class InCallActivity extends FragmentActivity implements
 					
 					List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.Paused));
 					if (pausedCalls.size() == 1) {
-						pause.setImageResource(R.drawable.pause_on);
+						pause.setBackgroundResource(R.drawable.pause_on);
 					} else {
-						pause.setImageResource(R.drawable.pause_off);
+						pause.setBackgroundResource(R.drawable.pause_off);
 					}
 				}
 			}
@@ -572,7 +572,7 @@ public class InCallActivity extends FragmentActivity implements
 					isVideoCallPaused = true;
 					showAudioView();
 				}
-				pause.setImageResource(R.drawable.pause_on);
+				pause.setBackgroundResource(R.drawable.pause_on);
 			}
 		} else {
 			List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc, Arrays.asList(State.Paused));
@@ -584,7 +584,7 @@ public class InCallActivity extends FragmentActivity implements
 						isVideoCallPaused = false;
 						showVideoView();
 					}
-					pause.setImageResource(R.drawable.pause_off);
+					pause.setBackgroundResource(R.drawable.pause_off);
 				}
 			} else if (call != null) {
 				lc.resumeCall(call);
@@ -592,7 +592,7 @@ public class InCallActivity extends FragmentActivity implements
 					isVideoCallPaused = false;
 					showVideoView();
 				}
-				pause.setImageResource(R.drawable.pause_off);
+				pause.setBackgroundResource(R.drawable.pause_off);
 			}
 		}
 	}
@@ -734,7 +734,7 @@ public class InCallActivity extends FragmentActivity implements
 			return;
 		}
 			
-		dialer.setImageResource(R.drawable.dialer_alt);
+		dialer.setBackgroundResource(R.drawable.dialer_alt);
 		if (isAnimationDisabled) {
 			numpad.setVisibility(View.GONE);
 		} else {
@@ -768,7 +768,7 @@ public class InCallActivity extends FragmentActivity implements
 		if (numpad.getVisibility() == View.VISIBLE) {
 			hideNumpad();
 		} else {	
-			dialer.setImageResource(R.drawable.dialer_alt_back);	
+			dialer.setBackgroundResource(R.drawable.dialer_alt_back);	
 			if (isAnimationDisabled) {
 				numpad.setVisibility(View.VISIBLE);
 			} else {
