@@ -230,6 +230,7 @@
 	<string name="call_stats_upload">Bande passante envoi :</string>
 	<string name="call_stats_download">Bande passante réception :</string>
 	<string name="call_stats_ice">Connexion ICE :</string>
+	<string name="call_stats_video_resolution">Taille vidéo:</string>
 	
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact"></string>
