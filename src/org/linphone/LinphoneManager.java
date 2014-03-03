@@ -102,6 +102,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
@@ -144,6 +145,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private boolean mAudioFocused;
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
+	private Handler mHandler = new Handler();
 
 	private WakeLock mIncallWakeLock;
 	
@@ -586,7 +588,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
-			initLiblinphone();
+			//initLiblinphone();
 			
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -885,6 +887,22 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
 		Log.i("new state [",state,"]");
+		
+		if (state == GlobalState.GlobalOn) {
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					synchronized (this) {
+						try {
+							initLiblinphone();
+						} catch (LinphoneCoreException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+		}
+		
 		mListenerDispatcher.onGlobalStateChanged(state, message);
 	}
 
