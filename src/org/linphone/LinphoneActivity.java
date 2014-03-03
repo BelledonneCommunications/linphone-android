@@ -44,6 +44,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
+import org.linphone.setup.RemoteProvisioningLoginActivity;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.AddressText;
 
@@ -92,6 +93,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
+	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
 
 	private static LinphoneActivity instance;
@@ -138,16 +140,21 @@ public class LinphoneActivity extends FragmentActivity implements
 			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
 			return;
 		}
-
+		
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_wizard_at_first_start);
-		if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
+		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
+			Intent wizard = new Intent();
+			wizard.setClass(this, RemoteProvisioningLoginActivity.class);
+			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
+			startActivityForResult(wizard, REMOTE_PROVISIONING_LOGIN_ACTIVITY);
+		} else if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
 				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
 				startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
 			}
 		}
-
+		
 		setContentView(R.layout.main);
 		instance = this;
 		fragmentsHistory = new ArrayList<FragmentsAvailable>();

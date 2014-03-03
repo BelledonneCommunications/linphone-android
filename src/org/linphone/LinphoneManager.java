@@ -156,6 +156,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 	public boolean isUsingBluetoothAudioRoute;
 	private boolean mBluetoothStarted;
 
+	public String wizardLoginViewDomain = null;
+
 	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
 	public static void addListener(LinphoneSimpleListener listener) {
 		if (!simpleListeners.contains(listener)) {
@@ -881,12 +883,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mListenerDispatcher.onDisplayStatus(message);
 	}
 
-	public void globalState(final LinphoneCore lc, final LinphoneCore.GlobalState state, final String message) {
+	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
 		Log.i("new state [",state,"]");
 		mListenerDispatcher.onGlobalStateChanged(state, message);
 	}
 
-	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final LinphoneCore.RegistrationState state,final String message) {
+	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final RegistrationState state,final String message) {
 		Log.i("new state ["+state+"]");
 		mListenerDispatcher.onRegistrationStateChanged(state, message);
 	}
@@ -1466,8 +1468,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
 		
 		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
-			if (mR.getBoolean(R.bool.show_login_wizard_after_remote_provisioning_without_credentials)) {
-				
+			if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
+				LinphoneProxyConfig proxyConfig = lc.createProxyConfig();
+				try {
+					LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getIdentity());
+					wizardLoginViewDomain = addr.getDomain();
+				} catch (LinphoneCoreException e) {
+					wizardLoginViewDomain = null;
+				}
 			}
 		}
 	}

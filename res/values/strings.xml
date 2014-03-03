@@ -437,6 +437,7 @@
 	<string name="setup_remote_provisioning">Download provisioning</string>
 	<string name="setup_remote_provisioning_hint">This assistant will download an existing configuration.</string>
 	<string name="setup_remote_provisioning_url_hint">provisioning url</string>
+	<string name="setup_remote_provisioning_login_hint">The configuration you downloaded doesn\'t include your account. Please fill it in.</string>
 	<string name="setup_confirm_username">Your username will be %s (uppercase characters are not allowed). Do you accept ?</string>
 	
 	<string name="zrtp_accept">Accept</string>
