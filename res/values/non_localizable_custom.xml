@@ -29,7 +29,7 @@
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>
     <bool name="hide_remote_provisioning_in_wizard">false</bool>
-    <bool name="show_login_wizard_after_remote_provisioning_without_credentials">true</bool>
+    <bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
     <bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
 	<bool name="use_linphone_server_ports">true</bool>

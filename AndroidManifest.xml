@@ -94,6 +94,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
+         
+        <activity android:name="org.linphone.setup.RemoteProvisioningLoginActivity"
+		    android:theme="@style/NoTitle"
+            android:screenOrientation="nosensor">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
 
 	    <service android:name="org.linphone.LinphoneService"
 	        android:label="@string/service_name"
