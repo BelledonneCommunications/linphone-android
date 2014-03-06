@@ -71,6 +71,7 @@ import org.linphone.core.PayloadType;
 import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.PublishState;
+import org.linphone.core.Reason;
 import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -183,6 +184,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/toy_mono.wav";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
+		mErrorToneFile = basePath + "/error_tone.wav";
 
 		mPrefs = LinphonePreferences.instance();
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -203,6 +205,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private final String mRingbackSoundFile;
 	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
+	private final String mErrorToneFile;
 
 	private Timer mTimer;
 
@@ -634,6 +637,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
+		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 
 		int availableCores = Runtime.getRuntime().availableProcessors();
 		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
@@ -662,6 +666,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
 		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
 		copyIfNotExist(R.raw.toy_mono, mPauseSoundFile);
+		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
