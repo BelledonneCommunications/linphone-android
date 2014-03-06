@@ -448,4 +448,6 @@
 	
 	<string name="remote_composing">Remote is writing...</string>
 	<string name="unread_messages">%i unread messages</string>
+	
+	<string name="retry">Retry</string>
 </resources>

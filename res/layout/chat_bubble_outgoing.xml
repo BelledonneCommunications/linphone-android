@@ -37,7 +37,7 @@
 	    <TextView 
 	        android:id="@+id/time"
 	        android:textColor="@android:color/darker_gray"
-	        android:textSize="12dp"
+	        android:textSize="12sp"
 	        android:singleLine="true"
 	        android:paddingRight="5dp"
 	        android:layout_width="match_parent"

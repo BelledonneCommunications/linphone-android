@@ -92,12 +92,14 @@ public class BubbleChat {
 	private String imageUrl, textMessage;
 	private LinphoneChatMessage.State state;
 	private LinphoneChatMessage nativeMessage;
+	private int id;
 	
-	public BubbleChat(final Context context, int id, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, String url, int previousID) {
+	public BubbleChat(final Context context, int ID, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, String url, int previousID) {
 		view = new RelativeLayout(context);
 		imageUrl = url;
 		textMessage = message;
 		state = status;
+		id = ID;
 		
 		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	
@@ -324,5 +326,9 @@ public class BubbleChat {
 	
 	public void setNativeMessageObject(LinphoneChatMessage message) {
 		nativeMessage = message;
+	}
+	
+	public int getId() {
+		return id;
 	}
 }
