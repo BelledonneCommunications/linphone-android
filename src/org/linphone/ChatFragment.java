@@ -95,6 +95,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private static final int MENU_PICTURE_LARGE = 4;
 	private static final int MENU_PICTURE_REAL = 5;
 	private static final int MENU_COPY_TEXT = 6;
+	private static final int MENU_RESEND_MESSAGE = 7;
 	private static final int COMPRESSOR_QUALITY = 100;
 	private static final int SIZE_SMALL = 500;
 	private static final int SIZE_MEDIUM = 1000;
@@ -509,6 +510,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			} else {
 				menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
 			}
+			
+			LinphoneChatMessage msg = getMessageForId(v.getId());
+			if (msg != null && msg.getStatus() == LinphoneChatMessage.State.NotDelivered) {
+				menu.add(v.getId(), MENU_RESEND_MESSAGE, 0, getString(R.string.retry));
+			}
 		}
 	}
 	
@@ -517,13 +523,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		switch (item.getItemId()) {
 		case MENU_DELETE_MESSAGE:
 			LinphoneActivity.instance().getChatStorage().deleteMessage(chatRoom, item.getGroupId());
-			for (int i = 0; i < messagesLayout.getChildCount(); i++) {
-				View v = messagesLayout.getChildAt(i);
-				if (v.getId() == item.getGroupId()) {
-					v.setVisibility(View.GONE);
-					break;
-				}
-			}
+			hideMessageBubble(item.getGroupId());
 			break;
 		case MENU_SAVE_PICTURE:
 			saveImage(item.getGroupId());
@@ -542,6 +542,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			break;
 		case MENU_PICTURE_REAL:
 			uploadAndSendImage(fileToUploadPath, imageToUpload, ImageSize.REAL);
+			break;
+		case MENU_RESEND_MESSAGE:
+			resendMessage(item.getGroupId());
 			break;
 		}
 		return true;
@@ -618,13 +621,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 	
 	private void sendTextMessage() {
+		sendTextMessage(message.getText().toString());
+		message.setText("");
+	}
+	
+	private void sendTextMessage(String messageToSend) {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
 		
-		if (chatRoom != null && message != null && message.getText().length() > 0 && isNetworkReachable) {
-			String messageToSend = message.getText().toString();
-			message.setText("");
-
+		if (chatRoom != null && messageToSend != null && messageToSend.length() > 0 && isNetworkReachable) {
 			LinphoneChatMessage chatMessage = chatRoom.createLinphoneChatMessage(messageToSend);
 			chatRoom.sendMessage(chatMessage, this);
 			
@@ -665,6 +670,48 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			scrollToEnd();
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+		}
+	}
+	
+	private LinphoneChatMessage getMessageForId(int id) {
+		LinphoneChatMessage msg = null;
+		try {
+			msg = LinphoneActivity.instance().getChatStorage().getMessage(chatRoom, id);
+		} catch (Exception e) {}
+		
+		if (msg == null) {
+			for (BubbleChat bubble : lastSentMessagesBubbles) {
+				if (bubble.getId() == id) {
+					return bubble.getNativeMessageObject();
+				}
+			}
+		}
+		
+		return msg;
+	}
+	
+	private void hideMessageBubble(int id) {
+		for (int i = 0; i < messagesLayout.getChildCount(); i++) {
+			View v = messagesLayout.getChildAt(i);
+			if (v.getId() == id) {
+				v.setVisibility(View.GONE);
+				break;
+			}
+		}
+	}
+	
+	private void resendMessage(int id) {
+		LinphoneChatMessage message = getMessageForId(id);
+		if (message == null)
+			return;
+		
+		LinphoneActivity.instance().getChatStorage().deleteMessage(chatRoom, id);
+		hideMessageBubble(id);
+		
+		if (message.getText() != null && message.getText().length() > 0) {
+			sendTextMessage(message.getText());
+		} else {
+			sendImageMessage(message.getExternalBodyUrl(), null);
 		}
 	}
 	

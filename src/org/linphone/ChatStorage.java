@@ -353,6 +353,18 @@ public class ChatStorage {
 		return message;
 	}
 	
+	public LinphoneChatMessage getMessage(LinphoneChatRoom chatroom, int id) {
+		if (useNativeAPI) {
+			LinphoneChatMessage[] history = chatroom.getHistory();
+			for (LinphoneChatMessage msg : history) {
+				if (msg.getStorageId() == id) {
+					return msg;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public void removeDiscussion(String correspondent) {
 		if (useNativeAPI) {
 			LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
