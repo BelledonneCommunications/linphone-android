@@ -119,9 +119,11 @@ $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
 prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
 
 #ffmpeg
+ifeq ($(BUILD_VIDEO),1)
 BUILD_FFMPEG_DEPS=$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so
 ifeq ($(BUILD_FOR_X86), 1)
 	BUILD_FFMPEG_DEPS+=$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so
+endif
 endif
 FFMPEG_SRC_DIR=$(TOPDIR)/submodules/externals/ffmpeg
 FFMPEG_BUILD_DIR=$(TOPDIR)/submodules/externals/build/ffmpeg
@@ -159,11 +161,14 @@ clean-ffmpeg:
 	rm -rf $(FFMPEG_BUILD_DIR)/x86
 
 #x264
+ifeq ($(BUILD_VIDEO),1)
 ifeq ($(BUILD_X264), 1)
 BUILD_X264_DEPS=$(X264_SRC_DIR)/log2f_fix_patch_applied.txt $(X264_BUILD_DIR)/arm/libx264.a
 ifeq ($(BUILD_FOR_X86), 1)
 	BUILD_X264_DEPS+=$(X264_BUILD_DIR)/x86/libx264.a
 endif
+endif
+
 X264_SRC_DIR=$(TOPDIR)/submodules/externals/x264
 X264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/x264
 X264_CONFIGURE_OPTIONS=
@@ -200,9 +205,11 @@ clean-x264:
 	rm -rf $(X264_BUILD_DIR)/x86
 
 #libvpx
+ifeq ($(BUILD_VIDEO),1)
 BUILD_VPX_DEPS=$(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt $(LIBVPX_BUILD_DIR)/arm/libvpx.a
 ifeq ($(BUILD_FOR_X86), 1)
 	BUILD_VPX_DEPS+=$(LIBVPX_BUILD_DIR)/x86/libvpx.a
+endif
 endif
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
 LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
