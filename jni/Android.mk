@@ -10,12 +10,12 @@ else
 _BUILD_X264=$(BUILD_X264)
 _BUILD_VIDEO=$(BUILD_VIDEO)
 endif
+
 ifeq ($(_BUILD_VIDEO),0)
 ifeq (,$(DUMP_VAR))
 $(info $(TARGET_ARCH_ABI): Video is disabled for targets other than armeabi-v7a and x86)
 endif
 endif
-
 
 ifeq ($(BUILD_GPLV3_ZRTP), 1)
 	BUILD_SRTP=1

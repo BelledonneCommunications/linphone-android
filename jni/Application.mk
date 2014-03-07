@@ -55,6 +55,9 @@ endif
 ifeq ($(BUILD_VIDEO),1)
 APP_MODULES += libavutil-linphone libavcodec-linphone libswscale-linphone
 APP_MODULES += libvpx
+ifeq ($(BUILD_X264),1)
+APP_MODULES +=libx264 libmsx264
+endif
 endif
 
 _BUILD_AMR=0
@@ -72,10 +75,6 @@ endif
 
 ifneq ($(BUILD_AMRWB), 0)
 APP_MODULES += libvoamrwbenc
-endif
-
-ifeq ($(BUILD_X264),1)
-APP_MODULES +=libx264 libmsx264
 endif
 
 ifeq ($(BUILD_SILK),1)
