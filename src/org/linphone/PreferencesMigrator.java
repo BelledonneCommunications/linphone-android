@@ -19,6 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 
@@ -95,30 +97,31 @@ public class PreferencesMigrator {
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
 		String domain = getPrefString(getString(R.string.pref_domain_key) + key, null);
 		if (username != null && username.length() > 0 && password != null) {
-			mNewPrefs.setNewAccountUsername(username);
-			mNewPrefs.setNewAccountUserId(userid);
-			mNewPrefs.setNewAccountDomain(domain);
-			mNewPrefs.setNewAccountPassword(password);
-			
 			String proxy = getPrefString(getString(R.string.pref_proxy_key) + key, null);
-			mNewPrefs.setNewAccountProxy(proxy);
 			String expire = getPrefString(R.string.pref_expire_key, null);
-			mNewPrefs.setNewAccountExpires(expire);
+
+			AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
+			.setUsername(username)
+			.setUserId(userid)
+			.setDomain(domain)
+			.setPassword(password)
+			.setProxy(proxy)
+			.setExpires(expire);
 			
 			if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false)) {
-				mNewPrefs.setNewAccountOutboundProxyEnabled(true);
+				builder.setOutboundProxyEnabled(true);
 			}
 			if (mResources.getBoolean(R.bool.enable_push_id)) {
 				String regId = mNewPrefs.getPushNotificationRegistrationID();
 				String appId = getString(R.string.push_sender_id);
 				if (regId != null && mNewPrefs.isPushNotificationEnabled()) {
 					String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
-					mNewPrefs.setNewAccountContactParameters(contactInfos);
+					builder.setContactParameters(contactInfos);
 				}
 			}
 			
 			try {
-				mNewPrefs.saveNewAccount();
+				builder.saveNewAccount();
 			} catch (LinphoneCoreException e) {
 				e.printStackTrace();
 			}

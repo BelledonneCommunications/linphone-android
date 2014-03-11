@@ -146,65 +146,125 @@ public class LinphonePreferences {
 	private void saveAuthInfo(LinphoneAuthInfo authInfo) {
 		getLc().addAuthInfo(authInfo);
 	}
-	
-	private String tempUsername;
-	private String tempUserId;
-	private String tempPassword;
-	private String tempDomain;
-	private String tempProxy;
-	private boolean tempOutboundProxy;
-	private String tempContactsParams;
-	private String tempExpire;
-	private TransportType tempTransport;
-	
-	/**
-	 * Creates a new account using values previously set using setNew* functions
-	 * @throws LinphoneCoreException 
-	 */
-	public void saveNewAccount() throws LinphoneCoreException {
-		String identity = "sip:" + tempUsername + "@" + tempDomain;
-		String proxy = "sip:";
-		proxy += tempProxy == null ? tempDomain : tempProxy;
-		LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
-		
-		if (tempTransport == null) {
-			tempTransport = TransportType.LinphoneTransportUdp;
+
+	public static class AccountBuilder {
+		private LinphoneCore lc;
+		public AccountBuilder(LinphoneCore lc) {
+			this.lc = lc;
 		}
-		proxyAddr.setTransport(tempTransport);
-		
-		String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
-		
-		LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), route, true);
-		if (tempContactsParams != null)
-			prxCfg.setContactUriParameters(tempContactsParams);
-		if (tempExpire != null) {
-			try {
-				prxCfg.setExpires(Integer.parseInt(tempExpire));
-			} catch (NumberFormatException nfe) { }
+		private String tempUsername;
+		private String tempUserId;
+		private String tempPassword;
+		private String tempDomain;
+		private String tempProxy;
+		private boolean tempOutboundProxy;
+		private String tempContactsParams;
+		private String tempExpire;
+		private TransportType tempTransport;
+		private boolean tempEnabled = true;
+		private boolean tempNoDefault = false;
+
+		public AccountBuilder setTransport(TransportType transport) {
+			tempTransport = transport;
+			return this;
+		}
+		public AccountBuilder setUsername(String username) {
+			tempUsername = username;
+			return this;
+		}
+
+		public AccountBuilder setPassword(String password) {
+			tempPassword = password;
+			return this;
+		}
+
+		public AccountBuilder setDomain(String domain) {
+			tempDomain = domain;
+			return this;
+		}
+
+		public AccountBuilder setProxy(String proxy) {
+			tempProxy = proxy;
+			return this;
+		}
+		public AccountBuilder setOutboundProxyEnabled(boolean enabled) {
+			tempOutboundProxy = enabled;
+			return this;
+		}
+
+		public AccountBuilder setContactParameters(String contactParams) {
+			tempContactsParams = contactParams;
+			return this;
 		}
 		
-		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
-		
-		getLc().addProxyConfig(prxCfg);
-		getLc().addAuthInfo(authInfo);
-		
-		if (getAccountCount() == 1)
-			getLc().setDefaultProxyConfig(prxCfg);
-		
-		tempUsername = null;
-		tempUserId = null;
-		tempPassword = null;
-		tempDomain = null;
-		tempProxy = null;
-		tempOutboundProxy = false;
-		tempContactsParams = null;
-		tempExpire = null;
-		tempTransport = null;
+		public AccountBuilder setExpires(String expire) {
+			 tempExpire = expire;
+			return this;
+		}
+
+		public AccountBuilder setUserId(String userId) {
+			tempUserId = userId;
+			return this;
+		}
+
+		public AccountBuilder setEnabled(boolean enable) {
+			tempEnabled = enable;
+			return this;
+		}
+
+		public AccountBuilder setNoDefault(boolean yesno) {
+			tempNoDefault = yesno;
+			return this;
+		}
+
+		/**
+		 * Creates a new account
+		 * @throws LinphoneCoreException 
+		 */
+		public void saveNewAccount() throws LinphoneCoreException {
+			String identity = "sip:" + tempUsername + "@" + tempDomain;
+			String proxy = "sip:";
+			if (tempProxy == null) {
+				proxy += tempDomain;
+			} else {
+				if (!tempProxy.startsWith("sip:") && !tempProxy.startsWith("<sip:")
+					&& !tempProxy.startsWith("sips:") && !tempProxy.startsWith("<sips:")) {
+					proxy += tempProxy;
+				} else {
+					proxy = tempProxy;
+				}
+			}
+			LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
+			
+			if (tempTransport != null) {
+				proxyAddr.setTransport(tempTransport);
+			}
+			
+			String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
+			
+			LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), route, tempEnabled);
+
+			if (tempContactsParams != null)
+				prxCfg.setContactUriParameters(tempContactsParams);
+			if (tempExpire != null) {
+				try {
+					prxCfg.setExpires(Integer.parseInt(tempExpire));
+				} catch (NumberFormatException nfe) { }
+			}
+			
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
+			
+			lc.addProxyConfig(prxCfg);
+			lc.addAuthInfo(authInfo);
+			
+			if (!tempNoDefault && LinphonePreferences.instance().getAccountCount() == 1)
+				lc.setDefaultProxyConfig(prxCfg);
+		}
 	}
 	
-	public void setNewAccountTransport(TransportType transport) {
-		tempTransport = transport;
-	}
+
+	
+
 	
 	public void setAccountTransport(int n, String transport) {
 		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
@@ -275,9 +335,7 @@ public class LinphonePreferences {
 		return getString(R.string.pref_transport_udp);
 	}
 	
-	public void setNewAccountUsername(String username) {
-		tempUsername = username;
-	}
+
 	
 	public void setAccountUsername(int n, String username) {
 		String identity = "sip:" + username + "@" + getAccountDomain(n);
@@ -299,10 +357,6 @@ public class LinphonePreferences {
 		return authInfo == null ? null : authInfo.getUsername();
 	}
 
-	public void setNewAccountUserId(String userId) {
-		tempUserId = userId;
-	}
-
 	public void setAccountUserId(int n, String userId) {
 		LinphoneAuthInfo info = getClonedAuthInfo(n);
 		info.setUserId(userId);
@@ -314,10 +368,6 @@ public class LinphonePreferences {
 		return authInfo == null ? null : authInfo.getUserId();
 	}
 
-	public void setNewAccountPassword(String password) {
-		tempPassword = password;
-	}
-
 	public void setAccountPassword(int n, String password) {
 		LinphoneAuthInfo info = getClonedAuthInfo(n);
 		info.setPassword(password);
@@ -327,10 +377,6 @@ public class LinphonePreferences {
 	public String getAccountPassword(int n) {
 		LinphoneAuthInfo authInfo = getAuthInfo(n);
 		return authInfo == null ? null : authInfo.getPassword();
-	}
-
-	public void setNewAccountDomain(String domain) {
-		tempDomain = domain;
 	}
 
 	public void setAccountDomain(int n, String domain) {
@@ -351,10 +397,6 @@ public class LinphonePreferences {
 
 	public String getAccountDomain(int n) {
 		return getProxyConfig(n).getDomain();
-	}
-
-	public void setNewAccountProxy(String proxy) {
-		tempProxy = proxy;
 	}
 
 	public void setAccountProxy(int n, String proxy) {
@@ -389,9 +431,6 @@ public class LinphonePreferences {
 		return proxy;
 	}
 
-	public void setNewAccountOutboundProxyEnabled(boolean enabled) {
-		tempOutboundProxy = enabled;
-	}
 
 	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
 		try {
@@ -411,10 +450,6 @@ public class LinphonePreferences {
 	public boolean isAccountOutboundProxySet(int n) {
 		return getProxyConfig(n).getRoute() != null;
 	}
-
-	public void setNewAccountContactParameters(String contactParams) {
-		tempContactsParams = contactParams;
-	}
 	
 	public void setAccountContactParameters(int n, String contactParams) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
@@ -424,10 +459,6 @@ public class LinphonePreferences {
 	
 	public String getExpires(int n) {
 		return String.valueOf(getProxyConfig(n).getExpires());
-	}
-	
-	public void setNewAccountExpires(String expire) {
-		 tempExpire = expire;
 	}
 	
 	public void setExpires(int n, String expire) {
