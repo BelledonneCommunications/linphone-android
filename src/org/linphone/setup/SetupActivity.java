@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress.TransportType;
@@ -285,30 +286,31 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
-		mPrefs.setNewAccountUsername(username);
-		mPrefs.setNewAccountDomain(domain);
-		mPrefs.setNewAccountPassword(password);
+		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
+		.setUsername(username)
+		.setDomain(domain)
+		.setPassword(password);
 		
 		if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-				mPrefs.setNewAccountProxy(domain + ":5228");
-				mPrefs.setNewAccountTransport(TransportType.LinphoneTransportTcp);
+				builder.setProxy(domain + ":5228")
+				.setTransport(TransportType.LinphoneTransportTcp);
 			}
 			else {
-				mPrefs.setNewAccountProxy(domain + ":5223");
-				mPrefs.setNewAccountTransport(TransportType.LinphoneTransportTls);
+				builder.setProxy(domain + ":5223")
+				.setTransport(TransportType.LinphoneTransportTls);
 			}
 			
-			mPrefs.setNewAccountExpires("604800");
-			mPrefs.setNewAccountOutboundProxyEnabled(true);
+			builder.setExpires("604800")
+			.setOutboundProxyEnabled(true);
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
 			mPrefs.setPushNotificationEnabled(true);
 		} else {
 			String forcedProxy = getResources().getString(R.string.setup_forced_proxy);
 			if (!TextUtils.isEmpty(forcedProxy)) {
-				mPrefs.setNewAccountProxy(forcedProxy);
-				mPrefs.setNewAccountOutboundProxyEnabled(true);
+				builder.setProxy(forcedProxy)
+				.setOutboundProxyEnabled(true);
 			}
 		}
 		
@@ -317,12 +319,12 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			String appId = getString(R.string.push_sender_id);
 			if (regId != null && mPrefs.isPushNotificationEnabled()) {
 				String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
-				mPrefs.setNewAccountContactParameters(contactInfos);
+				builder.setContactParameters(contactInfos);
 			}
 		}
 		
 		try {
-			mPrefs.saveNewAccount();
+			builder.saveNewAccount();
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
