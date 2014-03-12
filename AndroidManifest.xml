@@ -49,6 +49,14 @@
 		        <action android:name="android.intent.action.MAIN" />
 		        <category android:name="android.intent.category.LAUNCHER" />
 		    </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <action android:name="android.intent.action.CALL_PRIVILEGED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tel" />
+                <data android:scheme="sip" />
+            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
@@ -106,12 +114,6 @@
 	    <service android:name="org.linphone.LinphoneService"
 	        android:label="@string/service_name"
 	        android:stopWithTask="false"/>
-	       
-	    <receiver android:name="org.linphone.AndroidCallInterceptor">
-            <intent-filter android:priority="99">
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-            </intent-filter>
-        </receiver>
          
 		<receiver android:name="org.linphone.NetworkManager">
 			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
