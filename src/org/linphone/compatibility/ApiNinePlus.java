@@ -128,20 +128,27 @@ public class ApiNinePlus {
 		return list;
 	}
 	
-	public static Cursor getContactsCursor(ContentResolver cr) {
-		String req = Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
-                + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL";
+	public static Cursor getContactsCursor(ContentResolver cr, String search) {
+		String req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+                + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL OR (" 
+				+ Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
+				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
 		
-		req += " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL)";
+		if (search != null) {
+			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
+		}
 		
 		return ApiFivePlus.getGeneralContactCursor(cr, req, true);
 	}
 
-	public static Cursor getSIPContactsCursor(ContentResolver cr) {
+	public static Cursor getSIPContactsCursor(ContentResolver cr, String search) {
 		String req = null;
 		req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
 				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL";
+		
+		if (search != null) {
+			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
+		}
 		
 		return ApiFivePlus.getGeneralContactCursor(cr, req, true);
 	}
