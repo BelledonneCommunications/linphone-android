@@ -21,9 +21,6 @@ package org.linphone;
 import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
-import static org.linphone.core.LinphoneCall.State.CallEnd;
-import static org.linphone.core.LinphoneCall.State.Error;
-import static org.linphone.core.LinphoneCall.State.IncomingReceived;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,7 +68,6 @@ import org.linphone.core.PayloadType;
 import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.PublishState;
-import org.linphone.core.Reason;
 import org.linphone.core.SubscriptionState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -184,7 +180,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/toy_mono.wav";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
-		mErrorToneFile = basePath + "/error_tone.wav";
+		mErrorToneFile = basePath + "/error.wav";
 
 		mPrefs = LinphonePreferences.instance();
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -964,7 +960,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@SuppressLint("Wakelock")
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("new state [",state,"]");
-		if (state == IncomingReceived && !call.equals(lc.getCurrentCall())) {
+		if (state == State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
 			if (call.getReplacedCall()!=null){
 				// attended transfer
 				// it will be accepted automatically.
@@ -972,14 +968,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 			} 
 		}
 		
-		if (state == IncomingReceived && mR.getBoolean(R.bool.auto_answer_calls)) {
+		if (state == State.IncomingReceived && mR.getBoolean(R.bool.auto_answer_calls)) {
 			try {
 				mLc.acceptCall(call);
 			} catch (LinphoneCoreException e) {
 				e.printStackTrace();
 			}
 		}
-		else if (state == IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
+		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
 				ringingCall = call;
@@ -991,7 +987,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			stopRinging();
 		}
 		
-		if (state == LinphoneCall.State.Connected) {
+		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
 				requestAudioFocus();
 				Compatibility.setAudioManagerInCallMode(mAudioManager);
@@ -1002,7 +998,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 
-		if (state == CallEnd || state == Error) {
+		if (state == State.CallReleased || state == State.Error) {
 			if (mLc.getCallsNb() == 0) {
 				if (mAudioFocused){
 					int res=mAudioManager.abandonAudioFocus(null);
@@ -1021,7 +1017,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			}
 		}
 
-		if (state == CallEnd) {
+		if (state == State.CallEnd) {
 			if (mLc.getCallsNb() == 0) {
 				if (mIncallWakeLock != null && mIncallWakeLock.isHeld()) {
 					mIncallWakeLock.release();
