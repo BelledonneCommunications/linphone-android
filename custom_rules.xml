@@ -44,6 +44,7 @@
 			<class name="org.linphone.core.PresenceNoteImpl" />
 			<class name="org.linphone.core.PresencePersonImpl" />
 			<class name="org.linphone.core.PresenceServiceImpl" />
+			<class name="org.linphone.core.ErrorInfoImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>
