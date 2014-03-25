@@ -78,10 +78,6 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothHeadset;
-import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -143,17 +139,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
 	private Handler mHandler = new Handler();
-
 	private WakeLock mIncallWakeLock;
-	
-	private BluetoothAdapter mBluetoothAdapter;
-	private BluetoothHeadset mBluetoothHeadset;
-	private BluetoothProfile.ServiceListener mProfileListener;
-	private BroadcastReceiver bluetoothReiceiver = new BluetoothManager();
-	private BroadcastReceiver bluetoothActionReceiver = new BluetoothActionReceiver();
-	public boolean isBluetoothScoConnected;
-	public boolean isUsingBluetoothAudioRoute;
-	private boolean mBluetoothStarted;
 
 	public String wizardLoginViewDomain = null;
 
@@ -208,13 +194,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
-		isUsingBluetoothAudioRoute = false;
-		if (mAudioManager != null && mBluetoothStarted) {
-			//Compatibility.setAudioManagerInCallMode(mAudioManager);
-			mAudioManager.stopBluetoothSco();
-			mAudioManager.setBluetoothScoOn(false);
-			mBluetoothStarted = false;
-		}
+		Log.w("Routing audio to " + (speakerOn ? "speaker" : "earpiece") + ", disabling bluetooth audio route");
+		BluetoothManager.getInstance().disableBluetoothSCO();
 		
 		if (!speakerOn) {
 			mLc.enableSpeaker(false);
@@ -222,10 +203,15 @@ public class LinphoneManager implements LinphoneCoreListener {
 			mLc.enableSpeaker(true);
 		}
 		
+		audioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
+	}
+	
+	public void audioStateChanged(AudioState state) {
 		for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
-			listener.onAudioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
+			listener.onAudioStateChanged(state);
 		}
 	}
+	
 	public void routeAudioToSpeaker() {
 		routeAudioToSpeakerHelper(true);
 	}
@@ -240,108 +226,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 		return userAgent.toString();
 	}
 
-	/**
-	 * 
-	 */
 	public void routeAudioToReceiver() {
 		routeAudioToSpeakerHelper(false);
-	}
-	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@SuppressWarnings("deprecation")
-	public void startBluetooth() {
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (mBluetoothAdapter.isEnabled()) {
-			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-				mProfileListener = new BluetoothProfile.ServiceListener() {
-					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-					public void onServiceConnected(int profile, BluetoothProfile proxy) {
-					    if (profile == BluetoothProfile.HEADSET) {
-					        Log.d("Bluetooth headset connected");
-							mServiceContext.registerReceiver(bluetoothActionReceiver, new IntentFilter(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT));
-					        mBluetoothHeadset = (BluetoothHeadset) proxy;
-			        		isBluetoothScoConnected = true;
-					    }
-					}
-					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-					public void onServiceDisconnected(int profile) {
-					    if (profile == BluetoothProfile.HEADSET) {
-							mServiceContext.unregisterReceiver(bluetoothActionReceiver);
-					        mBluetoothHeadset = null;
-			        		isBluetoothScoConnected = false;
-					        Log.d("Bluetooth headset disconnected");
-					        routeAudioToReceiver();
-					    }
-					}
-				};
-				mBluetoothAdapter.getProfileProxy(mServiceContext, mProfileListener, BluetoothProfile.HEADSET);
-			} else {
-				try {
-					mServiceContext.unregisterReceiver(bluetoothReiceiver);
-				} catch (Exception e) {}
-				
-				Intent currentValue = mServiceContext.registerReceiver(bluetoothReiceiver, new IntentFilter(AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED));
-				int state = currentValue == null ? 0 : currentValue.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
-	        	if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
-	        		isBluetoothScoConnected = true;
-	        	}
-			}
-		} else {
-    		isBluetoothScoConnected = false;
-			scoDisconnected();
-			routeAudioToReceiver();
-		}
-	}
-	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public boolean routeAudioToBluetooth() {
-		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (bluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
-			mAudioManager.setBluetoothScoOn(true);	
-			mAudioManager.startBluetoothSco();
-			mBluetoothStarted=true;
-			
-			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-				isUsingBluetoothAudioRoute = false;
-				if (mBluetoothHeadset != null) {
-					List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();                        
-					for (final BluetoothDevice dev : devices) {           
-						isUsingBluetoothAudioRoute |= mBluetoothHeadset.getConnectionState(dev) == BluetoothHeadset.STATE_CONNECTED;
-					}
-				}
-				
-				if (!isUsingBluetoothAudioRoute) {
-					Log.d("No bluetooth device available");	
-					scoDisconnected();
-				} else {
-					//Why is this for:
-					//mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-					for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
-						listener.onAudioStateChanged(AudioState.SPEAKER);
-					}
-				}
-			}
-			return isUsingBluetoothAudioRoute;
-		}
-		
-		return false;
-	}
-	
-	public void scoConnected() {
-		Log.i("Bluetooth sco connected!");
-		isBluetoothScoConnected = true;
-	}
-	
-	public void scoDisconnected() {
-		Log.w("Bluetooth sco disconnected!");
-		isUsingBluetoothAudioRoute = false;
-		isBluetoothScoConnected = false;
-		if (mAudioManager != null) {
-			//why is this for ?
-			//mAudioManager.setMode(AudioManager.MODE_NORMAL);
-			mAudioManager.stopBluetoothSco();
-			mAudioManager.setBluetoothScoOn(false);
-		}
 	}
 
 	public synchronized static final LinphoneManager createAndStart(Context c, LinphoneServiceListener listener) {
@@ -654,7 +540,7 @@ public class LinphoneManager implements LinphoneCoreListener {
         
 		updateNetworkReachability();
 		
-        startBluetooth();
+        BluetoothManager.getInstance().startBluetooth();
         resetCameraFromPreferences();
 	}
 
@@ -741,19 +627,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (LinphoneService.isReady()) // indeed, no need to crash
 			ChatStorage.getInstance().close();
 
-		try {
-			mServiceContext.unregisterReceiver(bluetoothReiceiver);
-		} catch (Exception e) {}
-		
-		try {
-			mServiceContext.unregisterReceiver(bluetoothActionReceiver);
-		} catch (Exception e) {}
-		
-		try {
-			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30))
-				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
-		} catch (Exception e) {}
-		
+		BluetoothManager.getInstance().destroy();
 		try {
 			mTimer.cancel();
 			mLc.destroy();
@@ -994,6 +868,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			}
 			
 			if (Hacks.needSoftvolume()) {
+				Log.w("Using soft volume audio hack");
 				adjustVolume(0); // Synchronize
 			}
 		}
@@ -1001,9 +876,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (state == State.CallReleased || state == State.Error) {
 			if (mLc.getCallsNb() == 0) {
 				if (mAudioFocused){
-					int res=mAudioManager.abandonAudioFocus(null);
+					int res = mAudioManager.abandonAudioFocus(null);
 					Log.d("Audio focus released a bit later: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
-					mAudioFocused=false;
+					mAudioFocused = false;
 				}
 				
 				Context activity = getContext();
@@ -1027,7 +902,21 @@ public class LinphoneManager implements LinphoneCoreListener {
 				}
 			}
 		}
+		
 		if (state == State.StreamsRunning) {
+			if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
+				BluetoothManager.getInstance().routeAudioToBluetooth();
+				// Hack for Android 4.2.2: we have to retry later, the first call will fail
+				if (Build.VERSION.SDK_INT == 17) {
+					mHandler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							BluetoothManager.getInstance().routeAudioToBluetooth();
+						}
+					}, 500);
+				}
+			}
+			
 			if (mIncallWakeLock == null) {
 				mIncallWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,	"incall");
 			}
@@ -1148,7 +1037,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 		
 		isRinging = false;
 		// You may need to call galaxys audio hack after this method
-		routeAudioToReceiver();
+		if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
+			Log.d("Stopped ringing, routing back to earpiece");
+			routeAudioToReceiver();
+		}
 	}
 
 	
@@ -1360,6 +1252,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			if (activity != null) {
 				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 				if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+					Log.d("All call terminated, routing back to earpiece");
 					routeAudioToReceiver();
 				}
 			}
