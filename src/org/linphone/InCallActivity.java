@@ -247,7 +247,7 @@ public class InCallActivity extends FragmentActivity implements
 	        slideOutTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
         }
 		
-		if (LinphoneManager.getInstance().isBluetoothScoConnected) {
+		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
 			try {
 				if (routeLayout != null)
 					routeLayout.setVisibility(View.VISIBLE);
@@ -292,7 +292,7 @@ public class InCallActivity extends FragmentActivity implements
 					} else {
 						speaker.setBackgroundResource(R.drawable.speaker_off);
 						routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
-						if (LinphoneManager.getInstance().isUsingBluetoothAudioRoute) {
+						if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
 							routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
 							routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
 						} else {
@@ -404,12 +404,13 @@ public class InCallActivity extends FragmentActivity implements
 			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.routeBluetooth) {
-			LinphoneManager.getInstance().routeAudioToBluetooth();
-			isSpeakerEnabled = false;
-			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
-			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
-			hideOrDisplayAudioRoutes();
+			if (BluetoothManager.getInstance().routeAudioToBluetooth()) {
+				isSpeakerEnabled = false;
+				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
+				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
+				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+				hideOrDisplayAudioRoutes();
+			}
 		}
 		else if (id == R.id.routeReceiver) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
@@ -493,9 +494,12 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void showVideoView() {
-		isSpeakerEnabled = true;
-		LinphoneManager.getInstance().routeAudioToSpeaker();
-		speaker.setBackgroundResource(R.drawable.speaker_on);
+		if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
+			Log.w("Bluetooth not available, using speaker");
+			LinphoneManager.getInstance().routeAudioToSpeaker();
+			isSpeakerEnabled = true;
+			speaker.setBackgroundResource(R.drawable.speaker_on);
+		}
 		video.setBackgroundResource(R.drawable.video_off);
 
 		LinphoneManager.stopProximitySensorForActivity(InCallActivity.this);
@@ -547,6 +551,7 @@ public class InCallActivity extends FragmentActivity implements
 			speaker.setBackgroundResource(R.drawable.speaker_on);
 			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 		} else {
+			Log.d("Toggle speaker off, routing back to earpiece");
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			speaker.setBackgroundResource(R.drawable.speaker_off);
 		}
