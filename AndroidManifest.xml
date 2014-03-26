@@ -120,11 +120,6 @@
 		</receiver>
 	
 	    <receiver android:name="org.linphone.BluetoothManager">
-			<intent-filter>
-			    <action android:name="android.bluetooth.device.action.ACL_CONNECTED"/>
-			    <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED"/>
-			    <action android:name="android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED"/>
-		    </intent-filter>
 		</receiver>
 	
 		<receiver android:name="org.linphone.BootReceiver">
@@ -134,8 +129,10 @@
 		<receiver android:name="org.linphone.PhoneStateChangedReceiver">
 			<intent-filter><action android:name="android.intent.action.PHONE_STATE" /></intent-filter>
 		</receiver>
+		
 		<receiver android:name="KeepAliveHandler" >
         </receiver>
+        
 		<!-- Needed for push notification -->
 		<receiver android:name="org.linphone.gcm.GCMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
 		  <intent-filter>

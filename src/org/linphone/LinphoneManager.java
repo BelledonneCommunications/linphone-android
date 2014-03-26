@@ -885,8 +885,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 				if (activity != null) {
 					TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 					if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-						mAudioManager.setMode(AudioManager.MODE_NORMAL);
 						Log.d("---AudioManager: back to MODE_NORMAL");
+						mAudioManager.setMode(AudioManager.MODE_NORMAL);
+						Log.d("All call terminated, routing back to earpiece");
+						routeAudioToReceiver();
 					}
 				}
 			}
@@ -1246,15 +1248,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 			if (state == State.OutgoingInit || state == State.IncomingReceived) {
 				boolean sendCamera = mLc.getConferenceSize() == 0;
 				enableCamera(call, sendCamera);
-			}
-			
-			Context activity = getContext();
-			if (activity != null) {
-				TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-				if (state == State.CallEnd && mLc.getCallsNb() == 0 && tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-					Log.d("All call terminated, routing back to earpiece");
-					routeAudioToReceiver();
-				}
 			}
 			
 			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
