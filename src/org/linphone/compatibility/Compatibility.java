@@ -292,4 +292,12 @@ public class Compatibility {
 			ApiFivePlus.setAudioManagerInCallMode(manager);
 		}
 	}
+	
+	public static String getAudioManagerEventForBluetoothConnectionStateChangedEvent() {
+		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
+			return ApiFourteenPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
+		} else {
+			return ApiEightPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
+		}
+	}
 }

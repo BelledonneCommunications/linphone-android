@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.List;
 
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
@@ -41,6 +41,13 @@ import android.os.Build;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class BluetoothManager extends BroadcastReceiver {
+	public int PLANTRONICS_BUTTON_PRESS = 1;
+	public int PLANTRONICS_BUTTON_LONG_PRESS = 2;
+	public int PLANTRONICS_BUTTON_DOUBLE_PRESS = 5;
+	
+	public int PLANTRONICS_BUTTON_CALL = 2;
+	public int PLANTRONICS_BUTTON_MUTE = 3;
+	
 	private static BluetoothManager instance;
 
 	private Context mContext;
@@ -65,49 +72,52 @@ public class BluetoothManager extends BroadcastReceiver {
 		instance = this;
 	}
 	
-	public void startBluetooth() {
+	public void initBluetooth() {
+		IntentFilter filter = new IntentFilter();
+		filter.addCategory(BluetoothHeadset.VENDOR_SPECIFIC_HEADSET_EVENT_COMPANY_ID_CATEGORY + "." + BluetoothAssignedNumbers.PLANTRONICS);
+		filter.addAction(Compatibility.getAudioManagerEventForBluetoothConnectionStateChangedEvent());
+		filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+		filter.addAction(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT);
+		mContext.registerReceiver(this,  filter);
+		Log.d("Bluetooth receiver started");
+		
+		startBluetooth();
+	}
+	
+	private void startBluetooth() {
 		if (isBluetoothConnected) {
 			Log.e("Bluetooth already started");
 			return;
 		}
 		
-		IntentFilter filter = new IntentFilter();
-		filter.addCategory(BluetoothHeadset.VENDOR_SPECIFIC_HEADSET_EVENT_COMPANY_ID_CATEGORY + "." + BluetoothAssignedNumbers.PLANTRONICS);
-		filter.addAction("android.media.ACTION_SCO_AUDIO_STATE_UPDATED");
-		filter.addAction(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT);
-		mContext.registerReceiver(this,  filter);
-		Log.d("Bluetooth receiver started");
-		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		
 		if (mBluetoothAdapter.isEnabled()) {
-			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-				if (mProfileListener != null) {
-					Log.w("Bluetooth headset profile was already opened, let's close it");
-					mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
+			if (mProfileListener != null) {
+				Log.w("Bluetooth headset profile was already opened, let's close it");
+				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
+			}
+			
+			mProfileListener = new BluetoothProfile.ServiceListener() {
+				public void onServiceConnected(int profile, BluetoothProfile proxy) {
+				    if (profile == BluetoothProfile.HEADSET) {
+				        Log.d("Bluetooth headset connected");
+				        mBluetoothHeadset = (BluetoothHeadset) proxy;
+				        isBluetoothConnected = true;
+				    }
 				}
-				
-				mProfileListener = new BluetoothProfile.ServiceListener() {
-					public void onServiceConnected(int profile, BluetoothProfile proxy) {
-					    if (profile == BluetoothProfile.HEADSET) {
-					        Log.d("Bluetooth headset connected");
-					        mBluetoothHeadset = (BluetoothHeadset) proxy;
-					        isBluetoothConnected = true;
-					    }
-					}
-					public void onServiceDisconnected(int profile) {
-					    if (profile == BluetoothProfile.HEADSET) {
-					        mBluetoothHeadset = null;
-					        isBluetoothConnected = false;
-					        Log.d("Bluetooth headset disconnected");
-					        LinphoneManager.getInstance().routeAudioToSpeaker();
-					    }
-					}
-				};
-				boolean success = mBluetoothAdapter.getProfileProxy(mContext, mProfileListener, BluetoothProfile.HEADSET);
-				if (!success) {
-					Log.e("Bluetooth getProfileProxy failed !");
+				public void onServiceDisconnected(int profile) {
+				    if (profile == BluetoothProfile.HEADSET) {
+				        mBluetoothHeadset = null;
+				        isBluetoothConnected = false;
+				        Log.d("Bluetooth headset disconnected");
+				        LinphoneManager.getInstance().routeAudioToSpeaker();
+				    }
 				}
+			};
+			boolean success = mBluetoothAdapter.getProfileProxy(mContext, mProfileListener, BluetoothProfile.HEADSET);
+			if (!success) {
+				Log.e("Bluetooth getProfileProxy failed !");
 			}
 		} else {
 			Log.w("Bluetooth interface disabled on device");
@@ -165,22 +175,20 @@ public class BluetoothManager extends BroadcastReceiver {
 		}
 		
 		if (mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
-			if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-				boolean isHeadsetConnected = false;
-				if (mBluetoothHeadset != null) {
-					List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();
-					mBluetoothDevice = null;
-					for (final BluetoothDevice dev : devices) {    
-						if (mBluetoothHeadset.getConnectionState(dev) == BluetoothHeadset.STATE_CONNECTED) {
-							mBluetoothDevice = dev;
-							isHeadsetConnected = true;
-							break;
-						}
+			boolean isHeadsetConnected = false;
+			if (mBluetoothHeadset != null) {
+				List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();
+				mBluetoothDevice = null;
+				for (final BluetoothDevice dev : devices) {    
+					if (mBluetoothHeadset.getConnectionState(dev) == BluetoothHeadset.STATE_CONNECTED) {
+						mBluetoothDevice = dev;
+						isHeadsetConnected = true;
+						break;
 					}
-					Log.d(isHeadsetConnected ? "Headset found, bluetooth audio route available" : "No headset found, bluetooth audio route unavailable");
 				}
-				return isHeadsetConnected;
+				Log.d(isHeadsetConnected ? "Headset found, bluetooth audio route available" : "No headset found, bluetooth audio route unavailable");
 			}
+			return isHeadsetConnected;
 		}
 		
 		return false;
@@ -211,11 +219,6 @@ public class BluetoothManager extends BroadcastReceiver {
 		
 		Log.w("Bluetooth stopped!");
 		
-		try {
-			mContext.unregisterReceiver(this);
-			Log.d("Bluetooth receiver stopped");
-		} catch (Exception e) {}
-		
 		if (LinphoneManager.isInstanciated()) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 		}
@@ -224,6 +227,11 @@ public class BluetoothManager extends BroadcastReceiver {
 	public void destroy() {
 		try {
 			stopBluetooth();
+			
+			try {
+				mContext.unregisterReceiver(this);
+				Log.d("Bluetooth receiver stopped");
+			} catch (Exception e) {}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -234,37 +242,44 @@ public class BluetoothManager extends BroadcastReceiver {
         	return;
 
         String action = intent.getAction();
-      //Using real value instead of constant because not available before sdk 11 
-        if ("android.media.ACTION_SCO_AUDIO_STATE_UPDATED".equals(action)) { // AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED
+        if (Compatibility.getAudioManagerEventForBluetoothConnectionStateChangedEvent().equals(action)) {
         	int state = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
     		if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
-    			Log.d("Bluetooth sco state updated to connected");
+    			Log.d("Bluetooth sco state => connected");
 				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
     			//isUsingBluetoothAudioRoute = true;
         	} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
-        		Log.d("Bluetooth sco state updated to disconnected");
+        		Log.d("Bluetooth sco state => disconnected");
 				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
         		//isUsingBluetoothAudioRoute = false;
+        	} else {
+        		Log.d("Bluetooth sco state => " + state);
         	}
         }
-        else if ("android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED".equals(action)) { //BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED
-        	int state = intent.getIntExtra("android.bluetooth.adapter.extra.CONNECTION_STATE", //BluetoothAdapter.EXTRA_CONNECTION_STATE
-        			0); //BluetoothAdapter.STATE_DISCONNECTED
+        else if (BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED.equals(action)) {
+        	int state = intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, BluetoothAdapter.STATE_DISCONNECTED);
         	if (state == 0) {
-        		Log.d("Bluetooth state updated to disconnected");
+        		Log.d("Bluetooth state => disconnected");
+        		stopBluetooth();
         	} else if (state == 2) {
-        		Log.d("Bluetooth state updated to connected");
+        		Log.d("Bluetooth state => connected");
+        		startBluetooth();
+        	} else {
+        		Log.d("Bluetooth state => " + state);
         	}
         }
         else if (intent.getAction().equals(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT)) {
 			String command = intent.getExtras().getString(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_CMD);
-			int type = intent.getExtras().getInt(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_CMD_TYPE);
+			//int type = intent.getExtras().getInt(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_CMD_TYPE);
 			
 			Object[] args = (Object[]) intent.getExtras().get(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_ARGS);	
 			String eventName = (String) args[0];
-			Log.d("Bluetooth event: " + command + " (type: " + type + ") = " + eventName);
 			
-			//TODO: parse command/args and do something with it
+			if (eventName.equals("BUTTON") && args.length >= 3) {
+				Integer buttonID = (Integer) args[1];
+				Integer mode = (Integer) args[2];
+				Log.d("Bluetooth event: " + command + " : " + eventName + ", id = " + buttonID + " (" + mode + ")");
+			}
     	}
     }
 }
