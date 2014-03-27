@@ -540,7 +540,9 @@ public class LinphoneManager implements LinphoneCoreListener {
         
 		updateNetworkReachability();
 		
-        BluetoothManager.getInstance().startBluetooth();
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			BluetoothManager.getInstance().initBluetooth();
+		}
         resetCameraFromPreferences();
 	}
 

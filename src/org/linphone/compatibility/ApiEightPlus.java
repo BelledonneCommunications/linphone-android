@@ -6,6 +6,7 @@ import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.media.AudioManager;
 
 import com.google.android.gcm.GCMRegistrar;
 
@@ -53,5 +54,10 @@ public class ApiEightPlus {
 		} catch (java.lang.UnsupportedOperationException e) {
 			Log.i("Push Notification not activated");
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public static String getAudioManagerEventForBluetoothConnectionStateChangedEvent() {
+		return AudioManager.ACTION_SCO_AUDIO_STATE_CHANGED;
 	}
 }
