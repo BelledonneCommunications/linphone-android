@@ -57,6 +57,7 @@ public class BluetoothManager extends BroadcastReceiver {
 	private BluetoothDevice mBluetoothDevice;
 	private BluetoothProfile.ServiceListener mProfileListener;
 	private boolean isBluetoothConnected;
+	private boolean isScoConnected;
 	
 	public static BluetoothManager getInstance() {
 		if (instance == null) {
@@ -125,10 +126,6 @@ public class BluetoothManager extends BroadcastReceiver {
 	}
 	
 	public boolean routeAudioToBluetooth() {
-		return routeAudioToBluetooth(false);
-	}
-	
-	private boolean routeAudioToBluetooth(boolean isRetry) {
 		if (mBluetoothAdapter == null) {
 			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		}
@@ -136,27 +133,39 @@ public class BluetoothManager extends BroadcastReceiver {
 		if (mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			if (isBluetoothHeadsetAvailable()) {
 				if (mAudioManager != null && !mAudioManager.isBluetoothScoOn()) {
+					Log.d("Bluetooth sco off, let's start it");
 					mAudioManager.setBluetoothScoOn(true);	
 					mAudioManager.startBluetoothSco();
 				}
+			} else {
+				return false;
 			}
 			
-			boolean ok = mBluetoothHeadset != null && mBluetoothHeadset.isAudioConnected(mBluetoothDevice);
-			if (!ok && !isRetry) {
-				Log.w("Routing audio to bluetooth headset failed, retry....");
+			// Hack to ensure bluetooth sco is really running
+			boolean ok = isUsingBluetoothAudioRoute();
+			int retries = 0;
+			while (!ok && retries < 5) {
+				retries++;
+				
 				try {
-					Thread.sleep(100);
+					Thread.sleep(200);
 				} catch (InterruptedException e) {}
-				return routeAudioToBluetooth(true);
-			} else if (isRetry) {
-				if (ok) {
-					Log.d("Retry worked, audio is routed to bluetooth headset");
+				
+				if (mAudioManager != null) {
+					mAudioManager.setBluetoothScoOn(true);	
+					mAudioManager.startBluetoothSco();
+				}
+				
+				ok = isUsingBluetoothAudioRoute();
+			}
+			if (ok) {
+				if (retries > 0) {
+					Log.d("Bluetooth route ok after " + retries + " retries");
 				} else {
-					Log.e("Retry not worked, audio isn't routed to bluetooth headset...");
-					disableBluetoothSCO();
+					Log.d("Bluetooth route ok");
 				}
 			} else {
-				Log.d("Routing audio to bluetooth headset worked at first try");
+				Log.d("Bluetooth still not ok...");
 			}
 			
 			return ok;
@@ -166,7 +175,7 @@ public class BluetoothManager extends BroadcastReceiver {
 	}
 	
 	public boolean isUsingBluetoothAudioRoute() {
-		return mBluetoothHeadset != null && mBluetoothHeadset.isAudioConnected(mBluetoothDevice);
+		return mBluetoothHeadset != null && mBluetoothHeadset.isAudioConnected(mBluetoothDevice) && isScoConnected;
 	}
 	
 	public boolean isBluetoothHeadsetAvailable() {
@@ -198,9 +207,19 @@ public class BluetoothManager extends BroadcastReceiver {
 		if (mAudioManager != null && mAudioManager.isBluetoothScoOn()) {
 			mAudioManager.stopBluetoothSco();
 			mAudioManager.setBluetoothScoOn(false);
-			Log.w("Hack: stopping bluetooth sco again since first time won't have succedded");
-			mAudioManager.stopBluetoothSco();
-			mAudioManager.setBluetoothScoOn(false);
+			
+			// Hack to ensure bluetooth sco is really stopped
+			int retries = 0;
+			while (isScoConnected && retries < 10) {
+				retries++;
+				
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {}
+				
+				mAudioManager.stopBluetoothSco();
+				mAudioManager.setBluetoothScoOn(false);
+			}
 			Log.w("Bluetooth sco disconnected!");
 		}
 	}
@@ -247,11 +266,11 @@ public class BluetoothManager extends BroadcastReceiver {
     		if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
     			Log.d("Bluetooth sco state => connected");
 				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
-    			//isUsingBluetoothAudioRoute = true;
+    			isScoConnected = true;
         	} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
         		Log.d("Bluetooth sco state => disconnected");
 				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
-        		//isUsingBluetoothAudioRoute = false;
+        		isScoConnected = false;
         	} else {
         		Log.d("Bluetooth sco state => " + state);
         	}
