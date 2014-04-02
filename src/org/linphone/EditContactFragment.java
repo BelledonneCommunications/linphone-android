@@ -531,6 +531,10 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		private void addNewNumber() {
+			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
+				return;
+			}
+			
 			if (isNewContact) {
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
@@ -567,6 +571,10 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		private void updateNumber() {
+			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
+				return;
+			}
+			
 			if (isSipAddress) {
 				if (newNumberOrAddress.startsWith("sip:"))
 					newNumberOrAddress = newNumberOrAddress.substring(4);
