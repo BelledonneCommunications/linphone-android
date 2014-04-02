@@ -34,9 +34,9 @@
 [submodule "submodules/externals/libvpx"]
 	path = submodules/externals/libvpx
 	url = http://git.chromium.org/webm/libvpx.git
-[submodule "submodules/externals/libzrtpcpp"]
-	path = submodules/externals/libzrtpcpp
-	url = https://github.com/wernerd/ZRTPCPP.git
+[submodule "submodules/bzrtp"]
+	path = submodules/bzrtp
+	url = git://git.linphone.org/bzrtp.git
 [submodule "submodules/externals/srtp"]
 	path = submodules/externals/srtp
 	url = git://git.linphone.org/srtp.git

@@ -17,11 +17,13 @@ $(info $(TARGET_ARCH_ABI): Video is disabled for targets other than armeabi-v7a 
 endif
 endif
 
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
+#libxml2 
+include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
+
+ifeq ($(BUILD_ZRTP), 1)
 	BUILD_SRTP=1
 ZRTP_C_INCLUDE= \
-	$(linphone-root-dir)/submodules/externals/libzrtpcpp/zrtp \
-	$(linphone-root-dir)/submodules/externals/libzrtpcpp/zrtp/libzrtpcpp
+	$(linphone-root-dir)/submodules/bzrtp/include
 endif
 
 ifeq ($(BUILD_SRTP), 1)
@@ -41,9 +43,6 @@ endif
 ifeq ($(BUILD_UPNP),1)
 include $(linphone-root-dir)/submodules/externals/build/libupnp/Android.mk
 endif
-
-#libxml2 
-include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
 
 # Speex
 include $(linphone-root-dir)/submodules/externals/build/speex/Android.mk
@@ -94,11 +93,11 @@ include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
 endif #_BUILD_VIDEO
 
 
-ifeq ($(BUILD_GPLV3_ZRTP), 1)
+ifeq ($(BUILD_ZRTP), 1)
 ifeq (,$(DUMP_VAR))
 $(info $(TARGET_ARCH_ABI): Build ZRTP support)
 endif
-include $(linphone-root-dir)/submodules/externals/build/libzrtpcpp/Android.mk
+include $(linphone-root-dir)/submodules/bzrtp/Android.mk
 endif
 
 ifeq ($(BUILD_SRTP), 1)
