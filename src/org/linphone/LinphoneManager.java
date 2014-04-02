@@ -910,15 +910,13 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (state == State.StreamsRunning) {
 			if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
 				BluetoothManager.getInstance().routeAudioToBluetooth();
-				// Hack for Android 4.2.2: we have to retry later, the first call will fail
-				if (Build.VERSION.SDK_INT == 17) {
-					mHandler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							BluetoothManager.getInstance().routeAudioToBluetooth();
-						}
-					}, 500);
-				}
+				// Hack to ensure the bluetooth route is really used
+				mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						BluetoothManager.getInstance().routeAudioToBluetooth();
+					}
+				}, 500);
 			}
 			
 			if (mIncallWakeLock == null) {
