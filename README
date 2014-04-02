@@ -48,7 +48,7 @@ Some options can be passed to make, like "make SOME_OPTION=SOME_VALUE".
 
 ENABLE_GPL_THIRD_PARTIES
 	values: 0 (GPL third parties disabled) or 1 (GPL third parties enabled), default value: 1
-	GPL third parties are: X264, ZRTP and G729
+	GPL third parties are: X264 and G729
 
 BUILD_VIDEO
 	values: 0 (no video) or 1 (video enabled), default value: 1
@@ -62,8 +62,8 @@ BUILD_AMRNB
 BUILD_AMRWB
 	values: 0 (don't build amrwb codec), 1 (build your own amrwb codec): default value: 1
 
-BUILD_GPLV3_ZRTP
-	values: 0 (don't support ZRTP), 1 (support ZRTP and make the whole program GPLv3), default value: 1
+BUILD_ZRTP
+	values: 0 (don't support ZRTP), 1 (support ZRTP), default value: 1
 
 BUILD_SILK            
 	values: 0 (don't build silk plugin), 1 (build silk) [silk is Skype nonfree patented audio codec], default value: 1
