@@ -153,11 +153,6 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		}
 		
-		if (!LinphoneManager.getLc().needsEchoCalibration()) {
-			uncheckAndHidePreference(R.string.pref_echo_cancellation_key);
-			hidePreference(R.string.pref_echo_canceller_calibration_key);
-		}
-		
 		if (!LinphoneManager.getLc().isTunnelAvailable()) {
 			emptyAndHidePreference(R.string.pref_tunnel_key);
 		}
