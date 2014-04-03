@@ -145,7 +145,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			hidePreference(R.string.pref_push_notification_key);
 		}
 
-		if (!Version.isVideoCapable()) {
+		if (!Version.isVideoCapable() || !LinphoneManager.getLcIfManagerNotDestroyedOrNull().isVideoSupported()) {
 			uncheckAndHidePreference(R.string.pref_video_enable_key);
 		} else {
 			if (!AndroidCameraConfiguration.hasFrontCamera()) {
