@@ -411,6 +411,7 @@ clean-ndk-build:
 	fi
 
 clean: clean-ndk-build
+	ant clean
 
 veryclean: clean clean-ffmpeg clean-x264 clean-vpx
 
