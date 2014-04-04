@@ -8,7 +8,7 @@ import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ListView;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 /**
  * @author Sylvain Berfini
