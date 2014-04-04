@@ -94,6 +94,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			return true;
 		}		
 	};
+	OnPreferenceChangeListener displayNameChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			mPrefs.setAccountDisplayName(n, newValue.toString());
+			preference.setSummary(newValue.toString());
+			return true;
+		}		
+	};
 	OnPreferenceChangeListener proxyChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -192,6 +200,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	domain.setOnPreferenceChangeListener(domainChangedListener);
     	domain.setSummary(domain.getText());
+    	
+    	EditTextPreference displayName = (EditTextPreference) account.getPreference(4);
+    	displayName.setText(mPrefs.getAccountDisplayName(n));
+    	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+    	displayName.setOnPreferenceChangeListener(displayNameChangedListener);
+    	displayName.setSummary(displayName.getText());
 		
     	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_advanced_key));
     	mTransportPreference = (ListPreference) advanced.getPreference(0);

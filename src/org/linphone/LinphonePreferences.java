@@ -149,10 +149,8 @@ public class LinphonePreferences {
 
 	public static class AccountBuilder {
 		private LinphoneCore lc;
-		public AccountBuilder(LinphoneCore lc) {
-			this.lc = lc;
-		}
 		private String tempUsername;
+		private String tempDisplayName;
 		private String tempUserId;
 		private String tempPassword;
 		private String tempDomain;
@@ -163,13 +161,23 @@ public class LinphonePreferences {
 		private TransportType tempTransport;
 		private boolean tempEnabled = true;
 		private boolean tempNoDefault = false;
+		
+		public AccountBuilder(LinphoneCore lc) {
+			this.lc = lc;
+		}
 
 		public AccountBuilder setTransport(TransportType transport) {
 			tempTransport = transport;
 			return this;
 		}
+		
 		public AccountBuilder setUsername(String username) {
 			tempUsername = username;
+			return this;
+		}
+		
+		public AccountBuilder setDisplayName(String displayName) {
+			tempDisplayName = displayName;
 			return this;
 		}
 
@@ -187,6 +195,7 @@ public class LinphonePreferences {
 			tempProxy = proxy;
 			return this;
 		}
+		
 		public AccountBuilder setOutboundProxyEnabled(boolean enabled) {
 			tempOutboundProxy = enabled;
 			return this;
@@ -235,6 +244,11 @@ public class LinphonePreferences {
 				}
 			}
 			LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
+			LinphoneAddress identityAddr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
+			
+			if (tempDisplayName != null) {
+				identityAddr.setDisplayName(tempDisplayName);
+			}
 			
 			if (tempTransport != null) {
 				proxyAddr.setTransport(tempTransport);
@@ -242,7 +256,7 @@ public class LinphonePreferences {
 			
 			String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
 			
-			LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), route, tempEnabled);
+			LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identityAddr.asString(), proxyAddr.asStringUriOnly(), route, tempEnabled);
 
 			if (tempContactsParams != null)
 				prxCfg.setContactUriParameters(tempContactsParams);
@@ -261,10 +275,6 @@ public class LinphonePreferences {
 				lc.setDefaultProxyConfig(prxCfg);
 		}
 	}
-	
-
-	
-
 	
 	public void setAccountTransport(int n, String transport) {
 		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
@@ -334,9 +344,7 @@ public class LinphonePreferences {
 		
 		return getString(R.string.pref_transport_udp);
 	}
-	
 
-	
 	public void setAccountUsername(int n, String username) {
 		String identity = "sip:" + username + "@" + getAccountDomain(n);
 		LinphoneAuthInfo info = getClonedAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
@@ -355,6 +363,29 @@ public class LinphonePreferences {
 	public String getAccountUsername(int n) {
 		LinphoneAuthInfo authInfo = getAuthInfo(n);
 		return authInfo == null ? null : authInfo.getUsername();
+	}
+	
+	public void setAccountDisplayName(int n, String displayName) {
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
+			addr.setDisplayName(displayName);
+			prxCfg.setIdentity(addr.asString());
+			prxCfg.done();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getAccountDisplayName(int n) {
+		try {
+			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(getProxyConfig(n).getIdentity());
+			return addr.getDisplayName();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	public void setAccountUserId(int n, String userId) {
