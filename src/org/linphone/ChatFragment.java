@@ -40,6 +40,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 import org.linphone.ui.LinphoneScrollView;
@@ -640,6 +641,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			
 			BubbleChat bubble = displayMessage(newId, messageToSend, System.currentTimeMillis(), false, State.InProgress, messagesLayout);
 			bubble.setNativeMessageObject(chatMessage);
+			Log.e("Sent message current status: " + chatMessage.getStatus());
 			scrollToEnd();
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
@@ -765,16 +767,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	@Override
-	public synchronized void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+	public synchronized void onLinphoneChatMessageStateChanged(final LinphoneChatMessage msg, final State state) {
 		final String finalMessage = msg.getText();
 		final String finalImage = msg.getExternalBodyUrl();
-		final State finalState = state;
 		if (LinphoneActivity.isInstanciated() && state != State.InProgress) {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
 					if (finalMessage != null && !finalMessage.equals("")) {
-						LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage, finalState.toInt());
+						LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage, state.toInt());
 					} else if (finalImage != null && !finalImage.equals("")) {
 						if (latestImageMessages != null && latestImageMessages.containsValue(finalImage)) {
 							int id = -1;
@@ -786,15 +787,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								}
 							}
 							if (id != -1) {
-								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, finalState.toInt());
+								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, state.toInt());
 							}
 						}
 					}
 					
 					if (lastSentMessagesBubbles != null && lastSentMessagesBubbles.size() > 0) {
 						for (BubbleChat bubble : lastSentMessagesBubbles) {
-							if (bubble.getStatus() == State.InProgress || bubble.getStatus() == State.Idle) {
-								bubble.updateStatusView(bubble.getNativeMessageObject().getStatus());
+							if (bubble.getNativeMessageObject() == msg) {
+								bubble.updateStatusView(state);
 							}
 						}
 					}
