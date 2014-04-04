@@ -3,7 +3,7 @@ download_bw=380
 upload_bw=380
 
 [sip]
-contact=sip:unknown@unknown-host
+contact="Linphone Android" sip:linphone.android@unknown-host
 use_info=0
 use_ipv6=0
 keepalive_period=30000
