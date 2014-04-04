@@ -8,7 +8,9 @@
         <EditTextPreference 
         	android:title="@string/pref_username"
         	android:dialogMessage="@string/pref_help_username"
-            android:persistent="true"/><EditTextPreference 
+            android:persistent="true"/>
+        
+        <EditTextPreference 
         	android:title="@string/pref_auth_userid"
         	android:dialogMessage="@string/pref_help_auth_userid"
             android:persistent="true"/>
@@ -20,6 +22,11 @@
         <EditTextPreference 
         	android:title="@string/pref_domain"
         	android:dialogMessage="@string/pref_help_domain"
+            android:persistent="true"/>
+        
+        <EditTextPreference 
+        	android:title="@string/pref_display_name"
+        	android:dialogMessage="@string/pref_help_display_name"
             android:persistent="true"/>
         
     </PreferenceCategory>

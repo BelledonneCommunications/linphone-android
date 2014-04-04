@@ -378,6 +378,11 @@
 	<string name="download_image">Télécharger</string>
 	<string name="download_image_failed">Téléchargement échoué. Vérifiez votre connexion internet ou reéssayez plus tard.</string>
 	
+	<string name="pref_auth_userid">Identifiant d\'authentification</string>
+	<string name="pref_help_auth_userid">Entrez votre identifiant (optionnel)</string>
+	<string name="pref_display_name">Nom d\'affichage</string>
+	<string name="pref_help_display_name">Entrez votre nom (optionnel)</string>
+	
 	<string name="wait">Merci de patienter...</string>
 	<string name="importing_messages">Mise à jour de la base des messages</string>
 	<string name="default_account_flag">Compte par défaut</string>
