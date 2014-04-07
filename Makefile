@@ -33,7 +33,7 @@ ENABLE_GPL_THIRD_PARTIES=1
 #default options, can be overidden using make OPTION=value .
 
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
-BUILD_X264=1
+BUILD_X264=0
 BUILD_G729=1
 else
 #x264 and g729 requires additional licensing agreements.
@@ -43,6 +43,7 @@ endif
 
 NDK_DEBUG=0
 BUILD_VIDEO=1
+BUILD_OPENH264=1
 BUILD_UPNP=1
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=1
@@ -201,6 +202,57 @@ clean-x264:
 	rm -rf $(X264_BUILD_DIR)/arm && \
 	rm -rf $(X264_BUILD_DIR)/x86
 
+#openh264
+ifeq ($(BUILD_VIDEO),1)
+ifeq ($(BUILD_OPENH264), 1)
+BUILD_OPENH264_DEPS=\
+	$(OPENH264_BUILD_DIR)/include/codec_api.h \
+	$(OPENH264_BUILD_DIR)/include/codec_app_def.h \
+	$(OPENH264_BUILD_DIR)/include/codec_def.h \
+	$(OPENH264_BUILD_DIR)/arm/libwels.a
+ifeq ($(BUILD_FOR_X86), 1)
+	BUILD_OPENH264_DEPS+=$(OPENH264_BUILD_DIR)/x86/libwels.a
+endif
+endif
+
+OPENH264_SRC_DIR=$(TOPDIR)/submodules/externals/openh264
+OPENH264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/openh264
+
+$(OPENH264_BUILD_DIR)/include/codec_api.h:
+	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
+	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_api.h $(OPENH264_BUILD_DIR)/include/wels/
+
+$(OPENH264_BUILD_DIR)/include/codec_app_def.h:
+	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
+	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_app_def.h $(OPENH264_BUILD_DIR)/include/wels/
+
+$(OPENH264_BUILD_DIR)/include/codec_def.h:
+	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
+	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_def.h $(OPENH264_BUILD_DIR)/include/wels/
+
+$(OPENH264_BUILD_DIR)/arm/libwels.a:
+	mkdir -p $(OPENH264_BUILD_DIR)/arm && \
+	cd $(OPENH264_SRC_DIR) && \
+	make libraries -j $(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) && \
+	cp libwels.a $(OPENH264_BUILD_DIR)/arm/libwels.a && \
+	make clean OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) \
+	|| ( echo "Build of openh264 for arm failed." ; exit 1 )
+
+$(OPENH264_BUILD_DIR)/x86/libwels.a:
+	mkdir -p $(OPENH264_BUILD_DIR)/x86 && \
+	cd $(OPENH264_SRC_DIR) && \
+	make libraries -j $(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) && \
+	cp libwels.a $(OPENH264_BUILD_DIR)/x86/libwels.a && \
+	make clean OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) \
+	|| ( echo "Build of openh264 for arm failed." ; exit 1 )
+endif
+
+build-openh264: $(BUILD_OPENH264_DEPS)
+
+clean-openh264:
+	rm -rf $(OPENH264_BUILD_DIR)/arm && \
+	rm -rf $(OPENH264_BUILD_DIR)/x86
+
 #libvpx
 ifeq ($(BUILD_VIDEO),1)
 BUILD_VPX_DEPS=$(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt $(LIBVPX_BUILD_DIR)/arm/libvpx.a
@@ -328,12 +380,12 @@ $(SQLITE_BASENAME).zip:
 	curl -sO $(SQLITE_URL)
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
+prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
-	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) \
+	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) BUILD_OPENH264=$(BUILD_OPENH264) \
 	BUILD_UPNP=$(BUILD_UPNP) BUILD_ZRTP=$(BUILD_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC)
 
 
@@ -413,7 +465,7 @@ clean-ndk-build:
 clean: clean-ndk-build
 	ant clean
 
-veryclean: clean clean-ffmpeg clean-x264 clean-vpx
+veryclean: clean clean-ffmpeg clean-x264 clean-openh264 clean-vpx
 
 .PHONY: clean install-apk run-linphone
 
