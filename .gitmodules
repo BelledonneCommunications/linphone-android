@@ -79,3 +79,9 @@
 [submodule "submodules/msisac"]
 	path = submodules/msisac
 	url = git://git.linphone.org/msisac.git
+[submodule "submodules/msopenh264"]
+	path = submodules/msopenh264
+	url = git://git.linphone.org/msopenh264.git
+[submodule "submodules/externals/openh264"]
+	path = submodules/externals/openh264
+	url = https://github.com/cisco/openh264

@@ -28,6 +28,10 @@ ifeq ($(BUILD_X264),)
 BUILD_X264=0
 endif
 
+ifeq ($(BUILD_OPENH264),)
+BUILD_OPENH264=0
+endif
+
 ifeq ($(BUILD_G729),)
 BUILD_G729=0
 endif
@@ -57,6 +61,9 @@ APP_MODULES += libavutil-linphone libavcodec-linphone libswscale-linphone
 APP_MODULES += libvpx
 ifeq ($(BUILD_X264),1)
 APP_MODULES +=libx264 libmsx264
+endif
+ifeq ($(BUILD_OPENH264),1)
+APP_MODULES += libwels libmsopenh264
 endif
 endif
 

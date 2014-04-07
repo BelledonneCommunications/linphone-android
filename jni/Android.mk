@@ -5,9 +5,11 @@
 #variables given on command line take precedence over the ones defined internally.
 ifeq ($(TARGET_ARCH_ABI), armeabi)
 _BUILD_X264=0
+_BUILD_OPENH264=0
 _BUILD_VIDEO=0
 else
 _BUILD_X264=$(BUILD_X264)
+_BUILD_OPENH264=$(BUILD_OPENH264)
 _BUILD_VIDEO=$(BUILD_VIDEO)
 endif
 
@@ -85,6 +87,14 @@ $(info $(TARGET_ARCH_ABI): Build X264 plugin for mediastreamer2)
 endif
 include $(linphone-root-dir)/submodules/msx264/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/x264/Android.mk
+endif
+
+ifeq ($(_BUILD_OPENH264),1)
+ifeq (,$(DUMP_VAR))
+$(info $(TARGET_ARCH_ABI): Build OpenH264 plugin for mediastreamer2)
+endif
+include $(linphone-root-dir)/submodules/msopenh264/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/openh264/Android.mk
 endif
 
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
