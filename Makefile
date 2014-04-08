@@ -33,7 +33,7 @@ ENABLE_GPL_THIRD_PARTIES=1
 #default options, can be overidden using make OPTION=value .
 
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
-BUILD_X264=0
+BUILD_X264=1
 BUILD_G729=1
 else
 #x264 and g729 requires additional licensing agreements.
@@ -43,7 +43,7 @@ endif
 
 NDK_DEBUG=0
 BUILD_VIDEO=1
-BUILD_OPENH264=1
+BUILD_OPENH264=0
 BUILD_UPNP=1
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=1
