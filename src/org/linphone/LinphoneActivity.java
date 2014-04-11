@@ -1084,13 +1084,20 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 	
 	public void removeContactFromLists(Contact contact) {
-		if (contactList.contains(contact)) {
-			contactList.remove(contact);
-			contactCursor = Compatibility.getContactsCursor(getContentResolver());
+		for (Contact c : contactList) {
+			if (c != null && c.getID().equals(contact.getID())) {
+				contactList.remove(c);
+				contactCursor = Compatibility.getContactsCursor(getContentResolver());
+				break;
+			}
 		}
-		if (sipContactList.contains(contact)) {
-			sipContactList.remove(contact);
-			sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
+		
+		for (Contact c : sipContactList) {
+			if (c != null && c.getID().equals(contact.getID())) {
+				sipContactList.remove(c);
+				sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
+				break;
+			}
 		}
 	}
 
