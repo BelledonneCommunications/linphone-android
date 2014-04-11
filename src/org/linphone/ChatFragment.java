@@ -767,15 +767,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	@Override
-	public synchronized void onLinphoneChatMessageStateChanged(final LinphoneChatMessage msg, final State state) {
-		final String finalMessage = msg.getText();
-		final String finalImage = msg.getExternalBodyUrl();
+	public synchronized void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+		final LinphoneChatMessage finalMessage = msg;
+		final String finalImage = finalMessage.getExternalBodyUrl();
+		final State finalState=state;
 		if (LinphoneActivity.isInstanciated() && state != State.InProgress) {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
 					if (finalMessage != null && !finalMessage.equals("")) {
-						LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage, state.toInt());
+						LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage.getText(), finalState.toInt());
 					} else if (finalImage != null && !finalImage.equals("")) {
 						if (latestImageMessages != null && latestImageMessages.containsValue(finalImage)) {
 							int id = -1;
@@ -787,15 +788,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								}
 							}
 							if (id != -1) {
-								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, state.toInt());
+								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, finalState.toInt());
 							}
 						}
 					}
 					
 					if (lastSentMessagesBubbles != null && lastSentMessagesBubbles.size() > 0) {
 						for (BubbleChat bubble : lastSentMessagesBubbles) {
-							if (bubble.getNativeMessageObject() == msg) {
-								bubble.updateStatusView(state);
+							if (bubble.getNativeMessageObject() == finalMessage) {
+								bubble.updateStatusView(finalState);
 							}
 						}
 					}
