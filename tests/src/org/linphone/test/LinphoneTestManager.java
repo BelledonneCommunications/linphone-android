@@ -445,4 +445,11 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			RemoteProvisioningState state, String message) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void authInfoRequested(LinphoneCore lc, String realm,
+			String username, String Domain) {
+		// TODO Auto-generated method stub
+		
+	}
 }
