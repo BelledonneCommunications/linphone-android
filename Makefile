@@ -33,7 +33,6 @@ ENABLE_GPL_THIRD_PARTIES=1
 #default options, can be overidden using make OPTION=value .
 
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
-BUILD_X264=1
 BUILD_G729=1
 else
 #x264 and g729 requires additional licensing agreements.
@@ -43,7 +42,7 @@ endif
 
 NDK_DEBUG=0
 BUILD_VIDEO=1
-BUILD_OPENH264=0
+BUILD_OPENH264=1
 BUILD_UPNP=1
 BUILD_AMRNB=full # 0, light or full
 BUILD_AMRWB=1
@@ -218,6 +217,12 @@ endif
 OPENH264_SRC_DIR=$(TOPDIR)/submodules/externals/openh264
 OPENH264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/openh264
 
+openh264-patch:	$(OPENH264_SRC_DIR)/patch.stamp
+
+
+$(OPENH264_SRC_DIR)/patch.stamp: $(TOPDIR)/patches/openh264-permissive.patch
+	cd $(OPENH264_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/openh264-permissive.patch && touch $(OPENH264_SRC_DIR)/patch.stamp
+
 $(OPENH264_BUILD_DIR)/include/codec_api.h:
 	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
 	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_api.h $(OPENH264_BUILD_DIR)/include/wels/
@@ -230,7 +235,7 @@ $(OPENH264_BUILD_DIR)/include/codec_def.h:
 	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
 	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_def.h $(OPENH264_BUILD_DIR)/include/wels/
 
-$(OPENH264_BUILD_DIR)/arm/libwels.a:
+$(OPENH264_BUILD_DIR)/arm/libwels.a: openh264-patch
 	mkdir -p $(OPENH264_BUILD_DIR)/arm && \
 	cd $(OPENH264_SRC_DIR) && \
 	make libraries -j $(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) && \
@@ -238,7 +243,7 @@ $(OPENH264_BUILD_DIR)/arm/libwels.a:
 	make clean OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) \
 	|| ( echo "Build of openh264 for arm failed." ; exit 1 )
 
-$(OPENH264_BUILD_DIR)/x86/libwels.a:
+$(OPENH264_BUILD_DIR)/x86/libwels.a: openh264-patch
 	mkdir -p $(OPENH264_BUILD_DIR)/x86 && \
 	cd $(OPENH264_SRC_DIR) && \
 	make libraries -j $(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) && \
@@ -250,6 +255,8 @@ endif
 build-openh264: $(BUILD_OPENH264_DEPS)
 
 clean-openh264:
+	cd $(OPENH264_SRC_DIR) && make clean OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) 
+	cd $(OPENH264_SRC_DIR) && make clean OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
 	rm -rf $(OPENH264_BUILD_DIR)/arm && \
 	rm -rf $(OPENH264_BUILD_DIR)/x86
 
