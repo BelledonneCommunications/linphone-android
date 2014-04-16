@@ -775,6 +775,32 @@ public class LinphonePreferences {
 	
 	public void setPushNotificationEnabled(boolean enable) {
 		 getConfig().setBool("app", "push_notification", enable);
+		 
+		 if (enable) {
+			 // Add push infos to exisiting proxy configs
+			 String regId = getPushNotificationRegistrationID();
+			 String appId = getString(R.string.push_sender_id);
+			 if (regId != null && getLc().getProxyConfigList().length > 0) {
+				 for (LinphoneProxyConfig lpc : getLc().getProxyConfigList()) {
+					 String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
+					 lpc.edit();
+					 lpc.setContactUriParameters(contactInfos);
+					 lpc.done();
+					 Log.d("Push notif infos added to proxy config");
+				 }
+				 getLc().refreshRegisters();
+			 }
+		 } else {
+			 if (getLc().getProxyConfigList().length > 0) {
+				 for (LinphoneProxyConfig lpc : getLc().getProxyConfigList()) {
+					 lpc.edit();
+					 lpc.setContactUriParameters(null);
+					 lpc.done();
+					 Log.d("Push notif infos removed from proxy config");
+				 }
+				 getLc().refreshRegisters();
+			 }
+		 }
 	}
 	
 	public boolean isPushNotificationEnabled() {
