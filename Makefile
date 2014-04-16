@@ -204,61 +204,53 @@ clean-x264:
 #openh264
 ifeq ($(BUILD_VIDEO),1)
 ifeq ($(BUILD_OPENH264), 1)
-BUILD_OPENH264_DEPS=\
-	$(OPENH264_BUILD_DIR)/include/codec_api.h \
-	$(OPENH264_BUILD_DIR)/include/codec_app_def.h \
-	$(OPENH264_BUILD_DIR)/include/codec_def.h \
-	$(OPENH264_BUILD_DIR)/arm/libwels.a
+BUILD_OPENH264_DEPS=build-openh264-arm
 ifeq ($(BUILD_FOR_X86), 1)
-	BUILD_OPENH264_DEPS+=$(OPENH264_BUILD_DIR)/x86/libwels.a
+	BUILD_OPENH264_DEPS+=build-openh264-x86
+endif
 endif
 endif
 
 OPENH264_SRC_DIR=$(TOPDIR)/submodules/externals/openh264
 OPENH264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/openh264
-
-openh264-patch:	$(OPENH264_SRC_DIR)/patch.stamp
-
+OPENH264_BUILD_DIR_ARM=$(OPENH264_BUILD_DIR)/arm
+OPENH264_BUILD_DIR_X86=$(OPENH264_BUILD_DIR)/x86
 
 $(OPENH264_SRC_DIR)/patch.stamp: $(TOPDIR)/patches/openh264-permissive.patch
 	cd $(OPENH264_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/openh264-permissive.patch && touch $(OPENH264_SRC_DIR)/patch.stamp
 
-$(OPENH264_BUILD_DIR)/include/codec_api.h:
-	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
-	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_api.h $(OPENH264_BUILD_DIR)/include/wels/
+openh264-patch:	$(OPENH264_SRC_DIR)/patch.stamp
 
-$(OPENH264_BUILD_DIR)/include/codec_app_def.h:
-	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
-	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_app_def.h $(OPENH264_BUILD_DIR)/include/wels/
+openh264-install-headers:
+	mkdir -p $(OPENH264_SRC_DIR)/include/wels
+	rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/codec/api/svc/* $(OPENH264_SRC_DIR)/include/wels/.
 
-$(OPENH264_BUILD_DIR)/include/codec_def.h:
-	mkdir -p $(OPENH264_BUILD_DIR)/include/wels && \
-	cp $(OPENH264_SRC_DIR)/codec/api/svc/codec_def.h $(OPENH264_BUILD_DIR)/include/wels/
+copy-openh264-x86: openh264-patch openh264-install-headers
+	mkdir -p $(OPENH264_BUILD_DIR)
+	mkdir -p $(OPENH264_BUILD_DIR_X86) 
+	cd $(OPENH264_BUILD_DIR_X86) \
+	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
-$(OPENH264_BUILD_DIR)/arm/libwels.a: openh264-patch
-	mkdir -p $(OPENH264_BUILD_DIR)/arm && \
-	cd $(OPENH264_SRC_DIR) && \
-	make libraries -j $(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) && \
-	cp libwels.a $(OPENH264_BUILD_DIR)/arm/libwels.a && \
-	make clean OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) \
-	|| ( echo "Build of openh264 for arm failed." ; exit 1 )
+copy-openh264-arm: openh264-patch openh264-install-headers
+	mkdir -p $(OPENH264_BUILD_DIR)
+	mkdir -p $(OPENH264_BUILD_DIR_ARM) 
+	cd $(OPENH264_BUILD_DIR_ARM) \
+	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
-$(OPENH264_BUILD_DIR)/x86/libwels.a: openh264-patch
-	mkdir -p $(OPENH264_BUILD_DIR)/x86 && \
-	cd $(OPENH264_SRC_DIR) && \
-	make libraries -j $(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) && \
-	cp libwels.a $(OPENH264_BUILD_DIR)/x86/libwels.a && \
-	make clean OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) \
-	|| ( echo "Build of openh264 for arm failed." ; exit 1 )
-endif
+build-openh264-x86: copy-openh264-x86
+	cd $(OPENH264_BUILD_DIR_X86) && \
+	make libraries -j $(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
+
+build-openh264-arm: copy-openh264-arm
+	cd $(OPENH264_BUILD_DIR_ARM) && \
+	make libraries -j $(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
 
 build-openh264: $(BUILD_OPENH264_DEPS)
 
 clean-openh264:
-	cd $(OPENH264_SRC_DIR) && make clean OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET) 
-	cd $(OPENH264_SRC_DIR) && make clean OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
-	rm -rf $(OPENH264_BUILD_DIR)/arm && \
-	rm -rf $(OPENH264_BUILD_DIR)/x86
+	cd $(OPENH264_SRC_DIR) && git clean -dfx && git reset --hard
+	rm -rf $(OPENH264_BUILD_DIR_ARM)
+	rm -rf $(OPENH264_BUILD_DIR_X86)
 
 #libvpx
 ifeq ($(BUILD_VIDEO),1)
