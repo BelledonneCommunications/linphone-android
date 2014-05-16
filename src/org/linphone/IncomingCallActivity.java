@@ -156,11 +156,6 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	
 	private void answer() {
 		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
-		if (mCall != null && mCall.getRemoteParams() != null && mCall.getRemoteParams().getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-			params.setVideoEnabled(true);
-		} else {
-			params.setVideoEnabled(false);
-		}
 		
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(this);
 		if (isLowBandwidthConnection) {

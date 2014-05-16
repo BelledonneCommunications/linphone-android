@@ -854,6 +854,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
+				BluetoothManager.getInstance().disableBluetoothSCO(); // Just in case
+				
 				ringingCall = call;
 				startRinging();
 				// otherwise there is the beep
