@@ -36,6 +36,7 @@ import org.linphone.ui.Numpad;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -1256,6 +1257,14 @@ public class InCallActivity extends FragmentActivity implements
 			});
 	        
 	        return view;
+	    }
+	    
+	    @Override
+	    public void onCancel(DialogInterface dialog) {
+	    	super.onCancel(dialog);
+	    	
+	    	callUpdateDialog = new AcceptCallUpdateDialog();
+	        callUpdateDialog.show(getSupportFragmentManager(), "Accept Call Update Dialog");
 	    }
 	}
 	
