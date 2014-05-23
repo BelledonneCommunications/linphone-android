@@ -876,9 +876,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		AddressType address = new AddressText(this, null);
 		address.setDisplayedName(name);
 		address.setText(number);
-		if (LinphoneManager.getLc().getCallsNb() == 0) {
-			LinphoneManager.getInstance().newOutgoingCall(address);
-		}
+		LinphoneManager.getInstance().newOutgoingCall(address);
 	}
 
 	public void setAddressAndGoToDialer(String number) {

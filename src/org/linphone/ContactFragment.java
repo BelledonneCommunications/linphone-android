@@ -47,8 +47,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	private OnClickListener dialListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if (LinphoneActivity.isInstanciated())
+			if (LinphoneActivity.isInstanciated()) {
 				LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
+			}
 		}
 	};
 	
