@@ -265,7 +265,9 @@ public class BubbleChat {
 			int indexOf = text.indexOf(key);
 			while (indexOf >= 0) {
 				int end = indexOf + key.length();
-				builder.setSpan(new ImageSpan(context, entry.getValue()), indexOf, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				if (end <= spanned.length()) {
+					builder.setSpan(new ImageSpan(context, entry.getValue()), indexOf, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
 				indexOf = text.indexOf(key, end);
 			}
 		}
