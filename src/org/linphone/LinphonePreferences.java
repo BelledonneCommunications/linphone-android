@@ -159,6 +159,8 @@ public class LinphonePreferences {
 		private String tempContactsParams;
 		private String tempExpire;
 		private TransportType tempTransport;
+		private boolean tempAvpfEnabled = false;
+		private int tempAvpfRRInterval = 0;
 		private boolean tempEnabled = true;
 		private boolean tempNoDefault = false;
 		
@@ -216,6 +218,16 @@ public class LinphonePreferences {
 			return this;
 		}
 
+		public AccountBuilder setAvpfEnabled(boolean enable) {
+			tempAvpfEnabled = enable;
+			return this;
+		}
+
+		public AccountBuilder setAvpfRRInterval(int interval) {
+			tempAvpfRRInterval = interval;
+			return this;
+		}
+
 		public AccountBuilder setEnabled(boolean enable) {
 			tempEnabled = enable;
 			return this;
@@ -265,6 +277,9 @@ public class LinphonePreferences {
 					prxCfg.setExpires(Integer.parseInt(tempExpire));
 				} catch (NumberFormatException nfe) { }
 			}
+			
+			prxCfg.enableAvpf(tempAvpfEnabled);
+			prxCfg.setAvpfRRInterval(tempAvpfRRInterval);
 			
 			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
 			
