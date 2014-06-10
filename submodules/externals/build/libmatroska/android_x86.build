@@ -1,0 +1,13 @@
+#define TARGARCH x86
+#define TARGARCH_ABI x86
+#define TARGOPTIM release
+#define IX86
+
+CCFLAGS += -O3 -m32 -march=i486 -msse -mmmx -Wno-multichar -fvisibility=hidden -fno-PIC -DRESOURCE_COREC
+ANDROID_ABI += x86
+ANDROID_ARCH = arch-x86
+ANDROID_GCC_PREFIX = i686-linux-android-
+ANDROID_GCC = x86-4.8
+ANDROID_GCC_LIB = gcc/i686-linux-android/4.8/libgcc.a
+
+#include "android.inc"

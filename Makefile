@@ -51,6 +51,7 @@ BUILD_SILK=1
 BUILD_TUNNEL=0
 BUILD_WEBRTC_AECM=1
 BUILD_OPUS=1
+BUILD_MATROSKA=0
 BUILD_WEBRTC_ISAC=1
 BUILD_FOR_X86=1
 USE_JAVAH=1
@@ -287,6 +288,79 @@ clean-vpx:
 	rm -rf submodules/externals/build/libvpx/arm && \
 	rm -rf submodules/externals/build/libvpx/x86
 
+#libmatroska
+ifeq ($(BUILD_VIDEO), 1)
+ifeq ($(BUILD_MATROSKA),1)
+BUILD_MATROSKA_DEPS=$(LIBEBML2_BUILD_DIR)/arm/libebml2.a $(LIBMATROSKA_BUILD_DIR)/arm/libmatroska2.a
+ifeq ($(BUILD_FOR_X86), 1)
+BUILD_MATROSKA_DEPS+=$(LIBEBML2_BUILD_DIR)/x86/libebml2.a $(LIBMATROSKA_BUILD_DIR)/x86/libmatroska2.a
+endif #BUILD_FOR_X86
+endif #BUILD_MATROSKA
+endif #BUILD_VIDEO
+LIBMATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska
+LIBMATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska
+LIBEBML2_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libebml2
+COREMAKE=$(LIBMATROSKA_SRC_DIR)/corec/tools/coremake/coremake
+
+$(LIBEBML2_BUILD_DIR)/arm/libebml2.a: $(LIBMATROSKA_SRC_DIR)/release/android_armv7/libebml2.a
+	mkdir -p $(LIBEBML2_BUILD_DIR)/arm
+	cp $< $@
+
+$(LIBMATROSKA_BUILD_DIR)/arm/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/release/android_armv7/libmatroska2.a
+	mkdir -p $(LIBMATROSKA_BUILD_DIR)/arm
+	cp $< $@
+	
+$(LIBEBML2_BUILD_DIR)/x86/libebml2.a: $(LIBMATROSKA_SRC_DIR)/release/android_x86/libebml2.a
+	mkdir -p $(LIBEBML2_BUILD_DIR)/x86
+	cp $< $@
+
+$(LIBMATROSKA_BUILD_DIR)/x86/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/release/android_x86/libmatroska2.a
+	mkdir -p $(LIBMATROSKA_BUILD_DIR)/x86
+	cp $< $@
+
+$(LIBMATROSKA_SRC_DIR)/release/android_armv7/libebml2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_armv7.txt
+	make -C $(LIBMATROSKA_SRC_DIR) ebml2
+
+$(LIBMATROSKA_SRC_DIR)/release/android_armv7/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_armv7.txt
+	make -C $(LIBMATROSKA_SRC_DIR) matroska2
+	
+$(LIBMATROSKA_SRC_DIR)/release/android_x86/libebml2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_x86.txt
+	make -C $(LIBMATROSKA_SRC_DIR) ebml2
+
+$(LIBMATROSKA_SRC_DIR)/release/android_x86/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_x86.txt
+	make -C $(LIBMATROSKA_SRC_DIR) matroska2
+
+$(LIBMATROSKA_SRC_DIR)/coremake_android_armv7.txt: $(COREMAKE) $(LIBMATROSKA_SRC_DIR)/configure_config_h.txt $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt
+	cd $(LIBMATROSKA_SRC_DIR); $(COREMAKE) android_armv7 -f $(LIBMATROSKA_SRC_DIR)/root.proj
+	rm -f $(LIBMATROSKA_SRC_DIR)/coremake_*.txt;
+	touch $@
+
+$(LIBMATROSKA_SRC_DIR)/coremake_android_x86.txt: $(COREMAKE) $(LIBMATROSKA_SRC_DIR)/configure_config_h.txt $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt
+	cd $(LIBMATROSKA_SRC_DIR); $(COREMAKE) android_x86 -f $(LIBMATROSKA_SRC_DIR)/root.proj
+	rm -f $(LIBMATROSKA_SRC_DIR)/coremake_*.txt
+	touch $@
+		
+$(COREMAKE):
+	make -C $(LIBMATROSKA_SRC_DIR)/corec/tools/coremake
+
+$(LIBMATROSKA_SRC_DIR)/configure_config_h.txt:
+	echo "#define CONFIG_ANDROID_NDK $(NDK_PATH)" >> $(LIBMATROSKA_SRC_DIR)/config.h
+	echo "#define CONFIG_ANDROID_VERSION $(ANDROID_MOST_RECENT_TARGET)" >> $(LIBMATROSKA_SRC_DIR)/config.h
+	echo "#define CONFIG_ANDROID_PLATFORM linux-x86_64" >> $(LIBMATROSKA_SRC_DIR)/config.h
+	touch $@
+
+$(LIBMATROSKA_SRC_DIR)/fix_coremake.txt:
+	cd $(LIBMATROSKA_SRC_DIR); patch -p0 < ../build/libmatroska/coremake_fix.patch
+	cp $(LIBMATROSKA_BUILD_DIR)/android_x86.build $(LIBMATROSKA_SRC_DIR)/corec/tools/coremake
+	touch $@
+	
+build-matroska: $(BUILD_MATROSKA_DEPS)
+
+clean-matroska:
+	rm -rf $(LIBMATROSKA_BUILD_DIR)/{arm,x86}
+	rm -rf $(LIBEBML2_BUILD_DIR)/{arm,x86}
+	cd $(LIBMATROSKA_SRC_DIR); $(COREMAKE) clean
+
 #SILK
 LIBMSSILK_SRC_DIR=$(TOPDIR)/submodules/mssilk
 LIBMSSILK_BUILD_DIR=$(LIBMSSILK_SRC_DIR)
@@ -379,7 +453,7 @@ $(SQLITE_BASENAME).zip:
 	curl -sO $(SQLITE_URL)
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
+prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx build-matroska prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3
 
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
