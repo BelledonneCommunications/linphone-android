@@ -1,0 +1,38 @@
+--- corec/tools/coremake/android_arm.inc
++++ corec/tools/coremake/android_arm.inc
+@@ -7,8 +7,8 @@
+ SFLAGS += -march=armv7-a
+ ANDROID_ABI += armeabi
+ ANDROID_ARCH = arch-arm
+-ANDROID_GCC_PREFIX = arm-eabi-
+-ANDROID_GCC = arm-eabi-4.4.0
+-ANDROID_GCC_LIB = gcc/arm-eabi/4.4.0/libgcc.a
++ANDROID_GCC_PREFIX = arm-linux-androideabi-
++ANDROID_GCC = arm-linux-androideabi-4.8
++ANDROID_GCC_LIB = gcc/arm-linux-androideabi/4.8/libgcc.a
+ 
+ #include "android.inc"
+--- corec/tools/coremake/android.inc
++++ corec/tools/coremake/android.inc
+@@ -12,8 +12,8 @@
+ 
+ CONFIG
+ 
+-ANDROID_LIBC_DIR = %(低ONFIG_ANDROID_NDK)/build/platforms/android-%(CONFIG_ANDROID_VERSION)/%(ANDROID_ARCH)/usr
+-ANDROID_GCC_DIR = %(低ONFIG_ANDROID_NDK)/build/prebuilt/%(CONFIG_ANDROID_PLATFORM)/%(ANDROID_GCC)/bin
++ANDROID_LIBC_DIR = %(低ONFIG_ANDROID_NDK)/platforms/%(CONFIG_ANDROID_VERSION)/%(ANDROID_ARCH)/usr
++ANDROID_GCC_DIR = %(低ONFIG_ANDROID_NDK)/toolchains/%(ANDROID_GCC)/prebuilt/%(CONFIG_ANDROID_PLATFORM)/bin
+ 
+ IFNDEF CONFIG_ANDROID_NDK
+   ECHO Android NDK path not defined ! (CONFIG_ANDROID_NDK)
+--- corec/tools/coremake/gcc_mak.inc
++++ corec/tools/coremake/gcc_mak.inc
+@@ -85,7 +85,7 @@
+   PRINTNL CCFLAGS += -include %(PRECOMPILED_HEADER)
+ ENDIF
+ IF %(OS_INCLUDE)!=""
+-  PRINTNL CCFLAGS += %(|OS_INCLUDE:%=-isystem '%')
++  PRINTNL CCFLAGS += %(OS_INCLUDE:%=-isystem '%')
+ ENDIF
+ PRINTNL CCFLAGS += %(DEFINE:%=-D%) -I . %(@INCLUDE:%=-I '%') %(@SYSINCLUDE:%=-I '%') %(@CONFIG_INCLUDE:%=-I '%')
+ IF %(CCFLAGS)!=""

@@ -82,3 +82,6 @@
 [submodule "submodules/externals/openh264"]
 	path = submodules/externals/openh264
 	url = https://github.com/cisco/openh264
+[submodule "submodules/externals/libmatroska"]
+	path = submodules/externals/libmatroska
+	url = https://github.com/Matroska-Org/foundation-source.git
