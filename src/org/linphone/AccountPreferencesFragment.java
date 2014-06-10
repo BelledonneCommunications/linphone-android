@@ -141,6 +141,29 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			return true;
 		}
 	};
+	OnPreferenceChangeListener avpfChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean value = (Boolean) newValue;
+			mPrefs.enableAvpf(n, value);
+			return true;
+		}
+	};
+	OnPreferenceChangeListener avpfRRIntervalChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			String value = newValue.toString();
+			try {
+				int intValue = Integer.parseInt(value);
+				if ((intValue < 1) || (intValue > 5)) {
+					return false;
+				}
+			} catch (NumberFormatException nfe) { }
+			mPrefs.setAvpfRRInterval(n, value);
+			preference.setSummary(value);
+			return true;
+		}
+	};
 	OnPreferenceChangeListener escapeChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -233,8 +256,17 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	prefix.setSummary(prefixValue);
     	prefix.setText(prefixValue);
     	prefix.setOnPreferenceChangeListener(prefixChangedListener);
-    	
-    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(5);
+
+		CheckBoxPreference avpf = (CheckBoxPreference) advanced.getPreference(5);
+		avpf.setChecked(mPrefs.avpfEnabled(n));
+		avpf.setOnPreferenceChangeListener(avpfChangedListener);
+
+		EditTextPreference avpfRRInterval = (EditTextPreference) advanced.getPreference(6);
+		avpfRRInterval.setText(mPrefs.getAvpfRRInterval(n));
+		avpfRRInterval.setOnPreferenceChangeListener(avpfRRIntervalChangedListener);
+		avpfRRInterval.setSummary(mPrefs.getAvpfRRInterval(n));
+
+    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(7);
 		escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
 		escape.setOnPreferenceChangeListener(escapeChangedListener);
     	

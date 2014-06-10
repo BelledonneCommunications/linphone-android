@@ -400,6 +400,8 @@
 	<string name="pref_display_name_title">Display name</string>
 	<string name="pref_user_name_title">Username</string>
 	<string name="pref_expire_title">Expire</string>
+	<string name="pref_avpf">AVPF</string>
+	<string name="pref_avpf_rr_interval"> AVPF regular RTCP interval in seconds (between 1 and 5)</string>
 	
 	<string name="pref_rfc2833_dtmf">Send RFC2833 DTMFs</string>
 	<string name="pref_sipinfo_dtmf">Send SIP INFO DTMFs</string>

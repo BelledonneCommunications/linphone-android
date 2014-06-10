@@ -524,7 +524,29 @@ public class LinphonePreferences {
 		prxCfg.setDialPrefix(prefix);
 		prxCfg.done();
 	}
-	
+
+	public boolean avpfEnabled(int n) {
+		return getProxyConfig(n).avpfEnabled();
+	}
+
+	public void enableAvpf(int n, boolean enable) {
+		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.enableAvpf(enable);
+		prxCfg.done();
+	}
+
+	public String getAvpfRRInterval(int n) {
+		return String.valueOf(getProxyConfig(n).getAvpfRRInterval());
+	}
+
+	public void setAvpfRRInterval(int n, String interval) {
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.setAvpfRRInterval(Integer.parseInt(interval));
+			prxCfg.done();
+		} catch (NumberFormatException nfe) { }
+	}
+
 	public boolean getReplacePlusByZeroZero(int n) {
 		return getProxyConfig(n).getDialEscapePlus();
 	}

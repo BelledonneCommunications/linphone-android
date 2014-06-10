@@ -59,6 +59,15 @@
 		    android:title="@string/pref_prefix"
 			android:key="@string/pref_prefix_key"/>
 
+		<CheckBoxPreference
+			android:title="@string/pref_avpf"
+			android:key="@string/pref_avpf_key"/>
+
+		<EditTextPreference
+			android:title="@string/pref_avpf_rr_interval"
+			android:key="@string/pref_avpf_rr_interval_key"
+			android:numeric="integer"/>
+
 		<CheckBoxPreference 
 			android:title="@string/pref_escape_plus"
 		    android:key="@string/pref_escape_plus_key"/>
