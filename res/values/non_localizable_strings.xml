@@ -113,6 +113,8 @@
     <string name="pref_display_name_key">pref_display_name_key</string>
     <string name="pref_user_name_key">pref_user_name_key</string>
     <string name="pref_expire_key">pref_expire_key</string>
+	<string name="pref_avpf_key">pref_avpf_key</string>
+	<string name="pref_avpf_rr_interval_key">pref_avpf_rr_interval_key</string>
     
 	<string name="pref_rfc2833_dtmf_key">pref_rfc2833_dtmf_key</string>
 	<string name="pref_sipinfo_dtmf_key">pref_sipinfo_dtmf_key</string>
