@@ -46,9 +46,6 @@
 [submodule "submodules/bcg729"]
 	path = submodules/bcg729
 	url = git://git.linphone.org/bcg729.git
-[submodule "submodules/externals/webrtc"]
-	path = submodules/externals/webrtc
-	url = git://git.linphone.org/webrtc.git
 [submodule "submodules/belle-sip"]
 	path = submodules/belle-sip
 	url = git://git.linphone.org/belle-sip
@@ -73,9 +70,9 @@
 [submodule "submodules/externals/opus"]
 	path = submodules/externals/opus
 	url = git://git.opus-codec.org/opus.git
-[submodule "submodules/msisac"]
-	path = submodules/msisac
-	url = git://git.linphone.org/msisac.git
+[submodule "submodules/mswebrtc"]
+	path = submodules/mswebrtc
+	url = git://git.linphone.org/mswebrtc.git
 [submodule "submodules/msopenh264"]
 	path = submodules/msopenh264
 	url = git://git.linphone.org/msopenh264.git
@@ -85,3 +82,6 @@
 [submodule "submodules/externals/libmatroska"]
 	path = submodules/externals/libmatroska
 	url = https://github.com/Matroska-Org/foundation-source.git
+[submodule "submodules/externals/webrtc"]
+	path = submodules/externals/webrtc
+	url = git://git.linphone.org/webrtc.git
