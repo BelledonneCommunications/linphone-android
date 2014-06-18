@@ -18,3 +18,13 @@ bc-android.keystore
 res/raw/lpconfig.xsd
 res/raw/rootca.pem
 submodules/externals/sqlite3/sqlite3.*
+certdata.txt
+check_tools.mk
+proguard-project.txt
+sqlite-amalgamation-*.zip
+submodules/externals/build/ffmpeg/arm/
+submodules/externals/build/ffmpeg/x86
+submodules/externals/build/libvpx/x86
+submodules/externals/build/libvpx/arm
+submodules/externals/build/openh264/arm
+submodules/externals/build/openh264/x86
