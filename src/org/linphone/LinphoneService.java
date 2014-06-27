@@ -76,6 +76,10 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	 * setLatestEventInfo and startActivity() which needs a context.
 	 */
 	public static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
+	public static final int IC_LEVEL_ORANGE=0;
+	/*private static final int IC_LEVEL_GREEN=1;
+	private static final int IC_LEVEL_RED=2;*/
+	public static final int IC_LEVEL_OFFLINE=3;
 	
 	private static LinphoneService instance;
 	
@@ -83,11 +87,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private final static int INCALL_NOTIF_ID=2;
 	private final static int MESSAGE_NOTIF_ID=3;
 	private final static int CUSTOM_NOTIF_ID=4;
-
-	private static final int IC_LEVEL_ORANGE=0;
-	/*private static final int IC_LEVEL_GREEN=1;
-	private static final int IC_LEVEL_RED=2;*/
-	private static final int IC_LEVEL_OFFLINE=3;
 	
 	public static boolean isReady() {
 		return instance != null && instance.mTestDelayElapsed;
@@ -118,6 +117,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	private PendingIntent mNotifContentIntent;
 	private PendingIntent mkeepAlivePendingIntent;
 	private String mNotificationTitle;
+	private boolean mDisableRegistrationStatus;
 
 	public int getMessageNotifCount() {
 		return mMsgNotifCount;
@@ -428,8 +428,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			Log.i("Linphone version is unknown");
 		}
 	}
+	
+	public void disableNotificationsAutomaticRegistrationStatusContent() {
+		mDisableRegistrationStatus = true;
+	}
 
-	private synchronized void sendNotification(int level, int textId) {
+	public synchronized void sendNotification(int level, int textId) {
 		String text = getString(textId);
 		if (text.contains("%s") && LinphoneManager.getLc() != null) {
 			// Test for null lc is to avoid a NPE when Android mess up badly with the String resources.
@@ -498,16 +502,18 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 //			Log.i("Service not ready, discarding registration state change to ",state.toString());
 //			return;
 //		}
-		if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
-			sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
-		}
-
-		if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
-			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
-		}
-		
-		if (state == RegistrationState.RegistrationNone) {
-			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+		if (!mDisableRegistrationStatus) {
+			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+				sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
+			}
+	
+			if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
+				sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
+			}
+			
+			if (state == RegistrationState.RegistrationNone) {
+				sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+			}
 		}
 
 		mHandler.post(new Runnable() {
