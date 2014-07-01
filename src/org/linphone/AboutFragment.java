@@ -75,7 +75,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		if (LinphoneActivity.isInstanciated()) {
 
 			if (getResources().getBoolean(R.bool.enable_log_collect)) {
-				LinphoneUtils.collectLogs(getString(R.string.app_name), getString(R.string.about_bugreport_email));
+				LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
 			} else {
 				LinphoneActivity.instance().exit();
 			}

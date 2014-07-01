@@ -341,7 +341,7 @@ public final class LinphoneUtils {
 		}
 	}
 	
-	public static void collectLogs(String logTag, String email) {
+	public static void collectLogs(Context context, String email) {
         BufferedReader br = null;
         Process p = null;
         StringBuilder sb = new StringBuilder();
@@ -362,7 +362,7 @@ public final class LinphoneUtils {
 	    	i.putExtra(Intent.EXTRA_SUBJECT, "Linphone Logs");
 	    	i.putExtra(Intent.EXTRA_TEXT, sb.toString());
 	    	try {
-	    	    LinphoneActivity.instance().startActivity(Intent.createChooser(i, "Send mail..."));
+	    		context.startActivity(Intent.createChooser(i, "Send mail..."));
 	    	} catch (android.content.ActivityNotFoundException ex) {
 	    	}
 		} catch (IOException e) {
