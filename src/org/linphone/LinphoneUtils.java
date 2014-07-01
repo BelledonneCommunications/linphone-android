@@ -21,7 +21,10 @@ package org.linphone;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -340,7 +345,28 @@ public final class LinphoneUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
+    public static boolean zipLogs(StringBuilder sb, String toZipFile){
+        boolean success = false;
+        try {
+            FileOutputStream zip = new FileOutputStream(toZipFile);
+
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(zip));
+            ZipEntry entry = new ZipEntry("logs.txt");
+            out.putNextEntry(entry);
+
+            out.write(sb.toString().getBytes());
+
+            out.close();
+            success = true;
+
+        } catch (Exception e){
+            Log.e("Exception when trying to zip the logs: " + e.getMessage());
+        }
+
+        return success;
+    }
+
 	public static void collectLogs(Context context, String email) {
         BufferedReader br = null;
         Process p = null;
@@ -355,16 +381,24 @@ public final class LinphoneUtils {
 	    		sb.append(line);
 	    		sb.append("\r\n");
 	    	}
-	    	
-	    	Intent i = new Intent(Intent.ACTION_SEND);
-	    	i.setType("message/rfc822");
-	    	i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-	    	i.putExtra(Intent.EXTRA_SUBJECT, "Linphone Logs");
-	    	i.putExtra(Intent.EXTRA_TEXT, sb.toString());
-	    	try {
-	    		context.startActivity(Intent.createChooser(i, "Send mail..."));
-	    	} catch (android.content.ActivityNotFoundException ex) {
-	    	}
+            String zipFilePath = context.getExternalFilesDir(null).getAbsolutePath() + "/logs.zip";
+            Log.i("Saving logs to " + zipFilePath);
+
+            if( zipLogs(sb, zipFilePath) ) {
+                Uri zipURI = Uri.parse("file://" + zipFilePath);
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                i.putExtra(Intent.EXTRA_SUBJECT, "Linphone Logs");
+                i.putExtra(Intent.EXTRA_TEXT, "Linphone logs");
+                i.setType("application/zip");
+                i.putExtra(Intent.EXTRA_STREAM, zipURI);
+                try {
+                    context.startActivity(Intent.createChooser(i, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    
+                }
+            }
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
