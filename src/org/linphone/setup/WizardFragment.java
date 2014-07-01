@@ -117,9 +117,13 @@ public class WizardFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int id) {
 					}
 				});
-				builder.setMessage(getString(R.string.setup_confirm_username).replace("%s", username.getText().toString().toLowerCase(Locale.getDefault())));
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				if(!username.getText().toString().equals(username.getText().toString().toLowerCase(Locale.getDefault()))){
+					builder.setMessage(getString(R.string.setup_confirm_username).replace("%s", username.getText().toString().toLowerCase(Locale.getDefault())));
+					AlertDialog dialog = builder.create();
+					dialog.show();
+				} else {
+					createAccount(username.getText().toString().toLowerCase(Locale.getDefault()), password.getText().toString(), email.getText().toString(), false);
+				}
 			}
     	});
     	
