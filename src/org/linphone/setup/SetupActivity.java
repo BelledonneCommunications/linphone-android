@@ -312,7 +312,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			String forcedProxy = getResources().getString(R.string.setup_forced_proxy);
 			if (!TextUtils.isEmpty(forcedProxy)) {
 				builder.setProxy(forcedProxy)
-				.setOutboundProxyEnabled(true);
+				.setOutboundProxyEnabled(true)
+				.setAvpfRRInterval(5);
 			}
 		}
 		
