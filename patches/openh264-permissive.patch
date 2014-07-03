@@ -4,19 +4,6 @@ Date:   Tue Apr 15 15:19:37 2014 +0200
 
     permissive mode: allow reference frames to be used even if there were lost slices.
 
-diff --git a/codec/decoder/core/src/decoder_core.cpp b/codec/decoder/core/src/decoder_core.cpp
-index c19f501..a14e971 100644
---- a/codec/decoder/core/src/decoder_core.cpp
-+++ b/codec/decoder/core/src/decoder_core.cpp
-@@ -58,7 +58,7 @@ static inline int32_t DecodeFrameConstruction (PWelsDecoderContext pCtx, uint8_t
-     WelsLog (pCtx, WELS_LOG_WARNING,
-              "DecodeFrameConstruction():::iTotalNumMbRec:%d, total_num_mb_sps:%d, cur_layer_mb_width:%d, cur_layer_mb_height:%d --\n",
-              pCtx->iTotalNumMbRec, kiTotalNumMbInCurLayer, pCurDq->iMbWidth, pCurDq->iMbHeight);
--    return -1;
-+    //return -1;
-   }
- #ifdef NO_WAITING_AU
-   pCtx->iTotalNumMbRec = 0;
 diff --git a/codec/decoder/core/src/manage_dec_ref.cpp b/codec/decoder/core/src/manage_dec_ref.cpp
 index dcf61ca..5582ec9 100644
 --- a/codec/decoder/core/src/manage_dec_ref.cpp
