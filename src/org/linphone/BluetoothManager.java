@@ -93,7 +93,7 @@ public class BluetoothManager extends BroadcastReceiver {
 		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		
-		if (mBluetoothAdapter.isEnabled()) {
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
 			if (mProfileListener != null) {
 				Log.w("Bluetooth headset profile was already opened, let's close it");
 				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
@@ -130,7 +130,7 @@ public class BluetoothManager extends BroadcastReceiver {
 			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		}
 		
-		if (mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			if (isBluetoothHeadsetAvailable()) {
 				if (mAudioManager != null && !mAudioManager.isBluetoothScoOn()) {
 					Log.d("Bluetooth sco off, let's start it");
@@ -183,7 +183,7 @@ public class BluetoothManager extends BroadcastReceiver {
 			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		}
 		
-		if (mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			boolean isHeadsetConnected = false;
 			if (mBluetoothHeadset != null) {
 				List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();
@@ -230,7 +230,7 @@ public class BluetoothManager extends BroadcastReceiver {
 		
 		disableBluetoothSCO();
 		
-		if (mProfileListener != null && mBluetoothHeadset != null) {
+		if (mBluetoothAdapter != null && mProfileListener != null && mBluetoothHeadset != null) {
 			mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
 			mProfileListener = null;
 		}
