@@ -217,22 +217,17 @@ OPENH264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/openh264
 OPENH264_BUILD_DIR_ARM=$(OPENH264_BUILD_DIR)/arm
 OPENH264_BUILD_DIR_X86=$(OPENH264_BUILD_DIR)/x86
 
-$(OPENH264_SRC_DIR)/patch.stamp: $(TOPDIR)/patches/openh264-permissive.patch
-	cd $(OPENH264_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/openh264-permissive.patch && touch $(OPENH264_SRC_DIR)/patch.stamp
-
-openh264-patch:	$(OPENH264_SRC_DIR)/patch.stamp
-
 openh264-install-headers:
 	mkdir -p $(OPENH264_SRC_DIR)/include/wels
 	rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/codec/api/svc/* $(OPENH264_SRC_DIR)/include/wels/.
 
-copy-openh264-x86: openh264-patch openh264-install-headers
+copy-openh264-x86: openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
 	mkdir -p $(OPENH264_BUILD_DIR_X86) 
 	cd $(OPENH264_BUILD_DIR_X86) \
 	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
-copy-openh264-arm: openh264-patch openh264-install-headers
+copy-openh264-arm: openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
 	mkdir -p $(OPENH264_BUILD_DIR_ARM) 
 	cd $(OPENH264_BUILD_DIR_ARM) \
