@@ -412,7 +412,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		sb.append("MODEL=").append(Build.MODEL).append("\n");
 		//MANUFACTURER doesn't exist in android 1.5.
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
-		sb.append("SDK=").append(Build.VERSION.SDK_INT);
+		sb.append("SDK=").append(Build.VERSION.SDK_INT).append("\n");
+		sb.append("EABI=").append(Build.CPU_ABI).append("\n");
 		Log.i(sb.toString());
 	}
 
