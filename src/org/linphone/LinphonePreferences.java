@@ -291,6 +291,11 @@ public class LinphonePreferences {
 		}
 	}
 	
+	public boolean isAccountDeleted(int n){
+		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
+		return proxyConfig.getIsDeleted();
+	}
+	
 	public void setAccountTransport(int n, String transport) {
 		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
 		
@@ -586,6 +591,7 @@ public class LinphonePreferences {
 
 	public void setAccountEnabled(int n, boolean enabled) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
 		prxCfg.enableRegister(enabled);
 		prxCfg.done();
 		
@@ -608,19 +614,31 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
-		LinphoneAuthInfo authInfo = getAuthInfo(n);
-		if (authInfo != null)
-			getLc().removeAuthInfo(authInfo);
-		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-		if (proxyCfg != null)
-			getLc().removeProxyConfig(proxyCfg);
-		
-		if (getLc().getProxyConfigList().length == 0) {
-			// TODO: remove once issue http://bugs.linphone.org/view.php?id=984 will be fixed
-			LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
-		} else {
-			getLc().refreshRegisters();
-		}
+		final LinphoneAuthInfo authInfo = getAuthInfo(n);
+		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
+
+		proxyCfg.edit();
+		proxyCfg.enableRegister(false);
+		proxyCfg.done();
+			
+		proxyCfg.setIsDeleted(true);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(proxyCfg.getState() != RegistrationState.RegistrationCleared && proxyCfg.getState() != RegistrationState.RegistrationFailed){}
+				if (authInfo != null)
+					getLc().removeAuthInfo(authInfo);
+				if (proxyCfg != null)
+					getLc().removeProxyConfig(proxyCfg);
+				if (getLc().getProxyConfigList().length == 0) {
+					// TODO: remove once issue http://bugs.linphone.org/view.php?id=984 will be fixed
+					LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
+				} else {
+					getLc().refreshRegisters();
+				}
+			}
+		}).start();
 	}
 	// End of accounts settings
 	
