@@ -615,6 +615,20 @@ public class LinphonePreferences {
 	public boolean isAccountEnabled(int n) {
 		return getProxyConfig(n).registerEnabled();
 	}
+	
+	public void resetDefaultProxyConfig(){
+		int count = getLc().getProxyConfigList().length;
+		for (int i = 0; i < count; i++) {
+			if (isAccountEnabled(i)) {
+				getLc().setDefaultProxyConfig(getProxyConfig(i));
+				break;
+			}
+		}
+
+		if(getLc().getDefaultProxyConfig() == null){
+			getLc().setDefaultProxyConfig(getProxyConfig(0));
+		}
+	}
 
 	public void deleteAccount(int n) {
 		final LinphoneAuthInfo authInfo = getAuthInfo(n);
@@ -638,6 +652,7 @@ public class LinphonePreferences {
 					// TODO: remove once issue http://bugs.linphone.org/view.php?id=984 will be fixed
 					LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
 				} else {
+					resetDefaultProxyConfig();
 					getLc().refreshRegisters();
 				}
 			}
