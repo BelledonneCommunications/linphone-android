@@ -91,7 +91,7 @@ public class InCallActivity extends FragmentActivity implements
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isTransferAllowed, isAnimationDisabled;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled, isPaused = false,  isTransferAllowed, isAnimationDisabled;
 	private ViewGroup mControlsLayout;
 	private Numpad numpad;
 	private int cameraNumber;
@@ -310,7 +310,7 @@ public class InCallActivity extends FragmentActivity implements
 				} else {
 					micro.setBackgroundResource(R.drawable.micro_on);
 				}
-				
+	
 				if (LinphoneManager.getLc().getCallsNb() > 1) {
 					conference.setVisibility(View.VISIBLE);
 					pause.setVisibility(View.GONE);
@@ -325,6 +325,13 @@ public class InCallActivity extends FragmentActivity implements
 						pause.setBackgroundResource(R.drawable.pause_off);
 					}
 				}
+				
+				if(isPaused){
+					video.setEnabled(false);
+				} else {
+					video.setEnabled(true);
+				}
+					
 			}
 		});
 	}
@@ -364,10 +371,10 @@ public class InCallActivity extends FragmentActivity implements
 		if (isVideoEnabled) {
 			displayVideoCallControlsIfHidden();
 		}
-		
+
 		if (id == R.id.video) {
 			isVideoEnabled = !isVideoEnabled;
-			switchVideo(isVideoEnabled, true);
+			switchVideo(isVideoEnabled, true);	
 		} 
 		else if (id == R.id.micro) {
 			toggleMicro();
@@ -1055,7 +1062,16 @@ public class InCallActivity extends FragmentActivity implements
 			return;
 		}
 		
+		if (state == State.Paused || state == State.PausedByRemote ||  state == State.Pausing) {
+			isPaused = true;
+		}
+		
+		if (state == State.Resuming) {
+			isPaused = false;
+		}
+		
 		if (state == State.StreamsRunning) {
+			isPaused = false;
 			boolean isVideoEnabledInCall = call.getCurrentParamsCopy().getVideoEnabled();
 			if (isVideoEnabledInCall != isVideoEnabled) {
 				isVideoEnabled = isVideoEnabledInCall;
