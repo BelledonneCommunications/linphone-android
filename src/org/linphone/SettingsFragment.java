@@ -276,29 +276,31 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		for (int i = 0; i < nbAccounts; i++) {
 			final int accountId = i;
 			// For each, add menus to configure it
-			LedPreference account = new LedPreference(LinphoneService.instance());
-			String username = mPrefs.getAccountUsername(accountId);
-			String domain = mPrefs.getAccountDomain(accountId);
-			
-			if (username == null) {
-				account.setTitle(getString(R.string.pref_sipaccount));
-			} else {
-				account.setTitle(username + "@" + domain);
-			}
-			
-			if (defaultAccountID == i) {
-				account.setSummary(R.string.default_account_flag);
-			}
-			
-			account.setOnPreferenceClickListener(new OnPreferenceClickListener() 
-			{
-				public boolean onPreferenceClick(Preference preference) {
-					LinphoneActivity.instance().displayAccountSettings(accountId);
-					return false;
+			if(!mPrefs.isAccountDeleted(accountId)){
+				String username = mPrefs.getAccountUsername(accountId);
+				String domain = mPrefs.getAccountDomain(accountId); 
+				LedPreference account = new LedPreference(LinphoneService.instance());
+				
+				if (username == null) {
+					account.setTitle(getString(R.string.pref_sipaccount));
+				} else {
+					account.setTitle(username + "@" + domain);
 				}
-			});
-			updateAccountLed(account, username, domain, mPrefs.isAccountEnabled(i));
-			accounts.addPreference(account);
+				
+				if (defaultAccountID == i) {
+					account.setSummary(R.string.default_account_flag);
+				}
+				
+				account.setOnPreferenceClickListener(new OnPreferenceClickListener() 
+				{
+					public boolean onPreferenceClick(Preference preference) {
+						LinphoneActivity.instance().displayAccountSettings(accountId);
+						return false;
+					}
+				});
+				updateAccountLed(account, username, domain, mPrefs.isAccountEnabled(i));
+				accounts.addPreference(account);
+			}		
 		}
 	}
 	
