@@ -30,6 +30,8 @@ import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -121,13 +123,35 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 				} else {
 					if (getResources().getBoolean(R.bool.display_confirmation_popup_after_first_configuration) 
 							&& !LinphonePreferences.instance().isFirstRemoteProvisioning()) {
-						// TODO: show confirmation popup
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								displayDialogConfirmation();
+							}
+						});
 					} else {
 						setRemoteProvisioningAddressAndRestart(configUriParam);
 					}
 				}
 			}
 		}).start();
+	}
+	
+	private void displayDialogConfirmation() {
+		new AlertDialog.Builder(RemoteProvisioningActivity.this)
+        .setTitle(getString(R.string.remote_provisioning_again_title))
+        .setMessage(getString(R.string.remote_provisioning_again_message))
+        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) { 
+            	setRemoteProvisioningAddressAndRestart(configUriParam);
+            }
+         })
+        .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) { 
+            	goToLinphoneActivity();
+            }
+         })
+         .show();
 	}
 	
 	private void setRemoteProvisioningAddressAndRestart(String configUri) {
@@ -151,6 +175,6 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	private void goToLinphoneActivity() {
 		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
 		finish(); // To prevent the user to come back to this page using back button
-		startActivity(new Intent().setClass(this, LinphoneActivity.class).setData(getIntent().getData()));
+		startActivity(new Intent().setClass(this, LinphoneActivity.class));
 	}
 }

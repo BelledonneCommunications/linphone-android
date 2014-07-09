@@ -250,9 +250,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void changeStatusToOnline() {
-		if (isInstanciated() && isPresenceModelActivitySet() && getLc().getPresenceModel().getActivity().getType() != PresenceActivityType.Online) {
+		if (isInstanciated() && getLcIfManagerNotDestroyedOrNull() != null && isPresenceModelActivitySet() && getLc().getPresenceModel().getActivity().getType() != PresenceActivityType.Online) {
 			getLc().getPresenceModel().getActivity().setType(PresenceActivityType.Online);
-		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
+		} else if (isInstanciated() && getLcIfManagerNotDestroyedOrNull() != null && !isPresenceModelActivitySet()) {
 			PresenceModel model = LinphoneCoreFactoryImpl.instance().createPresenceModel(PresenceActivityType.Online, null);
 			getLc().setPresenceModel(model);
 		}
