@@ -110,6 +110,21 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
+         
+        <activity android:name="org.linphone.setup.RemoteProvisioningActivity"
+            android:theme="@style/NoTitle"
+            android:screenOrientation="nosensor">
+            <intent-filter>
+	     		<action android:name="android.intent.action.MAIN" />
+		  	</intent-filter>
+			 
+            <intent-filter>
+		        <data android:scheme="linphone-config" /> <!-- Change if needed -->
+		        <action android:name="android.intent.action.VIEW" />
+		        <category android:name="android.intent.category.BROWSABLE" />
+		        <category android:name="android.intent.category.DEFAULT" />
+     		</intent-filter>
+        </activity>
 
 	    <service android:name="org.linphone.LinphoneService"
 	        android:label="@string/service_name"

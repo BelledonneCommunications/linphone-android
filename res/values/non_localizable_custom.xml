@@ -71,6 +71,11 @@
 	<bool name="intercept_outgoing_gsm_calls">false</bool>
 	<bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool>
 	
+	<!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
+	<bool name="display_sms_remote_provisioning_activity">false</bool>
+	<bool name="forbid_app_usage_until_remote_provisioning_completed">false</bool>
+	<bool name="display_confirmation_popup_after_first_configuration">false</bool>
+	
 	<bool name="hash_images_as_name_before_upload">true</bool>
 	
 	<bool name="enable_log_collect">false</bool>

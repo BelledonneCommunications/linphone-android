@@ -988,4 +988,12 @@ public class LinphonePreferences {
 			Log.w("Remote provisioning login view wasn't enabled, ignoring");
 		}
 	}
+
+	public void firstRemoteProvisioningSuccessful() {
+		getConfig().setBool("app", "first_remote_provisioning", false);
+	}
+	
+	public boolean isFirstRemoteProvisioning() {
+		return getConfig().getBool("app", "first_remote_provisioning", true);
+	}
 }
