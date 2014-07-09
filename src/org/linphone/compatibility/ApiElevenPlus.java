@@ -84,7 +84,8 @@ public class ApiElevenPlus {
 						.setContentIntent(intent)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).getNotification();
-
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		
 		return notif;
 	}
 	
