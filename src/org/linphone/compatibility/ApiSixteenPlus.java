@@ -72,6 +72,7 @@ public class ApiSixteenPlus {
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).build();
 
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
 		return notif;
 	}
 	
