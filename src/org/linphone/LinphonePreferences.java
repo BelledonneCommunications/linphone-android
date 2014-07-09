@@ -316,6 +316,7 @@ public class LinphonePreferences {
 				}
 				
 				LinphoneProxyConfig prxCfg = getProxyConfig(n);
+				prxCfg.edit();
 				prxCfg.setProxy(proxyAddr.asStringUriOnly());
 				prxCfg.done();
 				
@@ -373,6 +374,7 @@ public class LinphonePreferences {
 		LinphoneAuthInfo info = getClonedAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
 			
@@ -393,6 +395,7 @@ public class LinphonePreferences {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
 			addr.setDisplayName(displayName);
+			prxCfg.edit();
 			prxCfg.setIdentity(addr.asString());
 			prxCfg.done();
 		} catch (Exception e) {
@@ -442,6 +445,7 @@ public class LinphonePreferences {
 			saveAuthInfo(authInfo);
 			
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
@@ -469,6 +473,7 @@ public class LinphonePreferences {
 			}
 			
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
 			prxCfg.setProxy(proxyAddr.asStringUriOnly());
 			prxCfg.done();
 			
@@ -489,6 +494,7 @@ public class LinphonePreferences {
 	public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
 			if (enabled) {
 				String route = prxCfg.getProxy();
 				prxCfg.setRoute(route);
@@ -507,6 +513,7 @@ public class LinphonePreferences {
 	
 	public void setAccountContactParameters(int n, String contactParams) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
 		prxCfg.setContactUriParameters(contactParams);
 		prxCfg.done();
 	}
@@ -518,6 +525,7 @@ public class LinphonePreferences {
 	public void setExpires(int n, String expire) {
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
 			prxCfg.setExpires(Integer.parseInt(expire));
 			prxCfg.done();
 		} catch (NumberFormatException nfe) { }
@@ -529,6 +537,7 @@ public class LinphonePreferences {
 	
 	public void setPrefix(int n, String prefix) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
 		prxCfg.setDialPrefix(prefix);
 		prxCfg.done();
 	}
@@ -539,6 +548,7 @@ public class LinphonePreferences {
 
 	public void enableAvpf(int n, boolean enable) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
 		prxCfg.enableAvpf(enable);
 		prxCfg.done();
 	}
@@ -550,6 +560,7 @@ public class LinphonePreferences {
 	public void setAvpfRRInterval(int n, String interval) {
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
 			prxCfg.setAvpfRRInterval(Integer.parseInt(interval));
 			prxCfg.done();
 		} catch (NumberFormatException nfe) { }
@@ -561,6 +572,7 @@ public class LinphonePreferences {
 	
 	public void setReplacePlusByZeroZero(int n, boolean replace) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
 		prxCfg.setDialEscapePlus(replace);
 		prxCfg.done();
 	}
