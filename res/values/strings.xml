@@ -451,4 +451,6 @@
 	<string name="unread_messages">%i unread messages</string>
 	
 	<string name="retry">Retry</string>
+	
+	<string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
 </resources>

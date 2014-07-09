@@ -40,6 +40,7 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioS
 import org.linphone.LinphoneSimpleListener.LinphoneOnComposingReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
+import org.linphone.LinphoneSimpleListener.LinphoneOnRemoteProvisioningListener;
 import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
@@ -74,6 +75,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.setup.RemoteProvisioningActivity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -1369,10 +1371,22 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (composingReceivedListener != null)
 			composingReceivedListener.onComposingReceived(cr);
 	}
+	
+	private LinphoneOnRemoteProvisioningListener remoteProvisioningListener;
+	public void setOnRemoteProvisioningListener(LinphoneOnRemoteProvisioningListener listener) {
+		remoteProvisioningListener = listener;
+	}
 	@Override
 	public void configuringStatus(LinphoneCore lc,
 			RemoteProvisioningState state, String message) {
 		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
+		if (RemoteProvisioningActivity.getInstance() != null) {
+			RemoteProvisioningActivity.getInstance().onConfiguringStatus(state);
+		}
+		
+		if (remoteProvisioningListener != null) {
+			remoteProvisioningListener.onConfiguringStatus(state);
+		}
 		
 		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
 			if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
