@@ -653,6 +653,10 @@ public class LinphonePreferences {
 	public boolean isEchoCancellationEnabled() {
 		return getLc().isEchoCancellationEnabled();
 	}
+	
+	public int getEchoCalibration() {
+		return getConfig().getInt("sound", "ec_delay", -1);
+	}
 	// End of audio settings
 	
 	// Video settings
