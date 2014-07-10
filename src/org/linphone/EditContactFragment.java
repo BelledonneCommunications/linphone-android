@@ -539,6 +539,8 @@ public class EditContactFragment extends Fragment {
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
+					if(!newNumberOrAddress.contains("@"))
+						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
@@ -556,7 +558,9 @@ public class EditContactFragment extends Fragment {
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
-					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
+					if(!newNumberOrAddress.contains("@"))
+						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);	
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
 					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
@@ -578,6 +582,8 @@ public class EditContactFragment extends Fragment {
 			if (isSipAddress) {
 				if (newNumberOrAddress.startsWith("sip:"))
 					newNumberOrAddress = newNumberOrAddress.substring(4);
+				if(!newNumberOrAddress.contains("@"))
+					newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
 				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 

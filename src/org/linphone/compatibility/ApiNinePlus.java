@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
 
@@ -45,10 +46,12 @@ public class ApiNinePlus {
 	public static void addSipAddressToContact(Context context, ArrayList<ContentProviderOperation> ops, String sipAddress) {
 		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
 	        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-	        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-	        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, sipAddress)
-	        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
-	        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, context.getString(R.string.addressbook_label))
+	        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+	        .withValue(ContactsContract.CommonDataKinds.Im.DATA, sipAddress)
+	        .withValue(ContactsContract.CommonDataKinds.Im.TYPE,  ContactsContract.CommonDataKinds.Im.TYPE_CUSTOM)
+	        .withValue(ContactsContract.CommonDataKinds.Im.PROTOCOL, ContactsContract.CommonDataKinds.Im.PROTOCOL_CUSTOM)
+	        .withValue(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL,"Sip")
+	        .withValue(ContactsContract.CommonDataKinds.Im.LABEL, context.getString(R.string.addressbook_label))
 	        .build()
 	    );
 	}
@@ -56,33 +59,35 @@ public class ApiNinePlus {
 	public static void addSipAddressToContact(Context context, ArrayList<ContentProviderOperation> ops, String sipAddress, String rawContactID) {
 		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
 		    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactID)       
-	        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-	        .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, sipAddress)
-	        .withValue(ContactsContract.CommonDataKinds.SipAddress.TYPE,  ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM)
-	        .withValue(ContactsContract.CommonDataKinds.SipAddress.LABEL, context.getString(R.string.addressbook_label))
+	        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+	        .withValue(ContactsContract.CommonDataKinds.Im.DATA, sipAddress)
+	        .withValue(ContactsContract.CommonDataKinds.Im.TYPE,  ContactsContract.CommonDataKinds.Im.TYPE_CUSTOM)
+	        .withValue(ContactsContract.CommonDataKinds.Im.PROTOCOL, ContactsContract.CommonDataKinds.Im.PROTOCOL_CUSTOM)
+	        .withValue(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL,"Sip")
+	        .withValue(ContactsContract.CommonDataKinds.Im.LABEL, context.getString(R.string.addressbook_label))
 	        .build()
 	    );
 	}
 	
-	public static void updateSipAddressForContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String newSipAddress, String contactID) {
+	public static void updateSipAddressForContact(ArrayList<ContentProviderOperation> ops, String oldIm, String newIm, String contactID) {
 		String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-				+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
-				+ ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?"; 
-		String[] args = new String[] { String.valueOf(contactID), oldSipAddress };   
+				+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE +  "' AND " 
+				+ ContactsContract.CommonDataKinds.Im.DATA + "=? AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'"; 
+		String[] args = new String[] { String.valueOf(contactID), oldIm };   
 		
         ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
     		.withSelection(select, args) 
-            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-            .withValue(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, newSipAddress)
+            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+            .withValue(ContactsContract.CommonDataKinds.Im.DATA, newIm)
             .build()
         );
 	}
 	
-	public static void deleteSipAddressFromContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String contactID) {
+	public static void deleteSipAddressFromContact(ArrayList<ContentProviderOperation> ops, String oldIm, String contactID) {
 		String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-				+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE +  "' AND " 
-				+ ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?"; 
-		String[] args = new String[] { String.valueOf(contactID), oldSipAddress };   
+				+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE +  "' AND " 
+				+ ContactsContract.CommonDataKinds.Im.DATA + "=? AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
+		String[] args = new String[] { String.valueOf(contactID), oldIm };   
 		
         ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
     		.withSelection(select, args) 
@@ -112,13 +117,15 @@ public class ApiNinePlus {
 			.append(" = ? AND ")
 			.append(Data.MIMETYPE)
 			.append(" = '")
-			.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-			.append("'")
+			.append(ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+			.append("' AND lower(")
+			.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
+			.append(") = 'sip'")
 			.toString();
-		projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+		projection = new String[] {ContactsContract.CommonDataKinds.Im.DATA};
 		c = cr.query(uri, projection, selection, new String[]{id}, null);
 		if (c != null) {
-			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
 			while (c.moveToNext()) {
 				list.add("sip:" + c.getString(nbId)); 
 			}
@@ -127,12 +134,13 @@ public class ApiNinePlus {
 
 		return list;
 	}
-	
+
 	public static Cursor getContactsCursor(ContentResolver cr, String search) {
 		String req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
                 + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL OR (" 
-				+ Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
+				+ Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+				+ "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'"
+				+ " AND " + ContactsContract.CommonDataKinds.Im.DATA + " IS NOT NULL))";
 		
 		if (search != null) {
 			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
@@ -143,8 +151,9 @@ public class ApiNinePlus {
 
 	public static Cursor getSIPContactsCursor(ContentResolver cr, String search) {
 		String req = null;
-		req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL";
+		req = Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'"
+                + " AND " + ContactsContract.CommonDataKinds.Im.DATA + " IS NOT NULL";
 		
 		if (search != null) {
 			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
@@ -155,10 +164,11 @@ public class ApiNinePlus {
 	
 	private static Cursor getSIPContactCursor(ContentResolver cr, String id) {
 		String req = null;
-		req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
-				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " LIKE '" + id + "'";
-
-			return ApiFivePlus.getGeneralContactCursor(cr, req, false);
+    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
+                + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
+		
+		return ApiFivePlus.getGeneralContactCursor(cr, req, false);
 	}
 	
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
