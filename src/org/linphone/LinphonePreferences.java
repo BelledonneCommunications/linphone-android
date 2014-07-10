@@ -164,8 +164,12 @@ public class LinphonePreferences {
 		private TransportType tempTransport;
 		private boolean tempAvpfEnabled = false;
 		private int tempAvpfRRInterval = 0;
+		private String tempQualityReportingCollector;
+		private boolean tempQualityReportingEnabled = false;
+		private int tempQualityReportingInterval = 0;
 		private boolean tempEnabled = true;
 		private boolean tempNoDefault = false;
+		
 		
 		public AccountBuilder(LinphoneCore lc) {
 			this.lc = lc;
@@ -231,6 +235,21 @@ public class LinphonePreferences {
 			return this;
 		}
 
+		public AccountBuilder setQualityReportingCollector(String collector) {
+			tempQualityReportingCollector = collector;
+			return this;
+		}
+		
+		public AccountBuilder setQualityReportingEnabled(boolean enable) {
+			tempQualityReportingEnabled = enable;
+			return this;
+		}
+		
+		public AccountBuilder setQualityReportingInterval(int interval) {
+			tempQualityReportingInterval = interval;
+			return this;
+		}
+		
 		public AccountBuilder setEnabled(boolean enable) {
 			tempEnabled = enable;
 			return this;
@@ -283,6 +302,9 @@ public class LinphonePreferences {
 			
 			prxCfg.enableAvpf(tempAvpfEnabled);
 			prxCfg.setAvpfRRInterval(tempAvpfRRInterval);
+			prxCfg.enableQualityReporting(tempQualityReportingEnabled);
+			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
+			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
 			
 			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
 			
