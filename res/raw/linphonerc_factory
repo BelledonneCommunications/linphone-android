@@ -18,12 +18,6 @@ audio_jitt_comp=60
 video_jitt_comp=60
 nortp_timeout=30
 disable_upnp=1
-rtcp_xr_enabled=1
-rtcp_xr_rcvr_rtt_mode=all
-rtcp_xr_rcvr_rtt_max_size=10000
-rtcp_xr_stat_summary_enabled=1
-rtcp_xr_voip_metrics_enabled=1
-
 
 [sound]
 playback_dev_id=
@@ -35,8 +29,3 @@ dtmf_player_amp=0.1
 
 [misc]
 max_calls=10
-
-[proxy_default_values]
-quality_reporting_collector=sip:voip-metrics@sip.linphone.org
-quality_reporting_enabled=1
-quality_reporting_interval=180

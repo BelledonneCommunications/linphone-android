@@ -306,9 +306,14 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			}
 			
 			builder.setExpires("604800")
-			.setOutboundProxyEnabled(true);
-			builder.setAvpfEnabled(true);
-			builder.setAvpfRRInterval(3);
+			.setOutboundProxyEnabled(true)
+			.setAvpfEnabled(true)
+			.setAvpfRRInterval(3)
+			.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
+			.setQualityReportingEnabled(true)
+			.setQualityReportingInterval(180);
+			
+			
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
 			mPrefs.setPushNotificationEnabled(true);
