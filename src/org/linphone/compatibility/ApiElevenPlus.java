@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Intents.Insert;
@@ -136,8 +137,9 @@ public class ApiElevenPlus {
 		
 		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
 		ContentValues sipAddressRow = new ContentValues();
-		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
-		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+		sipAddressRow.put(Contacts.Data.MIMETYPE, Im.CONTENT_ITEM_TYPE);
+		sipAddressRow.put(Im.DATA, sipUri);
+		sipAddressRow.put(Im.CUSTOM_PROTOCOL,"Sip");
 		data.add(sipAddressRow);
 		intent.putParcelableArrayListExtra(Insert.DATA, data);
 		
@@ -151,8 +153,9 @@ public class ApiElevenPlus {
 		
 		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
 		ContentValues sipAddressRow = new ContentValues();
-		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
-		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+		sipAddressRow.put(Contacts.Data.MIMETYPE, Im.CONTENT_ITEM_TYPE);
+		sipAddressRow.put(Im.DATA, sipUri);
+		sipAddressRow.put(Im.CUSTOM_PROTOCOL,"Sip");
 		data.add(sipAddressRow);
 		data.add(sipAddressRow);
 		intent.putParcelableArrayListExtra(Insert.DATA, data);
