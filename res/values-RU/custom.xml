@@ -8,8 +8,9 @@
 	<string name="wait_dialog_text">Загружается</string>
 	<string name="notification_registered">Зарегистрирован в %s </string> 
 	<string name="notification_register_failure">Ошибка регистрации в %s</string>
-	<string name="about_text">Linphone %s SIP (rfc 3261) совместимый телефон под GPL V2 лицензией\n http://www.linphone.org\n\nИнструкции\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
-
+	<string name="about_text">Linphone %s SIP (rfc 3261) совместимый телефон под GPL V2 лицензией</string>
+	<string name="about_link">http://www.linphone.org\n\nИнструкции\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+	
 	<string name="setup_welcome">Этот помощник поможет Вам настроить учётную запись SIP для звонков.</string>
 	<string name="setup_create_account">Создать учётную запись на linphone.org</string>
 	<string name="setup_login_linphone">Уже есть учётная запись на linphone.org</string>

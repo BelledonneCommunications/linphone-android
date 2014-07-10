@@ -8,8 +8,9 @@
 	<string name="wait_dialog_text">Démarrage</string>
 	<string name="notification_registered">Enregistré comme %s </string> 
 	<string name="notification_register_failure">Erreur lors de l\'enregistrement en tant que %s</string>
-	<string name="about_text">Linphone %s téléphone compatible SIP (rfc 3261) sous licence GPL V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
-
+	<string name="about_text">Linphone %s téléphone compatible SIP (rfc 3261) sous licence GPL V2 </string>
+	<string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+	
 	<string name="setup_welcome">Cet assistant va vous aider à configurer un compte SIP pour vos appels.</string>
 	<string name="setup_create_account">Créer un compte linphone.org</string>
 	<string name="setup_login_linphone">J\'ai déjà un compte linphone.org</string>

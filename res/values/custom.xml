@@ -14,8 +14,9 @@
 	<string name="wait_dialog_text">Starting up</string>
 	<string name="notification_registered">Registered to %s </string> 
 	<string name="notification_register_failure">Fails to register to %s</string>
-	<string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2\n http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
-
+	<string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2</string>
+	<string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+	
 	<string name="setup_welcome">This assistant will help you to use a SIP account for your calls.</string>
 	<string name="setup_create_account">Create an account on linphone.org</string>
 	<string name="setup_login_linphone">I already have a linphone.org account</string>
