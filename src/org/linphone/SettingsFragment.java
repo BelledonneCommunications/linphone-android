@@ -433,6 +433,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		
 		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
 		echoCancellation.setChecked(mPrefs.isEchoCancellationEnabled());
+		
+		if (mPrefs.isEchoCancellationEnabled()) {
+			Preference echoCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
+			echoCalibration.setSummary(String.format(getString(R.string.ec_calibrated), mPrefs.getEchoCalibration()));
+		}
+		
 	}
 	
 	private void setAudioPreferencesListener() {
@@ -836,16 +842,19 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			public void run() {
 				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
 				Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
-				
+
 				if (status == EcCalibratorStatus.DoneNoEcho) {
 					echoCancellerCalibration.setSummary(R.string.no_echo);
 					echoCancellation.setChecked(false);
+					LinphonePreferences.instance().setEchoCancellation(false);
 				} else if (status == EcCalibratorStatus.Done) {
 					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
 					echoCancellation.setChecked(true);
+					LinphonePreferences.instance().setEchoCancellation(true);
 				} else if (status == EcCalibratorStatus.Failed) {
 					echoCancellerCalibration.setSummary(R.string.failed);
 					echoCancellation.setChecked(true);
+					LinphonePreferences.instance().setEchoCancellation(true);
 				}
 			}
 		});
