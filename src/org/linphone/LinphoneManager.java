@@ -503,6 +503,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
 		}
+		
+		// Some devices could be using software AEC before
+		// This will disable it in favor of hardware AEC if available
+		if (prefMigrator.isEchoMigratioNeeded()) {
+			Log.d("Echo canceller configuration need to be updated");
+			prefMigrator.doEchoMigration();
+			mPrefs.echoConfigurationUpdated();
+		}
 
 		mLc.setContext(mServiceContext);
 		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
