@@ -684,6 +684,14 @@ public class LinphonePreferences {
 	public int getEchoCalibration() {
 		return getConfig().getInt("sound", "ec_delay", -1);
 	}
+	
+	public boolean isEchoConfigurationUpdated() {
+		return getConfig().getBool("app", "ec_updated", false);
+	}
+	
+	public void echoConfigurationUpdated() {
+		getConfig().setBool("app", "ec_updated", true);
+	}
 	// End of audio settings
 	
 	// Video settings
