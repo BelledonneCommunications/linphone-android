@@ -140,7 +140,7 @@
 
 	<target name="liblinphone-android-sdk">
                 <echo level="info">Creating library output jar file...</echo>
-                <property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone.jar" />
+                <property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone-android.jar" />
                 <jar destfile="${out.library.jar.file}">
                         <fileset dir="${out.classes.absolute.dir}"
                                 includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class"/>
