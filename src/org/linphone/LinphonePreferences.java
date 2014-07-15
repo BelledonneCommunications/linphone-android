@@ -54,8 +54,12 @@ public class LinphonePreferences {
 		
 	}
 	
+	public void setContext(Context c) {
+		mContext = c;
+	}
+	
 	private String getString(int key) {
-		if (mContext == null) {
+		if (mContext == null && LinphoneManager.isInstanciated()) {
 			mContext = LinphoneManager.getInstance().getContext();
 		}
 		
@@ -71,8 +75,14 @@ public class LinphonePreferences {
 	
 	public LpConfig getConfig() {
 		LinphoneCore lc = getLc();
-		if (lc != null)
+		if (lc != null) {
 			return lc.getConfig();
+		}
+		
+		if (!LinphoneManager.isInstanciated()) {
+			Log.w("LinphoneManager not instanciated yet...");
+			return LinphoneCoreFactory.instance().createLpConfig(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+		}
 		
 		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
 	}
@@ -986,9 +996,13 @@ public class LinphonePreferences {
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
-		if (url != null && url.length() == 0)
+		if (url != null && url.length() == 0) {
 			url = null;
-		getConfig().setString("misc", "config-uri", url);
+		}
+		
+		LpConfig config = getConfig();
+		config.setString("misc", "config-uri", url);
+		config.sync();
 	}
 	
 	public String getRemoteProvisioningUrl() {
