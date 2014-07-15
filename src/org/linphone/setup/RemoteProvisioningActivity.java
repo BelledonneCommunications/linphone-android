@@ -22,6 +22,7 @@ import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneLauncherActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRemoteProvisioningListener;
@@ -157,13 +158,14 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	private void setRemoteProvisioningAddressAndRestart(String configUri) {
 		if (spinner != null) spinner.setVisibility(View.VISIBLE);
 		
+		LinphonePreferences.instance().setContext(this); // Needed, else the next call will crash
 		LinphonePreferences.instance().setRemoteProvisioningUrl(configUri);
 		LinphonePreferences.instance().firstRemoteProvisioningSuccessful();
 		
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				// Restart Linphone
+				LinphoneManager.destroy();
 				stopService(new Intent(ACTION_MAIN).setClass(RemoteProvisioningActivity.this, LinphoneService.class));
 				Intent intent = new Intent();
 				intent.setClass(RemoteProvisioningActivity.this, LinphoneLauncherActivity.class);
