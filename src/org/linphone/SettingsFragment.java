@@ -57,33 +57,33 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
-	
+
 	public SettingsFragment() {
 		super(R.xml.preferences);
 		mPrefs = LinphonePreferences.instance();
 	}
-	
+
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		
+
 		// Init the settings page interface
 		initSettings();
 		setListeners();
 		hideSettings();
 	}
-	
+
 	// Inits the values or the listener on some settings
 	private void initSettings() {
 		//Init accounts on Resume instead of on Create to update the account list when coming back from wizard
-		
+
 		initTunnelSettings();
 		initAudioSettings();
 		initVideoSettings();
 		initCallSettings();
 		initNetworkSettings();
 		initAdvancedSettings();
-		
+
 		// Add action on About button
 		findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
@@ -120,19 +120,19 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
 			hidePreference(R.string.menu_about_key);
 		}
-		
-		if (getResources().getBoolean(R.bool.hide_accounts)) {	
+
+		if (getResources().getBoolean(R.bool.hide_accounts)) {
 			emptyAndHidePreference(R.string.pref_sipaccounts_key);
 		}
-		
+
 		if (getResources().getBoolean(R.bool.hide_wizard)) {
 			hidePreference(R.string.setup_key);
 		}
-		
+
 		if (getResources().getBoolean(R.bool.disable_animations)) {
 			uncheckAndHidePreference(R.string.pref_animation_enable_key);
 		}
-		
+
 		if (!getResources().getBoolean(R.bool.enable_linphone_friends)) {
 			emptyAndHidePreference(R.string.pref_linphone_friend_key);
 		}
@@ -140,7 +140,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			findPreference(getString(R.string.pref_image_sharing_server_key)).setLayoutResource(R.layout.hidden);
 		}
-		
+
 		if (!getResources().getBoolean(R.bool.enable_push_id)) {
 			hidePreference(R.string.pref_push_notification_key);
 		}
@@ -152,35 +152,35 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				uncheckAndHidePreference(R.string.pref_video_use_front_camera_key);
 			}
 		}
-		
+
 		if (!LinphoneManager.getLc().isTunnelAvailable()) {
 			emptyAndHidePreference(R.string.pref_tunnel_key);
 		}
-		
+
 		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
 			emptyAndHidePreference(R.string.pref_video_key);
 			hidePreference(R.string.pref_video_enable_key);
 		}
-		
+
 		if (getResources().getBoolean(R.bool.disable_every_log)) {
 			uncheckAndHidePreference(R.string.pref_debug_key);
 		}
-		
+
 		if (!LinphoneManager.getLc().upnpAvailable()) {
 			uncheckAndHidePreference(R.string.pref_upnp_enable_key);
 		}
 	}
-	
+
 	private void uncheckAndHidePreference(int preferenceKey) {
 		Preference preference = findPreference(getString(preferenceKey));
 		if (!(preference instanceof CheckBoxPreference))
 			return;
-		
+
 		CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
 		checkBoxPreference.setChecked(false);
 		hidePreference(checkBoxPreference);
 	}
-	
+
 	private void emptyAndHidePreference(int preferenceKey) {
 		Preference preference = findPreference(getString(preferenceKey));
 		if (preference instanceof PreferenceCategory)
@@ -188,41 +188,43 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		else if (preference instanceof PreferenceScreen)
 			emptyAndHidePreferenceScreen(preferenceKey);
 	}
-	
+
 	private void emptyAndHidePreferenceCategory(int preferenceKey) {
 		Preference preference = findPreference(getString(preferenceKey));
 		if (!(preference instanceof PreferenceCategory))
 			return;
-		
+
 		PreferenceCategory preferenceCategory = (PreferenceCategory) preference;
 		preferenceCategory.removeAll();
 		hidePreference(preferenceCategory);
 	}
-	
+
 	private void emptyAndHidePreferenceScreen(int preferenceKey) {
 		Preference preference = findPreference(getString(preferenceKey));
 		if (!(preference instanceof PreferenceScreen))
 			return;
-		
+
 		PreferenceScreen preferenceScreen = (PreferenceScreen) preference;
 		preferenceScreen.removeAll();
 		hidePreference(preferenceScreen);
 	}
-	
+
 	private void hidePreference(int preferenceKey) {
 		hidePreference(findPreference(getString(preferenceKey)));
 	}
-	
+
 	private void hidePreference(Preference preference) {
 		preference.setLayoutResource(R.layout.hidden);
 	}
-	
+
 	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
-		EditTextPreference etPref = (EditTextPreference) findPreference(getString(pref));
-		etPref.setText(value);
-		etPref.setSummary(value);
+		if(value != null) {
+			EditTextPreference etPref = (EditTextPreference) findPreference(getString(pref));
+			etPref.setText(value);
+			etPref.setSummary(value);
+		}
 	}
-	
+
 	private void initTunnelSettings() {
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
@@ -231,7 +233,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		tunnelModePref.setSummary(tunnelMode);
 		tunnelModePref.setValue(tunnelMode);
 	}
-	
+
 	private void setTunnelPreferencesListener() {
 		findPreference(getString(R.string.pref_tunnel_host_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -245,7 +247,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		findPreference(getString(R.string.pref_tunnel_port_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				try { 
+				try {
 					int port = Integer.parseInt(newValue.toString());
 					mPrefs.setTunnelPort(port);
 					preference.setSummary(String.valueOf(port));
@@ -265,11 +267,11 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	private void initAccounts() {
 		PreferenceCategory accounts = (PreferenceCategory) findPreference(getString(R.string.pref_sipaccounts_key));
 		accounts.removeAll();
-		
+
 		// Get already configured extra accounts
 		int defaultAccountID = mPrefs.getDefaultAccountIndex();
 		int nbAccounts = mPrefs.getAccountCount();
@@ -278,20 +280,20 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			// For each, add menus to configure it
 			if(!mPrefs.isAccountDeleted(accountId)){
 				String username = mPrefs.getAccountUsername(accountId);
-				String domain = mPrefs.getAccountDomain(accountId); 
+				String domain = mPrefs.getAccountDomain(accountId);
 				LedPreference account = new LedPreference(LinphoneService.instance());
-				
+
 				if (username == null) {
 					account.setTitle(getString(R.string.pref_sipaccount));
 				} else {
 					account.setTitle(username + "@" + domain);
 				}
-				
+
 				if (defaultAccountID == i) {
 					account.setSummary(R.string.default_account_flag);
 				}
-				
-				account.setOnPreferenceClickListener(new OnPreferenceClickListener() 
+
+				account.setOnPreferenceClickListener(new OnPreferenceClickListener()
 				{
 					public boolean onPreferenceClick(Preference preference) {
 						LinphoneActivity.instance().displayAccountSettings(accountId);
@@ -300,16 +302,16 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				});
 				updateAccountLed(account, username, domain, mPrefs.isAccountEnabled(i));
 				accounts.addPreference(account);
-			}		
+			}
 		}
 	}
-	
+
 	private void updateAccountLed(final LedPreference me, final String username, final String domain, boolean enabled) {
 		if (!enabled) {
 			me.setLed(R.drawable.led_disconnected);
 			return;
 		}
-		
+
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
 				LinphoneAddress addr = null;
@@ -340,7 +342,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		}
 	}
-	
+
 	private void initMediaEncryptionPreference(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
@@ -352,7 +354,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			setListPreferenceValues(pref, entries, values);
 			return;
 		}
-		
+
 		boolean hasZrtp = lc.mediaEncryptionSupported(MediaEncryption.ZRTP);
 		boolean hasSrtp = lc.mediaEncryptionSupported(MediaEncryption.SRTP);
 		if (!hasSrtp && !hasZrtp) {
@@ -368,10 +370,10 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 			setListPreferenceValues(pref, entries, values);
 		}
-		
+
 		MediaEncryption value = mPrefs.getMediaEncryption();
 		pref.setSummary(value.toString());
-		
+
 		String key = getString(R.string.pref_media_encryption_key_none);
 		if (value.toString().equals(getString(R.string.media_encryption_srtp)))
 			key = getString(R.string.pref_media_encryption_key_srtp);
@@ -389,12 +391,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		}
 
 		setListPreferenceValues(pref, entries, values);
-		
+
 		String value = mPrefs.getPreferredVideoSize();
 		pref.setSummary(value);
 		pref.setValue(value);
 	}
-	
+
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
 		CharSequence[] contents = new CharSequence[entries.size()];
 		entries.toArray(contents);
@@ -403,18 +405,18 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		values.toArray(contents);
 		pref.setEntryValues(contents);
 	}
-	
+
 	private void initAudioSettings() {
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_codecs_key));
 		codecs.removeAll();
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (final PayloadType pt : lc.getAudioCodecs()) {
 			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
 			codec.setTitle(pt.getMime());
 			codec.setSummary(pt.getRate() + " Hz");
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
-			
+
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -427,20 +429,20 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 					return true;
 				}
 			});
-			
+
 			codecs.addPreference(codec);
 		}
-		
+
 		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
 		echoCancellation.setChecked(mPrefs.isEchoCancellationEnabled());
-		
+
 		if (mPrefs.isEchoCancellationEnabled()) {
 			Preference echoCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 			echoCalibration.setSummary(String.format(getString(R.string.ec_calibrated), mPrefs.getEchoCalibration()));
 		}
-		
+
 	}
-	
+
 	private void setAudioPreferencesListener() {
 		findPreference(getString(R.string.pref_echo_cancellation_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -450,7 +452,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_echo_canceller_calibration_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -466,18 +468,18 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	private void initVideoSettings() {
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_video_codecs_key));
 		codecs.removeAll();
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (final PayloadType pt : lc.getVideoCodecs()) {
 			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
 			codec.setTitle(pt.getMime());
-			
+
 			if (!pt.getMime().equals("VP8")) {
 				if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
 					continue;
@@ -491,7 +493,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				}
 			}
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
-			
+
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -504,17 +506,17 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 					return true;
 				}
 			});
-			
+
 			codecs.addPreference(codec);
 		}
-		
+
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_enable_key))).setChecked(mPrefs.isVideoEnabled());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_use_front_camera_key))).setChecked(mPrefs.useFrontCam());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
 		//((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_share_my_video_key))).setChecked(mPrefs.shouldAutomaticallyShareMyVideo());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_accept_video_key))).setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
 	}
-	
+
 	private void setVideoPreferencesListener() {
 		findPreference(getString(R.string.pref_video_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -524,7 +526,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_video_use_front_camera_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -533,7 +535,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_video_initiate_call_with_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -542,7 +544,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		/*
 		findPreference(getString(R.string.pref_video_automatically_share_my_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -553,7 +555,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 		*/
-		
+
 		findPreference(getString(R.string.pref_video_automatically_accept_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -562,7 +564,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_preferred_video_size_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -572,7 +574,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	private void initCallSettings() {
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
@@ -586,7 +588,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			rfc2833.setEnabled(false);
 		}
 	}
-	
+
 	private void setCallPreferencesListener() {
 		findPreference(getString(R.string.pref_rfc2833_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -599,7 +601,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_sipinfo_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -612,12 +614,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	private void initNetworkSettings() {
 		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
 
 		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
-		
+
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 		CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
@@ -633,21 +635,21 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 
 		CheckBoxPreference randomPort = (CheckBoxPreference) findPreference(getString(R.string.pref_transport_use_random_ports_key));
 		randomPort.setChecked(mPrefs.isUsingRandomPort());
-		
+
 		// Disable sip port choice if port is random
 		EditTextPreference sipPort = (EditTextPreference) findPreference(getString(R.string.pref_sip_port_key));
 		sipPort.setEnabled(!randomPort.isChecked());
 		sipPort.setSummary(mPrefs.getSipPort());
 		sipPort.setText(mPrefs.getSipPort());
-		
+
 		EditTextPreference stun = (EditTextPreference) findPreference(getString(R.string.pref_stun_server_key));
 		stun.setSummary(mPrefs.getStunServer());
 		stun.setText(mPrefs.getStunServer());
-		
+
 		((CheckBoxPreference) findPreference(getString(R.string.pref_push_notification_key))).setChecked(mPrefs.isPushNotificationEnabled());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_ipv6_key))).setChecked(mPrefs.isUsingIpv6());
 	}
-	
+
 	private void setNetworkPreferencesListener() {
 		findPreference(getString(R.string.pref_wifi_only_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -656,7 +658,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_stun_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -665,7 +667,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_ice_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -677,7 +679,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_upnp_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -689,7 +691,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_transport_use_random_ports_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -699,7 +701,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_sip_port_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -707,13 +709,13 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				try {
 					port = Integer.parseInt(newValue.toString());
 				} catch (NumberFormatException nfe) { }
-				
+
 				mPrefs.setSipPort(port);
 				preference.setSummary(newValue.toString());
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -724,12 +726,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
 					menc = MediaEncryption.ZRTP;
 				mPrefs.setMediaEncryption(menc);
-				
+
 				preference.setSummary(mPrefs.getMediaEncryption().toString());
 				return true;
 			}
-		});	
-		
+		});
+
 		findPreference(getString(R.string.pref_push_notification_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -737,7 +739,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_ipv6_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -746,7 +748,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	private void initAdvancedSettings() {
 		((CheckBoxPreference)findPreference(getString(R.string.pref_debug_key))).setChecked(mPrefs.isDebugEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_background_mode_key))).setChecked(mPrefs.isBackgroundModeEnabled());
@@ -757,7 +759,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		setPreferenceDefaultValueAndSummary(R.string.pref_display_name_key, mPrefs.getDefaultDisplayName());
 		setPreferenceDefaultValueAndSummary(R.string.pref_user_name_key, mPrefs.getDefaultUsername());
 	}
-	
+
 	private void setAdvancedPreferencesListener() {
 		findPreference(getString(R.string.pref_debug_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -767,7 +769,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_background_mode_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -776,7 +778,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_animation_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -785,7 +787,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_autostart_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -794,7 +796,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_image_sharing_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -804,7 +806,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_remote_provisioning_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -814,7 +816,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_display_name_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -824,7 +826,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_user_name_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -835,7 +837,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	@Override
 	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
 		mHandler.post(new Runnable() {
@@ -859,16 +861,16 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		initAccounts();
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
-			
+
 			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 				LinphoneActivity.instance().hideStatusBar();
 			}
