@@ -214,8 +214,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	userid.setSummary(userid.getText());
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-    	password.setText(mPrefs.getAccountPassword(n));
     	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    	password.setText(mPrefs.getAccountPassword(n));
     	password.setOnPreferenceChangeListener(passwordChangedListener);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
@@ -226,7 +226,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	
     	EditTextPreference displayName = (EditTextPreference) account.getPreference(4);
     	displayName.setText(mPrefs.getAccountDisplayName(n));
-    	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+    	displayName.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
     	displayName.setOnPreferenceChangeListener(displayNameChangedListener);
     	displayName.setSummary(displayName.getText());
 		
