@@ -618,7 +618,7 @@ public class LinphonePreferences {
 	public int getDefaultAccountIndex() {
 		LinphoneProxyConfig defaultPrxCfg = getLc().getDefaultProxyConfig();
 		if (defaultPrxCfg == null)
-			return 0;
+			return -1;
 
 		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		for (int i = 0; i < prxCfgs.length; i++) {
@@ -626,7 +626,7 @@ public class LinphonePreferences {
 				return i;
 			}
 		}
-		return 0;
+		return -1;
 	}
 
 	public int getAccountCount() {
