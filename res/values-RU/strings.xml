@@ -250,6 +250,7 @@
 	<string name="pref_help_outbound_proxy">Отправить все звонки через SIP прокси</string>
 	<string name="pref_help_username">Например: john если Ваш адрес john@sip.example.org</string>
 	<string name="pref_help_domain">sip.example.org если Ваш адрес john@sip.example.org</string>
+	<string name="pref_help_password">You have to re-enter your password if you edit the username and/or the domain</string>
 	
 	<string name="delete">Удалить</string>
 	<string name="chat">Чат</string>
