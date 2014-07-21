@@ -17,6 +17,7 @@
         
         <EditTextPreference 
         	android:title="@string/pref_passwd"
+        	android:dialogMessage="@string/pref_help_password"
             android:persistent="true"/>
         
         <EditTextPreference 
