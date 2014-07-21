@@ -82,7 +82,13 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener passwordChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			mPrefs.setAccountPassword(n, newValue.toString());
+			if (getResources().getBoolean(R.bool.store_ha1_passwords)
+					&& mPrefs.getAccountPassword(n) == null) {
+				String ha1 = LinphoneUtils.md5Hash(mPrefs.getAccountUsername(n), newValue.toString(), mPrefs.getAccountDomain(n));
+				mPrefs.setAccountHa1(n, ha1);
+			} else {
+				mPrefs.setAccountPassword(n, newValue.toString());
+			}
 			return true;
 		}		
 	};

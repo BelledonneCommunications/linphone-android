@@ -23,13 +23,14 @@ import static android.view.View.VISIBLE;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -402,6 +403,33 @@ public final class LinphoneUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String md5Hash(String username, String password, String domain) {
+		String passwordToHash = username + ":" + domain + ":" + password;
+
+		byte messageDigest[] = null;
+		try {
+			MessageDigest digest;
+			digest = java.security.MessageDigest.getInstance("MD5");
+	        digest.update(passwordToHash.getBytes());
+	        messageDigest = digest.digest();
+	        
+	        StringBuffer hexString = new StringBuffer();
+	        for (int i = 0; i < messageDigest.length; i++) {
+	            String h = Integer.toHexString(0xFF & messageDigest[i]);
+	            while (h.length() < 2) {
+	                h = "0" + h;
+	            }
+	            hexString.append(h);
+	        }
+	        String hash = hexString.toString();
+	        return hash;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }
 
