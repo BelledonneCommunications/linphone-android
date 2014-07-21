@@ -1003,6 +1003,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			mAudioManager.setMode(MODE_RINGTONE);
 		}
 
+		routeAudioToSpeaker();
 		try {
 			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {
 				long[] patern = {0,1000,1000};
