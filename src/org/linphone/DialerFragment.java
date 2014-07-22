@@ -141,11 +141,6 @@ public class DialerFragment extends Fragment {
 			LinphoneActivity.instance().showStatusBar();
 		}
 		
-		// Force speaker for tablets
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null)
-			lc.enableSpeaker(getResources().getBoolean(R.bool.isTablet));
-		
 		if (shouldEmptyAddressField) {
 			mAddress.setText("");
 		} else {
