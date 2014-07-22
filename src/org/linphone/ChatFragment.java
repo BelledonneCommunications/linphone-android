@@ -412,6 +412,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			bubble.setShowOrDownloadImageButtonListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					v.findViewById(R.id.spinner).setVisibility(View.VISIBLE);
+					v.findViewById(R.id.download).setVisibility(View.GONE);
+					
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -428,13 +431,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 									public void run() {
 										((ImageView)v.findViewById(R.id.image)).setImageBitmap(bm);
 										v.findViewById(R.id.image).setVisibility(View.VISIBLE);
-										v.findViewById(R.id.download).setVisibility(View.GONE);
+										v.findViewById(R.id.spinner).setVisibility(View.GONE);
 									}
 								});
 							} else {
 								mHandler.post(new Runnable() {
 									@Override
 									public void run() {
+										v.findViewById(R.id.spinner).setVisibility(View.GONE);
+										v.findViewById(R.id.download).setVisibility(View.VISIBLE);
 										LinphoneActivity.instance().displayCustomToast(getString(R.string.download_image_failed), Toast.LENGTH_LONG);
 									}
 								});
