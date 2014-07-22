@@ -199,12 +199,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.w("Routing audio to " + (speakerOn ? "speaker" : "earpiece") + ", disabling bluetooth audio route");
 		BluetoothManager.getInstance().disableBluetoothSCO();
 
-		if (!speakerOn) {
-			mLc.enableSpeaker(false);
-		} else {
-			mLc.enableSpeaker(true);
-		}
-
+		mLc.enableSpeaker(speakerOn);
 		audioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
 	}
 
@@ -528,7 +523,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 			Log.e(e, "cannot get version name");
 		}
 
-		mLc.setRing(null);
+		if (mR.getBoolean(R.bool.use_linphonecore_ringing)) {
+			disableRinging();
+		} else {
+			mLc.setRing(null);
+		}
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
@@ -996,6 +995,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	private synchronized void startRinging()  {
 		if (disableRinging) {
+			routeAudioToSpeaker();
 			return;
 		}
 
