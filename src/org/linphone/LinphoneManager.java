@@ -998,6 +998,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 			routeAudioToSpeaker();
 			return;
 		}
+		if (mR.getBoolean(R.bool.allow_ringing_while_early_media)) {
+			routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
+		}
 
 		if (Hacks.needGalaxySAudioHack()) {
 			mAudioManager.setMode(MODE_RINGTONE);
