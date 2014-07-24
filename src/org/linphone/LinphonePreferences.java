@@ -334,7 +334,7 @@ public class LinphonePreferences {
 
 	public boolean isAccountDeleted(int n){
 		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
-		return proxyConfig.getIsDeleted();
+		return proxyConfig.getUserData() != null ? (Boolean) proxyConfig.getUserData() : false ;
 	}
 
 	public void setAccountTransport(int n, String transport) {
@@ -699,7 +699,7 @@ public class LinphonePreferences {
 		proxyCfg.enableRegister(false);
 		proxyCfg.done();
 
-		proxyCfg.setIsDeleted(true);
+		proxyCfg.setUserData(true);
 		new Thread(new Runnable() {
 
 			@Override
