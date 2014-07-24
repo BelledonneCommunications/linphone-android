@@ -111,7 +111,7 @@ public class ApiNinePlus {
 	        c.close();
 		}
 		
-		// SIP addresses
+		// IM addresses
 		String selection = new StringBuilder()
 			.append(Data.CONTACT_ID)
 			.append(" = ? AND ")
@@ -131,7 +131,26 @@ public class ApiNinePlus {
 			}
 			c.close();
 		}
-
+		
+		// SIP addresses
+		String selection2 = new StringBuilder()
+			.append(Data.CONTACT_ID)
+			.append(" = ? AND ")
+			.append(Data.MIMETYPE)
+			.append(" = '")
+			.append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
+			.append("'")
+			.toString();
+		projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+		c = cr.query(uri, projection, selection2, new String[]{id}, null);
+		if (c != null) {
+			int nbid = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+			while (c.moveToNext()) {
+				list.add("sip:" + c.getString(nbid)); 
+			}
+			c.close();
+		}
+		
 		return list;
 	}
 
@@ -140,7 +159,9 @@ public class ApiNinePlus {
                 + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL OR (" 
 				+ Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
 				+ "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'"
-				+ " AND " + ContactsContract.CommonDataKinds.Im.DATA + " IS NOT NULL))";
+				+ " AND " + ContactsContract.CommonDataKinds.Im.DATA + " IS NOT NULL"
+				+ ") OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
+				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
 		
 		if (search != null) {
 			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
@@ -151,23 +172,27 @@ public class ApiNinePlus {
 
 	public static Cursor getSIPContactsCursor(ContentResolver cr, String search) {
 		String req = null;
-		req = Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+		req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
                 + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'"
-                + " AND " + ContactsContract.CommonDataKinds.Im.DATA + " IS NOT NULL";
+                + " AND " + ContactsContract.CommonDataKinds.Im.DATA + " IS NOT NULL"
+                + " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
+                + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
 		
 		if (search != null) {
 			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
 		}
-		
+
 		return ApiFivePlus.getGeneralContactCursor(cr, req, true);
 	}
 	
 	private static Cursor getSIPContactCursor(ContentResolver cr, String id) {
 		String req = null;
-    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+    	req = "(" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
                 + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
-                + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
-		
+                + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "' " 
+                + " OR " + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE 
+                + " AND " + android.provider.ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " LIKE '" + id + "'";
+    	
 		return ApiFivePlus.getGeneralContactCursor(cr, req, false);
 	}
 	
