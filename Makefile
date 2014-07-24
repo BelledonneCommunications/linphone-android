@@ -543,12 +543,13 @@ veryclean: clean clean-ffmpeg clean-x264 clean-openh264 clean-vpx
 .PHONY: clean install-apk run-linphone
 
 generate-sdk: generate-apk
-	ant liblinphone-sdk
+	ant liblinphone-android-sdk
 
-linphone-sdk: generate-sdk
+liblinphone-android-sdk: generate-apk
+	ant liblinphone-android-sdk
 
 linphone-android-sdk: generate-apk
-	ant liblinphone-android-sdk
+	ant linphone-android-sdk
 
 mediastreamer2-sdk: update-mediastreamer2-project generate-mediastreamer2-apk
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
