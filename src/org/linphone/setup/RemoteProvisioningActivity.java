@@ -66,6 +66,7 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	protected void onResume() {
 		super.onResume();
 		instance = this;
+		LinphonePreferences.instance().setContext(this);
 		
 		checkIntentForConfigUri(getIntent());
 	}
@@ -175,8 +176,12 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	}
 	
 	private void goToLinphoneActivity() {
-		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
-		finish(); // To prevent the user to come back to this page using back button
-		startActivity(new Intent().setClass(this, LinphoneActivity.class));
+		if (LinphoneService.isReady()) {
+			LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
+			//finish(); // To prevent the user to come back to this page using back button
+			startActivity(new Intent().setClass(this, LinphoneActivity.class));
+		} else {
+			finish();
+		}
 	}
 }
