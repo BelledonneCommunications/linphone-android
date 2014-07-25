@@ -78,13 +78,18 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	}
 
 	@Override
-	public void onConfiguringStatus(RemoteProvisioningState state) {
-		if (spinner != null) spinner.setVisibility(View.GONE);
-		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
-			goToLinphoneActivity();
-		} else if (state == RemoteProvisioningState.ConfiguringFailed) {
-			Toast.makeText(this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
-		}
+	public void onConfiguringStatus(final RemoteProvisioningState state) {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (spinner != null) spinner.setVisibility(View.GONE);
+				if (state == RemoteProvisioningState.ConfiguringSuccessful) {
+					goToLinphoneActivity();
+				} else if (state == RemoteProvisioningState.ConfiguringFailed) {
+					Toast.makeText(RemoteProvisioningActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -132,7 +137,12 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 							}
 						});
 					} else {
-						setRemoteProvisioningAddressAndRestart(configUriParam);
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								setRemoteProvisioningAddressAndRestart(configUriParam);
+							}
+						});
 					}
 				}
 			}
