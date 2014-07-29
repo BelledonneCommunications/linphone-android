@@ -811,7 +811,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 	private synchronized void allowSIPCalls() {
 		if (savedMaxCallWhileGsmIncall == 0) {
-			Log.w("SIP calls are already allowed as no GSM call knowned to be running");
+			Log.w("SIP calls are already allowed as no GSM call known to be running");
 			return;
 		}
 		mLc.setMaxCalls(savedMaxCallWhileGsmIncall);
