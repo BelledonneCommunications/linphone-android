@@ -321,6 +321,7 @@ public class LinphonePreferences {
 			prxCfg.enableQualityReporting(tempQualityReportingEnabled);
 			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
 			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
+			prxCfg.setRealm("sip.linphone.org");
 
 			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, tempHa1, null, tempDomain);
 
@@ -473,7 +474,7 @@ public class LinphonePreferences {
 		LinphoneAuthInfo authInfo = getAuthInfo(n);
 		return authInfo == null ? null : authInfo.getPassword();
 	}
-	
+
 	public void setAccountHa1(int n, String ha1) {
 		LinphoneAuthInfo info = getClonedAuthInfo(n);
 		info.setHa1(ha1);
