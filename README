@@ -18,6 +18,11 @@ To build liblinphone for Android, you must:
 	$ make linphone-sdk
 6) (Optional) To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run
 	$ make mediastreamer2-sdk
+7) (Optional) To generate a signed apk to publish on the Google Play, run
+	$ make release
+It will ask you for the version number that will be displayed in the about page of the app.
+Make sure you filled the ant.properties values for key.store and key.alias in order to correctly 
+sign the generated apk (it will ask you the password during the process)
 
 To run the tutorials:
 1) open the res/values/non_localizable_custom.xml file and change the value of the show_tutorials_instead_of_app to true.
