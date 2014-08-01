@@ -1,120 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-  	android:background="@drawable/background"
-    android:orientation="vertical" >
-    
-    <LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:background="@drawable/toolsbar_background">
-        
-        <TextView 
-            android:contentDescription="@string/content_description_delete"
-            android:id="@+id/deleteAll"
-            android:background="@drawable/history_delete"
-            android:text="@string/button_delete_all"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textSize="13dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_all_calls"
-            android:id="@+id/allCalls"
-            android:background="@drawable/history_all"
-            android:text="@string/button_all_call"
-            android:gravity="center"
-            android:paddingTop="15dp"
-            android:textSize="13dp"
-            android:textColor="@drawable/text_switch_button_color"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_missed_calls"
-            android:id="@+id/missedCalls"
-            android:background="@drawable/history_missed"
-            android:text="@string/button_missed_call"
-            android:gravity="center"
-            android:paddingTop="15dp"
-            android:textSize="13dp"
-            android:textColor="@drawable/text_switch_button_color"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_edit"
-            android:id="@+id/edit"
-            android:background="@drawable/history_edit"
-            android:text="@string/button_edit"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textSize="13dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_validate"
-            android:id="@+id/ok"
-            android:background="@drawable/history_ok"
-            android:text="@string/button_ok"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textSize="13dp"
-            android:textColor="@drawable/text_button"
-            android:visibility="gone"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-    </LinearLayout>
-    
-    <ListView 
-        android:id="@+id/historyList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@android:color/darker_gray"
-        android:cacheColorHint="@color/transparent"
-        android:dividerHeight="1dp" />
-    
-    <TextView 
-        android:id="@+id/noCallHistory"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/no_call_history"
-        android:textColor="@drawable/text_color"
-        android:textAppearance="@android:style/TextAppearance.Large"/>
-    
-    <TextView 
-        android:id="@+id/noMissedCallHistory"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/no_missed_call_history"
-        android:textColor="@drawable/text_color"
-        android:textAppearance="@android:style/TextAppearance.Large"/>
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/background"
+	android:orientation="vertical" >
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:background="@drawable/toolsbar_background">
+
+		<TextView
+			android:contentDescription="@string/content_description_delete"
+			android:id="@+id/deleteAll"
+			android:background="@drawable/history_delete"
+			android:text="@string/button_delete_all"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_all_calls"
+			android:id="@+id/allCalls"
+			android:background="@drawable/history_all"
+			android:text="@string/button_all_call"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13dp"
+			android:textColor="@drawable/text_switch_button_color"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_missed_calls"
+			android:id="@+id/missedCalls"
+			android:background="@drawable/history_missed"
+			android:text="@string/button_missed_call"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13dp"
+			android:textColor="@drawable/text_switch_button_color"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_edit"
+			android:id="@+id/edit"
+			android:background="@drawable/history_edit"
+			android:text="@string/button_edit"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_validate"
+			android:id="@+id/ok"
+			android:background="@drawable/history_ok"
+			android:text="@string/button_ok"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13dp"
+			android:textColor="@drawable/text_button"
+			android:visibility="gone"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+	</LinearLayout>
+
+	<ListView
+		android:id="@+id/historyList"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:divider="@android:color/darker_gray"
+		android:cacheColorHint="@color/transparent"
+		android:dividerHeight="1dp" />
+
+	<TextView
+		android:id="@+id/noCallHistory"
+		android:visibility="gone"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:text="@string/no_call_history"
+		android:textColor="@drawable/text_color"
+		android:textAppearance="@android:style/TextAppearance.Large"/>
+
+	<TextView
+		android:id="@+id/noMissedCallHistory"
+		android:visibility="gone"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:text="@string/no_missed_call_history"
+		android:textColor="@drawable/text_color"
+		android:textAppearance="@android:style/TextAppearance.Large"/>
 
 </LinearLayout>
