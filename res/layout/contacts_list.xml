@@ -1,138 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-  	android:background="@drawable/background"
-    android:orientation="vertical" >
-    
-    <LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:background="@drawable/toolsbar_background">
-	    
-        <TextView 
-            android:visibility="invisible"
-            android:paddingTop="20dp"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_all_contacts"
-            android:id="@+id/allContacts"
-            android:background="@drawable/contacts_all"
-            android:text="@string/button_all_contacts"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textSize="13sp"
-            android:textColor="@drawable/text_switch_button_color"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_linphone_contacts"
-            android:id="@+id/linphoneContacts"
-            android:background="@drawable/contacts_sip"
-            android:text="@string/button_sip_contacts"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textSize="13sp"
-            android:textColor="@drawable/text_switch_button_color"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_add_contact"
-            android:id="@+id/newContact"
-            android:background="@drawable/contacts_add_contact"
-            android:text="@string/button_add_contact"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textSize="13sp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-    </LinearLayout>
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-	    
-	    <ImageView 
-	        android:contentDescription="@string/content_description_cancel"
-	        android:id="@+id/clearSearchField"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:adjustViewBounds="true"
-	        android:src="@drawable/list_delete"
-	        android:layout_centerVertical="true"
-	        android:layout_alignParentRight="true"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="5dp"/>
-        
-	    <EditText
-            android:textCursorDrawable="@null"
-	        android:id="@+id/searchField"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/black"
-	        android:background="@drawable/chat_fast_address_background"
-	        android:gravity="center"
-	        android:layout_toLeftOf="@id/clearSearchField"
-	        android:paddingRight="5dp"
-	        android:inputType="textPersonName"/>
-	    
-    </RelativeLayout>
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-	    <ListView 
-	        android:id="@+id/contactsList"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:divider="@android:color/darker_gray"
-	        android:cacheColorHint="@color/transparent"
-		    android:fastScrollAlwaysVisible="true"
-		    android:fastScrollEnabled="true"
-	        android:dividerHeight="1dp" />
-	    
-	    <TextView 
-	        android:id="@+id/noSipContact"
-	        android:visibility="gone"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-	        android:text="@string/no_sip_contact"
-	        android:textColor="@drawable/text_color"
-	        android:textAppearance="@android:style/TextAppearance.Large"/>
-	    
-	    <TextView 
-	        android:id="@+id/noContact"
-	        android:visibility="gone"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-	        android:text="@string/no_contact"
-	        android:textColor="@drawable/text_color"
-	        android:textAppearance="@android:style/TextAppearance.Large"/>
-        
-    </RelativeLayout>
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/background"
+	android:orientation="vertical" >
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:background="@drawable/toolsbar_background">
+
+		<TextView
+			android:visibility="invisible"
+			android:paddingTop="20dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_all_contacts"
+			android:id="@+id/allContacts"
+			android:background="@drawable/contacts_all"
+			android:text="@string/button_all_contacts"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13sp"
+			android:textColor="@drawable/text_switch_button_color"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_linphone_contacts"
+			android:id="@+id/linphoneContacts"
+			android:background="@drawable/contacts_sip"
+			android:text="@string/button_sip_contacts"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13sp"
+			android:textColor="@drawable/text_switch_button_color"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/content_description_add_contact"
+			android:id="@+id/newContact"
+			android:background="@drawable/contacts_add_contact"
+			android:text="@string/button_add_contact"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textSize="13sp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+	</LinearLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:contentDescription="@string/content_description_cancel"
+			android:id="@+id/clearSearchField"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			android:src="@drawable/list_delete"
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"
+			android:paddingLeft="5dp"
+			android:paddingRight="5dp"/>
+
+		<EditText
+			android:textCursorDrawable="@null"
+			android:id="@+id/searchField"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/black"
+			android:background="@drawable/chat_fast_address_background"
+			android:gravity="center"
+			android:layout_toLeftOf="@id/clearSearchField"
+			android:paddingRight="5dp"
+			android:inputType="textPersonName"/>
+
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<ListView
+			android:id="@+id/contactsList"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:divider="@android:color/darker_gray"
+			android:cacheColorHint="@color/transparent"
+			android:fastScrollAlwaysVisible="true"
+			android:fastScrollEnabled="true"
+			android:dividerHeight="1dp" />
+
+		<TextView
+			android:id="@+id/noSipContact"
+			android:visibility="gone"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_centerVertical="true"
+			android:text="@string/no_sip_contact"
+			android:textColor="@drawable/text_color"
+			android:textAppearance="@android:style/TextAppearance.Large"/>
+
+		<TextView
+			android:id="@+id/noContact"
+			android:visibility="gone"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_centerVertical="true"
+			android:text="@string/no_contact"
+			android:textColor="@drawable/text_color"
+			android:textAppearance="@android:style/TextAppearance.Large"/>
+
+	</RelativeLayout>
 
 </LinearLayout>

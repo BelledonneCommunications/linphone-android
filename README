@@ -3,7 +3,7 @@
 
 To build liblinphone for Android, you must:
 0) download the Android sdk with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both 'tools' and 'platform-tools' folders in your path.
-1) download the Android ndk (>=r9d) from google and add it to your path (no symlink !!!).
+1) download the Android ndk (>=r9d, < r10) from google and add it to your path (no symlink !!!).
 2) install yasm, nasm, curl, ant, rsync and the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig
 	On 64 bits linux systems you'll need the ia32-libs package
 	With the latest Debian (multiarch), you need this:
@@ -21,7 +21,7 @@ To build liblinphone for Android, you must:
 7) (Optional) To generate a signed apk to publish on the Google Play, run
 	$ make release
 It will ask you for the version number that will be displayed in the about page of the app.
-Make sure you filled the ant.properties values for key.store and key.alias in order to correctly 
+Make sure you filled the ant.properties values for key.store and key.alias in order to correctly
 sign the generated apk (it will ask you the password during the process)
 
 To run the tutorials:
@@ -38,6 +38,8 @@ To create an apk with a different package name, you need to edit the custom_rule
 
 			   TROUBLESHOOTING
 			*****************************
+
+Currently Android NDK 10 is NOT supported for X86 version, please use Android NDK 9d maximum.
 
 If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
 
@@ -63,7 +65,7 @@ BUILD_VIDEO
 BUILD_X264
 	values: 0 (don't build x264) or 1 (build x264), default value: 1
 
-BUILD_AMRNB          
+BUILD_AMRNB
 	values: 0 (don't build amrnb codec), light (try to use amrnb codec from android), full (build your own amrnb codec), default value: full
 
 BUILD_AMRWB
@@ -72,7 +74,7 @@ BUILD_AMRWB
 BUILD_ZRTP
 	values: 0 (don't support ZRTP), 1 (support ZRTP), default value: 1
 
-BUILD_SILK            
+BUILD_SILK
 	values: 0 (don't build silk plugin), 1 (build silk) [silk is Skype nonfree patented audio codec], default value: 1
 
 BUILD_G729
