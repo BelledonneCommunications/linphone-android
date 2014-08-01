@@ -101,8 +101,8 @@ include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
 
 ifeq ($(BUILD_MATROSKA), 1)
-include $(linphone-root-dir)/submodules/externals/buil/libebml/Android.mk
-include $(linphone-root-dir)/submodules/externals/buil/libmatroska/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/libebml2/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/libmatroska/Android.mk
 endif
 
 endif #_BUILD_VIDEO
