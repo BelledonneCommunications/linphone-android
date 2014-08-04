@@ -3,6 +3,7 @@ package org.linphone.compatibility;
 import java.util.ArrayList;
 
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -124,6 +125,11 @@ public class ApiElevenPlus {
 	}
 
 	public static void setAudioManagerInCallMode(AudioManager manager) {
+		if (manager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
+			Log.w("---AudioManager: already in MODE_IN_COMMUNICATION, skipping..."); 
+			return;
+		}
+		Log.d("---AudioManager: set mode to MODE_IN_COMMUNICATION");
 		manager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 	}
 	
