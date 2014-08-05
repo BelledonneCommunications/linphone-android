@@ -888,6 +888,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 				adjustVolume(0); // Synchronize
 			}
 		}
+		
+		if (state == State.OutgoingEarlyMedia) {
+			Compatibility.setAudioManagerInCallMode(mAudioManager);
+		}
 
 		if (state == State.CallReleased || state == State.Error) {
 			if (mLc.getCallsNb() == 0) {
