@@ -303,6 +303,8 @@ LIBMATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska
 LIBEBML2_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libebml2
 COREMAKE=$(LIBMATROSKA_SRC_DIR)/corec/tools/coremake/coremake
 
+build-matroska: $(BUILD_MATROSKA_DEPS)
+
 $(LIBEBML2_BUILD_DIR)/arm/libebml2.a: $(LIBMATROSKA_SRC_DIR)/release/android_armv7/libebml2.a
 	mkdir -p $(LIBEBML2_BUILD_DIR)/arm
 	cp $< $@
@@ -310,7 +312,7 @@ $(LIBEBML2_BUILD_DIR)/arm/libebml2.a: $(LIBMATROSKA_SRC_DIR)/release/android_arm
 $(LIBMATROSKA_BUILD_DIR)/arm/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/release/android_armv7/libmatroska2.a
 	mkdir -p $(LIBMATROSKA_BUILD_DIR)/arm
 	cp $< $@
-	
+
 $(LIBEBML2_BUILD_DIR)/x86/libebml2.a: $(LIBMATROSKA_SRC_DIR)/release/android_x86/libebml2.a
 	mkdir -p $(LIBEBML2_BUILD_DIR)/x86
 	cp $< $@
@@ -319,32 +321,33 @@ $(LIBMATROSKA_BUILD_DIR)/x86/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/release/andr
 	mkdir -p $(LIBMATROSKA_BUILD_DIR)/x86
 	cp $< $@
 
-$(LIBMATROSKA_SRC_DIR)/release/android_armv7/libebml2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_armv7.txt
+$(LIBMATROSKA_SRC_DIR)/release/android_armv7/libebml2.a: $(LIBMATROSKA_SRC_DIR)/builded.txt
+
+$(LIBMATROSKA_SRC_DIR)/release/android_armv7/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/builded.txt
+
+$(LIBMATROSKA_SRC_DIR)/release/android_x86/libebml2.a: $(LIBMATROSKA_SRC_DIR)/builded.txt
+
+$(LIBMATROSKA_SRC_DIR)/release/android_x86/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/builded.txt
+
+$(LIBMATROSKA_SRC_DIR)/builded.txt: $(COREMAKE) $(LIBMATROSKA_SRC_DIR)/configure_config_h.txt $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt
+	cd $(LIBMATROSKA_SRC_DIR) ; $(COREMAKE) android_armv7 -f $(LIBMATROSKA_SRC_DIR)/root.proj
 	make -C $(LIBMATROSKA_SRC_DIR) ebml2
-
-$(LIBMATROSKA_SRC_DIR)/release/android_armv7/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_armv7.txt
 	make -C $(LIBMATROSKA_SRC_DIR) matroska2
-	
-$(LIBMATROSKA_SRC_DIR)/release/android_x86/libebml2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_x86.txt
+ifeq ($(BUILD_FOR_X86), 1)
+	cd $(LIBMATROSKA_SRC_DIR) ; $(COREMAKE) android_x86 -f $(LIBMATROSKA_SRC_DIR)/root.proj
 	make -C $(LIBMATROSKA_SRC_DIR) ebml2
-
-$(LIBMATROSKA_SRC_DIR)/release/android_x86/libmatroska2.a: $(LIBMATROSKA_SRC_DIR)/coremake_android_x86.txt
 	make -C $(LIBMATROSKA_SRC_DIR) matroska2
-
-$(LIBMATROSKA_SRC_DIR)/coremake_android_armv7.txt: $(COREMAKE) $(LIBMATROSKA_SRC_DIR)/configure_config_h.txt $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt
-	cd $(LIBMATROSKA_SRC_DIR); $(COREMAKE) android_armv7 -f $(LIBMATROSKA_SRC_DIR)/root.proj
-	rm -f $(LIBMATROSKA_SRC_DIR)/coremake_*.txt;
+endif
 	touch $@
 
-$(LIBMATROSKA_SRC_DIR)/coremake_android_x86.txt: $(COREMAKE) $(LIBMATROSKA_SRC_DIR)/configure_config_h.txt $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt
-	cd $(LIBMATROSKA_SRC_DIR); $(COREMAKE) android_x86 -f $(LIBMATROSKA_SRC_DIR)/root.proj
-	rm -f $(LIBMATROSKA_SRC_DIR)/coremake_*.txt
-	touch $@
-		
 $(COREMAKE):
 	make -C $(LIBMATROSKA_SRC_DIR)/corec/tools/coremake
 
-$(LIBMATROSKA_SRC_DIR)/configure_config_h.txt:
+$(LIBMATROSKA_SRC_DIR)/configure_config_h.txt: $(LIBMATROSKA_BUILD_DIR)/config.h
+	cp $(LIBMATROSKA_BUILD_DIR)/config.h $(LIBMATROSKA_SRC_DIR)
+	echo "#define COREMAKE_STATIC" >> $(LIBMATROSKA_SRC_DIR)/config.h
+	echo "#define COREMAKE_UNICODE" >> $(LIBMATROSKA_SRC_DIR)/config.h
+	echo "#define COREMAKE_CONFIG_HELPER" >> $(LIBMATROSKA_SRC_DIR)/config.h
 	echo "#define CONFIG_ANDROID_NDK $(NDK_PATH)" >> $(LIBMATROSKA_SRC_DIR)/config.h
 	echo "#define CONFIG_ANDROID_VERSION $(ANDROID_MOST_RECENT_TARGET)" >> $(LIBMATROSKA_SRC_DIR)/config.h
 	echo "#define CONFIG_ANDROID_PLATFORM linux-x86_64" >> $(LIBMATROSKA_SRC_DIR)/config.h
@@ -354,22 +357,21 @@ $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt:
 	cd $(LIBMATROSKA_SRC_DIR); patch -p0 < ../build/libmatroska/coremake_fix.patch
 	cp $(LIBMATROSKA_BUILD_DIR)/android_x86.build $(LIBMATROSKA_SRC_DIR)/corec/tools/coremake
 	touch $@
-	
+
 $(LIBEBML2_BUILD_DIR)/include: $(LIBMATROSKA_SRC_DIR)/libebml2/ebml $(LIBMATROSKA_SRC_DIR)/corec/corec $(LIBMATROSKA_BUILD_DIR)/config.h
-	mkdir $@
+	mkdir -p $@
 	cp -r $(LIBMATROSKA_SRC_DIR)/libebml2/ebml $(LIBMATROSKA_SRC_DIR)/corec/corec $@
 	cp $(LIBMATROSKA_BUILD_DIR)/config.h $(LIBEBML2_BUILD_DIR)/include/corec
 
 $(LIBMATROSKA_BUILD_DIR)/include: $(LIBMATROSKA_SRC_DIR)/libmatroska2/matroska
-	mkdir $@
+	mkdir -p $@
 	cp -r $(LIBMATROSKA_SRC_DIR)/libmatroska2/matroska $@
-
-build-matroska: $(BUILD_MATROSKA_DEPS)
 
 clean-matroska:
 	rm -rf $(LIBMATROSKA_BUILD_DIR)/{arm,x86,include}
 	rm -rf $(LIBEBML2_BUILD_DIR)/{arm,x86,include}
 	cd $(LIBMATROSKA_SRC_DIR); $(COREMAKE) clean
+	rm -rf $(LIBMATROSKA_SRC_DIR)/builded.txt
 
 #SILK
 LIBMSSILK_SRC_DIR=$(TOPDIR)/submodules/mssilk
@@ -548,7 +550,7 @@ clean-ndk-build:
 clean: clean-ndk-build
 	ant clean
 
-veryclean: clean clean-ffmpeg clean-x264 clean-openh264 clean-vpx
+veryclean: clean clean-ffmpeg clean-x264 clean-openh264 clean-vpx clean-matroska
 
 .PHONY: clean install-apk run-linphone
 
