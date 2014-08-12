@@ -1077,4 +1077,20 @@ public class LinphonePreferences {
 	public boolean isFirstRemoteProvisioning() {
 		return getConfig().getBool("app", "first_remote_provisioning", true);
 	}
+
+	public boolean isAdaptativeRateControlEnabled() {
+		return getLc().isAdaptiveRateControlEnabled();
+	}
+	
+	public void enableAdaptativeRateControl(boolean enabled) {
+		getLc().enableAdaptiveRateControl(enabled);
+	}
+	
+	public int getCodecBitrateLimit() {
+		return getConfig().getInt("audio", "codec_bitrate_limit", 36);
+	}
+	
+	public void setCodecBitrateLimit(int bitrate) {
+		getConfig().setInt("audio", "codec_bitrate_limit", bitrate);
+	}
 }

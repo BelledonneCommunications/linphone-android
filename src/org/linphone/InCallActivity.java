@@ -1055,7 +1055,13 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		
 		if(!LinphonePreferences.instance().isVideoEnabled()){
-			video.setEnabled(true);
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					video.setEnabled(true);
+				}
+			});
+			
 		}
 		
 		if (state == State.IncomingReceived) {

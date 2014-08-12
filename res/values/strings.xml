@@ -166,6 +166,25 @@
     <string name="pref_audio_port_description">Audio port or port range (minport-maxport)</string>
     <string name="pref_incoming_call_timeout_title">Incoming call timeout (in seconds)</string>
     <string name="place_call_chooser">Place a call</string>
+    <string name="pref_adaptative_rate_control">Adaptative rate control</string>
+    <string name="pref_codec_bitrate_limit">Codec bitrate limit</string>
+    
+    <string-array name="limit_bitrate_entries">
+        <item>10 kbits/s</item>
+        <item>15 kbits/s</item>
+        <item>20 kbits/s</item>
+        <item>36 kbits/s</item>
+        <item>64 kbits/s</item>
+        <item>128 kbits/s</item>
+    </string-array>
+    <string-array name="limit_bitrate_entry_values">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>36</item>
+        <item>64</item>
+        <item>128</item>
+    </string-array>  
     
 	<string name="pref_debug">Debug</string>
 	<string name="about_report_issue">Report issue</string>

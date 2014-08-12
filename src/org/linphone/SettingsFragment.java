@@ -440,7 +440,14 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			Preference echoCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 			echoCalibration.setSummary(String.format(getString(R.string.ec_calibrated), mPrefs.getEchoCalibration()));
 		}
-
+		
+		CheckBoxPreference adaptativeRateControl = (CheckBoxPreference) findPreference(getString(R.string.pref_adaptative_rate_control_key));
+		adaptativeRateControl.setChecked(mPrefs.isAdaptativeRateControlEnabled());
+		
+		
+		ListPreference bitrateLimit = (ListPreference) findPreference(getString(R.string.pref_codec_bitrate_limit_key));
+		bitrateLimit.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
+		bitrateLimit.setValue(String.valueOf(mPrefs.getCodecBitrateLimit()));
 	}
 
 	private void setAudioPreferencesListener() {
@@ -452,7 +459,34 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
+		
+		findPreference(getString(R.string.pref_adaptative_rate_control_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enabled = (Boolean) newValue;
+				mPrefs.enableAdaptativeRateControl(enabled);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_codec_bitrate_limit_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setCodecBitrateLimit(Integer.parseInt(newValue.toString()));
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				int bitrate=Integer.parseInt(newValue.toString());
 
+				for (final PayloadType pt : lc.getAudioCodecs()) {
+					if(lc.payloadTypeIsVbr(pt)){
+						lc.setPayloadTypeBitrate(pt, bitrate);
+					}
+				}
+				
+				preference.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
+				return true;
+			}
+		});
+		
 		findPreference(getString(R.string.pref_echo_canceller_calibration_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
