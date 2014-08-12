@@ -380,7 +380,7 @@ public class ChatStorage {
 		if (useNativeAPI) {
 			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
 			for (LinphoneChatRoom chatroom : chats) {
-				if (chatroom.getHistory().length > 0) {
+				if (chatroom.getHistory(1).length > 0) {
 					chatList.add(chatroom.getPeerAddress().asStringUriOnly());
 				}
 			}
