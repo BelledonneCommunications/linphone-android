@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.R;
@@ -293,12 +292,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 		.setUsername(username)
-		.setDomain(domain);
-		if (getResources().getBoolean(R.bool.store_ha1_passwords)) {
-			builder = builder.setHa1(LinphoneUtils.md5Hash(username, password, domain));
-		} else {
-			builder = builder.setPassword(password);
-		}
+		.setDomain(domain)
+		.setPassword(password);
 		
 		if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
