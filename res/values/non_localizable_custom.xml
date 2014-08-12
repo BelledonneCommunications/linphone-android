@@ -70,7 +70,6 @@
 	<bool name="auto_answer_calls">false</bool>
 	<bool name="intercept_outgoing_gsm_calls">false</bool>
 	<bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool>
-	<bool name="store_ha1_passwords">true</bool>
 	<bool name="use_linphonecore_ringing">false</bool>
 	
 	<!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
