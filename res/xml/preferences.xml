@@ -52,6 +52,16 @@
 			<Preference 
 				android:title="@string/pref_echo_canceller_calibration"
 			    android:key="@string/pref_echo_canceller_calibration_key"/>
+			
+			<CheckBoxPreference 
+				android:title="@string/pref_adaptative_rate_control" 
+			    android:key="@string/pref_adaptative_rate_control_key" />
+			
+			<ListPreference 
+			    android:title="@string/pref_codec_bitrate_limit"
+				android:key="@string/pref_codec_bitrate_limit_key"
+				android:entries="@array/limit_bitrate_entries"
+            	android:entryValues="@array/limit_bitrate_entry_values" />
 	
 			<PreferenceCategory
 				android:title="@string/pref_codecs" 

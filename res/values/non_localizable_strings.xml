@@ -97,6 +97,9 @@
     <string name="pref_media_encryption_key_srtp">srtp</string>
     <string name="pref_media_encryption_key_zrtp">zrtp</string>
 	<string name="pref_background_mode_key">pref_background_mode_key</string>
+	<string name="pref_codec_bitrate_limit_key">pref_codec_bitrate_limit_key</string>
+	<string name="pref_adaptative_rate_control_key">pref_adaptative_rate_control_key</string>
+	
     
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
