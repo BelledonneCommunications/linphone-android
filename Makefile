@@ -18,7 +18,7 @@ X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
 	print $$0 " " b[2]}' | \
 	sort -g -k 2 | \
 	awk '{ print $$1 }' | tail -1)
-NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo || echo "4" )
+NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo "4" )
 TOPDIR=$(shell pwd)
 LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
@@ -113,7 +113,7 @@ $(LIBILBC_BUILD_DIR)/Makefile: $(LIBILBC_SRC_DIR)/configure
 $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
 	cd $(LIBILBC_BUILD_DIR)/downloads && make \
 	|| ( echo "iLBC prepare stage failed" ; exit 1 )
-	
+
 prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
 
 #ffmpeg
@@ -228,13 +228,13 @@ openh264-install-headers:
 
 copy-openh264-x86: openh264-patch openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
-	mkdir -p $(OPENH264_BUILD_DIR_X86) 
+	mkdir -p $(OPENH264_BUILD_DIR_X86)
 	cd $(OPENH264_BUILD_DIR_X86) \
 	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
 copy-openh264-arm: openh264-patch openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
-	mkdir -p $(OPENH264_BUILD_DIR_ARM) 
+	mkdir -p $(OPENH264_BUILD_DIR_ARM)
 	cd $(OPENH264_BUILD_DIR_ARM) \
 	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
@@ -417,15 +417,15 @@ ANLTR3_SRC_DIR=$(TOPDIR)/submodules/externals/antlr3/runtime/C/include/
 ANTLR3_BUILD_DIR=$(ANTLR3_SRC_DIR)
 $(ANLTR3_SRC_DIR)/antlr3config.h: $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h
 	cp $(TOPDIR)/submodules/externals/build/antlr3/antlr3config.h $(ANLTR3_SRC_DIR)
-prepare-antlr3: $(ANLTR3_SRC_DIR)/antlr3config.h 
+prepare-antlr3: $(ANLTR3_SRC_DIR)/antlr3config.h
 
 %.tokens: %.g
-	$(ANTLR) -make -fo $(dir $^) $^ 
+	$(ANTLR) -make -fo $(dir $^) $^
 
 #Belle-sip
 BELLESIP_SRC_DIR=$(TOPDIR)/submodules/belle-sip
 BELLESIP_BUILD_DIR=$(BELLESIP_SRC_DIR)
-prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/grammars/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/grammars/belle_sdp.tokens 
+prepare-belle-sip: $(BELLESIP_SRC_DIR)/src/grammars/belle_sip_message.tokens $(BELLESIP_SRC_DIR)/src/grammars/belle_sdp.tokens
 
 #CUnit
 prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
@@ -437,7 +437,7 @@ $(TOPDIR)/res/raw/rootca.pem:
 
 prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/res/raw/rootca.pem
 	rm -rf liblinphone_tester/assets/config_files
-	mkdir -p liblinphone_tester/assets/config_files 
+	mkdir -p liblinphone_tester/assets/config_files
 	for file in $^; do \
 	cp -rf $$file $(TOPDIR)/liblinphone_tester/assets/config_files/. \
 	;done
@@ -461,7 +461,7 @@ $(SQLITE_BUILD_DIR)/sqlite3.c: $(SQLITE_BASENAME).zip
 	mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
 	rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
 
-$(SQLITE_BASENAME).zip:	
+$(SQLITE_BASENAME).zip:
 	curl -sO $(SQLITE_URL)
 
 #Build targets
@@ -505,7 +505,7 @@ update-mediastreamer2-project:
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
 	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=android-14
 
-javah: 
+javah:
 	ant javah
 
 generate-apk: generate-libs
@@ -537,7 +537,7 @@ run-basic-tests:
 	$(MAKE) -C tests run-basic-tests
 
 run-all-tests:
-	ant partial-clean 
+	ant partial-clean
 	$(MAKE) -C tests run-all-tests
 
 clean-ndk-build:
