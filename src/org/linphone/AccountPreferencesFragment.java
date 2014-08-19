@@ -188,7 +188,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			String key = newValue.toString();
 			mPrefs.setAccountTransport(n, key);
 			preference.setSummary(mPrefs.getAccountTransportString(n));
-			
+			preference.setDefaultValue(mPrefs.getAccountTransportKey(n));
 			if (mProxyPreference != null) {
 				String newProxy = mPrefs.getAccountProxy(n);
 				mProxyPreference.setSummary(newProxy);
@@ -258,7 +258,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	initializeTransportPreference(mTransportPreference);
     	mTransportPreference.setOnPreferenceChangeListener(transportChangedListener);	
     	mTransportPreference.setSummary(mPrefs.getAccountTransportString(n));
-		
+    	
 		mProxyPreference = (EditTextPreference) advanced.getPreference(1);
 		mProxyPreference.setText(mPrefs.getAccountProxy(n));
 		mProxyPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -340,6 +340,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		
 		pref.setSummary(mPrefs.getAccountTransportString(n));
 		pref.setDefaultValue(mPrefs.getAccountTransportKey(n));
+		pref.setValueIndex(entries.indexOf(mPrefs.getAccountTransportString(n)));
 	}
 	
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
