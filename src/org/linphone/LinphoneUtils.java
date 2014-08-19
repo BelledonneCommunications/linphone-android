@@ -86,6 +86,10 @@ public final class LinphoneUtils {
 		}
 	}
 	
+	public static boolean isNumberAddress(String numberOrAddress) {
+		return numberOrAddress.matches("[-+]?\\d*\\.?\\d+");
+	}
+	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
 		return isSipAddress(numberOrAddress) && numberOrAddress.startsWith("sip:");
 	}
