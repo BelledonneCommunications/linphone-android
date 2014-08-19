@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+  	android:background="@drawable/background"
+	android:layout_height="match_parent">
+	
+	<LinearLayout
+		android:id="@+id/fragmentContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="20dp"
+		android:layout_above="@id/menu"
+		android:orientation="horizontal" />
+	  
+	<LinearLayout
+		android:id="@+id/menu"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:orientation="horizontal">
+	    
+		<include layout="@layout/setup_cancel_button" />
+		          
+		<include layout="@layout/setup_next_button" />
+		
+		<include layout="@layout/setup_back_button" />    
+	  
+	</LinearLayout>
+ 
+</RelativeLayout>
