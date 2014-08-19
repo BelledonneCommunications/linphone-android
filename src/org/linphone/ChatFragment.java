@@ -688,7 +688,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void scrollToEnd() {
-		messagesList.smoothScrollToPosition(messagesList.getBottom());
+		messagesList.smoothScrollToPosition(messagesList.getCount());
 		chatRoom.markAsRead();
 	}
 
