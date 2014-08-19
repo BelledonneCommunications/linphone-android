@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.AvatarWithShadow;
 
@@ -209,7 +210,7 @@ public class EditContactFragment extends Fragment {
 			}
 		}
 		if (newSipOrNumberToAdd != null) {
-			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, true);
+			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
 			if (view != null)
 				controls.addView(view);
 		}
@@ -243,7 +244,8 @@ public class EditContactFragment extends Fragment {
 	}
 	
 	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress, boolean forceAddNumber) {
-		boolean isSip = numberOrAddress.startsWith("sip:");
+		boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
+		
 		if (isSip) {
 			if (firstSipAddressIndex == -1) {
 				firstSipAddressIndex = controls.getChildCount();
