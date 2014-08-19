@@ -435,7 +435,7 @@ prepare-cunit: $(TOPDIR)/submodules/externals/cunit/CUnit/Headers/*.h
 $(TOPDIR)/res/raw/rootca.pem:
 	 HTTPS_CA_DIR=$(HTTPS_CA_DIR) $(TOPDIR)/submodules/linphone/scripts/mk-ca-bundle.pl $@
 
-prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/res/raw/rootca.pem
+prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(TOPDIR)/res/raw/rootca.pem $(TOPDIR)/submodules/linphone/tester/messages.db
 	rm -rf liblinphone_tester/assets/config_files
 	mkdir -p liblinphone_tester/assets/config_files
 	for file in $^; do \
