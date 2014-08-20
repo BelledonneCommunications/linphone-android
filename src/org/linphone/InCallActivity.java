@@ -91,7 +91,7 @@ public class InCallActivity extends FragmentActivity implements
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isVideoEnabled,  isTransferAllowed, isAnimationDisabled;
+	private boolean isSpeakerEnabled = false, isMicMuted = false,  isTransferAllowed, isAnimationDisabled;
 	private ViewGroup mControlsLayout;
 	private Numpad numpad;
 	private int cameraNumber;
@@ -153,6 +153,7 @@ public class InCallActivity extends FragmentActivity implements
             if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
             	callFragment = new VideoCallFragment();
             	videoCallFragment = (VideoCallFragment) callFragment;
+            	isSpeakerEnabled = true;
             	
             	if (cameraNumber > 1) {
             		switchCamera.setVisibility(View.VISIBLE); 
@@ -164,6 +165,7 @@ public class InCallActivity extends FragmentActivity implements
             }
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
+
         }
 	}
 	
@@ -176,11 +178,15 @@ public class InCallActivity extends FragmentActivity implements
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean("Speaker", isSpeakerEnabled);
-		outState.putBoolean("Mic", isMicMuted);
+		outState.putBoolean("Speaker", LinphoneManager.getLc().isSpeakerEnabled());
+		outState.putBoolean("Mic", LinphoneManager.getLc().isMicMuted());
 		outState.putBoolean("VideoCallPaused", isVideoCallPaused);
 		
 		super.onSaveInstanceState(outState);
+	}
+	
+	private boolean isTablet() {
+		return getResources().getBoolean(R.bool.isTablet);
 	}
 	
 	private void initUI() {
@@ -189,6 +195,7 @@ public class InCallActivity extends FragmentActivity implements
         callsList = (TableLayout) findViewById(R.id.calls);
         if (!showCallListInVideo) {
         	callsList.setVisibility(View.GONE);
+        	
         }
         
 		video = (TextView) findViewById(R.id.video);
@@ -199,6 +206,9 @@ public class InCallActivity extends FragmentActivity implements
 //		micro.setEnabled(false);
 		speaker = (TextView) findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
+		if(isTablet()){
+			speaker.setEnabled(false);
+		}
 //		speaker.setEnabled(false);
 		addCall = (TextView) findViewById(R.id.addCall);
 		addCall.setOnClickListener(this);
@@ -329,8 +339,7 @@ public class InCallActivity extends FragmentActivity implements
 					} else {
 						pause.setBackgroundResource(R.drawable.pause_off);
 					}
-				}
-					
+				}	
 			}
 		});
 	}
@@ -348,7 +357,9 @@ public class InCallActivity extends FragmentActivity implements
 				
 				video.setEnabled(true);
 				micro.setEnabled(true);
-				speaker.setEnabled(true);
+				if(!isTablet()){
+					speaker.setEnabled(true);
+		    	}
 				transfer.setEnabled(true);
 				pause.setEnabled(true);
 				dialer.setEnabled(true);
@@ -464,7 +475,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 	
 	private void switchVideo(final boolean displayVideo, final boolean isInitiator) {
-		final LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
 			return;
 		}
