@@ -10,8 +10,6 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 
 import android.test.suitebuilder.annotation.LargeTest;
-import android.view.KeyEvent;
-
 /**
  * @author Sylvain Berfini
  */
@@ -23,20 +21,18 @@ public class AccountManagement extends SampleTest {
 		solo.clickOnText(iContext.getString(R.string.account_generic_login) + "@" + iContext.getString(R.string.account_generic_domain));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_username));
 		solo.enterText(0, "new");
-		//Hack to validate the dialog
-		solo.sendKey(KeyEvent.KEYCODE_ENTER);
-		solo.sendKey(KeyEvent.KEYCODE_TAB);
-		solo.sendKey(KeyEvent.KEYCODE_ENTER);
-		//End of hack
+		
+		solo.clickOnView(solo.getView(android.R.id.button1));
 		
 		solo.goBack();
 		solo.goBack();
 		solo.waitForFragmentByTag(FragmentsAvailable.DIALER.toString(), 2000);
 		
-		solo.sleep(2000); //Wait for registration to be done
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
+		LinphoneProxyConfig proxyConfig = proxyConfigs[0];
+		waitForRegistration(proxyConfig);
 		Assert.assertEquals(proxyConfigs.length, 2);
-		LinphoneProxyConfig proxyConfig = proxyConfigs[1];
+		proxyConfig = proxyConfigs[1];
 		Assert.assertEquals(RegistrationState.RegistrationOk, proxyConfig.getState());
 		Assert.assertTrue(proxyConfig.getIdentity(), proxyConfig.getIdentity().contains("new"));
 	}
@@ -45,7 +41,7 @@ public class AccountManagement extends SampleTest {
 	public void testBDeleteAccount() {
 		goToSettings();
 		solo.clickOnText(iContext.getString(R.string.account_generic_login) + "new");
-		selectItemInListOnUIThread(8);
+		selectItemInListOnUIThread(16);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_delete_account));
 		
 		solo.goBack();
@@ -59,7 +55,7 @@ public class AccountManagement extends SampleTest {
 	public void testCDisableAccount() {
 		goToSettings();
 		solo.clickOnText(iContext.getString(R.string.account_linphone_login));
-		selectItemInListOnUIThread(6);
+		selectItemInListOnUIThread(14);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_disable_account));
 		
 		solo.goBack();
@@ -72,7 +68,7 @@ public class AccountManagement extends SampleTest {
 	public void testDEnableAccount() {
 		goToSettings();
 		solo.clickOnText(iContext.getString(R.string.account_linphone_login));
-		selectItemInListOnUIThread(6);
+		selectItemInListOnUIThread(14);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_disable_account));
 		
 		solo.goBack();
