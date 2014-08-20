@@ -12,24 +12,24 @@
 		</exec>
 	</target>
 	<target name="test">
-		<exec executable="adb" failonerror="true" outputproperty="tests.output">
-			<arg value="shell" />
-			<arg value="am" />
-			<arg value="instrument" />
-			<arg value="-r" />
-			<arg value="-w" />
-			<arg value="org.linphone.tester/org.linphone.tester.TestRunner" />
+  		<property name="output.file" value="./tests.output" />
+  		<exec executable="bash" failonerror="true">
+			<arg value="-c"/>
+			<!-- use 'tee' command to write in file AND on stdout.
+			First is used below to check if tests failed or not while second
+			is used to get output in real time -->
+			<arg value="adb shell am instrument -r -w org.linphone.tester/org.linphone.tester.TestRunner | tee ${output.file}"/>
 		</exec>
-		<echo message="${tests.output}"/>
 		<fail message="Tests failed">
 			<condition>
-					<contains string="${tests.output}" substring="FAILURES" />
+					<resourcecontains resource="${output.file}" substring="FAILURES" />
 			</condition>
 		</fail>
 		<fail message="Tests crashed">
 			<condition>
-					<contains string="${tests.output}" substring="Process crashed" />
+					<resourcecontains resource="${output.file}" substring="Process crashed" />
 			</condition>
 		</fail>
+		<delete file="${output.file}"/>
 	</target>
 </project>
