@@ -245,9 +245,9 @@ public class CallsAudio extends SampleTest {
 		assertCallIsCorrectlyRunning();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
-		LinphoneCall.State state = LinphoneManager.getLc().getCalls()[0].getState();
 		solo.sleep(1000);
-		
+		LinphoneCall.State state = LinphoneManager.getLc().getCalls()[0].getState();
+
 		Assert.assertTrue(LinphoneCall.State.Paused == state || LinphoneCall.State.Pausing == state);
 		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
 		solo.sleep(1000);

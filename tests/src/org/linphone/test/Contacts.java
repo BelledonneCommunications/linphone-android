@@ -8,7 +8,6 @@ import org.linphone.LinphoneActivity;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ScrollView;
 

@@ -3,11 +3,14 @@ package org.linphone.test;
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LinphoneCore.RegistrationState;
 
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ListView;
 
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 
 /**
@@ -48,5 +51,14 @@ public abstract class SampleTest extends ActivityInstrumentationTestCase2<Linpho
 				list.setSelection(item);
 			}
 		});
+	}
+	
+	protected void waitForRegistration(final LinphoneProxyConfig lpc) {
+		solo.waitForCondition(new Condition() {
+		   @Override
+		   public boolean isSatisfied() {
+		       return RegistrationState.RegistrationOk == lpc.getState();
+		   }
+		},30000);
 	}
 }
