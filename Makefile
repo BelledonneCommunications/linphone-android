@@ -554,8 +554,7 @@ veryclean: clean clean-ffmpeg clean-x264 clean-openh264 clean-vpx clean-matroska
 
 .PHONY: clean install-apk run-linphone
 
-generate-sdk: generate-apk
-	ant liblinphone-android-sdk
+generate-sdk: liblinphone-android-sdk
 
 liblinphone-android-sdk: generate-apk
 	ant liblinphone-android-sdk
