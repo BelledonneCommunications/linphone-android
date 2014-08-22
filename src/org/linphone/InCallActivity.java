@@ -492,8 +492,8 @@ public class InCallActivity extends FragmentActivity implements
 					showAudioView();
 				} else {
 					if (!call.getRemoteParams().isLowBandwidthEnabled()) {
-						LinphoneManager.getInstance().addVideo();
-						showVideoView();
+						if (LinphoneManager.getInstance().addVideo())
+							showVideoView();
 					} else {
 						displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
 					}
