@@ -200,7 +200,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 		String proxy = "sip:" + domain;
 		LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
 		proxyAddr.setTransport(TransportType.LinphoneTransportTls);
-		LinphoneProxyConfig proxycon = LinphoneCoreFactory.instance().createProxyConfig(identity, proxyAddr.asStringUriOnly(), proxyAddr.asStringUriOnly(), true);
+		LinphoneProxyConfig proxycon = mLc.createProxyConfig(identity, proxyAddr.asStringUriOnly(), proxyAddr.asStringUriOnly(), true);
 		mLc.addProxyConfig(proxycon);
 		mLc.setDefaultProxyConfig(proxycon);
 		
@@ -209,7 +209,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			//escape +
 			lDefaultProxyConfig.setDialEscapePlus(false);
 		} else if (LinphoneService.isReady()) {
-			LinphoneService.instance().onRegistrationStateChanged(RegistrationState.RegistrationNone, null);
+			LinphoneService.instance().onRegistrationStateChanged(lDefaultProxyConfig, RegistrationState.RegistrationNone, null);
 		}
 	}
 
