@@ -41,6 +41,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -382,8 +383,8 @@ public class InCallActivity extends FragmentActivity implements
 			displayVideoCallControlsIfHidden();
 		}
 
-		if (id == R.id.video) {
-			switchVideo(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()), true);	
+		if (id == R.id.video) {		
+			enabledOrDisabledVideo(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));	
 		} 
 		else if (id == R.id.micro) {
 			toggleMicro();
@@ -455,6 +456,32 @@ public class InCallActivity extends FragmentActivity implements
 		}
 	}
 
+	private void enabledOrDisabledVideo(final boolean isVideoEnabled) {
+		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		if (call == null) {
+			return;
+		}
+		
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (!isVideoEnabled) {
+					video.setEnabled(true);
+					LinphoneCallParams params = call.getCurrentParamsCopy();
+					params.setVideoEnabled(false);
+					LinphoneManager.getLc().updateCall(call, params);
+				} else {
+					if (!call.getRemoteParams().isLowBandwidthEnabled()) {
+						LinphoneManager.getInstance().addVideo();
+					} else {
+						displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
+					}
+				}
+			}
+		});
+		
+	}
+
 	public void displayCustomToast(final String message, final int duration) {
 		mHandler.post(new Runnable() {
 			@Override
@@ -474,7 +501,7 @@ public class InCallActivity extends FragmentActivity implements
 		});
 	}
 	
-	private void switchVideo(final boolean displayVideo, final boolean isInitiator) {
+	private void switchVideo(final boolean displayVideo) {
 		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
 			return;
@@ -484,15 +511,11 @@ public class InCallActivity extends FragmentActivity implements
 			@Override
 			public void run() {
 				if (!displayVideo) {
-					if (isInitiator) {
-						LinphoneCallParams params = call.getCurrentParamsCopy();
-						params.setVideoEnabled(false);
-						LinphoneManager.getLc().updateCall(call, params);
-					}
 					showAudioView();
 				} else {
 					if (!call.getRemoteParams().isLowBandwidthEnabled()) {
-						if (LinphoneManager.getInstance().addVideo())
+						LinphoneManager.getInstance().addVideo();
+						if (videoCallFragment == null || !videoCallFragment.isVisible())
 							showVideoView();
 					} else {
 						displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
@@ -517,6 +540,7 @@ public class InCallActivity extends FragmentActivity implements
 			speaker.setBackgroundResource(R.drawable.speaker_on);
 		}
 		video.setBackgroundResource(R.drawable.video_off);
+		video.setEnabled(true);
 
 		LinphoneManager.stopProximitySensorForActivity(InCallActivity.this);
 		replaceFragmentAudioByVideo();
@@ -1107,7 +1131,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		
 		if (state == State.StreamsRunning) {
-			switchVideo(isVideoEnabled(call), false);
+			switchVideo(isVideoEnabled(call));
 
 			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 
