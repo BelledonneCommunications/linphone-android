@@ -25,6 +25,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneProxyConfig;
 
 import android.app.Activity;
 import android.content.Context;
@@ -201,7 +202,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	
 	
 	private LinphoneOnRegistrationStateChangedListener registrationListener = new LinphoneOnRegistrationStateChangedListener() {
-		public void onRegistrationStateChanged(RegistrationState state) {
+		public void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state, String message) {
 			if (state == RegistrationState.RegistrationOk) {
 				LinphoneManager.removeListener(registrationListener);
 				
@@ -311,7 +312,8 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			.setAvpfRRInterval(3)
 			.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
 			.setQualityReportingEnabled(true)
-			.setQualityReportingInterval(180);
+			.setQualityReportingInterval(180)
+			.setRealm("sip.linphone.org");
 			
 			
 			mPrefs.setStunServer(getString(R.string.default_stun));

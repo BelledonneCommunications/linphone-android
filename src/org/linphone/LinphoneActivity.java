@@ -33,7 +33,9 @@ import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedLis
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
@@ -768,14 +770,24 @@ public class LinphoneActivity extends FragmentActivity implements
 		getChatStorage().updateMessageStatus(to, id, newState);
 	}
 
-	@Override
-	public void onRegistrationStateChanged(RegistrationState state) {
+	public void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state, String message) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (statusFragment != null) {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (lc != null && lc.getDefaultProxyConfig() != null)
-				statusFragment.registrationStateChanged(lc.getDefaultProxyConfig().getState());
+			if (lc != null)
+				if(lc.getDefaultProxyConfig() == null)
+					statusFragment.registrationStateChanged(proxy.getState());
+				else 
+					statusFragment.registrationStateChanged(lc.getDefaultProxyConfig().getState());
 			else
 				statusFragment.registrationStateChanged(RegistrationState.RegistrationNone);
+		}
+		
+		if(state.equals(RegistrationState.RegistrationCleared)){ 
+			if(lc != null){
+				LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
+				if(authInfo != null)
+					lc.removeAuthInfo(authInfo);
+			}
 		}
 	}
 
