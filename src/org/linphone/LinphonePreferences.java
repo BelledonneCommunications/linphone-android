@@ -168,6 +168,7 @@ public class LinphonePreferences {
 		private String tempPassword;
 		private String tempDomain;
 		private String tempProxy;
+		private String tempRealm;
 		private boolean tempOutboundProxy;
 		private String tempContactsParams;
 		private String tempExpire;
@@ -244,6 +245,11 @@ public class LinphonePreferences {
 			tempAvpfRRInterval = interval;
 			return this;
 		}
+		
+		public AccountBuilder setRealm(String realm) {
+			tempRealm = realm;
+			return this;
+		}
 
 		public AccountBuilder setQualityReportingCollector(String collector) {
 			tempQualityReportingCollector = collector;
@@ -300,7 +306,7 @@ public class LinphonePreferences {
 
 			String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
 
-			LinphoneProxyConfig prxCfg = LinphoneCoreFactory.instance().createProxyConfig(identityAddr.asString(), proxyAddr.asStringUriOnly(), route, tempEnabled);
+			LinphoneProxyConfig prxCfg = lc.createProxyConfig(identityAddr.asString(), proxyAddr.asStringUriOnly(), route, tempEnabled);
 
 			if (tempContactsParams != null)
 				prxCfg.setContactUriParameters(tempContactsParams);
@@ -315,7 +321,9 @@ public class LinphonePreferences {
 			prxCfg.enableQualityReporting(tempQualityReportingEnabled);
 			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
 			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
-			prxCfg.setRealm("sip.linphone.org");
+			
+			if(tempRealm != null)
+				prxCfg.setRealm(tempRealm);
 
 			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
 
@@ -325,11 +333,6 @@ public class LinphonePreferences {
 			if (!tempNoDefault && LinphonePreferences.instance().getAccountCount() == 1)
 				lc.setDefaultProxyConfig(prxCfg);
 		}
-	}
-
-	public boolean isAccountDeleted(int n){
-		LinphoneProxyConfig proxyConfig = getProxyConfig(n);
-		return proxyConfig.getUserData() != null ? (Boolean) proxyConfig.getUserData() : false ;
 	}
 
 	public void setAccountTransport(int n, String transport) {
@@ -675,35 +678,16 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
-		final LinphoneAuthInfo authInfo = getAuthInfo(n);
 		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-
-		proxyCfg.edit();
-		proxyCfg.enableRegister(false);
-		proxyCfg.done();
-
-		proxyCfg.setUserData(true);
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while(proxyCfg.getState() != RegistrationState.RegistrationCleared
-					&& proxyCfg.getState() != RegistrationState.RegistrationFailed
-					&& proxyCfg.getState() != RegistrationState.RegistrationNone){
-				}
-				if (authInfo != null)
-					getLc().removeAuthInfo(authInfo);
-				if (proxyCfg != null)
-					getLc().removeProxyConfig(proxyCfg);
-				if (getLc().getProxyConfigList().length == 0) {
-					// TODO: remove once issue http://bugs.linphone.org/view.php?id=984 will be fixed
-					LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
-				} else {
-					resetDefaultProxyConfig();
-					getLc().refreshRegisters();
-				}
-			}
-		}).start();
+		
+		if (proxyCfg != null)
+			getLc().removeProxyConfig(proxyCfg);
+		if (getLc().getProxyConfigList().length == 0) {
+			LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
+		} else {
+			resetDefaultProxyConfig();
+			getLc().refreshRegisters();
+		}
 	}
 	// End of accounts settings
 

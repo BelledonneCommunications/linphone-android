@@ -497,7 +497,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
-	public void onRegistrationStateChanged(final RegistrationState state,
+	public void onRegistrationStateChanged(final LinphoneProxyConfig proxy, final RegistrationState state,
 			final String message) {
 //		if (instance == null) {
 //			Log.i("Service not ready, discarding registration state change to ",state.toString());
@@ -520,7 +520,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		mHandler.post(new Runnable() {
 			public void run() {
 				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().onRegistrationStateChanged(state);
+					LinphoneActivity.instance().onRegistrationStateChanged(proxy,state,message);
 				}
 			}
 		});

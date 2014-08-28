@@ -795,9 +795,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mListenerDispatcher.onGlobalStateChanged(state, message);
 	}
 
-	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig cfg,final RegistrationState state,final String message) {
+	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {
 		Log.i("new state ["+state+"]");
-		mListenerDispatcher.onRegistrationStateChanged(state, message);
+		mListenerDispatcher.onRegistrationStateChanged(proxy, state, message);
 	}
 
 	private int savedMaxCallWhileGsmIncall;
@@ -1285,11 +1285,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 			if (serviceListener != null) serviceListener.onGlobalStateChanged( state, message);
 		}
 
-		public void onRegistrationStateChanged(RegistrationState state,
+		public void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state,
 				String message) {
-			if (serviceListener != null) serviceListener.onRegistrationStateChanged(state, message);
+			if (serviceListener != null) serviceListener.onRegistrationStateChanged(proxy, state, message);
 			for (LinphoneOnRegistrationStateChangedListener listener : getSimpleListeners(LinphoneOnRegistrationStateChangedListener.class)) {
-				listener.onRegistrationStateChanged(state);
+				listener.onRegistrationStateChanged(proxy, state, message);
 			}
 		}
 

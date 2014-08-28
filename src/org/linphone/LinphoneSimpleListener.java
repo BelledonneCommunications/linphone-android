@@ -20,6 +20,7 @@ package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
@@ -41,8 +42,8 @@ public interface LinphoneSimpleListener {
 		void tryingNewOutgoingCallButCannotGetCallParameters();
 		void tryingNewOutgoingCallButWrongDestinationAddress();
 		void tryingNewOutgoingCallButAlreadyInCall();
-		void onRegistrationStateChanged(RegistrationState state, String message);
 		void onDisplayStatus(String message);
+		void onRegistrationStateChanged(LinphoneProxyConfig proxy,RegistrationState state, String message);
 	}
 
 
@@ -68,7 +69,7 @@ public interface LinphoneSimpleListener {
 	}
 
 	public static interface LinphoneOnRegistrationStateChangedListener extends LinphoneSimpleListener {
-		void onRegistrationStateChanged(RegistrationState state);
+		void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state, String message);
 	}
 
 	public static interface ConnectivityChangedListener extends LinphoneSimpleListener {
