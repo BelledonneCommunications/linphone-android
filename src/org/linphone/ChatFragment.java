@@ -114,7 +114,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private List<BubbleChat> lastSentMessagesBubbles;
 	private HashMap<Integer, String> latestImageMessages;
 	private boolean useLinphoneMessageStorage;
-	private List<Integer> openImagesId ;
 	private ListView messagesList;
 
 	private ProgressBar progressBar;
@@ -148,13 +147,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         remoteComposing.setVisibility(View.GONE);
         
         messagesList = (ListView) view.findViewById(R.id.chatMessageList);
-        openImagesId = new ArrayList<Integer>();
         
         message = (EditText) view.findViewById(R.id.message);
         if (!getActivity().getResources().getBoolean(R.bool.allow_chat_multiline)) {
         	message.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
         	message.setMaxLines(1);
         }
+        
         uploadLayout = (RelativeLayout) view.findViewById(R.id.uploadLayout);
         textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
         
@@ -242,6 +241,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putString("fileToUploadPath", fileToUploadPath);
 		outState.putParcelable("imageToUpload", imageToUpload);
+		outState.putString("messageDraft", message.getText().toString());
 		super.onSaveInstanceState(outState);
 	}
 
@@ -312,11 +312,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			BubbleChat bubble;
 			LinphoneChatMessage msg = history[position];
 			View v;
-			Boolean showImage = false;
-			
-			if (msg.getExternalBodyUrl() != null ) {
-				if(!openImagesId.isEmpty() && openImagesId.contains(msg.getStorageId())) showImage = true;	
-				bubble = displayImageMessage(msg.getStorageId(), null, msg.getTime(), !msg.isOutgoing(), msg.getStatus(), context, msg.getExternalBodyUrl(),showImage);
+
+			if (msg.getExternalBodyUrl() != null ) {	
+				bubble = displayImageMessage(msg.getStorageId(), null, msg.getTime(), !msg.isOutgoing(), msg.getStatus(), context, msg.getExternalBodyUrl());
 			} else {
 				bubble = displayMessage(msg.getStorageId(), msg.getText(), msg.getTime(), !msg.isOutgoing(), msg.getStatus(), context);
 				
@@ -368,7 +366,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		return bubble;
 	}
 
-	private BubbleChat displayImageMessage(int id, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, Context context, final String url, boolean show) {
+	private BubbleChat displayImageMessage(int id, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, Context context, final String url) {
 		final BubbleChat bubble = new BubbleChat(context, id, null, image, time, isIncoming, status, url);
 		if (!isIncoming) {
 			if (lastSentMessagesBubbles == null)
@@ -396,7 +394,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 									String newFileUrl = saveImage(bm, finalId, getMessageForId(finalId));
 									bubble.updateUrl(newFileUrl);
 									adapter.refreshHistory();
-									openImagesId.add(finalId);
 								} else {
 									LinphoneActivity.instance().getChatStorage().saveImage(finalId, bm);
 								}
@@ -423,26 +420,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 			});
 		} else { // Show
-			if(show){
-				Bitmap bm = BitmapFactory.decodeFile(url);
-				((ImageView)v.findViewById(R.id.image)).setImageBitmap(bm);
-				v.findViewById(R.id.image).setVisibility(View.VISIBLE);
-				v.findViewById(R.id.download).setVisibility(View.GONE);
-			} else {
-				bubble.setShowOrDownloadText(getString(R.string.show_image));
-				bubble.setShowOrDownloadImageButtonListener(new OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						Bitmap bm = BitmapFactory.decodeFile(url);
-						if (bm != null) {
-							openImagesId.add(finalId);
-							((ImageView)v.findViewById(R.id.image)).setImageBitmap(bm);
-							v.findViewById(R.id.image).setVisibility(View.VISIBLE);
-							v.findViewById(R.id.download).setVisibility(View.GONE);
-						}
-					}
-				});
-			}	
+			Bitmap bm = BitmapFactory.decodeFile(url);
+			((ImageView)v.findViewById(R.id.image)).setImageBitmap(bm);
+			v.findViewById(R.id.image).setVisibility(View.VISIBLE);
+			v.findViewById(R.id.download).setVisibility(View.GONE);
 		}
 		
 		return bubble;
@@ -535,24 +516,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		latestImageMessages = null;
 		message.removeTextChangedListener(textWatcher);
 		removeVirtualKeyboardVisiblityListener();
-
+	
 		LinphoneService.instance().removeMessageNotification();
 
 		if (LinphoneManager.isInstanciated())
 			LinphoneManager.getInstance().setOnComposingReceivedListener(null);
 
 		super.onPause();
-
-		if (!message.getText().toString().equals("") && LinphoneActivity.isInstanciated()) {
-			ChatStorage chatStorage = LinphoneActivity.instance().getChatStorage();
-			if (chatStorage.getDraft(sipUri) == null) {
-				chatStorage.saveDraft(sipUri, message.getText().toString());
-			} else {
-				chatStorage.updateDraft(sipUri, message.getText().toString());
-			}
-		} else if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().getChatStorage().deleteDraft(sipUri);
-		}
+		
+		onSaveInstanceState(getArguments());
 	}
 
 	@SuppressLint("UseSparseArrays")
@@ -576,10 +548,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 		}
 
-		if (LinphoneActivity.isInstanciated()) {
-			String draft = LinphoneActivity.instance().getChatStorage().getDraft(sipUri);
-			message.setText(draft);
-		}
+		String draft = getArguments().getString("messageDraft");
+		message.setText(draft);
 
 		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 
