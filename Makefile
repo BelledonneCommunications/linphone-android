@@ -20,7 +20,7 @@ X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
 	awk '{ print $$1 }' | tail -1)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo "4" )
 TOPDIR=$(shell pwd)
-LINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
+LIBLINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 BELLESIP_VERSION_SCRIPT:=cat submodules/belle-sip/configure.ac | grep "AC_INIT(" | sed -e "s/.*belle-sip\]//" | sed -e "s/].*//" | sed -e "s/.*\[//"
 BELLESIP_VERSION=$(shell $(BELLESIP_VERSION_SCRIPT))
@@ -475,7 +475,7 @@ GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 
 
 LIBLINPHONE_OPTIONS = $(GENERATE_OPTIONS) \
-	LINPHONE_VERSION=$(LINPHONE_VERSION) BELLESIP_VERSION=$(BELLESIP_VERSION) USE_JAVAH=$(USE_JAVAH) \
+	LIBLINPHONE_VERSION=$(LIBLINPHONE_VERSION) BELLESIP_VERSION=$(BELLESIP_VERSION) USE_JAVAH=$(USE_JAVAH) \
 	BUILD_TUNNEL=$(BUILD_TUNNEL) BUILD_TLS=$(BUILD_TLS) BUILD_SQLITE=$(BUILD_SQLITE) \
 	BUILD_CONTACT_HEADER=$(BUILD_CONTACT_HEADER) BUILD_RTP_MAP=$(BUILD_RTP_MAP) \
 	LIBLINPHONE_EXTENDED_SRC_FILES="$(LIBLINPHONE_EXTENDED_SRC_FILES)" \
