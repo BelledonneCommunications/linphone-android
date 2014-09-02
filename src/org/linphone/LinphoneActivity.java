@@ -1248,6 +1248,7 @@ public class LinphoneActivity extends FragmentActivity implements
 				selectMenu(newFragment);
 			}
 		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
+			getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
 			boolean callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				initInCallMenuLayout(callTransfer);
@@ -1258,7 +1259,13 @@ public class LinphoneActivity extends FragmentActivity implements
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
-
+	
+	@Override
+	protected void onPause() {
+		getIntent().putExtra("PreviousActivity", 0);
+		super.onPause();
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -1278,19 +1285,22 @@ public class LinphoneActivity extends FragmentActivity implements
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
 		LinphoneManager.getInstance().changeStatusToOnline();
-		
-		if (LinphoneManager.getLc().getCalls().length > 0) {
-			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-			LinphoneCall.State callState = call.getState();
-			if (callState == State.IncomingReceived) {
-				startActivity(new Intent(this, IncomingCallActivity.class));
-			} else {
-				if (call.getCurrentParamsCopy().getVideoEnabled()) {
-					startVideoActivity(call);
+
+		if(getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
+			if (LinphoneManager.getLc().getCalls().length > 0) {
+				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+				LinphoneCall.State callState = call.getState();
+				if (callState == State.IncomingReceived) {
+					startActivity(new Intent(this, IncomingCallActivity.class));
 				} else {
-					startIncallActivity(call);
+					
+						if (call.getCurrentParamsCopy().getVideoEnabled()) {
+							startVideoActivity(call);
+						} else {
+							startIncallActivity(call);
+						}
+					}
 				}
-			}
 		}
 	}
 
