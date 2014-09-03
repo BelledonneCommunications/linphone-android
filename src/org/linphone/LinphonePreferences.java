@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LpConfig;
+import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -1014,30 +1015,65 @@ public class LinphonePreferences {
 	// End of advanced settings
 
 	// Tunnel settings
+	private TunnelConfig tunnelConfig = null;
+	
+	public TunnelConfig getTunnelConfig() {
+		if(getLc().isTunnelAvailable()) {
+			if(tunnelConfig == null) {
+				TunnelConfig servers[] = getLc().tunnelGetServers();
+				if(servers.length > 0) {
+					tunnelConfig = servers[0];
+				} else {
+					tunnelConfig = new TunnelConfig();
+					tunnelConfig.setDelay(500);
+				}
+			}
+			return tunnelConfig;
+		} else {
+			return null;
+		}
+	}
+	
+	public String getTunnelHost() {
+		TunnelConfig config = getTunnelConfig();
+		if(config != null) {
+			return config.getHost();
+		} else {
+			return null;
+		}
+	}
+	
+	public void setTunnelHost(String host) {
+		TunnelConfig config = getTunnelConfig();
+		if(config != null) {
+			config.setHost(host);
+			LinphoneManager.getInstance().initTunnelFromConf();
+		}
+	}
+	
+	public int getTunnelPort() {
+		TunnelConfig config = getTunnelConfig();
+		if(config != null) {
+			return config.getPort();
+		} else {
+			return -1;
+		}
+	}
+	
+	public void setTunnelPort(int port) {
+		TunnelConfig config = getTunnelConfig();
+		if(config != null) {
+			config.setPort(port);
+			LinphoneManager.getInstance().initTunnelFromConf();
+		}
+	}
+	
 	public String getTunnelMode() {
 		return getConfig().getString("app", "tunnel", null);
 	}
 
 	public void setTunnelMode(String mode) {
 		getConfig().setString("app", "tunnel", mode);
-		LinphoneManager.getInstance().initTunnelFromConf();
-	}
-
-	public String getTunnelHost() {
-		return getConfig().getString("tunnel", "host", null);
-	}
-
-	public void setTunnelHost(String host) {
-		getConfig().setString("tunnel", "host", host);
-		LinphoneManager.getInstance().initTunnelFromConf();
-	}
-
-	public int getTunnelPort() {
-		return getConfig().getInt("tunnel", "port", 443);
-	}
-
-	public void setTunnelPort(int port) {
-		getConfig().setInt("tunnel", "port", port);
 		LinphoneManager.getInstance().initTunnelFromConf();
 	}
 	// End of tunnel settings
