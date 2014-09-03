@@ -569,14 +569,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 		copyIfNotExist(R.raw.rootca, mLinphoneRootCaFile);
 	}
 
-	private void copyIfNotExist(int ressourceId,String target) throws IOException {
+	public void copyIfNotExist(int ressourceId, String target) throws IOException {
 		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {
 			copyFromPackage(ressourceId,lFileToCopy.getName());
 		}
 	}
 
-	private void copyFromPackage(int ressourceId,String target) throws IOException{
+	public void copyFromPackage(int ressourceId, String target) throws IOException{
 		FileOutputStream lOutputStream = mServiceContext.openFileOutput (target, 0);
 		InputStream lInputStream = mR.openRawResource(ressourceId);
 		int readByte;
