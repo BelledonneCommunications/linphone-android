@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -57,6 +58,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
+	private TunnelConfig tunnelConfig;
 
 	public SettingsFragment() {
 		super(R.xml.preferences);
