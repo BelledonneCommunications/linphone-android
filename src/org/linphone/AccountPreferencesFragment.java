@@ -65,9 +65,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		manageAccountPreferencesFields(screen);
 	}
 	
+	public static boolean isEditTextEmpty(String s){
+	      return s.equals("");  // really empty.          
+	}
+	
 	OnPreferenceChangeListener usernameChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			if(isEditTextEmpty(newValue.toString())) return false;
 			mPrefs.setAccountUsername(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
@@ -84,6 +89,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener passwordChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			if(isEditTextEmpty(newValue.toString())) return false;
 			mPrefs.setAccountPassword(n, newValue.toString());
 			return true;
 		}		
@@ -91,6 +97,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener domainChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			if(isEditTextEmpty(newValue.toString())) return false;
 			mPrefs.setAccountDomain(n, newValue.toString());
 			preference.setSummary(newValue.toString());
 			return true;
