@@ -302,6 +302,7 @@ LIBMATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska
 LIBMATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska
 LIBEBML2_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libebml2
 COREMAKE=$(LIBMATROSKA_SRC_DIR)/corec/tools/coremake/coremake
+HOST_ARCH=$(shell basename `find $(NDK_PATH)/prebuilt -name linux-*`)
 
 build-matroska: $(BUILD_MATROSKA_DEPS)
 
@@ -350,7 +351,7 @@ $(LIBMATROSKA_SRC_DIR)/configure_config_h.txt: $(LIBMATROSKA_BUILD_DIR)/config.h
 	echo "#define COREMAKE_CONFIG_HELPER" >> $(LIBMATROSKA_SRC_DIR)/config.h
 	echo "#define CONFIG_ANDROID_NDK $(NDK_PATH)" >> $(LIBMATROSKA_SRC_DIR)/config.h
 	echo "#define CONFIG_ANDROID_VERSION $(ANDROID_MOST_RECENT_TARGET)" >> $(LIBMATROSKA_SRC_DIR)/config.h
-	echo "#define CONFIG_ANDROID_PLATFORM linux-x86_64" >> $(LIBMATROSKA_SRC_DIR)/config.h
+	echo "#define CONFIG_ANDROID_PLATFORM $(HOST_ARCH)" >> $(LIBMATROSKA_SRC_DIR)/config.h
 	touch $@
 
 $(LIBMATROSKA_SRC_DIR)/fix_coremake.txt:
