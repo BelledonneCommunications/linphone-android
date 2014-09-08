@@ -112,3 +112,6 @@ BUILD_OPUS
 
 BUILD_UPNP
 	values: 0 (don't build upnp), 1 (do build upnp), default value: 1
+
+BUILD_MATROSKA
+	values: 0 (don't build matroska and ebml), 1 (do build matroska and ebml), default value: 1
