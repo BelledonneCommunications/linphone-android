@@ -151,7 +151,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true);
 
 		LinphoneManager.createAndStart(this, this);
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -275,7 +275,12 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 	}
 
+	@Deprecated 
 	public void addNotification(Intent onClickIntent, int iconResourceID, String title, String message) {
+		addCustomNotification(onClickIntent, iconResourceID, title, message, true);
+	}
+	
+	public void addCustomNotification(Intent onClickIntent, int iconResourceID, String title, String message, boolean isOngoingEvent) {
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Bitmap bm = null;
@@ -283,7 +288,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent);
+		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent);
 		
 		mCustomNotif.defaults |= Notification.DEFAULT_VIBRATE;
 		mCustomNotif.defaults |= Notification.DEFAULT_SOUND;
@@ -448,7 +453,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent, true);
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
 

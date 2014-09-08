@@ -71,12 +71,12 @@ public class ApiSixteenPlus {
 						.setContentIntent(intent)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).build();
-
 		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		
 		return notif;
 	}
 	
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent) {
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
 		Notification notif;
 		
 		if (largeIcon != null) {
@@ -97,7 +97,9 @@ public class ApiSixteenPlus {
 	        .setWhen(System.currentTimeMillis())
 	        .build();
 		}
-		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		if (isOngoingEvent) {
+			notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		}
 		
 		return notif;
 	}

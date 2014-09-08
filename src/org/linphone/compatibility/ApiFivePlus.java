@@ -367,12 +367,14 @@ public class ApiFivePlus {
 		//manager.setMode(AudioManager.MODE_IN_CALL);
 	}
 
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, PendingIntent intent) {
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, PendingIntent intent, boolean isOngoingEvent) {
 		Notification notif = new Notification();
 		notif.icon = icon;
 		notif.iconLevel = level;
 		notif.when = System.currentTimeMillis();
-		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		if (isOngoingEvent) {
+			notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		}
 		notif.setLatestEventInfo(context, title, message, intent);
 		
 		return notif;
