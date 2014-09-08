@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Intents.Insert;
 
 /*
@@ -92,7 +91,7 @@ public class ApiElevenPlus {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent) {
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
 		Notification notif;
 		
 		if (largeIcon != null) {
@@ -113,7 +112,9 @@ public class ApiElevenPlus {
 	        .setWhen(System.currentTimeMillis())
 	        .getNotification();
 		}
-		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		if (isOngoingEvent) {
+			notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		}
 		
 		return notif;
 	}
