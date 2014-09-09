@@ -477,9 +477,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				ListPreference listPreference = (ListPreference) preference;
-				int index = listPreference.findIndexOfValue((String)newValue);
-
-				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromInt(index));
+				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromString((String)newValue));
 				preference.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
 				return true;
 			}
