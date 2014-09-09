@@ -4,96 +4,102 @@
     <Preference
 	    android:title="@string/menu_about"
 	    android:key="@string/menu_about_key"/>
-    
-    <PreferenceCategory 
+
+    <PreferenceCategory
         android:title="@string/pref_sipaccounts"
 	    android:key="@string/pref_sipaccounts_key"/>
 
-	<Preference 
+	<Preference
 	    android:title="@string/setup_title"
 	    android:key="@string/setup_key"/>
 
-    <PreferenceCategory 
+    <PreferenceCategory
         android:title="@string/pref_tunnel"
         android:key="@string/pref_tunnel_key">
-        
-            <EditTextPreference 
+
+            <EditTextPreference
 				android:title="@string/pref_tunnel_host"
 				android:key="@string/pref_tunnel_host_key"/>
 
-            <EditTextPreference 
+            <EditTextPreference
                 android:title="@string/pref_tunnel_port"
 				android:key="@string/pref_tunnel_port_key"
 				android:numeric="integer"/>
 
-            <ListPreference 
+            <ListPreference
                 android:title="@string/pref_tunnel_mode"
 				android:key="@string/pref_tunnel_mode_key"
 				android:entries="@array/tunnel_mode_entries"
 				android:entryValues="@array/tunnel_mode_entry_values"/>
-            
+
     </PreferenceCategory>
-	    
-	<PreferenceCategory 
+
+	<PreferenceCategory
 	    android:title="@string/pref_preferences">
 
-		<CheckBoxPreference 
-			android:title="@string/pref_video_enable_title" 
+		<CheckBoxPreference
+			android:title="@string/pref_video_enable_title"
 			android:key="@string/pref_video_enable_key"/>
-		
-		<PreferenceScreen 
+
+		<PreferenceScreen
 		    android:title="@string/pref_audio">
-		    
-		    <CheckBoxPreference 
-				android:title="@string/pref_echo_cancellation" 
-			    android:key="@string/pref_echo_cancellation_key" 
+
+		    <CheckBoxPreference
+				android:title="@string/pref_echo_cancellation"
+			    android:key="@string/pref_echo_cancellation_key"
 				android:summary="@string/pref_echo_cancellation_summary"/>
-	
-			<Preference 
+
+			<Preference
 				android:title="@string/pref_echo_canceller_calibration"
 			    android:key="@string/pref_echo_canceller_calibration_key"/>
-			
-			<CheckBoxPreference 
-				android:title="@string/pref_adaptative_rate_control" 
-			    android:key="@string/pref_adaptative_rate_control_key" />
-			
-			<ListPreference 
+
+			<CheckBoxPreference
+				android:title="@string/pref_adaptive_rate_control"
+			    android:key="@string/pref_adaptive_rate_control_key" />
+
+			<ListPreference
+			    android:title="@string/pref_adaptive_rate_algorithm"
+				android:key="@string/pref_adaptive_rate_algorithm_key"
+				android:entries="@array/adaptive_rate_algorithm_entries"
+            	android:entryValues="@array/adaptive_rate_algorithm_entries" />
+
+			<ListPreference
 			    android:title="@string/pref_codec_bitrate_limit"
 				android:key="@string/pref_codec_bitrate_limit_key"
 				android:entries="@array/limit_bitrate_entries"
             	android:entryValues="@array/limit_bitrate_entry_values" />
-	
+
 			<PreferenceCategory
-				android:title="@string/pref_codecs" 
+				android:title="@string/pref_codecs"
 				android:key="@string/pref_codecs_key"/>
-		
+
 		</PreferenceScreen>
-		
-		<PreferenceScreen 
-		    android:title="@string/pref_video" 
+
+		<PreferenceScreen
+		    android:title="@string/pref_video"
 		    android:key="@string/pref_video_key"
-		    android:dependency="@string/pref_video_enable_key" 
+		    android:dependency="@string/pref_video_enable_key"
 		    android:shouldDisableView="true">
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_video_use_front_camera_title"
 			    android:key="@string/pref_video_use_front_camera_key"
 				android:dependency="@string/pref_video_enable_key"
 				android:layout="@layout/hidden"/>
-		
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_video_initiate_call_with_video_title"
 			    android:key="@string/pref_video_initiate_call_with_video_key"
 				android:summary="@string/pref_video_initiate_call_with_video"
 				android:dependency="@string/pref_video_enable_key"/>
-		
+
 			<CheckBoxPreference
 				android:title="@string/pref_video_automatically_share_my_video_title"
 				android:key="@string/pref_video_automatically_share_my_video_key"
 				android:summary="@string/pref_video_automatically_share_my_video"
 				android:dependency="@string/pref_video_enable_key"
 				android:layout="@layout/hidden"/>
-			
+
 		    <CheckBoxPreference
 				android:title="@string/pref_video_automatically_accept_video_title"
 				android:key="@string/pref_video_automatically_accept_video_key"
@@ -109,154 +115,154 @@
 					android:key="@string/pref_video_codecs_key"
 				    android:dependency="@string/pref_video_enable_key"
 					android:shouldDisableView="true"/>
-				
+
 		</PreferenceScreen>
-		
-		<PreferenceScreen 
+
+		<PreferenceScreen
 		    android:title="@string/call">
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_sipinfo_dtmf"
 			    android:key="@string/pref_sipinfo_dtmf_key"/>
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_rfc2833_dtmf"
 			    android:key="@string/pref_rfc2833_dtmf_key"/>
-				
+
 	    </PreferenceScreen>
-		
-		<PreferenceScreen 
+
+		<PreferenceScreen
 		    android:title="@string/pref_network_title">
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_wifi_only"
 			    android:key="@string/pref_wifi_only_key"/>
 
-			<EditTextPreference 
+			<EditTextPreference
 			    android:title="@string/pref_stun_server"
 				android:key="@string/pref_stun_server_key"/>
-	
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 			    android:title="@string/pref_ice_enable"
 				android:key="@string/pref_ice_enable_key"/>
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 			    android:title="@string/pref_upnp_enable"
 				android:key="@string/pref_upnp_enable_key"/>
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_transport_use_random_ports"
 			    android:key="@string/pref_transport_use_random_ports_key"/>
-			
-			<EditTextPreference 
+
+			<EditTextPreference
 			    android:title="@string/pref_sip_port_title"
 			    android:key="@string/pref_sip_port_key"
 				android:numeric="integer"/>
-			
-			<EditTextPreference 
+
+			<EditTextPreference
 			    android:title="@string/pref_audio_port_title"
 			    android:key="@string/pref_audio_port_key"
 			    android:summary="@string/pref_audio_port_description"
 				android:layout="@layout/hidden"/>
-			
-			<EditTextPreference 
+
+			<EditTextPreference
 			    android:title="@string/pref_video_port_title"
 			    android:key="@string/pref_video_port_key"
 			    android:summary="@string/pref_video_port_description"
 				android:layout="@layout/hidden"/>
-			
-			<ListPreference 
+
+			<ListPreference
 			    android:title="@string/pref_media_encryption"
-				android:key="@string/pref_media_encryption_key"/> 
-			
-			<CheckBoxPreference 
+				android:key="@string/pref_media_encryption_key"/>
+
+			<CheckBoxPreference
 				android:title="@string/pref_push_notification"
 			    android:key="@string/pref_push_notification_key"/>
-	 			
-			<CheckBoxPreference 
-				android:title="@string/pref_ipv6_title" 
+
+			<CheckBoxPreference
+				android:title="@string/pref_ipv6_title"
 				android:key="@string/pref_ipv6_key"/>
-			
+
 		</PreferenceScreen>
-		
-		<PreferenceScreen 
+
+		<PreferenceScreen
 		    android:title="@string/pref_advanced">
-	        
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_debug"
 			    android:key="@string/pref_debug_key"/>
-			
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 				android:title="@string/pref_background_mode"
 			    android:key="@string/pref_background_mode_key"/>
-			
-			<CheckBoxPreference 
-				android:title="@string/pref_animation_enable_title" 
+
+			<CheckBoxPreference
+				android:title="@string/pref_animation_enable_title"
 				android:key="@string/pref_animation_enable_key"/>
-	            
-			<CheckBoxPreference 
+
+			<CheckBoxPreference
 			    android:title="@string/pref_autostart"
 				android:key="@string/pref_autostart_key"/>
-			
-			<EditTextPreference 
+
+			<EditTextPreference
 			    android:title="@string/pref_incoming_call_timeout_title"
 			    android:key="@string/pref_incoming_call_timeout_key"
 			    android:layout="@layout/hidden"/>
-				 
-			 <EditTextPreference 
+
+			 <EditTextPreference
 				android:title="@string/pref_image_sharing_server_title"
 				android:key="@string/pref_image_sharing_server_key"/>
-			 
-			 <EditTextPreference 
+
+			 <EditTextPreference
 				android:title="@string/pref_remote_provisioning_title"
 				android:key="@string/pref_remote_provisioning_key"/>
-			 
+
 			 <PreferenceCategory
 			     android:title="@string/pref_primary_account_title">
-			     
-			     <EditTextPreference 
+
+			     <EditTextPreference
 			         android:title="@string/pref_display_name_title"
 			         android:key="@string/pref_display_name_key"/>
-			     
-			     <EditTextPreference 
+
+			     <EditTextPreference
 			         android:title="@string/pref_user_name_title"
 			         android:key="@string/pref_user_name_key"/>
-			     
+
 			 </PreferenceCategory>
-			
+
 			<PreferenceScreen
 			    android:title="@string/pref_audio_hacks_title"
 				android:layout="@layout/hidden">
-				
-				<CheckBoxPreference 
+
+				<CheckBoxPreference
 				  	android:title="@string/pref_audio_hacks_use_routing_api_title"
 				    android:key="@string/pref_audio_hacks_use_routing_api_key"/>
-				
-				 <CheckBoxPreference 
+
+				 <CheckBoxPreference
 					android:title="@string/pref_audio_hacks_use_galaxys_hack_title"
 					android:key="@string/pref_audio_hacks_use_galaxys_hack_key"/>
-				 
-				 <EditTextPreference 
+
+				 <EditTextPreference
 					android:title="@string/pref_audio_use_specific_mode_title"
 					android:key="@string/pref_audio_use_specific_mode_key"
 				  	android:summary="@string/pref_audio_use_specific_mode_summary"
 				  	android:numeric="integer" />
-				 
+
 			</PreferenceScreen>
-			
+
 		</PreferenceScreen>
-		
+
 	</PreferenceCategory>
 
 	<PreferenceCategory
     	android:title="@string/pref_linphone_friend_title"
 	    android:key="@string/pref_linphone_friend_key">
-	    
-	    <CheckBoxPreference 
+
+	    <CheckBoxPreference
 			android:title="@string/pref_auto_accept_friends_title"
 		    android:key="@string/pref_auto_accept_friends_key"
 			android:summary="@string/pref_auto_accept_friends_desc"/>
-	    
+
 	</PreferenceCategory>
 
 </PreferenceScreen>

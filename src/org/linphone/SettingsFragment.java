@@ -25,6 +25,7 @@ import java.util.List;
 import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
@@ -440,11 +441,14 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			Preference echoCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 			echoCalibration.setSummary(String.format(getString(R.string.ec_calibrated), mPrefs.getEchoCalibration()));
 		}
-		
-		CheckBoxPreference adaptativeRateControl = (CheckBoxPreference) findPreference(getString(R.string.pref_adaptative_rate_control_key));
-		adaptativeRateControl.setChecked(mPrefs.isAdaptativeRateControlEnabled());
-		
-		
+
+		CheckBoxPreference adaptiveRateControl = (CheckBoxPreference) findPreference(getString(R.string.pref_adaptive_rate_control_key));
+		adaptiveRateControl.setChecked(mPrefs.isAdaptiveRateControlEnabled());
+
+		ListPreference adaptiveRateAlgorithm = (ListPreference) findPreference(getString(R.string.pref_adaptive_rate_algorithm_key));
+		adaptiveRateAlgorithm.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
+		adaptiveRateAlgorithm.setValue(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
+
 		ListPreference bitrateLimit = (ListPreference) findPreference(getString(R.string.pref_codec_bitrate_limit_key));
 		bitrateLimit.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
 		bitrateLimit.setValue(String.valueOf(mPrefs.getCodecBitrateLimit()));
@@ -459,16 +463,29 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
-		findPreference(getString(R.string.pref_adaptative_rate_control_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+		findPreference(getString(R.string.pref_adaptive_rate_control_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean enabled = (Boolean) newValue;
-				mPrefs.enableAdaptativeRateControl(enabled);
+				mPrefs.enableAdaptiveRateControl(enabled);
 				return true;
 			}
 		});
-		
+
+		findPreference(getString(R.string.pref_adaptive_rate_algorithm_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				ListPreference listPreference = (ListPreference) preference;
+				int index = listPreference.findIndexOfValue((String)newValue);
+
+				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromInt(index));
+				preference.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
+				return true;
+			}
+		});
+
+
 		findPreference(getString(R.string.pref_codec_bitrate_limit_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -481,12 +498,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 						lc.setPayloadTypeBitrate(pt, bitrate);
 					}
 				}
-				
+
 				preference.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_echo_canceller_calibration_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
