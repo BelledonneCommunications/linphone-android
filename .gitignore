@@ -28,3 +28,4 @@ submodules/externals/build/libvpx/x86
 submodules/externals/build/libvpx/arm
 submodules/externals/build/openh264/arm
 submodules/externals/build/openh264/x86
+submodules/externals/build/cunit/CUnit/

@@ -17,7 +17,7 @@
 		<item >@string/tunnel_mode_entry_value_3G_only</item>
 		<item>@string/tunnel_mode_entry_value_always</item>
 		<item>@string/tunnel_mode_entry_value_auto</item>
-	</string-array> 
+	</string-array>
 		<string name="pref_tunnel_host_key">pref_tunnel_host_key</string>
 		<string name="pref_tunnel_port_key">pref_tunnel_port_key</string>
 	<string name="tunnel_mode_entry_value_auto">auto</string>
@@ -27,9 +27,9 @@
 	<string name="pref_audio_hacks_use_routing_api_key">pref_audio_hacks_use_routing_api_key</string>
 	<string name="pref_audio_soft_volume_key">pref_audio_soft_volume_key</string>
 	<string name="pref_audio_ringtone">pref_audio_ringtone</string>
-	
+
 	<string name="pref_ipv6_key">pref_ipv6_key</string>
-	
+
 	<string name="menu_about_key">menu_about_key</string>
 	<string name="pref_sipaccounts_key">pref_sipaccounts_key</string>
 	<string name="setup_key">setup_key</string>
@@ -57,7 +57,7 @@
     <string name="first_launch_suceeded_once_key">first_launch_suceeded_once_key</string>
 
     <string name="pref_wifi_only_key">pref_wifi_only_key</string>
-        
+
     <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
     <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
     <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
@@ -98,33 +98,35 @@
     <string name="pref_media_encryption_key_zrtp">zrtp</string>
 	<string name="pref_background_mode_key">pref_background_mode_key</string>
 	<string name="pref_codec_bitrate_limit_key">pref_codec_bitrate_limit_key</string>
-	<string name="pref_adaptative_rate_control_key">pref_adaptative_rate_control_key</string>
-	
-    
+	<string name="pref_adaptive_rate_control_key">pref_adaptive_rate_control_key</string>
+	<string name="pref_adaptive_rate_algorithm_key">pref_adaptive_rate_algorithm</string>
+	<string name="pref_adaptive_rate_algorithm_simple_key">pref_adaptive_rate_algorithm_simple_key</string>
+	<string name="pref_adaptive_rate_algorithm_stateful_key">pref_adaptive_rate_algorithm_stateful_key</string>
+
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
 	<string name="pref_push_notification_key">pref_push_notification_key</string>
-	
+
 	<string name="pref_auto_accept_friends_key">pref_auto_accept_friends_key</string>
 	<string name="pref_image_sharing_server_key">pref_image_sharing_server_key</string>
 	<string name="pref_remote_provisioning_key">pref_remote_provisioning_key</string>
-	
+
     <string name="pref_video_port_key">pref_video_port_key</string>
     <string name="pref_audio_port_key">pref_audio_port_key</string>
     <string name="pref_incoming_call_timeout_key">pref_incoming_expire_key</string>
-    
+
     <string name="pref_display_name_key">pref_display_name_key</string>
     <string name="pref_user_name_key">pref_user_name_key</string>
     <string name="pref_expire_key">pref_expire_key</string>
 	<string name="pref_avpf_key">pref_avpf_key</string>
 	<string name="pref_avpf_rr_interval_key">pref_avpf_rr_interval_key</string>
-    
+
 	<string name="pref_rfc2833_dtmf_key">pref_rfc2833_dtmf_key</string>
 	<string name="pref_sipinfo_dtmf_key">pref_sipinfo_dtmf_key</string>
 	<string name="pref_upnp_enable_key">pref_upnp_enable_key</string>
-	
+
 	<string name="pref_first_time_linphone_chat_storage">pref_first_time_linphone_chat_storage</string>
-	
+
 	<string name="pref_sipaccount_key">pref_sipaccount_key</string>
 	<string name="pref_advanced_key">pref_advanced_key</string>
 	<string name="pref_manage_key">pref_manage_key</string>

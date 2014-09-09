@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_disable_account">Disable</string>
-    
+
     <string name="pref_tunnel">Tunnel</string>
 	<string name="pref_tunnel_host">Hostname</string>
 	<string name="pref_tunnel_port">Port</string>
 	<string name="pref_tunnel_mode">Mode</string>
 
    	<!-- do not change order without changing corresponding entry_values in non_localizable_strings.xml -->
-	<string-array name="tunnel_mode_entries"> 
+	<string-array name="tunnel_mode_entries">
 		<item>disabled</item>
 		<item>3G only</item>
 		<item>always</item>
 		<item>auto</item>
-	</string-array> 
+	</string-array>
 
     <string name="incall_notif_active">Audio call ongoing</string>
     <string name="incall_notif_paused">Paused call ongoing</string>
     <string name="incall_notif_video">Video capturing call ongoing</string>
-    
+
     <string name="not_ready_to_make_new_call">Not ready for a new call</string>
     <string name="bad_target_uri">Bad contact : %s</string>
     <string name="reset_sas_fmt">Reset verified %s</string>
     <string name="verify_sas_fmt">Verify %s</string>
     <string name="communication_encrypted">Encrypted</string>
-   
+
 	<string name="waiting_for_startup">Starting up&#8230;</string>
 	<string name="couldnt_accept_call">An error occurred while accepting call</string>
 
@@ -39,7 +39,7 @@
 	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>
 
 	<string name="close_button_text">Close</string>
-	
+
 	<string name="status_conf_call">conf</string>
 	<string name="status_active_call">active</string>
 	<string name="state_paused">paused</string>
@@ -48,7 +48,7 @@
 	<string name="state_incoming_received">incoming</string>
 	<string name="state_outgoing_ringing">ringing</string>
 	<string name="state_outgoing_progress">calling</string>
-	
+
 	<string name="mutemic_button_txt">Mute</string>
 	<string name="speaker_button_txt">Speaker</string>
 	<string name="bluetooth_button_txt">Bluetooth</string>
@@ -89,7 +89,7 @@
 	<string name="accept">Accept</string>
 	<string name="decline">Decline</string>
 	<string name="unknown_incoming_call_name">Unknown</string>
-	
+
 	<string name="pref_network_title">Network</string>
 	<string name="pref_transport">Transport</string>
 	<string name="pref_transport_udp">UDP</string>
@@ -166,9 +166,15 @@
     <string name="pref_audio_port_description">Audio port or port range (minport-maxport)</string>
     <string name="pref_incoming_call_timeout_title">Incoming call timeout (in seconds)</string>
     <string name="place_call_chooser">Place a call</string>
-    <string name="pref_adaptative_rate_control">Adaptative rate control</string>
+    <string name="pref_adaptive_rate_control">Adaptive rate control</string>
+   	<string name="pref_adaptive_rate_algorithm">Adaptive rate algorithm</string>
+    <string-array name="adaptive_rate_algorithm_entries">
+        <item>Simple</item>
+        <item>Stateful</item>
+    </string-array>
+
     <string name="pref_codec_bitrate_limit">Codec bitrate limit</string>
-    
+
     <string-array name="limit_bitrate_entries">
         <item>10 kbits/s</item>
         <item>15 kbits/s</item>
@@ -184,8 +190,8 @@
         <item>36</item>
         <item>64</item>
         <item>128</item>
-    </string-array>  
-    
+    </string-array>
+
 	<string name="pref_debug">Debug</string>
 	<string name="about_report_issue">Report issue</string>
 	<string name="about_bugreport_email_text">Describe problem here</string>
@@ -225,7 +231,7 @@
 	<string name="error_cannot_get_call_parameters">Cannot get call parameters</string>
 	<string name="error_cannot_create_default_parameters">Cannot create default call parameters</string>
 	<string name="error_cannot_invite_address">Cannot invite destination address [%s]</string>
-	
+
 	<string name="notification_started">started</string>
 	<string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 	<string name="pref_stun_server">Stun server</string>
@@ -240,21 +246,21 @@
 	<string name="first_login_connect">Connect</string>
 	<string name="first_launch_no_login_password">Please enter your login and password</string>
 	<string name="first_launch_bad_login_password">Couldn\'t connect; check your login and password and start again</string>
-	
+
 	<string name="pref_amr_summary">AMR codec might not be present on your phone</string>
 	<string name="pref_video_codec_vp8_title">VP8</string>
 	<string name="pref_media_encryption">Media encryption</string>
 	<string name="media_encryption_none">None</string>
 	<string name="media_encryption_srtp">SRTP</string>
 	<string name="media_encryption_zrtp">ZRTP</string>
-	
+
 	<string name="pref_video_codec_h264_unavailable">Codec disabled, build the app from source code to enable it</string>
 	<string name="pref_video_codec_mpeg4_unavailable">Codec disabled, build the app from source code to enable it</string>
-	
+
 	<string name="pref_sipaccounts">SIP Accounts</string>
 	<string name="pref_wifi_only">Use wifi only</string>
 	<string name="pref_push_notification">Enable push notifications</string>
-	
+
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>
@@ -262,13 +268,13 @@
 	<string name="wizard_email_incorrect">Your email is not valid.</string>
 	<string name="wizard_password_incorrect">Your password is not valid (6 characters min).</string>
 	<string name="wizard_passwords_unmatched">Passwords entered are different.</string>
-	
+
 	<string name="pref_help_proxy">SIP proxy hostname or ip address (optional)</string>
 	<string name="pref_help_outbound_proxy">Route all calls through SIP proxy</string>
 	<string name="pref_help_username">Example: john if your account is john@sip.example.org</string>
 	<string name="pref_help_domain">sip.example.org if your account is john@sip.example.org</string>
 	<string name="pref_help_password">You have to re-enter your password if you edit your username and/or the domain</string>
-	
+
 	<string name="delete">Delete</string>
 	<string name="chat">Chat</string>
 	<string name="call">Call</string>
@@ -277,7 +283,7 @@
 	<string name="status_not_connected">Not Registered</string>
 	<string name="status_in_progress">Registration in progress</string>
 	<string name="status_error">Registration failed</string>
-	
+
 	<string name="addressHint">Number or address</string>
 	<string name="conference">Conference</string>
 	<string name="incoming">Incoming call</string>
@@ -288,7 +294,7 @@
 	<string name="no_contact">No contact in your address book.</string>
 	<string name="no_sip_contact">No SIP contact in your address book.</string>
 	<string name="no_chat_history">No chat history.</string>
-	
+
 	<string name="call_stats_audio">Audio</string>
 	<string name="call_stats_video">Video</string>
 	<string name="call_stats_codec">Codec:</string>
@@ -296,7 +302,7 @@
 	<string name="call_stats_download">Download bandwidth:</string>
 	<string name="call_stats_ice">ICE connectivity:</string>
 	<string name="call_stats_video_resolution">Video size:</string>
-	
+
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact">Add to contacts button</string>
 	<string name="content_description_about"></string>
@@ -337,7 +343,7 @@
 	<string name="content_description_message_status"></string>
 	<string name="content_description_conference"></string>
 	<string name="content_description_mark"></string>
-	
+
 	<string name="setup_title">Account Setup Assistant</string>
 	<string name="setup_apply">Apply</string>
 	<string name="setup_password_hint">password</string>
@@ -349,17 +355,17 @@
 	<string name="setup_check_account_validation">Check</string>
 	<string name="setup_account_not_validated">Your account has not been validated yet.</string>
 	<string name="setup_account_validated">Your account has been validated.</string>
-	
+
 	<string name="button_history">History</string>
 	<string name="button_contacts">Contacts</string>
 	<string name="button_settings">Settings</string>
 	<string name="button_chat">Chat</string>
 	<string name="button_about">About</string>
-	
+
 	<string name="button_setup_cancel">Cancel</string>
 	<string name="button_setup_back">Back</string>
 	<string name="button_setup_next">Let\'s go</string>
-	
+
 	<string name="button_new_chat">New conversation</string>
 	<string name="button_edit">Edit</string>
 	<string name="button_cancel">Cancel</string>
@@ -370,7 +376,7 @@
 	<string name="button_all_call">All</string>
 	<string name="button_missed_call">Missed</string>
 	<string name="button_delete_all">Delete</string>
-	
+
 	<string name="button_transfer">Transfer</string>
 	<string name="button_add_call">Add call</string>
 	<string name="button_video">Video</string>
@@ -380,11 +386,11 @@
 	<string name="button_receiver">Receiver</string>
 	<string name="button_bluetooth">Bluetooth</string>
 	<string name="button_options">Options</string>
-	
+
 	<string name="button_send_message">Send</string>
 	<string name="button_send_picture">Pic</string>
 	<string name="uploading_image">Uploading&#8230;</string>
-	
+
 	<string name="call_update_title">Call update requested</string>
 	<string name="call_update_desc">Your correspondent would like to add video to the current call.</string>
 	<string name="call_update_yes">Accept</string>
@@ -400,7 +406,7 @@
 	<string name="image_picker_title">Select source</string>
 	<string name="image_saved">Image saved</string>
 	<string name="image_not_saved">Error, image not saved</string>
-	
+
 	<string name="pref_linphone_friend_title">Friends</string>
 	<string name="pref_auto_accept_friends_title">New friends</string>
 	<string name="pref_auto_accept_friends_desc">utomatically accept new friend requests</string>
@@ -409,69 +415,69 @@
 	<string name="setup_ec_calibration">Echo canceller calibration in progress</string>
     <string name="pref_image_sharing_server_title">Sharing server</string>
     <string name="pref_remote_provisioning_title">Remote provisioning</string>
-	
+
 	<string name="delete_contact">Delete contact</string>
 	<string name="sip_address">SIP address</string>
 	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
 	<string name="contact_last_name">Last name</string>
-	
+
 	<string name="pref_primary_account_title">Primary account</string>
 	<string name="pref_display_name_title">Display name</string>
 	<string name="pref_user_name_title">Username</string>
 	<string name="pref_expire_title">Expire</string>
 	<string name="pref_avpf">AVPF</string>
 	<string name="pref_avpf_rr_interval"> AVPF regular RTCP interval in seconds (between 1 and 5)</string>
-	
+
 	<string name="pref_rfc2833_dtmf">Send RFC2833 DTMFs</string>
 	<string name="pref_sipinfo_dtmf">Send SIP INFO DTMFs</string>
-	
+
 	<string name="error_call_declined">Call declined</string>
 	<string name="error_user_not_found">User not found</string>
 	<string name="error_incompatible_media">Incompatible media parameters</string>
 	<string name="error_low_bandwidth">Your correspondent has low bandwidth, video can\'t be started</string>
 	<string name="error_network_unreachable">Network is unreachable</string>
-	
+
 	<string name="today">Today</string>
 	<string name="yesterday">Yesterday</string>
-	
+
 	<string name="call_state_missed">Missed</string>
 	<string name="call_state_outgoing">Outgoing</string>
 	<string name="call_state_incoming">Incoming</string>
-	
+
 	<string name="pref_background_mode">Background mode</string>
-	
+
 	<string name="show_image">Show</string>
 	<string name="download_image">Download</string>
 	<string name="download_image_failed">Download failed. Please check your internet access or try again later.</string>
-	
+
 	<string name="pref_auth_userid">Auth userid</string>
 	<string name="pref_help_auth_userid">Enter authentication userid (optionnal)</string>
 	<string name="pref_display_name">Display name</string>
 	<string name="pref_help_display_name">Enter display name (optionnal)</string>
-	
+
 	<string name="pref_upnp_enable">Enable UPNP</string>
 	<string name="pref_manage">Manage</string>
-	
+
 	<string name="wait">Please wait...</string>
 	<string name="importing_messages">Updating messages database</string>
 	<string name="default_account_flag">Default account</string>
-	
+
 	<string name="setup_remote_provisioning">Download provisioning</string>
 	<string name="setup_remote_provisioning_hint">This assistant will download an existing configuration.</string>
 	<string name="setup_remote_provisioning_url_hint">provisioning url</string>
 	<string name="setup_remote_provisioning_login_hint">The configuration you downloaded doesn\'t include your account. Please fill it in.</string>
 	<string name="setup_confirm_username">Your username will be %s (uppercase characters are not allowed). Do you accept ?</string>
-	
+
 	<string name="zrtp_accept">Accept</string>
 	<string name="zrtp_deny">Deny</string>
 	<string name="zrtp_help">You should only accept if you have the same code (see above) as your correspondent</string>
-	
+
 	<string name="remote_composing">Remote is writing...</string>
 	<string name="unread_messages">%i unread messages</string>
-	
+
 	<string name="retry">Retry</string>
-	
+
 	<string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
 	<string name="remote_provisioning_again_title">Remote provisioning</string>
 	<string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string>

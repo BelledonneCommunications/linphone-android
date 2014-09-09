@@ -23,6 +23,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneAddress.TransportType;
+import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -246,7 +247,7 @@ public class LinphonePreferences {
 			tempAvpfRRInterval = interval;
 			return this;
 		}
-		
+
 		public AccountBuilder setRealm(String realm) {
 			tempRealm = realm;
 			return this;
@@ -322,7 +323,7 @@ public class LinphonePreferences {
 			prxCfg.enableQualityReporting(tempQualityReportingEnabled);
 			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
 			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
-			
+
 			if(tempRealm != null)
 				prxCfg.setRealm(tempRealm);
 
@@ -680,7 +681,7 @@ public class LinphonePreferences {
 
 	public void deleteAccount(int n) {
 		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-		
+
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
 		if (getLc().getProxyConfigList().length == 0) {
@@ -1016,7 +1017,7 @@ public class LinphonePreferences {
 
 	// Tunnel settings
 	private TunnelConfig tunnelConfig = null;
-	
+
 	public TunnelConfig getTunnelConfig() {
 		if(getLc().isTunnelAvailable()) {
 			if(tunnelConfig == null) {
@@ -1033,7 +1034,7 @@ public class LinphonePreferences {
 			return null;
 		}
 	}
-	
+
 	public String getTunnelHost() {
 		TunnelConfig config = getTunnelConfig();
 		if(config != null) {
@@ -1042,7 +1043,7 @@ public class LinphonePreferences {
 			return null;
 		}
 	}
-	
+
 	public void setTunnelHost(String host) {
 		TunnelConfig config = getTunnelConfig();
 		if(config != null) {
@@ -1050,7 +1051,7 @@ public class LinphonePreferences {
 			LinphoneManager.getInstance().initTunnelFromConf();
 		}
 	}
-	
+
 	public int getTunnelPort() {
 		TunnelConfig config = getTunnelConfig();
 		if(config != null) {
@@ -1059,7 +1060,7 @@ public class LinphonePreferences {
 			return -1;
 		}
 	}
-	
+
 	public void setTunnelPort(int port) {
 		TunnelConfig config = getTunnelConfig();
 		if(config != null) {
@@ -1067,7 +1068,7 @@ public class LinphonePreferences {
 			LinphoneManager.getInstance().initTunnelFromConf();
 		}
 	}
-	
+
 	public String getTunnelMode() {
 		return getConfig().getString("app", "tunnel", null);
 	}
@@ -1098,18 +1099,26 @@ public class LinphonePreferences {
 		return getConfig().getBool("app", "first_remote_provisioning", true);
 	}
 
-	public boolean isAdaptativeRateControlEnabled() {
+	public boolean isAdaptiveRateControlEnabled() {
 		return getLc().isAdaptiveRateControlEnabled();
 	}
-	
-	public void enableAdaptativeRateControl(boolean enabled) {
+
+	public void enableAdaptiveRateControl(boolean enabled) {
 		getLc().enableAdaptiveRateControl(enabled);
 	}
-	
+
+	public AdaptiveRateAlgorithm getAdaptiveRateAlgorithm() {
+		return getLc().getAdaptiveRateAlgorithm();
+	}
+
+	public void setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm alg) {
+		getLc().setAdaptiveRateAlgorithm(alg);
+	}
+
 	public int getCodecBitrateLimit() {
 		return getConfig().getInt("audio", "codec_bitrate_limit", 36);
 	}
-	
+
 	public void setCodecBitrateLimit(int bitrate) {
 		getConfig().setInt("audio", "codec_bitrate_limit", bitrate);
 	}
