@@ -13,13 +13,31 @@
 	</target>
 	<target name="test">
   		<property name="output.file" value="./tests.output" />
-  		<exec executable="bash" failonerror="true">
+		<tstamp>
+        		<format property="archive.name"
+            		pattern="'liblinphonetester_'yyyyMMdd_HHmmss" />
+    		</tstamp>
+    		<echo>Adb log files are put in ${archive.name}.zip</echo>
+
+  		<exec executable="bash" spawn="true">
+			<arg value="-c"/>
+			<arg value="adb logcat -v time > ${archive.name}" />
+		</exec>
+  		<exec executable="bash">
 			<arg value="-c"/>
 			<!-- use 'tee' command to write in file AND on stdout.
 			First is used below to check if tests failed or not while second
 			is used to get output in real time -->
 			<arg value="adb shell am instrument -r -w org.linphone.tester/org.linphone.tester.TestRunner | tee ${output.file}"/>
 		</exec>
+		<!-- hack to stop adb logcat-->	
+		<exec executable="adb" >
+			<arg value="kill-server" />
+		</exec>
+		<zip destfile="${archive.name}.zip">
+			<fileset dir="." includes="${archive.name}"/>
+		</zip>
+		<delete file="${archive.name}"/>
 		<fail message="Tests failed">
 			<condition>
 					<resourcecontains resource="${output.file}" substring="FAILURES" />
