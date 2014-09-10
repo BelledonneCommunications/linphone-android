@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -1420,5 +1421,17 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneChatMessage message, LinphoneContent content, int progress) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void fileTransferRecv(LinphoneCore lc, LinphoneChatMessage message,
+			LinphoneContent content, String buffer, int size) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int fileTransferSend(LinphoneCore lc, LinphoneChatMessage message,
+			LinphoneContent content, ByteBuffer buffer, int size) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
