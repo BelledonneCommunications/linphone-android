@@ -1125,29 +1125,33 @@ public class LinphoneActivity extends FragmentActivity implements
 		Thread sipContactsHandler = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for (int i = 0; i < sipContactCursor.getCount(); i++) {
-					Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
-					if (contact == null)
-						continue;
-					
-					contact.refresh(getContentResolver());
-					if (!isContactPresenceDisabled) {
-						searchFriendAndAddToContact(contact);
-					}
-					sipContactList.add(contact);
-				}
-				for (int i = 0; i < contactCursor.getCount(); i++) {
-					Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
-					if (contact == null)
-						continue;
-					
-					for (Contact c : sipContactList) {
-						if (c != null && c.getID().equals(contact.getID())) {
-							contact = c;
-							break;
+				if(sipContactCursor != null) {
+					for (int i = 0; i < sipContactCursor.getCount(); i++) {
+						Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
+						if (contact == null)
+							continue;
+						
+						contact.refresh(getContentResolver());
+						if (!isContactPresenceDisabled) {
+							searchFriendAndAddToContact(contact);
 						}
+						sipContactList.add(contact);
 					}
-					contactList.add(contact);
+				}
+				if(contactCursor != null) {
+					for (int i = 0; i < contactCursor.getCount(); i++) {
+						Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
+						if (contact == null)
+							continue;
+						
+						for (Contact c : sipContactList) {
+							if (c != null && c.getID().equals(contact.getID())) {
+								contact = c;
+								break;
+							}
+						}
+						contactList.add(contact);
+					}
 				}
 			}
 		});

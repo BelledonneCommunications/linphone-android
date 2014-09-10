@@ -38,7 +38,11 @@ public class ApiEightPlus {
 		try {
 			// Starting the push notification service
 			GCMRegistrar.checkDevice(context);
-			GCMRegistrar.checkManifest(context);
+			try {
+				GCMRegistrar.checkManifest(context);
+			} catch (IllegalStateException e){
+				Log.e("No receiver found",e);
+			}
 			final String regId = GCMRegistrar.getRegistrationId(context);
 			String newPushSenderID = context.getString(R.string.push_sender_id);
 			String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
