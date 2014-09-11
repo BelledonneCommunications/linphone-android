@@ -1,5 +1,6 @@
 package org.linphone.test;
 
+import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -445,5 +446,26 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			String username, String Domain) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void fileTransferProgressIndication(LinphoneCore lc,
+			LinphoneChatMessage message, LinphoneContent content, int progress) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void fileTransferRecv(LinphoneCore lc, LinphoneChatMessage message,
+			LinphoneContent content, byte[] buffer, int size) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public int fileTransferSend(LinphoneCore lc, LinphoneChatMessage message,
+			LinphoneContent content, ByteBuffer buffer, int size) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
