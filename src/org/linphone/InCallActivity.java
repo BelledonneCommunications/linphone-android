@@ -65,6 +65,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +89,7 @@ public class InCallActivity extends FragmentActivity implements
 	private TextView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference;
 	private TextView audioRoute, routeSpeaker, routeReceiver, routeBluetooth;
 	private LinearLayout routeLayout;
+	private ProgressBar videoProgress;
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
@@ -230,6 +232,9 @@ public class InCallActivity extends FragmentActivity implements
 		dialer.setOnClickListener(this);
 		dialer.setEnabled(false);
 		numpad = (Numpad) findViewById(R.id.numpad);
+		videoProgress =  (ProgressBar) findViewById(R.id.videoInProgress);
+		videoProgress.setVisibility(View.GONE);
+		
 		
 		try {
 			routeLayout = (LinearLayout) findViewById(R.id.routesLayout);
@@ -383,7 +388,7 @@ public class InCallActivity extends FragmentActivity implements
 		}
 
 		if (id == R.id.video) {		
-			enabledOrDisabledVideo(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));	
+			enabledOrDisabledVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));	
 		} 
 		else if (id == R.id.micro) {
 			toggleMicro();
@@ -464,12 +469,14 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				if (!isVideoEnabled) {
+				if (isVideoEnabled) {
 					video.setEnabled(true);
 					LinphoneCallParams params = call.getCurrentParamsCopy();
 					params.setVideoEnabled(false);
 					LinphoneManager.getLc().updateCall(call, params);
 				} else {
+					video.setEnabled(false);
+					videoProgress.setVisibility(View.VISIBLE);
 					if (!call.getRemoteParams().isLowBandwidthEnabled()) {
 						LinphoneManager.getInstance().addVideo();
 					} else {
@@ -509,6 +516,9 @@ public class InCallActivity extends FragmentActivity implements
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
+				//Check if the call is not terminated
+				if(call.getState() == State.CallEnd || call.getState() == State.CallReleased) return;
+				
 				if (!displayVideo) {
 					showAudioView();
 				} else {
@@ -540,7 +550,8 @@ public class InCallActivity extends FragmentActivity implements
 		}
 		video.setBackgroundResource(R.drawable.video_off);
 		video.setEnabled(true);
-
+		videoProgress.setVisibility(View.INVISIBLE);
+		
 		LinphoneManager.stopProximitySensorForActivity(InCallActivity.this);
 		replaceFragmentAudioByVideo();
 		displayVideoCallControlsIfHidden();
@@ -1140,7 +1151,8 @@ public class InCallActivity extends FragmentActivity implements
 			if (status != null) {
 				mHandler.post(new Runnable() {
 					@Override
-					public void run() {
+					public void run() {						
+						videoProgress.setVisibility(View.GONE);
 						status.refreshStatusItems(call, isVideoEnabled(call));
 					}
 				});
