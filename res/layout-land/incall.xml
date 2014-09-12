@@ -80,16 +80,35 @@
             android:gravity="center"
             android:paddingTop="30dp" />
 
-        <TextView
-        	android:id="@+id/video"
-        	android:background="@drawable/video_off"
-            android:text="@string/button_video"
-            android:gravity="center"
-            android:paddingTop="30dp"
-            android:textColor="@drawable/text_incall_button_color"
-        	android:layout_width="match_parent"
-       		android:layout_height="wrap_content"
-       		android:layout_weight="1" />
+        	
+       	<RelativeLayout   
+                android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:gravity="center">
+	            
+           	 <TextView
+	        	android:id="@+id/video"
+	        	android:background="@drawable/video_off"
+	            android:text="@string/button_video"
+	            android:gravity="center"
+	            android:paddingTop="30dp"
+	            android:textColor="@drawable/text_incall_button_color"
+	        	android:layout_width="match_parent"
+	       		android:layout_height="wrap_content"/>
+                
+            <ProgressBar
+                android:id="@+id/videoInProgress"
+                style="?android:attr/progressBarStyle" 
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+	            android:layout_height="wrap_content"/>
+
+            </RelativeLayout>  
+            
+       
 
        	<TextView
         	android:id="@+id/micro"
