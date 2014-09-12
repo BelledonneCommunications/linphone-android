@@ -19,9 +19,8 @@
     		</tstamp>
     		<echo>Adb log files are put in ${archive.name}.zip</echo>
 
-  		<exec executable="bash" spawn="true">
-			<arg value="-c"/>
-			<arg value="adb logcat -v time > ${archive.name}" />
+  		<exec executable="adb-log-start.sh" >
+			<arg value=" ${archive.name}" />
 		</exec>
   		<exec executable="bash">
 			<arg value="-c"/>
@@ -31,8 +30,9 @@
 			<arg value="adb shell am instrument -r -w org.linphone.tester/org.linphone.tester.TestRunner | tee ${output.file}"/>
 		</exec>
 		<!-- hack to stop adb logcat-->	
-		<exec executable="adb" >
-			<arg value="kill-server" />
+		<exec executable="bash" >
+			<arg value="-c" />
+			<arg value="kill `cat adb.pid`" />
 		</exec>
 		<zip destfile="${archive.name}.zip">
 			<fileset dir="." includes="${archive.name}"/>
