@@ -155,6 +155,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
         }
         
         uploadLayout = (RelativeLayout) view.findViewById(R.id.uploadLayout);
+        uploadLayout.setVisibility(View.GONE);
         textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
         
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
