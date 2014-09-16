@@ -19,7 +19,7 @@
     		</tstamp>
     		<echo>Adb log files are put in ${archive.name}.zip</echo>
 
-  		<exec executable="adb-log-start.sh" >
+  		<exec executable="./adb-log-start.sh" >
 			<arg value=" ${archive.name}" />
 		</exec>
   		<exec executable="bash">
