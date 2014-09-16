@@ -10,6 +10,8 @@ auto_answer_replacing_calls=1
 media_encryption_mandatory=0
 ping_with_options=0
 root_ca=/data/data/org.linphone/files/rootca.pem
+sip_port=-1
+sip_tcp_port=-1
 
 [rtp]
 audio_rtp_port=7076
