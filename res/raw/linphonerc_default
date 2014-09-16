@@ -7,8 +7,6 @@ contact="Linphone Android" sip:linphone.android@unknown-host
 use_info=0
 use_ipv6=0
 keepalive_period=30000
-sip_port=-1
-sip_tcp_port=-1
 
 [video]
 size=qvga
