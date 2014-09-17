@@ -56,7 +56,7 @@
 		</exec>
 		<exec executable="bash" >
 			<arg value="-c" />
-			<arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi`" />
+			<arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
 		</exec>
 		<fail message="Tests crashed"/>
 	</target>
