@@ -19,6 +19,10 @@
     		</tstamp>
     		<echo>Adb log files are put in ${archive.name}.zip</echo>
 
+  		<exec executable="adb" >
+			<arg value="logcat" />
+			<arg value="-c" />
+		</exec>
   		<exec executable="./adb-log-start.sh" >
 			<arg value=" ${archive.name}" />
 		</exec>
@@ -29,7 +33,6 @@
 			is used to get output in real time -->
 			<arg value="adb shell am instrument -r -w org.linphone.tester/org.linphone.tester.TestRunner | tee ${output.file}"/>
 		</exec>
-		<!-- hack to stop adb logcat-->	
 		<exec executable="bash" >
 			<arg value="-c" />
 			<arg value="kill `cat adb.pid`" />
@@ -42,7 +45,7 @@
 					<resourcecontains resource="${output.file}" substring="FAILURES" />
 			</condition>
 		</fail>
-		<condition property="has.crashed" value="true" else="false">
+		<condition property="has.crashed" >
 				<resourcecontains resource="${output.file}" substring="Process crashed" />
 		</condition>
 		<antcall target="test-crashed"/>
