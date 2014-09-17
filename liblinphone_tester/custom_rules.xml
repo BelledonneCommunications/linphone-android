@@ -37,17 +37,27 @@
 		<zip destfile="${archive.name}.zip">
 			<fileset dir="." includes="${archive.name}"/>
 		</zip>
-		<delete file="${archive.name}"/>
 		<fail message="Tests failed">
 			<condition>
 					<resourcecontains resource="${output.file}" substring="FAILURES" />
 			</condition>
 		</fail>
-		<fail message="Tests crashed">
-			<condition>
-					<resourcecontains resource="${output.file}" substring="Process crashed" />
-			</condition>
-		</fail>
+		<condition property="has.crashed" value="true" else="false">
+				<resourcecontains resource="${output.file}" substring="Process crashed" />
+		</condition>
+		<antcall target="test-crashed"/>
+		<delete file="${archive.name}"/>
 		<delete file="${output.file}"/>
+	</target>
+	<target name="test-crashed" if="has.crashed">
+		<exec executable="bash" >
+			<arg value="-c" />
+			<arg value="tail -n 500 ${archive.name}" />
+		</exec>
+		<exec executable="bash" >
+			<arg value="-c" />
+			<arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi`" />
+		</exec>
+		<fail message="Tests crashed"/>
 	</target>
 </project>
