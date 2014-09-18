@@ -29,6 +29,7 @@ SQLITE_VERSION=3071700
 SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
 ENABLE_GPL_THIRD_PARTIES=1
+CC=
 
 #default options, can be overidden using make OPTION=value .
 
