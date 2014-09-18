@@ -22,7 +22,14 @@ public class TestUnit extends AndroidTestCase {
 		mTest = test;
 		setName(suite + "/" + test);
 	}
-
+	
+	public TestUnit(String name) {
+		String[] tab = name.split("/"); 
+		mSuite = tab[0];
+		mTest = tab[1];
+		setName(name);
+	}
+	
 	static public void copyAssetsFromPackage(Context ctx) throws IOException {
 		copyAssetsFromPackage(ctx,"config_files");
 	}
