@@ -18,7 +18,7 @@ X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
 	print $$0 " " b[2]}' | \
 	sort -g -k 2 | \
 	awk '{ print $$1 }' | tail -1)
-NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo "4" )
+NUMCPUS=1
 TOPDIR=$(shell pwd)
 LIBLINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
@@ -79,7 +79,7 @@ else
 	HTTPS_CA_DIR=$(OPENSSL_DIR)
 endif
 
-all: update-project prepare-sources generate-apk
+all: update-project generate-apk
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
 	@echo "***************************************************************************"
 	@echo "***** CAUTION, this liblinphone SDK is built using 3rd party GPL code *****"
