@@ -48,11 +48,11 @@
 		<condition property="has.crashed" >
 				<resourcecontains resource="${output.file}" substring="Process crashed" />
 		</condition>
-		<antcall target="test-crashed"/>
+		<antcall target="check-for-crash"/>
 		<delete file="${archive.name}"/>
 		<delete file="${output.file}"/>
 	</target>
-	<target name="test-crashed" if="has.crashed">
+	<target name="check-for-crash" if="has.crashed">
 		<exec executable="bash" >
 			<arg value="-c" />
 			<arg value="tail -n 500 ${archive.name}" />
