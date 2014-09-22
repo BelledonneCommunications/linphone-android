@@ -66,7 +66,7 @@ ifeq ($(BUILD_OPENH264),1)
 APP_MODULES += libopenh264 libmsopenh264
 endif
 ifeq ($(BUILD_MATROSKA), 1)
-APP_MODULES += libebml2 libmatroska2
+APP_MODULES += libmatroska2
 endif
 endif # BUILD_VIDEO
 

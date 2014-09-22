@@ -52,6 +52,11 @@ include $(linphone-root-dir)/submodules/externals/build/speex/Android.mk
 # Gsm
 include $(linphone-root-dir)/submodules/externals/build/gsm/Android.mk
 
+# Matroska
+ifeq ($(BUILD_MATROSKA), 1)
+include $(linphone-root-dir)/submodules/externals/build/libmatroska/Android.mk
+endif
+
 ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
@@ -100,10 +105,6 @@ endif
 include $(linphone-root-dir)/submodules/externals/build/ffmpeg/Android.mk
 include $(linphone-root-dir)/submodules/externals/build/libvpx/Android.mk
 
-ifeq ($(BUILD_MATROSKA), 1)
-include $(linphone-root-dir)/submodules/externals/build/libebml2/Android.mk
-include $(linphone-root-dir)/submodules/externals/build/libmatroska/Android.mk
-endif
 
 endif #_BUILD_VIDEO
 
