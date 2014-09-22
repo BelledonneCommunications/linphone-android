@@ -1,0 +1,31 @@
+diff --git a/config.h b/config.h
+index 8b74169..e69de29 100644
+--- a/config.h
++++ b/config.h
+@@ -1,13 +0,0 @@
+-#define COREMAKE_STATIC
+-#define COREMAKE_UNICODE
+-#define CONFIG_EBML_WRITING
+-#define CONFIG_EBML_UNICODE
+-#define HAVE_EBML2
+-#define CONFIG_ZLIB
+-#define CONFIG_MATROSKA2
+-#define USE_PRECOMPILED_HEADERS
+-#define CONFIG_DEBUGCHECKS
+-#define CONFIG_STDIO
+-#define CONFIG_FILEPOS_64
+-#define COREMAKE_CONFIG_HELPER
+-//#define CONFIG_DEBUG_LEAKS
+diff --git a/corec/corec/helpers/parser/parser2.c b/corec/corec/helpers/parser/parser2.c
+index 3126ae8..0d8512a 100644
+--- a/corec/corec/helpers/parser/parser2.c
++++ b/corec/corec/helpers/parser/parser2.c
+@@ -2019,7 +2019,7 @@ NOINLINE bool_t ExprIsTokenEx(const tchar_t** p,const tchar_t* Name,...)
+ 
+ NOINLINE bool_t ExprIsToken(const tchar_t** p,const tchar_t* Name)
+ {
+-    return ExprIsTokenEx(p,Name);
++    return ExprIsTokenEx(p,Name,"");
+ }
+ 
+ uint32_t StringToIP(const tchar_t *Address)
