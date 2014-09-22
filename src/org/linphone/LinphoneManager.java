@@ -455,13 +455,13 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.i("Managing tunnel");
 		if (isTunnelNeeded(info)) {
 			Log.i("Tunnel need to be activated");
-			mLc.tunnelEnable(true);
+			mLc.tunnelSetMode(LinphoneCore.TunnelMode.enable);
 		} else {
 			Log.i("Tunnel should not be used");
 			String pref = mPrefs.getTunnelMode();
-			mLc.tunnelEnable(false);
+			mLc.tunnelSetMode(LinphoneCore.TunnelMode.disable);
 			if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
-				mLc.tunnelAutoDetect();
+				mLc.tunnelSetMode(LinphoneCore.TunnelMode.auto);
 			}
 		}
 	}
