@@ -64,6 +64,13 @@
                 <data android:scheme="sip" />
                 <data android:scheme="imto" />
 			 </intent-filter>
+			 
+            <intent-filter>
+		        <data android:scheme="sip" />
+		        <action android:name="android.intent.action.VIEW" />
+		        <category android:name="android.intent.category.BROWSABLE" />
+		        <category android:name="android.intent.category.DEFAULT" />
+     		</intent-filter>
 		</activity>
 
 		<activity android:name="org.linphone.LinphoneActivity"
