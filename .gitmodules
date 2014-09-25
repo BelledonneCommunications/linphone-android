@@ -16,9 +16,11 @@
 [submodule "submodules/externals/ffmpeg"]
 	path = submodules/externals/ffmpeg
 	url = git://git.videolan.org/ffmpeg
+	ignore = dirty
 [submodule "submodules/externals/x264"]
 	path = submodules/externals/x264
 	url = git://git.videolan.org/x264.git
+	ignore = dirty
 [submodule "submodules/msx264"]
 	path = submodules/msx264
 	url = git://git.linphone.org/msx264.git
@@ -31,6 +33,7 @@
 [submodule "submodules/externals/libvpx"]
 	path = submodules/externals/libvpx
 	url = http://git.chromium.org/webm/libvpx.git
+	ignore = dirty
 [submodule "submodules/bzrtp"]
 	path = submodules/bzrtp
 	url = git://git.linphone.org/bzrtp.git
@@ -79,6 +82,7 @@
 [submodule "submodules/externals/openh264"]
 	path = submodules/externals/openh264
 	url = https://github.com/cisco/openh264
+	ignore = dirty
 [submodule "submodules/externals/libmatroska"]
 	path = submodules/externals/libmatroska
 	url = https://github.com/Matroska-Org/foundation-source.git
