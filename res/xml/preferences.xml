@@ -128,6 +128,10 @@
 			<CheckBoxPreference
 				android:title="@string/pref_rfc2833_dtmf"
 			    android:key="@string/pref_rfc2833_dtmf_key"/>
+			
+			<EditTextPreference
+			    android:title="@string/pref_voice_mail"
+				android:key="@string/pref_voice_mail_key"/>
 
 	    </PreferenceScreen>
 

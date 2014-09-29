@@ -627,6 +627,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private void initCallSettings() {
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
+		
 		if (mPrefs.useRfc2833Dtmfs()) {
 			rfc2833.setChecked(true);
 			sipInfo.setChecked(false);
@@ -636,6 +637,8 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			rfc2833.setChecked(false);
 			rfc2833.setEnabled(false);
 		}
+		
+		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 	}
 
 	private void setCallPreferencesListener() {
@@ -651,6 +654,17 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			}
 		});
 
+		findPreference(getString(R.string.pref_voice_mail_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				EditTextPreference voiceMail = (EditTextPreference) findPreference(getString(R.string.pref_voice_mail_key));
+				voiceMail.setSummary(newValue.toString());
+				voiceMail.setText(newValue.toString());
+				mPrefs.setVoiceMailUri(newValue.toString());
+				return true;
+			}
+		});
+		
 		findPreference(getString(R.string.pref_sipinfo_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {

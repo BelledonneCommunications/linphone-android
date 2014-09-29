@@ -22,12 +22,15 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.LinphoneSimpleListener.LinphoneOnNotifyReceivedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
@@ -56,10 +59,10 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class StatusFragment extends Fragment {
+public class StatusFragment extends Fragment implements LinphoneOnNotifyReceivedListener {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText, exit;
+	private TextView statusText, exit, voicemailCount;
 	private ImageView statusLed, callQuality, encryption, background;
 	private ListView sliderContentAccounts;
 	private TableLayout callStats;
@@ -93,6 +96,8 @@ public class StatusFragment extends Fragment {
 		
 		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
 
+		voicemailCount = (TextView) view.findViewById(R.id.voicemailCount);
+		
 		exit = (TextView) view.findViewById(R.id.exit);
 		exit.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -164,12 +169,14 @@ public class StatusFragment extends Fragment {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
 			sliderContentAccounts.setVisibility(View.GONE);
 			callStats.setVisibility(View.GONE);
+			voicemailCount.setVisibility(View.GONE);
 			
 			if (isInCall && isAttached && getResources().getBoolean(R.bool.display_call_stats)) {
 				callStats.setVisibility(View.VISIBLE);
 				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 				initCallStatsRefresher(call, callStats);
 			} else if (!isInCall) {
+				voicemailCount.setVisibility(View.VISIBLE);
 				sliderContentAccounts.setVisibility(View.VISIBLE);
 				AccountsListAdapter adapter = new AccountsListAdapter();
 				sliderContentAccounts.setAdapter(adapter);
@@ -363,6 +370,7 @@ public class StatusFragment extends Fragment {
 	
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
 		if (call != null) {
+			voicemailCount.setVisibility(View.GONE);
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 
 			if (isVideoEnabled) {
@@ -616,6 +624,26 @@ public class StatusFragment extends Fragment {
 			isDefault.setOnClickListener(defaultListener);
 			
 			return view;
+		}
+	}
+	
+	@Override
+	public void onNotifyReceived(LinphoneEvent ev, String eventName,
+			LinphoneContent content) {
+		
+		if(!content.getType().equals("application")) return;
+		if(!content.getSubtype().equals("imple-message-summary")) return;
+
+		if (content.getData() == null) return;
+
+		//TODO Parse 
+		int unreadCount = -1;
+
+		if (unreadCount > 0) {
+			voicemailCount.setText(unreadCount + " unread messages");
+			voicemailCount.setVisibility(View.VISIBLE);
+		} else {
+			voicemailCount.setVisibility(View.GONE);
 		}
 	}
 }
