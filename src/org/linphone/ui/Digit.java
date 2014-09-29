@@ -20,6 +20,7 @@ package org.linphone.ui;
 
 import org.linphone.InCallActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
@@ -58,6 +59,10 @@ public class Digit extends Button implements AddressAware {
 		setOnTouchListener(lListener);
 		
 		if ("0+".equals(text)) {
+			setOnLongClickListener(lListener);
+		}
+		
+		if ("1".equals(text)) {
 			setOnLongClickListener(lListener);
 		}
 	}
@@ -138,12 +143,23 @@ public class Digit extends Button implements AddressAware {
 		}
 		
 		public boolean onLongClick(View v) {
+			int id = v.getId();
+			LinphoneCore lc = LinphoneManager.getLc();
+
 			if (mPlayDtmf) {
 				if (!linphoneServiceReady()) return true;
 				// Called if "0+" dtmf
-				LinphoneCore lc = LinphoneManager.getLc();
 				lc.stopDtmf();
 			}
+			
+			if(id == R.id.Digit1 && lc.getCalls().length == 0){
+				String voiceMail = LinphonePreferences.instance().getVoiceMailUri();
+				if(voiceMail != null){
+					LinphoneManager.getInstance().newOutgoingCall(voiceMail,"");
+				}
+				return true;
+			}
+			
 			
 			if (mAddress == null) return true;
 

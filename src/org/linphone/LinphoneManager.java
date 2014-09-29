@@ -38,6 +38,7 @@ import java.util.TimerTask;
 import org.linphone.LinphoneSimpleListener.ConnectivityChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
+import org.linphone.LinphoneSimpleListener.LinphoneOnNotifyReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnComposingReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
 import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
@@ -1365,11 +1366,18 @@ public class LinphoneManager implements LinphoneCoreListener {
 			SubscriptionState state) {
 		Log.d("Subscription state changed to "+state+" event name is "+ev.getEventName());
 	}
+	
+	private LinphoneOnNotifyReceivedListener notifyReceivedListener;
+	public void setNotifyReceivedListener(LinphoneOnNotifyReceivedListener listener) {
+		notifyReceivedListener = listener;
+	}
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
 			String eventName, LinphoneContent content) {
 		Log.d("Notify received for event "+eventName);
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getDataAsString());
+		if (notifyReceivedListener != null)
+			notifyReceivedListener.onNotifyReceived(ev,eventName,content);
 	}
 	@Override
 	public void publishStateChanged(LinphoneCore lc, LinphoneEvent ev,

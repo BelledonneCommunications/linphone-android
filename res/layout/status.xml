@@ -243,6 +243,19 @@
 		        android:textColor="@android:color/white"
 		        android:visibility="gone"
 		        android:textSize="18sp" />
+		    
+			<TextView 
+				android:id="@+id/voicemailCount" 
+				android:textColor="@android:color/white"
+				android:layout_alignParentRight="true"
+				android:textSize="18sp"
+				android:paddingLeft="5dp"
+				android:paddingRight="10dp"
+				android:layout_centerVertical="true"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:gravity="center_vertical"
+				android:visibility="gone" />
 		
 		</RelativeLayout>
 		

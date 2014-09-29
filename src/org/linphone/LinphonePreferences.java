@@ -785,6 +785,14 @@ public class LinphonePreferences {
 	public void sendDTMFsAsSipInfo(boolean use) {
 		getLc().setUseSipInfoForDtmfs(use);
 	}
+	
+	public String getVoiceMailUri() {
+		return getConfig().getString("app", "voice_mail", null);
+	}
+	
+	public void setVoiceMailUri(String uri) {
+		getConfig().setString("app", "voice_mail", uri);
+	}
 	// End of call settings
 
 	// Network settings

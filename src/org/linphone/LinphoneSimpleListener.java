@@ -20,6 +20,9 @@ package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneContent;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneChatMessage;
@@ -78,6 +81,9 @@ public interface LinphoneSimpleListener {
 	
 	public static interface LinphoneOnDTMFReceivedListener extends LinphoneSimpleListener {
 		void onDTMFReceived(LinphoneCall call, int dtmf);
+	}
+	public static interface LinphoneOnNotifyReceivedListener extends LinphoneSimpleListener {
+		void onNotifyReceived(LinphoneEvent ev,String eventName, LinphoneContent content);
 	}
 	public static interface LinphoneOnComposingReceivedListener extends LinphoneSimpleListener {
 		void onComposingReceived(LinphoneChatRoom room);
