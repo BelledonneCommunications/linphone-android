@@ -32,7 +32,7 @@ To run the tutorials:
 To create an apk with a different package name, you need to edit the custom_rules.xml file:
 1) look for the property named "linphone.package.name" and change it value accordingly
 2) also update the values in the AndroidManifest file where the comment <!-- Change package ! --> appears
-3) update the path to the sounds in the linphonerc-factory files in the res folders
+3) update the path to the sounds in the linphonerc-factory files in the res folders and optionally change default sip account on linphonerc-default
 4) run again the Makefile script by calling "make"
 
 
