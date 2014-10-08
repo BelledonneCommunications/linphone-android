@@ -106,6 +106,14 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	        	return true;
 			}
 		});
+		findPreference(getString(R.string.pref_add_account_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				int nbAccounts = mPrefs.getAccountCount();
+				LinphoneActivity.instance().displayAccountSettings(nbAccounts);
+	        	return true;
+			}
+		});
 	}
 
 	// Sets listener for each preference to update the matching value in linphonecore
@@ -128,8 +136,12 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			emptyAndHidePreference(R.string.pref_sipaccounts_key);
 		}
 
-		if (getResources().getBoolean(R.bool.hide_wizard)) {
+		if (getResources().getBoolean(R.bool.hide_wizard)){
 			hidePreference(R.string.setup_key);
+		}
+		
+		if(!getResources().getBoolean(R.bool.replace_wizard_with_old_interface)){
+			hidePreference(R.string.pref_add_account_key);
 		}
 
 		if (getResources().getBoolean(R.bool.disable_animations)) {

@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.LinphonePreferences.AccountBuilder;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.os.Bundle;
@@ -41,9 +43,11 @@ import android.view.View;
  */
 public class AccountPreferencesFragment extends PreferencesListFragment {
 	private int n;
+	private boolean isNewAccount=false;
 	private LinphonePreferences mPrefs;
 	private EditTextPreference mProxyPreference;
 	private ListPreference mTransportPreference;
+	private AccountBuilder builder;
 	
 	public AccountPreferencesFragment() {
 		super(R.xml.account_preferences);
@@ -62,7 +66,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		
 		PreferenceScreen screen = getPreferenceScreen();
 		n = getArguments().getInt("Account", 0);
-		manageAccountPreferencesFields(screen);
+		if(n == mPrefs.getAccountCount()){
+			isNewAccount=true;
+			builder = new AccountBuilder(LinphoneManager.getLc());
+			initAccountPreferencesFields(screen);
+		} else {
+			manageAccountPreferencesFields(screen);
+		}
+		
 	}
 	
 	public static boolean isEditTextEmpty(String s){
@@ -73,7 +84,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			if(isEditTextEmpty(newValue.toString())) return false;
-			mPrefs.setAccountUsername(n, newValue.toString());
+			if (isNewAccount) {
+				builder.setUsername(newValue.toString());
+			} else {
+				mPrefs.setAccountUsername(n, newValue.toString());
+			}
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -81,7 +96,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener useridChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			mPrefs.setAccountUserId(n, newValue.toString());
+			if (isNewAccount) {
+				builder.setUserId(newValue.toString());
+			} else {
+				mPrefs.setAccountUserId(n, newValue.toString());
+			}		
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -90,7 +109,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			if(isEditTextEmpty(newValue.toString())) return false;
-			mPrefs.setAccountPassword(n, newValue.toString());
+			if (isNewAccount) {
+				builder.setPassword(newValue.toString());
+			} else {
+				mPrefs.setAccountPassword(n, newValue.toString());
+			}		
 			return true;
 		}		
 	};
@@ -98,7 +121,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			if(isEditTextEmpty(newValue.toString())) return false;
-			mPrefs.setAccountDomain(n, newValue.toString());
+			if (isNewAccount) {
+				builder.setDomain(newValue.toString());
+			} else {
+				mPrefs.setAccountDomain(n, newValue.toString());
+			}			
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -106,7 +133,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	OnPreferenceChangeListener displayNameChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			mPrefs.setAccountDisplayName(n, newValue.toString());
+			if (isNewAccount) {
+				builder.setDisplayName(newValue.toString());
+			} else {
+				mPrefs.setAccountDisplayName(n, newValue.toString());
+			}
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -115,28 +146,40 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			String value = newValue.toString();
-			mPrefs.setAccountProxy(n, value);
-			preference.setSummary(mPrefs.getAccountProxy(n));
-			
-			if (mTransportPreference != null) {
-				mTransportPreference.setSummary(mPrefs.getAccountTransportString(n));
-				mTransportPreference.setValue(mPrefs.getAccountTransportKey(n));
-			}
-			
+			if (isNewAccount) {
+				builder.setProxy(newValue.toString());
+				preference.setSummary(newValue.toString());
+			} else {
+				mPrefs.setAccountProxy(n, value);
+				preference.setSummary(mPrefs.getAccountProxy(n));
+				
+				if (mTransportPreference != null) {
+					mTransportPreference.setSummary(mPrefs.getAccountTransportString(n));
+					mTransportPreference.setValue(mPrefs.getAccountTransportKey(n));
+				}
+			}		
 			return true;
 		}		
 	};
 	OnPreferenceChangeListener outboundProxyChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			mPrefs.setAccountOutboundProxyEnabled(n, (Boolean) newValue);
+			if (isNewAccount) {
+				builder.setOutboundProxyEnabled((Boolean) newValue);
+			} else {
+				mPrefs.setAccountOutboundProxyEnabled(n, (Boolean) newValue);
+			}			
 			return true;
 		}		
 	};
 	OnPreferenceChangeListener expiresChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			mPrefs.setExpires(n, newValue.toString());
+			if (isNewAccount) {
+				builder.setExpires(newValue.toString());
+			} else {
+				mPrefs.setExpires(n, newValue.toString());
+			}
 			preference.setSummary(newValue.toString());
 			return true;
 		}		
@@ -146,7 +189,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			String value = newValue.toString();
 			preference.setSummary(value);
-			mPrefs.setPrefix(n, value);
+			if (isNewAccount) {
+				//TODO acocunt builder ste prefix
+			} else {
+				mPrefs.setPrefix(n, value);
+			}
 			return true;
 		}
 	};
@@ -154,7 +201,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			boolean value = (Boolean) newValue;
-			mPrefs.enableAvpf(n, value);
+			if (isNewAccount) {
+				builder.setAvpfEnabled(value);
+			} else {
+				mPrefs.enableAvpf(n, value);
+			}
 			return true;
 		}
 	};
@@ -168,7 +219,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 					return false;
 				}
 			} catch (NumberFormatException nfe) { }
-			mPrefs.setAvpfRRInterval(n, value);
+			if (isNewAccount) {
+				//TODO
+			} else {
+				mPrefs.setAvpfRRInterval(n, value);
+			}	
 			preference.setSummary(value);
 			return true;
 		}
@@ -177,7 +232,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			boolean value = (Boolean) newValue;
-			mPrefs.setReplacePlusByZeroZero(n, value);
+			if (isNewAccount) {
+				//TODO
+			} else {
+				mPrefs.setReplacePlusByZeroZero(n, value);
+			}
 			return true;
 		}
 	};
@@ -185,7 +244,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			boolean value = (Boolean) newValue;
-			mPrefs.setAccountEnabled(n, !value);
+			if (isNewAccount) {
+				builder.setEnabled(!value);
+			} else {
+				mPrefs.setAccountEnabled(n, !value);
+			}		
 			return true;
 		}		
 	};
@@ -193,15 +256,19 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			String key = newValue.toString();
-			mPrefs.setAccountTransport(n, key);
-			preference.setSummary(mPrefs.getAccountTransportString(n));
-			preference.setDefaultValue(mPrefs.getAccountTransportKey(n));
-			if (mProxyPreference != null) {
-				String newProxy = mPrefs.getAccountProxy(n);
-				mProxyPreference.setSummary(newProxy);
-				mProxyPreference.setText(newProxy);
-			}
-			
+			if (isNewAccount) {
+				//TODO
+				//builder.setTransport(transport);
+			} else {
+				mPrefs.setAccountTransport(n, key);
+				preference.setSummary(mPrefs.getAccountTransportString(n));
+				preference.setDefaultValue(mPrefs.getAccountTransportKey(n));
+				if (mProxyPreference != null) {
+					String newProxy = mPrefs.getAccountProxy(n);
+					mProxyPreference.setSummary(newProxy);
+					mProxyPreference.setText(newProxy);
+				}
+			}		
 			return true;
 		}
 	};
@@ -226,6 +293,89 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	        }
 	    }
 	}
+	
+	private void initAccountPreferencesFields(PreferenceScreen parent) {
+		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
+		
+    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
+    	EditTextPreference username = (EditTextPreference) account.getPreference(0);
+    	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+    	username.setOnPreferenceChangeListener(usernameChangedListener);
+    	
+    	EditTextPreference userid = (EditTextPreference) account.getPreference(1);
+    	userid.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+    	userid.setOnPreferenceChangeListener(useridChangedListener);
+    	
+    	EditTextPreference password = (EditTextPreference) account.getPreference(2);
+    	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+    	password.getEditText().setTransformationMethod(new CoolPasswordMethod());
+    	password.setOnPreferenceChangeListener(passwordChangedListener);
+    	
+    	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
+    	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+    	domain.setOnPreferenceChangeListener(domainChangedListener);
+    	
+    	EditTextPreference displayName = (EditTextPreference) account.getPreference(4);
+    	displayName.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+    	displayName.setOnPreferenceChangeListener(displayNameChangedListener);
+		
+    	PreferenceCategory advanced = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_advanced_key));
+    	mTransportPreference = (ListPreference) advanced.getPreference(0);
+    	initializeTransportPreference(mTransportPreference);
+    	mTransportPreference.setOnPreferenceChangeListener(transportChangedListener);	
+    	
+		mProxyPreference = (EditTextPreference) advanced.getPreference(1);
+		mProxyPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+		mProxyPreference.setOnPreferenceChangeListener(proxyChangedListener);
+    	
+    	CheckBoxPreference outboundProxy = (CheckBoxPreference) advanced.getPreference(2);
+    	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
+    	
+    	EditTextPreference expires = (EditTextPreference) advanced.getPreference(3);
+    	expires.setOnPreferenceChangeListener(expiresChangedListener);
+
+    	EditTextPreference prefix = (EditTextPreference) advanced.getPreference(4);
+    	prefix.setOnPreferenceChangeListener(prefixChangedListener);
+
+		CheckBoxPreference avpf = (CheckBoxPreference) advanced.getPreference(5);
+		avpf.setOnPreferenceChangeListener(avpfChangedListener);
+
+		EditTextPreference avpfRRInterval = (EditTextPreference) advanced.getPreference(6);
+		avpfRRInterval.setOnPreferenceChangeListener(avpfRRIntervalChangedListener);
+
+    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(7);
+		escape.setOnPreferenceChangeListener(escapeChangedListener);
+    	
+    	PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
+    	final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);
+    	disable.setEnabled(true);
+    	disable.setOnPreferenceChangeListener(disableChangedListener);
+    	
+    	CheckBoxPreference mainAccount = (CheckBoxPreference) manage.getPreference(1);
+    	mainAccount.setChecked(isDefaultAccount);
+    	mainAccount.setEnabled(!mainAccount.isChecked());
+    	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() 
+    	{
+			public boolean onPreferenceClick(Preference preference) {
+				mPrefs.setDefaultAccount(n);
+				disable.setEnabled(false);
+				disable.setChecked(false);
+				preference.setEnabled(false);
+				return true;
+			}
+		});
+
+    	final Preference delete = manage.getPreference(2);
+    	delete.setEnabled(true);
+    	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        public boolean onPreferenceClick(Preference preference) {
+	        	mPrefs.deleteAccount(n);
+	        	LinphoneActivity.instance().displaySettings();
+	        	return true;
+	        }
+        });
+	}
+	
 	private void manageAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
 		
@@ -357,5 +507,19 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		contents = new CharSequence[values.size()];
 		values.toArray(contents);
 		pref.setEntryValues(contents);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();		
+		if (LinphoneActivity.isInstanciated()) {
+			try {
+				if(isNewAccount){
+					builder.saveNewAccount();
+				}
+			} catch (LinphoneCoreException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 }
