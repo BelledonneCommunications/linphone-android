@@ -42,6 +42,14 @@
 		android:textStyle="bold" 
 		android:textColor="@color/text_contrast"
 		android:id="@+id/AboutLink"/>
+
+	<Button
+	    android:id="@+id/send_log"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="30sp"
+	    android:text="@string/menu_send_log"
+	    android:visibility="gone" />
 	
 	<Button android:id="@+id/exit"
 		android:layout_width="wrap_content"
