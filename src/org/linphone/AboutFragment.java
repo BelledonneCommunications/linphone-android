@@ -34,6 +34,9 @@ import android.widget.TextView;
  */
 public class AboutFragment extends Fragment implements OnClickListener {
 	private FragmentsAvailable about = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
+	View exitButton = null;
+	View sendLogButton = null;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -49,11 +52,16 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-
-		View issue = view.findViewById(R.id.exit);
-		issue.setOnClickListener(this);
-		issue.setVisibility(View.VISIBLE);
 		
+		sendLogButton = view.findViewById(R.id.send_log);
+		sendLogButton.setOnClickListener(this);
+		sendLogButton.setVisibility(getResources().getBoolean(R.bool.enable_log_collect) ? View.VISIBLE : View.GONE);
+
+		exitButton = view.findViewById(R.id.exit);
+		exitButton.setOnClickListener(this);
+		exitButton.setVisibility(View.VISIBLE);
+		
+
 		return view;
 	}
 	
@@ -73,8 +81,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
-
-			if (getResources().getBoolean(R.bool.enable_log_collect)) {
+			if (v == sendLogButton) {
 				LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
 			} else {
 				LinphoneActivity.instance().exit();

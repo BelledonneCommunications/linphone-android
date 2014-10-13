@@ -200,6 +200,7 @@
 	<string name="about_reading_logs">Reading logs, may takes time&#8230;</string>
 	<string name="about_mailer_chooser_text">Send bug report with&#8230;</string>
 	<string name="menu_about">About</string>
+	<string name="menu_send_log">Send log</string>
 	<string name="pref_audio">Audio</string>
 	<string name="menu_exit">Exit</string>
 	<string name="pref_prefix">Prefix</string>
@@ -258,6 +259,7 @@
 	<string name="pref_video_codec_mpeg4_unavailable">Codec disabled, build the app from source code to enable it</string>
 
 	<string name="pref_sipaccounts">SIP Accounts</string>
+	<string name="pref_dtmf">Gate code</string>
 	<string name="pref_wifi_only">Use wifi only</string>
 	<string name="pref_push_notification">Enable push notifications</string>
 
@@ -359,7 +361,7 @@
 	<string name="button_history">History</string>
 	<string name="button_contacts">Contacts</string>
 	<string name="button_settings">Settings</string>
-	<string name="button_chat">Chat</string>
+	<string name="button_chat">Gate</string>
 	<string name="button_about">About</string>
 
 	<string name="button_setup_cancel">Cancel</string>
@@ -482,4 +484,7 @@
 	<string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
 	<string name="remote_provisioning_again_title">Remote provisioning</string>
 	<string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string>
+	<string name="pref_dtmf_sequence_title">DTMF sequence</string>
+	<string name="dtmf_sequence_not_set_failure">No DTMF set in advanced preferences</string>
+	<string name="dtmf_sequence">DTMF sequence</string>
 </resources>
