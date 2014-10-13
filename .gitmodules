@@ -27,6 +27,7 @@
 [submodule "submodules/externals/opencore-amr"]
 	path = submodules/externals/opencore-amr
 	url = git://git.code.sf.net/p/opencore-amr/code
+	ignore = dirty
 [submodule "submodules/msamr"]
 	path = submodules/msamr
 	url = git://git.linphone.org/msamr
