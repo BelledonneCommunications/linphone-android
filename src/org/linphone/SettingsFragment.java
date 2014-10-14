@@ -139,7 +139,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		if (getResources().getBoolean(R.bool.hide_wizard)){
 			hidePreference(R.string.setup_key);
 		}
-		
+
 		if(!getResources().getBoolean(R.bool.replace_wizard_with_old_interface)){
 			hidePreference(R.string.pref_add_account_key);
 		}
@@ -427,6 +427,21 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		for (final PayloadType pt : lc.getAudioCodecs()) {
 			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
 			codec.setTitle(pt.getMime());
+			/* Special case */
+			if (pt.getMime().equals("mpeg4-generic")) {
+				if (android.os.Build.VERSION.SDK_INT < 16) {
+					/* Make sure AAC is disabled */
+					try {
+						lc.enablePayloadType(pt, false);
+					} catch (LinphoneCoreException e) {
+						e.printStackTrace();
+					}
+					continue;
+				} else {
+					codec.setTitle("AAC-ELD");
+				}
+			}
+
 			codec.setSummary(pt.getRate() + " Hz");
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
@@ -639,7 +654,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private void initCallSettings() {
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
-		
+
 		if (mPrefs.useRfc2833Dtmfs()) {
 			rfc2833.setChecked(true);
 			sipInfo.setChecked(false);
@@ -649,7 +664,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 			rfc2833.setChecked(false);
 			rfc2833.setEnabled(false);
 		}
-		
+
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 	}
 
@@ -676,7 +691,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_sipinfo_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
