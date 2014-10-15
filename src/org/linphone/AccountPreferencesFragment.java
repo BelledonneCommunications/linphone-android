@@ -495,9 +495,16 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
 		setListPreferenceValues(pref, entries, values);
 		
-		pref.setSummary(mPrefs.getAccountTransportString(n));
-		pref.setDefaultValue(mPrefs.getAccountTransportKey(n));
-		pref.setValueIndex(entries.indexOf(mPrefs.getAccountTransportString(n)));
+		if (! isNewAccount) {
+			pref.setSummary(mPrefs.getAccountTransportString(n));
+			pref.setDefaultValue(mPrefs.getAccountTransportKey(n));
+			pref.setValueIndex(entries.indexOf(mPrefs.getAccountTransportString(n)));
+		} else {
+
+			pref.setSummary(getString(R.string.pref_transport_udp));
+			pref.setDefaultValue(getString(R.string.pref_transport_udp));
+			pref.setValueIndex(entries.indexOf(getString(R.string.pref_transport_udp)));
+		}
 	}
 	
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
