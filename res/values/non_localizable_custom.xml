@@ -20,7 +20,7 @@
     <bool name="exit_button_on_dialer">false</bool>
 
     <bool name="hide_camera_settings">false</bool>
-    <bool name="replace_wizard_with_old_interface">true</bool>
+    <bool name="replace_wizard_with_old_interface">false</bool>
     <bool name="hide_wizard">false</bool>
     <string name="setup_forced_proxy"></string>
     <bool name="setup_cancel_move_to_back">false</bool>
