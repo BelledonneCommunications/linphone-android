@@ -283,6 +283,12 @@ public class LinphonePreferences {
 		 * @throws LinphoneCoreException
 		 */
 		public void saveNewAccount() throws LinphoneCoreException {
+
+			if (tempUsername == null || tempUsername.length() < 1 || tempDomain == null || tempDomain.length() < 1) {
+				Log.w("Skipping account save: username or domain not provided");
+				return;
+			}
+
 			String identity = "sip:" + tempUsername + "@" + tempDomain;
 			String proxy = "sip:";
 			if (tempProxy == null) {
@@ -785,11 +791,11 @@ public class LinphonePreferences {
 	public void sendDTMFsAsSipInfo(boolean use) {
 		getLc().setUseSipInfoForDtmfs(use);
 	}
-	
+
 	public String getVoiceMailUri() {
 		return getConfig().getString("app", "voice_mail", null);
 	}
-	
+
 	public void setVoiceMailUri(String uri) {
 		getConfig().setString("app", "voice_mail", uri);
 	}
