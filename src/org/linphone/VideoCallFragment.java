@@ -66,8 +66,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 
 		fixZOrder(mVideoView, mCaptureView);
 		
-		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mCaptureView);
-		androidVideoWindowImpl.setListener(new AndroidVideoWindowImpl.VideoWindowListener() {
+		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mCaptureView, new AndroidVideoWindowImpl.VideoWindowListener() {
 			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				LinphoneManager.getLc().setVideoWindow(vw);
 				mVideoView = surface;
@@ -90,7 +89,6 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 				LinphoneManager.getLc().setPreviewWindow(null);
 			}
 		});
-		androidVideoWindowImpl.init();
 		
 		mVideoView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
