@@ -389,11 +389,13 @@ public final class LinphoneUtils {
             Log.i("Saving logs to " + zipFilePath);
 
             if( zipLogs(sb, zipFilePath) ) {
+            	final String appName = (context != null) ? context.getString(R.string.app_name) : "Linphone(?)";
+            	
                 Uri zipURI = Uri.parse("file://" + zipFilePath);
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                i.putExtra(Intent.EXTRA_SUBJECT, "Linphone Logs");
-                i.putExtra(Intent.EXTRA_TEXT, "Linphone logs");
+                i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+                i.putExtra(Intent.EXTRA_TEXT, appName + " logs");
                 i.setType("application/zip");
                 i.putExtra(Intent.EXTRA_STREAM, zipURI);
                 try {
