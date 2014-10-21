@@ -437,14 +437,12 @@ liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester jav
 javah:
 	ant javah
 
-generate-apk: generate-libs
-	ant partial-clean
+generate-apk: clean generate-libs
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties
 	ant debug
 
-generate-mediastreamer2-apk: generate-mediastreamer2-libs
+generate-mediastreamer2-apk: clean generate-mediastreamer2-libs
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
-	ant partial-clean && \
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties && \
 	ant debug
 
@@ -476,10 +474,10 @@ clean-ndk-build:
 	  cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && ant clean; \
 	fi
 
-clean: clean-ndk-build
+clean:
 	ant clean
 
-veryclean: clean clean-ffmpeg clean-x264 clean-openh264 clean-vpx
+veryclean: clean clean-ndk-build clean-ffmpeg clean-x264 clean-openh264 clean-vpx
 
 .PHONY: clean install-apk run-linphone
 
