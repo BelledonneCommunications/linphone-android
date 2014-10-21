@@ -443,6 +443,7 @@
 	<string name="setup_remote_provisioning_hint">This assistant will download an existing configuration.</string>
 	<string name="setup_remote_provisioning_url_hint">provisioning url</string>
 	<string name="setup_confirm_username">Your username will be %s (uppercase characters are not allowed). Do you accept ?</string>
+	<string name="setup_title_assistant">Account setup assistant</string>
 	
 	<string name="zrtp_accept">Accept</string>
 	<string name="zrtp_deny">Deny</string>

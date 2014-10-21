@@ -4,13 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     
-    <ImageView 
+    <TextView 
    		android:contentDescription="@string/content_description_welcome"
 	    android:paddingTop="40dp"
+	    android:textSize="20sp"
+	    android:textStyle="bold"
+	    android:textColor="@android:color/black"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:visibility="gone"
-	    android:src="@drawable/setup_title_assistant"/>
+	    android:text="@string/setup_title_assistant"/>
     
     <TextView 
 	    android:paddingTop="10dp"
