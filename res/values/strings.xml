@@ -115,7 +115,7 @@
 	<string name="pref_video">Video</string>
 	<string name="pref_preferences">Preferences</string>
     <string name="pref_video_codec_h263_title">H263</string>
-    <string name="pref_video_codec_mpeg4_title">MPEG4</string>
+    <string name="pref_video_codec_mpeg4_title">MP4V-ES</string>
     <string name="pref_video_codec_h264_title">H264</string>
     <string name="pref_video_codecs_title">Codecs</string>
 	<string name="pref_preferred_video_size">Preferred video size</string>

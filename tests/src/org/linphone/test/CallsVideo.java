@@ -9,7 +9,9 @@ import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphonePlayer;
 import org.linphone.core.PayloadType;
+import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
@@ -250,6 +252,15 @@ public class CallsVideo extends SampleTest {
 		assertCallIsRunningWithVideo();
 	}
 	
+//	@SmallTest
+//	@MediumTest
+//	@LargeTest
+//	public void testJIncommingCallWithCallPlayer() throws InterruptedException {
+//		testJIncomingVideoCall();
+//		Thread.sleep(2000);
+//		callPlayerTest();
+//	}
+	
 	//TODO: Test each video codec
 
 	@MediumTest
@@ -479,6 +490,44 @@ public class CallsVideo extends SampleTest {
 		}
 	}
 	
+//	private void forceH264Codec() {
+//		goToVideoCodecsSettings();
+//		
+//		if (isVideoCodecEnabled("VP8")) {
+//			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_vp8_title));
+//			solo.sleep(500);
+//		}
+//				
+//		if (!isVideoCodecEnabled("H264")) {
+//			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_h264_title));
+//			solo.sleep(500);
+//		}
+//				
+//		if (isVideoCodecEnabled("MP4V-ES")) {
+//			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_mpeg4_title));
+//			solo.sleep(500);
+//		}
+//	}
+	
+//	private void enableAllDisabledVideoCodecs() {
+//		goToVideoCodecsSettings();
+//			
+//		if (!isVideoCodecEnabled("VP8")) {
+//			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_vp8_title));
+//			solo.sleep(500);
+//		}
+//				
+//		if (!isVideoCodecEnabled("H264")) {
+//			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_h264_title));
+//			solo.sleep(500);
+//		}
+//				
+//		if (!isVideoCodecEnabled("MP4V-ES")) {
+//			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_codec_mpeg4_title));
+//			solo.sleep(500);
+//		}
+//	}
+	
 	private void goBackToDialerAfterCodecChanges()
 	{
 		solo.goBack();
@@ -487,4 +536,45 @@ public class CallsVideo extends SampleTest {
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
+	
+//	private void callPlayerTest() throws InterruptedException {
+//		LinphoneCall call = LinphoneTestManager.getLc().getCurrentCall();
+//		Assert.assertNotNull(call);
+//		if(call == null) return;
+//		LinphonePlayer player = call.getPlayer();
+//		Assert.assertNotNull(player);
+//		if(player == null) return;
+//		EofListenerImpl eof = new EofListenerImpl();
+//		int openResult = player.open("/storage/sdcard0/Movies/test.mkv", eof);
+//		Assert.assertEquals(openResult, 0);
+//		if(openResult == 0) {
+//			Assert.assertEquals(player.start(), 0);
+//			try {
+//				Assert.assertTrue(eof.waitForEof(20000));
+//			} catch (InterruptedException e) {
+//				throw e;
+//			} finally {
+//				player.close();
+//			}
+//		}
+//	}
+//	
+//	private class EofListenerImpl implements LinphonePlayer.Listener {
+//		private boolean mEof = false;
+//		
+//		@Override
+//		public void endOfFile(LinphonePlayer player) {
+//			mEof = true;
+//		}
+//		
+//		public boolean waitForEof(int timeout) throws InterruptedException {
+//			final int refreshTime = 100;
+//			int time = 0;
+//			while(time < timeout && !mEof) {
+//				Thread.sleep(refreshTime);
+//				time += refreshTime;
+//			}
+//			return time < timeout;
+//		}
+//	}
 }
