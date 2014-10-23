@@ -62,8 +62,11 @@ ENABLE_GPL_THIRD_PARTIES
 BUILD_VIDEO
 	values: 0 (no video) or 1 (video enabled), default value: 1
 
+BUILD_OPENH264
+	values: 0 (don't build openH264) or 1 (build openH264), default value: 1
+
 BUILD_X264
-	values: 0 (don't build x264) or 1 (build x264), default value: 1
+	values: 0 (don't build x264) or 1 (build x264), default value: 0
 
 BUILD_AMRNB
 	values: 0 (don't build amrnb codec), light (try to use amrnb codec from android), full (build your own amrnb codec), default value: full
