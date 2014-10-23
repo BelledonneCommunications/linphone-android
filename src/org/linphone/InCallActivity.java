@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.AvatarWithShadow;
@@ -1243,6 +1244,40 @@ public class InCallActivity extends FragmentActivity implements
 		LinphoneManager.addListener(this);
 
 		refreshCallList(getResources());
+		
+		handleViewIntent();
+	}
+	
+	private void handleViewIntent() {
+		Intent intent = getIntent();
+		if(intent != null && intent.getAction() == "android.intent.action.VIEW") {
+			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+			if(call != null && isVideoEnabled(call)) {
+				LinphonePlayer player = call.getPlayer();
+				String path = intent.getData().getPath();
+				Log.i("Openning " + path);
+				int openRes = player.open(path, new LinphonePlayer.Listener() {
+					
+					@Override
+					public void endOfFile(LinphonePlayer player) {
+						player.close();
+					}
+				});
+				if(openRes == -1) {
+					String message = "Could not open " + path;
+					Log.e(message);
+					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				Log.i("Start playing");
+				if(player.start() == -1) {
+					player.close();
+					String message = "Could not start playing " + path;
+					Log.e(message);
+					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
 	}
 	
 	@Override
