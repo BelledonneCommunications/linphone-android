@@ -65,6 +65,9 @@ BUILD_VIDEO
 BUILD_OPENH264
 	values: 0 (don't build openH264) or 1 (build openH264), default value: 1
 
+ENABLE_OPENH264_DECODER
+	values: 0 (disable openh264 decoder) or 1 (enable openh264 decoder), default value: 1
+
 BUILD_X264
 	values: 0 (don't build x264) or 1 (build x264), default value: 0
 
