@@ -60,6 +60,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private TunnelConfig tunnelConfig;
+	private List<CheckBoxPreference> aacCheckboxPreferences = new ArrayList<CheckBoxPreference>();
 
 	public SettingsFragment() {
 		super(R.xml.preferences);
@@ -423,14 +424,21 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_codecs_key));
 		codecs.removeAll();
 
+		aacCheckboxPreferences.clear();
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		boolean aecEnabled = lc.isEchoCancellationEnabled();
+
 		for (final PayloadType pt : lc.getAudioCodecs()) {
 			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
 			codec.setTitle(pt.getMime());
+			codec.setSummary(pt.getRate() + " Hz");
+			codec.setChecked(lc.isPayloadTypeEnabled(pt));
+
 			/* Special case */
 			if (pt.getMime().equals("mpeg4-generic")) {
+				/* Make sure AAC is disabled for Android < 4.1 */
 				if (android.os.Build.VERSION.SDK_INT < 16) {
-					/* Make sure AAC is disabled */
 					try {
 						lc.enablePayloadType(pt, false);
 					} catch (LinphoneCoreException e) {
@@ -439,11 +447,21 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 					continue;
 				} else {
 					codec.setTitle("AAC-ELD");
+
+					/* AAC 16kHz is always authorized. Other sample rates are
+					 * usable if and only if echo canceller is disabled.
+					 * So we store the checkbox to be able to gray them out
+					 * in the aec-preference listener.
+					 */
+					if (pt.getRate() != 16000) {
+						aacCheckboxPreferences.add(codec);
+
+						if (aecEnabled) {
+							disableAACPayload(lc, pt, codec);
+						}
+					}
 				}
 			}
-
-			codec.setSummary(pt.getRate() + " Hz");
-			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
@@ -481,12 +499,46 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 		bitrateLimit.setValue(String.valueOf(mPrefs.getCodecBitrateLimit()));
 	}
 
+	private void disableAACPayload(LinphoneCore lc, PayloadType pt, CheckBoxPreference codec) {
+		codec.setEnabled(false);
+		codec.setChecked(false);
+		try {
+			lc.enablePayloadType(pt, false);
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setAudioPreferencesListener() {
 		findPreference(getString(R.string.pref_echo_cancellation_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean enabled = (Boolean) newValue;
 				mPrefs.setEchoCancellation(enabled);
+
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+
+				if (lc != null) {
+					/* Update UI */
+					for (CheckBoxPreference pref : aacCheckboxPreferences) {
+						/* gray-out button if echo-canceller is enabled */
+						pref.setEnabled(!enabled);
+						/* and disable codec as-well */
+						pref.setChecked(false);
+					}
+					/* Disable AAC (except 16kHz) if AEC is enabled */
+					if (enabled) {
+						for (final PayloadType pt : lc.getAudioCodecs()) {
+							if (pt.getMime().equals("mpeg4-generic") && pt.getRate() != 16000) {
+								try {
+									lc.enablePayloadType(pt, false);
+								} catch (LinphoneCoreException exc) {
+									exc.printStackTrace();
+								}
+							}
+						}
+					}
+				}
 				return true;
 			}
 		});
