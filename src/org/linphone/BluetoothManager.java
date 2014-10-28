@@ -68,7 +68,7 @@ public class BluetoothManager extends BroadcastReceiver {
 	
 	public BluetoothManager() {
 		isBluetoothConnected = false;
-		mContext = LinphoneManager.getInstance().getContext();
+		mContext = LinphoneService.instance().getApplicationContext();
 		mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
 		instance = this;
 	}
