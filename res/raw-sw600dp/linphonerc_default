@@ -1,7 +1,6 @@
 [net]
 download_bw=512
 upload_bw=512
-firewall_policy=0
 
 [sip]
 contact="Linphone Android" <sip:linphone.android@unknown-host>
