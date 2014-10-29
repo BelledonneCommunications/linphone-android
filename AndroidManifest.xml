@@ -147,7 +147,7 @@
 			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
 		</receiver>
 	
-	    <receiver android:name="org.linphone.BluetoothManager">
+	    <receiver android:name="org.linphone.BluetoothManager" android:enabled="false">
 		</receiver>
 	
 		<receiver android:name="org.linphone.BootReceiver">

@@ -66,14 +66,26 @@ public class BluetoothManager extends BroadcastReceiver {
 		return instance;
 	}
 	
-	public BluetoothManager() {
+	private BluetoothManager() {
 		isBluetoothConnected = false;
-		mContext = LinphoneService.instance().getApplicationContext();
-		mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
+		if (LinphoneService.isReady()) {
+			mContext = LinphoneService.instance().getApplicationContext();
+			mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
+		} else {
+			Log.w("BluetoothManager tried to init but LinphoneService not ready yet...");
+		}
 		instance = this;
 	}
 	
 	public void initBluetooth() {
+		if (mContext == null && LinphoneService.isReady()) {
+			mContext = LinphoneService.instance().getApplicationContext();
+			mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
+		} else if (mContext == null) {
+			Log.w("BluetoothManager tried to init bluetooth but LinphoneService not ready yet...");
+			return;
+		}
+		
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(BluetoothHeadset.VENDOR_SPECIFIC_HEADSET_EVENT_COMPANY_ID_CATEGORY + "." + BluetoothAssignedNumbers.PLANTRONICS);
 		filter.addAction(Compatibility.getAudioManagerEventForBluetoothConnectionStateChangedEvent());
