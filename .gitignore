@@ -28,4 +28,9 @@ submodules/externals/build/libvpx/x86
 submodules/externals/build/libvpx/arm
 submodules/externals/build/openh264/arm
 submodules/externals/build/openh264/x86
+lint.xml
 submodules/externals/build/cunit/CUnit/
+.gradle
+.idea
+build
+linphone-android.iml
