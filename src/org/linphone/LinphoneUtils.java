@@ -23,7 +23,6 @@ import static android.view.View.VISIBLE;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +42,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -87,7 +87,11 @@ public final class LinphoneUtils {
 	}
 	
 	public static boolean isNumberAddress(String numberOrAddress) {
-		return numberOrAddress.matches("[-+]?\\d*\\.?\\d+");
+		LinphoneProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
+		if(proxy.normalizePhoneNumber(numberOrAddress) != null){
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
