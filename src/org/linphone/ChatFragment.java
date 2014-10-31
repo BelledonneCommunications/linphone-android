@@ -682,12 +682,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					}
 				});
 			} else if (message.getExternalBodyUrl() != null) {
-				if (!useLinphoneMessageStorage) {
-					byte[] rawImage = LinphoneActivity.instance().getChatStorage().getRawImageFromMessage(id);
-					if (rawImage != null) {
-						Bitmap bm = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
-					}
-				}
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {

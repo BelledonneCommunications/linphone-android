@@ -23,6 +23,7 @@ import java.util.Calendar;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -41,6 +42,7 @@ import android.widget.TextView;
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts;
 	private View view;
+	private AvatarWithShadow contactPicture;
 	private TextView contactName, contactAddress, callDirection, time, date;
 	private String sipUri, displayName, pictureUri;
 	
@@ -66,6 +68,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		addToContacts = (ImageView) view.findViewById(R.id.addToContacts);
 		addToContacts.setOnClickListener(this);
+		
+		contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		
 		contactName = (TextView) view.findViewById(R.id.contactName);
 		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
@@ -108,7 +112,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		LinphoneAddress lAddress;
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
+			Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
+			if(pictureUri != null)
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
 			String displayName = lAddress.getDisplayName();
 			if (displayName != null) {
 				view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
@@ -116,6 +122,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
+	
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
