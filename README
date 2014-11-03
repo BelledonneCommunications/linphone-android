@@ -35,6 +35,8 @@ To create an apk with a different package name, you need to edit the custom_rule
 3) update the path to the sounds in the linphonerc-factory files in the res folders and optionally change default sip account on linphonerc-default
 4) run again the Makefile script by calling "make"
 
+You can speed up the compilation by using ccache (compiler cache, see https://ccache.samba.org/). Simply export:
+export NDK_CCACHE=ccache
 
 			   TROUBLESHOOTING
 			*****************************
