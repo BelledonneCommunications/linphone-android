@@ -272,6 +272,12 @@ public class BubbleChat {
 	}
 	
 	public static Spanned getTextWithHttpLinks(String text) {
+		if (text.contains("<")) {
+			text = text.replace("<", "&lt;");
+		}
+		if (text.contains(">")) {
+			text = text.replace(">", "&gt;");
+		}
 		if (text.contains("http://")) {
 			int indexHttp = text.indexOf("http://");
 			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
