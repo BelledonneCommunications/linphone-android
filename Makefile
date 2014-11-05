@@ -2,7 +2,7 @@
 NDK_PATH=$(shell dirname `which ndk-build`)
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
-ARM_COMPILER_PATH=`find "$(NDK_PATH)" -name "arm-linux-androideabi-gcc*" -print -quit`
+ARM_COMPILER_PATH=`find "$(NDK_PATH)" -name "arm-linux-androideabi-gcc-4*" -print | tail -1`
 ARM_TOOLCHAIN_PATH=$(shell dirname $(ARM_COMPILER_PATH))/arm-linux-androideabi-
 ARM_SYSROOT=$(shell find "${NDK_PATH}" -name arch-arm -print | \
 	awk '{n = split($$0,a,"/"); \
@@ -10,7 +10,7 @@ ARM_SYSROOT=$(shell find "${NDK_PATH}" -name arch-arm -print | \
 	print $$0 " " b[2]}' | \
 	sort -g -k 2 | \
 	awk '{ print $$1 }' | tail -1)
-X86_COMPILER_PATH=`find "$(NDK_PATH)" -name "i686-linux-android-gcc*" -print -quit`
+X86_COMPILER_PATH=`find "$(NDK_PATH)" -name "i686-linux-android-gcc-4*" -print | tail -1`
 X86_TOOLCHAIN_PATH=$(shell dirname $(X86_COMPILER_PATH))/i686-linux-android-
 X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
 	awk '{n = split($$0,a,"/"); \
@@ -144,6 +144,7 @@ $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so:
 	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
 	cd $(FFMPEG_BUILD_DIR)/arm && \
 	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS) && \
+	patch -p0 < $(TOPDIR)/patches/ffmpeg_configh.patch && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
 
@@ -151,6 +152,7 @@ $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
 	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS) && \
+	patch -p0 < $(TOPDIR)/patches/ffmpeg_configh.patch && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for x86 failed." ; exit 1 )
 
