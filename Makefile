@@ -143,12 +143,10 @@ $(FFMPEG_BUILD_DIR)/arm/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
         cd $(FFMPEG_BUILD_DIR)/arm && \
         $(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS)
-
-patch_config_h_arm:
 	sed -i.bak 's/#define HAVE_SYSCTL 1/#define HAVE_SYSCTL 0/g' $(FFMPEG_BUILD_DIR)/arm/config.h
 	sed -i.bak 's/#define HAVE_GETHRTIME 1/#define HAVE_GETHRTIME 0/g' $(FFMPEG_BUILD_DIR)/arm/config.h
 
-$(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/config.h patch_config_h_arm
+$(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/config.h
 	cd $(FFMPEG_BUILD_DIR)/arm && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
@@ -157,12 +155,10 @@ $(FFMPEG_BUILD_DIR)/x86/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
         cd $(FFMPEG_BUILD_DIR)/x86 && \
         $(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS)
-
-patch_config_h_x86:
 	sed -i.bak 's/#define HAVE_SYSCTL 1/#define HAVE_SYSCTL 0/g' $(FFMPEG_BUILD_DIR)/x86/config.h
 	sed -i.bak 's/#define HAVE_GETHRTIME 1/#define HAVE_GETHRTIME 0/g' $(FFMPEG_BUILD_DIR)/x86/config.h
 
-$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so: $(FFMPEG_BUILD_DIR)/x86/config.h patch_config_h_x86
+$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so: $(FFMPEG_BUILD_DIR)/x86/config.h
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for x86 failed." ; exit 1 )
