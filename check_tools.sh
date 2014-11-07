@@ -11,7 +11,7 @@ if [ -z ${JAVA} ]; then
 fi
 
 # Check antlr
-ANTLR="${JAVA} -jar \"submodules/externals/antlr3/antlr-3.4-complete.jar\"";
+ANTLR="${JAVA} -jar \"submodules/externals/antlr3/antlr-3.2.jar\"";
 
 # Check NDK
 NDK=$(which ndk-build)
