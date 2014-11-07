@@ -57,7 +57,7 @@ endif
 endif
 
 ifeq ($(BUILD_VIDEO),1)
-APP_MODULES += libavutil-linphone libavcodec-linphone libswscale-linphone
+APP_MODULES += libffmpeg-linphone
 APP_MODULES += libvpx
 ifeq ($(BUILD_X264),1)
 APP_MODULES +=libx264 libmsx264
