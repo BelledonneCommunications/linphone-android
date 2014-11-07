@@ -119,9 +119,9 @@ prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
 
 #ffmpeg
 ifeq ($(BUILD_VIDEO),1)
-BUILD_FFMPEG_DEPS=$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so
+BUILD_FFMPEG_DEPS=$(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt $(FFMPEG_BUILD_DIR)/arm/libffmpeg-linphone-arm.so
 ifeq ($(BUILD_FOR_X86), 1)
-	BUILD_FFMPEG_DEPS+=$(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so
+	BUILD_FFMPEG_DEPS+=$(FFMPEG_BUILD_DIR)/x86/libffmpeg-linphone-x86.so
 endif
 endif
 FFMPEG_SRC_DIR=$(TOPDIR)/submodules/externals/ffmpeg
@@ -131,7 +131,7 @@ FFMPEG_CONFIGURE_OPTIONS=--target-os=linux --enable-cross-compile --enable-runti
 	--disable-avdevice --disable-avfilter --disable-avformat --disable-swresample --disable-network \
 	--enable-decoder=mjpeg --enable-encoder=mjpeg --enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
 	--enable-decoder=h263p --enable-encoder=h263p --enable-decoder=h263 --enable-encoder=h263\
-	--disable-static --enable-shared
+	--disable-static --enable-shared --disable-symver
 FFMPEG_ARM_CONFIGURE_OPTIONS=--build-suffix=-linphone-arm --arch=arm --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
 FFMPEG_X86_CONFIGURE_OPTIONS=--build-suffix=-linphone-x86 --arch=x86 --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH) --disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
 
@@ -151,6 +151,11 @@ $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so: $(FFMPEG_BUILD_DI
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
 
+$(FFMPEG_BUILD_DIR)/arm/libffmpeg-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so
+	cd $(FFMPEG_BUILD_DIR)/arm && \
+	rm libavcodec/log2_tab.o && \
+	$(ARM_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(ARM_SYSROOT) -Wl,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/arm/*.o libavcodec/*.o libavcodec/arm/*.o libswscale/*.o -o libffmpeg-linphone-arm.so
+
 $(FFMPEG_BUILD_DIR)/x86/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
         cd $(FFMPEG_BUILD_DIR)/x86 && \
@@ -162,6 +167,11 @@ $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so: $(FFMPEG_BUILD_DI
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
 	make -j ${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for x86 failed." ; exit 1 )
+
+$(FFMPEG_BUILD_DIR)/x86/libffmpeg-linphone-x86.so: $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so
+	cd $(FFMPEG_BUILD_DIR)/x86 && \
+	rm libavcodec/log2_tab.o && \
+	$(X86_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(X86_SYSROOT) -Wl,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/x86/*.o libavcodec/*.o libavcodec/x86/*.o libswscale/*.o -o  libffmpeg-linphone-x86.so
 
 build-ffmpeg: $(BUILD_FFMPEG_DEPS)
 
