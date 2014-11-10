@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_disable_account">Désactiver</string>
-    
+
     <string name="pref_tunnel">Tunnel</string>
 	<string name="pref_tunnel_host">Hôte</string>
 	<string name="pref_tunnel_port">Port</string>
 	<string name="pref_tunnel_mode">Mode</string>
 
    	<!-- do not change order without changing corresponding entry_values in non_localizable_strings.xml -->
-	<string-array name="tunnel_mode_entries"> 
+	<string-array name="tunnel_mode_entries">
 		<item>désactivé</item>
 		<item>3G seulement</item>
 		<item>toujours</item>
 		<item>auto</item>
-	</string-array> 
+	</string-array>
 
     <string name="incall_notif_active">Appel audio en cours</string>
     <string name="incall_notif_paused">Appel en pause</string>
     <string name="incall_notif_video">Appel vidéo en cours</string>
-    
+
     <string name="not_ready_to_make_new_call">Pas prêt pour un nouvel appel</string>
     <string name="bad_target_uri">Mauvais contact : %s</string>
     <string name="reset_sas_fmt">Annuler vérification %s</string>
     <string name="verify_sas_fmt">Vérifier %s</string>
     <string name="communication_encrypted">Encrypté</string>
-   
+
 	<string name="waiting_for_startup">Démarrage&#8230;</string>
 	<string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation d\'un appel</string>
 
@@ -39,7 +39,7 @@
 	<string name="skipable_error_service_not_ready">Attention : le service n\'est pas prêt</string>
 
 	<string name="close_button_text">Fermer</string>
-	
+
 	<string name="status_conf_call">conf</string>
 	<string name="status_active_call">actif</string>
 	<string name="state_paused">en pause</string>
@@ -48,7 +48,7 @@
 	<string name="state_incoming_received">entrant</string>
 	<string name="state_outgoing_ringing">sonnant</string>
 	<string name="state_outgoing_progress">sortant</string>
-	
+
 	<string name="mutemic_button_txt">Silence</string>
 	<string name="speaker_button_txt">HP</string>
 	<string name="bluetooth_button_txt">Bluetooth</string>
@@ -73,7 +73,7 @@
 	<string name="accept">Accepter</string>
 	<string name="decline">Refuser</string>
 	<string name="unknown_incoming_call_name">Inconnu</string>
-	
+
 	<string name="pref_network_title">Réseau</string>
 	<string name="pref_transport">Transport</string>
 	<string name="pref_transport_use_random_ports">Utiliser des ports aléatoires</string>
@@ -123,7 +123,7 @@
     <string name="pref_video_port_description">Port ou plage (min-max) pour l\'audio</string>
     <string name="pref_audio_port_description">Port ou plage (min-max) pour la video</string>
     <string name="pref_incoming_call_timeout_title">Timeout (en secondes) pour les appels entrants</string>
-    
+
 	<string name="pref_debug">Activer les traces de débogage</string>
 	<string name="about_report_issue">Reporter un problème</string>
 	<string name="about_bugreport_email_text">Décrivez le problème ici</string>
@@ -163,7 +163,7 @@
 	<string name="error_cannot_get_call_parameters">Impossible de récupérer les paramètres de l\'appel</string>
 	<string name="error_cannot_create_default_parameters">Impossible de créer les paramètres par défaut de l\'appel</string>
 	<string name="error_cannot_invite_address">Impossible d\'inviter l\'adresse [%s]</string>
-	
+
 	<string name="notification_started">démarré</string>
 	<string name="pref_echo_cancellation_summary">Supprime l\'écho entendu de l\'autre côté</string>
 	<string name="pref_stun_server">Serveur Stun</string>
@@ -179,18 +179,18 @@
 	<string name="first_login_connect">Connexion</string>
 	<string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
 	<string name="first_launch_bad_login_password">Impossible de se connecter; Vérifiez vos informations de connexion et réessayez</string>
-	
+
 	<string name="pref_amr_summary">Le codec AMR codec peut ne pas être disponible sur votre téléphone</string>
 	<string name="pref_media_encryption">Encryption</string>
 	<string name="media_encryption_none">Aucune</string>
-	
+
 	<string name="pref_video_codec_h264_unavailable">Codec désactivé, compilez l\'application depuis le code source pour l\'activer</string>
 	<string name="pref_video_codec_mpeg4_unavailable">Codec désactivé, compilez l\'application depuis le code source pour l\'activer</string>
-	
+
 	<string name="pref_sipaccounts">Comptes SIP</string>
 	<string name="pref_wifi_only">Wi-Fi uniquement</string>
 	<string name="pref_push_notification">Activer les notifications poussées</string>
-	
+
 	<string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
 	<string name="wizard_server_unavailable">Serveur injoignable, vérifiez votre connexion internet.</string>
 	<string name="wizard_username_unavailable">Ce nom d\'utilisateur est déjà pris.</string>
@@ -198,13 +198,13 @@
 	<string name="wizard_email_incorrect">Votre courriel n\'est pas valide.</string>
 	<string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide (6 caractères min).</string>
 	<string name="wizard_passwords_unmatched">Les mots de passe sont différents.</string>
-	
+
 	<string name="pref_help_proxy">Adresse IP ou nom de domaine du serveur mandataire SIP (facultatif)</string>
 	<string name="pref_help_outbound_proxy">Faire passer tous les appels via le serveur mandataire SIP</string>
 	<string name="pref_help_username">Exemple: john si votre compte est john@sip.example.org</string>
 	<string name="pref_help_domain">sip.example.org si votre compte est john@sip.example.org</string>
 	<string name="pref_help_password">Vous devrez retaper votre mot de passe si vous changez votre nom d\'utilisateur ou le domaine</string>
-	
+
 	<string name="delete">Supprimer</string>
 	<string name="chat">Chat</string>
 	<string name="call">Appel</string>
@@ -213,7 +213,7 @@
 	<string name="status_not_connected">Pas Enregistré</string>
 	<string name="status_in_progress">Enregistrement en cours</string>
 	<string name="status_error">Enregistrement échoué</string>
-	
+
 	<string name="addressHint">Numéro ou adresse</string>
 	<string name="conference">Conférence</string>
 	<string name="incoming">Appel entrant</string>
@@ -224,7 +224,7 @@
 	<string name="no_contact">Aucun contact dans votre carnet d\'adresse.</string>
 	<string name="no_sip_contact">Aucun contact SIP dans votre carnet d\'adresse.</string>
 	<string name="no_chat_history">Aucun historique de chat.</string>
-	
+
 	<string name="call_stats_audio">Audio</string>
 	<string name="call_stats_video">Vidéo</string>
 	<string name="call_stats_codec">Codec :</string>
@@ -232,7 +232,7 @@
 	<string name="call_stats_download">Bande passante réception :</string>
 	<string name="call_stats_ice">Connexion ICE :</string>
 	<string name="call_stats_video_resolution">Taille vidéo:</string>
-	
+
 	<!-- Used by Android to help blind people by describing them images -->
 	<string name="content_description_add_contact"></string>
 	<string name="content_description_about"></string>
@@ -272,7 +272,7 @@
 	<string name="content_description_setup_ok"></string>
 	<string name="content_description_message_status"></string>
 	<string name="content_description_mark"></string>
-	
+
 	<string name="setup_title">Assistant de configuration des comptes</string>
 	<string name="setup_apply">Appliquer</string>
 	<string name="setup_password_hint">mot de passe</string>
@@ -284,17 +284,17 @@
 	<string name="setup_check_account_validation">Vérifier</string>
 	<string name="setup_account_not_validated">Votre compte n\'a pas encore été validé.</string>
 	<string name="setup_account_validated">Votre compte à été validé.</string>
-	
+
 	<string name="button_history">Historique</string>
 	<string name="button_contacts">Contacts</string>
 	<string name="button_settings">Options</string>
 	<string name="button_chat">Chat</string>
 	<string name="button_about">A propos</string>
-	
+
 	<string name="button_setup_cancel">Annuler</string>
 	<string name="button_setup_back">Retour</string>
 	<string name="button_setup_next">Allons-y</string>
-	
+
 	<string name="button_new_chat">+ Chat</string>
 	<string name="button_edit">Modifier</string>
 	<string name="button_cancel">Annuler</string>
@@ -305,7 +305,7 @@
 	<string name="button_all_call">Tous</string>
 	<string name="button_missed_call">Manqués</string>
 	<string name="button_delete_all">Supprimer</string>
-	
+
 	<string name="button_transfer">Transfert</string>
 	<string name="button_add_call">+ Appel</string>
 	<string name="button_video">Vidéo</string>
@@ -315,11 +315,11 @@
 	<string name="button_receiver">Ecouteur</string>
 	<string name="button_bluetooth">Bluetooth</string>
 	<string name="button_options">Options</string>
-	
+
 	<string name="button_send_message">Envoyer</string>
 	<string name="button_send_picture">Img</string>
 	<string name="uploading_image">Envoi en cours&#8230;</string>
-	
+
 	<string name="call_update_title">Mise à jour de l\'appel</string>
 	<string name="call_update_desc">Votre correspondant souhaite ajouter la vidéo à l\'appel en cours.</string>
 	<string name="call_update_yes">Accepter</string>
@@ -335,75 +335,74 @@
 	<string name="image_picker_title">Choisissez la source</string>
 	<string name="image_saved">Image sauvegardée</string>
 	<string name="image_not_saved">Erreur, image non sauvegardée</string>
-	
+
 	<string name="pref_linphone_friend_title">Amis</string>
 	<string name="pref_auto_accept_friends_title">Nouveaux amis</string>
 	<string name="pref_auto_accept_friends_desc">Toujours accepter les nouvelles demandes d\'amis</string>
 	<string name="linphone_friend_new_request_title">Requête d\'ami</string>
 	<string name="linphone_friend_new_request_desc">voudrait être partager son status avec vous et voir le votre.</string>
-	
+
 	<string name="setup_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
     <string name="pref_image_sharing_server_title">Serveur de partage</string>
-	
+
 	<string name="delete_contact">Supprimer contact</string>
 	<string name="sip_address">Adresse SIP</string>
 	<string name="phone_number">Numéro de téléphone</string>
 	<string name="contact_first_name">Prénom</string>
 	<string name="contact_last_name">Nom</string>
-	
+
 	<string name="pref_primary_account_title">Compte principal</string>
 	<string name="pref_display_name_title">Nom d\'affichage</string>
 	<string name="pref_user_name_title">Nom d\'utilisateur</string>
 	<string name="pref_expire_title">Expiration</string>
-	
+
 	<string name="pref_rfc2833_dtmf">Envoyer les DTMFs RFC2833</string>
 	<string name="pref_sipinfo_dtmf">Envoyer les DTMFs en SIP INFO</string>
-	
+
 	<string name="error_call_declined">Appel rejeté</string>
 	<string name="error_user_not_found">Utilisateur non trouvé</string>
 	<string name="error_incompatible_media">Paramètres média incompatibles</string>
 	<string name="error_low_bandwidth">Votre correspondant à un débit faible, la vidéo ne peut démarrer</string>
 	<string name="error_network_unreachable">Le réseau n\'est pas joignable</string>
-	
+
 	<string name="today">Aujourd\'hui</string>
 	<string name="yesterday">Hier</string>
-	
+
 	<string name="call_state_missed">Manqué</string>
 	<string name="call_state_outgoing">Émis</string>
 	<string name="call_state_incoming">Reçu</string>
-	
+
 	<string name="pref_background_mode">Actif en arrière plan</string>
 	<string name="pref_manage">Gestion</string>
-	
+
 	<string name="show_image">Afficher</string>
 	<string name="download_image">Télécharger</string>
 	<string name="download_image_failed">Téléchargement échoué. Vérifiez votre connexion internet ou reéssayez plus tard.</string>
-	
+
 	<string name="pref_auth_userid">Identifiant d\'authentification</string>
 	<string name="pref_help_auth_userid">Entrez votre identifiant (optionnel)</string>
 	<string name="pref_display_name">Nom d\'affichage</string>
 	<string name="pref_help_display_name">Entrez votre nom (optionnel)</string>
-	
+
 	<string name="wait">Merci de patienter...</string>
 	<string name="importing_messages">Mise à jour de la base des messages</string>
 	<string name="default_account_flag">Compte par défaut</string>
-	
+
 	<string name="setup_remote_provisioning">Télécharger ma configuration</string>
 	<string name="setup_remote_provisioning_hint">Cet assistant va télécharger une configuration existante.</string>
 	<string name="setup_remote_provisioning_url_hint">addresse où télécharger la configuration</string>
 	<string name="setup_confirm_username">Votre nom d\'utilisateur sera %s (les majuscules sont interdites). Acceptez-vous ?</string>
 	<string name="setup_title_assistant">Assistant de création de compte</string>
-	
+
 	<string name="zrtp_accept">Accepter</string>
 	<string name="zrtp_deny">Refuser</string>
 	<string name="zrtp_help">Vous ne devriez accepter que si vous avez le même code (ci-dessus) que votre contact</string>
-	
+
 	<string name="remote_composing">Votre correspondant est en train de taper...</string>
 	<string name="unread_messages">%i messages non lus</string>
-	
+
 	<string name="retry">Renvoyer</string>
-	
+
 	<string name="remote_provisioning_failure">Erreur durant le téléchargement ou l\'application de la configuration distante...</string>
-	<string name="remote_provisioning_again_title">Remote provisioning</string>
-	<string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string>
+	<string name="pref_voice_mail">Adresse messagerie vocale</string>
 </resources>
