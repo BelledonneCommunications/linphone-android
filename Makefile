@@ -29,7 +29,7 @@ SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
 ENABLE_GPL_THIRD_PARTIES=1
 CC=
-
+PACKAGE_NAME=$(shell sed -nE 's|<property name="linphone.package.name" value="(.*)" />|\1|p' custom_rules.xml)
 #default options, can be overidden using make OPTION=value .
 
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
@@ -465,6 +465,9 @@ generate-mediastreamer2-apk: clean generate-mediastreamer2-libs
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties && \
 	ant debug
+
+uninstall:
+	adb uninstall $(PACKAGE_NAME)
 
 install-apk:
 	ant installd
