@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -36,48 +37,50 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	private FragmentsAvailable about = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
 	View exitButton = null;
 	View sendLogButton = null;
-	
+	LinearLayout sendLogLayout = null;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (getArguments() != null && getArguments().getSerializable("About") != null) {
 			about = (FragmentsAvailable) getArguments().getSerializable("About");
 		}
-		
+
 		View view = inflater.inflate(R.layout.about, container, false);
-		
+
 		TextView aboutText = (TextView) view.findViewById(R.id.AboutText);
 		try {
 			aboutText.setText(String.format(getString(R.string.about_text), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-		
+
 		sendLogButton = view.findViewById(R.id.send_log);
 		sendLogButton.setOnClickListener(this);
-		sendLogButton.setVisibility(getResources().getBoolean(R.bool.enable_log_collect) ? View.VISIBLE : View.GONE);
+        sendLogLayout = (LinearLayout)view.findViewById(R.id.send_log_layout);
+        sendLogLayout.setVisibility(getResources().getBoolean(R.bool.enable_log_collect) ? View.VISIBLE : View.GONE);
 
 		exitButton = view.findViewById(R.id.exit);
 		exitButton.setOnClickListener(this);
 		exitButton.setVisibility(View.VISIBLE);
-		
+
 
 		return view;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(about);
-			
+
 			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 				LinphoneActivity.instance().hideStatusBar();
 			}
 		}
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
