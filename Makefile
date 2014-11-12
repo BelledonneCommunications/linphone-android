@@ -148,7 +148,7 @@ $(FFMPEG_BUILD_DIR)/arm/config.h:
 
 $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/config.h
 	cd $(FFMPEG_BUILD_DIR)/arm && \
-	make -j ${NUMCPUS} \
+	make -j${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for arm failed." ; exit 1 )
 
 $(FFMPEG_BUILD_DIR)/arm/libffmpeg-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so
@@ -165,7 +165,7 @@ $(FFMPEG_BUILD_DIR)/x86/config.h:
 
 $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so: $(FFMPEG_BUILD_DIR)/x86/config.h
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
-	make -j ${NUMCPUS} \
+	make -j${NUMCPUS} \
 	|| ( echo "Build of ffmpeg for x86 failed." ; exit 1 )
 
 $(FFMPEG_BUILD_DIR)/x86/libffmpeg-linphone-x86.so: $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so
@@ -202,7 +202,7 @@ $(X264_BUILD_DIR)/arm/libx264.a:
 	mkdir -p $(X264_BUILD_DIR)/arm && \
 	cd $(X264_SRC_DIR) && \
 	$(X264_SRC_DIR)/configure $(X264_CONFIGURE_OPTIONS) $(X264_ARM_CONFIGURE_OPTIONS) && \
-	make -j $(NUMCPUS) STRIP= && \
+	make -j$(NUMCPUS) STRIP= && \
 	cp libx264.a $(X264_BUILD_DIR)/arm/libx264.a && \
 	make clean \
 	|| ( echo "Build of x264 for arm failed." ; exit 1 )
@@ -211,7 +211,7 @@ $(X264_BUILD_DIR)/x86/libx264.a:
 	mkdir -p $(X264_BUILD_DIR)/x86 && \
 	cd $(X264_SRC_DIR) && \
 	$(X264_SRC_DIR)/configure $(X264_CONFIGURE_OPTIONS) $(X264_X86_CONFIGURE_OPTIONS) && \
-	make -j $(NUMCPUS) STRIP= && \
+	make -j$(NUMCPUS) STRIP= && \
 	cp libx264.a $(X264_BUILD_DIR)/x86/libx264.a && \
 	make clean \
 	|| ( echo "Build of x264 for x86 failed." ; exit 1 )
@@ -261,11 +261,11 @@ copy-openh264-arm: openh264-patch openh264-install-headers
 
 build-openh264-x86: copy-openh264-x86
 	cd $(OPENH264_BUILD_DIR_X86) && \
-	make libraries -j $(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
+	make libraries -j$(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
 
 build-openh264-arm: copy-openh264-arm
 	cd $(OPENH264_BUILD_DIR_ARM) && \
-	make libraries -j $(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
+	make libraries -j$(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
 
 build-openh264: $(BUILD_OPENH264_DEPS)
 
@@ -293,7 +293,7 @@ $(LIBVPX_BUILD_DIR)/arm/libvpx.a:
 	mkdir -p $(LIBVPX_BUILD_DIR)/arm && \
 	cd $(LIBVPX_BUILD_DIR)/arm && \
 	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
-	make -j ${NUMCPUS} \
+	make -j${NUMCPUS} \
 	|| ( echo "Build of libvpx for arm failed." ; exit 1 )
 
 $(LIBVPX_BUILD_DIR)/x86/libvpx.a:
