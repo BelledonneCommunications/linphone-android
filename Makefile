@@ -52,7 +52,7 @@ BUILD_SILK=1
 BUILD_TUNNEL=0
 BUILD_WEBRTC_AECM=1
 BUILD_OPUS=1
-BUILD_MATROSKA=0
+BUILD_MATROSKA=1
 BUILD_WEBRTC_ISAC=1
 BUILD_FOR_X86=1
 USE_JAVAH=1
@@ -190,7 +190,7 @@ endif
 
 X264_SRC_DIR=$(TOPDIR)/submodules/externals/x264
 X264_BUILD_DIR=$(TOPDIR)/submodules/externals/build/x264
-X264_CONFIGURE_OPTIONS=
+X264_CONFIGURE_OPTIONS=--enable-static
 X264_ARM_CONFIGURE_OPTIONS=--host=arm-none-linux-gnueabi --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
 X264_X86_CONFIGURE_OPTIONS=--host=i686-linux-gnueabi --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH)
 
@@ -438,11 +438,11 @@ MEDIASTREAMER2_OPTIONS = $(GENERATE_OPTIONS) BUILD_MEDIASTREAMER2_SDK=1
 
 
 generate-libs: prepare-sources javah
-	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=android-14
+	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
 
 generate-mediastreamer2-libs: prepare-sources
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
-	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=android-14
+	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
@@ -453,7 +453,7 @@ update-mediastreamer2-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
-	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=android-14
+	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
 
 javah:
 	ant javah
