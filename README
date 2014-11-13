@@ -3,7 +3,7 @@
 
 To build liblinphone for Android, you must:
 0) download the Android sdk with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both 'tools' and 'platform-tools' folders in your path.
-1) download the Android ndk (=r9d or =r10c) from google and add it to your path (no symlink !!!).
+1) download the Android ndk (=r9d to target devices with Android < 5 or =r10c to target devices with Android >= 5) from google and add it to your path (no symlink !!!).
 2) install yasm, nasm, curl, ant, rsync and the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig
 	On 64 bits linux systems you'll need the ia32-libs package
 	With the latest Debian (multiarch), you need this:
@@ -40,8 +40,9 @@ export NDK_CCACHE=ccache
 
 			   TROUBLESHOOTING
 			*****************************
-
-Currently Android NDK 10 is NOT supported for X86 version, please use Android NDK 9d maximum.
+If you encounter the following issue:
+E/dalvikvm( 2465): dlopen("/data/app-lib/org.linphone-1/liblinphone-armeabi-v7a.so") failed: Cannot load library: soinfo_relocate(linker.cpp:975): cannot locate symbol "rand" referenced by "liblinphone-armeabi-v7a.so"...
+it's because you have installed the android-21 platform (which is chosen automatically because it's the most recent) and you deployed the apk on a android < 5 device. Use ndk r9 to fix this.
 
 If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
 
