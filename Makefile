@@ -454,6 +454,7 @@ update-mediastreamer2-project:
 
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
 	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
+	$(MAKE) -C liblinphone_tester
 
 javah:
 	ant javah
