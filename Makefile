@@ -306,6 +306,7 @@ $(LIBVPX_BUILD_DIR)/x86/libvpx.a:
 build-vpx: $(BUILD_VPX_DEPS)
 
 clean-vpx:
+	cd $(LIBVPX_SRC_DIR) && git clean -dfx && git reset --hard
 	rm -rf submodules/externals/build/libvpx/arm && \
 	rm -rf submodules/externals/build/libvpx/x86
 
@@ -491,13 +492,14 @@ run-all-tests:
 	$(MAKE) -C tests run-all-tests
 
 clean-ndk-build:
-	$(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
+	- $(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
 	ant clean
 	@if [ -f $(TOPDIR)/submodules/linphone/mediastreamer2/java/project.properties ]; then \
 	  cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && ant clean; \
 	fi
 
 .NOTPARALLEL clean-native: clean-ndk-build clean-ffmpeg clean-x264 clean-openh264 clean-vpx
+
 
 java-clean:
 	ant clean
