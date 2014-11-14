@@ -24,6 +24,7 @@ LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 BELLESIP_VERSION_SCRIPT:=cat submodules/belle-sip/configure.ac | grep "AC_INIT(" | sed -e "s/.*belle-sip\]//" | sed -e "s/].*//" | sed -e "s/.*\[//"
 BELLESIP_VERSION=$(shell $(BELLESIP_VERSION_SCRIPT))
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
+#ANDROID_MOST_RECENT_TARGET=android-19
 SQLITE_VERSION=3071700
 SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
