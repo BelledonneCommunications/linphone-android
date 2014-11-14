@@ -17,7 +17,7 @@ X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
 	print $$0 " " b[2]}' | \
 	sort -g -k 2 | \
 	awk '{ print $$1 }' | tail -1)
-NUMCPUS=1
+NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo "4" )
 TOPDIR=$(shell pwd)
 LIBLINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
