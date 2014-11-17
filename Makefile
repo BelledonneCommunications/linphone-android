@@ -3,20 +3,8 @@ SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 ARM_COMPILER_PATH=`find "$(NDK_PATH)" -name "arm-linux-androideabi-gcc-4*" -print | tail -1`
 ARM_TOOLCHAIN_PATH=$(shell dirname $(ARM_COMPILER_PATH))/arm-linux-androideabi-
-ARM_SYSROOT=$(shell find "${NDK_PATH}" -name arch-arm -print | \
-	awk '{n = split($$0,a,"/"); \
-	split(a[n-1],b,"-"); \
-	print $$0 " " b[2]}' | \
-	sort -g -k 2 | \
-	awk '{ print $$1 }' | tail -1)
 X86_COMPILER_PATH=`find "$(NDK_PATH)" -name "i686-linux-android-gcc-4*" -print | tail -1`
 X86_TOOLCHAIN_PATH=$(shell dirname $(X86_COMPILER_PATH))/i686-linux-android-
-X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | \
-	awk '{n = split($$0,a,"/"); \
-	split(a[n-1],b,"-"); \
-	print $$0 " " b[2]}' | \
-	sort -g -k 2 | \
-	awk '{ print $$1 }' | tail -1)
 NUMCPUS=$(shell grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo "4" )
 TOPDIR=$(shell pwd)
 LIBLINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
@@ -26,6 +14,9 @@ BELLESIP_VERSION=$(shell $(BELLESIP_VERSION_SCRIPT))
 MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
 SECOND_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sed -e '1{$$q;}' -e '$$!{h;d;}' -e x)
 ANDROID_MOST_RECENT_TARGET=$(shell test $(MOST_RECENT_TARGET) = "android-21" && echo $(SECOND_MOST_RECENT_TARGET) || echo $(MOST_RECENT_TARGET))
+# Force android-14 for compilation for now, some externals submodules doesn't support compilation with android-19
+ARM_SYSROOT=$(shell find "${NDK_PATH}" -name arch-arm -print | sort -V -r | tail -1 | sed -e "s/android-[0-9]\+/android-14/")
+X86_SYSROOT=$(shell find "${NDK_PATH}" -name arch-x86 -print | sort -V -r | tail -1 | sed -e "s/android-[0-9]\+/android-14/")
 SQLITE_VERSION=3071700
 SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
