@@ -100,7 +100,6 @@ public class InCallActivity extends FragmentActivity implements
 	private int cameraNumber;
 	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
 	private CountDownTimer timer;
-	private AcceptCallUpdateDialog callUpdateDialog;
 	private boolean isVideoCallPaused = false;
 	
 	private TableLayout callsList;
@@ -1062,13 +1061,9 @@ public class InCallActivity extends FragmentActivity implements
 		finish();
 	}
 	
-	private void acceptCallUpdate(boolean accept) {
+	public void acceptCallUpdate(boolean accept) {
 		if (timer != null) {
 			timer.cancel();
-		}
-		
-		if (callUpdateDialog != null) {
-			callUpdateDialog.dismissAllowingStateLoss();
 		}
 		 
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
@@ -1213,7 +1208,7 @@ public class InCallActivity extends FragmentActivity implements
 	
 	private void showAcceptCallUpdateDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        callUpdateDialog = new AcceptCallUpdateDialog();
+        AcceptCallUpdateDialogFragment callUpdateDialog = new AcceptCallUpdateDialogFragment();
         callUpdateDialog.show(fm, "Accept Call Update Dialog");
     }
 
@@ -1341,49 +1336,6 @@ public class InCallActivity extends FragmentActivity implements
 
 	public void bindVideoFragment(VideoCallFragment fragment) {
 		videoCallFragment = fragment;
-	}
-	
-	@SuppressLint("ValidFragment")
-	class AcceptCallUpdateDialog extends DialogFragment {
-
-	    public AcceptCallUpdateDialog() {
-	        // Empty constructor required for DialogFragment
-	    }
-
-	    @Override
-	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        View view = inflater.inflate(R.layout.accept_call_update_dialog, container);
-
-	        getDialog().setTitle(R.string.call_update_title);
-	        
-	        Button yes = (Button) view.findViewById(R.id.yes);
-	        yes.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-			    	Log.d("Call Update Accepted");
-			    	acceptCallUpdate(true);
-				}
-			});
-	        
-	        Button no = (Button) view.findViewById(R.id.no);
-	        no.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-			    	Log.d("Call Update Denied");
-			    	acceptCallUpdate(false);
-				}
-			});
-	        
-	        return view;
-	    }
-	    
-	    @Override
-	    public void onCancel(DialogInterface dialog) {
-	    	super.onCancel(dialog);
-	    	
-	    	callUpdateDialog = new AcceptCallUpdateDialog();
-	        callUpdateDialog.show(getSupportFragmentManager(), "Accept Call Update Dialog");
-	    }
 	}
 	
 	private void displayConferenceHeader() {
