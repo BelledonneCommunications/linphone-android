@@ -37,7 +37,7 @@ public class CallsVideo extends SampleTest {
 		solo.sleep(500);
 		
 		// enable auto accept and auto share video
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video));
+		goToVideoCodecsSettings();
 		solo.sleep(500);
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_initiate_call_with_video_title));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_automatically_accept_video_title));
