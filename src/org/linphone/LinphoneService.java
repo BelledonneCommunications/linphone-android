@@ -153,14 +153,19 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		}
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true);
 
-		LinphoneManager.createAndStart(this, this);
+		UIThreadDispatcher.Dispatch(new Runnable() {
+			@Override
+			public void run() {
+				LinphoneManager.createAndStart(LinphoneService.this, LinphoneService.this);
+			}
+		});
+		
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
 			startWifiLock();
 		}
 		instance = this; // instance is ready once linphone manager has been created
 		
-
 		// Retrieve methods to publish notification and keep Android
 		// from killing us and keep the audio quality high.
 		if (Version.sdkStrictlyBelow(Version.API05_ECLAIR_20)) {

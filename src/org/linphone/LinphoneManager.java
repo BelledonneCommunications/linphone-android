@@ -480,7 +480,14 @@ public class LinphoneManager implements LinphoneCoreListener {
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
-					mLc.iterate();
+					UIThreadDispatcher.Dispatch(new Runnable() {
+						@Override
+						public void run() {
+							if (mLc != null) {
+								mLc.iterate();
+							}
+						}
+					});
 				}
 			};
 			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
