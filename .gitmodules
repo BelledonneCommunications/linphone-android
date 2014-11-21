@@ -87,6 +87,7 @@
 [submodule "submodules/externals/libmatroska"]
 	path = submodules/externals/libmatroska
 	url = https://github.com/Matroska-Org/foundation-source.git
+	ignore = dirty
 [submodule "submodules/externals/webrtc"]
 	path = submodules/externals/webrtc
 	url = git://git.linphone.org/webrtc.git
