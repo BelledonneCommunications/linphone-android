@@ -4,15 +4,15 @@
 
 	<target name="-pre-build" description="Move file that is not to be compiled.">
 		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
-			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
+			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.ignored"
 			failonerror="false" />
 		<copy file="submodules/linphone/share/xml/lpconfig.xsd"
 			tofile="res/raw/lpconfig.xsd"
-			failonerror="false" />	
+			failonerror="false" />
 	</target>
 
 	<target name="-post-build" description="Restore file that has been moved so that it was not compiled.">
-		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
+		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.ignored"
 			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
 			failonerror="false" />
 	</target>
@@ -59,17 +59,17 @@
 			<class name="org.linphone.tools.Lpc2Xml" />
 		</javah>
 	</target>
-	
+
 	<target name="partial-clean">
 	    <delete file="bin/${ant.project.name}.ap_" />
 	</target>
 
 	<target name="javadoc">
 		<echo level="info">Generate Javadoc</echo>
-		<javadoc 
+		<javadoc
 			destdir="${javadoc.dir}"
-			verbose="off" 
-			use="true" 
+			verbose="off"
+			use="true"
 			classpath="${sdk.dir}/platforms/${target}/android.jar:libs/android-support-v4.jar:libs/gcm.jar"
 			sourcepath="${source.dir}:gen"
 			linkoffline="http://developer.android.com/reference file:/${sdk.dir}/docs/reference"
@@ -77,7 +77,7 @@
 		</javadoc>
 	</target>
 
-	<target name="-package-resources" depends="-crunch">	    
+	<target name="-package-resources" depends="-crunch">
 		<!-- only package resources if *not* a library project -->
 		<do-only-if-not-library elseText="Library project: do not package resources...">
 			<exec executable="${aapt}" failonerror="true">
@@ -105,7 +105,7 @@
 				<arg value="${linphone.package.name}" />
 				<arg value="--custom-package" />
 				<arg value="${linphone.package.name}" />
-			</exec> 
+			</exec>
 		</do-only-if-not-library>
 	</target>
 
