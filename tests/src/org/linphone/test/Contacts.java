@@ -110,18 +110,6 @@ public class Contacts extends SampleTest {
 		goToContacts();
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
-		
-		// Scroll down a bit on some small screens to see the delete button
-		final ScrollView scrollView = (ScrollView)solo.getView(org.linphone.R.id.controlsScrollView);
-		scrollView.getHandler().post(new Runnable() {
-			@Override
-			public void run() {
-				scrollView.fullScroll(View.FOCUS_DOWN);
-			}
-		});
-		solo.sleep(500);
 		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}

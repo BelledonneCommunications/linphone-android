@@ -301,7 +301,7 @@
   <string name="linphone_friend_new_request_desc">voudrait être partager son status avec vous et voir le votre.</string>
   <string name="setup_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>
-  <string name="delete_contact">Supprimer contact</string>
+  <string name="delete_contact">Supprimer</string>
   <string name="sip_address">Adresse SIP</string>
   <string name="phone_number">Numéro de téléphone</string>
   <string name="contact_first_name">Prénom</string>
