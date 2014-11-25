@@ -18,13 +18,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.io.InputStream;
-
+import java.util.ArrayList;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
-
+import android.annotation.SuppressLint;
+import android.content.ContentProviderOperation;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +42,7 @@ import android.widget.TextView;
  */
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private TextView editContact;
+	private TextView editContact, deleteContact;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -74,6 +77,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		editContact = (TextView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
 		
+		deleteContact = (TextView) view.findViewById(R.id.deleteContact);
+		deleteContact.setOnClickListener(this);
+		
 		return view;
 	}
 	
@@ -83,6 +89,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		displayContact(inflater, view);
 	}
 	
+	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
 		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		if (contact.getPhotoUri() != null) {
@@ -195,6 +202,27 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
+		} else if (id == R.id.deleteContact) {
+			deleteExistingContact();
+			LinphoneActivity.instance().removeContactFromLists(contact);
+			LinphoneActivity.instance().displayContacts(false);
 		}
+	}
+	
+	private void deleteExistingContact() {
+		String select = ContactsContract.Data.CONTACT_ID + " = ?"; 
+		String[] args = new String[] { contact.getID() };   
+		
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
+    		.withSelection(select, args) 
+            .build()
+        );
+        
+        try {
+            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+        	Log.w(e.getMessage() + ":" + e.getStackTrace());
+        }
 	}
 }

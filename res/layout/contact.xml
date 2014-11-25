@@ -11,6 +11,20 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
         
+        <TextView
+			android:contentDescription="@string/content_description_delete"
+			android:id="@+id/deleteContact"
+			android:background="@drawable/contact_delete"
+			android:text="@string/button_delete_all"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+        
         <TextView 
             android:contentDescription="@string/content_description_edit"
             android:id="@+id/editContact"
@@ -21,6 +35,7 @@
             android:textColor="@drawable/text_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+			android:layout_weight="1"
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"/>
         

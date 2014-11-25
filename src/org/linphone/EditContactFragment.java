@@ -3,11 +3,10 @@ package org.linphone;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.AvatarWithShadow;
-
+import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,7 +33,6 @@ public class EditContactFragment extends Fragment {
 	private TextView ok;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
-	private View deleteContact;
 	
 	private boolean isNewContact = true;
 	private Contact contact;
@@ -214,19 +212,6 @@ public class EditContactFragment extends Fragment {
 			if (view != null)
 				controls.addView(view);
 		}
-		
-		if (!isNewContact) {
-			deleteContact = inflater.inflate(R.layout.contact_delete_button, null);
-			deleteContact.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					deleteExistingContact();
-					LinphoneActivity.instance().removeContactFromLists(contact);
-					LinphoneActivity.instance().displayContacts(false);
-				}
-			});
-			controls.addView(deleteContact, controls.getChildCount());
-		}
 
 		// Add one for phone numbers, one for SIP address
 		if (!getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)) {
@@ -243,6 +228,7 @@ public class EditContactFragment extends Fragment {
 		return displayNumberOrAddress(controls, numberOrAddress, false);
 	}
 	
+	@SuppressLint("InflateParams")
 	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress, boolean forceAddNumber) {
 		boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
 		
@@ -307,6 +293,7 @@ public class EditContactFragment extends Fragment {
 		return view;
 	}
 	
+	@SuppressLint("InflateParams")
 	private void addEmptyRowToAllowNewNumberOrAddress(final TableLayout controls, final boolean isSip) {
 		final View view = inflater.inflate(R.layout.contact_add_row, null);
 		
@@ -365,11 +352,6 @@ public class EditContactFragment extends Fragment {
 				controls.addView(view);
 			}
 		}
-		if (deleteContact != null) {
-			// Move to the bottom the remove contact button
-			controls.removeView(deleteContact);
-			controls.addView(deleteContact, controls.getChildCount());
-		}
 	}
 	
 	private void createNewContact() {
@@ -402,22 +384,6 @@ public class EditContactFragment extends Fragment {
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, lastName.getText().toString())
                 .build()
             );
-        }
-	}
-	
-	private void deleteExistingContact() {
-		String select = ContactsContract.Data.CONTACT_ID + "=?"; 
-		String[] args = new String[] { String.valueOf(contactID) };   
-		
-        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-    		.withSelection(select, args) 
-            .build()
-        );
-        
-        try {
-            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (Exception e) {
-        	e.printStackTrace();
         }
 	}
 	
