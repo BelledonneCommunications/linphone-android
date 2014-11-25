@@ -349,7 +349,7 @@
   <string name="setup_ec_calibration">Идёт настройка шумоподавления</string>
   <string name="pref_image_sharing_server_title">Общий сервер</string>
   <string name="pref_remote_provisioning_title">Удалённое резервирование</string>
-  <string name="delete_contact">Удалить контакт</string>
+  <string name="delete_contact">Удалить</string>
   <string name="sip_address">адрес SIP</string>
   <string name="phone_number">Номер телефона</string>
   <string name="contact_first_name">Имя</string>

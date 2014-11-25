@@ -375,7 +375,7 @@
   <string name="setup_ec_calibration">Echo canceller calibration in progress</string>
   <string name="pref_image_sharing_server_title">Sharing server</string>
   <string name="pref_remote_provisioning_title">Remote provisioning</string>
-  <string name="delete_contact">Delete contact</string>
+  <string name="delete_contact">Delete</string>
   <string name="sip_address">SIP address</string>
   <string name="phone_number">Phone number</string>
   <string name="contact_first_name">First name</string>
