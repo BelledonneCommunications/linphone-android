@@ -423,7 +423,7 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (final PayloadType pt : lc.getAudioCodecs()) {
-			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
+			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMime());
 			/* Special case */
 			if (pt.getMime().equals("mpeg4-generic")) {
