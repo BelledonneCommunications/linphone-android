@@ -142,6 +142,7 @@
   <string name="button_options">אפשרויות</string>
   <string name="call_update_yes">קבל</string>
   <string name="call_update_no">דחה</string>
+  <string name="delete_contact">מחק</string>
   <string name="pref_user_name_title">שם משתמש</string>
   <string name="today">היום</string>
   <string name="yesterday">אתמול</string>

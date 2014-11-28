@@ -93,9 +93,6 @@
   <string name="pref_video_use_front_camera_title">Frontkamera benutzen</string>
   <string name="pref_video">Video</string>
   <string name="pref_preferences">Einstellungen</string>
-  <string name="pref_video_codec_h263_title">H263</string>
-  <string name="pref_video_codec_mpeg4_title">MP4V-ES</string>
-  <string name="pref_video_codec_h264_title">H264</string>
   <string name="pref_video_codecs_title">Codecs</string>
   <string name="pref_preferred_video_size">bevorzugte Video-Größe</string>
   <string name="menu_videocall_back_to_dialer_title">Zeige Wählgerät</string>
@@ -121,21 +118,6 @@
   <string name="pref_echo_cancellation">Echounterdrückung</string>
   <string name="pref_autostart">Starte beim Einschalten</string>
   <string name="pref_enable_outbound_proxy">Ausgehender Proxy</string>
-  <string name="pref_codec_pcma">pcma</string>
-  <string name="pref_codec_pcmu">pcmu</string>
-  <string name="pref_codec_gsm">gsm</string>
-  <string name="pref_codec_g722">g722</string>
-  <string name="pref_codec_amr">amr</string>
-  <string name="pref_codec_amrwb">amr-wb</string>
-  <string name="pref_codec_ilbc">ilbc</string>
-  <string name="pref_codec_speex8">speex 8 Khz</string>
-  <string name="pref_codec_speex16">speex 16 Khz</string>
-  <string name="pref_codec_opus">opus 48Khz</string>
-  <string name="pref_codec_silk8">silk 8 Khz</string>
-  <string name="pref_codec_silk12">silk 12 Khz</string>
-  <string name="pref_codec_silk16">silk 16 Khz</string>
-  <string name="pref_codec_silk24">silk 24 Khz</string>
-  <string name="pref_codec_g729">g729</string>
   <string name="pref_codecs">Codecs</string>
   <string name="pref_communication_expire_title">Zeitüberschreitung der Kommunikation</string>
   <string name="pref_incoming_expire_title">Zeitüberschreitung bei eingehendem Anruf</string>
@@ -146,10 +128,6 @@
   <string name="pref_incoming_call_timeout_title">Zeitüberschreitung bei eingehendem Anruf (in Sekunden)</string>
   <string name="place_call_chooser">Anrufen</string>
   <string name="pref_adaptive_rate_control">Starte Kalibrierung der Echounterdrückung </string>
-  <string-array name="adaptive_rate_algorithm_entries">
-    <item>Einfach</item>
-    <item>Zustandsbehaftet</item>
-  </string-array>
   <string-array name="limit_bitrate_entries">
     <item>10 kbits/s</item>
     <item>15 kbits/s</item>
@@ -157,14 +135,6 @@
     <item>36 kbits/s</item>
     <item>64 kbits/s</item>
     <item>128 kbits/s</item>
-  </string-array>
-  <string-array name="limit_bitrate_entry_values">
-    <item>10</item>
-    <item>15</item>
-    <item>20</item>
-    <item>36</item>
-    <item>64</item>
-    <item>128</item>
   </string-array>
   <string name="pref_debug">Debug</string>
   <string name="about_report_issue">Problembeschreibung</string>
@@ -218,11 +188,8 @@
   <string name="first_launch_no_login_password">Bitte Benutzername und Passwort eingeben</string>
   <string name="first_launch_bad_login_password">Verbindung nicht möglich; Prüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut</string>
   <string name="pref_amr_summary">AMR Codec ist möglicherweise nicht auf Ihrem Telefon vorhanden</string>
-  <string name="pref_video_codec_vp8_title">VP8</string>
   <string name="pref_media_encryption">Medien-Verschlüsselung</string>
   <string name="media_encryption_none">Keine</string>
-  <string name="media_encryption_srtp">SRTP</string>
-  <string name="media_encryption_zrtp">ZRTP</string>
   <string name="pref_video_codec_h264_unavailable">Codec deaktiviert, Erstellen Sie die App aus dem Source-Code, um Ihn zu aktivieren.</string>
   <string name="pref_video_codec_mpeg4_unavailable">Codec deaktiviert, Erstellen Sie die App aus dem Source-Code, um Ihn zu aktivieren.</string>
   <string name="pref_sipaccounts">SIP-Konten</string>
@@ -361,7 +328,7 @@
   <string name="pref_auto_accept_friends_desc">Neue Freundschaftsanfragen automatisch annehmen</string>
   <string name="linphone_friend_new_request_title">Freundschaftsanfrage</string>
   <string name="setup_ec_calibration">Echounterdrückung kalibrieren in Arbeit</string>
-  <string name="delete_contact">Lösche Kontakt</string>
+  <string name="delete_contact">Löschen</string>
   <string name="sip_address">SIP-Adresse</string>
   <string name="phone_number">Telefonnummer</string>
   <string name="contact_first_name">Vorname</string>
@@ -407,7 +374,4 @@
   <string name="remote_composing">Partner schreibt...</string>
   <string name="unread_messages">%i ungelesene Nachrichten</string>
   <string name="retry">Erneut versuchen</string>
-  <string name="pref_dtmf_sequence_title">DTMF Sequenz</string>
-  <string name="dtmf_sequence_not_set_failure">Kein DTMF eingerichtet in den Erweiterten Einstellungen</string>
-  <string name="dtmf_sequence">DTMF Sequenz</string>
 </resources>

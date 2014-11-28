@@ -93,9 +93,6 @@
   <string name="pref_video_use_front_camera_title">Use front camera</string>
   <string name="pref_video">Video</string>
   <string name="pref_preferences">Preferences</string>
-  <string name="pref_video_codec_h263_title">H263</string>
-  <string name="pref_video_codec_mpeg4_title">MP4V-ES</string>
-  <string name="pref_video_codec_h264_title">H264</string>
   <string name="pref_video_codecs_title">Codecs</string>
   <string name="pref_preferred_video_size">Preferred video size</string>
   <string name="menu_videocall_back_to_dialer_title">Display dialer</string>
@@ -121,21 +118,7 @@
   <string name="pref_echo_cancellation">Echo cancellation</string>
   <string name="pref_autostart">Start at boot time</string>
   <string name="pref_enable_outbound_proxy">Outbound proxy</string>
-  <string name="pref_codec_pcma">pcma</string>
-  <string name="pref_codec_pcmu">pcmu</string>
-  <string name="pref_codec_gsm">gsm</string>
-  <string name="pref_codec_g722">g722</string>
-  <string name="pref_codec_amr">amr</string>
-  <string name="pref_codec_amrwb">amr-wb</string>
-  <string name="pref_codec_ilbc">ilbc</string>
-  <string name="pref_codec_speex8">speex 8 Khz</string>
-  <string name="pref_codec_speex16">speex 16 Khz</string>
-  <string name="pref_codec_opus">opus 48Khz</string>
-  <string name="pref_codec_silk8">silk 8 Khz</string>
-  <string name="pref_codec_silk12">silk 12 Khz</string>
-  <string name="pref_codec_silk16">silk 16 Khz</string>
-  <string name="pref_codec_silk24">silk 24 Khz</string>
-  <string name="pref_codec_g729">g729</string>
+
   <string name="pref_codecs">Codecs</string>
   <string name="pref_communication_expire_title">Communication timeout</string>
   <string name="pref_incoming_expire_title">Incoming call timeout</string>
@@ -147,10 +130,6 @@
   <string name="place_call_chooser">Place a call</string>
   <string name="pref_adaptive_rate_control">Adaptive rate control</string>
   <string name="pref_adaptive_rate_algorithm">Adaptive rate algorithm</string>
-  <string-array name="adaptive_rate_algorithm_entries">
-    <item>Simple</item>
-    <item>Stateful</item>
-  </string-array>
   <string name="pref_codec_bitrate_limit">Codec bitrate limit</string>
   <string-array name="limit_bitrate_entries">
     <item>10 kbits/s</item>
@@ -160,14 +139,7 @@
     <item>64 kbits/s</item>
     <item>128 kbits/s</item>
   </string-array>
-  <string-array name="limit_bitrate_entry_values">
-    <item>10</item>
-    <item>15</item>
-    <item>20</item>
-    <item>36</item>
-    <item>64</item>
-    <item>128</item>
-  </string-array>
+
   <string name="pref_debug">Debug</string>
   <string name="about_report_issue">Report issue</string>
   <string name="about_bugreport_email_text">Describe problem here</string>
@@ -224,15 +196,11 @@
   <string name="first_launch_no_login_password">Please enter your login and password</string>
   <string name="first_launch_bad_login_password">Couldn\'t connect; check your login and password and start again</string>
   <string name="pref_amr_summary">AMR codec might not be present on your phone</string>
-  <string name="pref_video_codec_vp8_title">VP8</string>
   <string name="pref_media_encryption">Media encryption</string>
   <string name="media_encryption_none">None</string>
-  <string name="media_encryption_srtp">SRTP</string>
-  <string name="media_encryption_zrtp">ZRTP</string>
   <string name="pref_video_codec_h264_unavailable">Codec disabled, build the app from source code to enable it</string>
   <string name="pref_video_codec_mpeg4_unavailable">Codec disabled, build the app from source code to enable it</string>
   <string name="pref_sipaccounts">SIP Accounts</string>
-  <string name="pref_dtmf">Gate code</string>
   <string name="pref_wifi_only">Use wifi only</string>
   <string name="pref_push_notification">Enable push notifications</string>
   <string name="wizard_failed">An error occurred, try again later.</string>
@@ -426,8 +394,4 @@
   <string name="retry">Retry</string>
   <string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
   <string name="remote_provisioning_again_title">Remote provisioning</string>
-  <string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string>
-  <string name="pref_dtmf_sequence_title">DTMF sequence</string>
-  <string name="dtmf_sequence_not_set_failure">No DTMF set in advanced preferences</string>
-  <string name="dtmf_sequence">DTMF sequence</string>
-</resources>
+  <string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string></resources>

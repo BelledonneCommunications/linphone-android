@@ -132,4 +132,39 @@
 	<string name="pref_sipaccount_key">pref_sipaccount_key</string>
 	<string name="pref_advanced_key">pref_advanced_key</string>
 	<string name="pref_manage_key">pref_manage_key</string>
+
+
+	<string name="pref_video_codec_h263_title">H263</string>
+	<string name="pref_video_codec_mpeg4_title">MP4V-ES</string>
+	<string name="pref_video_codec_h264_title">H264</string>
+	<string name="pref_codec_pcma">pcma</string>
+	<string name="pref_codec_pcmu">pcmu</string>
+	<string name="pref_codec_gsm">gsm</string>
+	<string name="pref_codec_g722">g722</string>
+	<string name="pref_codec_amr">amr</string>
+	<string name="pref_codec_amrwb">amr-wb</string>
+	<string name="pref_codec_ilbc">ilbc</string>
+	<string name="pref_codec_speex8">speex 8 Khz</string>
+	<string name="pref_codec_speex16">speex 16 Khz</string>
+	<string name="pref_codec_opus">opus 48Khz</string>
+	<string name="pref_codec_silk8">silk 8 Khz</string>
+	<string name="pref_codec_silk12">silk 12 Khz</string>
+	<string name="pref_codec_silk16">silk 16 Khz</string>
+	<string name="pref_codec_silk24">silk 24 Khz</string>
+	<string name="pref_codec_g729">g729</string>
+	<string-array name="limit_bitrate_entry_values">
+		<item>10</item>
+		<item>15</item>
+		<item>20</item>
+		<item>36</item>
+		<item>64</item>
+		<item>128</item>
+	</string-array>
+	<string-array name="adaptive_rate_algorithm_entries">
+		<item>Simple</item>
+		<item>Stateful</item>
+	</string-array>
+	<string name="pref_video_codec_vp8_title">VP8</string>
+	<string name="media_encryption_srtp">SRTP</string>
+	<string name="media_encryption_zrtp">ZRTP</string>
 </resources>

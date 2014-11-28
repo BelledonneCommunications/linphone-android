@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="history_date_format">d MMM</string>
+  <string name="history_detail_date_format">EEEE MMM d HH:mm</string>
+  <string name="messages_date_format">d MMM HH:mm</string>
+  <string name="today_date_format">HH:mm</string>
+  <string name="picture_name_format">linphone-mms-%s.jpg</string>
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone サービス</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">はじめる</string>
+  <string name="notification_registered">%s に登録しました</string>
+  <string name="notification_register_failure">%s への登録に失敗しました</string>
+  <string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2</string>
+  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+  <string name="setup_welcome">アシスタントがSIPアカウントを使ってあなたの通話を助けます。</string>
+  <string name="setup_create_account">linphone.orgのアカウントを作成する</string>
+  <string name="setup_login_linphone">linphone.orgのアカウントをすでに持っている</string>
+  <string name="setup_login_generic">SIPアカウントをすでに持っている</string>
+  <string name="setup_linphone_account_hint">linphone.orgのユーザー名とパスワードを入力してください</string>
+  <string name="setup_general_account_hint">SIPアカウントのユーザー名とパスワードとドメインを入力してください</string>
+  <string name="setup_username_hint">ユーザー名</string>
+  <string name="tunnel_host"></string>
+</resources>
