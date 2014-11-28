@@ -93,9 +93,6 @@
   <string name="pref_video_use_front_camera_title">フロントカメラを使用する</string>
   <string name="pref_video">ビデオ</string>
   <string name="pref_preferences">設定</string>
-  <string name="pref_video_codec_h263_title">H263</string>
-  <string name="pref_video_codec_mpeg4_title">MP4V-ES</string>
-  <string name="pref_video_codec_h264_title">H264</string>
   <string name="pref_video_codecs_title">コーデック</string>
   <string name="pref_preferred_video_size">動画の大きさ</string>
   <string name="menu_videocall_back_to_dialer_title">ダイヤル画面を表示</string>
@@ -121,21 +118,6 @@
   <string name="pref_echo_cancellation">エコーキャンセル</string>
   <string name="pref_autostart">起動時に開始する</string>
   <string name="pref_enable_outbound_proxy">Outbound proxy</string>
-  <string name="pref_codec_pcma">pcma</string>
-  <string name="pref_codec_pcmu">pcmu</string>
-  <string name="pref_codec_gsm">gsm</string>
-  <string name="pref_codec_g722">g722</string>
-  <string name="pref_codec_amr">amr</string>
-  <string name="pref_codec_amrwb">amr-wb</string>
-  <string name="pref_codec_ilbc">ilbc</string>
-  <string name="pref_codec_speex8">speex 8 Khz</string>
-  <string name="pref_codec_speex16">speex 16 Khz</string>
-  <string name="pref_codec_opus">opus 48Khz</string>
-  <string name="pref_codec_silk8">silk 8 Khz</string>
-  <string name="pref_codec_silk12">silk 12 Khz</string>
-  <string name="pref_codec_silk16">silk 16 Khz</string>
-  <string name="pref_codec_silk24">silk 24 Khz</string>
-  <string name="pref_codec_g729">g729</string>
   <string name="pref_codecs">Codecs</string>
   <string name="pref_communication_expire_title">通信がタイムアウト</string>
   <string name="pref_incoming_expire_title">呼び出し時間のタイムアウト</string>
@@ -147,10 +129,6 @@
   <string name="place_call_chooser">電話をかける</string>
   <string name="pref_adaptive_rate_control">適応レート制御</string>
   <string name="pref_adaptive_rate_algorithm">適応レート方式</string>
-  <string-array name="adaptive_rate_algorithm_entries">
-    <item>シンプル</item>
-    <item>ステートフル</item>
-  </string-array>
   <string name="pref_codec_bitrate_limit">コーデックのビットレート制限</string>
   <string-array name="limit_bitrate_entries">
     <item>10 kbits/s</item>
@@ -159,14 +137,6 @@
     <item>36 kbits/s</item>
     <item>64 kbits/s</item>
     <item>128 kbits/s</item>
-  </string-array>
-  <string-array name="limit_bitrate_entry_values">
-    <item>10</item>
-    <item>15</item>
-    <item>20</item>
-    <item>36</item>
-    <item>64</item>
-    <item>128</item>
   </string-array>
   <string name="pref_debug">デバッグ</string>
   <string name="about_report_issue">問題をレポート</string>
@@ -224,15 +194,11 @@
   <string name="first_launch_no_login_password">ユーザー名とパスワードを入力してください</string>
   <string name="first_launch_bad_login_password">接続できません: ユーザー名とパスワードを確認して再度実行する</string>
   <string name="pref_amr_summary">AMRコーデックは、お使いの電話で使用できない場合があります</string>
-  <string name="pref_video_codec_vp8_title">VP8</string>
   <string name="pref_media_encryption">メディアの暗号化</string>
   <string name="media_encryption_none">なし</string>
-  <string name="media_encryption_srtp">SRTP</string>
-  <string name="media_encryption_zrtp">ZRTP</string>
   <string name="pref_video_codec_h264_unavailable">無効なコーデックです。有効にするには、ソースコードからアプリを構築する必要があります。</string>
   <string name="pref_video_codec_mpeg4_unavailable">無効なコーデックです。有効にするには、ソースコードからアプリを構築する必要があります。</string>
   <string name="pref_sipaccounts">SIPアカウント</string>
-  <string name="pref_dtmf">ゲートコード</string>
   <string name="pref_wifi_only">WiFIでのみ使用</string>
   <string name="pref_push_notification">プッシュ通知を有効にする</string>
   <string name="wizard_failed">エラーが発生しました。のちほど再試行してください。</string>
@@ -375,7 +341,7 @@
   <string name="setup_ec_calibration">エコーキャンセラーの調整進行中</string>
   <string name="pref_image_sharing_server_title">共有サーバー</string>
   <string name="pref_remote_provisioning_title">遠隔準備</string>
-  <string name="delete_contact">連絡先を削除する</string>
+  <string name="delete_contact">削除</string>
   <string name="sip_address">SIPアドレス</string>
   <string name="phone_number">電話番号</string>
   <string name="contact_first_name">名前</string>
@@ -427,7 +393,4 @@
   <string name="remote_provisioning_failure">ダウンロードした、リモートプロビジョニング設定を適用できませんでした...</string>
   <string name="remote_provisioning_again_title">遠隔準備</string>
   <string name="remote_provisioning_again_message">プロビジョニングURIを変更しますか？</string>
-  <string name="pref_dtmf_sequence_title">DTMF方式</string>
-  <string name="dtmf_sequence_not_set_failure">DTMF設定が拡張設定に存在しておりません</string>
-  <string name="dtmf_sequence">DTMF方式</string>
 </resources>

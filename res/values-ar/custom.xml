@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">لِنْفُونْ</string>
+  <string name="service_name">خدمة لِنْفُونْ</string>
+  <string name="addressbook_label">لِنْفُونْ</string>
+  <string name="notification_title">لِنْفُونْ</string>
+  <string name="wait_dialog_text">يجري التشغيل</string>
+  <string name="notification_registered">مُسجَّل في %s</string>
+  <string name="notification_register_failure">فشِل التسجيل في %s</string>
+  <string name="about_text">هاتف موافق للِنْفُونْ %s SIP (rfc 3261) برخصة جْنُو العمومية الإصدار 2</string>
+  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+  <string name="setup_welcome">سيمكنك هذا المرشد من إعداد حسابك SIP لإجراء المكالمات.</string>
+  <string name="setup_create_account">إنشاء حساب في linphone.org</string>
+  <string name="setup_login_linphone">أتوفر على حساب في linphone.org</string>
+  <string name="setup_login_generic">أتوفر على حساب SIP</string>
+  <string name="setup_linphone_account_hint">ادخل إسم المستخدم وكلمة السر لحسابك في linphone.org</string>
+  <string name="setup_general_account_hint">ادخل إسم المستخدم وكلمة السر وكذا نطاق SIP.</string>
+  <string name="setup_username_hint">إسم المستخدم</string>
+  <string name="tunnel_host"></string>
+</resources>

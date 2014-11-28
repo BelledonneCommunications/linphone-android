@@ -45,12 +45,20 @@
   <string name="CancelButtonText">Annuler</string>
   <string name="AddCallButtonText">Ajouter un appel</string>
   <string name="TransferCallButtonText">Transférer appel</string>
+  <string name="conf_admin_choice_enter">Entrer dans la onférence</string>
+  <string name="conf_admin_choice_leave">Quitter temporairement la conférence</string>
+  <string name="conf_admin_choice_terminate">Terminer la conférence</string>
   <string name="hangup">Raccrocher</string>
   <string name="conf_simple_merge_bt_txt">Fusionner</string>
   <string name="conf_simple_transfer_bt_txt">Transférer</string>
   <string name="conf_simple_video_bt_txt">Vidéo</string>
   <!--<string name="conf_simple_no_current_call">No active call</string>-->
   <string name="show_send_dtmfs_button">Dialpad</string>
+  <string name="conf_conference">Conférence</string>
+  <string name="in_conf_leave">Sortir</string>
+  <string name="out_conf_enter">Rentrer</string>
+  <string name="pref_audio_hacks_title">Bidouilles audio</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (défaut), 2=MODE_IN_CALL</string>
   <string name="pref_audio_soft_volume_title">Utiliser volume logiciel</string>
   <string name="pref_ipv6_title">Utiliser ipv6 au lieu de ipv4</string>
   <string name="error_while_accepting_pending_call">Erreur pendant l\'acceptation de l\'appel</string>
@@ -60,6 +68,9 @@
   <string name="unknown_incoming_call_name">Inconnu</string>
   <string name="pref_network_title">Réseau</string>
   <string name="pref_transport">Transport</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
   <string name="pref_transport_use_random_ports">Utiliser des ports aléatoires</string>
   <string name="pref_sip_port_title">Port SIP à utiliser si port aléatoire désactivé</string>
   <string name="at_least_a_protocol">Au moins un est requis</string>
@@ -79,6 +90,15 @@
   <string name="pref_preferences">Préférences</string>
   <string name="pref_video_codecs_title">Codecs</string>
   <string name="pref_preferred_video_size">Taille de vidéo préférée</string>
+  <string name="menu_videocall_back_to_dialer_title">Afficher le dialer</string>
+  <string name="menu_videocall_switch_camera_title">Caméra frontale / arrière</string>
+  <string name="menu_videocall_change_resolution_when_low_resolution">Tester haute résolution</string>
+  <string name="menu_videocall_change_resolution_when_high_resolution">Basse résolution</string>
+  <string name="menu_videocall_change_resolution_title">Changer résolution</string>
+  <string name="menu_videocall_toggle_camera_title">Activer / Désactiver caméra</string>
+  <string name="menu_videocall_toggle_camera_disable">Désactiver caméra</string>
+  <string name="menu_videocall_toggle_camera_enable">Activer caméra</string>
+  <string name="menu_videocall_terminate_call_title">Terminer l\'appel</string>
   <string name="pref_video_settings_title">Paramètres vidéo</string>
   <string name="pref_video_automatically_share_my_video_title">Partager ma vidéo</string>
   <string name="pref_video_automatically_accept_video_title">Accepter appels vidéo</string>
@@ -101,6 +121,10 @@
   <string name="pref_video_port_description">Port ou plage (min-max) pour l\'audio</string>
   <string name="pref_audio_port_description">Port ou plage (min-max) pour la video</string>
   <string name="pref_incoming_call_timeout_title">Timeout (en secondes) pour les appels entrants</string>
+  <string name="place_call_chooser">Réaliser un appel</string>
+  <string name="pref_adaptive_rate_control">Contrôle qualité adaptatif</string>
+  <string name="pref_adaptive_rate_algorithm">Algorithme de contrôle adaptatif</string>
+  <string name="pref_codec_bitrate_limit">Limite de débit du codec</string>
   <string name="pref_debug">Activer les traces de débogage</string>
   <string name="about_report_issue">Reporter un problème</string>
   <string name="about_bugreport_email_text">Décrivez le problème ici</string>
@@ -109,6 +133,7 @@
   <string name="about_reading_logs">En train de lire les traces, peut prendre du temps…</string>
   <string name="about_mailer_chooser_text">Envoyer le rapport avec…</string>
   <string name="menu_about">A propos</string>
+  <string name="menu_send_log">Envoyer les logs</string>
   <string name="pref_audio">Audio</string>
   <string name="menu_exit">Quitter</string>
   <string name="pref_prefix">Préfixe</string>
@@ -201,6 +226,7 @@
   <string name="call_stats_ice">Connexion ICE :</string>
   <string name="call_stats_video_resolution">Taille vidéo:</string>
   <!--Used by Android to help blind people by describing them images-->
+  <string name="content_description_add_contact">Button Ajouter aux contacts</string>
   <string name="content_description_about"></string>
   <string name="content_description_chat"></string>
   <string name="content_description_dial_back"></string>
@@ -301,6 +327,7 @@
   <string name="linphone_friend_new_request_desc">voudrait être partager son status avec vous et voir le votre.</string>
   <string name="setup_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>
+  <string name="pref_remote_provisioning_title">Configuration distante</string>
   <string name="delete_contact">Supprimer</string>
   <string name="sip_address">Adresse SIP</string>
   <string name="phone_number">Numéro de téléphone</string>
@@ -310,6 +337,7 @@
   <string name="pref_display_name_title">Nom d\'affichage</string>
   <string name="pref_user_name_title">Nom d\'utilisateur</string>
   <string name="pref_expire_title">Expiration</string>
+  <string name="pref_avpf">AVPF</string>
   <string name="pref_rfc2833_dtmf">Envoyer les DTMFs RFC2833</string>
   <string name="pref_sipinfo_dtmf">Envoyer les DTMFs en SIP INFO</string>
   <string name="pref_voice_mail">Adresse messagerie vocale</string>
@@ -331,6 +359,7 @@
   <string name="pref_help_auth_userid">Entrez votre identifiant (optionnel)</string>
   <string name="pref_display_name">Nom d\'affichage</string>
   <string name="pref_help_display_name">Entrez votre nom (optionnel)</string>
+  <string name="pref_upnp_enable">Activer UPNP</string>
   <string name="pref_manage">Gestion</string>
   <string name="wait">Merci de patienter...</string>
   <string name="importing_messages">Mise à jour de la base des messages</string>
@@ -338,6 +367,7 @@
   <string name="setup_remote_provisioning">Télécharger ma configuration</string>
   <string name="setup_remote_provisioning_hint">Cet assistant va télécharger une configuration existante.</string>
   <string name="setup_remote_provisioning_url_hint">addresse où télécharger la configuration</string>
+  <string name="setup_remote_provisioning_login_hint">La configuration téléchargée ne contient pas votre compte. Veuillez le remplir.</string>
   <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s (les majuscules sont interdites). Acceptez-vous ?</string>
   <string name="setup_title_assistant">Assistant de création de compte</string>
   <string name="zrtp_accept">Accepter</string>
@@ -347,4 +377,6 @@
   <string name="unread_messages">%i messages non lus</string>
   <string name="retry">Renvoyer</string>
   <string name="remote_provisioning_failure">Erreur durant le téléchargement ou l\'application de la configuration distante...</string>
+  <string name="remote_provisioning_again_title">Configuration distante</string>
+  <string name="remote_provisioning_again_message">Souhaitez-vous changer l\'URI de configuration ?</string>
 </resources>
