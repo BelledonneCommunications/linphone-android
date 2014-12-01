@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import static android.content.Intent.ACTION_MAIN;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
@@ -108,6 +111,11 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneRemo
 				if (openUri != null) {
 					// We expect something like linphone-config://http://linphone.org/config.xml
 					configUriParam = openUri.getEncodedSchemeSpecificPart().substring(2); // Removes the linphone-config://
+					try {
+						configUriParam = URLDecoder.decode(configUriParam, "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						Log.e(e);
+					}
 					Log.d("Using config uri: " + configUriParam);
 				}
 				
