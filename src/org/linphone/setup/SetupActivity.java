@@ -79,6 +79,26 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	};
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
+		super.onPause();
+	}
+	
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable("CurrentFragment", currentFragment);
 		super.onSaveInstanceState(outState);
@@ -203,7 +223,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	
 	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
 		if (state == RegistrationState.RegistrationOk) {
-			lc.removeListener(this);
 			
 			if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 				mHandler .post(new Runnable () {
@@ -213,7 +232,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 				});
 			}
 		} else if (state == RegistrationState.RegistrationFailed) {
-			lc.removeListener(this);
 			mHandler.post(new Runnable () {
 				public void run() {
 					Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
@@ -223,13 +241,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	}
 	
 	public void checkAccount(String username, String password, String domain) {
-//		LinphoneManager.removeListener(registrationListener);
-//		LinphoneManager.addListener(registrationListener);
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(this);
-		}
-		
 		saveCreatedAccount(username, password, domain);
 	}
 
