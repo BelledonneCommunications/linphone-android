@@ -28,22 +28,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.LinphoneSimpleListener.ConnectivityChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
-import org.linphone.LinphoneSimpleListener.LinphoneOnNotifyReceivedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnComposingReceivedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnDTMFReceivedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnRemoteProvisioningListener;
-import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -63,6 +52,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
@@ -78,7 +68,6 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
-import org.linphone.setup.RemoteProvisioningActivity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -128,7 +117,7 @@ import android.widget.Toast;
  * @author Guillaume Beraudo
  *
  */
-public class LinphoneManager implements LinphoneCoreListener {
+public class LinphoneManager implements LinphoneListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -148,20 +137,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	public String wizardLoginViewDomain = null;
 
-	private static List<LinphoneSimpleListener> simpleListeners = new ArrayList<LinphoneSimpleListener>();
-	public static void addListener(LinphoneSimpleListener listener) {
-		if (!simpleListeners.contains(listener)) {
-			simpleListeners.add(listener);
-		}
-	}
-	public static void removeListener(LinphoneSimpleListener listener) {
-		simpleListeners.remove(listener);
-	}
-
-	protected LinphoneManager(final Context c, LinphoneServiceListener listener) {
+	protected LinphoneManager(final Context c) {
 		sExited=false;
 		mServiceContext = c;
-		mListenerDispatcher = new ListenerDispatcher(listener);
 		basePath = c.getFilesDir().getAbsolutePath();
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
@@ -203,13 +181,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		BluetoothManager.getInstance().disableBluetoothSCO();
 
 		mLc.enableSpeaker(speakerOn);
-		audioStateChanged(speakerOn ? AudioState.SPEAKER : AudioState.EARPIECE);
-	}
-
-	public void audioStateChanged(AudioState state) {
-		for (LinphoneOnAudioChangedListener listener : getSimpleListeners(LinphoneOnAudioChangedListener.class)) {
-			listener.onAudioStateChanged(state);
-		}
 	}
 
 	public void routeAudioToSpeaker() {
@@ -230,11 +201,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 		routeAudioToSpeakerHelper(false);
 	}
 
-	public synchronized static final LinphoneManager createAndStart(Context c, LinphoneServiceListener listener) {
+	public synchronized static final LinphoneManager createAndStart(Context c) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
 
-		instance = new LinphoneManager(c, listener);
+		instance = new LinphoneManager(c);
 		instance.startLibLinphone(c);
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
@@ -315,11 +286,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneProxyConfig lpc = mLc.getDefaultProxyConfig();
 
 			if (mR.getBoolean(R.bool.forbid_self_call) && lpc!=null && lAddress.asStringUriOnly().equals(lpc.getIdentity())) {
-				mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 				return;
 			}
 		} catch (LinphoneCoreException e) {
-			mListenerDispatcher.tryingNewOutgoingCallButWrongDestinationAddress();
 			return;
 		}
 		lAddress.setDisplayName(displayName);
@@ -338,7 +307,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 
 			} catch (LinphoneCoreException e) {
-				mListenerDispatcher.tryingNewOutgoingCallButCannotGetCallParameters();
 				return;
 			}
 		} else if (LinphoneActivity.isInstanciated()) {
@@ -475,6 +443,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
+			mLc.addListener((LinphoneCoreListener) c);
 			//initLiblinphone();
 
 			TimerTask lTask = new TimerTask() {
@@ -683,24 +652,13 @@ public class LinphoneManager implements LinphoneCoreListener {
 	I/Linphone( 8397): WIFI connected: setting network reachable
 	*/
 	public void connectivityChanged(ConnectivityManager cm, boolean noConnectivity) {
-		NetworkInfo eventInfo = cm.getActiveNetworkInfo();
 		updateNetworkReachability();
-
-		if (connectivityListener != null) {
-			connectivityListener.onConnectivityChanged(mServiceContext, eventInfo, cm);
-		}
-	}
-
-	private ConnectivityChangedListener connectivityListener;
-	public void addConnectivityChangedListener(ConnectivityChangedListener l) {
-		connectivityListener = l;
 	}
 
 	public interface EcCalibrationListener {
 		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
 	}
 
-	private ListenerDispatcher mListenerDispatcher;
 	private LinphoneCall ringingCall;
 
 	private MediaPlayer mRingerPlayer;
@@ -713,15 +671,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 	public void show(LinphoneCore lc) {}
 
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf, String url) {
-		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
-			((LinphoneActivity) listener).onNewSubscriptionRequestReceived(lf, url);
-		}
 	}
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneActivity.class)) {
-			((LinphoneActivity) listener).onNotifyPresenceReceived(lf);
-		}
 	}
 
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
@@ -732,13 +684,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
 		Log.d("DTMF received: " + dtmf);
-		if (dtmfReceivedListener != null)
-			dtmfReceivedListener.onDTMFReceived(call, dtmf);
-	}
-
-	private LinphoneOnDTMFReceivedListener dtmfReceivedListener;
-	public void setOnDTMFReceivedListener(LinphoneOnDTMFReceivedListener listener) {
-		dtmfReceivedListener = listener;
 	}
 
 	@Override
@@ -751,12 +696,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		String textMessage = message.getText();
 		String url = message.getExternalBodyUrl();
-		int id = -1;
 		if (textMessage != null && textMessage.length() > 0) {
-			id = ChatStorage.getInstance().saveTextMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
+			ChatStorage.getInstance().saveTextMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
 		} else if (url != null && url.length() > 0) {
-			//Bitmap bm = ChatFragment.downloadImage(url);
-			id = ChatStorage.getInstance().saveImageMessage(from.asStringUriOnly(), "", null, message.getExternalBodyUrl(), message.getTime());
+			ChatStorage.getInstance().saveImageMessage(from.asStringUriOnly(), "", null, message.getExternalBodyUrl(), message.getTime());
 		}
 
 		try {
@@ -765,10 +708,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 				LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getDisplayName(), textMessage);
 			}
 		} catch (Exception e) { }
-
-		for (LinphoneSimpleListener listener : getSimpleListeners(LinphoneOnMessageReceivedListener.class)) {
-			((LinphoneOnMessageReceivedListener) listener).onMessageReceived(from, message, id);
-		}
 	}
 
 	public String getLastLcStatusMessage() {
@@ -778,7 +717,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	public void displayStatus(final LinphoneCore lc, final String message) {
 		Log.i(message);
 		lastLcStatusMessage=message;
-		mListenerDispatcher.onDisplayStatus(message);
 	}
 
 	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
@@ -798,13 +736,10 @@ public class LinphoneManager implements LinphoneCoreListener {
 				}
 			});
 		}
-
-		mListenerDispatcher.onGlobalStateChanged(state, message);
 	}
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {
 		Log.i("new state ["+state+"]");
-		mListenerDispatcher.onRegistrationStateChanged(proxy, state, message);
 	}
 
 	private int savedMaxCallWhileGsmIncall;
@@ -954,14 +889,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
 		}
-		mListenerDispatcher.onCallStateChanged(call, state, message);
 	}
 
 	public void callStatsUpdated(final LinphoneCore lc, final LinphoneCall call, final LinphoneCallStats stats) {}
 
 	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
 			boolean encrypted, String authenticationToken) {
-		mListenerDispatcher.onCallEncryptionChanged(call, encrypted, authenticationToken);
 	}
 
 	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delayMs,
@@ -1246,73 +1179,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		return getLc();
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> List<T> getSimpleListeners(Class<T> clazz) {
-		List<T> list = new ArrayList<T>();
-		for (LinphoneSimpleListener l : simpleListeners) {
-			if (clazz.isInstance(l)) list.add((T) l);
-		}
-		return list;
-	}
-
-	private class ListenerDispatcher implements LinphoneServiceListener {
-		private LinphoneServiceListener serviceListener;
-
-		public ListenerDispatcher(LinphoneServiceListener listener) {
-			this.serviceListener = listener;
-		}
-
-		public void onCallEncryptionChanged(LinphoneCall call,
-				boolean encrypted, String authenticationToken) {
-			if (serviceListener != null) {
-				serviceListener.onCallEncryptionChanged(call, encrypted, authenticationToken);
-			}
-			for (LinphoneOnCallEncryptionChangedListener l : getSimpleListeners(LinphoneOnCallEncryptionChangedListener.class)) {
-				l.onCallEncryptionChanged(call, encrypted, authenticationToken);
-			}
-		}
-
-		public void onCallStateChanged(LinphoneCall call, State state, String message) {
-			if (state == State.OutgoingInit || state == State.IncomingReceived) {
-				boolean sendCamera = mLc.getConferenceSize() == 0;
-				enableCamera(call, sendCamera);
-			}
-
-			if (serviceListener != null) serviceListener.onCallStateChanged(call, state, message);
-			for (LinphoneOnCallStateChangedListener l : getSimpleListeners(LinphoneOnCallStateChangedListener.class)) {
-				l.onCallStateChanged(call, state, message);
-			}
-		}
-
-		public void onDisplayStatus(String message) {
-			if (serviceListener != null) serviceListener.onDisplayStatus(message);
-		}
-
-		public void onGlobalStateChanged(GlobalState state, String message) {
-			if (serviceListener != null) serviceListener.onGlobalStateChanged( state, message);
-		}
-
-		public void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state,
-				String message) {
-			if (serviceListener != null) serviceListener.onRegistrationStateChanged(proxy, state, message);
-			for (LinphoneOnRegistrationStateChangedListener listener : getSimpleListeners(LinphoneOnRegistrationStateChangedListener.class)) {
-				listener.onRegistrationStateChanged(proxy, state, message);
-			}
-		}
-
-		public void tryingNewOutgoingCallButAlreadyInCall() {
-			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButAlreadyInCall();
-		}
-
-		public void tryingNewOutgoingCallButCannotGetCallParameters() {
-			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButCannotGetCallParameters();
-		}
-
-		public void tryingNewOutgoingCallButWrongDestinationAddress() {
-			if (serviceListener != null) serviceListener.tryingNewOutgoingCallButWrongDestinationAddress();
-		}
-	}
-
 	public static final boolean isInstanciated() {
 		return instance != null;
 	}
@@ -1374,17 +1240,11 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.d("Subscription state changed to "+state+" event name is "+ev.getEventName());
 	}
 	
-	private LinphoneOnNotifyReceivedListener notifyReceivedListener;
-	public void setNotifyReceivedListener(LinphoneOnNotifyReceivedListener listener) {
-		notifyReceivedListener = listener;
-	}
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
 			String eventName, LinphoneContent content) {
 		Log.d("Notify received for event "+eventName);
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getDataAsString());
-		if (notifyReceivedListener != null)
-			notifyReceivedListener.onNotifyReceived(ev,eventName,content);
 	}
 	@Override
 	public void publishStateChanged(LinphoneCore lc, LinphoneEvent ev,
@@ -1392,32 +1252,15 @@ public class LinphoneManager implements LinphoneCoreListener {
 		Log.d("Publish state changed to " + state + " for event name " + ev.getEventName());
 	}
 
-	private LinphoneOnComposingReceivedListener composingReceivedListener;
-	public void setOnComposingReceivedListener(LinphoneOnComposingReceivedListener listener) {
-		composingReceivedListener = listener;
-	}
 	@Override
 	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom cr) {
 		Log.d("Composing received for chatroom " + cr.getPeerAddress().asStringUriOnly());
-		if (composingReceivedListener != null)
-			composingReceivedListener.onComposingReceived(cr);
 	}
 
-	private LinphoneOnRemoteProvisioningListener remoteProvisioningListener;
-	public void setOnRemoteProvisioningListener(LinphoneOnRemoteProvisioningListener listener) {
-		remoteProvisioningListener = listener;
-	}
 	@Override
 	public void configuringStatus(LinphoneCore lc,
 			RemoteProvisioningState state, String message) {
 		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
-		if (RemoteProvisioningActivity.getInstance() != null) {
-			RemoteProvisioningActivity.getInstance().onConfiguringStatus(state);
-		}
-
-		if (remoteProvisioningListener != null) {
-			remoteProvisioningListener.onConfiguringStatus(state);
-		}
 
 		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
 			if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {

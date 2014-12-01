@@ -20,11 +20,12 @@ package org.linphone;
 
 import java.util.List;
 
-import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.LinphoneSliders;
@@ -44,7 +45,7 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements LinphoneOnCallStateChangedListener, LinphoneSliderTriggered {
+public class IncomingCallActivity extends Activity implements LinphoneCallStateListener, LinphoneSliderTriggered {
 
 	private static IncomingCallActivity instance;
 	
@@ -87,7 +88,10 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	protected void onResume() {
 		super.onResume();
 		instance = this;
-		LinphoneManager.addListener(this);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 		
 		// Only one call ringing at a time is allowed
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
@@ -120,8 +124,11 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	
 	@Override
 	protected void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
 		super.onPause();
-		LinphoneManager.removeListener(this);
 	}
 	
 	@Override
@@ -140,7 +147,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	}
 
 	@Override
-	public void onCallStateChanged(LinphoneCall call, State state, String msg) {
+	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 		if (call == mCall && State.CallEnd == state) {
 			finish();
 		}

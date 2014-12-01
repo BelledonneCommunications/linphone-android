@@ -20,11 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphonePreferences.AccountBuilder;
-import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
 
 import android.app.Activity;
@@ -44,7 +45,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class SetupActivity extends FragmentActivity implements OnClickListener {
+public class SetupActivity extends FragmentActivity implements OnClickListener, LinphoneCoreListener {
 	private static SetupActivity instance;
 	private RelativeLayout back, next, cancel;
 	private SetupFragmentsEnum currentFragment;
@@ -200,32 +201,34 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 	
-	
-	private LinphoneOnRegistrationStateChangedListener registrationListener = new LinphoneOnRegistrationStateChangedListener() {
-		public void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state, String message) {
-			if (state == RegistrationState.RegistrationOk) {
-				LinphoneManager.removeListener(registrationListener);
-				
-				if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-					mHandler .post(new Runnable () {
-						public void run() {
-							launchEchoCancellerCalibration(true);
-						}
-					});
-				}
-			} else if (state == RegistrationState.RegistrationFailed) {
-				LinphoneManager.removeListener(registrationListener);
-				mHandler.post(new Runnable () {
+	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
+		if (state == RegistrationState.RegistrationOk) {
+			lc.removeListener(this);
+			
+			if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+				mHandler .post(new Runnable () {
 					public void run() {
-						Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+						launchEchoCancellerCalibration(true);
 					}
 				});
 			}
+		} else if (state == RegistrationState.RegistrationFailed) {
+			lc.removeListener(this);
+			mHandler.post(new Runnable () {
+				public void run() {
+					Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+				}
+			});
 		}
-	};
+	}
+	
 	public void checkAccount(String username, String password, String domain) {
-		LinphoneManager.removeListener(registrationListener);
-		LinphoneManager.addListener(registrationListener);
+//		LinphoneManager.removeListener(registrationListener);
+//		LinphoneManager.addListener(registrationListener);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 		
 		saveCreatedAccount(username, password, domain);
 	}

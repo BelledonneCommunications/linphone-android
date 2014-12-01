@@ -21,7 +21,6 @@ package org.linphone;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.linphone.LinphoneSimpleListener.LinphoneServiceListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -31,6 +30,9 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
+import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneGlobalStateListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -71,7 +73,8 @@ import android.provider.MediaStore;
  * @author Guillaume Beraudo
  *
  */
-public final class LinphoneService extends Service implements LinphoneServiceListener {
+public final class LinphoneService extends Service implements LinphoneCallStateListener,
+		LinphoneGlobalStateListener, LinphoneRegistrationStateListener {
 	/* Listener needs to be implemented in the Service as it calls
 	 * setLatestEventInfo and startActivity() which needs a context.
 	 */
@@ -156,7 +159,7 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 		UIThreadDispatcher.Dispatch(new Runnable() {
 			@Override
 			public void run() {
-				LinphoneManager.createAndStart(LinphoneService.this, LinphoneService.this);
+				LinphoneManager.createAndStart(LinphoneService.this);
 			}
 		});
 		
@@ -483,6 +486,11 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 
 	@Override
 	public synchronized void onDestroy() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
 		instance = null;
 		LinphoneManager.destroy();
 
@@ -497,18 +505,16 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
 		super.onDestroy();
 	}
-	
-	public void onDisplayStatus(final String message) {
-	}
 
-	public void onGlobalStateChanged(final GlobalState state, final String message) {
+	@Override
+	public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
 		if (state == GlobalState.GlobalOn) {
 			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
 		}
 	}
 
-	public void onRegistrationStateChanged(final LinphoneProxyConfig proxy, final RegistrationState state,
-			final String message) {
+	@Override
+	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
 //		if (instance == null) {
 //			Log.i("Service not ready, discarding registration state change to ",state.toString());
 //			return;
@@ -526,14 +532,6 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 				sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
 			}
 		}
-
-		mHandler.post(new Runnable() {
-			public void run() {
-				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().onRegistrationStateChanged(proxy,state,message);
-				}
-			}
-		});
 	}
 	
 	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {
@@ -558,7 +556,8 @@ public final class LinphoneService extends Service implements LinphoneServiceLis
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 	}
 
-	public void onCallStateChanged(final LinphoneCall call, final State state, final String message) {
+	@Override
+	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 		if (instance == null) {
 			Log.i("Service not ready, discarding call state change to ",state.toString());
 			return;

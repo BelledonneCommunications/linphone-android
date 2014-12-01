@@ -27,24 +27,25 @@ import java.util.Collection;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
-import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnMessageReceivedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneMessageListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.setup.RemoteProvisioningLoginActivity;
 import org.linphone.setup.SetupActivity;
@@ -88,10 +89,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends FragmentActivity implements
-		OnClickListener, ContactPicked, LinphoneOnCallStateChangedListener,
-		LinphoneOnMessageReceivedListener,
-		LinphoneOnRegistrationStateChangedListener {
+public class LinphoneActivity extends FragmentActivity implements OnClickListener, ContactPicked, LinphoneCallStateListener, LinphoneMessageListener, LinphoneRegistrationStateListener {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
@@ -735,11 +733,11 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onMessageReceived(LinphoneAddress from, LinphoneChatMessage message, int id) {
+	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+		LinphoneAddress from = cr.getPeerAddress();
 		ChatFragment chatFragment = ((ChatFragment) messageListenerFragment);
 		if (messageListenerFragment != null && messageListenerFragment.isVisible() && chatFragment.getSipUri().equals(from.asStringUriOnly())) {
-			chatFragment.onMessageReceived(id, from, message);
-			getChatStorage().markMessageAsRead(id);
+			chatFragment.onMessageReceived(from, message);
 		} else if (LinphoneService.isReady()) {
 			displayMissedChats(getChatStorage().getUnreadMessageCount());
 			if (messageListFragment != null && messageListFragment.isVisible()) {
@@ -770,8 +768,7 @@ public class LinphoneActivity extends FragmentActivity implements
 		getChatStorage().updateMessageStatus(to, id, newState);
 	}
 
-	public void onRegistrationStateChanged(LinphoneProxyConfig proxy, RegistrationState state, String message) {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+	public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
 		if (statusFragment != null) {
 			if (lc != null)
 				if(lc.getDefaultProxyConfig() == null)
@@ -833,7 +830,7 @@ public class LinphoneActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCallStateChanged(LinphoneCall call, State state, String message) {
+	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 		if (state == State.IncomingReceived) {
 			startActivity(new Intent(this, IncomingCallActivity.class));
 		} else if (state == State.OutgoingInit) {
@@ -1266,6 +1263,11 @@ public class LinphoneActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
 		getIntent().putExtra("PreviousActivity", 0);
 		super.onPause();
 	}
@@ -1277,10 +1279,11 @@ public class LinphoneActivity extends FragmentActivity implements
 		if (!LinphoneService.isReady())  {
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
-
-		// Remove to avoid duplication of the listeners
-		LinphoneManager.removeListener(this);
-		LinphoneManager.addListener(this);
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 
 		prepareContactsInBackground();
 
@@ -1310,8 +1313,6 @@ public class LinphoneActivity extends FragmentActivity implements
 
 	@Override
 	protected void onDestroy() {
-		LinphoneManager.removeListener(this);
-
 		if (mOrientationHelper != null) {
 			mOrientationHelper.disable();
 			mOrientationHelper = null;
