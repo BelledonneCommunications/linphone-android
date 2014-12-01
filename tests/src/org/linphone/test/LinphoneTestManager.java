@@ -26,7 +26,7 @@ import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
@@ -42,7 +42,7 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.TelephonyManager;
 
-public class LinphoneTestManager implements LinphoneCoreListener {
+public class LinphoneTestManager implements LinphoneListener {
 
 	private static LinphoneTestManager instance;
 	private Context mIContext;
@@ -210,7 +210,7 @@ public class LinphoneTestManager implements LinphoneCoreListener {
 			//escape +
 			lDefaultProxyConfig.setDialEscapePlus(false);
 		} else if (LinphoneService.isReady()) {
-			LinphoneService.instance().onRegistrationStateChanged(lDefaultProxyConfig, RegistrationState.RegistrationNone, null);
+			LinphoneService.instance().registrationState(mLc, lDefaultProxyConfig, RegistrationState.RegistrationNone, null);
 		}
 	}
 
