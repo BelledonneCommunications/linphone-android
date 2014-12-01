@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.util.List;
 
-import org.linphone.LinphoneSimpleListener.LinphoneOnAudioChangedListener.AudioState;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Log;
 
@@ -277,11 +276,11 @@ public class BluetoothManager extends BroadcastReceiver {
         	int state = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
     		if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
     			Log.d("Bluetooth sco state => connected");
-				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
+//				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
     			isScoConnected = true;
         	} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
         		Log.d("Bluetooth sco state => disconnected");
-				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
+//				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
         		isScoConnected = false;
         	} else {
         		Log.d("Bluetooth sco state => " + state);

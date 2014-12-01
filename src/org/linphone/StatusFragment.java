@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.LinphoneSimpleListener.LinphoneOnNotifyReceivedListener;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
@@ -30,6 +29,7 @@ import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreListener.LinphoneNotifyListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
@@ -45,7 +45,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -59,7 +58,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class StatusFragment extends Fragment implements LinphoneOnNotifyReceivedListener {
+public class StatusFragment extends Fragment implements LinphoneNotifyListener {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit, voicemailCount;
@@ -99,13 +98,12 @@ public class StatusFragment extends Fragment implements LinphoneOnNotifyReceived
 		voicemailCount = (TextView) view.findViewById(R.id.voicemailCount);
 		
 		exit = (TextView) view.findViewById(R.id.exit);
-		exit.setOnTouchListener(new View.OnTouchListener() {
+		exit.setOnClickListener(new OnClickListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void onClick(View v) {
 				if (LinphoneActivity.isInstanciated()) {
 					LinphoneActivity.instance().exit();
 				}
-				return true;
 			}
 		});
 		if (getResources().getBoolean(R.bool.exit_button_on_dialer))
@@ -327,7 +325,10 @@ public class StatusFragment extends Fragment implements LinphoneOnNotifyReceived
 	@Override
 	public void onResume() {
 		super.onResume();
-		LinphoneCore lc = LinphoneManager.getLc();
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 
 		LinphoneCall call = lc.getCurrentCall();
 		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
@@ -360,6 +361,11 @@ public class StatusFragment extends Fragment implements LinphoneOnNotifyReceived
 	
 	@Override
 	public void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
 		super.onPause();
 		
 		if (mCallQualityUpdater != null) {
@@ -628,8 +634,7 @@ public class StatusFragment extends Fragment implements LinphoneOnNotifyReceived
 	}
 	
 	@Override
-	public void onNotifyReceived(LinphoneEvent ev, String eventName,
-			LinphoneContent content) {
+	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
 		
 		if(!content.getType().equals("application")) return;
 		if(!content.getSubtype().equals("imple-message-summary")) return;

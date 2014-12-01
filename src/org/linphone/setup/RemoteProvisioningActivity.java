@@ -25,9 +25,10 @@ import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneSimpleListener.LinphoneOnRemoteProvisioningListener;
 import org.linphone.R;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
+import org.linphone.core.LinphoneCoreListener.LinphoneRemoteProvisioningListener;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -44,16 +45,10 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class RemoteProvisioningActivity extends Activity implements LinphoneOnRemoteProvisioningListener {
-	private static RemoteProvisioningActivity instance = null;
-	
+public class RemoteProvisioningActivity extends Activity implements LinphoneRemoteProvisioningListener {
 	private Handler mHandler = new Handler();
 	private String configUriParam = null;
 	private ProgressBar spinner;
-	
-	public static RemoteProvisioningActivity getInstance() {
-		return instance;
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +60,10 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	@Override
 	protected void onResume() {
 		super.onResume();
-		instance = this;
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 		LinphonePreferences.instance().setContext(this);
 		
 		checkIntentForConfigUri(getIntent());
@@ -73,12 +71,15 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneOnRe
 	
 	@Override
 	protected void onPause() {
-		instance = null;
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
 		super.onPause();
 	}
 
 	@Override
-	public void onConfiguringStatus(final RemoteProvisioningState state) {
+	public void configuringStatus(LinphoneCore lc, final RemoteProvisioningState state, String message) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {

@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.Arrays;
 import java.util.List;
 
-import org.linphone.LinphoneSimpleListener.LinphoneOnCallEncryptionChangedListener;
-import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -29,6 +27,8 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListener.LinphoneCallEncryptionStateListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
 import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -70,10 +70,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class InCallActivity extends FragmentActivity implements
-									LinphoneOnCallStateChangedListener,
-									LinphoneOnCallEncryptionChangedListener,
-									OnClickListener {
+public class InCallActivity extends FragmentActivity implements LinphoneCallStateListener, LinphoneCallEncryptionStateListener, OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	
@@ -1085,7 +1082,7 @@ public class InCallActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCallStateChanged(final LinphoneCall call, State state, String message) {
+	public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
 			finish();
 			return;
@@ -1209,7 +1206,7 @@ public class InCallActivity extends FragmentActivity implements
     }
 
 	@Override
-	public void onCallEncryptionChanged(final LinphoneCall call, boolean encrypted, String authenticationToken) {
+	public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
 		if (status != null) {
 			mHandler.post(new Runnable() {
 				@Override
@@ -1223,6 +1220,7 @@ public class InCallActivity extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		instance = this;
+		
 		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			displayVideoCallControlsIfHidden();
 		} else {
@@ -1232,7 +1230,10 @@ public class InCallActivity extends FragmentActivity implements
 		
 		super.onResume();
 		
-		LinphoneManager.addListener(this);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 
 		refreshCallList(getResources());
 		
@@ -1273,6 +1274,11 @@ public class InCallActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
 		super.onPause();
 
 		if (mControlsHandler != null && mControls != null) {
@@ -1283,8 +1289,6 @@ public class InCallActivity extends FragmentActivity implements
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			LinphoneManager.stopProximitySensorForActivity(this);
 		}
-		
-		LinphoneManager.removeListener(this);
 	}
 	
 	@Override

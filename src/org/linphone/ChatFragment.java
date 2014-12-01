@@ -33,13 +33,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.linphone.LinphoneSimpleListener.LinphoneOnComposingReceivedListener;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListener.LinphoneComposingListener;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
@@ -87,7 +87,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.StateListener, LinphoneOnComposingReceivedListener {
+public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.StateListener, LinphoneComposingListener {
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_SAVE_PICTURE = 1;
@@ -520,8 +520,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 		LinphoneService.instance().removeMessageNotification();
 
-		if (LinphoneManager.isInstanciated())
-			LinphoneManager.getInstance().setOnComposingReceivedListener(null);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
 
 		super.onPause();
 		
@@ -535,10 +537,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
 
-		if (LinphoneManager.isInstanciated())
-			LinphoneManager.getInstance().setOnComposingReceivedListener(this);
-
 		super.onResume();
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
@@ -671,7 +675,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	public void onMessageReceived(final int id, LinphoneAddress from, final LinphoneChatMessage message) {
+	public void onMessageReceived(LinphoneAddress from, final LinphoneChatMessage message) {
 		if (from.asStringUriOnly().equals(sipUri))  {
 			if (message.getText() != null) {
 				mHandler.post(new Runnable() {
@@ -1086,7 +1090,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	@Override
-	public void onComposingReceived(LinphoneChatRoom room) {
+	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom room) {
 		if (chatRoom != null && room != null && chatRoom.getPeerAddress().asStringUriOnly().equals(room.getPeerAddress().asStringUriOnly())) {
 			mHandler.post(new Runnable() {
 				@Override
