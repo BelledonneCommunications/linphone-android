@@ -11,16 +11,14 @@ LIBLINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 BELLESIP_VERSION_SCRIPT:=cat submodules/belle-sip/configure.ac | grep "AC_INIT(" | sed -e "s/.*belle-sip\]//" | sed -e "s/].*//" | sed -e "s/.*\[//"
 BELLESIP_VERSION=$(shell $(BELLESIP_VERSION_SCRIPT))
-MOST_RECENT_TARGET=$(shell android list target -c | grep android | tail -n1)
-SECOND_MOST_RECENT_TARGET=$(shell android list target -c | grep android | sed -e '1{$$q;}' -e '$$!{h;d;}' -e x)
-ANDROID_MOST_RECENT_TARGET=$(shell test $(MOST_RECENT_TARGET) = "android-21" && echo $(SECOND_MOST_RECENT_TARGET) || echo $(MOST_RECENT_TARGET))
-# Force android-14 for compilation for now, some externals submodules doesn't support compilation with android-19
+ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -v android-21 | grep -E 'android-[0-9]+' | tail -n1)
 ARM_SYSROOT=${NDK_PATH}/platforms/android-14/arch-arm
 X86_SYSROOT=${NDK_PATH}/platforms/android-14/arch-x86
 SQLITE_VERSION=3071700
 SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
 ENABLE_GPL_THIRD_PARTIES=1
+#override CC variable to disable compiler specific FLAGS in configure using the system compiler instead of the android one
 CC=
 PACKAGE_NAME=$(shell sed -nE 's|<property name="linphone.package.name" value="(.*)" />|\1|p' custom_rules.xml)
 #default options, can be overidden using make OPTION=value .
