@@ -19,7 +19,7 @@ public class AinitTestEnv extends SampleTest {
 	public void testAInitLinphoneCore() {		
 		LinphoneTestManager.createAndStart(aContext, iContext, 1);
 		
-		solo.sleep(2000);
+		solo.sleep(5000);
 		Assert.assertEquals(1, LinphoneTestManager.getLc().getProxyConfigList().length);
 		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc().getProxyConfigList()[0].getState());
 	}

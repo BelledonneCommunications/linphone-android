@@ -187,7 +187,7 @@ public class CallsVideo extends SampleTest {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
-		solo.sleep(500);
+		solo.sleep(1500);
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.error_call_declined)));
 		
 		solo.waitForActivity("LinphoneActivity", 5000);
