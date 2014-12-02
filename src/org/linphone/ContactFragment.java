@@ -19,10 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.io.InputStream;
 import java.util.ArrayList;
+
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
+
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.graphics.BitmapFactory;
@@ -51,7 +54,22 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			if (LinphoneActivity.isInstanciated()) {
-				LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				if (lc != null) {
+					LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+					String to;
+					if (lpc != null) {
+						String address = v.getTag().toString();
+						if (address.contains("@")) {
+							to = lpc.normalizePhoneNumber(address.split("@")[0]);
+						} else {
+							to = lpc.normalizePhoneNumber(address);
+						}
+					} else {
+						to = v.getTag().toString();
+					}
+					LinphoneActivity.instance().setAddresGoToDialerAndCall(to, contact.getName(), contact.getPhotoUri());
+				}
 			}
 		}
 	};

@@ -19,15 +19,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Version;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract.Contacts;
-import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 public final class ContactHelper {
@@ -54,13 +56,7 @@ public final class ContactHelper {
 	}
 
 	public boolean query() {
-		boolean succeeded;
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
-			ContactHelperNew helper = new ContactHelperNew();
-			succeeded = helper.queryNewContactAPI();
-		} else {
-			succeeded = queryOldContactAPI();
-		}
+		boolean succeeded = queryContact();
 		if (succeeded && !TextUtils.isEmpty(displayName)) {
 			address.setDisplayName(displayName);
 		}
@@ -101,149 +97,132 @@ public final class ContactHelper {
     	Cursor cursor = resolver.query(photoUriToTest, new String[]{photoCol}, null, null, null);
     	return testPhotoUriAndCloseCursor(cursor);
     }
+	
+	private void checkPhotosUris(ContentResolver resolver, Cursor c, String idCol, String nameCol) {
+		displayName = c.getString(c.getColumnIndex(nameCol));
+		
+		long id = c.getLong(c.getColumnIndex(idCol));
+		Uri contactUri = ContentUris.withAppendedId(android.provider.ContactsContract.Contacts.CONTENT_URI, id);
+		Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
 
-	// OLD API
-	@SuppressWarnings("deprecation")
-	private final boolean queryOldContactAPI() {
-		String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
-		if (TextUtils.isEmpty(normalizedNumber)) {
-			// non phone username
-			return false;
-		}
-		String[] projection = {android.provider.Contacts.Phones.PERSON_ID, android.provider.Contacts.Phones.DISPLAY_NAME};
-		String selection = android.provider.Contacts.Phones.NUMBER_KEY + "=" + normalizedNumber;
-		Cursor c = resolver.query(android.provider.Contacts.Phones.CONTENT_URI, projection, selection, null, null);
-		if (c == null) return false;
-
-		while (c.moveToNext()) {
-			long id = c.getLong(c.getColumnIndex(android.provider.Contacts.Phones.PERSON_ID));
-			Uri personUri = ContentUris.withAppendedId(android.provider.Contacts.People.CONTENT_URI, id);
-			Uri potentialPictureUri = Uri.withAppendedPath(personUri, android.provider.Contacts.Photos.CONTENT_DIRECTORY);
-			boolean valid = testPhotoUri(resolver, potentialPictureUri, android.provider.Contacts.Photos.DATA);
-			if (valid) {
-				displayName = c.getString(c.getColumnIndex(android.provider.Contacts.Phones.DISPLAY_NAME));
-				foundPhotoUri = personUri; // hack (not returning pictureUri as it crashes when reading from it)
-				c.close();
-				return true;
+		if (photoUri != null) {
+			String[] projection = { android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO };
+	    	Cursor photoCursor = resolver.query(photoUri, projection, null, null, null);
+			
+	    	boolean isPhotoValid = testPhotoUriAndCloseCursor(photoCursor);
+			if (isPhotoValid) {
+				foundPhotoUri = photoUri;
 			}
 		}
-		c.close();
-		return false;
 	}
-
-	// END OLD API
 	
-	// START NEW CONTACT API
-
-	private class ContactHelperNew {
-
-		private final boolean checkPhotosUris(ContentResolver resolver, Cursor c, String idCol, String nameCol) {
-			if (c == null) return false;
-			while (c.moveToNext()) {
-				long id = c.getLong(c.getColumnIndex(idCol));
-				Uri contactUri = ContentUris.withAppendedId(android.provider.ContactsContract.Contacts.CONTENT_URI, id);
-				Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-				if (photoUri == null) {
-					return false;
-				}
-				String[] projection = {android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO};
-		    	Cursor photoCursor = resolver.query(photoUri, projection, null, null, null);
-		    	String maybeDisplayName = c.getString(c.getColumnIndex(nameCol));
-				boolean isPhotoValid = testPhotoUriAndCloseCursor(photoCursor);
-				if (isPhotoValid) {
-					foundPhotoUri = photoUri;
-					displayName = maybeDisplayName;
-					return true;
-				} else if (maybeDisplayName != null) {
-					foundPhotoUri = null;
-					displayName = maybeDisplayName;
-					return true;
+	private boolean checkSIPQueryResult(Cursor c, String columnSip) {
+		boolean contactFound = false;
+		
+		if (c != null) {
+			while (!contactFound && c.moveToNext()) {
+				String contact = c.getString(c.getColumnIndex(columnSip));
+				if (contact.equals(username + "@" + domain) || contact.equals(username)) {
+					contactFound = true;
+					checkPhotosUris(resolver, c, android.provider.ContactsContract.Data.CONTACT_ID, android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+				} else {
+					String normalizedUsername = null;
+					LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+					if (lc != null) {
+						LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+						if (lpc != null) {
+							if (contact.contains("@")) {
+								normalizedUsername = lpc.normalizePhoneNumber(contact.split("@")[0]);
+							} else {
+								normalizedUsername = lpc.normalizePhoneNumber(contact);
+							}
+						}
+					}
+					if (normalizedUsername != null && normalizedUsername.equals(username)) {
+						contactFound = true;
+						checkPhotosUris(resolver, c, android.provider.ContactsContract.Data.CONTACT_ID, android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+					}
 				}
 			}
 			c.close();
-			return false;
 		}
-
-		private final boolean queryNewContactAPI() {
-			String sipUri = username + "@" + domain;
-
-			// Try first using sip field
-			Uri uri = android.provider.ContactsContract.Data.CONTENT_URI;
-			String[] projection = {
-					android.provider.ContactsContract.Data.CONTACT_ID,
-					android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
-
-			// Then using custom SIP field
-			if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-				String selection = new StringBuilder()
-					.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
-					.append(" = ? AND ")
-					.append(android.provider.ContactsContract.Data.MIMETYPE)
-					.append(" = '")
-					.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-					.append("'")
-					.toString();
-				Cursor c = resolver.query(uri, projection, selection, new String[] {sipUri}, null);
-				boolean valid = checkPhotosUris(resolver, c,
-						android.provider.ContactsContract.Data.CONTACT_ID,
-						android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-				c.close();
-				if (valid) return true;
+		
+		return contactFound;
+	}
+	
+	private boolean checkPhoneQueryResult(Cursor c, String columnPhone) {
+		boolean contactFound = false;
+		
+		if (c != null) {
+			while (!contactFound && c.moveToNext()) {
+				String contact = c.getString(c.getColumnIndex(columnPhone));
+				if (contact.equals(username)) {
+					contactFound = true;
+					checkPhotosUris(resolver, c, android.provider.ContactsContract.PhoneLookup._ID, android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME);
+				} else {
+					String normalizedUsername = null;
+					LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+					if (lc != null) {
+						LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+						if (lpc != null) {
+							normalizedUsername = lpc.normalizePhoneNumber(contact);
+						}
+					}
+					if (normalizedUsername != null && normalizedUsername.equals(username)) {
+						contactFound = true;
+						checkPhotosUris(resolver, c, android.provider.ContactsContract.PhoneLookup._ID, android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME);
+					}
+				}
 			}
-			
-			String selection = new StringBuilder()
-				.append(android.provider.ContactsContract.CommonDataKinds.Im.DATA).append(" =  ? AND ")
+			c.close();
+		}
+		
+		return contactFound;
+	}
+	
+	@SuppressLint("InlinedApi")
+	private final boolean queryContact() {
+		boolean contactFound = false;
+		
+		Uri uri = android.provider.ContactsContract.Data.CONTENT_URI;
+		String[] projection = { android.provider.ContactsContract.Data.CONTACT_ID, android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, android.provider.ContactsContract.CommonDataKinds.Im.DATA };
+		
+		String selection = new StringBuilder()
+			.append(android.provider.ContactsContract.Data.MIMETYPE)
+			.append(" = '")
+			.append(android.provider.ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
+			.append("' AND lower(")
+			.append(android.provider.ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
+			.append(") = 'sip'").toString();
+		
+		Cursor c = resolver.query(uri, projection, selection, null, null);
+		contactFound = checkSIPQueryResult(c, android.provider.ContactsContract.CommonDataKinds.Im.DATA);
+		if (contactFound) {
+			return true;
+		}
+		
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			selection = new StringBuilder()
 				.append(android.provider.ContactsContract.Data.MIMETYPE)
 				.append(" = '")
-				.append(android.provider.ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE)
-				.append("' AND lower(")
-				.append(android.provider.ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
-				.append(") = 'sip'").toString();
-			Cursor c = resolver.query(uri, projection, selection, new String[] {sipUri}, null);
-			boolean valid = checkPhotosUris(resolver, c,
-					android.provider.ContactsContract.Data.CONTACT_ID,
-					android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-			c.close();
-			if (valid) return true;
-
-			// Finally using phone number
-			String normalizedNumber = PhoneNumberUtils.getStrippedReversed(username);
-			if (TextUtils.isEmpty(normalizedNumber)) {
-				// non phone username
-				return false;
-			}
-			Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(username));
-			projection = new String[]{
-					android.provider.ContactsContract.PhoneLookup._ID,
-					android.provider.ContactsContract.PhoneLookup.NUMBER,
-					android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME};
-			c = resolver.query(lookupUri, projection, null, null, null);
-			while (c != null && c.moveToNext()) {
-				long id = c.getLong(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup._ID));
-				String enteredNumber = c.getString(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup.NUMBER));
-				if (!normalizedNumber.equals(PhoneNumberUtils.getStrippedReversed(enteredNumber))) {
-					continue;
-				}
-				
-				Uri contactUri = ContentUris.withAppendedId(android.provider.ContactsContract.Contacts.CONTENT_URI, id);
-				Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-//				if (photoUri == null) {
-//					continue;
-//				}
-				String[] photoProj = {android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO};
-				Cursor cursor = resolver.query(photoUri, photoProj, null, null, null);
-				valid = testPhotoUriAndCloseCursor(cursor);
-				displayName = c.getString(c.getColumnIndex(android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME));
-				if (valid) {
-					foundPhotoUri = photoUri;
-				} else {
-					foundPhotoUri = null;
-				}
-				c.close();
+				.append(android.provider.ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
+				.append("'")
+				.toString();
+			c = resolver.query(uri, projection, selection, null, null);
+			contactFound = checkSIPQueryResult(c, android.provider.ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+			if (contactFound) {
 				return true;
 			}
-			c.close();
-			return false;
 		}
+		
+		Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(username));
+		projection = new String[] {
+			android.provider.ContactsContract.PhoneLookup._ID,
+			android.provider.ContactsContract.PhoneLookup.NUMBER,
+			android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME };
+		c = resolver.query(lookupUri, projection, null, null, null);
+		contactFound = checkPhoneQueryResult(c, android.provider.ContactsContract.PhoneLookup.NUMBER);
+		
+		return contactFound;
 	}
 }
