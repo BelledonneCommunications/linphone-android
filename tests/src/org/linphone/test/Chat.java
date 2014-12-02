@@ -103,7 +103,8 @@ public class Chat extends SampleTest {
 	public void testGDeleteConversation() {
 		goToChat();
 		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));		
+		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
+		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
 

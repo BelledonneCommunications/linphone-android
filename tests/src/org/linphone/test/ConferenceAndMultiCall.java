@@ -62,7 +62,6 @@ public class ConferenceAndMultiCall extends SampleTest {
 		
 		Assert.assertEquals(1, LinphoneTestManager.getLc(1).getCallsNb());
 		Assert.assertEquals(1, LinphoneTestManager.getLc(2).getCallsNb());
-		Assert.assertEquals(2, LinphoneManager.getLc().getCallsNb());
 		Assert.assertFalse(LinphoneManager.getLc().isInConference());
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));

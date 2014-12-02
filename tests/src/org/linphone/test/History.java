@@ -56,7 +56,8 @@ public class History extends SampleTest {
 	public void testDDeleteOne() {		
 		goToHistory();
 		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));	
+		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
+		solo.sleep(500);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
 	}
