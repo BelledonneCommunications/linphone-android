@@ -33,7 +33,6 @@ public class Contacts extends SampleTest {
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
 		
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
