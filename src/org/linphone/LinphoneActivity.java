@@ -377,13 +377,23 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 						R.anim.slide_out_right_to_left);
 			}
 		}
-		try {
-			getSupportFragmentManager().popBackStackImmediate(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		} catch (java.lang.IllegalStateException e) {
+		
+		
+		if (newFragmentType == FragmentsAvailable.DIALER 
+				|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
+				|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
+				|| newFragmentType == FragmentsAvailable.SETTINGS 
+				|| newFragmentType == FragmentsAvailable.CONTACTS
+				|| newFragmentType == FragmentsAvailable.CHATLIST
+				|| newFragmentType == FragmentsAvailable.HISTORY) {
+			try {
+				getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			} catch (java.lang.IllegalStateException e) {
 
+			}
+		} else {
+			transaction.addToBackStack(newFragmentType.toString());
 		}
-
-		transaction.addToBackStack(newFragmentType.toString());
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
 		getSupportFragmentManager().executePendingTransactions();
@@ -430,22 +440,25 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 					transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 				}
 			}
-			
-			try {
-				getSupportFragmentManager().popBackStackImmediate(newFragmentType.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			} catch (java.lang.IllegalStateException e) {
-				
-			}
-			
-			transaction.addToBackStack(newFragmentType.toString());
+
 			transaction.replace(R.id.fragmentContainer, newFragment);
 		}
 		transaction.commitAllowingStateLoss();
 		getSupportFragmentManager().executePendingTransactions();
 		
 		currentFragment = newFragmentType;
-		if (currentFragment == FragmentsAvailable.DIALER) {
-			fragmentsHistory.clear();
+		if (newFragmentType == FragmentsAvailable.DIALER 
+				|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
+				|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
+				|| newFragmentType == FragmentsAvailable.SETTINGS 
+				|| newFragmentType == FragmentsAvailable.CONTACTS
+				|| newFragmentType == FragmentsAvailable.CHATLIST
+				|| newFragmentType == FragmentsAvailable.HISTORY) {
+			try {
+				getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			} catch (java.lang.IllegalStateException e) {
+
+			}
 		}
 		fragmentsHistory.add(currentFragment);
 	}
@@ -1373,26 +1386,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				if (isTablet()) {
 					if (currentFragment == FragmentsAvailable.SETTINGS) {
 						updateAnimationsState();
-					}
-					
-					fragmentsHistory.remove(fragmentsHistory.size() - 1);
-					if (fragmentsHistory.size() > 0) {
-						FragmentsAvailable newFragmentType = fragmentsHistory.get(fragmentsHistory.size() - 1);
-						LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-						if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
-							ll.setVisibility(View.VISIBLE);
-						} else {
-							if (newFragmentType == FragmentsAvailable.DIALER 
-									|| newFragmentType == FragmentsAvailable.ABOUT 
-									|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
-									|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
-									|| newFragmentType == FragmentsAvailable.SETTINGS 
-									|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
-								ll.setVisibility(View.GONE);
-							} else {
-								ll.setVisibility(View.INVISIBLE);
-							}
-						}
 					}
 				}
 			}

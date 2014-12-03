@@ -293,8 +293,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			contacts = contactsList;
 			cursor = c;
 
-			margin = LinphoneUtils.pixelsToDpi(getResources(), 10);
-			bitmapUnknown = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			margin = LinphoneUtils.pixelsToDpi(LinphoneActivity.instance().getResources(), 10);
+			bitmapUnknown = BitmapFactory.decodeResource(LinphoneActivity.instance().getResources(), R.drawable.unknown_small);
 		}
 		
 		public int getCount() {
