@@ -116,6 +116,11 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(this);
+			
+			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			if (lpc != null) {
+				registrationState(lc, null, lpc.getState(), null);
+			}
 		}
 
         return view;
@@ -189,7 +194,7 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 	}
 	
 	@Override
-	public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
+	public void registrationState(final LinphoneCore lc, LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
 		if (!isAttached || !LinphoneService.isReady()) {
 			return;
 		}
@@ -204,9 +209,7 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 						statusText.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								if (LinphoneManager.isInstanciated()) {
-									LinphoneManager.getLc().refreshRegisters();
-								}
+								lc.refreshRegisters();
 							}
 						});
 					}
