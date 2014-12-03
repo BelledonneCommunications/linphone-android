@@ -20,13 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -690,9 +689,7 @@ public class LinphonePreferences {
 
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
-		if (getLc().getProxyConfigList().length == 0) {
-			LinphoneActivity.instance().getStatusFragment().registrationStateChanged(RegistrationState.RegistrationNone);
-		} else {
+		if (getLc().getProxyConfigList().length != 0) {
 			resetDefaultProxyConfig();
 			getLc().refreshRegisters();
 		}
