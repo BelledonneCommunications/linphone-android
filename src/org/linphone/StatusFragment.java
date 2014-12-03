@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreListener.LinphoneNotifyListener;
+import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
@@ -58,7 +59,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class StatusFragment extends Fragment implements LinphoneNotifyListener {
+public class StatusFragment extends Fragment implements LinphoneNotifyListener, LinphoneRegistrationStateListener {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit, voicemailCount;
@@ -111,6 +112,11 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener {
 		
 		// We create it once to not delay the first display
 		populateSliderContent();
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 
         return view;
     }
@@ -182,7 +188,8 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener {
 		}
 	}
 	
-	public void registrationStateChanged(final RegistrationState state) {
+	@Override
+	public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
 		if (!isAttached || !LinphoneService.isReady()) {
 			return;
 		}
@@ -325,11 +332,8 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(this);
-		}
-
 		LinphoneCall call = lc.getCurrentCall();
 		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 			if (call != null) {
@@ -361,17 +365,22 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener {
 	
 	@Override
 	public void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.removeListener(this);
-		}
-		
 		super.onPause();
 		
 		if (mCallQualityUpdater != null) {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater = null;
 		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
+		super.onDestroy();
 	}
 	
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {

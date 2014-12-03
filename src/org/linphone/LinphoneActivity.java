@@ -683,11 +683,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
-
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null && lc.getDefaultProxyConfig() != null) {
-			statusFragment.registrationStateChanged(LinphoneManager.getLc().getDefaultProxyConfig().getState());
-		}
 	}
 
 	public void displaySettings() {
@@ -768,21 +763,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		getChatStorage().updateMessageStatus(to, id, newState);
 	}
 
+	@Override
 	public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
-		if (statusFragment != null) {
-			if (lc != null)
-				if(lc.getDefaultProxyConfig() == null)
-					statusFragment.registrationStateChanged(proxy.getState());
-				else 
-					statusFragment.registrationStateChanged(lc.getDefaultProxyConfig().getState());
-			else
-				statusFragment.registrationStateChanged(RegistrationState.RegistrationNone);
-		}
-		
-		if(state.equals(RegistrationState.RegistrationCleared)){ 
-			if(lc != null){
+		if (state.equals(RegistrationState.RegistrationCleared)) { 
+			if (lc != null) {
 				LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
-				if(authInfo != null)
+				if (authInfo != null)
 					lc.removeAuthInfo(authInfo);
 			}
 		}
