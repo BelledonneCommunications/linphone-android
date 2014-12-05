@@ -11,9 +11,13 @@ LIBLINPHONE_VERSION=$(shell cd submodules/linphone && git describe --always)
 LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 BELLESIP_VERSION_SCRIPT:=cat submodules/belle-sip/configure.ac | grep "AC_INIT(" | sed -e "s/.*belle-sip\]//" | sed -e "s/].*//" | sed -e "s/.*\[//"
 BELLESIP_VERSION=$(shell $(BELLESIP_VERSION_SCRIPT))
-ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-9]+' | grep -Ev "android-(21|20)" | tail -n1)
-ARM_SYSROOT=${NDK_PATH}/platforms/android-14/arch-arm
-X86_SYSROOT=${NDK_PATH}/platforms/android-14/arch-x86
+ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-9]+' | tail -n1)
+#We force target 19 because 21 creates binaries incompatible with older versions due to rand() function no longer inline (congrats to Google's developers) 
+NDKBUILD_TARGET=android-19
+#The NDK target used to compile external third parties (ffmpeg, x264)
+EXTERNAL_MAKE_TARGET=14
+ARM_SYSROOT=${NDK_PATH}/platforms/android-$(EXTERNAL_MAKE_TARGET)/arch-arm
+X86_SYSROOT=${NDK_PATH}/platforms/android-$(EXTERNAL_MAKE_TARGET)/arch-x86
 SQLITE_VERSION=3071700
 SQLITE_BASENAME=sqlite-amalgamation-$(SQLITE_VERSION)
 SQLITE_URL=http://www.sqlite.org/2013/$(SQLITE_BASENAME).zip
@@ -252,11 +256,11 @@ copy-openh264-arm: openh264-patch openh264-install-headers
 
 build-openh264-x86: copy-openh264-x86
 	cd $(OPENH264_BUILD_DIR_X86) && \
-	make libraries -j$(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
+	make libraries -j$(NUMCPUS) OS=android ARCH=x86 NDKROOT=$(NDK_PATH) TARGET=$(NDKBUILD_TARGET)
 
 build-openh264-arm: copy-openh264-arm
 	cd $(OPENH264_BUILD_DIR_ARM) && \
-	make libraries -j$(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(ANDROID_MOST_RECENT_TARGET)
+	make libraries -j$(NUMCPUS) OS=android ARCH=arm NDKROOT=$(NDK_PATH) TARGET=$(NDKBUILD_TARGET)
 
 build-openh264: $(BUILD_OPENH264_DEPS)
 
@@ -429,11 +433,11 @@ MEDIASTREAMER2_OPTIONS = $(GENERATE_OPTIONS) BUILD_MEDIASTREAMER2_SDK=1
 
 
 generate-libs: prepare-sources javah
-	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
+	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(NDKBUILD_TARGET)
 
 generate-mediastreamer2-libs: prepare-sources
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
-	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
+	$(NDK_PATH)/ndk-build $(MEDIASTREAMER2_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(NDKBUILD_TARGET)
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
@@ -444,7 +448,7 @@ update-mediastreamer2-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 
 liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
-	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(ANDROID_MOST_RECENT_TARGET)
+	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(NDKBUILD_TARGET)
 	$(MAKE) -C liblinphone_tester
 
 javah:
