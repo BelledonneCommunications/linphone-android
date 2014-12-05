@@ -479,6 +479,12 @@ release: update-project
 run-linphone:
 	ant run
 
+run-liblinphone-tests: liblinphone_tester
+	cd liblinphone_tester && \
+	ant debug && \
+	ant installd && \
+	ant test
+
 run-basic-tests:
 	ant partial-clean
 	$(MAKE) -C tests run-basic-tests
