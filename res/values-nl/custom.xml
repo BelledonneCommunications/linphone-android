@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="history_date_format">d MMM</string>
+  <string name="history_detail_date_format">EEEE MMM d HH:mm</string>
+  <string name="messages_date_format">HH:mm d MMM</string>
+  <string name="today_date_format">HH:mm</string>
+  <string name="picture_name_format">linphone-mms-%s.jpg</string>
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone-service</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">Opstarten</string>
+  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+  <string name="setup_username_hint">gebruikersnaam</string>
+  <string name="tunnel_host"></string>
+</resources>

@@ -55,10 +55,15 @@
   <!--<string name="conf_simple_no_current_call">No active call</string>-->
   <string name="show_send_dtmfs_button">Dialpad</string>
   <string name="conf_conference">Conférence</string>
+  <string name="in_conf">Conférence en cours</string>
   <string name="in_conf_leave">Sortir</string>
+  <string name="out_conf">Conférence terminée</string>
   <string name="out_conf_enter">Rentrer</string>
   <string name="pref_audio_hacks_title">Bidouilles audio</string>
+  <string name="pref_audio_use_specific_mode_title">Utiliser la bidouille de mode spécifique</string>
   <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (défaut), 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">Utiliser la bidouille de l\'API de routage</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Utiliser la bidouille d\'audio pour Galaxy S</string>
   <string name="pref_audio_soft_volume_title">Utiliser volume logiciel</string>
   <string name="pref_ipv6_title">Utiliser ipv6 au lieu de ipv4</string>
   <string name="error_while_accepting_pending_call">Erreur pendant l\'acceptation de l\'appel</string>
@@ -125,6 +130,14 @@
   <string name="pref_adaptive_rate_control">Contrôle qualité adaptatif</string>
   <string name="pref_adaptive_rate_algorithm">Algorithme de contrôle adaptatif</string>
   <string name="pref_codec_bitrate_limit">Limite de débit du codec</string>
+  <string-array name="limit_bitrate_entries">
+    <item>10 kbits/s</item>
+    <item>15 kbits/s</item>
+    <item>20 kbits/s</item>
+    <item>36 kbits/s</item>
+    <item>64 kbits/s</item>
+    <item>128 kbits/s</item>
+  </string-array>
   <string name="pref_debug">Activer les traces de débogage</string>
   <string name="about_report_issue">Reporter un problème</string>
   <string name="about_bugreport_email_text">Décrivez le problème ici</string>
@@ -338,6 +351,7 @@
   <string name="pref_user_name_title">Nom d\'utilisateur</string>
   <string name="pref_expire_title">Expiration</string>
   <string name="pref_avpf">AVPF</string>
+  <string name="pref_avpf_rr_interval">Intervalle AVPF RTCP régulier en secondes (entre 1 et 5) </string>
   <string name="pref_rfc2833_dtmf">Envoyer les DTMFs RFC2833</string>
   <string name="pref_sipinfo_dtmf">Envoyer les DTMFs en SIP INFO</string>
   <string name="pref_voice_mail">Adresse messagerie vocale</string>
