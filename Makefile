@@ -441,13 +441,14 @@ generate-mediastreamer2-libs: prepare-sources
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
+	$(SDK_PATH)/android update test-project --path tests --target $(ANDROID_MOST_RECENT_TARGET) -m .
 	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
 update-mediastreamer2-project:
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 
-liblinphone_tester: prepare-sources prepare-cunit prepare-liblinphone_tester javah
+liblinphone_tester: update-project prepare-sources prepare-cunit prepare-liblinphone_tester javah
 	$(NDK_PATH)/ndk-build -C liblinphone_tester $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(NDKBUILD_TARGET)
 	$(MAKE) -C liblinphone_tester
 
@@ -485,11 +486,11 @@ run-liblinphone-tests: liblinphone_tester
 	ant installd && \
 	ant test
 
-run-basic-tests:
+run-basic-tests: update-project
 	ant partial-clean
 	$(MAKE) -C tests run-basic-tests
 
-run-all-tests:
+run-all-tests: update-project
 	ant partial-clean
 	$(MAKE) -C tests run-all-tests
 
