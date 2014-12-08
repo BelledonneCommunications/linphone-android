@@ -441,7 +441,7 @@ generate-mediastreamer2-libs: prepare-sources
 
 update-project:
 	$(SDK_PATH)/android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
-	$(SDK_PATH)/android update test-project --path tests --target $(ANDROID_MOST_RECENT_TARGET) -m .
+	$(SDK_PATH)/android update test-project --path tests -m .
 	$(SDK_PATH)/android update project --path liblinphone_tester --target $(ANDROID_MOST_RECENT_TARGET)
 
 update-mediastreamer2-project:
