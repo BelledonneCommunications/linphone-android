@@ -349,14 +349,23 @@ public class LinphonePreferences {
 			LinphoneAddress proxyAddr;
 			try {
 				proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getProxy());
-
+                int port = 0;
 				if (transport.equals(getString(R.string.pref_transport_udp_key))) {
 					proxyAddr.setTransport(TransportType.LinphoneTransportUdp);
 				} else if (transport.equals(getString(R.string.pref_transport_tcp_key))) {
 					proxyAddr.setTransport(TransportType.LinphoneTransportTcp);
 				} else if (transport.equals(getString(R.string.pref_transport_tls_key))) {
 					proxyAddr.setTransport(TransportType.LinphoneTransportTls);
+                    port = 5223;
 				}
+
+                /* 3G mobile firewall might block random TLS port, so we force use of 5223.
+                 * However we must NOT use this port when changing to TCP/UDP because otherwise
+                  * REGISTER (and everything actually) will fail...
+                  * */
+                if ("sip.linphone.org".equals(proxyConfig.getDomain())) {
+                    proxyAddr.setPort(port);
+                }
 
 				LinphoneProxyConfig prxCfg = getProxyConfig(n);
 				prxCfg.edit();
