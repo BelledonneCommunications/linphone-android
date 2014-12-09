@@ -601,9 +601,11 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
 	}
 	
 	private void pauseOrResumeCall() {
-		LinphoneCore lc = LinphoneManager.getLc();
-		LinphoneCall call = lc.getCurrentCall();
-		pauseOrResumeCall(call);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null && lc.getCallsNb() >= 1) {
+			LinphoneCall call = lc.getCalls()[0];
+			pauseOrResumeCall(call);
+		}
 	}
 	
 	public void pauseOrResumeCall(LinphoneCall call) {
@@ -622,19 +624,8 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
 				}
 				pause.setBackgroundResource(R.drawable.pause_on);
 			}
-		} else {
-			List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(lc, Arrays.asList(State.Paused));
-			if (pausedCalls.size() == 1) {
-				LinphoneCall callToResume = pausedCalls.get(0);
-				if ((call != null && callToResume.equals(call)) || call == null) {
-					lc.resumeCall(callToResume);
-					if (isVideoCallPaused) {
-						isVideoCallPaused = false;
-						showVideoView();
-					}
-					pause.setBackgroundResource(R.drawable.pause_off);
-				}
-			} else if (call != null) {
+		} else if (call != null) {
+			if (call.getState() == State.Paused) {
 				lc.resumeCall(call);
 				if (isVideoCallPaused) {
 					isVideoCallPaused = false;
