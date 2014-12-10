@@ -34,3 +34,4 @@ submodules/externals/build/cunit/CUnit/
 .idea
 build
 linphone-android.iml
+junit-report.xml
