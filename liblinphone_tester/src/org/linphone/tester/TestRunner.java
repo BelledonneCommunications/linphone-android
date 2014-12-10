@@ -1,13 +1,12 @@
 package org.linphone.tester;
 
-import java.io.IOException;
-
 import junit.framework.TestSuite;
 import android.os.Bundle;
-import android.test.InstrumentationTestRunner;
+
+import com.zutubi.android.junitreport.JUnitReportTestRunner;
 
 
-public class TestRunner extends InstrumentationTestRunner {
+public class TestRunner extends JUnitReportTestRunner {
 	String mSuite = null;
 	String mTest = null;
 	

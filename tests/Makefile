@@ -8,7 +8,7 @@ run-basic-tests:
 	ant debug
 	ant installd
 	adb shell am instrument -w -e size small org.linphone.test/com.zutubi.android.junitreport.JUnitReportTestRunner
-	adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > junit-report.xml
+	adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > linphone-junit-report.xml
 
 run-all-tests:
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
@@ -17,4 +17,4 @@ run-all-tests:
 	ant debug     
 	ant installd
 	adb shell am instrument -w -e size large org.linphone.test/com.zutubi.android.junitreport.JUnitReportTestRunner
-	adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > junit-report.xml
+	adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > linphone-junit-report.xml
