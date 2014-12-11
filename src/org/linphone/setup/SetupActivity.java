@@ -341,6 +341,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 		}
 		
 		try {
+			builder.setEnabled(false); //We'll enable it after the echo calibration
 			builder.saveNewAccount();
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
@@ -369,6 +370,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	}
 
 	public void isEchoCalibrationFinished() {
+		mPrefs.setAccountEnabled(0, true);
 		success();
 	}
 	
