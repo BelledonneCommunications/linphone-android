@@ -358,13 +358,6 @@ public class LinphoneTestManager implements LinphoneListener {
 	}
 
 	@Override
-	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
-			int delay_ms, Object data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneAddress from, byte[] event) {
 		// TODO Auto-generated method stub
