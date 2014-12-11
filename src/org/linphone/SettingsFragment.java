@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
@@ -30,6 +29,7 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListener.LinphoneEchoCalibrationListener;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
@@ -54,7 +54,7 @@ import android.preference.PreferenceScreen;
 /**
  * @author Sylvain Berfini
  */
-public class SettingsFragment extends PreferencesListFragment implements EcCalibrationListener {
+public class SettingsFragment extends PreferencesListFragment implements LinphoneEchoCalibrationListener {
 	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
@@ -926,7 +926,9 @@ public class SettingsFragment extends PreferencesListFragment implements EcCalib
 	}
 
 	@Override
-	public void onEcCalibrationStatus(final EcCalibratorStatus status, final int delayMs) {
+	public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
+		LinphoneManager.getInstance().routeAudioToReceiver();
+		
 		mHandler.post(new Runnable() {
 			public void run() {
 				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
