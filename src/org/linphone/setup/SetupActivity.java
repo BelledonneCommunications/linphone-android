@@ -22,8 +22,8 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress.TransportType;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneProxyConfig;
@@ -32,7 +32,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -53,7 +52,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
 	private boolean accountCreated = false;
-	private Handler mHandler = new Handler();
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -223,20 +221,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	
 	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
 		if (state == RegistrationState.RegistrationOk) {
-			
 			if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-				mHandler .post(new Runnable () {
-					public void run() {
-						launchEchoCancellerCalibration(true);
-					}
-				});
+				launchEchoCancellerCalibration(true);
 			}
 		} else if (state == RegistrationState.RegistrationFailed) {
-			mHandler.post(new Runnable () {
-				public void run() {
-					Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
-				}
-			});
+			Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
 		}
 	}
 	

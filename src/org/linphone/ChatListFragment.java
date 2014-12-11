@@ -37,7 +37,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -60,8 +59,6 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
-	private Handler mHandler = new Handler();
-	
 	private LayoutInflater mInflater;
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
@@ -112,15 +109,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	public void refresh() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				mConversations = LinphoneActivity.instance().getChatList();
-				mDrafts = LinphoneActivity.instance().getDraftChatList();
-				mConversations.removeAll(mDrafts);
-				hideAndDisplayMessageIfNoChat();
-			}
-		});
+		mConversations = LinphoneActivity.instance().getChatList();
+		mDrafts = LinphoneActivity.instance().getDraftChatList();
+		mConversations.removeAll(mDrafts);
+		hideAndDisplayMessageIfNoChat();
 	}
 	
 	private boolean isVersionUsingNewChatStorage() {

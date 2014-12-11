@@ -28,7 +28,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,8 +51,6 @@ import android.widget.TextView;
  */
 @SuppressLint("DefaultLocale")
 public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
-	private Handler mHandler = new Handler();
-	
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView allContacts, linphoneContacts, newContact, noSipContact, noContact;
@@ -278,17 +275,12 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	public void invalidate() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (searchField != null && searchField.getText().toString().length() > 0) {
-					searchContacts(searchField.getText().toString());
-				} else {
-					changeContactsAdapter();
-				}
-				contactsList.setSelectionFromTop(lastKnownPosition, 0);
-			}
-		});
+		if (searchField != null && searchField.getText().toString().length() > 0) {
+			searchContacts(searchField.getText().toString());
+		} else {
+			changeContactsAdapter();
+		}
+		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
