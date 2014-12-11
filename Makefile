@@ -486,11 +486,11 @@ run-liblinphone-tests: liblinphone_tester
 	ant installd && \
 	ant test
 
-run-basic-tests: update-project generate-apk
+run-basic-tests: update-project
 	ant partial-clean
 	$(MAKE) -C tests run-basic-tests
 
-run-all-tests: update-project generate-apk
+run-all-tests: update-project
 	ant partial-clean
 	$(MAKE) -C tests run-all-tests
 
