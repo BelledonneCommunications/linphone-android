@@ -83,17 +83,12 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneRemo
 
 	@Override
 	public void configuringStatus(LinphoneCore lc, final RemoteProvisioningState state, String message) {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (spinner != null) spinner.setVisibility(View.GONE);
-				if (state == RemoteProvisioningState.ConfiguringSuccessful) {
-					goToLinphoneActivity();
-				} else if (state == RemoteProvisioningState.ConfiguringFailed) {
-					Toast.makeText(RemoteProvisioningActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
-				}
-			}
-		});
+		if (spinner != null) spinner.setVisibility(View.GONE);
+		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
+			goToLinphoneActivity();
+		} else if (state == RemoteProvisioningState.ConfiguringFailed) {
+			Toast.makeText(RemoteProvisioningActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	@Override

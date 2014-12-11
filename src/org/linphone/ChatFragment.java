@@ -110,11 +110,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private TextView sendImage, sendMessage, contactName, remoteComposing;
 	private AvatarWithShadow contactPicture;
 	private RelativeLayout uploadLayout, textLayout;
-	private Handler mHandler = new Handler();
 	private List<BubbleChat> lastSentMessagesBubbles;
 	private HashMap<Integer, String> latestImageMessages;
 	private boolean useLinphoneMessageStorage;
 	private ListView messagesList;
+	private Handler mHandler = new Handler();
 
 	private ProgressBar progressBar;
 	private int bytesSent;
@@ -678,21 +678,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void onMessageReceived(LinphoneAddress from, final LinphoneChatMessage message) {
 		if (from.asStringUriOnly().equals(sipUri))  {
 			if (message.getText() != null) {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						adapter.refreshHistory();
-						adapter.notifyDataSetChanged();
-					}
-				});
+				adapter.refreshHistory();
+				adapter.notifyDataSetChanged();
 			} else if (message.getExternalBodyUrl() != null) {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						adapter.refreshHistory();
-						adapter.notifyDataSetChanged();
-					}
-				});
+				adapter.refreshHistory();
+				adapter.notifyDataSetChanged();
 			}
 			scrollToEnd();
 		}
@@ -704,38 +694,32 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		final String finalImage = finalMessage.getExternalBodyUrl();
 		final State finalState=state;
 		if (LinphoneActivity.isInstanciated() && state != State.InProgress) {
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					if (finalMessage != null && !finalMessage.equals("")) {
-						LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage.getText(), finalState.toInt());
-					} else if (finalImage != null && !finalImage.equals("")) {
-						if (latestImageMessages != null && latestImageMessages.containsValue(finalImage)) {
-							int id = -1;
-							for (int key : latestImageMessages.keySet()) {
-								String object = latestImageMessages.get(key);
-								if (object.equals(finalImage)) {
-									id = key;
-									break;
-								}
-							}
-							if (id != -1) {
-								LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, finalState.toInt());
-							}
+			if (finalMessage != null && !finalMessage.equals("")) {
+				LinphoneActivity.instance().onMessageStateChanged(sipUri, finalMessage.getText(), finalState.toInt());
+			} else if (finalImage != null && !finalImage.equals("")) {
+				if (latestImageMessages != null && latestImageMessages.containsValue(finalImage)) {
+					int id = -1;
+					for (int key : latestImageMessages.keySet()) {
+						String object = latestImageMessages.get(key);
+						if (object.equals(finalImage)) {
+							id = key;
+							break;
 						}
 					}
-
-					if (lastSentMessagesBubbles != null && lastSentMessagesBubbles.size() > 0) {
-						for (BubbleChat bubble : lastSentMessagesBubbles) {
-							if (bubble.getNativeMessageObject() == finalMessage) {
-								bubble.updateStatusView(finalState);
-							}
-						}
+					if (id != -1) {
+						LinphoneActivity.instance().onImageMessageStateChanged(sipUri, id, finalState.toInt());
 					}
-					adapter.notifyDataSetChanged();
 				}
-				
-			});
+			}
+
+			if (lastSentMessagesBubbles != null && lastSentMessagesBubbles.size() > 0) {
+				for (BubbleChat bubble : lastSentMessagesBubbles) {
+					if (bubble.getNativeMessageObject() == finalMessage) {
+						bubble.updateStatusView(finalState);
+					}
+				}
+			}
+			adapter.notifyDataSetChanged();
 		}
 	}
 
@@ -1092,12 +1076,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom room) {
 		if (chatRoom != null && room != null && chatRoom.getPeerAddress().asStringUriOnly().equals(room.getPeerAddress().asStringUriOnly())) {
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
-				}
-			});
+			remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 		}
 	}
 }

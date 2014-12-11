@@ -138,7 +138,7 @@ public class LinphoneManager implements LinphoneListener {
 	public String wizardLoginViewDomain = null;
 
 	protected LinphoneManager(final Context c) {
-		sExited=false;
+		sExited = false;
 		mServiceContext = c;
 		basePath = c.getFilesDir().getAbsolutePath();
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
@@ -448,7 +448,12 @@ public class LinphoneManager implements LinphoneListener {
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 			mLc.addListener((LinphoneCoreListener) c);
-			//initLiblinphone();
+			
+			try {
+				initLiblinphone();
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
+			}
 
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -725,21 +730,6 @@ public class LinphoneManager implements LinphoneListener {
 
 	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
 		Log.i("new state [",state,"]");
-
-		if (state == GlobalState.GlobalOn) {
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					synchronized (this) {
-						try {
-							initLiblinphone();
-						} catch (LinphoneCoreException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			});
-		}
 	}
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {

@@ -30,7 +30,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -53,7 +52,6 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryFragment extends Fragment implements OnClickListener, OnChildClickListener, OnGroupClickListener {
-	private Handler mHandler = new Handler();
 	private ExpandableListView historyList;
 	private LayoutInflater mInflater;
 	private TextView allCalls, missedCalls, edit, ok, deleteAll, noCallHistory, noMissedCallHistory;
@@ -164,16 +162,11 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	}
 	
 	private void expandAllGroups() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				for (int groupToExpand = 0; groupToExpand < historyList.getExpandableListAdapter().getGroupCount(); groupToExpand++) {
-					if (!historyList.isGroupExpanded(groupToExpand)) {
-						historyList.expandGroup(groupToExpand);
-					}
-				}
+		for (int groupToExpand = 0; groupToExpand < historyList.getExpandableListAdapter().getGroupCount(); groupToExpand++) {
+			if (!historyList.isGroupExpanded(groupToExpand)) {
+				historyList.expandGroup(groupToExpand);
 			}
-		});
+		}
 	}
 	
 	private String getCorrespondentDisplayName(LinphoneCallLog log) {

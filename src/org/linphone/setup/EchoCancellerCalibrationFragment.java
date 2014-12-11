@@ -59,7 +59,6 @@ public class EchoCancellerCalibrationFragment extends Fragment implements Linpho
 		} catch (LinphoneCoreException e) {
 			Log.e(e, "Unable to calibrate EC");
 		}
-
 		return view;
 	}
 

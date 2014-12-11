@@ -156,12 +156,7 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 		}
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true);
 
-		UIThreadDispatcher.Dispatch(new Runnable() {
-			@Override
-			public void run() {
-				LinphoneManager.createAndStart(LinphoneService.this);
-			}
-		});
+		LinphoneManager.createAndStart(LinphoneService.this);
 		
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
@@ -419,6 +414,7 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void dumpDeviceInformation() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");

@@ -929,26 +929,22 @@ public class SettingsFragment extends PreferencesListFragment implements Linphon
 	public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
 		LinphoneManager.getInstance().routeAudioToReceiver();
 		
-		mHandler.post(new Runnable() {
-			public void run() {
-				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
-				Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
+		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
+		Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 
-				if (status == EcCalibratorStatus.DoneNoEcho) {
-					echoCancellerCalibration.setSummary(R.string.no_echo);
-					echoCancellation.setChecked(false);
-					LinphonePreferences.instance().setEchoCancellation(false);
-				} else if (status == EcCalibratorStatus.Done) {
-					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
-					echoCancellation.setChecked(true);
-					LinphonePreferences.instance().setEchoCancellation(true);
-				} else if (status == EcCalibratorStatus.Failed) {
-					echoCancellerCalibration.setSummary(R.string.failed);
-					echoCancellation.setChecked(true);
-					LinphonePreferences.instance().setEchoCancellation(true);
-				}
-			}
-		});
+		if (status == EcCalibratorStatus.DoneNoEcho) {
+			echoCancellerCalibration.setSummary(R.string.no_echo);
+			echoCancellation.setChecked(false);
+			LinphonePreferences.instance().setEchoCancellation(false);
+		} else if (status == EcCalibratorStatus.Done) {
+			echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+			echoCancellation.setChecked(true);
+			LinphonePreferences.instance().setEchoCancellation(true);
+		} else if (status == EcCalibratorStatus.Failed) {
+			echoCancellerCalibration.setSummary(R.string.failed);
+			echoCancellation.setChecked(true);
+			LinphonePreferences.instance().setEchoCancellation(true);
+		}
 	}
 
 	@Override

@@ -61,7 +61,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment.SavedState;
@@ -108,7 +107,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private Fragment dialerFragment, messageListenerFragment, messageListFragment, friendStatusListenerFragment;
 	private SavedState dialerSavedState;
 	private boolean preferLinphoneContacts = false, isAnimationDisabled = false, isContactPresenceDisabled = true;
-	private Handler mHandler = new Handler();
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
 	private OrientationEventListener mOrientationHelper;
@@ -775,44 +773,34 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	private void displayMissedCalls(final int missedCallsCount) {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (missedCallsCount > 0) {
-					missedCalls.setText(missedCallsCount + "");
-					missedCalls.setVisibility(View.VISIBLE);
-					if (!isAnimationDisabled) {
-						missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
-					}
-				} else {
-					missedCalls.clearAnimation();
-					missedCalls.setVisibility(View.GONE);
-				}
+		if (missedCallsCount > 0) {
+			missedCalls.setText(missedCallsCount + "");
+			missedCalls.setVisibility(View.VISIBLE);
+			if (!isAnimationDisabled) {
+				missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
 			}
-		});
+		} else {
+			missedCalls.clearAnimation();
+			missedCalls.setVisibility(View.GONE);
+		}
 	}
 
 	private void displayMissedChats(final int missedChatCount) {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (missedChatCount > 0) {
-					missedChats.setText(missedChatCount + "");
-					if (missedChatCount > 99) {
-						missedChats.setTextSize(12);
-					} else {
-						missedChats.setTextSize(20);
-					}
-					missedChats.setVisibility(View.VISIBLE);
-					if (!isAnimationDisabled) {
-						missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
-					}
-				} else {
-					missedChats.clearAnimation();
-					missedChats.setVisibility(View.GONE);
-				}
+		if (missedChatCount > 0) {
+			missedChats.setText(missedChatCount + "");
+			if (missedChatCount > 99) {
+				missedChats.setTextSize(12);
+			} else {
+				missedChats.setTextSize(20);
 			}
-		});
+			missedChats.setVisibility(View.VISIBLE);
+			if (!isAnimationDisabled) {
+				missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
+			}
+		} else {
+			missedChats.clearAnimation();
+			missedChats.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -842,22 +830,17 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	public void displayCustomToast(final String message, final int duration) {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				LayoutInflater inflater = getLayoutInflater();
-				View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
 
-				TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
-				toastText.setText(message);
+		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+		toastText.setText(message);
 
-				final Toast toast = new Toast(getApplicationContext());
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.setDuration(duration);
-				toast.setView(layout);
-				toast.show();
-			}
-		});
+		final Toast toast = new Toast(getApplicationContext());
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.setDuration(duration);
+		toast.setView(layout);
+		toast.show();
 	}
 
 	@Override
@@ -1153,25 +1136,20 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (dialerFragment != null) {
-					((DialerFragment) dialerFragment).resetLayout(false);
-				}
+		if (dialerFragment != null) {
+			((DialerFragment) dialerFragment).resetLayout(false);
+		}
 
-				if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
-					LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-					if (call.getState() == LinphoneCall.State.IncomingReceived) {
-						startActivity(new Intent(LinphoneActivity.this, IncomingCallActivity.class));
-					} else if (call.getCurrentParamsCopy().getVideoEnabled()) {
-						startVideoActivity(call);
-					} else {
-						startIncallActivity(call);
-					}
-				}
+		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
+			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+			if (call.getState() == LinphoneCall.State.IncomingReceived) {
+				startActivity(new Intent(LinphoneActivity.this, IncomingCallActivity.class));
+			} else if (call.getCurrentParamsCopy().getVideoEnabled()) {
+				startVideoActivity(call);
+			} else {
+				startIncallActivity(call);
 			}
-		});
+		}
 	}
 
 	public FragmentsAvailable getCurrentFragment() {
