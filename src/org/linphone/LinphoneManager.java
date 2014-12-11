@@ -901,14 +901,7 @@ public class LinphoneManager implements LinphoneListener {
 			boolean encrypted, String authenticationToken) {
 	}
 
-	public void ecCalibrationStatus(final LinphoneCore lc,final EcCalibratorStatus status, final int delayMs,
-			final Object data) {
-		routeAudioToReceiver();
-		EcCalibrationListener listener = (EcCalibrationListener) data;
-		listener.onEcCalibrationStatus(status, delayMs);
-	}
-
-	public void startEcCalibration(EcCalibrationListener l) throws LinphoneCoreException {
+	public void startEcCalibration(LinphoneEchoCalibrationListener l) throws LinphoneCoreException {
 		routeAudioToSpeaker();
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
@@ -917,14 +910,6 @@ public class LinphoneManager implements LinphoneListener {
 
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
 	}
-
-
-
-
-
-
-
-
 
 	private boolean isRinging;
 	private boolean disableRinging = false;

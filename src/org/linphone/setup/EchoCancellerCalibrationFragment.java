@@ -22,11 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.net.URL;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneManager.EcCalibrationListener;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreListener.LinphoneEchoCalibrationListener;
 import org.linphone.mediastream.Log;
 
 import android.os.Build;
@@ -44,7 +45,7 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 /**
  * @author Ghislain MARY
  */
-public class EchoCancellerCalibrationFragment extends Fragment implements EcCalibrationListener {
+public class EchoCancellerCalibrationFragment extends Fragment implements LinphoneEchoCalibrationListener {
 	private Handler mHandler = new Handler();
 	private boolean mSendEcCalibrationResult = false;
 
@@ -63,14 +64,16 @@ public class EchoCancellerCalibrationFragment extends Fragment implements EcCali
 	}
 
 	@Override
-	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
+	public void ecCalibrationStatus(LinphoneCore lc,LinphoneCore.EcCalibratorStatus status, int delay_ms, Object data) {
+		LinphoneManager.getInstance().routeAudioToReceiver();
+		
 		if (status == EcCalibratorStatus.DoneNoEcho) {
 			LinphonePreferences.instance().setEchoCancellation(false);
 		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
 			LinphonePreferences.instance().setEchoCancellation(true);
 		}
 		if (mSendEcCalibrationResult) {
-			sendEcCalibrationResult(status, delayMs);
+			sendEcCalibrationResult(status, delay_ms);
 		} else {
 			SetupActivity.instance().isEchoCalibrationFinished();
 		}
