@@ -481,7 +481,7 @@ run-linphone:
 	ant run
 
 run-liblinphone-tests: liblinphone_tester
-	$(MAKE) -c liblinphone_tester run-all-tests
+	$(MAKE) -C liblinphone_tester run-all-tests
 
 run-basic-tests: update-project
 	ant partial-clean
