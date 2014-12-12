@@ -481,10 +481,7 @@ run-linphone:
 	ant run
 
 run-liblinphone-tests: liblinphone_tester
-	cd liblinphone_tester && \
-	ant debug && \
-	ant installd && \
-	ant test
+	$(MAKE) -c liblinphone_tester run-all-tests
 
 run-basic-tests: update-project
 	ant partial-clean
