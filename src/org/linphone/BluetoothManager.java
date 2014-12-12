@@ -67,20 +67,14 @@ public class BluetoothManager extends BroadcastReceiver {
 	
 	public BluetoothManager() {
 		isBluetoothConnected = false;
-		if (LinphoneService.isReady()) {
-			mContext = LinphoneService.instance().getApplicationContext();
-			mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
-		} else {
+		if (!ensureInit()) {
 			Log.w("BluetoothManager tried to init but LinphoneService not ready yet...");
 		}
 		instance = this;
 	}
 	
 	public void initBluetooth() {
-		if (mContext == null && LinphoneService.isReady()) {
-			mContext = LinphoneService.instance().getApplicationContext();
-			mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
-		} else if (mContext == null) {
+		if (!ensureInit()) {
 			Log.w("BluetoothManager tried to init bluetooth but LinphoneService not ready yet...");
 			return;
 		}
@@ -136,12 +130,27 @@ public class BluetoothManager extends BroadcastReceiver {
 		}
 	}
 	
-	public boolean routeAudioToBluetooth() {
+	private boolean ensureInit() {
 		if (mBluetoothAdapter == null) {
 			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		}
+		if (mContext == null) {
+			if (LinphoneService.isReady()) {
+				mContext = LinphoneService.instance().getApplicationContext();
+			} else {
+				return false;
+			}
+		}
+		if (mContext != null && mAudioManager == null) {
+			mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
+		}
+		return true;
+	}
+	
+	public boolean routeAudioToBluetooth() {
+		ensureInit();
 		
-		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager != null && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			if (isBluetoothHeadsetAvailable()) {
 				if (mAudioManager != null && !mAudioManager.isBluetoothScoOn()) {
 					Log.d("Bluetooth sco off, let's start it");
@@ -190,11 +199,9 @@ public class BluetoothManager extends BroadcastReceiver {
 	}
 	
 	public boolean isBluetoothHeadsetAvailable() {
-		if (mBluetoothAdapter == null) {
-			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		}
+		ensureInit();
 		
-		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager.isBluetoothScoAvailableOffCall()) {
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager != null && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			boolean isHeadsetConnected = false;
 			if (mBluetoothHeadset != null) {
 				List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();
