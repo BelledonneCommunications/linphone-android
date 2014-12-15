@@ -190,6 +190,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
 		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
 		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+			mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, false); //We'll enable it after the echo calibration
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
@@ -341,7 +342,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 		}
 		
 		try {
-			builder.setEnabled(false); //We'll enable it after the echo calibration
 			builder.saveNewAccount();
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
@@ -370,7 +370,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener, 
 	}
 
 	public void isEchoCalibrationFinished() {
-		mPrefs.setAccountEnabled(0, true);
+		mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, true);
 		success();
 	}
 	
