@@ -37,6 +37,10 @@
 			<arg value="-c" />
 			<arg value="kill `cat adb.pid`" />
 		</exec>
+		<exec executable="bash">
+			<arg value="-c"/>
+			<arg value="adb shell run-as org.linphone.tester cat /data/data/org.linphone.tester/files/junit-report.xml > liblinphone-junit-report.xml"/>
+		</exec>
 		<zip destfile="${archive.name}.zip">
 			<fileset dir="." includes="${archive.name}"/>
 		</zip>
