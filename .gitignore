@@ -36,3 +36,6 @@ build
 linphone-android.iml
 linphone-junit-report.xml
 liblinphone-junit-report.xml
+linphonetester_*.zip
+liblinphonetester_*.zip
+adb.pid
