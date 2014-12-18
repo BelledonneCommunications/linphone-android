@@ -448,7 +448,7 @@ public class LinphoneManager implements LinphoneListener {
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 			mLc.addListener((LinphoneCoreListener) c);
-			
+
 			try {
 				initLiblinphone();
 			} catch (LinphoneCoreException e) {
@@ -729,11 +729,11 @@ public class LinphoneManager implements LinphoneListener {
 	}
 
 	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
-		Log.i("new state [",state,"]");
+		Log.i("New global state [",state,"]");
 	}
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {
-		Log.i("new state ["+state+"]");
+		Log.i("New registration state ["+state+"]");
 	}
 
 	private int savedMaxCallWhileGsmIncall;
@@ -783,7 +783,7 @@ public class LinphoneManager implements LinphoneListener {
 
 	@SuppressLint("Wakelock")
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
-		Log.i("new state [",state,"]");
+		Log.i("New call state [",state,"]");
 		if (state == State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
 			if (call.getReplacedCall()!=null){
 				// attended transfer
@@ -824,7 +824,7 @@ public class LinphoneManager implements LinphoneListener {
 				adjustVolume(0); // Synchronize
 			}
 		}
-		
+
 		if (state == State.OutgoingEarlyMedia) {
 			Compatibility.setAudioManagerInCallMode(mAudioManager);
 		}
@@ -1218,7 +1218,7 @@ public class LinphoneManager implements LinphoneListener {
 			SubscriptionState state) {
 		Log.d("Subscription state changed to "+state+" event name is "+ev.getEventName());
 	}
-	
+
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
 			String eventName, LinphoneContent content) {
@@ -1257,13 +1257,13 @@ public class LinphoneManager implements LinphoneListener {
 	public void fileTransferProgressIndication(LinphoneCore lc,
 			LinphoneChatMessage message, LinphoneContent content, int progress) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void fileTransferRecv(LinphoneCore lc, LinphoneChatMessage message,
 			LinphoneContent content, byte[] buffer, int size) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public int fileTransferSend(LinphoneCore lc, LinphoneChatMessage message,
