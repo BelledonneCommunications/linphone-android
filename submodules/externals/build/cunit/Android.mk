@@ -10,6 +10,7 @@ LOCAL_SRC_FILES := \
 	CUnit/Sources/Framework/TestRun.c \
 	CUnit/Sources/Framework/Util.c \
 	CUnit/Sources/Basic/Basic.c \
+	CUnit/Sources/Automated/Automated.c \
 
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/CUnit/Headers/ \
