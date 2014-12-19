@@ -119,7 +119,7 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 			
 			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
-				registrationState(lc, null, lpc.getState(), null);
+				registrationState(lc, lpc, lpc.getState(), null);
 			}
 		}
 
@@ -199,8 +199,14 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 			return;
 		}
 		
-		statusLed.setImageResource(getStatusIconResource(state, true));
-		statusText.setText(getStatusIconText(state));
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				statusLed.setImageResource(getStatusIconResource(state, true));
+				statusText.setText(getStatusIconText(state));
+			}
+		});
+		
 		try {
 			if (getResources().getBoolean(R.bool.lock_statusbar)) {
 				statusText.setOnClickListener(new OnClickListener() {
