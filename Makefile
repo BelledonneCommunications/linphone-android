@@ -12,7 +12,7 @@ LINPHONE_ANDROID_DEBUG_VERSION=$(shell git describe --always)
 BELLESIP_VERSION_SCRIPT:=cat submodules/belle-sip/configure.ac | grep "AC_INIT(" | sed -e "s/.*belle-sip\]//" | sed -e "s/].*//" | sed -e "s/.*\[//"
 BELLESIP_VERSION=$(shell $(BELLESIP_VERSION_SCRIPT))
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-9]+' | tail -n1)
-#We force target 19 because 21 creates binaries incompatible with older versions due to rand() function no longer inline (congrats to Google's developers) 
+#We force target 19 because 21 creates binaries incompatible with older versions due to rand() function no longer inline (congrats to Google's developers)
 NDKBUILD_TARGET=android-19
 #The NDK target used to compile external third parties (ffmpeg, x264)
 EXTERNAL_MAKE_TARGET=14
@@ -64,7 +64,7 @@ APP_STL=stlport_static
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
 ifneq ($(CHECK_MSG),)
-    $(error $(CHECK_MSG))
+    $(error Some tools are missing.)
 endif
 include check_tools.mk
 
