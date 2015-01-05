@@ -50,30 +50,24 @@
     <View android:layout_weight="30" android:layout_width="0dp" android:layout_height="0dp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:gravity="center_horizontal"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="30dp">
 
-        <LinearLayout android:id="@+id/send_log_layout"
-            android:visibility="visible"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/send_log"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/menu_send_log"/>
-            <View android:layout_width="50dp" android:layout_height="0dp" />
-        </LinearLayout>
-       <Button  android:id="@+id/exit"
-                android:gravity="center"
-                android:layout_toRightOf="@id/send_log_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/menu_exit"
-       />
+		<Button
+       		android:id="@+id/send_log"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+       		android:text="@string/menu_send_log"/>
+		
+       	<Button android:id="@+id/exit"
+        	android:gravity="center"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/menu_exit"/>
+       	
     </LinearLayout>
-    <View android:layout_weight="30" android:layout_width="0dp" android:layout_height="0dp" />
 
 </LinearLayout>
