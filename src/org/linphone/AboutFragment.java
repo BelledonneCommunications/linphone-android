@@ -18,8 +18,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.LogCollectionUploadState;
+import org.linphone.core.LinphoneCoreListener;
 import org.linphone.mediastream.Log;
 
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,21 +31,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
  * @author Sylvain Berfini
  */
-public class AboutFragment extends Fragment implements OnClickListener {
+public class AboutFragment extends Fragment implements OnClickListener, LinphoneCoreListener.LinphoneLogCollectionUploadListener {
 	private FragmentsAvailable about = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
 	View exitButton = null;
 	View sendLogButton = null;
-	LinearLayout sendLogLayout = null;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (getArguments() != null && getArguments().getSerializable("About") != null) {
 			about = (FragmentsAvailable) getArguments().getSerializable("About");
 		}
@@ -57,13 +58,16 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 		sendLogButton = view.findViewById(R.id.send_log);
 		sendLogButton.setOnClickListener(this);
-        sendLogLayout = (LinearLayout)view.findViewById(R.id.send_log_layout);
-        sendLogLayout.setVisibility(getResources().getBoolean(R.bool.enable_log_collect) ? View.VISIBLE : View.GONE);
+		sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
 		exitButton = view.findViewById(R.id.exit);
 		exitButton.setOnClickListener(this);
 		exitButton.setVisibility(View.VISIBLE);
-
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(this);
+		}
 
 		return view;
 	}
@@ -80,15 +84,56 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			}
 		}
 	}
+	
 
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
 			if (v == sendLogButton) {
-				LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
+				//LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				if (lc != null) {
+					lc.uploadLogCollection();
+				}
 			} else {
 				LinphoneActivity.instance().exit();
 			}
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(this);
+		}
+		
+		super.onDestroy();
+	}
+
+	@Override
+	public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
+		Log.d("Log upload progress: currently uploaded = " + offset + " , total = " + total + ", % = " + String.valueOf((offset * 100) / total));
+	}
+
+	@Override
+	public void uploadStateChanged(LinphoneCore lc, LogCollectionUploadState state, String info) {
+		Log.d("Log upload state: " + state.toString() + ", info = " + info);
+		
+		if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered) {
+			final String appName = getString(R.string.app_name);
+        	
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.putExtra(Intent.EXTRA_EMAIL, new String[]{ getString(R.string.about_bugreport_email) });
+            i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+            i.putExtra(Intent.EXTRA_TEXT, info);
+            i.setType("application/zip");
+            
+            try {
+                startActivity(Intent.createChooser(i, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+            	Log.e(ex);
+            }
 		}
 	}
 }

@@ -46,6 +46,7 @@ import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
+import org.linphone.core.LinphoneCore.LogCollectionUploadState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCoreException;
@@ -1261,19 +1262,27 @@ public class LinphoneManager implements LinphoneListener {
 	@Override
 	public void fileTransferProgressIndication(LinphoneCore lc,
 			LinphoneChatMessage message, LinphoneContent content, int progress) {
-		// TODO Auto-generated method stub
 
 	}
 	@Override
 	public void fileTransferRecv(LinphoneCore lc, LinphoneChatMessage message,
 			LinphoneContent content, byte[] buffer, int size) {
-		// TODO Auto-generated method stub
 
 	}
 	@Override
 	public int fileTransferSend(LinphoneCore lc, LinphoneChatMessage message,
 			LinphoneContent content, ByteBuffer buffer, int size) {
-		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
+		
+	}
+
+	@Override
+	public void uploadStateChanged(LinphoneCore lc,
+			LogCollectionUploadState state, String info) {
+		
 	}
 }

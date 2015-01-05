@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
+import org.linphone.core.LinphoneCoreImpl;
 import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
 import org.linphone.core.LinphoneCoreListener.LinphoneGlobalStateListener;
 import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
@@ -137,6 +138,11 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 		// In case restart after a crash. Main in LinphoneActivity
 		mNotificationTitle = getString(R.string.service_name);
 
+		// Needed in order for the two next calls to succeed, libraries must have been loaded first
+		LinphoneCoreFactoryImpl.instance();
+		LinphoneCoreImpl.setLogCollectionPath(getFilesDir().getAbsolutePath());
+		LinphoneCoreImpl.enableLogCollection(!(getResources().getBoolean(R.bool.disable_every_log)));
+		
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
 		dumpDeviceInformation();
