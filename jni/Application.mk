@@ -127,7 +127,9 @@ ifeq ($(BUILD_ZRTP), 1)
 APP_MODULES      += libbzrtp
 endif
 
+ifeq ($(BUILD_ILBC), 1)
 APP_MODULES      +=libmsilbc
+endif
 
 ifeq ($(BUILD_SRTP), 1)
 APP_MODULES      += libsrtp
