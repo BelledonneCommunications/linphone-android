@@ -19,7 +19,7 @@ $(info $(TARGET_ARCH_ABI): Video is disabled for targets other than armeabi-v7a 
 endif
 endif
 
-#libxml2 
+#libxml2
 include $(linphone-root-dir)/submodules/externals/build/libxml2/Android.mk
 
 ifeq ($(BUILD_ZRTP), 1)
@@ -82,7 +82,9 @@ endif
 include $(linphone-root-dir)/submodules/mssilk/Android.mk
 endif
 
+ifeq ($(BUILD_ILBC), 1)
 include $(linphone-root-dir)/submodules/msilbc/Android.mk
+endif
 
 ifeq ($(_BUILD_VIDEO),1)
 

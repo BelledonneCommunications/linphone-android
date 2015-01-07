@@ -56,6 +56,7 @@ BUILD_SQLITE=1
 BUILD_CONTACT_HEADER=0
 BUILD_RTP_MAP=0
 BUILD_DONT_CHECK_HEADERS_IN_MESSAGE=0
+BUILD_LIBILBC=1
 LIBLINPHONE_EXTENDED_SRC_FILES=
 LIBLINPHONE_EXTENDED_C_INCLUDES=
 LIBLINPHONE_EXTENDED_CFLAGS=
@@ -110,7 +111,11 @@ $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
 	cd $(LIBILBC_BUILD_DIR)/downloads && make \
 	|| ( echo "iLBC prepare stage failed" ; exit 1 )
 
+ifeq ($(BUILD_LIBILBC),1)
 prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
+else
+prepare-ilbc:
+endif
 
 #ffmpeg
 ifeq ($(BUILD_VIDEO),1)
@@ -390,12 +395,13 @@ prepare-sqlite3:
 endif
 
 $(SQLITE_BUILD_DIR)/sqlite3.c: $(SQLITE_BASENAME).zip
-	unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
-	mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
-	rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
+       unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
+       mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
+       rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
 
 $(SQLITE_BASENAME).zip:
-	curl -sO $(SQLITE_URL)
+       curl -sO $(SQLITE_URL)
+
 
 #Matroska2
 MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska
