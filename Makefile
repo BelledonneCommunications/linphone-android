@@ -395,12 +395,12 @@ prepare-sqlite3:
 endif
 
 $(SQLITE_BUILD_DIR)/sqlite3.c: $(SQLITE_BASENAME).zip
-       unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
-       mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
-       rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
+	unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
+	mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
+	rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
 
 $(SQLITE_BASENAME).zip:
-       curl -sO $(SQLITE_URL)
+	curl -sO $(SQLITE_URL)
 
 
 #Matroska2
