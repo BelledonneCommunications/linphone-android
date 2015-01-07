@@ -373,24 +373,6 @@ prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(
 	cp -rf $(TOPDIR)/submodules/linphone/tester/rcfiles $(TOPDIR)/liblinphone_tester/assets/config_files
 
 
-#SQLite3
-SQLITE_SRC_DIR=$(TOPDIR)/submodules/externals/sqlite3
-SQLITE_BUILD_DIR=$(SQLITE_SRC_DIR)
-ifeq ($(BUILD_SQLITE), 1)
-prepare-sqlite3: $(SQLITE_BUILD_DIR)/sqlite3.c
-else
-prepare-sqlite3:
-endif
-
-$(SQLITE_BUILD_DIR)/sqlite3.c: $(SQLITE_BASENAME).zip
-	unzip -oq "$<" "*/sqlite3.?" -d  $(SQLITE_BUILD_DIR)/
-	mv "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/sqlite3".? $(SQLITE_BUILD_DIR)/
-	rmdir "$(SQLITE_BUILD_DIR)/$(SQLITE_BASENAME)/"
-
-$(SQLITE_BASENAME).zip:
-	curl -sO $(SQLITE_URL)
-
-
 #Matroska2
 MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska
 MATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska
@@ -404,8 +386,7 @@ $(MATROSKA_SRC_DIR)/patch_applied.txt: $(MATROSKA_BUILD_DIR)/fix_libmatroska2.pa
 	cd $(MATROSKA_SRC_DIR);	patch -p1 < $<; touch $@
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3 prepare-matroska2
-
+prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
