@@ -139,3 +139,6 @@ BUILD_UPNP
 
 BUILD_MATROSKA
 	values: 0 (don't build matroska and ebml), 1 (do build matroska and ebml), default value: 0
+
+BUILD_ILBC
+	values: 0 (don't build iLBC), 1 (do build iLBC), default value: 1
