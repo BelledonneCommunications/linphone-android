@@ -4,12 +4,12 @@ error_on_quit=0
 
 echo_err() {
 	 echo "$@" >&2
+	 error_on_quit=1
 }
 
 check_installed() {
 	if [ -z "$(which $1)" ]; then
 		echo_err "Could not find $1. Please install $2."
-		error_on_quit=1
 		return 1
 	fi
 	return 0
@@ -25,16 +25,18 @@ if check_installed "android" "android SDK"; then
 	# check that at least one target is installed
 	if [ -z "$(android list target -c)" ]; then
 		echo_err "Install at least one android target in the android SDK"
-		error_on_quit=1
 	fi
 fi
 if nasm -f elf32 2>&1 | grep -q "fatal: unrecognised output format"; then
 	echo_err "Invalid version of nasm: your version does not support elf32 output format. If you have installed nasm, please check that your PATH env variable is set correctly."
-	error_on_quit=1
 fi
 if ! (find submodules/linphone/mediastreamer2 -mindepth 1 2>/dev/null | grep -q . \
 	|| find submodules/linphone/oRTP -mindepth 1 2>/dev/null | grep -q .); then
 	echo_err "Missing some git submodules. Did you run 'git submodule update --init --recursive'?"
+fi
+# Android NDK should NOT be simlinked!
+if [ ! -f "$ANDROID_NDK" ]; then
+	echo_err "ANDROID_NDK=$ANDROID_NDK is not existing or is a symbolic link. Please use a correct folder"
 fi
 
 if [ $error_on_quit = 0 ]; then
