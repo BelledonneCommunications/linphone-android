@@ -35,8 +35,8 @@ if ! (find submodules/linphone/mediastreamer2 -mindepth 1 2>/dev/null | grep -q 
 	echo_err "Missing some git submodules. Did you run 'git submodule update --init --recursive'?"
 fi
 # Android NDK should NOT be simlinked!
-if [ ! -f "$ANDROID_NDK" ]; then
-	echo_err "ANDROID_NDK=$ANDROID_NDK is not existing or is a symbolic link. Please use a correct folder"
+if [[ -L "$ANDROID_NDK" && -d "$ANDROID_NDK" ]]; then
+	echo_err "ANDROID_NDK=$ANDROID_NDK must NOT be a symbolic link, please modify it accordingly"
 fi
 
 if [ $error_on_quit = 0 ]; then
