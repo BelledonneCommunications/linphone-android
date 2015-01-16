@@ -1,4 +1,5 @@
 NDK_PATH=$(shell dirname `which ndk-build`)
+NDK_MAJOR_VERSION=$(shell cat $(NDK_PATH)/RELEASE.TXT | sed "s/r\([0-9]\{1,2\}\).*/\1/")
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 ARM_COMPILER_PATH=`find "$(NDK_PATH)" -name "arm-linux-androideabi-gcc-4*" -print | tail -1`
@@ -50,6 +51,7 @@ BUILD_OPUS=1
 BUILD_MATROSKA=1
 BUILD_WEBRTC_ISAC=1
 BUILD_FOR_X86=1
+BUILD_FOR_ARM=1
 USE_JAVAH=1
 BUILD_TLS=1
 BUILD_SQLITE=1
@@ -64,10 +66,16 @@ APP_STL=stlport_static
 
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
+ifeq ($(BUILD_OPENH264),1)
+	ifneq ($(shell echo $(NDK_MAJOR_VERSION)\>=10 | bc),1)
+              $(error ndk version [$(NDK_MAJOR_VERSION)] not compatible with opensh264.)
+	endif
+endif
+include check_tools.mk
+
 ifneq ($(CHECK_MSG),)
     $(error Some tools are missing.)
 endif
-include check_tools.mk
 
 OPENSSL_DIR=$(shell openssl version -d | sed  "s/OPENSSLDIR: \"\(.*\)\"/\1/")
 ifneq ($(shell ls $(OPENSSL_DIR)/certs),)
