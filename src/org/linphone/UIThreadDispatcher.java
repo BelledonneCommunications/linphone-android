@@ -24,7 +24,7 @@ import android.os.Looper;
 public class UIThreadDispatcher {
 	private static Handler mHandler = new Handler(Looper.getMainLooper());
 	
-	public static void Dispatch(Runnable r) {
+	public static void dispatch(Runnable r) {
 		mHandler.post(r);
 	}
 }
