@@ -459,7 +459,7 @@ public class LinphoneManager implements LinphoneListener {
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
-					UIThreadDispatcher.Dispatch(new Runnable() {
+					UIThreadDispatcher.dispatch(new Runnable() {
 						@Override
 						public void run() {
 							if (mLc != null) {

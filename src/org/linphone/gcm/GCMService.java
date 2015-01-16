@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
+import org.linphone.UIThreadDispatcher;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -47,8 +48,16 @@ public class GCMService extends GCMBaseIntentService {
 	protected void onMessage(Context context, Intent intent) {
 		Log.d("Push notification received");
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-			LinphoneManager.getLc().setNetworkReachable(false);
-			LinphoneManager.getLc().setNetworkReachable(true);
+			UIThreadDispatcher.dispatch(new Runnable(){
+				@Override
+				public void run() {
+					if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0){
+						LinphoneManager.getLc().setNetworkReachable(false);
+						LinphoneManager.getLc().setNetworkReachable(true);
+					}
+				}
+			});
+
 		}
 	}
 
