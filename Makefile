@@ -66,15 +66,16 @@ APP_STL=stlport_static
 
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
-ifeq ($(BUILD_OPENH264),1)
-	ifneq ($(shell echo $(NDK_MAJOR_VERSION)\>=10 | bc),1)
-              $(error ndk version [$(NDK_MAJOR_VERSION)] not compatible with opensh264.)
-	endif
-endif
-include check_tools.mk
 
 ifneq ($(CHECK_MSG),)
-    $(error Some tools are missing.)
+	$(error Some tools are missing.)
+else
+	ifeq ($(BUILD_OPENH264),1)
+		ifneq ($(shell echo $(NDK_MAJOR_VERSION)\>=10 | bc),1)
+$(error ndk version [$(NDK_MAJOR_VERSION)] not compatible with openh264.)
+		endif
+	endif
+	include check_tools.mk
 endif
 
 OPENSSL_DIR=$(shell openssl version -d | sed  "s/OPENSSLDIR: \"\(.*\)\"/\1/")
