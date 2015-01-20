@@ -320,27 +320,6 @@ clean-vpx:
 	rm -rf submodules/externals/build/libvpx/x86
 
 
-#SILK
-LIBMSSILK_SRC_DIR=$(TOPDIR)/submodules/mssilk
-LIBMSSILK_BUILD_DIR=$(LIBMSSILK_SRC_DIR)
-$(LIBMSSILK_SRC_DIR)/configure:
-	cd $(LIBMSSILK_SRC_DIR) && ./autogen.sh
-
-$(LIBMSSILK_BUILD_DIR)/Makefile: $(LIBMSSILK_SRC_DIR)/configure
-	cd $(LIBMSSILK_BUILD_DIR) && \
-	$(LIBMSSILK_SRC_DIR)/configure --without-mediastreamer --host=arm-linux MEDIASTREAMER_CFLAGS=" " MEDIASTREAMER_LIBS=" "
-
-#make sure to update this path if SILK sdk is changed
-$(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c: $(LIBMSSILK_BUILD_DIR)/Makefile
-	cd $(LIBMSSILK_BUILD_DIR)/sdk && \
-	make extract-sources \
-	|| ( echo "SILK audio plugin prepare state failed." ; exit 1 )
-
-ifeq ($(BUILD_SILK), 1)
-prepare-silk: $(LIBMSSILK_BUILD_DIR)/sdk/SILK_SDK_SRC_v1.0.8/SILK_SDK_SRC_ARM_v1.0.8/src/SKP_Silk_resampler.c
-else
-prepare-silk:
-endif
 
 
 #srtp
@@ -425,7 +404,7 @@ $(MATROSKA_SRC_DIR)/patch_applied.txt: $(MATROSKA_BUILD_DIR)/fix_libmatroska2.pa
 	cd $(MATROSKA_SRC_DIR);	patch -p1 < $<; touch $@
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-silk prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3 prepare-matroska2
+prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-sqlite3 prepare-matroska2
 
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
