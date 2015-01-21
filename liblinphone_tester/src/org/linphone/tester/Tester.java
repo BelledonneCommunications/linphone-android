@@ -45,6 +45,8 @@ public class Tester {
 	}
 	
 	public native int run(String args[]);
+	public static native void keepAccounts(boolean keep);
+	public static native void clearAccounts();
 	
 	public void printLog(final int level, final String message) {
 		switch(level) {
