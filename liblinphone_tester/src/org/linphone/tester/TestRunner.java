@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import com.zutubi.android.junitreport.JUnitReportTestRunner;
 
+import java.lang.Override;
+
 
 public class TestRunner extends JUnitReportTestRunner {
 	String mSuite = null;
@@ -14,8 +16,15 @@ public class TestRunner extends JUnitReportTestRunner {
 	public void onCreate(Bundle arguments) {
 		mSuite = arguments.getString("suite");
 		mTest = arguments.getString("test");
+		Tester.keepAccounts(true);
 		
 		super.onCreate(arguments);
+	}
+
+	@Override
+	public void onDestroy() {
+		Tester.clearAccounts();
+		super.onDestroy();
 	}
 	
 	@Override

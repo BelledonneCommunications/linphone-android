@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Override;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			Log.e("liblinphone_tester", "Cannot install rc files",e);
 		}
+		Tester.keepAccounts(true);
 		TesterList suitesTest = new TesterList();
 		suitesTest.run(new String[]{"tester", "--list-suites"});
 		LinearLayout layout = ((LinearLayout)findViewById(R.id.suites_list));
@@ -39,6 +41,13 @@ public class MainActivity extends Activity {
 			addButton(layout, str, str);
 		}
 	}
+
+	@Override
+	protected void onDestroy(){
+		Tester.clearAccounts();
+		super.onDestroy();
+	}
+
 	private void addButton(LinearLayout layout, String text, String data) {
 		Button button = new Button(this);
 		button.setText(text);
@@ -46,17 +55,17 @@ public class MainActivity extends Activity {
 		button.setGravity(Gravity.CENTER);
 		button.setOnClickListener(new Button.OnClickListener() {
 		    public void onClick(View v) {
-		    	Button button = (Button) v;
-		    	String data = (String)button.getTag();
-		    	if(data == null) {
-		    		Intent intent = new Intent(getBaseContext(), LogsActivity.class);
-		    		intent.putExtra("args", new String[]{});
-		    		startActivity(intent);
-		    	} else {
-		    		Intent intent = new Intent(getBaseContext(), SuitesActivity.class);
-		    		intent.putExtra("suite", data);
-		    		startActivity(intent);
-		    	}
+		 		Button button = (Button) v;
+		 		String data = (String)button.getTag();
+		 		if(data == null) {
+		 			Intent intent = new Intent(getBaseContext(), LogsActivity.class);
+		 			intent.putExtra("args", new String[]{});
+		 			startActivity(intent);
+		 		} else {
+		 			Intent intent = new Intent(getBaseContext(), SuitesActivity.class);
+		 			intent.putExtra("suite", data);
+		 			startActivity(intent);
+		 		}
 		    }
 		});
 		layout.addView(button);
