@@ -272,27 +272,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			return true;
 		}
 	};
-	private class CoolPasswordMethod extends PasswordTransformationMethod{
-		@Override
-		public CharSequence getTransformation(CharSequence source, View view) {
-			return new PasswordCharSequence(source);
-		}
-		private class PasswordCharSequence implements CharSequence {
-	        private CharSequence mSource;
-	        public PasswordCharSequence(CharSequence source) {
-	            mSource = source; 
-	        }
-	        public char charAt(int index) {
-	            return index==mSource.length()-1 ? mSource.charAt(index) : '*'; 
-	        }
-	        public int length() {
-	            return mSource.length(); 
-	        }
-	        public CharSequence subSequence(int start, int end) {
-	            return mSource.subSequence(start, end); // Return default
-	        }
-	    }
-	}
 	
 	private void initAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
@@ -307,8 +286,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	userid.setOnPreferenceChangeListener(useridChangedListener);
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-    	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-    	password.getEditText().setTransformationMethod(new CoolPasswordMethod());
+        password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     	password.setOnPreferenceChangeListener(passwordChangedListener);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
@@ -393,10 +371,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	userid.setSummary(userid.getText());
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-    	password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     	password.setText(mPrefs.getAccountPassword(n));
-    	password.getEditText().setTransformationMethod(new CoolPasswordMethod());
-    	password.setOnPreferenceChangeListener(passwordChangedListener);
+        password.setOnPreferenceChangeListener(passwordChangedListener);
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
     	domain.setText(mPrefs.getAccountDomain(n));
