@@ -851,7 +851,7 @@ public class LinphoneManager implements LinphoneListener {
 			}
 
 			// Give user some hint about the error...
-			if (state == State.Error) {
+			if (state == State.Error && LinphoneActivity.isInstanciated() ) {
 				LinphoneActivity.instance().displayCustomToast("Call errored: " + message, Toast.LENGTH_LONG);
 			}
 		}
