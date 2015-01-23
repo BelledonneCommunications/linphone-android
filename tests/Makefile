@@ -11,6 +11,7 @@ all: clean
 
 run-basic-tests: all
 	ant test
+	adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > linphone-junit-report.xml
 
 run-all-tests: all
 	adb shell am instrument -w -e size large org.linphone.test/com.zutubi.android.junitreport.JUnitReportTestRunner
