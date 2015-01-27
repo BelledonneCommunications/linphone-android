@@ -63,6 +63,7 @@ LIBLINPHONE_EXTENDED_SRC_FILES=
 LIBLINPHONE_EXTENDED_C_INCLUDES=
 LIBLINPHONE_EXTENDED_CFLAGS=
 APP_STL=stlport_static
+ANT_SILENT=1
 
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
@@ -83,6 +84,12 @@ ifneq ($(shell ls $(OPENSSL_DIR)/certs),)
 	HTTPS_CA_DIR=$(OPENSSL_DIR)/certs
 else
 	HTTPS_CA_DIR=$(OPENSSL_DIR)
+endif
+
+ifeq ($(ANT_SILENT), 1)
+	ANT=ant -e -S
+else
+	ANT=ant -e
 endif
 
 all: update-project generate-apk
@@ -428,56 +435,56 @@ liblinphone_tester: update-project prepare-sources prepare-cunit prepare-liblinp
 	$(MAKE) -C liblinphone_tester
 
 javah:
-	ant javah
+	$(ANT) javah
 
 generate-apk: java-clean generate-libs
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties
-	ant debug
+	$(ANT) debug
 
 generate-mediastreamer2-apk: java-clean generate-mediastreamer2-libs
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
 	echo "version.name=$(LINPHONE_ANDROID_DEBUG_VERSION)" > default.properties && \
-	ant debug
+	$(ANT) debug
 
 uninstall:
 	adb uninstall $(PACKAGE_NAME)
 
 install-apk:
-	ant installd
+	$(ANT) installd
 
 release: update-project
-	ant clean
+	$(ANT) clean
 	echo "What is the version name for the release ?"; \
 	read version; \
 	echo "version.name=$$version" > default.properties
-	ant release
+	$(ANT) release
 
 run-linphone:
-	ant run
+	$(ANT) run
 
 run-liblinphone-tests: liblinphone_tester
 	$(MAKE) -C liblinphone_tester run-all-tests
 
 run-basic-tests: update-project
-	ant partial-clean
+	$(ANT) partial-clean
 	$(MAKE) -C tests run-basic-tests
 
 run-all-tests: update-project
-	ant partial-clean
+	$(ANT) partial-clean
 	$(MAKE) -C tests run-all-tests
 
 clean-ndk-build:
 	- $(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
-	ant clean
+	$(ANT) clean
 	@if [ -f $(TOPDIR)/submodules/linphone/mediastreamer2/java/project.properties ]; then \
-	  cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && ant clean; \
+	  cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && $(ANT) clean; \
 	fi
 
 .NOTPARALLEL clean-native: clean-ndk-build clean-ffmpeg clean-x264 clean-openh264 clean-vpx
 
 
 java-clean:
-	ant clean
+	$(ANT) clean
 
 clean:	clean-native java-clean
 
@@ -488,11 +495,11 @@ veryclean: clean
 generate-sdk: liblinphone-android-sdk
 
 liblinphone-android-sdk: generate-apk
-	ant liblinphone-android-sdk
+	$(ANT) liblinphone-android-sdk
 
 linphone-android-sdk: generate-apk
-	ant linphone-android-sdk
+	$(ANT) linphone-android-sdk
 
 mediastreamer2-sdk: update-mediastreamer2-project generate-mediastreamer2-apk
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
-	ant mediastreamer2-sdk
+	$(ANT) mediastreamer2-sdk
