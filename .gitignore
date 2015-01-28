@@ -17,7 +17,7 @@ liblinphone-junit-report.xml
 liblinphonetester_*.zip
 libs
 linphone-android.iml
-linphone-junit-report.xml
+linphone-junit-report*.xml
 linphonetester_*.zip
 lint.xml
 local.properties

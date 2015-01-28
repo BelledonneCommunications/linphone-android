@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="custom_rules">
+<project name="linphone-tester">
 	<target name="test">
 		<property name="output.file" value="./tests.output" />
-                <tstamp>
-                        <format property="archive.name"
-                        pattern="'linphonetester_'yyyyMMdd_HHmmss" />
-                </tstamp>
-                <echo>Adb log files are put in ${archive.name}.zip</echo>
-
-                <exec executable="adb" >
-                        <arg value="logcat" />
-                        <arg value="-c" />
-                </exec>
-                <exec executable="./adb-log-start.sh" >
-                        <arg value=" ${archive.name}" />
-                </exec>
-                <exec executable="bash">
-                        <arg value="-c"/>
-                        <!-- use 'tee' command to write in file AND on stdout.
-                        First is used below to check if tests failed or not while second
-                        is used to get output in real time -->
-                        <arg value="adb shell am instrument -r -w -e size small org.linphone.test/com.zutubi.android.junitreport.JUnitReportTestRunner | tee ${output.file}"/>
-                </exec>
-                <exec executable="bash" >
-                        <arg value="-c" />
-                        <arg value="kill `cat adb.pid`" />
-                </exec>
-                <exec executable="bash">
-                        <arg value="-c"/>
-                        <arg value="adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > linphone-junit-report.xml"/>
-                </exec>
-                <zip destfile="${archive.name}.zip">
-                        <fileset dir="." includes="${archive.name}"/>
-                </zip>
-                <fail message="Tests failed">
-                        <condition>
-                                        <resourcecontains resource="${output.file}" substring="FAILURES" />
-                        </condition>
-                </fail>
-                <condition property="has.crashed" >
-                                <resourcecontains resource="${output.file}" substring="Process crashed" />
-                </condition>
+		<!-- Possible values for test.size are small or large -->
+		<property name="test.size" value="small" />
+		<tstamp>
+			<format property="archive.name" pattern="'linphonetester_'yyyyMMdd_HHmmss" />
+		</tstamp>
+		<echo>Adb log files are put in ${archive.name}.zip</echo>
+		<exec executable="adb" >
+			<arg value="logcat" />
+			<arg value="-c" />
+		</exec>
+		<exec executable="./adb-log-start.sh" >
+			<arg value=" ${archive.name}" />
+		</exec>
+		<exec executable="bash">
+			<arg value="-c"/>
+			<!-- use 'tee' command to write in file AND on stdout.
+			First is used below to check if tests failed or not while second
+			is used to get output in real time -->
+			<arg value="adb shell am instrument -r -w -e size ${test.size} org.linphone.test/com.zutubi.android.junitreport.JUnitReportTestRunner | tee ${output.file}"/>
+		</exec>
+		<exec executable="bash" >
+			<arg value="-c" />
+			<arg value="kill `cat adb.pid`" />
+		</exec>
+		<exec executable="bash">
+			<arg value="-c"/>
+			<arg value="adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml > linphone-junit-report-${test.size}.xml"/>
+		</exec>
+		<zip destfile="${archive.name}.zip">
+			<fileset dir="." includes="${archive.name}"/>
+		</zip>
+		<fail message="Tests failed">
+			<condition>
+				<resourcecontains resource="${output.file}" substring="FAILURES" />
+			</condition>
+		</fail>
+		<condition property="has.crashed" >
+			<resourcecontains resource="${output.file}" substring="Process crashed" />
+		</condition>
 
 		<antcall target="check-for-crash"/>
-                <delete file="${archive.name}"/>
-                <delete file="${output.file}"/>
-        </target>
-        <target name="check-for-crash" if="has.crashed">
-                <exec executable="bash" >
-                        <arg value="-c" />
-                        <arg value="tail -n 500 ${archive.name}" />
-                </exec>
-                <exec executable="bash" >
-                        <arg value="-c" />
-                        <arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
-                </exec>
-                <fail message="Tests crashed"/>
-        </target>
+		<delete file="${archive.name}"/>
+		<delete file="${output.file}"/>
+	</target>
+	<target name="check-for-crash" if="has.crashed">
+		<exec executable="bash" >
+			<arg value="-c" />
+			<arg value="tail -n 500 ${archive.name}" />
+		</exec>
+		<exec executable="bash" >
+			<arg value="-c" />
+			<arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
+		</exec>
+		<fail message="Tests crashed"/>
+	</target>
 </project>
