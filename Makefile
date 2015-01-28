@@ -467,11 +467,11 @@ run-liblinphone-tests: liblinphone_tester
 
 run-basic-tests: update-project
 	$(ANT) partial-clean
-	$(MAKE) -C tests run-basic-tests
+	$(MAKE) -C tests run-basic-tests ANT_SILENT=$(ANT_SILENT)
 
 run-all-tests: update-project
 	$(ANT) partial-clean
-	$(MAKE) -C tests run-all-tests
+	$(MAKE) -C tests run-all-tests ANT_SILENT=$(ANT_SILENT)
 
 clean-ndk-build:
 	- $(NDK_PATH)/ndk-build clean $(LIBLINPHONE_OPTIONS)
