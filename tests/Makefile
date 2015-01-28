@@ -1,5 +1,12 @@
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
+ANT_SILENT=1
+
+ifeq ($(ANT_SILENT), 1)
+	ANT=ant -e -S
+else
+	ANT=ant -e
+endif
 
 clean:
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
@@ -7,10 +14,10 @@ clean:
 	$(SDK_PATH)/android update test-project --path . -m ../
 
 all: clean
-	ant debug install
+	$(ANT) debug install
 
 run-basic-tests: all
-	ant test
+	$(ANT) test
 	adb shell run-as org.linphone cat /data/data/org.linphone/files/junit-report.xml 2>/dev/null > linphone-junit-report.xml
 	if [ ! -s linphone-junit-report.xml ]; then exit 1; fi
 
