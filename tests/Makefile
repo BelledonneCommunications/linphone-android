@@ -18,8 +18,8 @@ all: clean
 
 run-basic-tests: all
 	$(ANT) test -Dtest.size=small
-	if [ ! -s linphone-junit-report.xml ]; then exit 1; fi
+	if [ ! -s linphone-junit-report-small.xml ]; then exit 1; fi
 
 run-all-tests: all
 	$(ANT) test -Dtest.size=large
-	if [ ! -s linphone-junit-report.xml ]; then exit 1; fi
+	if [ ! -s linphone-junit-report-large.xml ]; then exit 1; fi
