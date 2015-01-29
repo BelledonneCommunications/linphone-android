@@ -94,6 +94,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
+    private static final int CHAT_ACTIVITY = 21;
 
 	private static LinphoneActivity instance;
 
@@ -104,7 +105,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private RelativeLayout contacts, history, settings, chat, aboutChat, aboutSettings;
 	private FragmentsAvailable currentFragment, nextFragment;
 	private List<FragmentsAvailable> fragmentsHistory;
-	private Fragment dialerFragment, messageListenerFragment, messageListFragment, friendStatusListenerFragment;
+	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
 	private SavedState dialerSavedState;
 	private boolean preferLinphoneContacts = false, isAnimationDisabled = false, isContactPresenceDisabled = true;
 	private List<Contact> contactList, sipContactList;
@@ -262,7 +263,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	@SuppressWarnings("incomplete-switch")
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {
-		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
+		if (newFragmentType == currentFragment) {
 			return;
 		}
 		nextFragment = newFragmentType;
@@ -324,10 +325,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		case ABOUT_INSTEAD_OF_SETTINGS:
 			newFragment = new AboutFragment();
 			break;
-		case CHAT:
-			newFragment = new ChatFragment();
-			messageListenerFragment = newFragment;
-			break;
 		case CHATLIST:
 			newFragment = new ChatListFragment();
 			messageListFragment = new Fragment();
@@ -378,20 +375,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		}
 		
-		
-		if (newFragmentType == FragmentsAvailable.DIALER 
-				|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT 
-				|| newFragmentType == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
-				|| newFragmentType == FragmentsAvailable.SETTINGS 
-				|| newFragmentType == FragmentsAvailable.CONTACTS
-				|| newFragmentType == FragmentsAvailable.CHATLIST
-				|| newFragmentType == FragmentsAvailable.HISTORY) {
-			try {
-				getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			} catch (java.lang.IllegalStateException e) {
-
-			}
-		} else {
+		if (newFragmentType != FragmentsAvailable.DIALER
+				|| newFragmentType != FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT
+				|| newFragmentType != FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS
+				|| newFragmentType != FragmentsAvailable.CONTACTS
+				|| newFragmentType != FragmentsAvailable.CHATLIST
+				|| newFragmentType != FragmentsAvailable.HISTORY) {
 			transaction.addToBackStack(newFragmentType.toString());
 		}
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
@@ -568,24 +557,15 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		String displayName = lAddress.getDisplayName();
 		String pictureUri = uri == null ? null : uri.toString();
 
-		if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
-			Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
-			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
-				ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
-			} else {
-				Bundle extras = new Bundle();
-				extras.putString("SipUri", sipUri);
-				if (lAddress.getDisplayName() != null) {
-					extras.putString("DisplayName", displayName);
-					extras.putString("PictureUri", pictureUri);
-				}
-				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
-			}
-		} else {
-			changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
-			displayChat(sipUri);
+		Intent intent = new Intent(this, ChatActivity.class);
+		intent.putExtra("SipUri", sipUri);
+		if (lAddress.getDisplayName() != null) {
+			intent.putExtra("DisplayName", displayName);
+			intent.putExtra("PictureUri", pictureUri);
 		}
+		startOrientationSensor();
+		startActivityForResult(intent, CHAT_ACTIVITY);
+
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
 		displayMissedChats(getChatStorage().getUnreadMessageCount());
@@ -664,7 +644,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		case ABOUT_INSTEAD_OF_SETTINGS:
 			aboutSettings.setSelected(true);
 			break;
-		case CHAT:
 		case CHATLIST:
 			chat.setSelected(true);
 			break;
@@ -675,12 +654,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		dialerFragment = fragment;
 		// Hack to maintain soft input flags
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-	}
-
-	public void updateChatFragment(ChatFragment fragment) {
-		messageListenerFragment = fragment;
-		// Hack to maintain soft input flags
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 
 	public void updateChatListFragment(ChatListFragment fragment) {
@@ -740,16 +713,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-		LinphoneAddress from = cr.getPeerAddress();
-		ChatFragment chatFragment = ((ChatFragment) messageListenerFragment);
-		if (messageListenerFragment != null && messageListenerFragment.isVisible() && chatFragment.getSipUri().equals(from.asStringUriOnly())) {
-			chatFragment.onMessageReceived(from, message);
-		} else if (LinphoneService.isReady()) {
-			displayMissedChats(getChatStorage().getUnreadMessageCount());
-			if (messageListFragment != null && messageListFragment.isVisible()) {
-				((ChatListFragment) messageListFragment).refresh();
-			}
-		}
+        displayMissedChats(getChatStorage().getUnreadMessageCount());
+        if (messageListFragment != null && messageListFragment.isVisible()) {
+            ((ChatListFragment) messageListFragment).refresh();
+        }
 	}
 
 	public void updateMissedChatCount() {
@@ -1374,7 +1341,12 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (currentFragment == FragmentsAvailable.DIALER) {
+			if (currentFragment == FragmentsAvailable.DIALER
+					|| currentFragment == FragmentsAvailable.CONTACTS
+					|| currentFragment == FragmentsAvailable.HISTORY
+					|| currentFragment == FragmentsAvailable.CHATLIST
+					|| currentFragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT
+					|| currentFragment == FragmentsAvailable.ABOUT_INSTEAD_OF_SETTINGS) {
 				boolean isBackgroundModeActive = LinphonePreferences.instance().isBackgroundModeEnabled();
 				if (!isBackgroundModeActive) {
 					stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));

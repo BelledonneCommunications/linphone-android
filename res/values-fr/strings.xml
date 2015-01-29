@@ -301,6 +301,7 @@
   <string name="button_edit">Modifier</string>
   <string name="button_cancel">Annuler</string>
   <string name="button_ok">Valider</string>
+  <string name="button_back">Retour</string>
   <string name="button_all_contacts">Tous</string>
   <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">+ Contact</string>
