@@ -303,6 +303,7 @@
   <string name="button_edit">Edit</string>
   <string name="button_cancel">Cancel</string>
   <string name="button_ok">Okay</string>
+  <string name="button_back">Back</string>
   <string name="button_all_contacts">All</string>
   <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">New contact</string>

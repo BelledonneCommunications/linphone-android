@@ -107,6 +107,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name="org.linphone.ChatActivity"
+            android:theme="@style/NoTitle"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
          
         <activity android:name="org.linphone.setup.SetupActivity"
 		    android:theme="@style/NoTitle"
