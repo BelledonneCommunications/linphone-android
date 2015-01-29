@@ -34,7 +34,8 @@ public class AccountAssistant extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testBLoginWithLinphoneAccount() {
-		solo.waitForActivity("SetupActivity", 1000);
+		solo.waitForActivity("SetupActivity", 3000);
+		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.setup_next));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.setup_login_linphone));

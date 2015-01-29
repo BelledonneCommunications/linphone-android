@@ -9,16 +9,19 @@ import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.mediastream.Log;
 
+import com.robotium.solo.Solo;
+
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.EditText;
 
+
 /**
  * @author Sylvain Berfini
  */
 public class Chat extends SampleTest {
-	
+
 	@SmallTest
 	@MediumTest
 	@LargeTest
@@ -100,7 +103,31 @@ public class Chat extends SampleTest {
 
 	@MediumTest
 	@LargeTest
-	public void testGDeleteConversation() {
+	public void testGChatLandscape() {
+		goToChat();
+
+		solo.clickOnText(iContext.getString(org.linphone.test.R.string.account_test_calls_login));
+
+		solo.sleep(1000);
+		solo.setActivityOrientation(Solo.LANDSCAPE);
+		solo.sleep(1000);
+
+		solo.enterText((EditText) solo.getView(org.linphone.R.id.message), iContext.getString(R.string.chat_test_text_sent));
+		solo.clickOnView(solo.getView(org.linphone.R.id.sendMessage));
+
+		solo.sleep(1000);
+		Assert.assertTrue(solo.searchText(iContext.getString(R.string.chat_test_text_sent)));
+		Assert.assertEquals(iContext.getString(R.string.chat_test_text_sent), LinphoneTestManager.getInstance().lastMessageReceived);
+
+		solo.clickOnText(aContext.getString(org.linphone.R.string.button_back));
+
+		solo.sleep(1000);
+		Assert.assertTrue(solo.searchText(iContext.getString(R.string.account_test_calls_login)));
+	}
+
+	@MediumTest
+	@LargeTest
+	public void testHDeleteConversation() {
 		goToChat();
 		
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
