@@ -21,10 +21,10 @@
 	url = git://git.linphone.org/libilbc-rfc3951.git
 [submodule "submodules/externals/ffmpeg"]
 	path = submodules/externals/ffmpeg
-	url = git://git.videolan.org/ffmpeg
+	url = git://git.linphone.org/ffmpeg.git
 [submodule "submodules/externals/x264"]
 	path = submodules/externals/x264
-	url = git://git.videolan.org/x264.git
+	url = git://git.linphone.org/x264.git
 [submodule "submodules/msx264"]
 	path = submodules/msx264
 	url = git://git.linphone.org/msx264.git
