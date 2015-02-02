@@ -54,12 +54,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		mPrefs = LinphonePreferences.instance();
 	}
 	
-	@Override
-	public void onDestroy() {
-		LinphoneManager.getLc().refreshRegisters();
-		super.onDestroy();
-	}
-	
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -503,7 +497,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 				}
 			} catch (LinphoneCoreException e) {
 				e.printStackTrace();
-			}	
+			}
+
+			LinphoneManager.getLc().refreshRegisters();
 		}
 	}
 }
