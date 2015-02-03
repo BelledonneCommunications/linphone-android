@@ -63,6 +63,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
@@ -83,13 +84,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.linphone.core.LinphoneChatMessage.StateListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneComposingListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneMessageListener;
 
 /**
  * @author Margaux Clerc
  */
-public class ChatActivity extends FragmentActivity implements OnClickListener, LinphoneMessageListener, StateListener, LinphoneComposingListener {
+public class ChatActivity extends FragmentActivity implements OnClickListener, StateListener {
 	private static ChatActivity instance;
 
 	private static final int ADD_PHOTO = 1337;
@@ -131,6 +130,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, L
 	private TextWatcher textWatcher;
 	private ViewTreeObserver.OnGlobalLayoutListener keyboardListener;
 	private ChatMessageAdapter adapter;
+	private LinphoneCoreListenerBase mListener;
 
 	public static boolean isInstanciated() {
 		return instance != null;
@@ -215,6 +215,30 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, L
 			//Only works if using liblinphone storage
 			chatRoom.markAsRead();
 		}
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+				LinphoneAddress from = cr.getPeerAddress();
+				if (from.asStringUriOnly().equals(sipUri)) {
+					if (message.getText() != null) {
+						adapter.refreshHistory();
+						adapter.notifyDataSetChanged();
+					} else if (message.getExternalBodyUrl() != null) {
+						adapter.refreshHistory();
+						adapter.notifyDataSetChanged();
+					}
+					scrollToEnd();
+				}
+			}
+			
+			@Override
+			public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom room) {
+				if (chatRoom != null && room != null && chatRoom.getPeerAddress().asStringUriOnly().equals(room.getPeerAddress().asStringUriOnly())) {
+					remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
+				}
+			}
+		};
 
 		textWatcher = new TextWatcher() {
 			public void afterTextChanged(Editable arg0) {}
@@ -531,7 +555,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, L
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 
 		getIntent().putExtra("MessageDraft", message.getText());
@@ -548,8 +572,11 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, L
 		super.onResume();
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		
+		
+		
 		if (lc != null) {
-			lc.addListener(this);
+			lc.addListener(mListener);
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -681,20 +708,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, L
 		}
 	}
 
-	@Override
-	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-		LinphoneAddress from = cr.getPeerAddress();
-		if (from.asStringUriOnly().equals(sipUri)) {
-			if (message.getText() != null) {
-				adapter.refreshHistory();
-				adapter.notifyDataSetChanged();
-			} else if (message.getExternalBodyUrl() != null) {
-				adapter.refreshHistory();
-				adapter.notifyDataSetChanged();
-			}
-			scrollToEnd();
-		}
-	}
+	
 
 	@Override
 	public synchronized void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
@@ -1077,12 +1091,5 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, L
 		LARGE,
 		REAL;
 	}
-
-	@Override
-	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom room) {
-		if (chatRoom != null && room != null && chatRoom.getPeerAddress().asStringUriOnly().equals(room.getPeerAddress().asStringUriOnly())) {
-			remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
-		}
 	}
-}
 

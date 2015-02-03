@@ -27,7 +27,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreListener.LinphoneEchoCalibrationListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
 import android.os.Build;
@@ -45,38 +45,43 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 /**
  * @author Ghislain MARY
  */
-public class EchoCancellerCalibrationFragment extends Fragment implements LinphoneEchoCalibrationListener {
+public class EchoCancellerCalibrationFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private boolean mSendEcCalibrationResult = false;
+	private LinphoneCoreListenerBase mListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.setup_ec_calibration, container, false);
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void ecCalibrationStatus(LinphoneCore lc,LinphoneCore.EcCalibratorStatus status, int delay_ms, Object data) {
+				LinphoneManager.getInstance().routeAudioToReceiver();
+				
+				if (status == EcCalibratorStatus.DoneNoEcho) {
+					LinphonePreferences.instance().setEchoCancellation(false);
+				} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
+					LinphonePreferences.instance().setEchoCancellation(true);
+				}
+				if (mSendEcCalibrationResult) {
+					sendEcCalibrationResult(status, delay_ms);
+				} else {
+					SetupActivity.instance().isEchoCalibrationFinished();
+				}
+			}
+		};
 
 		try {
-			LinphoneManager.getInstance().startEcCalibration(this);
+			LinphoneManager.getInstance().startEcCalibration(mListener);
 		} catch (LinphoneCoreException e) {
 			Log.e(e, "Unable to calibrate EC");
 		}
 		return view;
 	}
 
-	@Override
-	public void ecCalibrationStatus(LinphoneCore lc,LinphoneCore.EcCalibratorStatus status, int delay_ms, Object data) {
-		LinphoneManager.getInstance().routeAudioToReceiver();
-		
-		if (status == EcCalibratorStatus.DoneNoEcho) {
-			LinphonePreferences.instance().setEchoCancellation(false);
-		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
-			LinphonePreferences.instance().setEchoCancellation(true);
-		}
-		if (mSendEcCalibrationResult) {
-			sendEcCalibrationResult(status, delay_ms);
-		} else {
-			SetupActivity.instance().isEchoCalibrationFinished();
-		}
-	}
+	
 
 	public void enableEcCalibrationResultSending(boolean enabled) {
 		mSendEcCalibrationResult = enabled;

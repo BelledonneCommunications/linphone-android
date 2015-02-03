@@ -29,8 +29,7 @@ import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreListener.LinphoneNotifyListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
@@ -59,7 +58,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class StatusFragment extends Fragment implements LinphoneNotifyListener, LinphoneRegistrationStateListener {
+public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit, voicemailCount;
@@ -72,6 +71,7 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 	private boolean isInCall, isAttached = false;
 	private Timer mTimer;
 	private TimerTask mTask;
+	private LinphoneCoreListenerBase mListener;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -113,13 +113,64 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 		// We create it once to not delay the first display
 		populateSliderContent();
 		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void registrationState(final LinphoneCore lc, LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
+				if (!isAttached || !LinphoneService.isReady()) {
+					return;
+				}
+				
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						statusLed.setImageResource(getStatusIconResource(state, true));
+						statusText.setText(getStatusIconText(state));
+					}
+				});
+				
+				try {
+					if (getResources().getBoolean(R.bool.lock_statusbar)) {
+						statusText.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								lc.refreshRegisters();
+							}
+						});
+					}
+//						setMiniLedsForEachAccount();
+					populateSliderContent();
+					sliderContentAccounts.invalidate();
+				} catch (IllegalStateException ise) {}
+			}
+			
+			@Override
+			public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
+				
+				if(!content.getType().equals("application")) return;
+				if(!content.getSubtype().equals("imple-message-summary")) return;
+
+				if (content.getData() == null) return;
+
+				//TODO Parse 
+				int unreadCount = -1;
+
+				if (unreadCount > 0) {
+					voicemailCount.setText(unreadCount + " unread messages");
+					voicemailCount.setVisibility(View.VISIBLE);
+				} else {
+					voicemailCount.setVisibility(View.GONE);
+				}
+			}
+			
+		};
+		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.addListener(this);
+			lc.addListener(mListener);
 			
 			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
-				registrationState(lc, lpc, lpc.getState(), null);
+				mListener.registrationState(lc, lpc, lpc.getState(), null);
 			}
 		}
 
@@ -191,35 +242,6 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 				sliderContentAccounts.setAdapter(adapter);
 			}
 		}
-	}
-	
-	@Override
-	public void registrationState(final LinphoneCore lc, LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
-		if (!isAttached || !LinphoneService.isReady()) {
-			return;
-		}
-		
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				statusLed.setImageResource(getStatusIconResource(state, true));
-				statusText.setText(getStatusIconText(state));
-			}
-		});
-		
-		try {
-			if (getResources().getBoolean(R.bool.lock_statusbar)) {
-				statusText.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						lc.refreshRegisters();
-					}
-				});
-			}
-//				setMiniLedsForEachAccount();
-			populateSliderContent();
-			sliderContentAccounts.invalidate();
-		} catch (IllegalStateException ise) {}
 	}
 	
 //	private void setMiniLedsForEachAccount() {
@@ -381,7 +403,7 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 	public void onDestroy() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 		
 		super.onDestroy();
@@ -495,7 +517,7 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 									ice.setText(videoStats.getIceState().toString());
 									
 									videoResolutionLayout.setVisibility(View.VISIBLE);
-									videoResolution.setText("↑ " + params.getSentVideoSize().toDisplayableString() + " / ↓ " + params.getReceivedVideoSize().toDisplayableString());
+									videoResolution.setText("��� " + params.getSentVideoSize().toDisplayableString() + " / ��� " + params.getReceivedVideoSize().toDisplayableString());
 								}
 							} else {
 								final LinphoneCallStats audioStats = call.getAudioStats();
@@ -645,23 +667,5 @@ public class StatusFragment extends Fragment implements LinphoneNotifyListener, 
 			return view;
 		}
 	}
-	
-	@Override
-	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
-		
-		if(!content.getType().equals("application")) return;
-		if(!content.getSubtype().equals("imple-message-summary")) return;
 
-		if (content.getData() == null) return;
-
-		//TODO Parse 
-		int unreadCount = -1;
-
-		if (unreadCount > 0) {
-			voicemailCount.setText(unreadCount + " unread messages");
-			voicemailCount.setVisibility(View.VISIBLE);
-		} else {
-			voicemailCount.setVisibility(View.GONE);
-		}
-	}
 }
