@@ -41,9 +41,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneMessageListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
@@ -88,7 +86,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends FragmentActivity implements OnClickListener, ContactPicked, LinphoneCallStateListener, LinphoneMessageListener, LinphoneRegistrationStateListener {
+public class LinphoneActivity extends FragmentActivity implements OnClickListener, ContactPicked {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
@@ -111,6 +109,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
 	private OrientationEventListener mOrientationHelper;
+	private LinphoneCoreListenerBase mListener;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -169,6 +168,53 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				selectMenu(FragmentsAvailable.DIALER);
 			}
 		}
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+		        displayMissedChats(getChatStorage().getUnreadMessageCount());
+		        if (messageListFragment != null && messageListFragment.isVisible()) {
+		            ((ChatListFragment) messageListFragment).refresh();
+		        }
+			}
+			
+			@Override
+			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
+				if (state.equals(RegistrationState.RegistrationCleared)) { 
+					if (lc != null) {
+						LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
+						if (authInfo != null)
+							lc.removeAuthInfo(authInfo);
+					}
+				}
+			}
+			
+			@Override
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				if (state == State.IncomingReceived) {
+					startActivity(new Intent(LinphoneActivity.instance(), IncomingCallActivity.class));
+				} else if (state == State.OutgoingInit) {
+					if (call.getCurrentParamsCopy().getVideoEnabled()) {
+						startVideoActivity(call);
+					} else {
+						startIncallActivity(call);
+					}
+				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
+					// Convert LinphoneCore message for internalization
+					if (message != null && message.equals("Call declined.")) { 
+						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
+					} else if (message != null && message.equals("Not Found")) {
+						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
+					} else if (message != null && message.equals("Unsupported media type")) {
+						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_LONG);
+					}
+					resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+				}
+
+				int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
+				displayMissedCalls(missedCalls);
+			}
+		};
 
 		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
@@ -711,13 +757,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		getChatStorage().deleteDraft(sipUri);
 	}
 
-	@Override
-	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-        displayMissedChats(getChatStorage().getUnreadMessageCount());
-        if (messageListFragment != null && messageListFragment.isVisible()) {
-            ((ChatListFragment) messageListFragment).refresh();
-        }
-	}
+	
 
 	public void updateMissedChatCount() {
 		displayMissedChats(getChatStorage().getUnreadMessageCount());
@@ -739,17 +779,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public void onImageMessageStateChanged(String to, int id, int newState) {
 		getChatStorage().updateMessageStatus(to, id, newState);
-	}
-
-	@Override
-	public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
-		if (state.equals(RegistrationState.RegistrationCleared)) { 
-			if (lc != null) {
-				LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
-				if (authInfo != null)
-					lc.removeAuthInfo(authInfo);
-			}
-		}
 	}
 
 	private void displayMissedCalls(final int missedCallsCount) {
@@ -781,32 +810,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			missedChats.clearAnimation();
 			missedChats.setVisibility(View.GONE);
 		}
-	}
-
-	@Override
-	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-		if (state == State.IncomingReceived) {
-			startActivity(new Intent(this, IncomingCallActivity.class));
-		} else if (state == State.OutgoingInit) {
-			if (call.getCurrentParamsCopy().getVideoEnabled()) {
-				startVideoActivity(call);
-			} else {
-				startIncallActivity(call);
-			}
-		} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
-			// Convert LinphoneCore message for internalization
-			if (message != null && message.equals("Call declined.")) { 
-				displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
-			} else if (message != null && message.equals("Not Found")) {
-				displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
-			} else if (message != null && message.equals("Unsupported media type")) {
-				displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_LONG);
-			}
-			resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-		}
-
-		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
-		displayMissedCalls(missedCalls);
 	}
 
 	public void displayCustomToast(final String message, final int duration) {
@@ -1209,7 +1212,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 		
 		getIntent().putExtra("PreviousActivity", 0);
@@ -1226,7 +1229,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.addListener(this);
+			lc.addListener(mListener);
 		}
 
 		prepareContactsInBackground();

@@ -29,7 +29,7 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListener.LinphoneEchoCalibrationListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
@@ -54,10 +54,11 @@ import android.preference.PreferenceScreen;
 /**
  * @author Sylvain Berfini
  */
-public class SettingsFragment extends PreferencesListFragment implements LinphoneEchoCalibrationListener {
+public class SettingsFragment extends PreferencesListFragment {
 	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
+	private LinphoneCoreListenerBase mListener;
 
 	public SettingsFragment() {
 		super(R.xml.preferences);
@@ -72,6 +73,30 @@ public class SettingsFragment extends PreferencesListFragment implements Linphon
 		initSettings();
 		setListeners();
 		hideSettings();
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
+				LinphoneManager.getInstance().routeAudioToReceiver();
+				
+				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
+				Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
+
+				if (status == EcCalibratorStatus.DoneNoEcho) {
+					echoCancellerCalibration.setSummary(R.string.no_echo);
+					echoCancellation.setChecked(false);
+					LinphonePreferences.instance().setEchoCancellation(false);
+				} else if (status == EcCalibratorStatus.Done) {
+					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+					echoCancellation.setChecked(true);
+					LinphonePreferences.instance().setEchoCancellation(true);
+				} else if (status == EcCalibratorStatus.Failed) {
+					echoCancellerCalibration.setSummary(R.string.failed);
+					echoCancellation.setChecked(true);
+					LinphonePreferences.instance().setEchoCancellation(true);
+				}
+			}
+		};
 	}
 
 	// Inits the values or the listener on some settings
@@ -531,7 +556,7 @@ public class SettingsFragment extends PreferencesListFragment implements Linphon
 			public boolean onPreferenceClick(Preference preference) {
 				synchronized (SettingsFragment.this) {
 					try {
-						LinphoneManager.getInstance().startEcCalibration(SettingsFragment.this);
+						LinphoneManager.getInstance().startEcCalibration(mListener);
 						preference.setSummary(R.string.ec_calibrating);
 					} catch (LinphoneCoreException e) {
 						Log.w(e, "Cannot calibrate EC");
@@ -924,29 +949,7 @@ public class SettingsFragment extends PreferencesListFragment implements Linphon
 			}
 		});
 	}
-
-	@Override
-	public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
-		LinphoneManager.getInstance().routeAudioToReceiver();
-		
-		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
-		Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
-
-		if (status == EcCalibratorStatus.DoneNoEcho) {
-			echoCancellerCalibration.setSummary(R.string.no_echo);
-			echoCancellation.setChecked(false);
-			LinphonePreferences.instance().setEchoCancellation(false);
-		} else if (status == EcCalibratorStatus.Done) {
-			echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
-			echoCancellation.setChecked(true);
-			LinphonePreferences.instance().setEchoCancellation(true);
-		} else if (status == EcCalibratorStatus.Failed) {
-			echoCancellerCalibration.setSummary(R.string.failed);
-			echoCancellation.setChecked(true);
-			LinphonePreferences.instance().setEchoCancellation(true);
-		}
-	}
-
+	
 	@Override
 	public void onResume() {
 		super.onResume();

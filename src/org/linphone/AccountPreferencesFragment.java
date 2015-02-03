@@ -35,8 +35,6 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
 
 /**
  * @author Sylvain Berfini

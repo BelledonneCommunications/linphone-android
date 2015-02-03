@@ -53,7 +53,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
@@ -118,7 +117,7 @@ import android.widget.Toast;
  * @author Guillaume Beraudo
  *
  */
-public class LinphoneManager implements LinphoneListener {
+public class LinphoneManager implements LinphoneCoreListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -448,7 +447,6 @@ public class LinphoneManager implements LinphoneListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
-			mLc.addListener((LinphoneCoreListener) c);
 
 			try {
 				initLiblinphone();
@@ -897,7 +895,7 @@ public class LinphoneManager implements LinphoneListener {
 			boolean encrypted, String authenticationToken) {
 	}
 
-	public void startEcCalibration(LinphoneEchoCalibrationListener l) throws LinphoneCoreException {
+	public void startEcCalibration(LinphoneCoreListener l) throws LinphoneCoreException {
 		routeAudioToSpeaker();
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
@@ -1283,6 +1281,13 @@ public class LinphoneManager implements LinphoneListener {
 	@Override
 	public void uploadStateChanged(LinphoneCore lc,
 			LogCollectionUploadState state, String info) {
+		
+	}
+
+	@Override
+	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
+			int delay_ms, Object data) {
+		// TODO Auto-generated method stub
 		
 	}
 }

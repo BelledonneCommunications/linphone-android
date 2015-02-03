@@ -25,7 +25,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.LinphoneSliders;
@@ -45,7 +45,7 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements LinphoneCallStateListener, LinphoneSliderTriggered {
+public class IncomingCallActivity extends Activity implements LinphoneSliderTriggered {
 
 	private static IncomingCallActivity instance;
 	
@@ -54,6 +54,7 @@ public class IncomingCallActivity extends Activity implements LinphoneCallStateL
 	private AvatarWithShadow mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneSliders mIncomingCallWidget;
+	private LinphoneCoreListenerBase mListener;
 	
 	public static IncomingCallActivity instance() {
 		return instance;
@@ -79,6 +80,19 @@ public class IncomingCallActivity extends Activity implements LinphoneCallStateL
         // "Dial-to-answer" widget for incoming calls.
         mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
         mIncomingCallWidget.setOnTriggerListener(this);
+        
+        mListener = new LinphoneCoreListenerBase(){
+        	@Override
+        	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+        		if (call == mCall && State.CallEnd == state) {
+        			finish();
+        		}
+        		if (state == State.StreamsRunning) {
+        			// The following should not be needed except some devices need it (e.g. Galaxy S).
+        			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+        		}
+        	}
+        };
 
         super.onCreate(savedInstanceState);
 		instance = this;
@@ -90,7 +104,7 @@ public class IncomingCallActivity extends Activity implements LinphoneCallStateL
 		instance = this;
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.addListener(this);
+			lc.addListener(mListener);
 		}
 		
 		// Only one call ringing at a time is allowed
@@ -126,7 +140,7 @@ public class IncomingCallActivity extends Activity implements LinphoneCallStateL
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 		super.onPause();
 	}
@@ -146,16 +160,7 @@ public class IncomingCallActivity extends Activity implements LinphoneCallStateL
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-		if (call == mCall && State.CallEnd == state) {
-			finish();
-		}
-		if (state == State.StreamsRunning) {
-			// The following should not be needed except some devices need it (e.g. Galaxy S).
-			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
-		}
-	}
+
 
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);

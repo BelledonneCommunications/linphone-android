@@ -31,7 +31,7 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
-import org.linphone.core.LinphoneCoreListener.LinphoneRemoteProvisioningListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -48,16 +48,29 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class RemoteProvisioningActivity extends Activity implements LinphoneRemoteProvisioningListener {
+public class RemoteProvisioningActivity extends Activity {
 	private Handler mHandler = new Handler();
 	private String configUriParam = null;
 	private ProgressBar spinner;
+	private LinphoneCoreListenerBase mListener;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.remote_provisioning);
 		spinner = (ProgressBar) findViewById(R.id.spinner);
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void configuringStatus(LinphoneCore lc, final RemoteProvisioningState state, String message) {
+				if (spinner != null) spinner.setVisibility(View.GONE);
+				if (state == RemoteProvisioningState.ConfiguringSuccessful) {
+					goToLinphoneActivity();
+				} else if (state == RemoteProvisioningState.ConfiguringFailed) {
+					Toast.makeText(RemoteProvisioningActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
+				}
+			}
+		};
 	}
 	
 	@Override
@@ -65,7 +78,7 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneRemo
 		super.onResume();
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.addListener(this);
+			lc.addListener(mListener);
 		}
 		LinphonePreferences.instance().setContext(this);
 		
@@ -76,19 +89,9 @@ public class RemoteProvisioningActivity extends Activity implements LinphoneRemo
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 		super.onPause();
-	}
-
-	@Override
-	public void configuringStatus(LinphoneCore lc, final RemoteProvisioningState state, String message) {
-		if (spinner != null) spinner.setVisibility(View.GONE);
-		if (state == RemoteProvisioningState.ConfiguringSuccessful) {
-			goToLinphoneActivity();
-		} else if (state == RemoteProvisioningState.ConfiguringFailed) {
-			Toast.makeText(RemoteProvisioningActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
-		}
 	}
 	
 	@Override

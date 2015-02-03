@@ -31,9 +31,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreImpl;
-import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneGlobalStateListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneRegistrationStateListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -74,8 +72,7 @@ import android.provider.MediaStore;
  * @author Guillaume Beraudo
  *
  */
-public final class LinphoneService extends Service implements LinphoneCallStateListener,
-		LinphoneGlobalStateListener, LinphoneRegistrationStateListener {
+public final class LinphoneService extends Service {
 	/* Listener needs to be implemented in the Service as it calls
 	 * setLatestEventInfo and startActivity() which needs a context.
 	 */
@@ -122,6 +119,7 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 	private PendingIntent mkeepAlivePendingIntent;
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
+	private LinphoneCoreListenerBase mListener;
 
 	public int getMessageNotifCount() {
 		return mMsgNotifCount;
@@ -169,6 +167,80 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 			startWifiLock();
 		}
 		instance = this; // instance is ready once linphone manager has been created
+		
+		mListener = new LinphoneCoreListenerBase(){
+
+			@Override
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				if (instance == null) {
+					Log.i("Service not ready, discarding call state change to ",state.toString());
+					return;
+				}
+				
+				if (state == LinphoneCall.State.IncomingReceived) {
+					onIncomingReceived();
+				}
+				
+				if (state == State.CallUpdatedByRemote) {
+					// If the correspondent proposes video while audio call
+					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
+					boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
+					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+						try {
+							LinphoneManager.getLc().deferCallUpdate(call);
+						} catch (LinphoneCoreException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+				if (state == State.StreamsRunning) {
+					// Workaround bug current call seems to be updated after state changed to streams running
+					if (getResources().getBoolean(R.bool.enable_call_notification))
+						refreshIncallIcon(call);
+					if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
+						mWifiLock.acquire();
+					}
+				} else {
+					if (getResources().getBoolean(R.bool.enable_call_notification))
+						refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
+				}
+				if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
+					if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
+						mWifiLock.release();
+					}
+				}
+			}
+			
+			@Override
+			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
+				if (state == GlobalState.GlobalOn) {
+					sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+				}
+			}
+
+			@Override
+			public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
+//				if (instance == null) {
+//					Log.i("Service not ready, discarding registration state change to ",state.toString());
+//					return;
+//				}
+				if (!mDisableRegistrationStatus) {
+					if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+						sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
+					}
+			
+					if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
+						sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
+					}
+					
+					if (state == RegistrationState.RegistrationNone) {
+						sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+					}
+				}
+			}
+		};
 		
 		// Retrieve methods to publish notification and keep Android
 		// from killing us and keep the audio quality high.
@@ -490,7 +562,7 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 	public synchronized void onDestroy() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 		
 		instance = null;
@@ -506,34 +578,6 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 		}
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
 		super.onDestroy();
-	}
-
-	@Override
-	public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
-		if (state == GlobalState.GlobalOn) {
-			sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
-		}
-	}
-
-	@Override
-	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
-//		if (instance == null) {
-//			Log.i("Service not ready, discarding registration state change to ",state.toString());
-//			return;
-//		}
-		if (!mDisableRegistrationStatus) {
-			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
-				sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
-			}
-	
-			if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
-				sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
-			}
-			
-			if (state == RegistrationState.RegistrationNone) {
-				sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
-			}
-		}
 	}
 	
 	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {
@@ -558,48 +602,6 @@ public final class LinphoneService extends Service implements LinphoneCallStateL
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 	}
 
-	@Override
-	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-		if (instance == null) {
-			Log.i("Service not ready, discarding call state change to ",state.toString());
-			return;
-		}
-		
-		if (state == LinphoneCall.State.IncomingReceived) {
-			onIncomingReceived();
-		}
-		
-		if (state == State.CallUpdatedByRemote) {
-			// If the correspondent proposes video while audio call
-			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
-			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
-			boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-				try {
-					LinphoneManager.getLc().deferCallUpdate(call);
-				} catch (LinphoneCoreException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		if (state == State.StreamsRunning) {
-			// Workaround bug current call seems to be updated after state changed to streams running
-			if (getResources().getBoolean(R.bool.enable_call_notification))
-				refreshIncallIcon(call);
-			if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
-				mWifiLock.acquire();
-			}
-		} else {
-			if (getResources().getBoolean(R.bool.enable_call_notification))
-				refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
-		}
-		if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
-			if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
-				mWifiLock.release();
-			}
-		}
-	}
 
 	public void tryingNewOutgoingCallButAlreadyInCall() {
 	}

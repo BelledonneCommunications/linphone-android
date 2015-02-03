@@ -27,8 +27,7 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListener.LinphoneCallEncryptionStateListener;
-import org.linphone.core.LinphoneCoreListener.LinphoneCallStateListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -70,7 +69,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class InCallActivity extends FragmentActivity implements LinphoneCallStateListener, LinphoneCallEncryptionStateListener, OnClickListener {
+public class InCallActivity extends FragmentActivity implements OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	
@@ -99,6 +98,7 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
 	private ViewGroup container;
 	private boolean isConferenceRunning = false;
 	private boolean showCallListInVideo = false;
+	private LinphoneCoreListenerBase mListener;
 	
 	public static InCallActivity instance() {
 		return instance;
@@ -122,6 +122,100 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
         
         isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
         cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
+        
+        mListener = new LinphoneCoreListenerBase(){
+        	@Override
+        	public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
+        		if (LinphoneManager.getLc().getCallsNb() == 0) {
+        			finish();
+        			return;
+        		}
+        		
+        		if(!LinphonePreferences.instance().isVideoEnabled()){
+        			video.setEnabled(true);
+        		}
+        		
+        		if (state == State.IncomingReceived) {
+        			startIncomingCallActivity();
+        			return;
+        		}
+        		
+        		if (state == State.Paused || state == State.PausedByRemote ||  state == State.Pausing) {
+        			video.setEnabled(false);
+        			if(isVideoEnabled(call)){
+        				showAudioView();
+        			}
+        		}
+        		
+        		if (state == State.Resuming) {
+        			if(LinphonePreferences.instance().isVideoEnabled()){
+        				status.refreshStatusItems(call, isVideoEnabled(call));
+        				if(call.getCurrentParamsCopy().getVideoEnabled()){
+        					showVideoView();
+        				}
+        			}
+        		}
+        		
+        		if (state == State.StreamsRunning) {
+        			switchVideo(isVideoEnabled(call));
+
+        			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+
+        			isMicMuted = LinphoneManager.getLc().isMicMuted();
+        			enableAndRefreshInCallActions();
+        			
+        			if (status != null) {
+        				videoProgress.setVisibility(View.GONE);
+        				status.refreshStatusItems(call, isVideoEnabled(call));
+        			}
+        		}
+        		
+        		refreshInCallActions();
+        		
+        		refreshCallList(getResources());
+        		
+        		if (state == State.CallUpdatedByRemote) {
+        			// If the correspondent proposes video while audio call
+        			boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
+        			if (!videoEnabled) {
+        				acceptCallUpdate(false);
+        				return;
+        			}
+        			
+        			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
+        			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
+        			boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+        			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+        				showAcceptCallUpdateDialog();
+        				
+        				timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
+        					public void onTick(long millisUntilFinished) { }
+        					public void onFinish() {
+        						acceptCallUpdate(false);
+        			    	}
+        				}.start();
+        			} 
+//        			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
+//        				mHandler.post(new Runnable() {
+//        					@Override
+//        					public void run() {
+//        						acceptCallUpdate(true);
+//        					}
+//        				});
+//        			}
+        		}
+        		
+        		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
+        	}
+        	
+        	@Override
+        	public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
+        		if (status != null) {
+        			status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+        		}
+        	}
+        	
+        };
         
         if (findViewById(R.id.fragmentContainer) != null) {
             initUI();
@@ -1039,89 +1133,7 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
 		startActivity(new Intent(this, IncomingCallActivity.class));
 	}
 
-	@Override
-	public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
-		if (LinphoneManager.getLc().getCallsNb() == 0) {
-			finish();
-			return;
-		}
-		
-		if(!LinphonePreferences.instance().isVideoEnabled()){
-			video.setEnabled(true);
-		}
-		
-		if (state == State.IncomingReceived) {
-			startIncomingCallActivity();
-			return;
-		}
-		
-		if (state == State.Paused || state == State.PausedByRemote ||  state == State.Pausing) {
-			video.setEnabled(false);
-			if(isVideoEnabled(call)){
-				showAudioView();
-			}
-		}
-		
-		if (state == State.Resuming) {
-			if(LinphonePreferences.instance().isVideoEnabled()){
-				status.refreshStatusItems(call, isVideoEnabled(call));
-				if(call.getCurrentParamsCopy().getVideoEnabled()){
-					showVideoView();
-				}
-			}
-		}
-		
-		if (state == State.StreamsRunning) {
-			switchVideo(isVideoEnabled(call));
-
-			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
-
-			isMicMuted = LinphoneManager.getLc().isMicMuted();
-			enableAndRefreshInCallActions();
-			
-			if (status != null) {
-				videoProgress.setVisibility(View.GONE);
-				status.refreshStatusItems(call, isVideoEnabled(call));
-			}
-		}
-		
-		refreshInCallActions();
-		
-		refreshCallList(getResources());
-		
-		if (state == State.CallUpdatedByRemote) {
-			// If the correspondent proposes video while audio call
-			boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
-			if (!videoEnabled) {
-				acceptCallUpdate(false);
-				return;
-			}
-			
-			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
-			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
-			boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-				showAcceptCallUpdateDialog();
-				
-				timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
-					public void onTick(long millisUntilFinished) { }
-					public void onFinish() {
-						acceptCallUpdate(false);
-			    	}
-				}.start();
-			} 
-//			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
-//				mHandler.post(new Runnable() {
-//					@Override
-//					public void run() {
-//						acceptCallUpdate(true);
-//					}
-//				});
-//			}
-		}
-		
-		transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
-	}
+	
 	
 	private void showAcceptCallUpdateDialog() {
         FragmentManager fm = getSupportFragmentManager();
@@ -1129,13 +1141,6 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
         callUpdateDialog.show(fm, "Accept Call Update Dialog");
     }
 
-	@Override
-	public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
-		if (status != null) {
-			status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
-		}
-	}
-	
 	@Override
 	protected void onResume() {
 		instance = this;
@@ -1151,7 +1156,7 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.addListener(this);
+			lc.addListener(mListener);
 		}
 
 		refreshCallList(getResources());
@@ -1195,7 +1200,7 @@ public class InCallActivity extends FragmentActivity implements LinphoneCallStat
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
-			lc.removeListener(this);
+			lc.removeListener(mListener);
 		}
 		
 		super.onPause();
