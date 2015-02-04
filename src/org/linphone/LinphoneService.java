@@ -168,7 +168,7 @@ public final class LinphoneService extends Service {
 		}
 		instance = this; // instance is ready once linphone manager has been created
 		
-		mListener = new LinphoneCoreListenerBase(){
+		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase(){
 
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
@@ -240,7 +240,7 @@ public final class LinphoneService extends Service {
 					}
 				}
 			}
-		};
+		});
 		
 		// Retrieve methods to publish notification and keep Android
 		// from killing us and keep the audio quality high.
