@@ -26,7 +26,8 @@ import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListener.LinphoneListener;
+import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneInfoMessage;
@@ -42,7 +43,7 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.TelephonyManager;
 
-public class LinphoneTestManager implements LinphoneListener {
+public class LinphoneTestManager implements LinphoneCoreListener{
 
 	private static LinphoneTestManager instance;
 	private Context mIContext;
@@ -54,6 +55,7 @@ public class LinphoneTestManager implements LinphoneListener {
 	public boolean declineCall = false;
 
 	private final String linphoneRootCaFile;
+	private LinphoneCoreListenerBase mListener;
 
 	private Timer mTimer1 = new Timer("Linphone scheduler 1");
 	private Timer mTimer2 = new Timer("Linphone scheduler 2");
@@ -210,7 +212,8 @@ public class LinphoneTestManager implements LinphoneListener {
 			//escape +
 			lDefaultProxyConfig.setDialEscapePlus(false);
 		} else if (LinphoneService.isReady()) {
-			LinphoneService.instance().registrationState(mLc, lDefaultProxyConfig, RegistrationState.RegistrationNone, null);
+			getLc().addListener(this);
+			this.registrationState(mLc, lDefaultProxyConfig, RegistrationState.RegistrationNone, null);
 		}
 	}
 
@@ -472,6 +475,13 @@ public class LinphoneTestManager implements LinphoneListener {
 	@Override
 	public void uploadStateChanged(LinphoneCore lc, LinphoneCore.LogCollectionUploadState state,
 			String info) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
+									int delay_ms, Object data) {
 		// TODO Auto-generated method stub
 
 	}
