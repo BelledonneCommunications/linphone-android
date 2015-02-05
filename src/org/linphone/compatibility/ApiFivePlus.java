@@ -164,7 +164,7 @@ public class ApiFivePlus {
 		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
 		
 		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + select + ")";
-		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, Data.DISPLAY_NAME + " COLLATE NOCASE ASC");
+		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, Data.DISPLAY_NAME + " COLLATE UNICODE ASC");
 		
 		if (!shouldGroupBy || cursor == null) {
 			return cursor;
