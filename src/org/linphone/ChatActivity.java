@@ -558,7 +558,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 			lc.removeListener(mListener);
 		}
 
-		getIntent().putExtra("MessageDraft", message.getText());
+		getIntent().putExtra("messageDraft", message.getText().toString());
 		super.onPause();
 	}
 
@@ -569,12 +569,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
 
-		super.onResume();
-
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		
-		
-		
+
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -586,12 +582,14 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 			}
 		}
 
-		String draft = getIntent().getStringExtra("messageDraft");
+		String draft = getIntent().getExtras().getString("messageDraft");
 		message.setText(draft);
 
 		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 
 		displayMessages();
+
+		super.onResume();
 	}
 
 	@Override
