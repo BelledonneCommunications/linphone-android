@@ -943,6 +943,8 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String value = (String) newValue;
+				if(value.equals("")) return false;
+
 				mPrefs.setDefaultUsername(value);
 				preference.setSummary(value);
 				return true;
