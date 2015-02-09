@@ -147,15 +147,18 @@ public class StatusFragment extends Fragment {
 			public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
 				
 				if(!content.getType().equals("application")) return;
-				if(!content.getSubtype().equals("imple-message-summary")) return;
+				if(!content.getSubtype().equals("simple-message-summary")) return;
 
 				if (content.getData() == null) return;
 
-				//TODO Parse 
 				int unreadCount = -1;
+				String data = content.getDataAsString();
+				String[] voiceMail = data.split("voice-message: ");
+				final String[] intToParse = voiceMail[1].split("/",0);
 
+				unreadCount = Integer.parseInt(intToParse[0]);
 				if (unreadCount > 0) {
-					voicemailCount.setText(unreadCount + " unread messages");
+					voicemailCount.setText(unreadCount + " " + getResources().getString(R.string.voicemail_unread));
 					voicemailCount.setVisibility(View.VISIBLE);
 				} else {
 					voicemailCount.setVisibility(View.GONE);
@@ -517,7 +520,7 @@ public class StatusFragment extends Fragment {
 									ice.setText(videoStats.getIceState().toString());
 									
 									videoResolutionLayout.setVisibility(View.VISIBLE);
-									videoResolution.setText("��� " + params.getSentVideoSize().toDisplayableString() + " / ��� " + params.getReceivedVideoSize().toDisplayableString());
+									videoResolution.setText("\u2191 " + params.getSentVideoSize().toDisplayableString() + " / \u2193 " + params.getReceivedVideoSize().toDisplayableString());
 								}
 							} else {
 								final LinphoneCallStats audioStats = call.getAudioStats();
