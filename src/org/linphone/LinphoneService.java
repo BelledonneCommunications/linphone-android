@@ -29,8 +29,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactoryImpl;
-import org.linphone.core.LinphoneCoreImpl;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
@@ -137,9 +136,10 @@ public final class LinphoneService extends Service {
 		mNotificationTitle = getString(R.string.service_name);
 
 		// Needed in order for the two next calls to succeed, libraries must have been loaded first
-		LinphoneCoreFactoryImpl.instance();
-		LinphoneCoreImpl.setLogCollectionPath(getFilesDir().getAbsolutePath());
-		LinphoneCoreImpl.enableLogCollection(!(getResources().getBoolean(R.bool.disable_every_log)));
+		LinphoneCoreFactory.instance();
+		Log.w(getFilesDir().getAbsolutePath());
+		LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
+		LinphoneCoreFactory.instance().enableLogCollection(!(getResources().getBoolean(R.bool.disable_every_log)));
 		
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
@@ -167,7 +167,6 @@ public final class LinphoneService extends Service {
 			startWifiLock();
 		}
 		instance = this; // instance is ready once linphone manager has been created
-		
 		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase(){
 
 			@Override
@@ -322,7 +321,7 @@ public final class LinphoneService extends Service {
 		String userName = call.getRemoteAddress().getUserName();
 		String domain = call.getRemoteAddress().getDomain();
 		String displayName = call.getRemoteAddress().getDisplayName();
-		LinphoneAddress address = LinphoneCoreFactoryImpl.instance().createLinphoneAddress(userName,domain,null);
+		LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
 		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
@@ -402,7 +401,7 @@ public final class LinphoneService extends Service {
 		
 		Uri pictureUri;
 		try {
-			pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactoryImpl.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+			pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri), getContentResolver());
 		} catch (LinphoneCoreException e1) {
 			Log.e("Cannot parse from address",e1);
 			pictureUri=null;
