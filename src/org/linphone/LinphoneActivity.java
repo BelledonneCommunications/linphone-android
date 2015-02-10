@@ -38,6 +38,7 @@ import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.LogCollectionUploadState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -215,6 +216,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				displayMissedCalls(missedCalls);
 			}
 		};
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
 
 		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
@@ -1210,11 +1216,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.removeListener(mListener);
-		}
-		
 		getIntent().putExtra("PreviousActivity", 0);
 		super.onPause();
 	}
@@ -1225,11 +1226,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		
 		if (!LinphoneService.isReady())  {
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-		}
-		
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(mListener);
 		}
 
 		prepareContactsInBackground();
@@ -1263,6 +1259,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		if (mOrientationHelper != null) {
 			mOrientationHelper.disable();
 			mOrientationHelper = null;
+		}
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
 		}
 
 		instance = null;
@@ -1407,7 +1408,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			return view;
 		}
 	}
-
 }
 
 interface ContactPicked {
