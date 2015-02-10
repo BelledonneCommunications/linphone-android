@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.LogCollectionUploadState;
-import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
@@ -41,7 +40,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	private FragmentsAvailable about = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
 	View exitButton = null;
 	View sendLogButton = null;
-	LinphoneCoreListener mListener;
+	private LinphoneCoreListenerBase mListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,12 +69,13 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		if (lc != null) {
 			mListener = new LinphoneCoreListenerBase(){
 				@Override
-				public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
-					Log.d("Log upload progress: currently uploaded = " + offset + " , total = " + total + ", % = " + String.valueOf((offset * 100) / total));
+				public void uploadProgressIndication(LinphoneCore linphoneCore, int offset, int total) {
+					if(total > 0)
+						Log.d("Log upload progress: currently uploaded = " + offset + " , total = " + total + ", % = " + String.valueOf((offset * 100) / total));
 				}
 
 				@Override
-				public void uploadStateChanged(LinphoneCore lc, LogCollectionUploadState state, String info) {
+				public void uploadStateChanged(LinphoneCore linphoneCore, LogCollectionUploadState state, String info) {
 					Log.d("Log upload state: " + state.toString() + ", info = " + info);
 					
 					if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered) {
