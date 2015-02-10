@@ -40,6 +40,13 @@ public class WrapperTester extends AndroidTestCase {
 		
 		mCore.setVideoMulticastTtl(4);
 		Assert.assertEquals(4, mCore.getVideoMulticastTtl());
+
+		String address = "Linphone Android <sip:linphone.android@unknown-host>";
+		mCore.setPrimaryContact(address);
+		Assert.assertEquals(LinphoneCoreFactory.instance().createLinphoneAddress(address).getDisplayName(),
+				LinphoneCoreFactory.instance().createLinphoneAddress(mCore.getPrimaryContact()).getDisplayName());
+		Assert.assertEquals(LinphoneCoreFactory.instance().createLinphoneAddress(address).getUserName(),
+				LinphoneCoreFactory.instance().createLinphoneAddress(mCore.getPrimaryContact()).getUserName());
 		
 	}
 
