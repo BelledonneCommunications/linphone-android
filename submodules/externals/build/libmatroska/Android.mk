@@ -33,7 +33,6 @@ LOCAL_C_INCLUDES := \
 LOCAL_SRC_FILES += \
 	libebml2/ebmlbinary.c \
 	libebml2/ebmlcrc.c \
-	libebml2/ebmlcrc.h \
 	libebml2/ebmldate.c \
 	libebml2/ebmlelement.c \
 	libebml2/ebmlmain.c \
@@ -65,4 +64,4 @@ LOCAL_CFLAGS := \
 LOCAL_MODULE := libmatroska2
 
 include $(BUILD_STATIC_LIBRARY)
-	
+
