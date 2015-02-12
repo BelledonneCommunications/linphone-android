@@ -3,17 +3,8 @@
 	<property name="linphone.package.name" value="org.linphone" />
 
 	<target name="-pre-build" description="Move file that is not to be compiled.">
-		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
-			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.ignored"
-			failonerror="false" />
 		<copy file="submodules/linphone/share/xml/lpconfig.xsd"
 			tofile="res/raw/lpconfig.xsd"
-			failonerror="false" />
-	</target>
-
-	<target name="-post-build" description="Restore file that has been moved so that it was not compiled.">
-		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java.ignored"
-			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
 			failonerror="false" />
 	</target>
 
