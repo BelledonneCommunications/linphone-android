@@ -82,7 +82,7 @@ LOCAL_SRC_FILES += \
 	silk/float/scale_vector_FLP.c silk/float/schur_FLP.c \
 	silk/float/sort_FLP.c src/opus.c src/opus_decoder.c \
 	src/opus_encoder.c src/opus_multistream.c src/repacketizer.c \
-	src/analysis.c src/mlp.c src/mlp_data.c 
+	src/analysis.c src/mlp.c src/mlp_data.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \
@@ -94,5 +94,8 @@ LOCAL_CFLAGS += -include ../build/opus/config.h
 
 
 LOCAL_ARM_MODE := arm
+
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
 
 include $(BUILD_STATIC_LIBRARY)

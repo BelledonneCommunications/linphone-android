@@ -48,7 +48,7 @@ fft_SRC_FILES += libspeex/smallft.c
 # Un-comment for KISS_FFT
 fft_SRC_FILES += \
 	libspeex/kiss_fft.c \
-	libspeex/kiss_fftr.c 
+	libspeex/kiss_fftr.c
 
 libspeexdsp_SRC_FILES := \
 	libspeex/preprocess.c \
@@ -66,7 +66,7 @@ LOCAL_SRC_FILES := \
 	$(libspeex_SRC_FILES) \
 	$(libspeexdsp_SRC_FILES)
 
-#	-DARM4_ASM 
+#	-DARM4_ASM
 
 
 USE_FLOAT=0
@@ -82,19 +82,21 @@ ifeq ($(TARGET_ARCH),arm)
 		# add NEON support
 		LOCAL_SRC_FILES += libspeex/resample_neon.c.neon
 		ifeq ($(USE_FLOAT),1)
-			LOCAL_CFLAGS += -DFLOATING_POINT=1 
-		else 
+			LOCAL_CFLAGS += -DFLOATING_POINT=1
+		else
 			LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)
 		endif
 	else
 		LOCAL_CFLAGS += $(FIXED_POINT_FLAGS)
-	endif 
+	endif
 else
 LOCAL_CFLAGS += \
 	-DFLOATING_POINT=1
 endif
 
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
 
 LOCAL_CFLAGS += \
 	-UHAVE_CONFIG_H \

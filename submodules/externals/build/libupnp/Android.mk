@@ -66,5 +66,8 @@ LOCAL_C_FLAGS += -DPTHREAD_MUTEX_RECURSIVE=PTHREAD_MUTEX_RECURSIVE
 
 LOCAL_MODULE:= libupnp
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
+
 include $(BUILD_STATIC_LIBRARY)
 

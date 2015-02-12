@@ -32,5 +32,8 @@ LOCAL_SRC_FILES := \
 	antlr3tokenstream.c \
 	antlr3treeparser.c \
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
+
 include $(BUILD_STATIC_LIBRARY)
 

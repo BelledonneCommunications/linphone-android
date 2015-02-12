@@ -63,5 +63,8 @@ LOCAL_CFLAGS := \
 
 LOCAL_MODULE := libmatroska2
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
+
 include $(BUILD_STATIC_LIBRARY)
 
