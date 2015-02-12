@@ -137,7 +137,6 @@ public final class LinphoneService extends Service {
 
 		// Needed in order for the two next calls to succeed, libraries must have been loaded first
 		LinphoneCoreFactory.instance();
-		Log.w(getFilesDir().getAbsolutePath());
 		LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
 		LinphoneCoreFactory.instance().enableLogCollection(!(getResources().getBoolean(R.bool.disable_every_log)));
 		
