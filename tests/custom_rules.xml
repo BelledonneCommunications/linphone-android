@@ -28,7 +28,11 @@
 		</exec>
 
 		<condition property="has.crashed" >
-			<resourcecontains resource="${output.file}" substring="Process crashed" />
+            <or>
+                <resourcecontains resource="${output.file}" substring="Process crashed" />
+                <resourcecontains resource="${output.file}" substring="Native crash" />
+            </or>
+
 		</condition>
 		<exec executable="bash" unless:set="has.crashed">
 			<arg value="-c"/>
