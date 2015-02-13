@@ -92,6 +92,12 @@ else
 	ANT=ant -e
 endif
 
+# Temporary check: in case of MediastreamActivity.java file existing while it should not anymore, print an error message
+# and abort build since otherwise java compilation will fail.
+ifneq ($(shell ls ./submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java 2>/dev/null),)
+$(error ./submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java found: please either remove it or move it to MediastreamActivity.java.ignored before continuing.)
+endif
+
 all: update-project generate-apk
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
 	@echo "***************************************************************************"
