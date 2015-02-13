@@ -455,7 +455,7 @@ uninstall:
 	adb uninstall $(PACKAGE_NAME)
 
 install-apk:
-	$(ANT) installd
+	ant installd
 
 release: update-project
 	$(ANT) clean
@@ -465,7 +465,7 @@ release: update-project
 	$(ANT) release
 
 run-linphone:
-	$(ANT) run
+	ant run
 
 run-liblinphone-tests: liblinphone_tester
 	$(MAKE) -C liblinphone_tester run-all-tests
