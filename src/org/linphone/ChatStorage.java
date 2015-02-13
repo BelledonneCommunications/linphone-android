@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.linphone.core.LinphoneChatMessage;
@@ -378,20 +380,33 @@ public class ChatStorage {
 		ArrayList<String> chatList = new ArrayList<String>();
 		
 		if (useNativeAPI) {
-			ArrayList<String> chatListReadMessages = new ArrayList<String>();
-			
 			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+			List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
+			
 			for (LinphoneChatRoom chatroom : chats) {
 				if (chatroom.getHistory(1).length > 0) {
-					if (chatroom.getUnreadMessagesCount() > 0) {
-						chatList.add(chatroom.getPeerAddress().asStringUriOnly());
-					} else {
-						chatListReadMessages.add(chatroom.getPeerAddress().asStringUriOnly());
-					}
+					rooms.add(chatroom);
 				}
 			}
-			chatList.addAll(chatListReadMessages);
 			
+			Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
+				@Override
+				public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
+					// /!\ Warning: Have to take the second element because it returns two even when asking for only one...
+					long atime = a.getHistory(1)[1].getTime();
+					long btime = b.getHistory(1)[1].getTime();
+					if (atime > btime)
+						return -1;
+					else if (btime > atime)
+						return 1;
+					else
+						return 0;
+				}
+			});
+			
+			for (LinphoneChatRoom chatroom : rooms) {
+				chatList.add(chatroom.getPeerAddress().asStringUriOnly());
+			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, null, null, "remoteContact", null, "id DESC");
 			while (c != null && c.moveToNext()) {
