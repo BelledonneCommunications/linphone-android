@@ -8,7 +8,7 @@
     
     <ImageView 
         android:id="@+id/image"
-		android:contentDescription="@string/content_description_next"
+        android:contentDescription="@string/content_description_next"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:src="@drawable/setup_next"

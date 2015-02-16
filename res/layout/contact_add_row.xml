@@ -7,7 +7,7 @@
 	android:padding="10dp">
    
    	<ImageView
-   	    android:contentDescription="@string/content_description_delete"
+   	    android:contentDescription="@string/content_description_add"
    	    android:id="@+id/add"
  		android:layout_width="wrap_content"
  		android:layout_height="wrap_content"

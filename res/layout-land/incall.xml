@@ -44,6 +44,7 @@
         android:visibility="invisible" />
     
     <org.linphone.ui.Numpad
+        android:contentDescription="@string/content_description_numpad"
         android:id="@+id/numpad"
         android:background="@drawable/dialer_alt_background"
         android:layout_width="wrap_content"
@@ -62,6 +63,7 @@
         android:orientation="horizontal" >
 
         <TextView
+            android:contentDescription="@string/content_description_pause"
             android:id="@+id/pause"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,6 +73,7 @@
             android:paddingTop="30dp" />
            
         <TextView
+            android:contentDescription="@string/content_description_conference"
             android:id="@+id/conference"
             android:visibility="gone"
             android:layout_width="match_parent"
@@ -122,6 +125,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:contentDescription="@string/content_description_hang_up"
             android:id="@+id/hangUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -236,6 +240,7 @@
 
           <TextView
           	android:id="@+id/dialer"
+            android:contentDescription="@string/content_description_dialer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

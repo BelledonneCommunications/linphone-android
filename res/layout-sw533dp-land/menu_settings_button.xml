@@ -11,7 +11,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/content_description_about"
+		android:contentDescription="@string/content_description_settings"
  		android:scaleType="fitXY"
 		android:src="@drawable/settings" />
 
