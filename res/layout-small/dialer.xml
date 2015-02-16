@@ -40,6 +40,7 @@
         
         <org.linphone.ui.CallButton
             android:id="@+id/Call"
+            android:contentDescription="@string/content_description_call"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -48,6 +49,7 @@
         
         <org.linphone.ui.EraseButton
             android:id="@+id/Erase"
+            android:contentDescription="@string/content_description_backspace"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

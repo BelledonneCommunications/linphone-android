@@ -51,7 +51,7 @@
 			android:layout_weight="1"/>
 
 		<TextView
-			android:contentDescription="@string/content_description_add_contact"
+			android:contentDescription="@string/content_description_new_contact"
 			android:id="@+id/newContact"
 			android:background="@drawable/contacts_add_contact"
 			android:text="@string/button_add_contact"
@@ -84,6 +84,7 @@
 			android:paddingRight="5dp"/>
 
 		<EditText
+            android:contentDescription="@string/content_description_search"
 			android:textCursorDrawable="@null"
 			android:id="@+id/searchField"
 			android:layout_width="match_parent"

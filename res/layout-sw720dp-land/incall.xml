@@ -156,6 +156,7 @@
 	        
 	        <TextView
 		        android:id="@+id/conference"
+                android:contentDescription="@string/content_description_conference"
 		        android:visibility="gone"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
@@ -163,18 +164,21 @@
 	        
 	        <TextView
 		        android:id="@+id/pause"
+                android:contentDescription="@string/content_description_pause"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:background="@drawable/pause_off" />
 	        
 	        <TextView
 	            android:id="@+id/dialer"
+                android:contentDescription="@string/content_description_dialer"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:background="@drawable/dialer_alt" />
 	        
 	        <TextView
 		        android:id="@+id/hangUp"
+                android:contentDescription="@string/content_description_hang_up"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:background="@drawable/hangup" />

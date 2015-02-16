@@ -31,6 +31,7 @@
             
 	        <ImageView
 	            android:id="@+id/setup_create_account"
+                android:contentDescription="@string/setup_create_account"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
@@ -58,6 +59,7 @@
             
 	        <ImageView
 	            android:id="@+id/setup_login_linphone"
+                android:contentDescription="@string/setup_login_linphone"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
@@ -85,6 +87,7 @@
             
 	        <ImageView
 	            android:id="@+id/setup_login_generic"
+                android:contentDescription="@string/setup_login_generic"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
@@ -112,6 +115,7 @@
             
 	        <ImageView
 	            android:id="@+id/setup_remote_provisioning"
+                android:contentDescription="@string/setup_remote_provisioning"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
