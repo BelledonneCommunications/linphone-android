@@ -152,8 +152,8 @@ FFMPEG_CONFIGURE_OPTIONS=--target-os=linux --enable-cross-compile --enable-runti
 	--disable-everything --disable-doc --disable-ffplay --disable-ffmpeg --disable-ffprobe --disable-ffserver \
 	--disable-avdevice --disable-avfilter --disable-avformat --disable-swresample --disable-network \
 	--enable-decoder=mjpeg --enable-encoder=mjpeg --enable-decoder=mpeg4 --enable-encoder=mpeg4 --enable-decoder=h264 \
-	--enable-decoder=h263p --enable-encoder=h263p --enable-decoder=h263 --enable-encoder=h263\
-	--disable-static --enable-shared --disable-symver --disable-warnings
+	--enable-decoder=h263p --enable-encoder=h263p --enable-decoder=h263 --enable-encoder=h263 --extra-cflags="-w" \
+	--disable-static --enable-shared --disable-symver
 FFMPEG_ARM_CONFIGURE_OPTIONS=--build-suffix=-linphone-arm --arch=arm --sysroot=$(ARM_SYSROOT) --cross-prefix=$(ARM_TOOLCHAIN_PATH) --enable-pic
 FFMPEG_X86_CONFIGURE_OPTIONS=--build-suffix=-linphone-x86 --arch=x86 --sysroot=$(X86_SYSROOT) --cross-prefix=$(X86_TOOLCHAIN_PATH) --disable-mmx --disable-sse2 --disable-ssse3 --extra-cflags='-O3'
 
@@ -161,11 +161,7 @@ $(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt:
 	@patch -p0 < $(TOPDIR)/patches/ffmpeg_non_versioned_soname.patch
 	touch $@
 
-$(FFMPEG_SRC_DIR)/disable_compiler_warnings_patch_applied.txt:
-	@patch -p0 < $(TOPDIR)/patches/ffmpeg_disable_compiler_warnings.patch
-	touch  $@
-
-$(FFMPEG_BUILD_DIR)/arm/config.h: $(FFMPEG_SRC_DIR)/disable_compiler_warnings_patch_applied.txt
+$(FFMPEG_BUILD_DIR)/arm/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
         cd $(FFMPEG_BUILD_DIR)/arm && \
         $(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS)
@@ -182,7 +178,7 @@ $(FFMPEG_BUILD_DIR)/arm/libffmpeg-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/libav
 	rm libavcodec/log2_tab.o && \
 	$(ARM_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(ARM_SYSROOT) -Wl,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/arm/*.o libavcodec/*.o libavcodec/arm/*.o libswscale/*.o -o libffmpeg-linphone-arm.so
 
-$(FFMPEG_BUILD_DIR)/x86/config.h: $(FFMPEG_SRC_DIR)/disable_compiler_warnings_patch_applied.txt
+$(FFMPEG_BUILD_DIR)/x86/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
         cd $(FFMPEG_BUILD_DIR)/x86 && \
         $(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS)
