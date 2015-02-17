@@ -21,10 +21,12 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 
@@ -53,6 +55,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private LinphonePreferences mPrefs;
 	private boolean accountCreated = false;
 	private LinphoneCoreListenerBase mListener;
+	private LinphoneAddress address;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,13 +81,17 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
         mListener = new LinphoneCoreListenerBase(){
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
-        		if (state == RegistrationState.RegistrationOk) {
-        			if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-        				launchEchoCancellerCalibration(true);
-        			}
-        		} else if (state == RegistrationState.RegistrationFailed) {
-        			Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
-        		}
+				if(accountCreated){
+					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
+						if (state == RegistrationState.RegistrationOk) {
+							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+								launchEchoCancellerCalibration(true);
+							}
+						} else if (state == RegistrationState.RegistrationFailed) {
+							Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+						}
+					}
+				}
         	}
         };
         
@@ -297,7 +304,13 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	public void saveCreatedAccount(String username, String password, String domain) {
 		if (accountCreated)
 			return;
-		
+
+		String identity = "sip:" + username + "@" + domain;
+		try {
+			address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
@@ -327,7 +340,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
-			mPrefs.setPushNotificationEnabled(true);
 		} else {
 			String forcedProxy = getResources().getString(R.string.setup_forced_proxy);
 			if (!TextUtils.isEmpty(forcedProxy)) {
