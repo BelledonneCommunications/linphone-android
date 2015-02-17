@@ -389,20 +389,25 @@ public class ChatStorage {
 				}
 			}
 			
-			Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
-				@Override
-				public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
-					// /!\ Warning: Have to take the second element because it returns two even when asking for only one...
-					long atime = a.getHistory(1)[1].getTime();
-					long btime = b.getHistory(1)[1].getTime();
-					if (atime > btime)
-						return -1;
-					else if (btime > atime)
-						return 1;
-					else
-						return 0;
-				}
-			});
+			if (rooms.size() > 1) {
+				Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
+					@Override
+					public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
+						LinphoneChatMessage[] messagesA = a.getHistory(1);
+						LinphoneChatMessage[] messagesB = b.getHistory(1);
+						long atime, btime;
+						// /!\ Warning: Have to take the second element because it returns two even when asking for only one...
+						atime = messagesA.length > 1 ? messagesA[1].getTime() : messagesA[0].getTime();
+						btime = messagesA.length > 1 ? messagesB[1].getTime() : messagesB[0].getTime();
+						if (atime > btime)
+							return -1;
+						else if (btime > atime)
+							return 1;
+						else
+							return 0;
+					}
+				});
+			}
 			
 			for (LinphoneChatRoom chatroom : rooms) {
 				chatList.add(chatroom.getPeerAddress().asStringUriOnly());
