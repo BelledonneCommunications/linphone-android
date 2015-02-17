@@ -26,17 +26,17 @@ public class ConferenceAndMultiCall extends SampleTest {
 	@LargeTest
 	public void testAInit() {
 		LinphoneTestManager.createAndStart(aContext, iContext, 2);
-		
+
 		solo.sleep(2000);
 		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc(2).getProxyConfigList()[0].getState());
-		
+
 		//Disable video
 		goToSettings();
 
 		selectItemInListOnUIThread(3);
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_enable_title));
 		solo.sleep(500);
-		
+
 		solo.goBack();
 		solo.sleep(1000);
 		Assert.assertFalse(LinphoneManager.getLc().isVideoEnabled());
@@ -48,7 +48,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 	public void testBSimpleConference() {
 		LinphoneTestManager.getInstance().declineCall = false; // Just in case
 		startConference();
-		
+
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
@@ -57,13 +57,14 @@ public class ConferenceAndMultiCall extends SampleTest {
 	@LargeTest
 	public void testCRemoveOneFromConference() {
 		startConference();
-		
+
 		solo.clickOnView(solo.getView(org.linphone.R.id.callStatus));
-		
+
 		Assert.assertEquals(1, LinphoneTestManager.getLc(1).getCallsNb());
 		Assert.assertEquals(1, LinphoneTestManager.getLc(2).getCallsNb());
+		solo.sleep(1000);
 		Assert.assertFalse(LinphoneManager.getLc().isInConference());
-		
+
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -74,18 +75,18 @@ public class ConferenceAndMultiCall extends SampleTest {
 	@LargeTest
 	public void testDChangePausedCall() {
 		startTwoCalls();
-		
+
 		solo.sleep(2000);
 		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
 		LinphoneCall call2 = LinphoneTestManager.getLc(2).getCalls()[0];
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call2.getState());
 		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
-		
+
 		solo.clickOnView(solo.getView(org.linphone.R.id.callStatus));
 		solo.sleep(2000);
 		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call1.getState());
 		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call2.getState());
-		
+
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
