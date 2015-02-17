@@ -131,10 +131,6 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
         			return;
         		}
         		
-        		if(!LinphonePreferences.instance().isVideoEnabled()){
-        			video.setEnabled(true);
-        		}
-        		
         		if (state == State.IncomingReceived) {
         			startIncomingCallActivity();
         			return;
@@ -155,9 +151,14 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
         				}
         			}
         		}
-        		
+
         		if (state == State.StreamsRunning) {
         			switchVideo(isVideoEnabled(call));
+
+					//Check media in progress
+					if(LinphonePreferences.instance().isVideoEnabled() && !call.mediaInProgress()){
+						video.setEnabled(true);
+					}
 
         			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 
@@ -432,7 +433,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 		transfer.setEnabled(getResources().getBoolean(R.bool.allow_transfers));
 		options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
 		
-		video.setEnabled(true);
+		//video.setEnabled(true);
 		micro.setEnabled(true);
 		if(!isTablet()){
 			speaker.setEnabled(true);
