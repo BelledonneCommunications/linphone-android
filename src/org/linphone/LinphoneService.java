@@ -35,7 +35,6 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -49,8 +48,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -105,8 +102,6 @@ public final class LinphoneService extends Service {
 
 //	private boolean mTestDelayElapsed; // add a timer for testing
 	private boolean mTestDelayElapsed = true; // no timer
-	private WifiManager mWifiManager;
-	private WifiLock mWifiLock;
 	private NotificationManager mNM;
 
 	private Notification mNotif;
@@ -159,11 +154,7 @@ public final class LinphoneService extends Service {
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
-		
-		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
-			startWifiLock();
-		}
+
 		instance = this; // instance is ready once linphone manager has been created
 		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase(){
 
@@ -196,17 +187,9 @@ public final class LinphoneService extends Service {
 					// Workaround bug current call seems to be updated after state changed to streams running
 					if (getResources().getBoolean(R.bool.enable_call_notification))
 						refreshIncallIcon(call);
-					if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
-						mWifiLock.acquire();
-					}
 				} else {
 					if (getResources().getBoolean(R.bool.enable_call_notification))
 						refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
-				}
-				if ((state == State.CallEnd || state == State.Error) && LinphoneManager.getLc().getCallsNb() < 1) {
-					if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
-						mWifiLock.release();
-					}
 				}
 			}
 			
@@ -274,12 +257,6 @@ public final class LinphoneService extends Service {
 																							, SystemClock.elapsedRealtime()+600000
 																							, 600000
 																							, mkeepAlivePendingIntent);
-	}
-	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-	private void startWifiLock() {
-		mWifiLock = mWifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, this.getPackageName()+"-wifi-call-lock");
-		mWifiLock.setReferenceCounted(false);
 	}
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
@@ -569,10 +546,7 @@ public final class LinphoneService extends Service {
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
 	    mNM.cancel(MESSAGE_NOTIF_ID);
-	    
-	    if (Version.sdkAboveOrEqual(Version.API12_HONEYCOMB_MR1_31X)) {
-			mWifiLock.release();
-		}
+
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
 		super.onDestroy();
 	}
