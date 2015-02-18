@@ -381,7 +381,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 	}
 
 	public void dispayMessageList() {
-		adapter = new ChatMessageAdapter(this.getApplicationContext(), chatRoom.getHistory());
+		adapter = new ChatMessageAdapter(this, chatRoom.getHistory());
 		messagesList.setAdapter(adapter);
 	}
 
