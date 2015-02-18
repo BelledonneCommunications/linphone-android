@@ -966,6 +966,7 @@ public class LinphonePreferences {
 	public void setDebugEnabled(boolean enabled) {
 		getConfig().setBool("app", "debug", enabled);
 		LinphoneCoreFactory.instance().setDebugMode(enabled, getString(R.string.app_name));
+		LinphoneCoreFactory.instance().enableLogCollection(enabled);
 	}
 
 	public boolean isDebugEnabled() {
