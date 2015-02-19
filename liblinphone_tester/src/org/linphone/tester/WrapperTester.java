@@ -3,6 +3,7 @@ package org.linphone.tester;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.PayloadType;
 
 import android.test.AndroidTestCase;
 import junit.framework.Assert;
@@ -41,12 +42,17 @@ public class WrapperTester extends AndroidTestCase {
 		mCore.setVideoMulticastTtl(4);
 		Assert.assertEquals(4, mCore.getVideoMulticastTtl());
 
+		//Test setPrimaryContact
 		String address = "Linphone Android <sip:linphone.android@unknown-host>";
 		mCore.setPrimaryContact(address);
 		Assert.assertEquals(LinphoneCoreFactory.instance().createLinphoneAddress(address).getDisplayName(),
 				LinphoneCoreFactory.instance().createLinphoneAddress(mCore.getPrimaryContact()).getDisplayName());
 		Assert.assertEquals(LinphoneCoreFactory.instance().createLinphoneAddress(address).getUserName(),
 				LinphoneCoreFactory.instance().createLinphoneAddress(mCore.getPrimaryContact()).getUserName());
+
+		//Test setPayloadTypeNumber
+		mCore.setPayloadTypeNumber(mCore.findPayloadType("PCMU"),12);
+		Assert.assertEquals(mCore.getPayloadTypeNumber(mCore.findPayloadType("PCMU")),12);
 		
 	}
 

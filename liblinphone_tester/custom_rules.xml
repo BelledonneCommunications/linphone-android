@@ -50,7 +50,10 @@
 			</condition>
 		</fail>
 		<condition property="has.crashed" >
-				<resourcecontains resource="${output.file}" substring="Process crashed" />
+            <or>
+                <resourcecontains resource="${output.file}" substring="Process crashed" />
+                <resourcecontains resource="${output.file}" substring="Native crash" />
+            </or>
 		</condition>
 		<antcall target="check-for-crash"/>
 		<delete file="${archive.name}"/>
