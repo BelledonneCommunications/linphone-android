@@ -149,6 +149,7 @@
   <string name="about_mailer_chooser_text">Send bug report with…</string>
   <string name="menu_about">About</string>
   <string name="menu_send_log">Send log</string>
+  <string name="menu_reset_log">Reset log</string>
   <string name="pref_audio">Audio</string>
   <string name="menu_exit">Exit</string>
   <string name="pref_prefix">Prefix</string>
