@@ -61,13 +61,20 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
        		android:text="@string/menu_send_log"/>
-		
-       	<Button android:id="@+id/exit"
+
+        <Button
+            android:id="@+id/reset_log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_reset_log"
+            />
+
+        <Button android:id="@+id/exit"
         	android:gravity="center"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:text="@string/menu_exit"/>
-       	
+
     </LinearLayout>
 
 </LinearLayout>

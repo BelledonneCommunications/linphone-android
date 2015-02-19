@@ -40,6 +40,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	private FragmentsAvailable about = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
 	View exitButton = null;
 	View sendLogButton = null;
+	View resetLogButton = null;
 	private LinphoneCoreListenerBase mListener;
 
 	@Override
@@ -60,6 +61,10 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		sendLogButton = view.findViewById(R.id.send_log);
 		sendLogButton.setOnClickListener(this);
 		sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+
+		resetLogButton = view.findViewById(R.id.reset_log);
+		resetLogButton.setOnClickListener(this);
+		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
 		exitButton = view.findViewById(R.id.exit);
 		exitButton.setOnClickListener(this);
@@ -118,11 +123,15 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (v == sendLogButton) {
 				//LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
-				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				if (lc != null) {
 					lc.uploadLogCollection();
+				}
+			} else if (v == resetLogButton) {
+				if (lc != null) {
+					lc.resetLogCollection();
 				}
 			} else {
 				LinphoneActivity.instance().exit();
