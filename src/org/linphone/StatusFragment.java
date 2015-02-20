@@ -115,18 +115,14 @@ public class StatusFragment extends Fragment {
 		
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
-			public void registrationState(final LinphoneCore lc, LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
+			public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
 				if (!isAttached || !LinphoneService.isReady()) {
 					return;
 				}
-				
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						statusLed.setImageResource(getStatusIconResource(state, true));
-						statusText.setText(getStatusIconText(state));
-					}
-				});
+						if (lc.getDefaultProxyConfig().equals(proxy)) {
+							statusLed.setImageResource(getStatusIconResource(state, true));
+							statusText.setText(getStatusIconText(state));
+						}
 				
 				try {
 					if (getResources().getBoolean(R.bool.lock_statusbar)) {
