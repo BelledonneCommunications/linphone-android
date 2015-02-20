@@ -154,8 +154,10 @@ public class Digit extends Button implements AddressAware {
 			
 			if(id == R.id.Digit1 && lc.getCalls().length == 0){
 				String voiceMail = LinphonePreferences.instance().getVoiceMailUri();
+				mAddress.getEditableText().clear();
+				mAddress.getEditableText().append(voiceMail);
 				if(voiceMail != null){
-					LinphoneManager.getInstance().newOutgoingCall(voiceMail,"");
+					LinphoneManager.getInstance().newOutgoingCall(mAddress);
 				}
 				return true;
 			}
