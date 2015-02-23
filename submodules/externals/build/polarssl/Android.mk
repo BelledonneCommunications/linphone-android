@@ -36,7 +36,6 @@ LOCAL_SRC_FILES := \
 	md.c \
 	md_wrap.c \
 	memory_buffer_alloc.c \
-	memory.c \
 	net.c \
 	oid.c \
 	padlock.c \
@@ -69,7 +68,10 @@ LOCAL_SRC_FILES := \
 	x509_csr.c \
 	x509write_crt.c \
 	x509write_csr.c \
-	xtea.c 
+	xtea.c \
+	ccm.c \
+	ssl_cookie.c \
+	hmac_drbg.c
 
 
 
