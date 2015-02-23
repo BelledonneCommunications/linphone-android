@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="custom_rules">
+<project name="custom_rules" xmlns:unless="ant:unless">
 	<target name="run">
 		<exec executable="adb">
 			<arg value="shell" />
