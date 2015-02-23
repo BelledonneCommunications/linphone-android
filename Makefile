@@ -510,3 +510,9 @@ linphone-android-sdk: generate-apk
 mediastreamer2-sdk: update-mediastreamer2-project generate-mediastreamer2-apk
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
 	$(ANT) mediastreamer2-sdk
+
+pull-transifex:
+	tx pull -af
+
+push-transifex:
+	tx push -s -t -f

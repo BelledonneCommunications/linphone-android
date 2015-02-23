@@ -158,6 +158,7 @@
   <string name="button_history">Geschiedenis</string>
   <string name="button_contacts">Contacten</string>
   <string name="button_settings">Instellingen</string>
+  <string name="button_chat">Chat</string>
   <string name="button_about">Over</string>
   <string name="button_setup_cancel">Annuleren</string>
   <string name="button_cancel">Annuleren</string>
