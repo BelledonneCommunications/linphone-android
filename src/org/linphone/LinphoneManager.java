@@ -848,11 +848,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 					}
 				}
 			}
-
-			// Give user some hint about the error...
-			if (state == State.Error && LinphoneActivity.isInstanciated() ) {
-				LinphoneActivity.instance().displayCustomToast("Call errored: " + message, Toast.LENGTH_LONG);
-			}
 		}
 
 		if (state == State.CallEnd) {
@@ -1276,19 +1271,19 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 	@Override
 	public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
-		
+
 	}
 
 	@Override
 	public void uploadStateChanged(LinphoneCore lc,
 			LogCollectionUploadState state, String info) {
-		
+
 	}
 
 	@Override
 	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
 			int delay_ms, Object data) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
