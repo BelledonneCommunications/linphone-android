@@ -75,7 +75,7 @@ LOCAL_SRC_FILES := \
 
 
 
-LOCAL_CFLAGS += -Wno-error=maybe-uninitialized
+LOCAL_CFLAGS += -Wno-maybe-uninitialized
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/../include
