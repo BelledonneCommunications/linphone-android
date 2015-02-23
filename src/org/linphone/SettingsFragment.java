@@ -394,6 +394,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		boolean hasZrtp = lc.mediaEncryptionSupported(MediaEncryption.ZRTP);
 		boolean hasSrtp = lc.mediaEncryptionSupported(MediaEncryption.SRTP);
 		boolean hasDtls = lc.mediaEncryptionSupported(MediaEncryption.DTLS);
+
 		if (!hasSrtp && !hasZrtp && !hasDtls) {
 			pref.setEnabled(false);
 		} else {
@@ -845,6 +846,8 @@ public class SettingsFragment extends PreferencesListFragment {
 					menc = MediaEncryption.SRTP;
 				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
 					menc = MediaEncryption.ZRTP;
+				else if (value.equals(getString(R.string.pref_media_encryption_key_dtls)))
+					menc = MediaEncryption.DTLS;
 				mPrefs.setMediaEncryption(menc);
 
 				preference.setSummary(mPrefs.getMediaEncryption().toString());
