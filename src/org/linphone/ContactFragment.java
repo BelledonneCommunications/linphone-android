@@ -229,13 +229,13 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	
 	private void deleteExistingContact() {
 		String select = ContactsContract.Data.CONTACT_ID + " = ?"; 
-		String[] args = new String[] { contact.getID() };   
-		
+		String[] args = new String[] { contact.getID() };
+
 		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-    		.withSelection(select, args) 
-            .build()
-        );
+		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+			.withSelection(select, args)
+			.build()
+		);
         
         try {
             getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
