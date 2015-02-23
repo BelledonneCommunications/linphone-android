@@ -135,6 +135,7 @@ public class StatusFragment extends Fragment {
 					}
 //						setMiniLedsForEachAccount();
 					populateSliderContent();
+					populateSliderContent();
 					sliderContentAccounts.invalidate();
 				} catch (IllegalStateException ise) {}
 			}
@@ -419,7 +420,7 @@ public class StatusFragment extends Fragment {
 				background.setVisibility(View.VISIBLE);
 			}
 			
-			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
+			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
 				encryption.setImageResource(R.drawable.security_ok);
 			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
 				encryption.setImageResource(R.drawable.security_pending);
