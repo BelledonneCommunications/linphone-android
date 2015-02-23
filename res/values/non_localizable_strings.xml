@@ -97,6 +97,7 @@
     <string name="pref_media_encryption_key_none">none</string>
     <string name="pref_media_encryption_key_srtp">srtp</string>
     <string name="pref_media_encryption_key_zrtp">zrtp</string>
+    <string name="pref_media_encryption_key_dtls">dtls</string>
 	<string name="pref_background_mode_key">pref_background_mode_key</string>
 	<string name="pref_codec_bitrate_limit_key">pref_codec_bitrate_limit_key</string>
 	<string name="pref_adaptive_rate_control_key">pref_adaptive_rate_control_key</string>
@@ -167,4 +168,5 @@
 	<string name="pref_video_codec_vp8_title">VP8</string>
 	<string name="media_encryption_srtp">SRTP</string>
 	<string name="media_encryption_zrtp">ZRTP</string>
+    <string name="media_encryption_dtls">DTLS</string>
 </resources>
