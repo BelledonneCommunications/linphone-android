@@ -515,4 +515,4 @@ pull-transifex:
 	tx pull -af
 
 push-transifex:
-	tx push -s -t -f
+	tx push -s -t -f --no-interactive
