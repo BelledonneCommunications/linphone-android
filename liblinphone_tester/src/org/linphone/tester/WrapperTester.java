@@ -53,7 +53,16 @@ public class WrapperTester extends AndroidTestCase {
 		//Test setPayloadTypeNumber
 		mCore.setPayloadTypeNumber(mCore.findPayloadType("PCMU"),12);
 		Assert.assertEquals(mCore.getPayloadTypeNumber(mCore.findPayloadType("PCMU")),12);
-		
+
+		PayloadType[] audioCodecs = mCore.getAudioCodecs();
+		int audioCodecsNb = audioCodecs.length;
+		if (audioCodecsNb >= 1) {
+			PayloadType[] newAudioCodecs = new PayloadType[audioCodecsNb - 1];
+			System.arraycopy(audioCodecs, 1, newAudioCodecs, 0, audioCodecsNb - 1);
+			mCore.setAudioCodecs(newAudioCodecs);
+			audioCodecs = mCore.getAudioCodecs();
+			Assert.assertEquals(audioCodecs.length, audioCodecsNb - 1);
+		}
 	}
 
 	@Override
