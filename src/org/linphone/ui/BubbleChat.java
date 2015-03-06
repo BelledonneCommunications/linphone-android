@@ -161,7 +161,7 @@ public class BubbleChat {
 	    			@Override
 	    			public void onClick(View v) {
 	    				Intent intent = new Intent(Intent.ACTION_VIEW);
-	    				intent.setDataAndType(Uri.parse("file://" + imageUrl), "image/*");
+	    				intent.setDataAndType(Uri.parse(imageUrl), "image/*");
 	    				context.startActivity(intent);
 	    			}
 	    		});

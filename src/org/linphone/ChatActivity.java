@@ -18,8 +18,36 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.util.ByteArrayBuffer;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatMessage.StateListener;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.mediastream.Log;
+import org.linphone.ui.AvatarWithShadow;
+import org.linphone.ui.BubbleChat;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -43,10 +71,10 @@ import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,34 +84,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.apache.http.util.ByteArrayBuffer;
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.mediastream.Log;
-import org.linphone.ui.AvatarWithShadow;
-import org.linphone.ui.BubbleChat;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.linphone.core.LinphoneChatMessage.StateListener;
 
 /**
  * @author Margaux Clerc
@@ -433,7 +433,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							final Bitmap bm = ChatActivity.instance().downloadImage(url);
+							ChatActivity.instance();
+							final Bitmap bm = ChatActivity.downloadImage(url);
 							if (bm != null) {
 								String newFileUrl = saveImage(bm, finalId, getMessageForId(finalId));
 								bubble.updateUrl(newFileUrl);
@@ -461,10 +462,21 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 				}
 			});
 		} else { // Show
-			Bitmap bm = BitmapFactory.decodeFile(url);
-			((ImageView) v.findViewById(R.id.image)).setImageBitmap(bm);
-			v.findViewById(R.id.image).setVisibility(View.VISIBLE);
-			v.findViewById(R.id.download).setVisibility(View.GONE);
+			ContentResolver cr = getContentResolver();
+            InputStream in;
+            Bitmap bm = null;
+			try {
+				in = cr.openInputStream(Uri.parse(url));
+	            bm = BitmapFactory.decodeStream(in, null, null);
+			} catch (FileNotFoundException e) {
+				Log.e(e);
+			}
+            
+			if (bm != null) {
+				((ImageView) v.findViewById(R.id.image)).setImageBitmap(bm);
+				v.findViewById(R.id.image).setVisibility(View.VISIBLE);
+				v.findViewById(R.id.download).setVisibility(View.GONE);
+			}
 		}
 		return bubble;
 	}
@@ -503,7 +515,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 //			menu.add(0, MENU_PICTURE_REAL, 0, getString(R.string.share_picture_size_real));
 		} else {
 			menu.add(v.getId(), MENU_DELETE_MESSAGE, 0, getString(R.string.delete));
-			ImageView iv = (ImageView) v.findViewById(R.id.image);
 			menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
 
 			LinphoneChatMessage msg = getMessageForId(v.getId());
@@ -802,22 +813,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 
 	private String saveImage(Bitmap bm, int id, LinphoneChatMessage message) {
 		try {
-			String path = Environment.getExternalStorageDirectory().toString();
-			if (!path.endsWith("/"))
-				path += "/";
-			path += "Pictures/";
-			File directory = new File(path);
-			directory.mkdirs();
-
-			String filename = getString(R.string.picture_name_format).replace("%s", String.valueOf(id));
-			File file = new File(path, filename);
-
-			OutputStream fOut = null;
-			fOut = new FileOutputStream(file);
-
-			bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-			fOut.flush();
-			fOut.close();
 			//Update url path in liblinphone database
 			if (message == null) {
 				LinphoneChatMessage[] history = chatRoom.getHistory();
@@ -828,11 +823,14 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 					}
 				}
 			}
-			message.setExternalBodyUrl(path + filename);
-			chatRoom.updateUrl(message);
 
-			MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
-			return file.getAbsolutePath();
+			String filename = getString(R.string.picture_name_format).replace("%s", String.valueOf(id));
+			String url = MediaStore.Images.Media.insertImage(getContentResolver(), bm, filename, null);
+			if (message != null && url != null) {
+				message.setExternalBodyUrl(url);
+			}
+			chatRoom.updateUrl(message);
+			return url;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
