@@ -15,6 +15,7 @@
     <!-- Hack to adjust perfectly on every screen the bottom of the fragment with the curved menu -->
     <LinearLayout
 	    android:id="@+id/mark"
+	    android:background="@color/menu_button_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
