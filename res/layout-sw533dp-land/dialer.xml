@@ -43,7 +43,8 @@
     
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
         
         <org.linphone.ui.Numpad 
 		    android:id="@+id/Dialer"
