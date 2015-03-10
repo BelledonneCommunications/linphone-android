@@ -759,20 +759,20 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, S
 	}
 
 	private void pickImage() {
-		final List<Intent> cameraIntents = new ArrayList<Intent>();
-		final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		List<Intent> cameraIntents = new ArrayList<Intent>();
+		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
 		imageToUploadUri = Uri.fromFile(file);
 		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
 		cameraIntents.add(captureIntent);
-
-		final Intent galleryIntent = new Intent();
+		
+		Intent galleryIntent = new Intent();
 		galleryIntent.setType("image/*");
-		galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-		final Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
+		galleryIntent.setAction(Intent.ACTION_PICK);
+		
+		Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
 		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
-
+		
 		startActivityForResult(chooserIntent, ADD_PHOTO);
 	}
 
