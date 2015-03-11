@@ -1,7 +1,5 @@
 package org.linphone.compatibility;
 
-import java.lang.reflect.Method;
-
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.mediastream.Log;
