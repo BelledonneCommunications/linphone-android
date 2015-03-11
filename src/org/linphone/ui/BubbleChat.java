@@ -93,6 +93,7 @@ public class BubbleChat {
 	private LinphoneChatMessage nativeMessage;
 	private int id;
 	
+	@SuppressLint("InflateParams") 
 	public BubbleChat(final Context context, int ID, String message, Bitmap image, long time, boolean isIncoming, LinphoneChatMessage.State status, String url) {
 		view = new RelativeLayout(context);
 		imageUrl = url;
