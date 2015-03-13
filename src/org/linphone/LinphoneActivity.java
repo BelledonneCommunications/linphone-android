@@ -314,9 +314,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(newFragmentType, extras, false);
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {
-		if (newFragmentType == currentFragment) {
+		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
 			return;
 		}
 		nextFragment = newFragmentType;
@@ -381,6 +380,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		case CHATLIST:
 			newFragment = new ChatListFragment();
 			messageListFragment = new Fragment();
+			break;
+		case CHAT:
+			newFragment = new ChatFragment();
+			break;
+		default:
 			break;
 		}
 
@@ -610,14 +614,32 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		String displayName = lAddress.getDisplayName();
 		String pictureUri = uri == null ? null : uri.toString();
 
-		Intent intent = new Intent(this, ChatActivity.class);
-		intent.putExtra("SipUri", sipUri);
-		if (lAddress.getDisplayName() != null) {
-			intent.putExtra("DisplayName", displayName);
-			intent.putExtra("PictureUri", pictureUri);
+		if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
+			if (isTablet()) {
+				Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+				if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+					ChatFragment chatFragment = (ChatFragment) fragment2;
+					chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
+				} else {
+					Bundle extras = new Bundle();
+					extras.putString("SipUri", sipUri);
+					if (lAddress.getDisplayName() != null) {
+						extras.putString("DisplayName", displayName);
+						extras.putString("PictureUri", pictureUri);
+					}
+					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+				}
+			} else {
+				Intent intent = new Intent(this, ChatActivity.class);
+				intent.putExtra("SipUri", sipUri);
+				if (lAddress.getDisplayName() != null) {
+					intent.putExtra("DisplayName", displayName);
+					intent.putExtra("PictureUri", pictureUri);
+				}
+				startOrientationSensor();
+				startActivityForResult(intent, CHAT_ACTIVITY);
+			}
 		}
-		startOrientationSensor();
-		startActivityForResult(intent, CHAT_ACTIVITY);
 
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
@@ -698,6 +720,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			aboutSettings.setSelected(true);
 			break;
 		case CHATLIST:
+		case CHAT:
 			chat.setSelected(true);
 			break;
 		}
