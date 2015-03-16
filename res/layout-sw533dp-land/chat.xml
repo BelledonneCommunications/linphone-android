@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/top_layout"
+  	android:background="@drawable/background" >
+
+   <LinearLayout 
+       android:id="@+id/header"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="10dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+	    android:gravity="center"
+	    android:orientation="horizontal"
+       android:layout_below="@+id/topbar"
+	    android:layout_centerHorizontal="true">
+        
+        <org.linphone.ui.AvatarWithShadow
+		    android:id="@+id/contactPicture"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    linphone:picture="@drawable/unknown_small" />
+	        
+        <TextView
+            android:id="@+id/contactName"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+	    	android:textColor="@color/text_contrast" />
+    </LinearLayout>
+    
+   <LinearLayout 
+        android:id="@+id/footer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_alignParentBottom="true"
+	    android:layout_centerHorizontal="true"
+   		android:background="@drawable/chat_background">
+       
+	    <RelativeLayout 
+	        android:id="@+id/messageLayout"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+	        
+	        <TextView
+	            android:id="@+id/sendPicture"
+	            android:text="@string/button_send_picture"
+	            android:gravity="center"
+	            android:textColor="@drawable/text_color"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:drawableTop="@drawable/chat_send_picture"
+	            android:paddingLeft="10dp"
+	            android:paddingRight="10dp" />
+	        
+	        <TextView
+	            android:id="@+id/sendMessage"
+	            android:text="@string/button_send_message"
+	            android:gravity="center"
+	            android:textColor="@drawable/text_color"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:layout_alignParentRight="true"
+	            android:drawableTop="@drawable/chat_send_message"
+	            android:paddingRight="10dp"
+	            android:paddingLeft="10dp" />
+	        
+	        <EditText
+                android:imeOptions="flagNoExtractUi"
+	            android:textCursorDrawable="@null"
+	            android:id="@+id/message"
+            	android:inputType="textMultiLine"
+            	android:maxLines="3"
+	            android:textColor="@android:color/black"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_toRightOf="@id/sendPicture"
+	            android:layout_toLeftOf="@id/sendMessage"
+	            android:background="@drawable/chat_field_background"
+	            android:layout_centerVertical="true"/>
+	        
+	    </RelativeLayout>
+	    
+	    <RelativeLayout 
+	        android:id="@+id/uploadLayout"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+	        
+	        <ImageView 
+	            android:contentDescription="@string/content_description_cancel"
+	            android:id="@+id/cancelUpload"
+	            android:src="@drawable/list_delete"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:adjustViewBounds="true"
+	            android:layout_alignParentRight="true"
+	            android:padding="20dp" />
+	        
+	        <LinearLayout 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_alignBottom="@id/cancelUpload"
+	            android:layout_toLeftOf="@id/cancelUpload"
+	            android:paddingBottom="20dp"
+	            android:orientation="vertical"
+	            android:gravity="center">
+	            
+	            <TextView
+	                android:id="@+id/progressBarText"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+	            	android:gravity="center"
+	                android:text="@string/uploading_image"
+	            	android:textColor="@android:color/black"/>
+	            
+		        <ProgressBar
+		            android:id="@+id/progressbar"
+		            android:layout_width="match_parent"
+		            android:layout_height="15dp"
+		     		style="@android:style/Widget.ProgressBar.Horizontal"
+		            android:paddingTop="2dp"
+		            android:paddingLeft="2dp"
+		            android:paddingRight="2dp" />
+	        
+	        </LinearLayout>
+	        
+	    </RelativeLayout>
+    
+    </LinearLayout>
+        
+    <TextView 
+        android:id="@+id/remoteComposing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+    	android:textColor="@color/text_contrast"
+        android:text="@string/remote_composing"
+        android:layout_above="@id/footer"/>
+
+	<ListView
+		android:id="@+id/chatMessageList"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:divider="@android:color/transparent"
+		android:stackFromBottom="true"
+		android:cacheColorHint="@color/transparent"
+		android:dividerHeight="1dp"
+		android:layout_above="@id/remoteComposing"
+		android:layout_below="@id/header"/>
+    
+</RelativeLayout>

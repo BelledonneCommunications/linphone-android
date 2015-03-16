@@ -187,12 +187,14 @@ public class ChatFragment extends Fragment implements OnClickListener, StateList
 		}
 
 		back = (TextView) view.findViewById(R.id.back);
-		back.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//TODO
-			}
-		});
+		if (back != null) {
+			back.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getActivity().finish();
+				}
+			});
+		}
 
 		cancelUpload = (ImageView) view.findViewById(R.id.cancelUpload);
 		cancelUpload.setOnClickListener(new View.OnClickListener() {
@@ -313,7 +315,7 @@ public class ChatFragment extends Fragment implements OnClickListener, StateList
 
 	public void showKeyboardVisibleMode() {
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-		if (isOrientationLandscape) {
+		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.GONE);
 		}
 		contactPicture.setVisibility(View.GONE);
@@ -323,7 +325,7 @@ public class ChatFragment extends Fragment implements OnClickListener, StateList
 	public void hideKeyboardVisibleMode() {
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 		contactPicture.setVisibility(View.VISIBLE);
-		if (isOrientationLandscape) {
+		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.VISIBLE);
 		}
 		scrollToEnd();
