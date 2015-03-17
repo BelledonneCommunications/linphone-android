@@ -41,6 +41,7 @@ import org.linphone.ui.BubbleChat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -49,8 +50,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -101,7 +102,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private TextWatcher textWatcher;
 	private ViewTreeObserver.OnGlobalLayoutListener keyboardListener;
 	private ChatMessageAdapter adapter;
-	private Handler mHandler = new Handler();
 	
 	private LinphoneCoreListenerBase mListener;
 	private ByteArrayOutputStream mDownloadedImageStream;
@@ -497,29 +497,57 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
 			Bitmap bm = BitmapFactory.decodeFile(path);
 			if (bm != null) {
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-				byte[] byteArray = stream.toByteArray();
-				mUploadingImageStream = new ByteArrayInputStream(byteArray);
-				
-				LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", "jpeg", byteArray, null);
-				String fileName = path.substring(path.lastIndexOf("/") + 1);
-				content.setName(fileName);
-				
-				LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
-				message.setListener(this);
-				message.setAppData(path);
-				
-				uploadLayout.setVisibility(View.VISIBLE);
-				textLayout.setVisibility(View.GONE);
-				
-				chatRoom.sendChatMessage(message);
-				currentMessageInFileTransferUploadState = message;
+				FileUploadPrepareTask task = new FileUploadPrepareTask(getActivity(), path);
+				task.execute(bm);
 			} else {
 				Log.e("Error, bitmap factory can't read " + path);
 			}
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+		}
+	}
+	
+	class FileUploadPrepareTask extends AsyncTask<Bitmap, Void, byte[]> {
+		private String path;
+		private ProgressDialog progressDialog;
+		
+		public FileUploadPrepareTask(Context context, String fileToUploadPath) {
+			path = fileToUploadPath;
+			
+			uploadLayout.setVisibility(View.VISIBLE);
+			textLayout.setVisibility(View.GONE);
+			
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setMessage(getString(R.string.processing_image));
+			progressDialog.show();
+		}
+
+		@Override
+		protected byte[] doInBackground(Bitmap... params) {
+			Bitmap bm = params[0];
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			byte[] byteArray = stream.toByteArray();
+			return byteArray;
+		}
+		
+		@Override
+		protected void onPostExecute(byte[] result) {
+			progressDialog.dismiss();
+			
+			mUploadingImageStream = new ByteArrayInputStream(result);
+			
+			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", "jpeg", result, null);
+			String fileName = path.substring(path.lastIndexOf("/") + 1);
+			content.setName(fileName);
+			
+			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
+			message.setListener(ChatFragment.this);
+			message.setAppData(path);
+			
+			chatRoom.sendChatMessage(message);
+			currentMessageInFileTransferUploadState = message;
 		}
 	}
 
@@ -610,13 +638,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			
 			if (fileToUploadPath != null) {
-				final String filePath = fileToUploadPath;
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						sendImageMessage(filePath);
-					}
-				});
+				sendImageMessage(fileToUploadPath);
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
