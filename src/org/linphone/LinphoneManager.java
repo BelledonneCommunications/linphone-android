@@ -484,7 +484,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
-
+		prefMigrator.migrateSharingServerUrlIfNeeded();
+		
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
 		}

@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
+import org.linphone.core.LinphoneContent;
 import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
@@ -134,45 +135,16 @@ public class BubbleChat {
 	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
 	    	}
     	}
-    	
-    	TextView msgView = (TextView) layout.findViewById(R.id.message);
-    	if (msgView != null) {
-        	Spanned text = null;
-        	String msg = message.getText();
-        	if (msg != null) {
-    	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-    	    		text = getSmiledText(context, getTextWithHttpLinks(msg));
-    	    	} else {
-    	    		text = getTextWithHttpLinks(msg);
-    	    	}
-    	    	msgView.setText(text);
-    	    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
-        		msgView.setVisibility(View.VISIBLE);
-        	} else {
-        		msgView.setVisibility(View.GONE);
-        	}
-    	}
-    	
-    	if (message.getExternalBodyUrl() != null || message.getFileTransferInformation() != null) {
-    		if (message.getAppData() == null) {
-				String appData = null;
-				if (message.getExternalBodyUrl() != null) {
-					appData = message.getExternalBodyUrl();
-				} else if (message.getFileTransferInformation() != null) {
-					appData = message.getFileTransferInformation().getDataAsString();
-				}
-				message.setAppData(appData);
-			}
-    	}
-    	
-    	String appData = message.getAppData();
-    	if (appData != null) {
+
+    	String externalBodyUrl = message.getExternalBodyUrl();
+    	LinphoneContent fileTransferContent = message.getFileTransferInformation();
+    	if (externalBodyUrl != null || fileTransferContent != null) {
 			Button download = (Button) layout.findViewById(R.id.download);
 	    	ImageView imageView = (ImageView) layout.findViewById(R.id.image);
 	    	
-    		if (appData.startsWith("http")) {
+	    	String appData = message.getAppData();
+    		if (appData == null) {
     	    	download.setVisibility(View.VISIBLE);
-    	    	imageView.setVisibility(View.GONE);
     	    	download.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -186,7 +158,6 @@ public class BubbleChat {
 					}
 				});
     		} else {
-    	    	download.setVisibility(View.GONE);
     	    	imageView.setVisibility(View.VISIBLE);
     	    	
     	    	Bitmap bm = null;
@@ -216,6 +187,22 @@ public class BubbleChat {
 		    		});
     	    	}
     		}
+    	} else {
+	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
+	    	if (msgView != null) {
+	        	Spanned text = null;
+	        	String msg = message.getText();
+	        	if (msg != null) {
+	    	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+	    	    		text = getSmiledText(context, getTextWithHttpLinks(msg));
+	    	    	} else {
+	    	    		text = getTextWithHttpLinks(msg);
+	    	    	}
+	    	    	msgView.setText(text);
+	    	    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
+	        		msgView.setVisibility(View.VISIBLE);
+	        	}
+	    	}
     	}
     	
     	TextView timeView = (TextView) layout.findViewById(R.id.time);

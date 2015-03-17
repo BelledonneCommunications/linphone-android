@@ -7,6 +7,7 @@
     
     <TextView 
         android:id="@+id/message"
+        android:visibility="gone"
         android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +15,7 @@
     
     <ImageView
         android:id="@+id/image"
+        android:visibility="gone"
         android:adjustViewBounds="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
