@@ -105,6 +105,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private LinphoneCoreListenerBase mListener;
 	private ByteArrayOutputStream mDownloadedImageStream;
 	private int mDownloadedImageStreamSize;
+	private LinphoneChatMessage currentMessageInFileTransferUploadState;
 
 	public static boolean isInstanciated() {
 		return instance != null;
@@ -173,9 +174,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		cancelUpload.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			uploadLayout.setVisibility(View.GONE);
-			textLayout.setVisibility(View.VISIBLE);
-			progressBar.setProgress(0);
+				if (currentMessageInFileTransferUploadState != null) {
+					uploadLayout.setVisibility(View.GONE);
+					textLayout.setVisibility(View.VISIBLE);
+					progressBar.setProgress(0);
+					currentMessageInFileTransferUploadState.cancelFileTransfer();
+					currentMessageInFileTransferUploadState = null;
+				}
 			}
 		});
 
@@ -507,6 +512,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				textLayout.setVisibility(View.GONE);
 				
 				chatRoom.sendChatMessage(message);
+				currentMessageInFileTransferUploadState = message;
 			} else {
 				Log.e("Error, bitmap factory can't read " + path);
 			}
@@ -641,6 +647,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			uploadLayout.setVisibility(View.GONE);
 			textLayout.setVisibility(View.VISIBLE);
 			progressBar.setProgress(0);
+			currentMessageInFileTransferUploadState = null;
 		}
 		invalidate();
 	}
