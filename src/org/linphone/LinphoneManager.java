@@ -541,6 +541,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 			BluetoothManager.getInstance().initBluetooth();
 		}
         resetCameraFromPreferences();
+        
+		mLc.setFileTransferServer(LinphonePreferences.instance().getSharingPictureServerUrl());
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
