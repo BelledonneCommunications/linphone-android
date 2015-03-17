@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -104,6 +105,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	
 	private LinphoneCoreListenerBase mListener;
 	private ByteArrayOutputStream mDownloadedImageStream;
+	private ByteArrayInputStream mUploadingImageStream;
 	private int mDownloadedImageStreamSize;
 	private LinphoneChatMessage currentMessageInFileTransferUploadState;
 
@@ -498,13 +500,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
 				byte[] byteArray = stream.toByteArray();
+				mUploadingImageStream = new ByteArrayInputStream(byteArray);
 				
 				LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", "jpeg", byteArray, null);
 				String fileName = path.substring(path.lastIndexOf("/") + 1);
 				content.setName(fileName);
 				
 				LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
-				message.setFileTransferFilepath(path);
 				message.setListener(this);
 				message.setAppData(path);
 				
@@ -630,20 +632,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			invalidate();
 		}
 		
-		if (state == State.FileTransferDone && mDownloadedImageStream != null) {
-			byte[] bytes = mDownloadedImageStream.toByteArray();
-			Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, mDownloadedImageStreamSize);
-			
-			String path = msg.getExternalBodyUrl();
-			String fileName = path.substring(path.lastIndexOf("/") + 1);
-			String url = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bm, fileName, null);
-			if (url != null) {
-				msg.setAppData(url);
+		if (state == State.FileTransferDone) {
+			if (mDownloadedImageStream != null) {
+				byte[] bytes = mDownloadedImageStream.toByteArray();
+				Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, mDownloadedImageStreamSize);
+				
+				String path = msg.getExternalBodyUrl();
+				String fileName = path.substring(path.lastIndexOf("/") + 1);
+				String url = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bm, fileName, null);
+				if (url != null) {
+					msg.setAppData(url);
+				}
+				
+				mDownloadedImageStream = null;
+				mDownloadedImageStreamSize = 0;
+			} else if (mUploadingImageStream != null) {
+				mUploadingImageStream = null;
 			}
-			
-			mDownloadedImageStream = null;
-			mDownloadedImageStreamSize = 0;
-		} else if (state == State.FileTransferDone || state == State.FileTransferError) {
+		} 
+		
+		if (state == State.FileTransferDone || state == State.FileTransferError) {
 			uploadLayout.setVisibility(View.GONE);
 			textLayout.setVisibility(View.VISIBLE);
 			progressBar.setProgress(0);
@@ -671,7 +679,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {
-		
+		if (mUploadingImageStream != null && size > 0) {
+			byte[] data = new byte[size];
+			int read = mUploadingImageStream.read(data, 0, size);
+			bufferToFill.setContent(data);
+			bufferToFill.setSize(read);
+		}
 	}
 
 	@Override

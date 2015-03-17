@@ -102,6 +102,14 @@ public class PreferencesMigrator {
 			mNewPrefs.getConfig().sync();
 		}
 	}
+
+	public void migrateSharingServerUrlIfNeeded() {
+		String currentUrl = mNewPrefs.getConfig().getString("app", "sharing_server", null);
+		if (currentUrl == null || currentUrl.equals("https://www.linphone.org:444/upload.php")) {
+			mNewPrefs.setSharingPictureServerUrl("https://www.linphone.org:444/lft.php");
+			mNewPrefs.getConfig().sync();
+		}
+	}
 	
 	private void doAccountsMigration() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
