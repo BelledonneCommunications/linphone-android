@@ -200,6 +200,7 @@ public class BubbleChat {
 					}
     	    	} else {
     	    		bm = BitmapFactory.decodeFile(appData);
+    	    		appData = "file://" + appData;
     	    	}
     	    	
     	    	if (bm != null) {
