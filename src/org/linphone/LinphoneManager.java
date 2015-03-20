@@ -983,8 +983,13 @@ public class LinphoneManager implements LinphoneCoreListener {
 		isRinging = false;
 		// You may need to call galaxys audio hack after this method
 		if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
-			Log.d("Stopped ringing, routing back to earpiece");
-			routeAudioToReceiver();
+			if (mServiceContext.getResources().getBoolean(R.bool.isTablet)) {
+				Log.d("Stopped ringing, routing back to speaker");
+				routeAudioToSpeaker();
+			} else {
+				Log.d("Stopped ringing, routing back to earpiece");
+				routeAudioToReceiver();
+			}
 		}
 	}
 
