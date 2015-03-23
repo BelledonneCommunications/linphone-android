@@ -38,7 +38,7 @@ public class Contact implements Serializable {
 	private String name;
 	private transient Uri photoUri;
 	private transient Bitmap photo;
-	private List<String> numerosOrAddresses;
+	private List<String> numbersOrAddresses;
 	private LinphoneFriend friend;
 	
 	public Contact(String id, String name) {
@@ -88,14 +88,14 @@ public class Contact implements Serializable {
 		return photo;
 	}
 
-	public List<String> getNumerosOrAddresses() {
-		if (numerosOrAddresses == null)
-			numerosOrAddresses = new ArrayList<String>();
-		return numerosOrAddresses;
+	public List<String> getNumbersOrAddresses() {
+		if (numbersOrAddresses == null)
+			numbersOrAddresses = new ArrayList<String>();
+		return numbersOrAddresses;
 	}
 	
 	public void refresh(ContentResolver cr) {
-		this.numerosOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
 		this.name = Compatibility.refreshContactName(cr, id);
 	}
 }

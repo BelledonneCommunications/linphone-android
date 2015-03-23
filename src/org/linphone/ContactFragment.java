@@ -27,7 +27,9 @@ import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -122,7 +124,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
-		for (String numberOrAddress : contact.getNumerosOrAddresses()) {
+		for (String numberOrAddress : contact.getNumbersOrAddresses()) {
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
 			String displayednumberOrAddress = numberOrAddress;
@@ -221,9 +223,17 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
 		} else if (id == R.id.deleteContact) {
-			deleteExistingContact();
-			LinphoneActivity.instance().removeContactFromLists(contact);
-			LinphoneActivity.instance().displayContacts(false);
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+			alertDialog.setMessage(getString(R.string.delete_contact_dialog));
+			alertDialog.setPositiveButton(getString(R.string.button_ok),new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+				deleteExistingContact();
+				LinphoneActivity.instance().removeContactFromLists(contact);
+				LinphoneActivity.instance().displayContacts(false);
+				}
+			});
+			alertDialog.setNegativeButton(getString(R.string.button_cancel),null);
+			alertDialog.show();
 		}
 	}
 	

@@ -198,8 +198,14 @@ public class DialerFragment extends Fragment {
 			} else if (scheme.startsWith("call") || scheme.startsWith("sip")) {
 				mAddress.setText(intent.getData().getSchemeSpecificPart());
 			} else {
-				Log.e("Unknown scheme: ",scheme);
-				mAddress.setText(intent.getData().getSchemeSpecificPart());
+				Uri contactUri = intent.getData();
+				String address = ContactHelper.queryAddressOrNumber(getActivity().getContentResolver(),contactUri);
+				if(address != null) {
+					mAddress.setText(address);
+				} else {
+					Log.e("Unknown scheme: ", scheme);
+					mAddress.setText(intent.getData().getSchemeSpecificPart());
+				}
 			}
 	
 			mAddress.clearDisplayedName();

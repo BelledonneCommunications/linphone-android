@@ -111,7 +111,7 @@ public class ApiFivePlus {
 	        c.close();
 		}
 		
-		// SIP addresses
+		// IM addresses
 		String selection = new StringBuilder()
 			.append(Data.CONTACT_ID).append(" =  ? AND ")
 			.append(Data.MIMETYPE).append(" = '")
@@ -246,7 +246,7 @@ public class ApiFivePlus {
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
 		Contact contact = getContact(cr, cursor, 0);
-		if (contact != null && contact.getNumerosOrAddresses().contains(sipUri)) {
+		if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
 			address.setDisplayName(contact.getName());
 			cursor.close();
 			return contact.getPhotoUri();
