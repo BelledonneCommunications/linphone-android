@@ -127,7 +127,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 				searchContacts(searchField.getText().toString());
 			}
 		});
-        
+
 		return view;
     }
 

@@ -29,6 +29,7 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
 
@@ -97,6 +98,35 @@ public final class ContactHelper {
     	Cursor cursor = resolver.query(photoUriToTest, new String[]{photoCol}, null, null, null);
     	return testPhotoUriAndCloseCursor(cursor);
     }
+
+	public static String queryAddressOrNumber(ContentResolver resolver, Uri contactUri) {
+		// Phone Numbers
+		String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+		Cursor c = resolver.query(contactUri, projection, null, null, null);
+		if (c != null) {
+			while (c.moveToNext()) {
+				int numberIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+				String number = c.getString(numberIndex);
+				c.close();
+				return number;
+			}
+		}
+
+		// SIP addresses
+		projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+		c = resolver.query(contactUri, projection, null, null, null);
+		if (c != null) {
+			while (c.moveToNext()) {
+				int numberIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
+				String address = c.getString(numberIndex);
+				c.close();
+				return address;
+			}
+		}
+		
+		c.close();
+		return null;
+	}
 	
 	private void checkPhotosUris(ContentResolver resolver, Cursor c, String idCol, String nameCol) {
 		displayName = c.getString(c.getColumnIndex(nameCol));
@@ -179,13 +209,51 @@ public final class ContactHelper {
 		
 		return contactFound;
 	}
-	
+
+	static boolean isContactHasLinphoneTag(Contact contact, ContentResolver cr) {
+		String select = ContactsContract.Data.CONTACT_ID + " = ?";
+		String[] args = new String[] { contact.getID() };
+
+		String[] projection = new String[] {ContactsContract.Data.MIMETYPE };
+
+		Cursor cursor = cr.query(ContactsContract.Data.CONTENT_URI, projection, select, args, null);
+
+		if (cursor != null) {
+			while (cursor.moveToNext()) {
+				if(cursor.getString(cursor.getColumnIndex(ContactsContract.Data.MIMETYPE)).equals("vnd.android.cursor.item/org.linphone.profile")){
+					cursor.close();
+					return true;
+				}
+			}
+		}
+		cursor.close();
+		return false;
+	}
+
+	public static String findRawContactID(ContentResolver cr, String contactID) {
+		Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI,
+				new String[]{ContactsContract.RawContacts._ID},
+				ContactsContract.RawContacts.CONTACT_ID + "=?",
+				new String[]{contactID}, null);
+		if (c != null) {
+			String result = null;
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
+			}
+
+			c.close();
+			return result;
+		}
+		return null;
+	}
+
 	@SuppressLint("InlinedApi")
 	private final boolean queryContact() {
 		boolean contactFound = false;
 		
 		Uri uri = android.provider.ContactsContract.Data.CONTENT_URI;
-		String[] projection = { android.provider.ContactsContract.Data.CONTACT_ID, android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, android.provider.ContactsContract.CommonDataKinds.Im.DATA };
+		String[] projection = { android.provider.ContactsContract.Data.CONTACT_ID, android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+								android.provider.ContactsContract.CommonDataKinds.Im.DATA };
 		
 		String selection = new StringBuilder()
 			.append(android.provider.ContactsContract.Data.MIMETYPE)
@@ -211,6 +279,7 @@ public final class ContactHelper {
 			c = resolver.query(uri, projection, selection, null, null);
 			contactFound = checkSIPQueryResult(c, android.provider.ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
 			if (contactFound) {
+				c.close();
 				return true;
 			}
 		}
@@ -222,7 +291,7 @@ public final class ContactHelper {
 			android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME };
 		c = resolver.query(lookupUri, projection, null, null, null);
 		contactFound = checkPhoneQueryResult(c, android.provider.ContactsContract.PhoneLookup.NUMBER);
-		
+		c.close();
 		return contactFound;
 	}
 }
