@@ -9,6 +9,7 @@ else
 endif
 
 clean:
+	killall adb
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
 	$(SDK_PATH)/android update test-project --path . -m ../
