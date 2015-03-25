@@ -8,14 +8,6 @@
 			<format property="archive.name" pattern="'linphonetester_'yyyyMMdd_HHmmss" />
 		</tstamp>
 
-		<!-- Ensure that adb is killed before running anything. This is needed in case
-		the previous execution crashed (while adb still running) because adb will not be able to list atached devices
-		until any adb is running -->
-		<exec executable="bash" >
-			<arg value="-c" />
-			<arg value="killall adb" />
-		</exec>
-
 		<echo>Adb log files are put in ${archive.name}.zip</echo>
 		<exec executable="adb" >
 			<arg value="logcat" />
@@ -37,10 +29,10 @@
 		</exec>
 
 		<condition property="has.crashed" >
-            <or>
-                <resourcecontains resource="${output.file}" substring="Process crashed" />
-                <resourcecontains resource="${output.file}" substring="Native crash" />
-            </or>
+			<or>
+				<resourcecontains resource="${output.file}" substring="Process crashed" />
+				<resourcecontains resource="${output.file}" substring="Native crash" />
+			</or>
 
 		</condition>
 		<exec executable="bash" unless:set="has.crashed">

@@ -8,8 +8,12 @@ else
 	ANT=ant -e
 endif
 
+# Ensure that adb is killed before running anything. This is needed in case
+# the previous execution crashed (while adb still running) because adb will not be able to list atached devices
+# until any adb is running
 clean:
-	killall adb
+	killall adb 2>/dev/null || true
+	$(SDK_PLATFORM_TOOLS_PATH)/adb start-server
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.test
 	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone
 	$(SDK_PATH)/android update test-project --path . -m ../

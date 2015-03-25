@@ -18,14 +18,6 @@
 		</tstamp>
 		<echo>Adb log files are put in ${archive.name}.zip</echo>
 
-		<!-- Ensure that adb is killed before running anything. This is needed in case
-		the previous execution crashed (while adb still running) because adb will not be able to list atached devices
-		until any adb is running -->
-		<exec executable="bash" >
-			<arg value="-c" />
-			<arg value="killall adb" />
-		</exec>
-
 		<exec executable="adb" >
 			<arg value="logcat" />
 			<arg value="-c" />
