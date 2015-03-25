@@ -296,7 +296,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		lAddress.setDisplayName(displayName);
 
-		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(LinphoneService.instance().getApplicationContext());
+		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance().getApplicationContext());
 
 		if (mLc.isNetworkReachable()) {
 			try {
