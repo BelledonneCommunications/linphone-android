@@ -3,6 +3,7 @@ package org.linphone.tester;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.core.PayloadType;
 
 import android.test.AndroidTestCase;
@@ -63,6 +64,12 @@ public class WrapperTester extends AndroidTestCase {
 			audioCodecs = mCore.getAudioCodecs();
 			Assert.assertEquals(audioCodecs.length, audioCodecsNb - 1);
 		}
+
+		//Test LinphoneFriend ref key
+		String key = "12";
+		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend("sip:lala@test.linphone.org");
+		friend.setRefKey(key);
+		Assert.assertEquals(friend.getRefKey(),key);
 	}
 
 	@Override
