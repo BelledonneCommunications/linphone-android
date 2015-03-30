@@ -64,7 +64,7 @@ LIBLINPHONE_EXTENDED_SRC_FILES=
 LIBLINPHONE_EXTENDED_C_INCLUDES=
 LIBLINPHONE_EXTENDED_CFLAGS=
 APP_STL=stlport_static
-ANT_SILENT=1
+ANT_SILENT=$(shell ant -h | grep -q -- -S && echo 1 || echo 0)
 
 # Checks
 CHECK_MSG=$(shell ./check_tools.sh)
