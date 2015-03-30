@@ -1,6 +1,6 @@
 SDK_PATH=$(shell dirname `which android`)
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
-ANT_SILENT=1
+ANT_SILENT=$(shell ant -h | grep -q -- -S && echo 1 || echo 0)
 
 ifeq ($(ANT_SILENT), 1)
 	ANT=ant -e -S
