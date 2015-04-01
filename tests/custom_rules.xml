@@ -32,6 +32,7 @@
 			<or>
 				<resourcecontains resource="${output.file}" substring="Process crashed" />
 				<resourcecontains resource="${output.file}" substring="Native crash" />
+				<resourcecontains resource="${output.file}" substring="longMsg=junit.framework.AssertionFailedError: View with id: '" />
 			</or>
 
 		</condition>
