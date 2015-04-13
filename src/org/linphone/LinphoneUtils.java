@@ -97,14 +97,14 @@ public final class LinphoneUtils {
 	public static boolean isStrictSipAddress(String numberOrAddress) {
 		return isSipAddress(numberOrAddress) && numberOrAddress.startsWith("sip:");
 	}
-	
+
 	public static String getUsernameFromAddress(String address) {
 		if (address.contains("sip:"))
 			address = address.replace("sip:", "");
-		
+
 		if (address.contains("@"))
 			address = address.split("@")[0];
-		
+
 		return address;
 	}
 	
@@ -137,20 +137,9 @@ public final class LinphoneUtils {
 	}
 
 
-	/**
-	 * @param contact sip uri
-	 * @return url/uri of the resource
-	 */
-//	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
-//		return Compatibility.findUriPictureOfContactAndSetDisplayName(address, resolver);
-//	}
+
 	
-	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
-		ContactHelper helper = new ContactHelper(address, resolver);
-		helper.query();
-		return helper.getUri();
-	}
-	
+
 	public static Bitmap downloadBitmap(Uri uri) {
 		URL url;
 		InputStream is = null;

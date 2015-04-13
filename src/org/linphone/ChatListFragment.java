@@ -356,7 +356,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Log.e("Chat view cannot parse address",e);
 				return view;
 			}
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
+			Contact lContact = ContactsManager.getInstance().findContactWithAddress(address);
 
 			String message = "";
 			if (useNativeAPI) {
@@ -393,14 +393,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
 			sipUri.setSelected(true); // For animation
-			
-			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && address.getDisplayName() != null && LinphoneUtils.isSipAddress(address.getDisplayName())) {
-				address.setDisplayName(LinphoneUtils.getUsernameFromAddress(address.getDisplayName()));
-			} else if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(contact)) {
-				contact = LinphoneUtils.getUsernameFromAddress(contact);
-			} 
-			
-			sipUri.setText(address.getDisplayName() == null ? contact : address.getDisplayName());
+
+			if (getResources().getBoolean(R.bool.only_display_username_if_unknown)) {
+				sipUri.setText(lContact == null ? address.getUserName() : lContact.getName());
+			} else {
+				sipUri.setText(lContact == null ? address.asStringUriOnly() : lContact.getName());
+			}
+
 			if (isDraft) {
 				view.findViewById(R.id.draft).setVisibility(View.VISIBLE);
 			}
