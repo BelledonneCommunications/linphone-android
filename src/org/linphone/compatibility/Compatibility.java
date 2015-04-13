@@ -84,40 +84,40 @@ public class Compatibility {
 		return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
 	}
 	
-	public static Cursor getContactsCursor(ContentResolver cr) {
+	public static Cursor getContactsCursor(ContentResolver cr, List<String> contactsId) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getContactsCursor(cr, null);
+			return ApiNinePlus.getContactsCursor(cr, null, contactsId);
 		} else {
-			return ApiFivePlus.getContactsCursor(cr);
+			return ApiFivePlus.getContactsCursor(cr, contactsId);
 		}
 	}
 	
-	public static Cursor getContactsCursor(ContentResolver cr, String search) {
+	public static Cursor getContactsCursor(ContentResolver cr, String search, List<String> contactsId) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getContactsCursor(cr, search);
+			return ApiNinePlus.getContactsCursor(cr, search, contactsId);
 		} else {
-			return ApiFivePlus.getContactsCursor(cr);
+			return ApiFivePlus.getContactsCursor(cr, contactsId);
+		}
+	}
+
+	public static Cursor getSIPContactsCursor(ContentResolver cr, List<String> contactsId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getSIPContactsCursor(cr, null, contactsId);
+		} else {
+			return ApiFivePlus.getSIPContactsCursor(cr, contactsId);
 		}
 	}
 	
-	public static Cursor getSIPContactsCursor(ContentResolver cr) {
+	public static Cursor getSIPContactsCursor(ContentResolver cr, String search, List<String> contactsId) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getSIPContactsCursor(cr, null);
+			return ApiNinePlus.getSIPContactsCursor(cr, search, contactsId);
 		} else {
-			return ApiFivePlus.getSIPContactsCursor(cr);
-		}
-	}
-	
-	public static Cursor getSIPContactsCursor(ContentResolver cr, String search) {
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getSIPContactsCursor(cr, search);
-		} else {
-			return ApiFivePlus.getSIPContactsCursor(cr);
+			return ApiFivePlus.getSIPContactsCursor(cr, contactsId);
 		}
 	}
 
 	public static Cursor getImContactsCursor(ContentResolver cr) {
-		return ApiFivePlus.getSIPContactsCursor(cr);
+		return ApiFivePlus.getSIPContactsCursor(cr,null);
 	}
 	
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {

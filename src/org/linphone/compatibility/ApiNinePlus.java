@@ -19,6 +19,7 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
+import android.text.TextUtils;
 
 /*
 ApiNinePlus.java
@@ -126,28 +127,41 @@ public class ApiNinePlus {
 			}
 			c.close();
 		}
-		
+
 		return list;
 	}
 
-	public static Cursor getContactsCursor(ContentResolver cr, String search) {
-		String req = Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
-                + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL OR (" 
-				+ Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
-				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL)";
-		
+	public static Cursor getContactsCursor(ContentResolver cr, String search, List<String> ids) {
+		String req;
+		if(ids != null && ids.size() > 0) {
+			req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
+				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
+				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL)"
+				+ " OR (" + Data.CONTACT_ID + " IN (" + TextUtils.join(" , ", ids) + ")))";
+		} else {
+			req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
+				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
+				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
+		}
+
 		if (search != null) {
 			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
 		}
-		
+
 		return ApiFivePlus.getGeneralContactCursor(cr, req, true);
 	}
 
-	public static Cursor getSIPContactsCursor(ContentResolver cr, String search) {
-		String req = null;
-		req = Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
-                + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL";
-		
+	public static Cursor getSIPContactsCursor(ContentResolver cr, String search, List<String> ids) {
+
+		String req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
+					+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL) ";
+
+		if(ids != null && ids.size() > 0) {
+			req += " OR (" + Data.CONTACT_ID + " IN (" + TextUtils.join(" , ", ids) + "))";
+		}
+
 		if (search != null) {
 			req += " AND " + Data.DISPLAY_NAME + " LIKE '%" + search + "%'";
 		}
@@ -162,6 +176,7 @@ public class ApiNinePlus {
     	
 		return ApiFivePlus.getGeneralContactCursor(cr, req, false);
 	}
+
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
 		String username = address.getUserName();
 		String domain = address.getDomain();
@@ -205,8 +220,12 @@ public class ApiNinePlus {
 
 	public static void deleteLinphoneContactTag(ArrayList<ContentProviderOperation> ops , String oldAddress, String rawContactId){
 		if(rawContactId != null) {
+			String select = ContactsContract.Data.RAW_CONTACT_ID + "=? AND "
+					+ ContactsContract.Data.DATA1 + "= ?";
+			String[] args = new String[]{rawContactId, oldAddress};
+
 			ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
-					.withSelection(ContactsContract.Data.RAW_CONTACT_ID + "=? AND " + ContactsContract.Data.DATA1 + "=? ", new String[]{rawContactId, oldAddress})
+					.withSelection(select, args)
 					.build());
 		}
 	}
@@ -223,10 +242,10 @@ public class ApiNinePlus {
 			);
 
 			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-				.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-				.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName())
-				.build()
+							.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+							.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+							.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName())
+							.build()
 			);
 
 			List<String> numbersOrAddresses = contact.getNumbersOrAddresses();
