@@ -81,7 +81,11 @@ public class Compatibility {
 	}
 
 	public static List<String> extractContactImAddresses(String id, ContentResolver cr) {
-		return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
+		} else {
+			return null;
+		}
 	}
 	
 	public static Cursor getContactsCursor(ContentResolver cr, List<String> contactsId) {
