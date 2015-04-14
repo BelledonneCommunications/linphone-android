@@ -33,6 +33,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
@@ -111,7 +112,7 @@ public class ApiFivePlus {
 	        c.close();
 		}
 		
-		// SIP addresses
+		// IM addresses
 		String selection = new StringBuilder()
 			.append(Data.CONTACT_ID).append(" =  ? AND ")
 			.append(Data.MIMETYPE).append(" = '")
@@ -132,38 +133,49 @@ public class ApiFivePlus {
 		return list;
 	}
 	
-	public static Cursor getContactsCursor(ContentResolver cr) {
+	public static Cursor getContactsCursor(ContentResolver cr, List<String> ids) {
 		String req = Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
-                + "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL";
-		
-    	req += " OR (" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
+				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL";
+
+		req += " OR (" + Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE
+				+ "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip')";
+
+		if(ids != null){
+			String s = TextUtils.join(",", ids);
+			req += " OR (" + Data.CONTACT_ID + " IN (" + s + "))";
+		}
+
+		return getGeneralContactCursor(cr, req, true);
+	}
+
+	public static Cursor getSIPContactsCursor(ContentResolver cr, List<String> ids) {
+		String req = null;
+    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
+                + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
+
+		if(ids != null){
+			String s = TextUtils.join(",", ids);
+			req += " OR (" + Data.CONTACT_ID + " IN (" + s + "))";
+		}
 		
 		return getGeneralContactCursor(cr, req, true);
 	}
 
-	public static Cursor getSIPContactsCursor(ContentResolver cr) {
-		String req = null;
-    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                + "' AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip'";
-		
-		return getGeneralContactCursor(cr, req, true);
-	}
-	
 	private static Cursor getSIPContactCursor(ContentResolver cr, String id) {
 		String req = null;
-    	req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE 
-                + " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
-                + android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
-		
+		req = Contacts.Data.MIMETYPE + " = '" + CommonDataKinds.Im.CONTENT_ITEM_TYPE
+				+ " AND lower(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ") = 'sip' AND "
+				+ android.provider.ContactsContract.CommonDataKinds.Im.DATA + " LIKE '" + id + "'";
+
 		return getGeneralContactCursor(cr, req, false);
 	}
 	
 	public static Cursor getGeneralContactCursor(ContentResolver cr, String select, boolean shouldGroupBy) {
-		
 		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
-		
-		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + select + ")";
+		String query;
+
+		query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + select + ")";
+
 		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME + ") COLLATE UNICODE ASC");
 		
 		if (!shouldGroupBy || cursor == null) {
@@ -206,7 +218,7 @@ public class ApiFivePlus {
 	    	String name = getContactDisplayName(cursor);
 	        Uri photo = getContactPictureUri(id);
 	        InputStream input = getContactPictureInputStream(cr, id);
-	        
+
 	        Contact contact;
 	        if (input == null) {
 	        	contact = new Contact(id, name);
@@ -246,7 +258,7 @@ public class ApiFivePlus {
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
 		Contact contact = getContact(cr, cursor, 0);
-		if (contact != null && contact.getNumerosOrAddresses().contains(sipUri)) {
+		if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
 			address.setDisplayName(contact.getName());
 			cursor.close();
 			return contact.getPhotoUri();

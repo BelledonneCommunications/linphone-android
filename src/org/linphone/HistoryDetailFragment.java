@@ -108,16 +108,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		time.setText(callTime == null ? "" : callTime);
 		date.setText(timestampToHumanDate(callDate));
-		
+
 		LinphoneAddress lAddress;
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, view.getContext().getContentResolver());
-			if(pictureUri != null)
-				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
-			String displayName = lAddress.getDisplayName();
-			if (displayName != null) {
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(lAddress);
+			if (contact != null) {
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),contact.getPhotoUri(), R.drawable.unknown_small);
 				view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
+			} else {
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),null ,R.drawable.unknown_small);
 			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();

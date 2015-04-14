@@ -79,37 +79,49 @@ public class Compatibility {
 			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
 		}
 	}
-	
-	public static Cursor getContactsCursor(ContentResolver cr) {
+
+	public static List<String> extractContactImAddresses(String id, ContentResolver cr) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getContactsCursor(cr, null);
+			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
 		} else {
-			return ApiFivePlus.getContactsCursor(cr);
+			return null;
 		}
 	}
 	
-	public static Cursor getContactsCursor(ContentResolver cr, String search) {
+	public static Cursor getContactsCursor(ContentResolver cr, List<String> contactsId) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getContactsCursor(cr, search);
+			return ApiNinePlus.getContactsCursor(cr, null, contactsId);
 		} else {
-			return ApiFivePlus.getContactsCursor(cr);
+			return ApiFivePlus.getContactsCursor(cr, contactsId);
 		}
 	}
 	
-	public static Cursor getSIPContactsCursor(ContentResolver cr) {
+	public static Cursor getContactsCursor(ContentResolver cr, String search, List<String> contactsId) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getSIPContactsCursor(cr, null);
+			return ApiNinePlus.getContactsCursor(cr, search, contactsId);
 		} else {
-			return ApiFivePlus.getSIPContactsCursor(cr);
+			return ApiFivePlus.getContactsCursor(cr, contactsId);
+		}
+	}
+
+	public static Cursor getSIPContactsCursor(ContentResolver cr, List<String> contactsId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getSIPContactsCursor(cr, null, contactsId);
+		} else {
+			return ApiFivePlus.getSIPContactsCursor(cr, contactsId);
 		}
 	}
 	
-	public static Cursor getSIPContactsCursor(ContentResolver cr, String search) {
+	public static Cursor getSIPContactsCursor(ContentResolver cr, String search, List<String> contactsId) {
 		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getSIPContactsCursor(cr, search);
+			return ApiNinePlus.getSIPContactsCursor(cr, search, contactsId);
 		} else {
-			return ApiFivePlus.getSIPContactsCursor(cr);
+			return ApiFivePlus.getSIPContactsCursor(cr, contactsId);
 		}
+	}
+
+	public static Cursor getImContactsCursor(ContentResolver cr) {
+		return ApiFivePlus.getSIPContactsCursor(cr,null);
 	}
 	
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {
@@ -261,7 +273,36 @@ public class Compatibility {
 			ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
 		}
 	}
-	
+
+	public static void deleteImAddressFromContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String contactID) {
+		ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
+	}
+
+	//Linphone Contacts Tag
+	public static void addLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newSipAddress, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.addLinphoneContactTag(context, ops, newSipAddress, rawContactId);
+		}
+	}
+
+	public static void updateLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newSipAddress, String oldSipAddress, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.updateLinphoneContactTag(context, ops, newSipAddress, oldSipAddress, rawContactId);
+		}
+	}
+
+	public static void deleteLinphoneContactTag(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.deleteLinphoneContactTag(ops, oldSipAddress, rawContactId);
+		}
+	}
+
+	public static void createLinphoneContactTag(Context context, ContentResolver contentResolver, Contact contact, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.createLinphoneContactTag(context, contentResolver, contact, rawContactId);
+		}
+	}
+	//End of Linphone Contact Tag
 
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {

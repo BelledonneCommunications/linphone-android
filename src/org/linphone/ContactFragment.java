@@ -27,7 +27,9 @@ import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -118,11 +120,12 @@ public class ContactFragment extends Fragment implements OnClickListener {
         }
 		
 		TextView contactName = (TextView) view.findViewById(R.id.contactName);
-		contactName.setText(contact.getName());	
+		contactName.setText(contact.getName());
+
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
-		for (String numberOrAddress : contact.getNumerosOrAddresses()) {
+		for (String numberOrAddress : contact.getNumbersOrAddresses()) {
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
 			String displayednumberOrAddress = numberOrAddress;
@@ -168,7 +171,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 					friend.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (LinphoneActivity.instance().newFriend(contact, finalNumberOrAddress)) {
+							if (ContactsManager.getInstance().createNewFriend(contact, finalNumberOrAddress)) {
 								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
 							}
 						}
@@ -178,7 +181,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 					friend.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (LinphoneActivity.instance().removeFriend(contact, finalNumberOrAddress)) {
+							if (ContactsManager.getInstance().removeFriend(finalNumberOrAddress)) {
 								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
 							}
 						}
@@ -221,9 +224,17 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
 		} else if (id == R.id.deleteContact) {
-			deleteExistingContact();
-			LinphoneActivity.instance().removeContactFromLists(contact);
-			LinphoneActivity.instance().displayContacts(false);
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+			alertDialog.setMessage(getString(R.string.delete_contact_dialog));
+			alertDialog.setPositiveButton(getString(R.string.button_ok),new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+				deleteExistingContact();
+				ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(),contact);
+				LinphoneActivity.instance().displayContacts(false);
+				}
+			});
+			alertDialog.setNegativeButton(getString(R.string.button_cancel),null);
+			alertDialog.show();
 		}
 	}
 	
@@ -239,6 +250,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
         
         try {
             getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+			ContactsManager.getInstance().removeAllFriends(contact);
         } catch (Exception e) {
         	Log.w(e.getMessage() + ":" + e.getStackTrace());
         }

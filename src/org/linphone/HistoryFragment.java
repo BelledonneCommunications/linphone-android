@@ -178,15 +178,16 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			address = log.getTo();
 		}
 		
-		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getActivity().getContentResolver());
-		displayName = address.getDisplayName(); 
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(address);
 		String sipUri = address.asStringUriOnly();
-		if (displayName == null) {
+		if (contact == null) {
 			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-				displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
+				displayName = address.getUserName();
 			} else {
 				displayName = sipUri;
 			}
+		} else {
+			displayName = contact.getName();
 		}
 		
 		return displayName;
@@ -389,8 +390,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 				address = log.getTo();
 				callDirection.setImageBitmap(outgoingCall);
 			}
-			
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
+
 			String sipUri = address.asStringUriOnly();
 			dateAndTime.setText(log.getStartDate() + " " + log.getCallDuration());
 			view.setTag(sipUri);
@@ -455,8 +455,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			} else {
 				address = log.getTo();
 			}
-			
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
+
 			String displayName = getCorrespondentDisplayName(log);
 			String sipUri = address.asStringUriOnly();
 			contact.setText(displayName + " (" + getChildrenCount(groupPosition) + ")");
