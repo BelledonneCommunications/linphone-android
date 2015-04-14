@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Version;
-import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
@@ -14,7 +13,6 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.RawContacts;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
@@ -102,7 +100,7 @@ public class EditContactFragment extends Fragment {
 
 		        try {
 					getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-					checkSipAddress();
+					addLinphoneFriendIfNeeded();
 					contactsManager.prepareContactsInBackground();
 		        } catch (Exception e) {
 		        	e.printStackTrace();
@@ -360,39 +358,6 @@ public class EditContactFragment extends Fragment {
 		}
 	}
 	
-	private String findRawContactID(String contactID) {
-		Cursor c = getActivity().getContentResolver().query(RawContacts.CONTENT_URI,
-			new String[]{RawContacts._ID},RawContacts.CONTACT_ID + "=?",
-			new String[]{contactID}, null);
-		if (c != null) {
-			String result = null;
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(RawContacts._ID));
-			}
-			c.close();
-			return result;
-		}
-		return null;
-	}
-
-	private String findRawLinphoneContactID(String contactID) {
-		String result = null;
-		String[] projection = { RawContacts._ID };
-
-		String selection = RawContacts.CONTACT_ID + "=? AND "
-				+ RawContacts.ACCOUNT_TYPE + "=? ";
-
-		Cursor c = getActivity().getContentResolver().query(RawContacts.CONTENT_URI, projection,
-				selection, new String[]{contactID, getString(R.string.sync_account_type)}, null);
-		if (c != null) {
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
-			}
-		}
-		c.close();
-		return result;
-	}
-	
 	private String findContactFirstName(String contactID) {
 		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
 		          new String[]{ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
@@ -425,35 +390,24 @@ public class EditContactFragment extends Fragment {
 		return null;
 	}
 
-	private boolean checkSipAddress(){
-		boolean check = true;
+	private void addLinphoneFriendIfNeeded(){
 		for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
-			if(numberOrAddress.newNumberOrAddress != null){
-				if(numberOrAddress.isSipAddress) {
-					if(isNewContact){
-						Contact c = ContactsManager.getInstance().findContactWithDisplayName(ContactsManager.getInstance().getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
-						if (!ContactsManager.getInstance().isContactHasAddress(c, numberOrAddress.newNumberOrAddress)) {
-							if (c != null) {
-								ContactsManager.getInstance().createNewFriend(c, numberOrAddress.newNumberOrAddress);
-							}
-						}
+			if(numberOrAddress.newNumberOrAddress != null && numberOrAddress.isSipAddress && !contactsManager.isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)) {
+				if(isNewContact){
+					Contact c = contactsManager.findContactWithDisplayName(ContactsManager.getInstance().getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
+					if (c != null) {
+						contactsManager.createNewFriend(c, numberOrAddress.newNumberOrAddress);
+					}
+				} else {
+					if (numberOrAddress.oldNumberOrAddress == null) {
+						contactsManager.createNewFriend(contact, numberOrAddress.newNumberOrAddress);
 					} else {
-						if (!ContactsManager.getInstance().isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)) {
-							check = false;
-							if (numberOrAddress.oldNumberOrAddress == null) {
-								ContactsManager.getInstance().createNewFriend(contact, numberOrAddress.newNumberOrAddress);
-							} else {
-								if(contact.hasFriends())
-									ContactsManager.getInstance().updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
-							}
-
-						}
+						if(contact.hasFriends())
+							contactsManager.updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
 					}
 				}
 			}
 		}
-
-		return check;
 	}
 	
 	class NewOrUpdatedNumberOrAddress {
@@ -509,7 +463,7 @@ public class EditContactFragment extends Fragment {
 				} else {
 					Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
 				}
-				Compatibility.deleteLinphoneContactTag(ops, oldNumberOrAddress, findRawLinphoneContactID(String.valueOf(contactID)));
+				Compatibility.deleteLinphoneContactTag(ops, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
@@ -546,7 +500,7 @@ public class EditContactFragment extends Fragment {
 				    );
 				}
 			} else {
-				String rawContactId = findRawContactID(String.valueOf(contactID));
+				String rawContactId = contactsManager.findRawContactID(getActivity().getContentResolver(),String.valueOf(contactID));
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
@@ -554,7 +508,7 @@ public class EditContactFragment extends Fragment {
 						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
 
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
-					Compatibility.addLinphoneContactTag(getActivity(), ops, newNumberOrAddress, findRawLinphoneContactID(String.valueOf(contactID)));
+					Compatibility.addLinphoneContactTag(getActivity(), ops, newNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
 					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
@@ -579,7 +533,7 @@ public class EditContactFragment extends Fragment {
 				if(!newNumberOrAddress.contains("@"))
 					newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
 				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
-				Compatibility.updateLinphoneContactTag(getActivity(), ops, newNumberOrAddress, oldNumberOrAddress, findRawLinphoneContactID(String.valueOf(contactID)));
+				Compatibility.updateLinphoneContactTag(getActivity(), ops, newNumberOrAddress, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 

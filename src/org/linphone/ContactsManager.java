@@ -39,7 +39,7 @@ import java.util.List;
 public class ContactsManager {
 	private static ContactsManager instance;
 	private List<Contact> contactList, sipContactList;
-	private Cursor contactCursor, sipContactCursor, friendContactCursor;
+	private Cursor contactCursor, sipContactCursor;
 	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
 	private ContentResolver contentResolver;
@@ -65,10 +65,7 @@ public class ContactsManager {
 	}
 
 	public Cursor getSIPContactsCursor() {
-		if (sipContactCursor.getCount() > 0)
-			return sipContactCursor;
-		else
-			return friendContactCursor;
+		return sipContactCursor;
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
@@ -103,6 +100,7 @@ public class ContactsManager {
 		return displayName;
 	}
 
+	//Contacts
 	public void createNewContact(ArrayList<ContentProviderOperation> ops, String firstName, String lastName){
 		int contactID = 0;
 
@@ -147,17 +145,20 @@ public class ContactsManager {
 		}
 
 		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend(sipUri);
-		friend.edit();
-		friend.setRefKey(contact.getID());
-		friend.done();
-		try {
-			LinphoneManager.getLc().addFriend(friend);
-			return true;
-		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+		if(friend != null) {
+			friend.edit();
+			friend.setRefKey(contact.getID());
+			friend.done();
+			try {
+				LinphoneManager.getLc().addFriend(friend);
+				return true;
+			} catch (LinphoneCoreException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
 			return false;
 		}
-
 	}
 
 	public void updateFriend(String oldSipUri, String newSipUri) {
@@ -239,13 +240,42 @@ public class ContactsManager {
 	}
 //End linphone Friend
 
+	public boolean removeContactTagIsNeeded(Contact contact){
+		contact.refresh(contentResolver);
+		boolean onlyNumbers = true;
+		for(String address: contact.getNumbersOrAddresses()){
+			if(LinphoneUtils.isSipAddress(address)){
+				onlyNumbers = false;
+			}
+		}
+
+		return onlyNumbers;
+	}
+
+	public void removeLinphoneContactTag(Contact contact){
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		String select = ContactsContract.RawContacts._ID + " = ?";
+		String[] args = new String[] { findRawLinphoneContactID(contact.getID()) };
+
+
+		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+						.withSelection(select, args)
+						.build()
+		);
+
+		try {
+			contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
+		} catch (Exception e) {
+			Log.w(e.getMessage() + ":" + e.getStackTrace());
+		}
+	}
+
 	public Contact findContactWithAddress(LinphoneAddress address){
 		for(Contact contact : contactList){
 			if(contact.getNumbersOrAddresses().contains(address.asStringUriOnly()) || contact.getNumbersOrAddresses().contains(address.getUserName())){
 				return contact;
 			}
 		}
-
 		return null;
 	}
 
@@ -270,13 +300,48 @@ public class ContactsManager {
 	public boolean isContactHasAddress(Contact contact, String address){
 		if(contact != null) {
 			contact.refresh(contentResolver);
-			if (contact.getNumbersOrAddresses().contains("sip:" + address)) {
+			if (contact.getNumbersOrAddresses().contains("sip:" + address))  {
 				return true;
 			} else {
 				return false;
 			}
 		}
 		return false;
+	}
+
+	public String findRawContactID(ContentResolver cr, String contactID) {
+		Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI,
+				new String[]{ContactsContract.RawContacts._ID},
+				ContactsContract.RawContacts.CONTACT_ID + "=?",
+				new String[]{contactID}, null);
+		if (c != null) {
+			String result = null;
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
+			}
+
+			c.close();
+			return result;
+		}
+		return null;
+	}
+
+	public String findRawLinphoneContactID(String contactID) {
+		String result = null;
+		String[] projection = { ContactsContract.RawContacts._ID };
+
+		String selection = ContactsContract.RawContacts.CONTACT_ID + "=? AND "
+				+ ContactsContract.RawContacts.ACCOUNT_TYPE + "=? ";
+
+		Cursor c = contentResolver.query(ContactsContract.RawContacts.CONTENT_URI, projection,
+				selection, new String[]{contactID, "org.linphone"}, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
+			}
+		}
+		c.close();
+		return result;
 	}
 
 	//Migrate old IM contacts into SIP addresses or linphoneFriends
@@ -288,12 +353,13 @@ public class ContactsManager {
 			for (int i = 0; i < oldContacts.getCount(); i++) {
 				Contact contact = Compatibility.getContact(contentResolver, oldContacts, i);
 				for (String address : Compatibility.extractContactImAddresses(contact.getID(), contentResolver)) {
-
 					if (LinphoneUtils.isSipAddress(address)) {
 						if (address.startsWith("sip:")) {
 							address = address.substring(4);
 						}
-						Compatibility.addSipAddressToContact(context, ops, address, findRawContactID(contentResolver,contact.getID()));
+
+						//Add new sip address
+						Compatibility.addSipAddressToContact(context, ops, address, findRawContactID(contentResolver, contact.getID()));
 						try {
 							contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
 						} catch (Exception e) {
@@ -302,42 +368,39 @@ public class ContactsManager {
 
 						ops.clear();
 
-						if(isContactHasAddress(contact,address)){
+						contact.refresh(contentResolver);
+
+						//If address sip is correctly add, remove the im address
+						if(contact.getNumbersOrAddresses().contains(address)){
 							Compatibility.deleteImAddressFromContact(ops, address, contact.getID());
 							try {
 								contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-
 							ops.clear();
 						} else {
-							if (!address.startsWith("sip:")) {
-								address = "sip:" + address;
+							//Add linphone friend instead
+							if(createNewFriend(contact, address)) {
+								contact.refresh(contentResolver);
+
+								//Remove IM address
+								Compatibility.deleteImAddressFromContact(ops, address, contact.getID());
+								try {
+									contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
+								} catch (Exception e) {
+									e.printStackTrace();
+
+								}
 							}
-
-							createNewFriend(contact, address);
-
-							contact.refresh(contentResolver);
-
-							if (address.startsWith("sip:")) {
-								address = address.substring(4);
-							}
-							Compatibility.deleteImAddressFromContact(ops, address, contact.getID());
-							try {
-								contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
-							} catch (Exception e) {
-								e.printStackTrace();
-
-							}
-							ops.clear();
 						}
 					}
+					ops.clear();
 				}
-				ops.clear();
-				contact.refresh(contentResolver);
 			}
+			oldContacts.close();
 		}
+
 	}
 
 	public synchronized void prepareContactsInBackground() {
@@ -376,6 +439,11 @@ public class ContactsManager {
 
 						if (contact == null)
 							continue;
+
+						//Remove linphone contact tag if the contact has no sip address
+						if(removeContactTagIsNeeded(contact) && isContactHasLinphoneTag(contact,contentResolver)){
+							removeLinphoneContactTag(contact);
+						}
 
 						for (Contact c : sipContactList) {
 							if (c != null && c.getID().equals(contact.getID())) {
@@ -442,23 +510,6 @@ public class ContactsManager {
 		}
 		cursor.close();
 		return false;
-	}
-
-	public String findRawContactID(ContentResolver cr, String contactID) {
-		Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI,
-				new String[]{ContactsContract.RawContacts._ID},
-				ContactsContract.RawContacts.CONTACT_ID + "=?",
-				new String[]{contactID}, null);
-		if (c != null) {
-			String result = null;
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
-			}
-
-			c.close();
-			return result;
-		}
-		return null;
 	}
 
 }

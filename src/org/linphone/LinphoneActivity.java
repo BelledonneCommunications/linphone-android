@@ -152,8 +152,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
 
 	 	if(!LinphonePreferences.instance().isContactsMigrationDone()){
-			//ContactsManager.getInstance().migrateContacts();
-			//LinphonePreferences.instance().contactsMigrationDone();
+			ContactsManager.getInstance().migrateContacts();
+			LinphonePreferences.instance().contactsMigrationDone();
 		}
 
 		setContentView(R.layout.main);
