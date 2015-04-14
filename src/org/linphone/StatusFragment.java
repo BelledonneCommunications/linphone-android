@@ -135,7 +135,6 @@ public class StatusFragment extends Fragment {
 					}
 //						setMiniLedsForEachAccount();
 					populateSliderContent();
-					populateSliderContent();
 					sliderContentAccounts.invalidate();
 				} catch (IllegalStateException ise) {}
 			}
@@ -163,11 +162,10 @@ public class StatusFragment extends Fragment {
 			}
 			
 		};
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
-			
 			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
 				mListener.registrationState(lc, lpc, lpc.getState(), null);

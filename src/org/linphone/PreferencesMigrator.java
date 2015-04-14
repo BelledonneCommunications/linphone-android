@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
@@ -28,6 +27,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+
 import android.preference.PreferenceManager;
 
 /**
@@ -120,7 +120,7 @@ public class PreferencesMigrator {
 			doAccountMigration(i, i == getPrefInt(R.string.pref_default_account_key, 0));
 		}
 	}
-	
+
 	private void doAccountMigration(int index, boolean isDefaultAccount) {
 		String key = index == 0 ? "" : String.valueOf(index);
 		
@@ -163,7 +163,7 @@ public class PreferencesMigrator {
 			}
 		}
 	}
-	
+
 	private void deleteAllOldPreferences() {
 		Editor editor = mOldPrefs.edit();
 		editor.clear();

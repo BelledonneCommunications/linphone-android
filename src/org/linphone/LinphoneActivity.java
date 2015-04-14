@@ -42,7 +42,6 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.setup.RemoteProvisioningLoginActivity;
@@ -55,11 +54,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
+import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.app.FragmentActivity;
@@ -76,7 +75,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -105,9 +103,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
 	private SavedState dialerSavedState;
-	private boolean preferLinphoneContacts = false, isAnimationDisabled = false, isContactPresenceDisabled = true;
-	private List<Contact> contactList, sipContactList;
-	private Cursor contactCursor, sipContactCursor;
+	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 
@@ -151,6 +147,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			} else {
 				startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
 			}
+		}
+
+		ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+
+	 	if(!LinphonePreferences.instance().isContactsMigrationDone()){
+			ContactsManager.getInstance().migrateContacts();
+			LinphonePreferences.instance().contactsMigrationDone();
 		}
 
 		setContentView(R.layout.main);
@@ -247,6 +250,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 		updateAnimationsState();
 	}
+
 
 	private void initButtons() {
 		menu = (LinearLayout) findViewById(R.id.menu);
@@ -400,15 +404,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	private void updateAnimationsState() {
 		isAnimationDisabled = getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
-		isContactPresenceDisabled = !getResources().getBoolean(R.bool.enable_linphone_friends);
 	}
 
 	public boolean isAnimationDisabled() {
 		return isAnimationDisabled;
-	}
-
-	public boolean isContactPresenceDisabled() {
-		return isContactPresenceDisabled;
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
@@ -517,10 +516,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			Log.e("Cannot display history details",e);
 			return;
 		}
-		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
+		Contact c = ContactsManager.getInstance().findContactWithAddress(lAddress);
 
-		String displayName = lAddress.getDisplayName();
-		String pictureUri = uri == null ? null : uri.toString();
+		String displayName = c != null ? c.getName() : null;
+		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
 
 		String status;
 		if (log.getDirection() == CallDirection.Outgoing) {
@@ -610,9 +609,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			Log.e("Cannot display chat",e);
 			return;
 		}
-		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, getContentResolver());
-		String displayName = lAddress.getDisplayName();
-		String pictureUri = uri == null ? null : uri.toString();
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(lAddress);
+		String displayName = contact != null ? contact.getName() : null;
+		String pictureUri = contact != null && contact.getPhotoUri() != null ? contact.getPhotoUri().toString() : null;
 
 		if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
 			if (isTablet()) {
@@ -629,16 +628,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 					}
 					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 				}
-			} else {
-				Intent intent = new Intent(this, ChatActivity.class);
-				intent.putExtra("SipUri", sipUri);
-				if (lAddress.getDisplayName() != null) {
-					intent.putExtra("DisplayName", displayName);
-					intent.putExtra("PictureUri", pictureUri);
-				}
-				startOrientationSensor();
-				startActivityForResult(intent, CHAT_ACTIVITY);
 			}
+		} else {
+			Intent intent = new Intent(this, ChatActivity.class);
+			intent.putExtra("SipUri", sipUri);
+			if (contact != null) {
+				intent.putExtra("DisplayName", contact.getName());
+				intent.putExtra("PictureUri", contact.getPhotoUri());
+			}
+			startOrientationSensor();
+			startActivityForResult(intent, CHAT_ACTIVITY);
 		}
 
 		LinphoneService.instance().resetMessageNotifCount();
@@ -906,7 +905,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	private int mAlwaysChangingPhoneAngle = -1;
-	private AcceptNewFriendDialog acceptNewFriendDialog;
 
 	private class LocalOrientationEventListener extends OrientationEventListener {
 		public LocalOrientationEventListener(Context context) {
@@ -943,202 +941,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				}
 			}
 		}
-	}
-
-	public void showPreferenceErrorDialog(String message) {
-
-	}
-
-	public List<Contact> getAllContacts() {
-		return contactList;
-	}
-
-	public List<Contact> getSIPContacts() {
-		return sipContactList;
-	}
-
-	public Cursor getAllContactsCursor() {
-		return contactCursor;
-	}
-
-	public Cursor getSIPContactsCursor() {
-		return sipContactCursor;
-	}
-
-	public void setLinphoneContactsPrefered(boolean isPrefered) {
-		preferLinphoneContacts = isPrefered;
-	}
-
-	public boolean isLinphoneContactsPrefered() {
-		return preferLinphoneContacts;
-	}
-
-	public void onNewSubscriptionRequestReceived(LinphoneFriend friend,
-			String sipUri) {
-		if (isContactPresenceDisabled) {
-			return;
-		}
-
-		sipUri = sipUri.replace("<", "").replace(">", "");
-		if (LinphonePreferences.instance().shouldAutomaticallyAcceptFriendsRequests()) {
-			Contact contact = findContactWithSipAddress(sipUri);
-			if (contact != null) {
-				friend.enableSubscribes(true);
-				try {
-					LinphoneManager.getLc().addFriend(friend);
-					contact.setFriend(friend);
-				} catch (LinphoneCoreException e) {
-					e.printStackTrace();
-				}
-			}
-		} else {
-			Contact contact = findContactWithSipAddress(sipUri);
-			if (contact != null) {
-				FragmentManager fm = getSupportFragmentManager();
-				acceptNewFriendDialog = new AcceptNewFriendDialog(contact, sipUri);
-				acceptNewFriendDialog.show(fm, "New Friend Request Dialog");
-			}
-		}
-	}
-
-	private Contact findContactWithSipAddress(String sipUri) {
-		if (!sipUri.startsWith("sip:")) {
-			sipUri = "sip:" + sipUri;
-		}
-
-		for (Contact contact : sipContactList) {
-			for (String addr : contact.getNumerosOrAddresses()) {
-				if (addr.equals(sipUri)) {
-					return contact;
-				}
-			}
-		}
-		return null;
-	}
-
-	public void onNotifyPresenceReceived(LinphoneFriend friend) {
-		if (!isContactPresenceDisabled && currentFragment == FragmentsAvailable.CONTACTS && friendStatusListenerFragment != null) {
-			((ContactsFragment) friendStatusListenerFragment).invalidate();
-		}
-	}
-
-	public boolean newFriend(Contact contact, String sipUri) {
-		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend(sipUri);
-		friend.enableSubscribes(true);
-		friend.setIncSubscribePolicy(LinphoneFriend.SubscribePolicy.SPAccept);
-		try {
-			LinphoneManager.getLc().addFriend(friend);
-			contact.setFriend(friend);
-			return true;
-		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	private void acceptNewFriend(Contact contact, String sipUri, boolean accepted) {
-		acceptNewFriendDialog.dismissAllowingStateLoss();
-		if (accepted) {
-			newFriend(contact, sipUri);
-		}
-	}
-
-	public boolean removeFriend(Contact contact, String sipUri) {
-		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
-		if (friend != null) {
-			friend.enableSubscribes(false);
-			LinphoneManager.getLc().removeFriend(friend);
-			contact.setFriend(null);
-			return true;
-		}
-		return false;
-	}
-
-	private void searchFriendAndAddToContact(Contact contact) {
-		if (contact == null || contact.getNumerosOrAddresses() == null) {
-			return;
-		}
-
-		for (String sipUri : contact.getNumerosOrAddresses()) {
-			if (LinphoneUtils.isSipAddress(sipUri)) {
-				LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
-				if (friend != null) {
-					friend.enableSubscribes(true);
-					friend.setIncSubscribePolicy(LinphoneFriend.SubscribePolicy.SPAccept);
-					contact.setFriend(friend);
-					break;
-				}
-			}
-		}
-	}
-
-	public void removeContactFromLists(Contact contact) {
-		for (Contact c : contactList) {
-			if (c != null && c.getID().equals(contact.getID())) {
-				contactList.remove(c);
-				contactCursor = Compatibility.getContactsCursor(getContentResolver());
-				break;
-			}
-		}
-
-		for (Contact c : sipContactList) {
-			if (c != null && c.getID().equals(contact.getID())) {
-				sipContactList.remove(c);
-				sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
-				break;
-			}
-		}
-	}
-
-	public synchronized void prepareContactsInBackground() {
-		if (contactCursor != null) {
-			contactCursor.close();
-		}
-		if (sipContactCursor != null) {
-			sipContactCursor.close();
-		}
-
-		contactCursor = Compatibility.getContactsCursor(getContentResolver());
-		sipContactCursor = Compatibility.getSIPContactsCursor(getContentResolver());
-
-		Thread sipContactsHandler = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if(sipContactCursor != null) {
-					for (int i = 0; i < sipContactCursor.getCount(); i++) {
-						Contact contact = Compatibility.getContact(getContentResolver(), sipContactCursor, i);
-						if (contact == null)
-							continue;
-
-						contact.refresh(getContentResolver());
-						if (!isContactPresenceDisabled) {
-							searchFriendAndAddToContact(contact);
-						}
-						sipContactList.add(contact);
-					}
-				}
-				if(contactCursor != null) {
-					for (int i = 0; i < contactCursor.getCount(); i++) {
-						Contact contact = Compatibility.getContact(getContentResolver(), contactCursor, i);
-						if (contact == null)
-							continue;
-
-						for (Contact c : sipContactList) {
-							if (c != null && c.getID().equals(contact.getID())) {
-								contact = c;
-								break;
-							}
-						}
-						contactList.add(contact);
-					}
-				}
-			}
-		});
-
-		contactList = new ArrayList<Contact>();
-		sipContactList = new ArrayList<Contact>();
-
-		sipContactsHandler.start();
 	}
 
 	private void initInCallMenuLayout(boolean callTransfer) {
@@ -1195,6 +997,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			extras.putSerializable("Contact", contact);
 			changeCurrentFragment(FragmentsAvailable.EDIT_CONTACT, extras);
 		}
+
 	}
 
 	public void editContact(Contact contact, String sipAddress)
@@ -1252,7 +1055,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
-		prepareContactsInBackground();
+		ContactsManager.getInstance().prepareContactsInBackground();
 
 		updateMissedChatCount();
 
@@ -1395,42 +1198,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-
-	@SuppressLint("ValidFragment")
-	class AcceptNewFriendDialog extends DialogFragment {
-		private Contact contact;
-		private String sipUri;
-
-		public AcceptNewFriendDialog(Contact c, String a) {
-			contact = c;
-			sipUri = a;
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View view = inflater.inflate(R.layout.new_friend_request_dialog, container);
-
-			getDialog().setTitle(R.string.linphone_friend_new_request_title);
-
-			Button yes = (Button) view.findViewById(R.id.yes);
-			yes.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					acceptNewFriend(contact, sipUri, true);
-				}
-			});
-
-			Button no = (Button) view.findViewById(R.id.no);
-			no.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					acceptNewFriend(contact, sipUri, false);
-				}
-			});
-
-			return view;
-		}
 	}
 }
 

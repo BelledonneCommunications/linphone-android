@@ -1143,4 +1143,12 @@ public class LinphonePreferences {
 	public void setCodecBitrateLimit(int bitrate) {
 		getConfig().setInt("audio", "codec_bitrate_limit", bitrate);
 	}
+
+	public void contactsMigrationDone(){
+		getConfig().setBool("app", "contacts_migration_done",true);
+	}
+
+	public boolean isContactsMigrationDone(){
+		return getConfig().getBool("app", "contacts_migration_done",false);
+	}
 }

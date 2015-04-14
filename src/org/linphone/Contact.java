@@ -38,14 +38,15 @@ public class Contact implements Serializable {
 	private String name;
 	private transient Uri photoUri;
 	private transient Bitmap photo;
-	private List<String> numerosOrAddresses;
-	private LinphoneFriend friend;
+	private List<String> numbersOrAddresses;
+	private boolean hasFriends;
 	
 	public Contact(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.photoUri = null;
+		this.hasFriends = false;
 	}
 	
 	public Contact(String id, String name, Uri photo) {
@@ -54,6 +55,7 @@ public class Contact implements Serializable {
 		this.name = name;
 		this.photoUri = photo;
 		this.photo = null;
+		this.hasFriends = false;
 	}
 	
 	public Contact(String id, String name, Uri photo, Bitmap picture) {
@@ -62,14 +64,12 @@ public class Contact implements Serializable {
 		this.name = name;
 		this.photoUri = photo;
 		this.photo = picture;
+		this.hasFriends = false;
 	}
-	
-	public void setFriend(LinphoneFriend friend) {
-		this.friend = friend;
-	}
-	
-	public LinphoneFriend getFriend() {
-		return friend;
+
+
+	public boolean hasFriends() {
+		return hasFriends;
 	}
 	
 	public String getID() {
@@ -88,14 +88,20 @@ public class Contact implements Serializable {
 		return photo;
 	}
 
-	public List<String> getNumerosOrAddresses() {
-		if (numerosOrAddresses == null)
-			numerosOrAddresses = new ArrayList<String>();
-		return numerosOrAddresses;
+	public List<String> getNumbersOrAddresses() {
+		if (numbersOrAddresses == null)
+			numbersOrAddresses = new ArrayList<String>();
+		return numbersOrAddresses;
 	}
 	
 	public void refresh(ContentResolver cr) {
-		this.numerosOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+			if (friend.getRefKey().equals(id)) {
+				hasFriends = true;
+				this.numbersOrAddresses.add(friend.getAddress().asStringUriOnly());
+			}
+		}
 		this.name = Compatibility.refreshContactName(cr, id);
 	}
 }

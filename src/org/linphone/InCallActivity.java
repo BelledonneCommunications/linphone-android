@@ -1299,8 +1299,12 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
     	
 		// Image Row
     	LinearLayout imageView = (LinearLayout) inflater.inflate(R.layout.active_call_image_row, container, false);
-        Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, imageView.getContext().getContentResolver());
-		displayOrHideContactPicture(imageView, pictureUri, false);
+        Contact contact  = ContactsManager.getInstance().findContactWithAddress(lAddress);
+		if(contact != null) {
+			displayOrHideContactPicture(imageView, contact.getPhotoUri(), false);
+		} else {
+			displayOrHideContactPicture(imageView, null, false);
+		}
     	callsList.addView(imageView);
     	
     	callView.setTag(imageView);
@@ -1321,18 +1325,16 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	
 	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
 		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
-		
-		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(lAddress, callView.getContext().getContentResolver());
-		String displayName = lAddress.getDisplayName();
 
-		if (displayName == null) {
+		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(lAddress);
+		if (lContact == null) {
 	        if (resources.getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-	        	contact.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+	        	contact.setText(lAddress.getUserName());
 			} else {
 				contact.setText(sipUri);
 			}
 		} else {
-			contact.setText(displayName);
+			contact.setText(lContact.getName());
 		}
 	}
 	

@@ -45,6 +45,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -52,6 +53,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
 /**
@@ -235,9 +237,11 @@ public final class LinphoneService extends Service {
 				mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
 				mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
 			} catch (NoSuchMethodException e) {
-				Log.e(e, "Couldn't find startGoreground or stopForeground");
+				Log.e(e, "Couldn't find startForeground or stopForeground");
 			}
 		}
+
+		this.getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 
 		startForegroundCompat(NOTIF_ID, mNotif);
 
@@ -258,6 +262,15 @@ public final class LinphoneService extends Service {
 																							, 600000
 																							, mkeepAlivePendingIntent);
 	}
+
+	private ContentObserver mObserver = new ContentObserver(new Handler()) {
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+		}
+
+	};
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
 	private IncallIconState mCurrentIncallIconState = IncallIconState.IDLE;
@@ -299,7 +312,8 @@ public final class LinphoneService extends Service {
 		LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
-		Uri pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(address);
+		Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
 		Bitmap bm = null;
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
@@ -376,7 +390,8 @@ public final class LinphoneService extends Service {
 		
 		Uri pictureUri;
 		try {
-			pictureUri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri), getContentResolver());
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
+			pictureUri = contact.getPhotoUri();
 		} catch (LinphoneCoreException e1) {
 			Log.e("Cannot parse from address",e1);
 			pictureUri=null;
@@ -548,6 +563,7 @@ public final class LinphoneService extends Service {
 	    mNM.cancel(MESSAGE_NOTIF_ID);
 
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
+		getContentResolver().unregisterContentObserver(mObserver);
 		super.onDestroy();
 	}
 	
