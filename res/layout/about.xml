@@ -49,27 +49,33 @@
 
     <View android:layout_weight="30" android:layout_width="0dp" android:layout_height="0dp" />
 
-    <LinearLayout
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center">
+
+		<Button
+       		android:id="@+id/send_log"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+       		android:text="@string/menu_send_log"/>
+
+		<Button
+            android:id="@+id/reset_log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_reset_log"/>
+	</LinearLayout>
+
+	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="30dp">
 
-		<Button
-       		android:id="@+id/send_log"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-       		android:text="@string/menu_send_log"/>
-
-        <Button
-            android:id="@+id/reset_log"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_reset_log"
-            />
-
-        <Button android:id="@+id/exit"
+		<Button android:id="@+id/exit"
         	android:gravity="center"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
