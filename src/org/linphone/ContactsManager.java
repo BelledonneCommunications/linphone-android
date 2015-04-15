@@ -425,9 +425,11 @@ public class ContactsManager {
 
 						contact.refresh(contentResolver);
 						//Add tag to Linphone contact if it not existed
-						if(!isContactHasLinphoneTag(contact,contentResolver)){
-							Compatibility.createLinphoneContactTag(context,contentResolver,contact,
-							findRawContactID(contentResolver, String.valueOf(contact.getID())));
+						if (LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+							if (!isContactHasLinphoneTag(contact, contentResolver)) {
+								Compatibility.createLinphoneContactTag(context, contentResolver, contact,
+										findRawContactID(contentResolver, String.valueOf(contact.getID())));
+							}
 						}
 
 						sipContactList.add(contact);
@@ -441,10 +443,11 @@ public class ContactsManager {
 							continue;
 
 						//Remove linphone contact tag if the contact has no sip address
-						if(removeContactTagIsNeeded(contact) && isContactHasLinphoneTag(contact,contentResolver)){
-							removeLinphoneContactTag(contact);
+						if (LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+							if (removeContactTagIsNeeded(contact) && isContactHasLinphoneTag(contact, contentResolver)) {
+								removeLinphoneContactTag(contact);
+							}
 						}
-
 						for (Contact c : sipContactList) {
 							if (c != null && c.getID().equals(contact.getID())) {
 								contact = c;
