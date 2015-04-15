@@ -149,7 +149,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			}
 		}
 
-		ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+			ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+		}
 
 	 	if(!LinphonePreferences.instance().isContactsMigrationDone()){
 			ContactsManager.getInstance().migrateContacts();
@@ -613,21 +615,19 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		String displayName = contact != null ? contact.getName() : null;
 		String pictureUri = contact != null && contact.getPhotoUri() != null ? contact.getPhotoUri().toString() : null;
 
-		if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
-			if (isTablet()) {
-				Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
-				if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
-					ChatFragment chatFragment = (ChatFragment) fragment2;
-					chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
-				} else {
-					Bundle extras = new Bundle();
-					extras.putString("SipUri", sipUri);
-					if (lAddress.getDisplayName() != null) {
-						extras.putString("DisplayName", displayName);
-						extras.putString("PictureUri", pictureUri);
-					}
-					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+		if (isTablet() && (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT)) {
+			Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+				ChatFragment chatFragment = (ChatFragment) fragment2;
+				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
+			} else {
+				Bundle extras = new Bundle();
+				extras.putString("SipUri", sipUri);
+				if (lAddress.getDisplayName() != null) {
+					extras.putString("DisplayName", displayName);
+					extras.putString("PictureUri", pictureUri);
 				}
+				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 			}
 		} else {
 			Intent intent = new Intent(this, ChatActivity.class);
