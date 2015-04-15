@@ -300,7 +300,7 @@ public class ContactsManager {
 	public boolean isContactHasAddress(Contact contact, String address){
 		if(contact != null) {
 			contact.refresh(contentResolver);
-			if (contact.getNumbersOrAddresses().contains(address))  {
+			if (contact.getNumbersOrAddresses().contains(address) || contact.getNumbersOrAddresses().contains("sip:"+ address))  {
 				return true;
 			} else {
 				return false;

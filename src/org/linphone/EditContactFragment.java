@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.AvatarWithShadow;
 import android.annotation.SuppressLint;
@@ -399,11 +400,13 @@ public class EditContactFragment extends Fragment {
 						contactsManager.createNewFriend(c, numberOrAddress.newNumberOrAddress);
 					}
 				} else {
-					if (numberOrAddress.oldNumberOrAddress == null) {
-						contactsManager.createNewFriend(contact, numberOrAddress.newNumberOrAddress);
-					} else {
-						if(contact.hasFriends())
-							contactsManager.updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
+					if (!contactsManager.isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)){
+						if (numberOrAddress.oldNumberOrAddress == null) {
+							contactsManager.createNewFriend(contact, numberOrAddress.newNumberOrAddress);
+						} else {
+							if (contact.hasFriends())
+								contactsManager.updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
+						}
 					}
 				}
 			}
@@ -486,8 +489,15 @@ public class EditContactFragment extends Fragment {
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
-					if(!newNumberOrAddress.contains("@"))
-						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+					if(!newNumberOrAddress.contains("@")) {
+						//Use default proxy config domain if it exists
+						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+						if(lpc != null){
+							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
+						} else {
+							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+						}
+					}
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
@@ -504,8 +514,15 @@ public class EditContactFragment extends Fragment {
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
-					if(!newNumberOrAddress.contains("@"))
-						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+					if(!newNumberOrAddress.contains("@")) {
+						//Use default proxy config domain if it exists
+						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+						if(lpc != null){
+							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
+						} else {
+							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+						}
+					}
 
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
 					Compatibility.addLinphoneContactTag(getActivity(), ops, newNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
@@ -530,8 +547,15 @@ public class EditContactFragment extends Fragment {
 			if (isSipAddress) {
 				if (newNumberOrAddress.startsWith("sip:"))
 					newNumberOrAddress = newNumberOrAddress.substring(4);
-				if(!newNumberOrAddress.contains("@"))
-					newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+				if(!newNumberOrAddress.contains("@")) {
+					//Use default proxy config domain if it exists
+					LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+					if(lpc != null){
+						newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
+					} else {
+						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+					}
+				}
 				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
 				Compatibility.updateLinphoneContactTag(getActivity(), ops, newNumberOrAddress, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
 			} else {
