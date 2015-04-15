@@ -62,10 +62,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 					String to;
 					if (lpc != null) {
 						String address = v.getTag().toString();
-						if (address.contains("@")) {
-							to = lpc.normalizePhoneNumber(address.split("@")[0]);
-						} else {
+						if (!address.contains("@")) {
 							to = lpc.normalizePhoneNumber(address);
+						} else {
+							to = v.getTag().toString();
 						}
 					} else {
 						to = v.getTag().toString();
