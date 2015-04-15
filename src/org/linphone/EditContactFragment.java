@@ -392,10 +392,10 @@ public class EditContactFragment extends Fragment {
 
 	private void addLinphoneFriendIfNeeded(){
 		for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
-			if(numberOrAddress.newNumberOrAddress != null && numberOrAddress.isSipAddress && !contactsManager.isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)) {
+			if(numberOrAddress.newNumberOrAddress != null && numberOrAddress.isSipAddress) {
 				if(isNewContact){
 					Contact c = contactsManager.findContactWithDisplayName(ContactsManager.getInstance().getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
-					if (c != null) {
+					if (c != null && !contactsManager.isContactHasAddress(c, numberOrAddress.newNumberOrAddress)) {
 						contactsManager.createNewFriend(c, numberOrAddress.newNumberOrAddress);
 					}
 				} else {
