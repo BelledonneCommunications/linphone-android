@@ -615,19 +615,24 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		String displayName = contact != null ? contact.getName() : null;
 		String pictureUri = contact != null && contact.getPhotoUri() != null ? contact.getPhotoUri().toString() : null;
 
-		if (isTablet() && (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT)) {
-			Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
-			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
-				ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
-			} else {
-				Bundle extras = new Bundle();
-				extras.putString("SipUri", sipUri);
-				if (lAddress.getDisplayName() != null) {
-					extras.putString("DisplayName", displayName);
-					extras.putString("PictureUri", pictureUri);
+		if (isTablet()){
+			if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT){
+				Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+				if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+					ChatFragment chatFragment = (ChatFragment) fragment2;
+					chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
+				} else {
+					Bundle extras = new Bundle();
+					extras.putString("SipUri", sipUri);
+					if (lAddress.getDisplayName() != null) {
+						extras.putString("DisplayName", displayName);
+						extras.putString("PictureUri", pictureUri);
+					}
+					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 				}
-				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+			} else {
+				changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
+				displayChat(sipUri);
 			}
 		} else {
 			Intent intent = new Intent(this, ChatActivity.class);
@@ -794,6 +799,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public int onMessageSent(String to, String message) {
 		getChatStorage().deleteDraft(to);
+		if (messageListFragment != null && messageListFragment.isVisible()) {
+			((ChatListFragment) messageListFragment).refresh();
+		}
+
 		return getChatStorage().saveTextMessage("", to, message, System.currentTimeMillis());
 	}
 
