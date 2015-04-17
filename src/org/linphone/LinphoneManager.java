@@ -723,7 +723,9 @@ public class LinphoneManager implements LinphoneCoreListener {
 					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
 				}
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			Log.e(e);
+		}
 	}
 
 	public String getLastLcStatusMessage() {
