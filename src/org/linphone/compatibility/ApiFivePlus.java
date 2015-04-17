@@ -239,7 +239,7 @@ public class ApiFivePlus {
 	}
 	
 	public static InputStream getContactPictureInputStream(ContentResolver cr, String id) {
-		Uri person = getContactPictureUri(id);
+		Uri person = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
 		return Contacts.openContactPhotoInputStream(cr, person);
 	}
 	
@@ -248,7 +248,8 @@ public class ApiFivePlus {
 	}
 	
 	private static Uri getContactPictureUri(String id) {
-		return ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
+		Uri person = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
+		return Uri.withAppendedPath(person, Contacts.Photo.DISPLAY_PHOTO);
 	}
 	
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
