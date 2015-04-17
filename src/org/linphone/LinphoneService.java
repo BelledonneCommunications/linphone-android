@@ -388,18 +388,23 @@ public final class LinphoneService extends Service {
 			mMsgNotifCount++;
 		}
 		
-		Uri pictureUri;
+		Uri pictureUri = null;
 		try {
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
-			pictureUri = contact.getPhotoUri();
+			if (contact != null)
+				pictureUri = contact.getPhotoUri();
 		} catch (LinphoneCoreException e1) {
-			Log.e("Cannot parse from address",e1);
-			pictureUri=null;
+			Log.e("Cannot parse from address ", e1);
 		}
+		
 		Bitmap bm = null;
-		try {
-			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
-		} catch (Exception e) {
+		if (pictureUri != null) {
+			try {
+				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+			} catch (Exception e) {
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			}
+		} else {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
 		}
 		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);

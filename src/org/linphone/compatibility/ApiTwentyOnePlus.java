@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.app.NotificationCompat;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /*
@@ -42,20 +43,17 @@ public class ApiTwentyOnePlus {
 		} else {
 			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
 		}
-
-		Notification notif = new Notification.Builder(context)
+		
+		Notification notif = new NotificationCompat.Builder(context)
 			.setContentTitle(title)
 			.setContentText(msg)
 			.setSmallIcon(R.drawable.chat_icon_over)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
-			.setDefaults(
-					Notification.DEFAULT_LIGHTS
-							| Notification.DEFAULT_SOUND
-							| Notification.DEFAULT_VIBRATE)
-			.setWhen(System.currentTimeMillis())
 			.setLargeIcon(contactIcon)
 			.setCategory(Notification.CATEGORY_MESSAGE)
+			.setVisibility(Notification.VISIBILITY_PRIVATE)
+			.setPriority(Notification.PRIORITY_HIGH)
 			.build();
 
 		return notif;
@@ -65,15 +63,16 @@ public class ApiTwentyOnePlus {
 			String title, String msg, int iconID, Bitmap contactIcon,
 			String contactName, PendingIntent intent) {
 
-		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
-			.setContentText(msg).setSmallIcon(iconID)
+		Notification notif = new NotificationCompat.Builder(context).setContentTitle(contactName)
+			.setContentText(msg)
+			.setSmallIcon(iconID)
 			.setAutoCancel(false)
 			.setContentIntent(intent)
-			.setWhen(System.currentTimeMillis())
 			.setLargeIcon(contactIcon)
 			.setCategory(Notification.CATEGORY_CALL)
+			.setVisibility(Notification.VISIBILITY_PUBLIC)
+			.setPriority(Notification.PRIORITY_HIGH)
 			.build();
-		notif.flags |= Notification.FLAG_ONGOING_EVENT;
 		
 		return notif;
 	}
@@ -82,26 +81,26 @@ public class ApiTwentyOnePlus {
 		Notification notif;
 		
 		if (largeIcon != null) {
-			notif = new Notification.Builder(context)
+			notif = new NotificationCompat.Builder(context)
 		        .setContentTitle(title)
 		        .setContentText(message)
 		        .setSmallIcon(icon, level)
 		        .setLargeIcon(largeIcon)
 		        .setContentIntent(intent)
-		        .setWhen(System.currentTimeMillis())
+				.setCategory(Notification.CATEGORY_SERVICE)
+				.setVisibility(Notification.VISIBILITY_SECRET)
+				.setPriority(Notification.PRIORITY_DEFAULT)
 		        .build();
 		} else {
-			notif = new Notification.Builder(context)
+			notif = new NotificationCompat.Builder(context)
 		        .setContentTitle(title)
 		        .setContentText(message)
 		        .setSmallIcon(icon, level)
 		        .setContentIntent(intent)
-		        .setWhen(System.currentTimeMillis())
 				.setCategory(Notification.CATEGORY_SERVICE)
+				.setVisibility(Notification.VISIBILITY_SECRET)
+				.setPriority(Notification.PRIORITY_DEFAULT)
 		        .build();
-		}
-		if (isOngoingEvent) {
-			notif.flags |= Notification.FLAG_ONGOING_EVENT;
 		}
 		
 		return notif;
