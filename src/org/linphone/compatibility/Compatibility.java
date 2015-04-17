@@ -162,7 +162,9 @@ public class Compatibility {
 			title = "%i unread messages".replace("%i", String.valueOf(msgCount));
 		}
 		
-		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
@@ -175,7 +177,9 @@ public class Compatibility {
 	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 		Notification notif = null;
 		
-		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
@@ -186,7 +190,9 @@ public class Compatibility {
 	}
 
 	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
-		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			return ApiSixteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			return ApiElevenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
