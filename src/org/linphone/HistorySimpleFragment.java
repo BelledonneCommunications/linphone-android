@@ -392,7 +392,7 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 				callDirection.setImageBitmap(outgoingCall);
 			}
 
-			Contact c = ContactsManager.getInstance().findContactWithAddress(address);
+			Contact c = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 			String displayName = null;
 			final String sipUri = address.asStringUriOnly();
 			if(c != null){

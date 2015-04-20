@@ -1299,7 +1299,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
     	
 		// Image Row
     	LinearLayout imageView = (LinearLayout) inflater.inflate(R.layout.active_call_image_row, container, false);
-        Contact contact  = ContactsManager.getInstance().findContactWithAddress(lAddress);
+        Contact contact  = ContactsManager.getInstance().findContactWithAddress(imageView.getContext().getContentResolver(), lAddress);
 		if(contact != null) {
 			displayOrHideContactPicture(imageView, contact.getPhotoUri(), false);
 		} else {
@@ -1326,7 +1326,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
 		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
 
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(lAddress);
+		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(callView.getContext().getContentResolver(), lAddress);
 		if (lContact == null) {
 	        if (resources.getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
 	        	contact.setText(lAddress.getUserName());

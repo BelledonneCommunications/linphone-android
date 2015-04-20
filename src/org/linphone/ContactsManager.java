@@ -150,6 +150,7 @@ public class ContactsManager {
 		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend(sipUri);
 		if (friend != null) {
 			friend.edit();
+			friend.enableSubscribes(false);
 			friend.setRefKey(contact.getID());
 			friend.done();
 			try {
@@ -230,7 +231,7 @@ public class ContactsManager {
 		return null;
 	}
 
-	public Contact getContact(String id){
+	public Contact getContact(String id, ContentResolver contentResolver){
 		String[] projection = {ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
 		String selection = new StringBuilder()
 				.append(ContactsContract.Data.CONTACT_ID)
@@ -296,7 +297,7 @@ public class ContactsManager {
 		}
 	}
 
-	private Contact checkPhoneQueryResult(Cursor c, String columnPhone, String columnId, String username) {
+	private Contact checkPhoneQueryResult(ContentResolver contentResolver, Cursor c, String columnPhone, String columnId, String username) {
 		boolean contactFound = false;
 
 		if (c != null) {
@@ -320,7 +321,7 @@ public class ContactsManager {
 				}
 
 				if(contactFound){
-					Contact contact = getContact(c.getString(c.getColumnIndex(columnId)));
+					Contact contact = getContact(c.getString(c.getColumnIndex(columnId)), contentResolver);
 					c.close();
 					return contact;
 				}
@@ -330,7 +331,7 @@ public class ContactsManager {
 		return null;
 	}
 
-	public Contact findContactWithAddress(LinphoneAddress address){
+	public Contact findContactWithAddress(ContentResolver contentResolver, LinphoneAddress address){
 		String sipUri = address.asStringUriOnly();
 		if (sipUri.startsWith("sip:"))
 			sipUri = sipUri.substring(4);
@@ -338,7 +339,7 @@ public class ContactsManager {
 		if(LinphoneManager.getLc().getFriendList() != null && LinphoneManager.getLc().getFriendList().length > 0) {
 			for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
 				if (friend.getAddress().equals(address)) {
-					return getContact(friend.getRefKey());
+					return getContact(friend.getRefKey(), contentResolver);
 				}
 			}
 		}
@@ -368,7 +369,7 @@ public class ContactsManager {
 		Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address.getUserName()));
 		projection = new String[] {ContactsContract.PhoneLookup._ID,ContactsContract.PhoneLookup.NUMBER,ContactsContract.PhoneLookup.DISPLAY_NAME };
 		Cursor c = contentResolver.query(lookupUri, projection, null, null, null);
-		contact = checkPhoneQueryResult(c, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup._ID, address.getUserName());
+		contact = checkPhoneQueryResult(contentResolver, c, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup._ID, address.getUserName());
 
 		if (contact != null) {
 			return contact;

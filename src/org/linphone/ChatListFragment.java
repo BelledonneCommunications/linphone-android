@@ -356,7 +356,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Log.e("Chat view cannot parse address",e);
 				return view;
 			}
-			Contact lContact = ContactsManager.getInstance().findContactWithAddress(address);
+			Contact lContact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 
 			String message = "";
 			if (useNativeAPI) {
