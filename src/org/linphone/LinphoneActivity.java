@@ -518,7 +518,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			Log.e("Cannot display history details",e);
 			return;
 		}
-		Contact c = ContactsManager.getInstance().findContactWithAddress(lAddress);
+		Contact c = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
 
 		String displayName = c != null ? c.getName() : null;
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
@@ -611,7 +611,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			Log.e("Cannot display chat",e);
 			return;
 		}
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(lAddress);
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
 		String displayName = contact != null ? contact.getName() : null;
 		String pictureUri = contact != null && contact.getPhotoUri() != null ? contact.getPhotoUri().toString() : null;
 

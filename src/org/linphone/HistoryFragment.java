@@ -178,7 +178,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			address = log.getTo();
 		}
 		
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(address);
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 		String sipUri = address.asStringUriOnly();
 		if (contact == null) {
 			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
