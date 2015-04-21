@@ -51,7 +51,7 @@ import de.timroes.axmlrpc.XMLRPCServerException;
  */
 public class InAppPurchaseHelper {
 	public static final int API_VERSION = 3;
-	public static final String TEST_ITEM = "android.test.purchased";
+	public static final String TEST_ITEM = "test_account_subscription";
 	public static final int ACTIVITY_RESULT_CODE_PURCHASE_ITEM = 11089;
 	
     public static final String SKU_DETAILS_ITEM_LIST = "ITEM_ID_LIST";
@@ -65,6 +65,15 @@ public class InAppPurchaseHelper {
     public static final String ITEM_TYPE_SUBS = "subs";
     
     public static final int RESPONSE_RESULT_OK = 0;
+    public static final int RESULT_USER_CANCELED = 1;
+    public static final int RESULT_SERVICE_UNAVAILABLE = 2;
+    public static final int RESULT_BILLING_UNAVAILABLE = 3;
+    public static final int RESULT_ITEM_UNAVAILABLE = 4;
+    public static final int RESULT_DEVELOPER_ERROR = 5;
+    public static final int RESULT_ERROR = 6;
+    public static final int RESULT_ITEM_ALREADY_OWNED = 7;
+    public static final int RESULT_ITEM_NOT_OWNED = 8;
+    
     public static final String RESPONSE_CODE = "RESPONSE_CODE";
     public static final String RESPONSE_BUY_INTENT = "BUY_INTENT";
     public static final String RESPONSE_INAPP_PURCHASE_DATA = "INAPP_PURCHASE_DATA";
@@ -87,6 +96,28 @@ public class InAppPurchaseHelper {
 	private IInAppBillingService mService;
 	private ServiceConnection mServiceConn;
 	private Handler mHandler = new Handler();
+	
+	private String responseCodeToErrorMessage(int responseCode) {
+		switch (responseCode) {
+		case RESULT_USER_CANCELED:
+			return "BILLING_RESPONSE_RESULT_USER_CANCELED";
+		case RESULT_SERVICE_UNAVAILABLE:
+			return "BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE";
+		case RESULT_BILLING_UNAVAILABLE:
+			return "BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE";
+		case RESULT_ITEM_UNAVAILABLE:
+			return "BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE";
+		case RESULT_DEVELOPER_ERROR:
+			return "BILLING_RESPONSE_RESULT_DEVELOPER_ERROR";
+		case RESULT_ERROR:
+			return "BILLING_RESPONSE_RESULT_ERROR";
+		case RESULT_ITEM_ALREADY_OWNED:
+			return "BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED";
+		case RESULT_ITEM_NOT_OWNED:
+			return "BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED";
+		}
+		return "UNKNOWN_RESPONSE_CODE";
+	}
 	
 	public InAppPurchaseHelper(Activity context, InAppPurchaseListener listener) {
 		mContext = context;
@@ -165,7 +196,7 @@ public class InAppPurchaseHelper {
 					}
 				}
 			} else {
-				Log.e("[In-app purchase] Error: responde code is not ok: " + response);
+				Log.e("[In-app purchase] Error: responde code is not ok: " + responseCodeToErrorMessage(response));
 			}
 		}
 		
@@ -222,7 +253,7 @@ public class InAppPurchaseHelper {
     				   			}, purchaseData, signature);
     				   		}
         				} else {
-        					Log.e("[In-app purchase] Error: responde code is not ok: " + response);
+        					Log.e("[In-app purchase] Error: responde code is not ok: " + responseCodeToErrorMessage(response));
         				}
         			}
         		} while (continuationToken != null);
@@ -279,7 +310,7 @@ public class InAppPurchaseHelper {
 					}
 				}, purchaseData, signature);
 			} else {
-				Log.e("[In-app purchase] Error: resultCode is " + resultCode + " and responseCode is " + responseCode);
+				Log.e("[In-app purchase] Error: resultCode is " + resultCode + " and responseCode is " + responseCodeToErrorMessage(responseCode));
 			}
 		}
 	}
@@ -321,7 +352,7 @@ public class InAppPurchaseHelper {
 				public void onError(long id, XMLRPCException error) {
 					Log.e(error);
 				}
-			}, "create_account_from_in_app_purchase", "android", purchasedData, signature);
+			}, "create_account_from_in_app_purchase", "sylvain@sip.linphone.org", "toto", purchasedData, signature, "google");
 		}
 	}
 	

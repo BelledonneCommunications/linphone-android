@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.util.ArrayList;
 
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -58,6 +60,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	@Override
 	public void onServiceAvailableForQueries() {
 		inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
+		inAppPurchaseHelper.getPurchasedItemsAsync();
 	}
 
 	@Override
@@ -76,7 +79,9 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 
 	@Override
 	public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
-		
+		for (Purchasable item : items) {
+			Log.d("[In-app] Item " + item.getTitle() + " is already bought");
+		}
 	}
 
 	@Override
