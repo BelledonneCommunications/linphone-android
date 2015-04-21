@@ -2,7 +2,7 @@
 <resources>
     <!-- Tutorial settings -->
     <bool name="show_tutorials_instead_of_app">false</bool> <!-- Be careful ! Setting this to true prevent the app from working ! It will only display tutorial activities -->
-
+	
 	<!-- Push notification settings -->
 	<bool name="enable_push_id">true</bool>
 	<string name="push_sender_id">622464153529</string>

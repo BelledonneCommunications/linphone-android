@@ -35,6 +35,7 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.setup.SetupActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
@@ -56,6 +57,7 @@ import android.preference.PreferenceScreen;
  */
 public class SettingsFragment extends PreferencesListFragment {
 	private static final int WIZARD_INTENT = 1;
+	private static final int STORE_INTENT = 2;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
@@ -134,6 +136,14 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				int nbAccounts = mPrefs.getAccountCount();
 				LinphoneActivity.instance().displayAccountSettings(nbAccounts);
+	        	return true;
+			}
+		});
+		findPreference("in_app_store").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(LinphoneService.instance(), InAppPurchaseActivity.class);
+	        	startActivityForResult(intent, STORE_INTENT);
 	        	return true;
 			}
 		});

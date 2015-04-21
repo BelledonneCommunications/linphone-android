@@ -14,6 +14,10 @@
 	    android:key="@string/setup_key"/>
 	
 	<Preference
+	    android:title="In-app Store"
+	    android:key="in_app_store"/>
+	
+	<Preference
 	    android:title="@string/pref_add_account"
 	    android:key="@string/pref_add_account_key"/>
 

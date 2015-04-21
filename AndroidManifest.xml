@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
-      android:versionCode="2302" android:installLocation="auto"> 
+      android:versionCode="2400" android:installLocation="auto"> 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="22"/>
     
     <!-- Permissions for Push Notification -->
@@ -40,6 +40,8 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <!-- Needed for in-app purchase -->
+    <uses-permission android:name="com.android.vending.BILLING" />
 
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     
@@ -125,6 +127,14 @@
         </activity>
          
         <activity android:name="org.linphone.setup.SetupActivity"
+		    android:theme="@style/NoTitle"
+            android:screenOrientation="nosensor">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+         
+         <activity android:name="org.linphone.purchase.InAppPurchaseActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>

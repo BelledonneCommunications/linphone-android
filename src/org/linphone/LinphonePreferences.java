@@ -1145,10 +1145,14 @@ public class LinphonePreferences {
 	}
 
 	public void contactsMigrationDone(){
-		getConfig().setBool("app", "contacts_migration_done",true);
+		getConfig().setBool("app", "contacts_migration_done", true);
 	}
 
 	public boolean isContactsMigrationDone(){
-		return getConfig().getBool("app", "contacts_migration_done",false);
+		return getConfig().getBool("app", "contacts_migration_done", false);
+	}
+	
+	public String getInAppPurchaseValidatingServerUrl() {
+		return getConfig().getString("in-app-purchase", "server_url", null);
 	}
 }
