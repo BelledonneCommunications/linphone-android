@@ -258,6 +258,9 @@ public class ContactsManager {
 		List<String> ids = new ArrayList<String>();
 		if(LinphoneManager.getLc().getFriendList() == null) return null;
 		for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+			friend.edit();
+			friend.enableSubscribes(false);
+			friend.done();
 			if(!ids.contains(friend.getRefKey())){
 				ids.add(friend.getRefKey());
 			}
@@ -268,15 +271,18 @@ public class ContactsManager {
 //End linphone Friend
 
 	public boolean removeContactTagIsNeeded(Contact contact){
-		contact.refresh(contentResolver);
-		boolean onlyNumbers = true;
-		for(String address: contact.getNumbersOrAddresses()){
-			if(LinphoneUtils.isSipAddress(address)){
-				onlyNumbers = false;
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			LinphoneProxyConfig lpc = lc.createProxyConfig();
+			contact.refresh(contentResolver);
+			for (String address : contact.getNumbersOrAddresses()) {
+				if (!lpc.isPhoneNumber(address)) {
+					return false;
+				}
 			}
+			return true;
 		}
-
-		return onlyNumbers;
+		return false;
 	}
 
 	public void removeLinphoneContactTag(Contact contact){
