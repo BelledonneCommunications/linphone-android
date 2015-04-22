@@ -245,12 +245,10 @@ public class InAppPurchaseHelper {
     				   			String signature = signatureList.get(i);
 								Log.d("[In-app purchase] Found purchase data: " + purchaseData);
         				      
-    				   			verifySignatureAsync(new VerifiedSignatureListener() {
-									@Override
-									public void onParsedAndVerifiedSignatureQueryFinished(Purchasable item) {
-										items.add(item);
-									}
-    				   			}, purchaseData, signature);
+    				   			Purchasable item = verifySignature(purchaseData, signature);
+    				   			if (item != null) {
+    				   				items.add(item);
+    				   			}
     				   		}
         				} else {
         					Log.e("[In-app purchase] Error: responde code is not ok: " + responseCodeToErrorMessage(response));
@@ -303,7 +301,7 @@ public class InAppPurchaseHelper {
 
 			if (resultCode == Activity.RESULT_OK && responseCode == RESPONSE_RESULT_OK) {
 				Log.d("[In-app purchase] response is OK");
-				verifySignatureAsync(new VerifiedSignatureListener() {
+				verifySignatureAndCreateAccountAsync(new VerifiedSignatureListener() {
 					@Override
 					public void onParsedAndVerifiedSignatureQueryFinished(Purchasable item) {
 						mListener.onPurchasedItemConfirmationQueryFinished(item);
@@ -319,7 +317,7 @@ public class InAppPurchaseHelper {
 		mContext.unbindService(mServiceConn);
 	}
 	
-	private void verifySignatureAsync(final VerifiedSignatureListener listener, String purchasedData, String signature) {
+	private Purchasable verifySignature(String purchasedData, String signature) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -328,29 +326,65 @@ public class InAppPurchaseHelper {
 		}
 		
 		if (client != null) {
+			try {
+				Object result = client.call("check_signature", purchasedData, signature, "google");
+				String object = (String)result;
+				JSONObject json = new JSONObject(object);
+				Log.d("[In-app purchase] JSON received is " + json);
+				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
+				Log.d("[In-app purchase] Purchasable verified by server: " + productId);
+				Purchasable item = new Purchasable(productId); 
+				//TODO parse JSON result to get the purchasable in it
+				return item;
+			} catch (XMLRPCException e) {
+				Log.e(e);
+			} catch (JSONException e) {
+				Log.e(e);
+			}
+		}
+		
+		return null;
+	}
+	
+	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, String purchasedData, String signature) {
+		XMLRPCClient client = null;
+		try {
+			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
+		} catch (MalformedURLException e) {
+			Log.e(e);
+			Log.e("[In-app purchase] Can't reach the server !");
+		}
+		
+		if (client != null) {
 			client.callAsync(new XMLRPCCallback() {
 				@Override
 				public void onServerError(long id, XMLRPCServerException error) {
 					Log.e(error);
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
 				
 				@Override
 				public void onResponse(long id, Object result) {
 					try {
-						JSONObject object = new JSONObject((String)result);
-						String productId = object.getString(PURCHASE_DETAILS_PRODUCT_ID);
+						String object = (String)result;
+						JSONObject json = new JSONObject(object);
+						Log.d("[In-app purchase] JSON received is " + json);
+						String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 						Log.d("[In-app purchase] Purchasable verified by server: " + productId);
 						Purchasable item = new Purchasable(productId); 
 						//TODO parse JSON result to get the purchasable in it
 				    	listener.onParsedAndVerifiedSignatureQueryFinished(item);
+				    	return;
 					} catch (JSONException e) {
 						Log.e(e);
 					}
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
 				
 				@Override
 				public void onError(long id, XMLRPCException error) {
 					Log.e(error);
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
 			}, "create_account_from_in_app_purchase", "sylvain@sip.linphone.org", "toto", purchasedData, signature, "google");
 		}

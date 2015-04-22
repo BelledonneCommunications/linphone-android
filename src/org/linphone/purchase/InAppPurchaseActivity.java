@@ -32,14 +32,14 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
  */
 public class InAppPurchaseActivity extends Activity implements InAppPurchaseListener, OnClickListener {
 	private InAppPurchaseHelper inAppPurchaseHelper;
-	private LinearLayout purchasableItems;
+	private LinearLayout purchasableItemsLayout;
+	private ArrayList<Purchasable> purchasedItems;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		inAppPurchaseHelper = new InAppPurchaseHelper(this, this);
 		
 		setContentView(R.layout.in_app_store);
-		purchasableItems = (LinearLayout) findViewById(R.id.purchasable_items);
+		purchasableItemsLayout = (LinearLayout) findViewById(R.id.purchasable_items);
 	}
 	
 	@Override
@@ -59,29 +59,35 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	
 	@Override
 	public void onServiceAvailableForQueries() {
-		inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
 		inAppPurchaseHelper.getPurchasedItemsAsync();
 	}
 
 	@Override
 	public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
-		purchasableItems.removeAllViews();
+		purchasableItemsLayout.removeAllViews();
 		
 		for (Purchasable item : items) {
-			View layout = LayoutInflater.from(this).inflate(R.layout.in_app_purchasable, purchasableItems);
+			View layout = LayoutInflater.from(this).inflate(R.layout.in_app_purchasable, purchasableItemsLayout);
 			TextView text = (TextView) layout.findViewById(R.id.text);
-			text.setText(item.getTitle() + " (" + item.getPrice() + ")");
+			text.setText(item.getTitle() + " " + item.getPrice());
 			ImageView image = (ImageView) layout.findViewById(R.id.image);
 			image.setTag(item);
 			image.setOnClickListener(this);
+			
+			for (Purchasable purchasedItem : purchasedItems) {
+				Log.d("[In-app purchase] Found already bought item");
+				if (purchasedItem.getId().equals(item.getId())) {
+					image.setEnabled(false);
+					text.setEnabled(false);
+				}
+			}
 		}
 	}
 
 	@Override
 	public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
-		for (Purchasable item : items) {
-			Log.d("[In-app] Item " + item.getTitle() + " is already bought");
-		}
+		purchasedItems = items;
+		inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
 	}
 
 	@Override

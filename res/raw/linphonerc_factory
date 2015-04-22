@@ -33,4 +33,4 @@ log_collection_upload_server_url=https://www.linphone.org:444/lft.php
 user_certificates_path=/data/data/org.linphone/files
 
 [in-app-purchase]
-server_url=https://www.linphone.org/wizard2.php
+server_url=https://www.linphone.org/inapp.php
