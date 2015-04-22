@@ -1301,9 +1301,9 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
     	LinearLayout imageView = (LinearLayout) inflater.inflate(R.layout.active_call_image_row, container, false);
         Contact contact  = ContactsManager.getInstance().findContactWithAddress(imageView.getContext().getContentResolver(), lAddress);
 		if(contact != null) {
-			displayOrHideContactPicture(imageView, contact.getPhotoUri(), false);
+			displayOrHideContactPicture(imageView, contact.getPhotoUri(), contact.getThumbnailUri(), false);
 		} else {
-			displayOrHideContactPicture(imageView, null, false);
+			displayOrHideContactPicture(imageView, null, null, false);
 		}
     	callsList.addView(imageView);
     	
@@ -1366,10 +1366,10 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 		return isCallPaused || isInConference;
 	}
 	
-	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, boolean hide) {
+	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, Uri thumbnailUri, boolean hide) {
 		AvatarWithShadow contactPicture = (AvatarWithShadow) callView.findViewById(R.id.contactPicture);
 		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), R.drawable.unknown_small);
+        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), thumbnailUri, R.drawable.unknown_small);
         }
 		callView.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}

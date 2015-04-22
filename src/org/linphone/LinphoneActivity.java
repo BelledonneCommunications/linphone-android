@@ -613,7 +613,13 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
 		String displayName = contact != null ? contact.getName() : null;
-		String pictureUri = contact != null && contact.getPhotoUri() != null ? contact.getPhotoUri().toString() : null;
+
+		String pictureUri = null;
+		String thumbnailUri = null;
+		if(contact != null && contact.getPhotoUri() != null){
+			pictureUri = contact.getPhotoUri().toString();
+			thumbnailUri = contact.getThumbnailUri().toString();
+		}
 
 		if (isTablet()){
 			if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT){
@@ -624,9 +630,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				} else {
 					Bundle extras = new Bundle();
 					extras.putString("SipUri", sipUri);
-					if (lAddress.getDisplayName() != null) {
+					if (contact != null) {
 						extras.putString("DisplayName", displayName);
 						extras.putString("PictureUri", pictureUri);
+						extras.putString("ThumbnailUri", thumbnailUri);
 					}
 					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 				}
@@ -639,7 +646,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			intent.putExtra("SipUri", sipUri);
 			if (contact != null) {
 				intent.putExtra("DisplayName", contact.getName());
-				intent.putExtra("PictureUri", contact.getPhotoUri());
+				intent.putExtra("PictureUri", pictureUri);
+				intent.putExtra("ThumbnailUri", thumbnailUri);
 			}
 			startOrientationSensor();
 			startActivityForResult(intent, CHAT_ACTIVITY);

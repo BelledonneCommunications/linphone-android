@@ -365,7 +365,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				if (history != null && history.length > 0) {
 					for (int i = history.length - 1; i >= 0; i--) {
 						LinphoneChatMessage msg = history[i];
-						if (msg.getText() != null && msg.getText().length() > 0) {
+						if (msg.getText() != null && msg.getText().length() > 0 && msg.getFileTransferInformation() == null) {
 							message = msg.getText();
 							break;
 						}

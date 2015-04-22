@@ -23,6 +23,7 @@ import java.util.Calendar;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
@@ -114,10 +115,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 			if (contact != null) {
-				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),contact.getPhotoUri(), R.drawable.unknown_small);
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),contact.getPhotoUri(), contact.getThumbnailUri(), R.drawable.unknown_small);
 				view.findViewById(R.id.addContactRow).setVisibility(View.GONE);
 			} else {
-				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),null ,R.drawable.unknown_small);
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),null, null ,R.drawable.unknown_small);
 			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();

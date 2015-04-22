@@ -37,6 +37,7 @@ public class Contact implements Serializable {
 	private String id;
 	private String name;
 	private transient Uri photoUri;
+	private transient Uri thumbnailUri;
 	private transient Bitmap photo;
 	private List<String> numbersOrAddresses;
 	private boolean hasFriends;
@@ -46,23 +47,26 @@ public class Contact implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.photoUri = null;
+		this.thumbnailUri = null;
 		this.hasFriends = false;
 	}
 	
-	public Contact(String id, String name, Uri photo) {
+	public Contact(String id, String name, Uri photo, Uri thumbnail) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.photoUri = photo;
+		this.thumbnailUri = thumbnail;
 		this.photo = null;
 		this.hasFriends = false;
 	}
 	
-	public Contact(String id, String name, Uri photo, Bitmap picture) {
+	public Contact(String id, String name, Uri photo, Uri thumbnail, Bitmap picture) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.photoUri = photo;
+		this.thumbnailUri = thumbnail;
 		this.photo = picture;
 		this.hasFriends = false;
 	}
@@ -83,6 +87,10 @@ public class Contact implements Serializable {
 	public Uri getPhotoUri() {
 		return photoUri;
 	}
+
+	public Uri getThumbnailUri() {
+		return thumbnailUri;
+	}
 	
 	public Bitmap getPhoto() {
 		return photo;
@@ -96,7 +104,7 @@ public class Contact implements Serializable {
 	
 	public void refresh(ContentResolver cr) {
 		this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
-		for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+		for(LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 			if (friend.getRefKey().equals(id)) {
 				hasFriends = true;
 				this.numbersOrAddresses.add(friend.getAddress().asStringUriOnly());
