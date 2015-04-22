@@ -33,6 +33,7 @@ import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
@@ -334,6 +335,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void displayChatHeader(String displayName, String pictureUri) {
+		LinphoneAddress lAddress;
+		try {
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+			if (contact != null) {
+				LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture.getView(), contact.getPhotoUri(), contact.getThumbnailUri(), R.drawable.unknown_small);
+
+			} else {
+				contactPicture.setImageResource(R.drawable.unknown_small);
+			}
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+
 		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
 			contactName.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
 		} else if (displayName == null) {
@@ -342,11 +357,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			contactName.setText(displayName);
 		}
 
-		if (pictureUri != null) {
-			LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture.getView(), Uri.parse(pictureUri), R.drawable.unknown_small);
-		} else {
-			contactPicture.setImageResource(R.drawable.unknown_small);
-		}
 	}
 
 	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri) {

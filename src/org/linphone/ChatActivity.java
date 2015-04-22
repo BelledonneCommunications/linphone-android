@@ -34,6 +34,7 @@ public class ChatActivity extends FragmentActivity {
 		extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
 		extras.putString("DisplayName", getIntent().getExtras().getString("DisplayName"));
 		extras.putString("PictureUri", getIntent().getExtras().getString("PictureUri"));
+		extras.putString("ThumbnailUri", getIntent().getExtras().getString("ThumbnailUri"));
 		
 		ChatFragment fragment = new ChatFragment();
 		fragment.setArguments(extras);

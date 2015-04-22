@@ -216,7 +216,8 @@ public class ApiFivePlus {
 			
 			String id = cursor.getString(cursor.getColumnIndex(Data.CONTACT_ID));
 	    	String name = getContactDisplayName(cursor);
-	        Uri photo = getContactPictureUri(id);
+	        Uri thumbnail = getContactPictureUri(id);
+			Uri photo = getContactPhotoUri(id);
 	        InputStream input = getContactPictureInputStream(cr, id);
 
 	        Contact contact;
@@ -228,7 +229,7 @@ public class ApiFivePlus {
 	        	try {
 	        		bm = BitmapFactory.decodeStream(input);
 	        	} catch (OutOfMemoryError oome) {}
-	        	contact = new Contact(id, name, photo, bm);
+	        	contact = new Contact(id, name, photo, thumbnail, bm);
 	        }
 	        
 	        return contact;
@@ -248,6 +249,11 @@ public class ApiFivePlus {
 	}
 	
 	private static Uri getContactPictureUri(String id) {
+		Uri person = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
+		return Uri.withAppendedPath(person, Contacts.Photo.CONTENT_DIRECTORY);
+	}
+
+	private static Uri getContactPhotoUri(String id) {
 		Uri person = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(id));
 		return Uri.withAppendedPath(person, Contacts.Photo.DISPLAY_PHOTO);
 	}

@@ -154,7 +154,7 @@ public class ContactsManager {
 			friend.setRefKey(contact.getID());
 			friend.done();
 			try {
-				LinphoneManager.getLc().addFriend(friend);
+				LinphoneManager.getLcIfManagerNotDestroyedOrNull().addFriend(friend);
 				return true;
 			} catch (LinphoneCoreException e) {
 				e.printStackTrace();
@@ -174,7 +174,7 @@ public class ContactsManager {
 			oldSipUri = "sip:" + oldSipUri;
 		}
 
-		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(oldSipUri);
+		LinphoneFriend friend = LinphoneManager.getLcIfManagerNotDestroyedOrNull().findFriendByAddress(oldSipUri);
 		if (friend != null) {
 			friend.edit();
 			try {
@@ -191,18 +191,18 @@ public class ContactsManager {
 			sipUri = "sip:" + sipUri;
 		}
 
-		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
+		LinphoneFriend friend = LinphoneManager.getLcIfManagerNotDestroyedOrNull().findFriendByAddress(sipUri);
 		if (friend != null) {
-			LinphoneManager.getLc().removeFriend(friend);
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 			return true;
 		}
 		return false;
 	}
 
 	public void removeAllFriends(Contact contact) {
-		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+		for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 			if (friend.getRefKey().equals(contact.getID())) {
-				LinphoneManager.getLc().removeFriend(friend);
+				LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 			}
 		}
 	}
@@ -256,8 +256,8 @@ public class ContactsManager {
 
 	public List<String> getContactsId(){
 		List<String> ids = new ArrayList<String>();
-		if(LinphoneManager.getLc().getFriendList() == null) return null;
-		for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+		if(LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList() == null) return null;
+		for(LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 			friend.edit();
 			friend.enableSubscribes(false);
 			friend.done();
@@ -342,8 +342,8 @@ public class ContactsManager {
 		if (sipUri.startsWith("sip:"))
 			sipUri = sipUri.substring(4);
 
-		if(LinphoneManager.getLc().getFriendList() != null && LinphoneManager.getLc().getFriendList().length > 0) {
-			for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+		if(LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
+			for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 				if (friend.getAddress().equals(address)) {
 					return getContact(friend.getRefKey(), contentResolver);
 				}
@@ -530,7 +530,7 @@ public class ContactsManager {
 
 						contact.refresh(contentResolver);
 						//Add tag to Linphone contact if it not existed
-						if (LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+						if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
 							if (!isContactHasLinphoneTag(contact, contentResolver)) {
 								Compatibility.createLinphoneContactTag(context, contentResolver, contact,
 										findRawContactID(contentResolver, String.valueOf(contact.getID())));
@@ -547,7 +547,7 @@ public class ContactsManager {
 							continue;
 
 						//Remove linphone contact tag if the contact has no sip address
-						if (LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+						if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
 							if (removeContactTagIsNeeded(contact) && isContactHasLinphoneTag(contact, contentResolver)) {
 								removeLinphoneContactTag(contact);
 							}

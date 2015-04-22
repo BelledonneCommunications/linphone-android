@@ -58,6 +58,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -158,7 +159,7 @@ public final class LinphoneUtils {
 	}
 
 	
-	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, int notFoundResource) {
+	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri, int notFoundResource) {
 		if (uri == null) {
 			view.setImageResource(notFoundResource);
 			return;
@@ -169,7 +170,17 @@ public final class LinphoneUtils {
 			view.setImageBitmap(bm);
 		} else {
 			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
-				view.setImageURI(uri);
+				Bitmap bm = null;
+				try {
+					bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),uri);
+				} catch (IOException e) {
+					if(tUri != null){
+						view.setImageURI(tUri);
+					}
+				}
+				if(bm != null) {
+					view.setImageBitmap(bm);
+				}
 			} else {
 				@SuppressWarnings("deprecation")
 				Bitmap bitmap = android.provider.Contacts.People.loadContactPhoto(c, uri, notFoundResource, null);
