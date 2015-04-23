@@ -48,7 +48,7 @@
 
 		<antcall target="check-for-crash"/>
 
-		<fail message="Tests failed">
+		<fail message="Tests failed" status="42">
 			<condition>
 				<resourcecontains resource="${output.file}" substring="FAILURES" />
 			</condition>
@@ -65,6 +65,6 @@
 			<arg value="-c" />
 			<arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
 		</exec>
-		<fail message="Tests crashed"/>
+		<fail message="Tests crashed" status="125"/>
 	</target>
 </project>
