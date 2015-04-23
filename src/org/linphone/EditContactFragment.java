@@ -102,6 +102,7 @@ public class EditContactFragment extends Fragment {
 		        try {
 					getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
 					addLinphoneFriendIfNeeded();
+					removeLinphoneTagIfNeeded();
 					contactsManager.prepareContactsInBackground();
 		        } catch (Exception e) {
 		        	e.printStackTrace();
@@ -412,6 +413,21 @@ public class EditContactFragment extends Fragment {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	private void removeLinphoneTagIfNeeded(){
+		if(!isNewContact) {
+			boolean areAllSipFielsEmpty = true;
+			for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
+				if (!nounoa.isSipAddress && (nounoa.oldNumberOrAddress != null && !nounoa.oldNumberOrAddress.equals("") || nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals(""))) {
+					areAllSipFielsEmpty = false;
+					break;
+				}
+			}
+			if (areAllSipFielsEmpty && contactsManager.findRawLinphoneContactID(contact.getID()) != null) {
+				contactsManager.removeLinphoneContactTag(contact);
 			}
 		}
 	}
