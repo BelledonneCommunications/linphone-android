@@ -1,4 +1,9 @@
 package org.linphone.purchase;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 /*
 Purchasable.java
 Copyright (C) 2015  Belledonne Communications, Grenoble, France
@@ -23,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 public class Purchasable {
 	private String id, title, description, price;
+	private long expire;
 
 	public Purchasable(String id) {
 		this.id = id;
@@ -56,6 +62,21 @@ public class Purchasable {
 
 	public Purchasable setPrice(String price) {
 		this.price = price;
+		return this;
+	}
+
+	public long getExpire() {
+		return expire;
+	}
+	
+	public String getExpireDate() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+		Date date = new Date(expire);
+		return dateFormat.format(date);
+	}
+
+	public Purchasable setExpire(long expire) {
+		this.expire = expire;
 		return this;
 	}
 }

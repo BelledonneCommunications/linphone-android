@@ -75,7 +75,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 			image.setOnClickListener(this);
 			
 			for (Purchasable purchasedItem : purchasedItems) {
-				Log.d("[In-app purchase] Found already bought item");
+				Log.d("[In-app purchase] Found already bought item, expires " + purchasedItem.getExpireDate());
 				if (purchasedItem.getId().equals(item.getId())) {
 					image.setEnabled(false);
 					text.setEnabled(false);

@@ -126,7 +126,6 @@ public class InAppPurchaseHelper {
 		   @Override
 		   public void onServiceDisconnected(ComponentName name) {
 		       mService = null;
-		       Log.d("[In-app purchase] service disconnected");
 		   }
 
 		   @Override
@@ -138,7 +137,6 @@ public class InAppPurchaseHelper {
 		    	   if (response != RESPONSE_RESULT_OK) {
 		    		   Log.e("[In-app purchase] Error: Subscriptions aren't supported!");
 		    	   } else {
-				       Log.d("[In-app purchase] service connected and subsciptions are available");
 				       mListener.onServiceAvailableForQueries();
 		    	   }
 		       } catch (RemoteException e) {
@@ -153,8 +151,6 @@ public class InAppPurchaseHelper {
             boolean ok = mContext.bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
             if (!ok) {
             	Log.e("[In-app purchase] Error: Bind service failed");
-            } else {
-		       Log.d("[In-app purchase] service bound");
             }
         } else {
         	Log.e("[In-app purchase] Error: Billing service unavailable on device.");
@@ -178,7 +174,6 @@ public class InAppPurchaseHelper {
 		if (skuDetails != null) {
 			int response = skuDetails.getInt(RESPONSE_CODE);
 			if (response == RESPONSE_RESULT_OK) {
-				Log.d("[In-app purchase] response is OK");
 				ArrayList<String> responseList = skuDetails.getStringArrayList(SKU_DETAILS_LIST);
 				for (String thisResponse : responseList) {
 					try {
@@ -187,7 +182,6 @@ public class InAppPurchaseHelper {
 						String price = object.getString(SKU_DETAILS_PRICE);
 						String title = object.getString(SKU_DETAILS_TITLE);
 						String desc = object.getString(SKU_DETAILS_DESC);
-						Log.d("[In-app purchase] found purchasable " + title + " (" + desc + ") for " + price + " with id " + id);
 						
 						Purchasable purchasable = new Purchasable(id).setTitle(title).setDescription(desc).setPrice(price);
 						products.add(purchasable);
@@ -235,7 +229,6 @@ public class InAppPurchaseHelper {
         			if (purchasedItems != null) {
         				int response = purchasedItems.getInt(RESPONSE_CODE);
         				if (response == RESPONSE_RESULT_OK) {
-        					Log.d("[In-app purchase] response is OK");
         					ArrayList<String>  purchaseDataList = purchasedItems.getStringArrayList(RESPONSE_INAPP_PURCHASE_DATA_LIST);
         					ArrayList<String>  signatureList = purchasedItems.getStringArrayList(RESPONSE_INAPP_SIGNATURE_LIST);
         					continuationToken = purchasedItems.getString(RESPONSE_INAPP_CONTINUATION_TOKEN);
@@ -243,9 +236,9 @@ public class InAppPurchaseHelper {
 				   			for (int i = 0; i < purchaseDataList.size(); ++i) {
 				   				String purchaseData = purchaseDataList.get(i);
     				   			String signature = signatureList.get(i);
-								Log.d("[In-app purchase] Found purchase data: " + purchaseData);
+    							Log.d("[In-app purchase] " + purchaseData);
         				      
-    				   			Purchasable item = verifySignature(purchaseData, signature);
+    				   			Purchasable item = verifySignatureAndGetExpire(purchaseData, signature);
     				   			if (item != null) {
     				   				items.add(item);
     				   			}
@@ -300,7 +293,6 @@ public class InAppPurchaseHelper {
 			String signature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
 
 			if (resultCode == Activity.RESULT_OK && responseCode == RESPONSE_RESULT_OK) {
-				Log.d("[In-app purchase] response is OK");
 				verifySignatureAndCreateAccountAsync(new VerifiedSignatureListener() {
 					@Override
 					public void onParsedAndVerifiedSignatureQueryFinished(Purchasable item) {
@@ -317,7 +309,7 @@ public class InAppPurchaseHelper {
 		mContext.unbindService(mServiceConn);
 	}
 	
-	private Purchasable verifySignature(String purchasedData, String signature) {
+	private Purchasable verifySignatureAndGetExpire(String purchasedData, String signature) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -327,13 +319,12 @@ public class InAppPurchaseHelper {
 		
 		if (client != null) {
 			try {
-				Object result = client.call("check_signature", purchasedData, signature, "google");
-				String object = (String)result;
-				JSONObject json = new JSONObject(object);
-				Log.d("[In-app purchase] JSON received is " + json);
+				Object result = client.call("get_expiration_date", purchasedData, signature, "google");
+				String expire = (String)result;
+				JSONObject json = new JSONObject(purchasedData);
 				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
-				Log.d("[In-app purchase] Purchasable verified by server: " + productId);
 				Purchasable item = new Purchasable(productId); 
+				item.setExpire(Long.parseLong(expire));
 				//TODO parse JSON result to get the purchasable in it
 				return item;
 			} catch (XMLRPCException e) {
@@ -346,7 +337,7 @@ public class InAppPurchaseHelper {
 		return null;
 	}
 	
-	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, String purchasedData, String signature) {
+	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, String signature) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -366,12 +357,11 @@ public class InAppPurchaseHelper {
 				@Override
 				public void onResponse(long id, Object result) {
 					try {
-						String object = (String)result;
-						JSONObject json = new JSONObject(object);
-						Log.d("[In-app purchase] JSON received is " + json);
+						String expire = (String)result;
+						JSONObject json = new JSONObject(purchasedData);
 						String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
-						Log.d("[In-app purchase] Purchasable verified by server: " + productId);
 						Purchasable item = new Purchasable(productId); 
+						item.setExpire(Long.parseLong(expire));
 						//TODO parse JSON result to get the purchasable in it
 				    	listener.onParsedAndVerifiedSignatureQueryFinished(item);
 				    	return;
