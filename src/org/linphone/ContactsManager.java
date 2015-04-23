@@ -548,7 +548,7 @@ public class ContactsManager {
 
 						//Remove linphone contact tag if the contact has no sip address
 						if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
-							if (removeContactTagIsNeeded(contact) && isContactHasLinphoneTag(contact, contentResolver)) {
+							if (removeContactTagIsNeeded(contact) && findRawLinphoneContactID(contact.getID()) != null) {
 								removeLinphoneContactTag(contact);
 							}
 						}
