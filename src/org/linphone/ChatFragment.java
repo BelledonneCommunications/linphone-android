@@ -20,25 +20,29 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.LinphoneChatMessageListener;
-import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
+import android.support.v4.content.CursorLoader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -53,10 +57,10 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -85,6 +89,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_COPY_TEXT = 6;
 	private static final int MENU_RESEND_MESSAGE = 7;
+	private static final int SIZE_MAX = 2048;
 
 	private LinphoneChatRoom chatRoom;
 	private String sipUri;
@@ -536,6 +541,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		@Override
 		protected byte[] doInBackground(Bitmap... params) {
 			Bitmap bm = params[0];
+
+			if (bm.getWidth() > bm.getHeight() && bm.getWidth() > SIZE_MAX) {
+				bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
+			} else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > SIZE_MAX) {
+
+				bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+			}
+
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
 			byte[] byteArray = stream.toByteArray();
@@ -611,6 +624,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void pickImage() {
 		List<Intent> cameraIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name) + Calendar.getInstance().getTime());
+		imageToUploadUri = Uri.fromFile(file);
+		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
 		cameraIntents.add(captureIntent);
 		
 		Intent galleryIntent = new Intent();
