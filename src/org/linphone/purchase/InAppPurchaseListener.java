@@ -24,23 +24,26 @@ import java.util.ArrayList;
  * @author Sylvain Berfini
  */
 public interface InAppPurchaseListener {
+	/**
+	 * Callback called when the in-app purchase listener is connected and available for queries
+	 */
 	void onServiceAvailableForQueries();
 	
 	/**
-	 * 
-	 * @param items
+	 * Callback called when the query for items available for purchase is done
+	 * @param items the list of items that can be purchased (also contains the ones already bought)
 	 */
 	void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items);
 	
 	/**
-	 * 
-	 * @param items
+	 * Callback called when the query for items bought by the user is done
+	 * @param items the list of items already purchased by the user
 	 */
 	void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items);
 	
 	/**
-	 * 
-	 * @param item
+	 * Callback called when the purchase has been validated by our external server
+	 * @param item the item the user just bought
 	 */
 	void onPurchasedItemConfirmationQueryFinished(Purchasable item);
 }
