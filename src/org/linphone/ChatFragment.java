@@ -438,6 +438,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneService.instance().removeMessageNotification();
 
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().updateChatFragment(null);
+		}
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
@@ -462,6 +466,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 				LinphoneActivity.instance().hideStatusBar();
 			}
+			LinphoneActivity.instance().updateChatFragment(this);
 		}
 
 		String draft = getArguments().getString("messageDraft");
