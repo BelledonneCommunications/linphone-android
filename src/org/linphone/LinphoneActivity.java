@@ -102,6 +102,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private FragmentsAvailable currentFragment, nextFragment;
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
+	private ChatFragment chatFragment;
 	private SavedState dialerSavedState;
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
@@ -599,6 +600,15 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		changeCurrentFragment(FragmentsAvailable.ABOUT, null);
 	}
 
+	public boolean displayChatMessageNotification(String address){
+		if(chatFragment != null) {
+			if(chatFragment.getSipUri().equals(address)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void displayChat(String sipUri) {
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
@@ -742,6 +752,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		dialerFragment = fragment;
 		// Hack to maintain soft input flags
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	}
+
+	public void updateChatFragment(ChatFragment fragment) {
+		chatFragment = fragment;
 	}
 
 	public void updateChatListFragment(ChatListFragment fragment) {
