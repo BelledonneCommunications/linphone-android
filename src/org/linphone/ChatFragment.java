@@ -447,7 +447,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			lc.removeListener(mListener);
 		}
 
-		getActivity().getIntent().putExtra("messageDraft", message.getText().toString());
+		onSaveInstanceState(getArguments());
 		super.onPause();
 	}
 
