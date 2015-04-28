@@ -92,6 +92,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
 	private CountDownTimer timer;
 	private boolean isVideoCallPaused = false;
+	AcceptCallUpdateDialogFragment callUpdateDialog;
 	
 	private TableLayout callsList;
 	private LayoutInflater inflater;
@@ -192,6 +193,8 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
         				timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
         					public void onTick(long millisUntilFinished) { }
         					public void onFinish() {
+								if (callUpdateDialog != null)
+									callUpdateDialog.dismiss();
         						acceptCallUpdate(false);
         			    	}
         				}.start();
@@ -1140,7 +1143,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	
 	private void showAcceptCallUpdateDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        AcceptCallUpdateDialogFragment callUpdateDialog = new AcceptCallUpdateDialogFragment();
+        callUpdateDialog = new AcceptCallUpdateDialogFragment();
         callUpdateDialog.show(fm, "Accept Call Update Dialog");
     }
 
