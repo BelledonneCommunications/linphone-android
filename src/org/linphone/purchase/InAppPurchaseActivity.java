@@ -92,7 +92,9 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 
 	@Override
 	public void onPurchasedItemConfirmationQueryFinished(Purchasable item) {
-		
+		if (item != null) {
+			Log.d("[In-app purchase] Item bought, expires " + item.getExpireDate());
+		}
 	}
 
 	@Override

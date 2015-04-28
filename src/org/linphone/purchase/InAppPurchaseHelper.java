@@ -21,12 +21,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.linphone.LinphonePreferences;
 import org.linphone.mediastream.Log;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -38,6 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Patterns;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -96,6 +100,7 @@ public class InAppPurchaseHelper {
 	private IInAppBillingService mService;
 	private ServiceConnection mServiceConn;
 	private Handler mHandler = new Handler();
+	private String mGmailAccount;
 	
 	private String responseCodeToErrorMessage(int responseCode) {
 		switch (responseCode) {
@@ -122,6 +127,8 @@ public class InAppPurchaseHelper {
 	public InAppPurchaseHelper(Activity context, InAppPurchaseListener listener) {
 		mContext = context;
 		mListener = listener;
+		mGmailAccount = getGmailAccount();
+		
 		mServiceConn = new ServiceConnection() {
 		   @Override
 		   public void onServiceDisconnected(ComponentName name) {
@@ -134,7 +141,7 @@ public class InAppPurchaseHelper {
 		       String packageName = mContext.getPackageName();
 		       try {
 		    	   int response = mService.isBillingSupported(API_VERSION, packageName, ITEM_TYPE_SUBS);
-		    	   if (response != RESPONSE_RESULT_OK) {
+		    	   if (response != RESPONSE_RESULT_OK || mGmailAccount == null) {
 		    		   Log.e("[In-app purchase] Error: Subscriptions aren't supported!");
 		    	   } else {
 				       mListener.onServiceAvailableForQueries();
@@ -296,7 +303,9 @@ public class InAppPurchaseHelper {
 				verifySignatureAndCreateAccountAsync(new VerifiedSignatureListener() {
 					@Override
 					public void onParsedAndVerifiedSignatureQueryFinished(Purchasable item) {
-						mListener.onPurchasedItemConfirmationQueryFinished(item);
+						if (item != null) {
+							mListener.onPurchasedItemConfirmationQueryFinished(item);
+						}
 					}
 				}, purchaseData, signature);
 			} else {
@@ -309,6 +318,24 @@ public class InAppPurchaseHelper {
 		mContext.unbindService(mServiceConn);
 	}
 	
+	private boolean isEmailCorrect(String email) {
+    	Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+    	return emailPattern.matcher(email).matches();
+	}
+	
+	private String getGmailAccount() {
+		Account[] accounts = AccountManager.get(mContext).getAccountsByType("com.google");
+		
+	    for (Account account: accounts) {
+	    	if (isEmailCorrect(account.name)) {
+	            String possibleEmail = account.name;
+	            return possibleEmail;
+	        }
+	    }
+	    
+	    return null;
+	}
+	
 	private Purchasable verifySignatureAndGetExpire(String purchasedData, String signature) {
 		XMLRPCClient client = null;
 		try {
@@ -319,8 +346,13 @@ public class InAppPurchaseHelper {
 		
 		if (client != null) {
 			try {
-				Object result = client.call("get_expiration_date", purchasedData, signature, "google");
+				Object result = client.call("get_expiration_date", mGmailAccount, purchasedData, signature, "google");
 				String expire = (String)result;
+				if ("-1".equals(expire)) {
+					Log.e("[In-app purchase] Server failed to validate the payload !");
+					return null;
+				}
+				
 				JSONObject json = new JSONObject(purchasedData);
 				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 				Purchasable item = new Purchasable(productId); 
@@ -358,6 +390,12 @@ public class InAppPurchaseHelper {
 				public void onResponse(long id, Object result) {
 					try {
 						String expire = (String)result;
+						if ("-1".equals(expire)) {
+							Log.e("[In-app purchase] Server failed to validate the payload !");
+							listener.onParsedAndVerifiedSignatureQueryFinished(null);
+							return;
+						}
+
 						JSONObject json = new JSONObject(purchasedData);
 						String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 						Purchasable item = new Purchasable(productId); 
@@ -376,7 +414,7 @@ public class InAppPurchaseHelper {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
-			}, "create_account_from_in_app_purchase", "sylvain@sip.linphone.org", "toto", purchasedData, signature, "google");
+			}, "create_account_from_in_app_purchase", mGmailAccount, "sylvain@sip.linphone.org", "toto", purchasedData, signature, "google");
 		}
 	}
 	
