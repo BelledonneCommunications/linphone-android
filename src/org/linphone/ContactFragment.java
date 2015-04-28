@@ -79,8 +79,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	private OnClickListener chatListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if (LinphoneActivity.isInstanciated())
+			if (LinphoneActivity.isInstanciated()) {
 				LinphoneActivity.instance().displayChat(v.getTag().toString());
+			}
 		}
 	};
 	
@@ -147,6 +148,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			v.findViewById(R.id.start_chat).setOnClickListener(chatListener);
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
+				displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
 				if (!displayednumberOrAddress.startsWith("sip:")) {
 					numberOrAddress = "sip:" + displayednumberOrAddress;
 				}
