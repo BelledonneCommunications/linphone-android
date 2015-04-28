@@ -293,7 +293,7 @@ public class InAppPurchaseHelper {
 		}).start();
 	}
 	
-	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data) {
+	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data, String username, String password) {
 		if (requestCode == ACTIVITY_RESULT_CODE_PURCHASE_ITEM) {
 			int responseCode = data.getIntExtra(RESPONSE_CODE, 0);
 			String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
@@ -307,7 +307,7 @@ public class InAppPurchaseHelper {
 							mListener.onPurchasedItemConfirmationQueryFinished(item);
 						}
 					}
-				}, purchaseData, signature);
+				}, purchaseData, signature, username, password);
 			} else {
 				Log.e("[In-app purchase] Error: resultCode is " + resultCode + " and responseCode is " + responseCodeToErrorMessage(responseCode));
 			}
@@ -369,7 +369,7 @@ public class InAppPurchaseHelper {
 		return null;
 	}
 	
-	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, String signature) {
+	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, String signature, String username, String password) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -414,7 +414,7 @@ public class InAppPurchaseHelper {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
-			}, "create_account_from_in_app_purchase", mGmailAccount, "sylvain@sip.linphone.org", "toto", purchasedData, signature, "google");
+			}, "create_account_from_in_app_purchase", mGmailAccount, username + "@sip.linphone.org", password, purchasedData, signature, "google");
 		}
 	}
 	
