@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.core.LinphoneProxyConfig;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -65,6 +66,17 @@ public class WizardFragment extends Fragment {
 	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '_', '-' };
+	private char[] acceptedCharsForPhoneNumbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+' };
+	private String inputFilterCharacters;
+	
+	private String getUsername() {
+		String username = this.username.getText().toString();
+		if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
+			LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+			username = lpc.normalizePhoneNumber(username);
+		}
+		return username.toLowerCase(Locale.getDefault());
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,12 +85,17 @@ public class WizardFragment extends Fragment {
 		username = (EditText) view.findViewById(R.id.setup_username);
     	ImageView usernameOkIV = (ImageView) view.findViewById(R.id.setup_username_ok);
     	addXMLRPCUsernameHandler(username, usernameOkIV);
+    	
+    	inputFilterCharacters = new String(acceptedChars);
+    	if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
+    		inputFilterCharacters = new String(acceptedCharsForPhoneNumbers);
+    	}
     	InputFilter filter = new InputFilter(){
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                 if (end > start) {
                     for (int index = start; index < end; index++) {                                         
-                        if (!new String(acceptedChars).contains(String.valueOf(source.charAt(index)))) { 
+                        if (!inputFilterCharacters.contains(String.valueOf(source.charAt(index)))) { 
                             return ""; 
                         }               
                     }
@@ -110,20 +127,16 @@ public class WizardFragment extends Fragment {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						createAccount(username.getText().toString().toLowerCase(Locale.getDefault()), password.getText().toString(), email.getText().toString(), false);
+						createAccount(getUsername(), password.getText().toString(), email.getText().toString(), false);
 					}
 				});
 				builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 					}
 				});
-				if(!username.getText().toString().equals(username.getText().toString().toLowerCase(Locale.getDefault()))){
-					builder.setMessage(getString(R.string.setup_confirm_username).replace("%s", username.getText().toString().toLowerCase(Locale.getDefault())));
-					AlertDialog dialog = builder.create();
-					dialog.show();
-				} else {
-					createAccount(username.getText().toString().toLowerCase(Locale.getDefault()), password.getText().toString(), email.getText().toString(), false);
-				}
+				builder.setMessage(getString(R.string.setup_confirm_username).replace("%s", getUsername()));
+				AlertDialog dialog = builder.create();
+				dialog.show();
 			}
     	});
     	
@@ -143,7 +156,11 @@ public class WizardFragment extends Fragment {
 	}
 	
 	private boolean isUsernameCorrect(String username) {
-		return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
+		if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
+			return username.matches("^(\\+)?(\\d-)?(\\d{3}-)?(\\d{3}-)?\\d{4,}$");
+		} else {
+			return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
+		}
 	}
 	
 	private void isUsernameRegistred(String username, final ImageView icon) {
@@ -278,6 +295,10 @@ public class WizardFragment extends Fragment {
 				usernameOk = false;
 				String username = field.getText().toString().toLowerCase(Locale.getDefault());
 				if (isUsernameCorrect(username)) {
+					if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
+						LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+						username = lpc.normalizePhoneNumber(username);
+					}
 					isUsernameRegistred(username, icon);
 				} else {
 					errorMessage.setText(R.string.wizard_username_incorrect);

@@ -95,6 +95,7 @@ public class BubbleChat {
 	private ImageView statusView;
 	private LinphoneChatMessage nativeMessage;
 	private LinphoneChatMessage.LinphoneChatMessageListener fileTransferListener;
+	private static final int SIZE_MAX = 2048;
 	
 	@SuppressLint("InflateParams") 
 	public BubbleChat(final Context context, LinphoneChatMessage message, LinphoneChatMessage.LinphoneChatMessageListener listener) {
@@ -173,6 +174,13 @@ public class BubbleChat {
     	    		bm = BitmapFactory.decodeFile(appData);
     	    		appData = "file://" + appData;
     	    	}
+
+				if (bm.getWidth() > bm.getHeight() && bm.getWidth() > SIZE_MAX) {
+					bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
+				} else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > SIZE_MAX) {
+
+					bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+				}
     	    	
     	    	if (bm != null) {
 			    	imageView.setImageBitmap(bm);

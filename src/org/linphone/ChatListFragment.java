@@ -356,7 +356,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Log.e("Chat view cannot parse address",e);
 				return view;
 			}
-			Contact lContact = ContactsManager.getInstance().findContactWithAddress(address);
+			Contact lContact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 
 			String message = "";
 			if (useNativeAPI) {
@@ -365,7 +365,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				if (history != null && history.length > 0) {
 					for (int i = history.length - 1; i >= 0; i--) {
 						LinphoneChatMessage msg = history[i];
-						if (msg.getText() != null && msg.getText().length() > 0) {
+						if (msg.getText() != null && msg.getText().length() > 0 && msg.getFileTransferInformation() == null) {
 							message = msg.getText();
 							break;
 						}

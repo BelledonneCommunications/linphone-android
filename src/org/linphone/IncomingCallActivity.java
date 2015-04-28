@@ -124,8 +124,9 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
 		// May be greatly sped up using a drawable cache
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(address);
-		LinphoneUtils.setImagePictureFromUri(this, mPictureView.getView(), contact != null ? contact.getPhotoUri() : null, R.drawable.unknown_small);
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		LinphoneUtils.setImagePictureFromUri(this, mPictureView.getView(), contact != null ? contact.getPhotoUri() : null,
+				 contact != null ? contact.getThumbnailUri() : null, R.drawable.unknown_small);
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
 		mNameView.setText(contact != null ? contact.getName() : "");
