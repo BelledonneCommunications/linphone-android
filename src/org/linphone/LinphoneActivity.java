@@ -178,6 +178,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+				if(!displayChatMessageNotification(message.getFrom().asStringUriOnly())) {
+					cr.markAsRead();
+				}
 		        displayMissedChats(getChatStorage().getUnreadMessageCount());
 		        if (messageListFragment != null && messageListFragment.isVisible()) {
 		            ((ChatListFragment) messageListFragment).refresh();
@@ -603,10 +606,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	public boolean displayChatMessageNotification(String address){
 		if(chatFragment != null) {
 			if(chatFragment.getSipUri().equals(address)){
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public void displayChat(String sipUri) {
@@ -650,6 +653,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			} else {
 				changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
 				displayChat(sipUri);
+			}
+			if (messageListFragment != null && messageListFragment.isVisible()) {
+				((ChatListFragment) messageListFragment).refresh();
 			}
 		} else {
 			Intent intent = new Intent(this, ChatActivity.class);
