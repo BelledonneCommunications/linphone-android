@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
 
 import android.content.ContentResolver;
@@ -104,10 +105,13 @@ public class Contact implements Serializable {
 	
 	public void refresh(ContentResolver cr) {
 		this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
-		for(LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
-			if (friend.getRefKey().equals(id)) {
-				hasFriends = true;
-				this.numbersOrAddresses.add(friend.getAddress().asStringUriOnly());
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if(lc != null && lc.getFriendList() != null) {
+			for (LinphoneFriend friend :lc.getFriendList()){
+				if (friend.getRefKey().equals(id)) {
+					hasFriends = true;
+					this.numbersOrAddresses.add(friend.getAddress().asStringUriOnly());
+				}
 			}
 		}
 		this.name = Compatibility.refreshContactName(cr, id);
