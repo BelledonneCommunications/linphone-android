@@ -199,7 +199,7 @@ public class DialerFragment extends Fragment {
 				mAddress.setText(intent.getData().getSchemeSpecificPart());
 			} else {
 				Uri contactUri = intent.getData();
-				String address = ContactsManager.getInstance().queryAddressOrNumber(getActivity().getContentResolver(),contactUri);
+				String address = ContactsManager.getInstance().queryAddressOrNumber(LinphoneService.instance().getContentResolver(),contactUri);
 				if(address != null) {
 					mAddress.setText(address);
 				} else {

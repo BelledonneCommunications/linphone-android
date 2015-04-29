@@ -53,8 +53,11 @@ public class EditContactFragment extends Fragment {
 				isNewContact = false;
 				contactID = Integer.parseInt(contact.getID());
 				contact.refresh(getActivity().getContentResolver());
-			}
-			if (getArguments().getString("NewSipAdress") != null) {
+				if (getArguments().getString("NewSipAdress") != null) {
+					newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
+				}
+
+			} else if (getArguments().getString("NewSipAdress") != null) {
 				newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
 				isNewContact = true;
 			}
@@ -257,7 +260,7 @@ public class EditContactFragment extends Fragment {
 		if (forceAddNumber) {
 			tempNounoa = new NewOrUpdatedNumberOrAddress(isSip);
 		} else {
-			if(isNewContact) {
+			if(isNewContact || newSipOrNumberToAdd != null) {
 				tempNounoa = new NewOrUpdatedNumberOrAddress(isSip, numberOrAddress);
 			} else {
 				tempNounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
