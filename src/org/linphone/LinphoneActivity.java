@@ -601,6 +601,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public void displayAbout() {
 		changeCurrentFragment(FragmentsAvailable.ABOUT, null);
+		settings.setSelected(true);
 	}
 
 	public boolean displayChatMessageNotification(String address){
