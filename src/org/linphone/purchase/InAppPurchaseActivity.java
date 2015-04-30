@@ -162,7 +162,8 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	}
 	
 	private boolean isUsernameCorrect(String username) {
-		return username.matches("^(\\+)?(\\d-)?(\\d{3}-)?(\\d{3}-)?\\d{4,}$");
+		LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+		return lpc.isPhoneNumber(username);
 	}
 	
 	private void isUsernameRegistred(String username, final ImageView icon) {
