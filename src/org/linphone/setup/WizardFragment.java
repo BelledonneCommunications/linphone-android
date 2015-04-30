@@ -157,7 +157,8 @@ public class WizardFragment extends Fragment {
 	
 	private boolean isUsernameCorrect(String username) {
 		if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
-			return username.matches("^(\\+)?(\\d-)?(\\d{3}-)?(\\d{3}-)?\\d{4,}$");
+			LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+			return lpc.isPhoneNumber(username);
 		} else {
 			return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
 		}
