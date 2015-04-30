@@ -13,7 +13,7 @@
   <string name="notification_registered">Enregistré sur %s</string>
   <string name="notification_register_failure">Échec d\'enregistrement sur %s</string>
   <string name="about_text">Linphone %s SIP (rfc 3261) compatible téléphone, sous licence GNU Public License V2</string>
-  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/m/help\n\n© 2011 Belledonne Communications</string>
+  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2015 Belledonne Communications</string>
   <string name="setup_welcome">Cet assistant va vous guider pour réaliser des appels à l\'aide d\'un compte SIP.</string>
   <string name="setup_create_account">Créer un compte sur linphone.org</string>
   <string name="setup_login_linphone">J\'ai déjà un compte sur linphone.org</string>
