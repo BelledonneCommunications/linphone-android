@@ -462,9 +462,6 @@ install-apk:
 
 release: update-project
 	$(ANT) clean
-	echo "What is the version name for the release ?"; \
-	read version; \
-	echo "version.name=$$version" > default.properties
 	patch -p1 < release.patch
 	$(ANT) release
 	git checkout HEAD AndroidManifest.xml
