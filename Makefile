@@ -99,6 +99,15 @@ ifneq ($(shell ls ./submodules/linphone/mediastreamer2/java/src/org/linphone/med
 $(error ./submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java found: please either remove it or move it to MediastreamActivity.java.ignored before continuing.)
 endif
 
+ifeq ($(BUILD_NON_FREE_CODECS), 0)
+BUILD_OPENH264=0
+ENABLE_OPENH264_DECODER=0
+BUILD_AMRNB=0
+BUILD_AMRWB=0
+BUILD_G729=0
+BUILD_X264=0
+endif
+
 all: update-project generate-apk
 ifeq ($(ENABLE_GPL_THIRD_PARTIES),1)
 	@echo "***************************************************************************"
@@ -164,8 +173,8 @@ $(FFMPEG_SRC_DIR)/non_versioned_soname_patch_applied.txt:
 
 $(FFMPEG_BUILD_DIR)/arm/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/arm && \
-        cd $(FFMPEG_BUILD_DIR)/arm && \
-        $(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS)
+	cd $(FFMPEG_BUILD_DIR)/arm && \
+	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_ARM_CONFIGURE_OPTIONS)
 	sed -i.bak 's/#define HAVE_SYSCTL 1/#define HAVE_SYSCTL 0/g' $(FFMPEG_BUILD_DIR)/arm/config.h
 	sed -i.bak 's/#define HAVE_GETHRTIME 1/#define HAVE_GETHRTIME 0/g' $(FFMPEG_BUILD_DIR)/arm/config.h
 
@@ -181,8 +190,8 @@ $(FFMPEG_BUILD_DIR)/arm/libffmpeg-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/libav
 
 $(FFMPEG_BUILD_DIR)/x86/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
-        cd $(FFMPEG_BUILD_DIR)/x86 && \
-        $(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS)
+	cd $(FFMPEG_BUILD_DIR)/x86 && \
+	$(FFMPEG_SRC_DIR)/configure $(FFMPEG_CONFIGURE_OPTIONS) $(FFMPEG_X86_CONFIGURE_OPTIONS)
 	sed -i.bak 's/#define HAVE_SYSCTL 1/#define HAVE_SYSCTL 0/g' $(FFMPEG_BUILD_DIR)/x86/config.h
 	sed -i.bak 's/#define HAVE_GETHRTIME 1/#define HAVE_GETHRTIME 0/g' $(FFMPEG_BUILD_DIR)/x86/config.h
 
