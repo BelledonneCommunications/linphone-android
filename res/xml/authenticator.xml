@@ -2,7 +2,7 @@
 
 <account-authenticator
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="org.linphone"
+    android:accountType="@string/sync_account_type"
     android:icon="@drawable/logo_linphone_57x57"
     android:smallIcon="@drawable/logo_linphone_57x57"
     android:label="@string/app_name"/>
