@@ -117,6 +117,7 @@
 
         <activity android:name="org.linphone.ChatActivity"
             android:theme="@style/NoTitle"
+            android:configChanges="orientation|screenSize|keyboardHidden" 
             android:windowSoftInputMode="adjustPan|adjustResize"
             android:launchMode="singleTask">
             <intent-filter>
