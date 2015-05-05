@@ -124,6 +124,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		super.onCreate(savedInstanceState);
 		instance = this;
 		View view = inflater.inflate(R.layout.chat, container, false);
+		
+		// Retain the fragment across configuration changes
+		setRetainInstance(true);
 
 		//Retrieve parameter from intent
 		sipUri = getArguments().getString("SipUri");
@@ -562,7 +565,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		
 		@Override
 		protected void onPostExecute(byte[] result) {
-			progressDialog.dismiss();
+			if (progressDialog != null && progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
 			
 			mUploadingImageStream = new ByteArrayInputStream(result);
 			
