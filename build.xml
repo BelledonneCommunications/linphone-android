@@ -26,6 +26,7 @@
          application and should be checked into Version Control Systems.
 
          -->
+    <property file="default.properties" />
     <property file="ant.properties" />
     <property file="ant_password.properties" />
 
