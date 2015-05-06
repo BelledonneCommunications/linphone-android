@@ -472,6 +472,7 @@ install-apk:
 release: update-project
 	$(ANT) clean
 	patch -p1 < release.patch
+	cat ant.properties | grep version.name > default.properties
 	$(ANT) release
 	git checkout HEAD AndroidManifest.xml
 
