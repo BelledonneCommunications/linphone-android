@@ -494,7 +494,7 @@ public final class LinphoneService extends Service {
 		//MANUFACTURER doesn't exist in android 1.5.
 		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK_INT).append("\n");
-		sb.append("EABI=").append(Build.CPU_ABI).append("\n");
+		sb.append("EABI=").append(Version.getCpuAbis().get(0)).append("\n");
 		Log.i(sb.toString());
 	}
 
