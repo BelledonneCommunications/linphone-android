@@ -593,9 +593,8 @@ public class ContactsManager {
 				c.close();
 				return address;
 			}
+			c.close();
 		}
-
-		c.close();
 		return null;
 	}
 
