@@ -95,6 +95,13 @@ public class InAppPurchaseHelper {
     public static final String PURCHASE_DETAILS_PAYLOAD = "developerPayload";
     public static final String PURCHASE_DETAILS_PURCHASE_TOKEN = "purchaseToken";
     
+    public static final String SERVER_ERROR_INVALID_ACCOUNT = "ERROR_INVALID_ACCOUNT";
+    public static final String SERVER_ERROR_PURCHASE_CANCELLED = "ERROR_PURCHASE_CANCELLED";
+    public static final String SERVER_ERROR_RECEIPT_PARSING_FAILED = "ERROR_RECEIPT_PARSING_FAILED";
+    public static final String SERVER_ERROR_UID_ALREADY_IN_USE = "ERROR_UID_ALREADY_IN_USE";
+    public static final String SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED = "ERROR_SIGNATURE_VERIFICATION_FAILED";
+    public static final String SERVER_ERROR_ACCOUNT_ALREADY_EXISTS = "ERROR_ACCOUNT_ALREADY_EXISTS";
+    
 	private Context mContext;
 	private InAppPurchaseListener mListener;
 	private IInAppBillingService mService;
@@ -293,7 +300,7 @@ public class InAppPurchaseHelper {
 		}).start();
 	}
 	
-	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data, String username, String password) {
+	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data, String username) {
 		if (requestCode == ACTIVITY_RESULT_CODE_PURCHASE_ITEM) {
 			int responseCode = data.getIntExtra(RESPONSE_CODE, 0);
 			String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
@@ -307,10 +314,42 @@ public class InAppPurchaseHelper {
 							mListener.onPurchasedItemConfirmationQueryFinished(item);
 						}
 					}
-				}, purchaseData, signature, username, password);
+				}, purchaseData, signature, username);
 			} else {
 				Log.e("[In-app purchase] Error: resultCode is " + resultCode + " and responseCode is " + responseCodeToErrorMessage(responseCode));
 			}
+		}
+	}
+	
+	public void recoverAccount(String productId, String sipIdentity) {
+		XMLRPCClient client = null;
+		try {
+			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
+		} catch (MalformedURLException e) {
+			Log.e(e);
+			Log.e("[In-app purchase] Can't reach the server !");
+		}
+		
+		if (client != null) {
+			client.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+				}
+				
+				@Override
+				public void onResponse(long id, Object result) {
+					Log.d("[In-app purchase] Server result is " + result);
+					mListener.onRecoverAccountSuccessful(result.equals("OK"));
+				}
+				
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+				}
+			}, "recover_account", mGmailAccount, sipIdentity + "@sip.linphone.org");
 		}
 	}
 	
@@ -318,12 +357,7 @@ public class InAppPurchaseHelper {
 		mContext.unbindService(mServiceConn);
 	}
 	
-	private boolean isEmailCorrect(String email) {
-    	Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-    	return emailPattern.matcher(email).matches();
-	}
-	
-	private String getGmailAccount() {
+	public String getGmailAccount() {
 		Account[] accounts = AccountManager.get(mContext).getAccountsByType("com.google");
 		
 	    for (Account account: accounts) {
@@ -334,6 +368,11 @@ public class InAppPurchaseHelper {
 	    }
 	    
 	    return null;
+	}
+	
+	private boolean isEmailCorrect(String email) {
+    	Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+    	return emailPattern.matcher(email).matches();
 	}
 	
 	private Purchasable verifySignatureAndGetExpire(String purchasedData, String signature) {
@@ -347,16 +386,20 @@ public class InAppPurchaseHelper {
 		if (client != null) {
 			try {
 				Object result = client.call("get_expiration_date", mGmailAccount, purchasedData, signature, "google");
+				long longExpire = -1;
 				String expire = (String)result;
-				if ("-1".equals(expire)) {
-					Log.e("[In-app purchase] Server failed to validate the payload !");
+				
+				try {
+					longExpire = Long.parseLong(expire);
+				} catch (NumberFormatException nfe) {
+					Log.e("[In-app purchase] Server failure: " + result);
 					return null;
 				}
 				
 				JSONObject json = new JSONObject(purchasedData);
 				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 				Purchasable item = new Purchasable(productId); 
-				item.setExpire(Long.parseLong(expire));
+				item.setExpire(longExpire);
 				//TODO parse JSON result to get the purchasable in it
 				return item;
 			} catch (XMLRPCException e) {
@@ -369,7 +412,7 @@ public class InAppPurchaseHelper {
 		return null;
 	}
 	
-	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, String signature, String username, String password) {
+	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, String signature, String username) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -389,9 +432,13 @@ public class InAppPurchaseHelper {
 				@Override
 				public void onResponse(long id, Object result) {
 					try {
+						long longExpire = -1;
 						String expire = (String)result;
-						if ("-1".equals(expire)) {
-							Log.e("[In-app purchase] Server failed to validate the payload !");
+						
+						try {
+							longExpire = Long.parseLong(expire);
+						} catch (NumberFormatException nfe) {
+							Log.e("[In-app purchase] Server failure: " + result);
 							listener.onParsedAndVerifiedSignatureQueryFinished(null);
 							return;
 						}
@@ -399,7 +446,7 @@ public class InAppPurchaseHelper {
 						JSONObject json = new JSONObject(purchasedData);
 						String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 						Purchasable item = new Purchasable(productId); 
-						item.setExpire(Long.parseLong(expire));
+						item.setExpire(longExpire);
 						//TODO parse JSON result to get the purchasable in it
 				    	listener.onParsedAndVerifiedSignatureQueryFinished(item);
 				    	return;
@@ -414,7 +461,7 @@ public class InAppPurchaseHelper {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
-			}, "create_account_from_in_app_purchase", mGmailAccount, username + "@sip.linphone.org", password, purchasedData, signature, "google");
+			}, "create_account_from_in_app_purchase", mGmailAccount, username + "@sip.linphone.org", purchasedData, signature, "google");
 		}
 	}
 	

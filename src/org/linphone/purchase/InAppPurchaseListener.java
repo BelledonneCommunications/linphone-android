@@ -46,4 +46,10 @@ public interface InAppPurchaseListener {
 	 * @param item the item the user just bought
 	 */
 	void onPurchasedItemConfirmationQueryFinished(Purchasable item);
+
+	/**
+	 * Callback called when the account has been recovered (or not)
+	 * @param true if the recover has been successful, false otherwise
+	 */
+	void onRecoverAccountSuccessful(boolean success);
 }

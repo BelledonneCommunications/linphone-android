@@ -42,7 +42,7 @@
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="@string/setup_username_hint"
-	            android:inputType="textEmailAddress"
+	            android:inputType="phone"
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
@@ -62,65 +62,24 @@
         </RelativeLayout>
         
         <RelativeLayout 
-           	android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             
 	        <EditText
 	            android:textCursorDrawable="@null"
-	            android:id="@+id/setup_password"
+	            android:id="@+id/setup_email"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:hint="@string/setup_password_hint"
-	            android:inputType="textPassword"
+	            android:hint="@string/setup_email_hint"
+	            android:inputType="textEmailAddress"
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
 	            android:textColor="@android:color/black"
             	android:background="@drawable/setup_field_background" />
-	        
-	        <ImageView 
-	    		android:contentDescription="@string/content_description_setup_ok"
-	            android:id="@+id/setup_password_ok"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="5dp"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:src="@drawable/wizard_notok"/>
-	        
-        </RelativeLayout>
-        
-        <RelativeLayout 
-           	android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-	        
-	        <EditText
-	            android:textCursorDrawable="@null"
-	            android:id="@+id/setup_password_confirm"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:hint="@string/setup_password_confirm_hint"
-	            android:inputType="textPassword"
-	            android:paddingLeft="10dp"
-	            android:paddingRight="10dp"
-	            android:singleLine="true"
-	            android:textColor="@android:color/black"
-            	android:background="@drawable/setup_field_background" />
-	        
-	        <ImageView 
-	    		android:contentDescription="@string/content_description_setup_ok"
-	            android:id="@+id/setup_confirm_password_ok"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="5dp"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:src="@drawable/wizard_notok"/>
         
         </RelativeLayout>
-    
+        
 	    <LinearLayout 
 	        android:id="@+id/purchasable_items"
 		    android:layout_width="match_parent"
