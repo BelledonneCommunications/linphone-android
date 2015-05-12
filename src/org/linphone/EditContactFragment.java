@@ -482,25 +482,27 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		public void delete() {
-			if (isSipAddress) {
-				if(contact.hasFriends()) {
-					ContactsManager.getInstance().removeFriend(oldNumberOrAddress);
+			if(contact != null) {
+				if (isSipAddress) {
+					if (contact.hasFriends()) {
+						ContactsManager.getInstance().removeFriend(oldNumberOrAddress);
+					} else {
+						Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
+					}
+					if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+						Compatibility.deleteLinphoneContactTag(ops, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
+					}
 				} else {
-					Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
+					String select = ContactsContract.Data.CONTACT_ID + "=? AND "
+							+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND "
+							+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
+					String[] args = new String[]{String.valueOf(contactID), oldNumberOrAddress};
+
+					ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+									.withSelection(select, args)
+									.build()
+					);
 				}
-				if (getResources().getBoolean(R.bool.use_linphone_tag)) {
-					Compatibility.deleteLinphoneContactTag(ops, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
-				}
-			} else {
-				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
-						+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
-				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
-				
-	            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-	        		.withSelection(select, args) 
-	                .build()
-	            );
 			}
 		}
 		
