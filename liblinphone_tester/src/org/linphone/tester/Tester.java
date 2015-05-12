@@ -1,5 +1,7 @@
 package org.linphone.tester;
 
+import java.util.List;
+
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Version;
 
@@ -23,25 +25,35 @@ public class Tester {
 	}
 	
 	static	{
-
-		LinphoneCoreFactory.instance();
-
-		System.loadLibrary("cunit"); 
-		String eabi = "armeabi";
-		if (Version.isX86()) {
-			eabi = "x86";
-		} else if (Version.isArmv7()) {
-			eabi = "armeabi-v7a";
+		List<String> cpuabis=Version.getCpuAbis();
+		String ffmpegAbi;
+		boolean libLoaded=false;
+		Throwable firstException=null;
+		for (String abi : cpuabis){
+			Log.i("LinphoneCoreFactoryImpl","Trying to load liblinphone for " + abi);
+			ffmpegAbi=abi;
+			// FFMPEG (audio/video)
+			if (abi.startsWith("armeabi")) {
+				ffmpegAbi="arm";
+			}
+			loadOptionalLibrary("ffmpeg-linphone-"+ffmpegAbi);
+			//Main library
+			try {
+				System.loadLibrary("linphone-" + abi);
+				Log.i("LinphoneCoreFactoryImpl","Loading done with " + abi);
+				libLoaded=true;
+				break;
+			}catch(Throwable e) {
+				if (firstException == null) firstException=e;
+			}
 		}
-		try {
-			System.loadLibrary("linphone_tester-"+eabi);
-
-		} catch (UnsatisfiedLinkError ule) {
-			Log.w("linphone", "Failed to load liblinphone_tester-"+eabi);
-			System.loadLibrary("linphone_tester"); 
+		
+		if (!libLoaded){
+			throw new RuntimeException(firstException);
+			
+		}else{
+			Version.dumpCapabilities();
 		}
-
-		Version.dumpCapabilities();
 	}
 	
 	public native int run(String args[]);

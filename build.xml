@@ -26,8 +26,9 @@
          application and should be checked into Version Control Systems.
 
          -->
-    <property file="ant.properties" />
     <property file="default.properties" />
+    <property file="ant.properties" />
+    <property file="ant_password.properties" />
 
     <!-- if sdk.dir was not set from one of the property file, then
          get it from the ANDROID_HOME env var.

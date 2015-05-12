@@ -717,10 +717,12 @@ public class LinphoneManager implements LinphoneCoreListener {
 		try {
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(mServiceContext.getContentResolver(),from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat__message_notification)) {
-				if(contact != null) {
-					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getName(), textMessage);
-				} else {
-					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
+				if(LinphoneActivity.isInstanciated() && LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
+					if (contact != null) {
+						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getName(), textMessage);
+					} else {
+						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
+					}
 				}
 			}
 		} catch (Exception e) {

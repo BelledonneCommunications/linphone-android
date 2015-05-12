@@ -102,6 +102,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private FragmentsAvailable currentFragment, nextFragment;
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
+	private ChatFragment chatFragment;
 	private SavedState dialerSavedState;
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
@@ -177,6 +178,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+				if(!displayChatMessageNotification(message.getFrom().asStringUriOnly())) {
+					cr.markAsRead();
+				}
 		        displayMissedChats(getChatStorage().getUnreadMessageCount());
 		        if (messageListFragment != null && messageListFragment.isVisible()) {
 		            ((ChatListFragment) messageListFragment).refresh();
@@ -597,6 +601,16 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 	public void displayAbout() {
 		changeCurrentFragment(FragmentsAvailable.ABOUT, null);
+		settings.setSelected(true);
+	}
+
+	public boolean displayChatMessageNotification(String address){
+		if(chatFragment != null) {
+			if(chatFragment.getSipUri().equals(address)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void displayChat(String sipUri) {
@@ -640,6 +654,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			} else {
 				changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
 				displayChat(sipUri);
+			}
+			if (messageListFragment != null && messageListFragment.isVisible()) {
+				((ChatListFragment) messageListFragment).refresh();
 			}
 		} else {
 			Intent intent = new Intent(this, ChatActivity.class);
@@ -742,6 +759,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		dialerFragment = fragment;
 		// Hack to maintain soft input flags
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	}
+
+	public void updateChatFragment(ChatFragment fragment) {
+		chatFragment = fragment;
 	}
 
 	public void updateChatListFragment(ChatListFragment fragment) {

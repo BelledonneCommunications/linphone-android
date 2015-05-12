@@ -124,6 +124,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		super.onCreate(savedInstanceState);
 		instance = this;
 		View view = inflater.inflate(R.layout.chat, container, false);
+		
+		// Retain the fragment across configuration changes
+		setRetainInstance(true);
 
 		//Retrieve parameter from intent
 		sipUri = getArguments().getString("SipUri");
@@ -438,12 +441,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneService.instance().removeMessageNotification();
 
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().updateChatFragment(null);
+		}
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
 
-		getActivity().getIntent().putExtra("messageDraft", message.getText().toString());
+		onSaveInstanceState(getArguments());
 		super.onPause();
 	}
 
@@ -462,6 +469,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 				LinphoneActivity.instance().hideStatusBar();
 			}
+			LinphoneActivity.instance().updateChatFragment(this);
 		}
 
 		String draft = getArguments().getString("messageDraft");
@@ -557,7 +565,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		
 		@Override
 		protected void onPostExecute(byte[] result) {
-			progressDialog.dismiss();
+			if (progressDialog != null && progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
 			
 			mUploadingImageStream = new ByteArrayInputStream(result);
 			

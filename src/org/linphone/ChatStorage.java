@@ -47,7 +47,7 @@ public class ChatStorage {
 	private static final int OUTGOING = 0;
 	private static final int READ = 1;
 	private static final int NOT_READ = 0;
-	
+
 	private static ChatStorage instance;
 	private Context context;
 	private SQLiteDatabase db;
@@ -66,7 +66,7 @@ public class ChatStorage {
 			instance.close();
 		instance = new ChatStorage(LinphoneService.instance().getApplicationContext());
 	}
-	
+
 	private boolean isVersionUsingNewChatStorage() {
 		try {
 			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
@@ -75,7 +75,7 @@ public class ChatStorage {
 		}
 		return true;
 	}
-	
+
 	private ChatStorage(Context c) {
 	    context = c;
 	    boolean useLinphoneStorage = c.getResources().getBoolean(R.bool.use_linphone_chat_storage);
@@ -84,24 +84,24 @@ public class ChatStorage {
 		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
 	    useNativeAPI = useLinphoneStorage && !updateNeeded;
 	    Log.d("Using native API: " + useNativeAPI);
-	    
+
 	    if (!useNativeAPI) {
 		    ChatHelper chatHelper = new ChatHelper(context);
 		    db = chatHelper.getWritableDatabase();
 	    }
 	}
-	
+
 	public void close() {
 		if (!useNativeAPI) {
 			db.close();
 		}
 	}
-	
+
 	public void updateMessageStatus(String to, String message, int status) {
 		if (useNativeAPI) {
 			return;
 		}
-		
+
 		String[] whereArgs = { String.valueOf(OUTGOING), to, message };
 		Cursor c = db.query(TABLE_NAME, null, "direction LIKE ? AND remoteContact LIKE ? AND message LIKE ?", whereArgs, null, null, "id DESC");
 
@@ -114,29 +114,29 @@ public class ChatStorage {
 			}
 		}
 		c.close();
-		
+
 		if (id != null && id.length() > 0) {
 			int intID = Integer.parseInt(id);
 			updateMessageStatus(to, intID, status);
 		}
 	}
-	
+
 	public void updateMessageStatus(String to, int id, int status) {
 		if (useNativeAPI) {
 			return;
 		}
-		
+
 		ContentValues values = new ContentValues();
 		values.put("status", status);
-		
+
 		db.update(TABLE_NAME, values, "id LIKE " + id, null);
 	}
-	
+
 	public int saveTextMessage(String from, String to, String message, long time) {
 		if (useNativeAPI) {
 			return -1;
 		}
-		
+
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);
@@ -155,12 +155,12 @@ public class ChatStorage {
 		values.put("time", time);
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
-	
+
 	public int saveImageMessage(String from, String to, Bitmap image, String url, long time) {
 		if (useNativeAPI) {
 			return -1;
 		}
-		
+
 		ContentValues values = new ContentValues();
 		if (from.equals("")) {
 			values.put("localContact", from);
@@ -176,73 +176,73 @@ public class ChatStorage {
 			values.put("status", LinphoneChatMessage.State.Idle.toInt());
 		}
 		values.put("url", url);
-		
+
 		if (image != null) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			image.compress(CompressFormat.JPEG, 100, baos);
 			values.put("image", baos.toByteArray());
 		}
-		
+
 		values.put("time", time);
 		return (int) db.insert(TABLE_NAME, null, values);
 	}
-	
+
 	public void saveImage(int id, Bitmap image) {
 		if (useNativeAPI) {
 			//Handled before this point
 			return;
 		}
-		
+
 		if (image == null)
 			return;
-		
+
 		ContentValues values = new ContentValues();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		image.compress(CompressFormat.JPEG, 100, baos);
 		values.put("image", baos.toByteArray());
-		
+
 		db.update(TABLE_NAME, values, "id LIKE " + id, null);
 	}
-	
+
 	public int saveDraft(String to, String message) {
 		if (useNativeAPI) {
 			//TODO
 			return -1;
 		}
-		
+
 		ContentValues values = new ContentValues();
 		values.put("remoteContact", to);
 		values.put("message", message);
 		return (int) db.insert(DRAFT_TABLE_NAME, null, values);
 	}
-	
+
 	public void updateDraft(String to, String message) {
 		if (useNativeAPI) {
 			//TODO
 			return;
 		}
-		
+
 		ContentValues values = new ContentValues();
 		values.put("message", message);
-		
+
 		db.update(DRAFT_TABLE_NAME, values, "remoteContact LIKE \"" + to + "\"", null);
 	}
-	
+
 	public void deleteDraft(String to) {
 		if (useNativeAPI) {
 			//TODO
 			return;
 		}
-		
+
 		db.delete(DRAFT_TABLE_NAME, "remoteContact LIKE \"" + to + "\"", null);
 	}
-	
+
 	public String getDraft(String to) {
 		if (useNativeAPI) {
 			//TODO
 			return "";
 		}
-		
+
 		Cursor c = db.query(DRAFT_TABLE_NAME, null, "remoteContact LIKE \"" + to + "\"", null, null, null, "id ASC");
 
 		String message = null;
@@ -254,13 +254,13 @@ public class ChatStorage {
 			}
 		}
 		c.close();
-		
+
 		return message;
 	}
-	
+
 	public List<String> getDrafts() {
 		List<String> drafts = new ArrayList<String>();
-		
+
 		if (useNativeAPI) {
 			//TODO
 		} else {
@@ -276,16 +276,16 @@ public class ChatStorage {
 			}
 			c.close();
 		}
-		
+
 		return drafts;
 	}
-	
+
 	public List<ChatMessage> getMessages(String correspondent) {
 		List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-		
+
 		if (!useNativeAPI) {
 			Cursor c = db.query(TABLE_NAME, null, "remoteContact LIKE \"" + correspondent + "\"", null, null, null, "id ASC");
-			
+
 			while (c.moveToNext()) {
 				try {
 					String message, timestamp, url;
@@ -297,7 +297,7 @@ public class ChatStorage {
 					byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
 					int read = c.getInt(c.getColumnIndex("read"));
 					url = c.getString(c.getColumnIndex("url"));
-					
+
 					ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status, read == READ);
 					chatMessage.setUrl(url);
 					chatMessages.add(chatMessage);
@@ -311,26 +311,26 @@ public class ChatStorage {
 			LinphoneChatMessage[] history = room.getHistory();
 			for (int i = 0; i < history.length; i++) {
 				LinphoneChatMessage message = history[i];
-				
+
 				Bitmap bm = null;
 				String url = message.getExternalBodyUrl();
 				if (url != null && !url.startsWith("http")) {
 					bm = BitmapFactory.decodeFile(url);
 				}
-				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), bm, 
-						String.valueOf(message.getTime()), !message.isOutgoing(), 
+				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), bm,
+						String.valueOf(message.getTime()), !message.isOutgoing(),
 						message.getStatus().toInt(), message.isRead());
 				chatMessage.setUrl(url);
 				chatMessages.add(chatMessage);
 			}
 		}
-		
+
 		return chatMessages;
 	}
 
 	public String getTextMessageForId(LinphoneChatRoom chatroom, int id) {
 		String message = null;
-		
+
 		if (useNativeAPI) {
 			LinphoneChatMessage[] history = chatroom.getHistory();
 			for (LinphoneChatMessage msg : history) {
@@ -341,7 +341,7 @@ public class ChatStorage {
 			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, "id LIKE " + id, null, null, null, null);
-	
+
 			if (c.moveToFirst()) {
 				try {
 					message = c.getString(c.getColumnIndex("message"));
@@ -351,10 +351,10 @@ public class ChatStorage {
 			}
 			c.close();
 		}
-		
+
 		return message;
 	}
-	
+
 	public LinphoneChatMessage getMessage(LinphoneChatRoom chatroom, int id) {
 		if (useNativeAPI) {
 			LinphoneChatMessage[] history = chatroom.getHistory();
@@ -366,7 +366,7 @@ public class ChatStorage {
 		}
 		return null;
 	}
-	
+
 	public void removeDiscussion(String correspondent) {
 		if (useNativeAPI) {
 			LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
@@ -375,30 +375,29 @@ public class ChatStorage {
 			db.delete(TABLE_NAME, "remoteContact LIKE \"" + correspondent + "\"", null);
 		}
 	}
-	
+
 	public ArrayList<String> getChatList() {
 		ArrayList<String> chatList = new ArrayList<String>();
-		
+
 		if (useNativeAPI) {
 			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
 			List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
-			
+
 			for (LinphoneChatRoom chatroom : chats) {
 				if (chatroom.getHistory(1).length > 0) {
 					rooms.add(chatroom);
 				}
 			}
-			
+
 			if (rooms.size() > 1) {
 				Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
 					@Override
 					public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
 						LinphoneChatMessage[] messagesA = a.getHistory(1);
 						LinphoneChatMessage[] messagesB = b.getHistory(1);
-						long atime, btime;
-						// /!\ Warning: Have to take the second element because it returns two even when asking for only one...
-						atime = messagesA.length > 1 ? messagesA[1].getTime() : messagesA[0].getTime();
-						btime = messagesA.length > 1 ? messagesB[1].getTime() : messagesB[0].getTime();
+						long atime = messagesA[0].getTime();
+						long btime = messagesB[0].getTime();
+
 						if (atime > btime)
 							return -1;
 						else if (btime > atime)
@@ -408,7 +407,7 @@ public class ChatStorage {
 					}
 				});
 			}
-			
+
 			for (LinphoneChatRoom chatroom : rooms) {
 				chatList.add(chatroom.getPeerAddress().asStringUriOnly());
 			}
@@ -423,7 +422,7 @@ public class ChatStorage {
 			}
 			c.close();
 		}
-		
+
 		return chatList;
 	}
 
@@ -440,7 +439,7 @@ public class ChatStorage {
 			db.delete(TABLE_NAME, "id LIKE " + id, null);
 		}
 	}
-	
+
 	public void markMessageAsRead(int id) {
 		if (!useNativeAPI) {
 			ContentValues values = new ContentValues();
@@ -448,13 +447,13 @@ public class ChatStorage {
 			db.update(TABLE_NAME, values, "id LIKE " + id, null);
 		}
 	}
-	
+
 	public void markConversationAsRead(LinphoneChatRoom chatroom) {
 		if (useNativeAPI) {
 			chatroom.markAsRead();
 		}
 	}
-	
+
 	public int getUnreadMessageCount() {
 		int count;
 		if (!useNativeAPI) {
@@ -489,10 +488,10 @@ public class ChatStorage {
 			//Handled before this point
 			return null;
 		}
-		
+
 		String[] columns = { "image" };
 		Cursor c = db.query(TABLE_NAME, columns, "id LIKE " + id + "", null, null, null, null);
-		
+
 		if (c.moveToFirst()) {
 			byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
 			c.close();
@@ -504,20 +503,20 @@ public class ChatStorage {
 	}
 
 	class ChatHelper extends SQLiteOpenHelper {
-	
+
 	    private static final int DATABASE_VERSION = 15;
 	    private static final String DATABASE_NAME = "linphone-android";
-	    
+
 	    ChatHelper(Context context) {
 	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	    }
-	
+
 	    @Override
 	    public void onCreate(SQLiteDatabase db) {
 	        db.execSQL("CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, localContact TEXT NOT NULL, remoteContact TEXT NOT NULL, direction INTEGER, message TEXT, image BLOB, url TEXT, time NUMERIC, read INTEGER, status INTEGER);");
 	        db.execSQL("CREATE TABLE " + DRAFT_TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT, remoteContact TEXT NOT NULL, message TEXT);");
 	    }
-	
+
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");

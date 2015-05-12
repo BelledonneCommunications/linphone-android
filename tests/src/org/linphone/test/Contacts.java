@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.linphone.ContactsFragment;
 import org.linphone.LinphoneActivity;
+import org.linphone.R;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -34,6 +35,8 @@ public class Contacts extends SampleTest {
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
+		solo.sleep(1000);
+		solo.clickOnText(aContext.getString(R.string.button_ok));
 		
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
@@ -70,6 +73,7 @@ public class Contacts extends SampleTest {
 	@LargeTest
 	public void testDEditContactAddSipAddressAndRemoveNumber() {
 		goToContacts();
+		solo.clickOnText(aContext.getString(org.linphone.R.string.button_all_contacts));
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
@@ -110,6 +114,8 @@ public class Contacts extends SampleTest {
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
+		solo.sleep(1000);
+		solo.clickOnText(aContext.getString(R.string.button_ok));
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 	

@@ -381,8 +381,9 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		back.setVisibility(View.GONE);
 	}
 	
-	public void isAccountVerified() {
+	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
 		launchEchoCancellerCalibration(true);
 	}
 

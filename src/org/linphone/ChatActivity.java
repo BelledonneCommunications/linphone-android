@@ -20,11 +20,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 /**
  * @author Margaux Clerc
  */
 public class ChatActivity extends FragmentActivity {
+	private static final String CHAT_FRAGMENT = "chatFragment";
+	private ChatFragment chatFragment;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +43,17 @@ public class ChatActivity extends FragmentActivity {
 		ChatFragment fragment = new ChatFragment();
 		fragment.setArguments(extras);
 		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "ChatFragment").commit();
+		
+		FragmentManager fm = getSupportFragmentManager();
+		chatFragment = (ChatFragment) fm.findFragmentByTag(CHAT_FRAGMENT);
+
+	    // If the Fragment is non-null, then it is currently being
+	    // retained across a configuration change.
+		if (chatFragment == null) {
+			chatFragment = new ChatFragment();
+			chatFragment.setArguments(extras);
+			fm.beginTransaction().add(R.id.fragmentContainer, chatFragment, CHAT_FRAGMENT).commit();
+	    }
 	}
 }
 

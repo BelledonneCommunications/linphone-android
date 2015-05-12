@@ -25,9 +25,11 @@ To build liblinphone for Android, you must:
 	$ make mediastreamer2-sdk
 7) (Optional) To generate a signed apk to publish on the Google Play, run
 	$ make release
-It will ask you for the version number that will be displayed in the about page of the app.
-Make sure you filled the ant.properties values for key.store and key.alias in order to correctly
-sign the generated apk (it will ask you the password during the process)
+Make sure you filled the ant.properties values for version.name, key.store and key.alias in order to correctly sign the generated apk. 
+You also may want to create a file name ant_password.properties with the following:
+key.store.password=[your_password]
+key.alias.password=[your_password]
+If you don't, the passwords will be asked at the signing phase.
 
 To run the tutorials:
 --------------------

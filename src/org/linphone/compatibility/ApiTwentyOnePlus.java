@@ -50,6 +50,7 @@ public class ApiTwentyOnePlus {
 			.setSmallIcon(R.drawable.chat_icon_over)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
+			.setDefaults(Notification.DEFAULT_ALL)
 			.setLargeIcon(contactIcon)
 			.setCategory(Notification.CATEGORY_MESSAGE)
 			.setVisibility(Notification.VISIBILITY_PRIVATE)
