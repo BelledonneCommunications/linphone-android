@@ -174,15 +174,15 @@ public class BubbleChat {
     	    		bm = BitmapFactory.decodeFile(appData);
     	    		appData = "file://" + appData;
     	    	}
-
-				if (bm.getWidth() > bm.getHeight() && bm.getWidth() > SIZE_MAX) {
-					bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
-				} else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > SIZE_MAX) {
-
-					bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
-				}
     	    	
     	    	if (bm != null) {
+					if (bm.getWidth() > bm.getHeight() && bm.getWidth() > SIZE_MAX) {
+						bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
+					} else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > SIZE_MAX) {
+
+						bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+					}
+
 			    	imageView.setImageBitmap(bm);
 			    	imageView.setTag(appData);
 			    	imageView.setOnClickListener(new OnClickListener() {
