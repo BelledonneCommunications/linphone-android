@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -634,7 +635,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void pickImage() {
 		List<Intent> cameraIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name) + Calendar.getInstance().getTime());
+		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())));
 		imageToUploadUri = Uri.fromFile(file);
 		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
 		cameraIntents.add(captureIntent);
