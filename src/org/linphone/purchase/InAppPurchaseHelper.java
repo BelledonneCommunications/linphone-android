@@ -101,6 +101,12 @@ public class InAppPurchaseHelper {
     public static final String SERVER_ERROR_UID_ALREADY_IN_USE = "ERROR_UID_ALREADY_IN_USE";
     public static final String SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED = "ERROR_SIGNATURE_VERIFICATION_FAILED";
     public static final String SERVER_ERROR_ACCOUNT_ALREADY_EXISTS = "ERROR_ACCOUNT_ALREADY_EXISTS";
+    public static final String SERVER_ERROR_UNKNOWN_ERROR = "ERROR_UNKNOWN_ERROR";
+    
+    public static final String CLIENT_ERROR_SUBSCRIPTION_PURCHASE_NOT_AVAILABLE = "SUBSCRIPTION_PURCHASE_NOT_AVAILABLE";
+    public static final String CLIENT_ERROR_BIND_TO_BILLING_SERVICE_FAILED = "BIND_TO_BILLING_SERVICE_FAILED";
+    public static final String CLIENT_ERROR_BILLING_SERVICE_UNAVAILABLE = "BILLING_SERVICE_UNAVAILABLE";
+    public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
     
 	private Context mContext;
 	private InAppPurchaseListener mListener;
@@ -150,6 +156,7 @@ public class InAppPurchaseHelper {
 		    	   int response = mService.isBillingSupported(API_VERSION, packageName, ITEM_TYPE_SUBS);
 		    	   if (response != RESPONSE_RESULT_OK || mGmailAccount == null) {
 		    		   Log.e("[In-app purchase] Error: Subscriptions aren't supported!");
+		    		   mListener.onError(CLIENT_ERROR_SUBSCRIPTION_PURCHASE_NOT_AVAILABLE);
 		    	   } else {
 				       mListener.onServiceAvailableForQueries();
 		    	   }
@@ -165,9 +172,11 @@ public class InAppPurchaseHelper {
             boolean ok = mContext.bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
             if (!ok) {
             	Log.e("[In-app purchase] Error: Bind service failed");
+    		   mListener.onError(CLIENT_ERROR_BIND_TO_BILLING_SERVICE_FAILED);
             }
         } else {
         	Log.e("[In-app purchase] Error: Billing service unavailable on device.");
+    		mListener.onError(CLIENT_ERROR_BILLING_SERVICE_UNAVAILABLE);
         }
 	}
 	
@@ -205,6 +214,7 @@ public class InAppPurchaseHelper {
 				}
 			} else {
 				Log.e("[In-app purchase] Error: responde code is not ok: " + responseCodeToErrorMessage(response));
+	    		mListener.onError(responseCodeToErrorMessage(response));
 			}
 		}
 		
@@ -259,6 +269,7 @@ public class InAppPurchaseHelper {
     				   		}
         				} else {
         					Log.e("[In-app purchase] Error: responde code is not ok: " + responseCodeToErrorMessage(response));
+        		    		mListener.onError(responseCodeToErrorMessage(response));
         				}
         			}
         		} while (continuationToken != null);
@@ -317,6 +328,7 @@ public class InAppPurchaseHelper {
 				}, purchaseData, signature, username);
 			} else {
 				Log.e("[In-app purchase] Error: resultCode is " + resultCode + " and responseCode is " + responseCodeToErrorMessage(responseCode));
+	    		mListener.onError(responseCodeToErrorMessage(responseCode));
 			}
 		}
 	}
@@ -328,6 +340,7 @@ public class InAppPurchaseHelper {
 		} catch (MalformedURLException e) {
 			Log.e(e);
 			Log.e("[In-app purchase] Can't reach the server !");
+    		mListener.onError(CLIENT_ERROR_SERVER_NOT_REACHABLE);
 		}
 		
 		if (client != null) {
@@ -336,6 +349,7 @@ public class InAppPurchaseHelper {
 				public void onServerError(long id, XMLRPCServerException error) {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
 				}
 				
 				@Override
@@ -348,6 +362,7 @@ public class InAppPurchaseHelper {
 				public void onError(long id, XMLRPCException error) {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
 				}
 			}, "recover_account", mGmailAccount, sipIdentity + "@sip.linphone.org");
 		}
@@ -393,6 +408,7 @@ public class InAppPurchaseHelper {
 					longExpire = Long.parseLong(expire);
 				} catch (NumberFormatException nfe) {
 					Log.e("[In-app purchase] Server failure: " + result);
+		    		mListener.onError(SERVER_ERROR_UNKNOWN_ERROR);
 					return null;
 				}
 				
@@ -419,6 +435,7 @@ public class InAppPurchaseHelper {
 		} catch (MalformedURLException e) {
 			Log.e(e);
 			Log.e("[In-app purchase] Can't reach the server !");
+    		mListener.onError(CLIENT_ERROR_SERVER_NOT_REACHABLE);
 		}
 		
 		if (client != null) {
@@ -427,6 +444,7 @@ public class InAppPurchaseHelper {
 				public void onServerError(long id, XMLRPCServerException error) {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
 				}
 				
 				@Override
@@ -440,6 +458,7 @@ public class InAppPurchaseHelper {
 						} catch (NumberFormatException nfe) {
 							Log.e("[In-app purchase] Server failure: " + result);
 							listener.onParsedAndVerifiedSignatureQueryFinished(null);
+				    		mListener.onError(SERVER_ERROR_UNKNOWN_ERROR);
 							return;
 						}
 
@@ -454,6 +473,7 @@ public class InAppPurchaseHelper {
 						Log.e(e);
 					}
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
 				}
 				
 				@Override

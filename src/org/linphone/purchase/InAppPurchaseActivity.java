@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -134,6 +135,17 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 			@Override
 			public void run() {
 				recoverAccountButton.setEnabled(false);				
+			}
+		});
+	}
+
+	@Override
+	public void onError(final String error) {
+		Log.e(error);
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();	
 			}
 		});
 	}

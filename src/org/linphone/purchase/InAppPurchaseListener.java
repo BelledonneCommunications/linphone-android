@@ -52,4 +52,10 @@ public interface InAppPurchaseListener {
 	 * @param true if the recover has been successful, false otherwise
 	 */
 	void onRecoverAccountSuccessful(boolean success);
+	
+	/**
+	 * Callback called when an error occurred.
+	 * @param error the error that occurred
+	 */
+	void onError(String error);
 }
