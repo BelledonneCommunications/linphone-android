@@ -1286,14 +1286,18 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	@Override
-	public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
-
+	public void uploadProgressIndication(LinphoneCore linphoneCore, int offset, int total) {
+		if(total > 0)
+			Log.d("Log upload progress: currently uploaded = " + offset + " , total = " + total + ", % = " + String.valueOf((offset * 100) / total));
 	}
 
 	@Override
-	public void uploadStateChanged(LinphoneCore lc,
-			LogCollectionUploadState state, String info) {
+	public void uploadStateChanged(LinphoneCore linphoneCore, LogCollectionUploadState state, String info) {
+		Log.d("Log upload state: " + state.toString() + ", info = " + info);
 
+		if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered) {
+			LinphoneActivity.instance().sendLogs(LinphoneService.instance().getApplicationContext(),info);
+		}
 	}
 
 	@Override

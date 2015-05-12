@@ -24,9 +24,12 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -118,7 +121,45 @@ public class Digit extends Button implements AddressAware {
 				if (lBegin >= 0) {
 					mAddress.getEditableText().insert(lBegin,String.valueOf(mKeyCode));
 				}
+
+				if(LinphonePreferences.instance().getDebugPopupAddress() != null
+						&& mAddress.getText().toString().equals(LinphonePreferences.instance().getDebugPopupAddress())){
+					displayDebugPopup();
+				}
 			}
+		}
+
+		public void displayDebugPopup(){
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+			alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
+			if(LinphonePreferences.instance().isDebugLogsEnabled()) {
+				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						if(which == 0){
+							LinphonePreferences.instance().enableDebugLogs(false);
+							LinphoneCoreFactory.instance().enableLogCollection(false);
+						}
+						if(which == 1) {
+							LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+							if (lc != null) {
+								lc.uploadLogCollection();
+							}
+						}
+					}
+				});
+
+			} else {
+				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						if(which == 0) {
+							LinphonePreferences.instance().enableDebugLogs(true);
+							LinphoneCoreFactory.instance().enableLogCollection(true);
+						}
+					}
+				});
+			}
+			alertDialog.show();
+			mAddress.getEditableText().clear();
 		}
 
 		public boolean onTouch(View v, MotionEvent event) {

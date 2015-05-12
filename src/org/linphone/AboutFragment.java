@@ -19,11 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.LogCollectionUploadState;
-import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
-import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,7 +38,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	View exitButton = null;
 	View sendLogButton = null;
 	View resetLogButton = null;
-	private LinphoneCoreListenerBase mListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,39 +65,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		exitButton = view.findViewById(R.id.exit);
 		exitButton.setOnClickListener(this);
 		exitButton.setVisibility(View.VISIBLE);
-		
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			mListener = new LinphoneCoreListenerBase(){
-				@Override
-				public void uploadProgressIndication(LinphoneCore linphoneCore, int offset, int total) {
-					if(total > 0)
-						Log.d("Log upload progress: currently uploaded = " + offset + " , total = " + total + ", % = " + String.valueOf((offset * 100) / total));
-				}
-
-				@Override
-				public void uploadStateChanged(LinphoneCore linphoneCore, LogCollectionUploadState state, String info) {
-					Log.d("Log upload state: " + state.toString() + ", info = " + info);
-					
-					if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered) {
-						final String appName = getString(R.string.app_name);
-			        	
-			            Intent i = new Intent(Intent.ACTION_SEND);
-			            i.putExtra(Intent.EXTRA_EMAIL, new String[]{ getString(R.string.about_bugreport_email) });
-			            i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-			            i.putExtra(Intent.EXTRA_TEXT, info);
-			            i.setType("application/zip");
-			            
-			            try {
-			                startActivity(Intent.createChooser(i, "Send mail..."));
-			            } catch (android.content.ActivityNotFoundException ex) {
-			            	Log.e(ex);
-			            }
-					}
-				}
-			};
-			lc.addListener(mListener);
-		}
 
 		return view;
 	}
@@ -141,11 +104,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	
 	@Override
 	public void onDestroy() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.removeListener(mListener);
-		}
-		
 		super.onDestroy();
 	}
 
