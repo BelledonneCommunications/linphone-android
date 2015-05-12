@@ -22,9 +22,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.security.Timestamp;
+import android.graphics.Matrix;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -43,6 +42,8 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
+
+import android.media.ExifInterface;
 import android.support.v4.content.CursorLoader;
 
 import android.annotation.SuppressLint;
@@ -556,6 +557,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			} else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > SIZE_MAX) {
 
 				bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+			}
+
+			// Rotate the bitmap if possible/needed, using EXIF data
+			Log.w(path);
+			try {
+				if (path != null) {
+					ExifInterface exif = new ExifInterface(path);
+					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+					Matrix matrix = new Matrix();
+					if (pictureOrientation == 6) {
+						matrix.postRotate(90);
+					} else if (pictureOrientation == 3) {
+						matrix.postRotate(180);
+					} else if (pictureOrientation == 8) {
+						matrix.postRotate(270);
+					}
+					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
