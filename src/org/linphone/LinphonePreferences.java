@@ -1151,4 +1151,16 @@ public class LinphonePreferences {
 	public boolean isContactsMigrationDone(){
 		return getConfig().getBool("app", "contacts_migration_done",false);
 	}
+
+	public String getDebugPopupAddress(){
+		return getConfig().getString("app", "debug_popup_magic", null);
+	}
+
+	public void enableDebugLogs(Boolean debugMode){
+		getConfig().setBool("app", "debug_logs_enabled", debugMode);
+	}
+
+	public Boolean isDebugLogsEnabled(){
+		return getConfig().getBool("app", "debug_logs_enabled", false);
+	}
 }
