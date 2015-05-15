@@ -552,10 +552,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		protected byte[] doInBackground(Bitmap... params) {
 			Bitmap bm = params[0];
 
-			if (bm.getWidth() > bm.getHeight() && bm.getWidth() > SIZE_MAX) {
+			if (bm.getWidth() >= bm.getHeight() && bm.getWidth() > SIZE_MAX) {
 				bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
-			} else if (bm.getHeight() > bm.getWidth() && bm.getHeight() > SIZE_MAX) {
-
+			} else if (bm.getHeight() >= bm.getWidth() && bm.getHeight() > SIZE_MAX) {
 				bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
 			}
 
@@ -762,8 +761,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (mUploadingImageStream != null && size > 0) {
 			byte[] data = new byte[size];
 			int read = mUploadingImageStream.read(data, 0, size);
-			bufferToFill.setContent(data);
-			bufferToFill.setSize(read);
+			if (read > 0) {
+				bufferToFill.setContent(data);
+				bufferToFill.setSize(read);
+			} else {
+				Log.e("Error, upload task asking for more bytes(" + size + ") than available (" + mUploadingImageStream.available() + ")");
+			}
 		}
 	}
 
