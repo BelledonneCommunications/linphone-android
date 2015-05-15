@@ -283,7 +283,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			topBar.setVisibility(View.GONE);
 		}
 		contactPicture.setVisibility(View.GONE);
-		scrollToEnd();
+		//scrollToEnd();
 	}
 
 	public void hideKeyboardVisibleMode() {
@@ -292,7 +292,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.VISIBLE);
 		}
-		scrollToEnd();
+		//scrollToEnd();
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
