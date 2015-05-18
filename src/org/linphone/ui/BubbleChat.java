@@ -39,6 +39,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -343,7 +344,7 @@ public class BubbleChat {
 	    	
 	    	if (path.startsWith("content")) {
 	    		try {
-					bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));
+	    			bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));
 				} catch (FileNotFoundException e) {
 					Log.e(e);
 				} catch (IOException e) {
@@ -356,9 +357,9 @@ public class BubbleChat {
 	    	
 	    	if (bm != null) {
 	    		if (bm.getWidth() >= bm.getHeight() && bm.getWidth() > SIZE_MAX) {
-					bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
+					bm = ThumbnailUtils.extractThumbnail(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth());
 				} else if (bm.getHeight() >= bm.getWidth() && bm.getHeight() > SIZE_MAX) {
-					bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+					bm = ThumbnailUtils.extractThumbnail(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX);
 				}
 	    	}
 	    	return bm;
