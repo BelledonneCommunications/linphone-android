@@ -210,7 +210,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
 					invalidate();
-					scrollToEnd();
 				}
 			}
 			
@@ -507,9 +506,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			invalidate();
-
 			Log.i("Sent message current status: " + message.getStatus());
-			scrollToEnd();
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
@@ -618,6 +615,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void invalidate() {
 		adapter.refreshHistory();
 		adapter.notifyDataSetChanged();
+		chatRoom.markAsRead();
 	}
 
 	private void resendMessage(int id) {
@@ -633,11 +631,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		} else {
 			sendImageMessage(message.getAppData());
 		}
-	}
-
-	private void scrollToEnd() {
-		messagesList.smoothScrollToPosition(messagesList.getCount());
-		chatRoom.markAsRead();
 	}
 
 	private void copyTextMessageToClipboard(int id) {

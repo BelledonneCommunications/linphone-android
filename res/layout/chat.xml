@@ -187,6 +187,7 @@
 		android:layout_height="match_parent"
 		android:divider="@android:color/transparent"
 		android:stackFromBottom="true"
+		android:transcriptMode="alwaysScroll"
 		android:cacheColorHint="@color/transparent"
 		android:dividerHeight="1dp"
 		android:layout_above="@id/remoteComposing"
