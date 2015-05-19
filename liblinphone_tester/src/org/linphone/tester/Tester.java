@@ -40,6 +40,8 @@ public class Tester {
 			//Main library
 			try {
 				System.loadLibrary("linphone-" + abi);
+				System.loadLibrary("linphone_tester-" + abi);
+				
 				Log.i("LinphoneCoreFactoryImpl","Loading done with " + abi);
 				libLoaded=true;
 				break;

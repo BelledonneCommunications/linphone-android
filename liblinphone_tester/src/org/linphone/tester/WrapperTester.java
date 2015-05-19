@@ -1,5 +1,6 @@
 package org.linphone.tester;
 
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
@@ -19,6 +20,7 @@ public class WrapperTester extends AndroidTestCase {
 	LinphoneCore mCore;
 	@Override
 	protected void runTest() throws Throwable {
+		//multicast begin
 		mCore.enableAudioMulticast(true);
 		Assert.assertEquals(true, mCore.audioMulticastEnabled());
 		mCore.enableAudioMulticast(false);
@@ -28,6 +30,18 @@ public class WrapperTester extends AndroidTestCase {
 		Assert.assertEquals(true, mCore.videoMulticastEnabled());
 		mCore.enableVideoMulticast(false);
 		Assert.assertEquals(false, mCore.videoMulticastEnabled());
+		
+		LinphoneCallParams params = mCore.createDefaultCallParameters();
+		params.enableAudioMulticast(true);
+		Assert.assertEquals(true, params.audioMulticastEnabled());
+		params.enableAudioMulticast(false);
+		Assert.assertEquals(false, params.audioMulticastEnabled());
+		
+		params.enableVideoMulticast(true);
+		Assert.assertEquals(true, params.videoMulticastEnabled());
+		params.enableVideoMulticast(false);
+		Assert.assertEquals(false, params.videoMulticastEnabled());
+		
 		
 		String ip = "224.3.2.1";
 		mCore.setAudioMulticastAddr(ip);
@@ -42,7 +56,8 @@ public class WrapperTester extends AndroidTestCase {
 		
 		mCore.setVideoMulticastTtl(4);
 		Assert.assertEquals(4, mCore.getVideoMulticastTtl());
-
+		//multicast end
+		
 		//Test setPrimaryContact
 		String address = "Linphone Android <sip:linphone.android@unknown-host>";
 		mCore.setPrimaryContact(address);

@@ -22,9 +22,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.security.Timestamp;
+import android.graphics.Matrix;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -43,6 +42,8 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
+
+import android.media.ExifInterface;
 import android.support.v4.content.CursorLoader;
 
 import android.annotation.SuppressLint;
@@ -209,7 +210,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
 					invalidate();
-					scrollToEnd();
 				}
 			}
 			
@@ -282,7 +282,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			topBar.setVisibility(View.GONE);
 		}
 		contactPicture.setVisibility(View.GONE);
-		scrollToEnd();
+		//scrollToEnd();
 	}
 
 	public void hideKeyboardVisibleMode() {
@@ -291,7 +291,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.VISIBLE);
 		}
-		scrollToEnd();
+		//scrollToEnd();
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
@@ -506,9 +506,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			invalidate();
-
 			Log.i("Sent message current status: " + message.getStatus());
-			scrollToEnd();
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
@@ -557,6 +555,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
 			}
 
+			// Rotate the bitmap if possible/needed, using EXIF data
+			Log.w(path);
+			try {
+				if (path != null) {
+					ExifInterface exif = new ExifInterface(path);
+					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+					Matrix matrix = new Matrix();
+					if (pictureOrientation == 6) {
+						matrix.postRotate(90);
+					} else if (pictureOrientation == 3) {
+						matrix.postRotate(180);
+					} else if (pictureOrientation == 8) {
+						matrix.postRotate(270);
+					}
+					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
 			byte[] byteArray = stream.toByteArray();
@@ -597,6 +615,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void invalidate() {
 		adapter.refreshHistory();
 		adapter.notifyDataSetChanged();
+		chatRoom.markAsRead();
 	}
 
 	private void resendMessage(int id) {
@@ -612,11 +631,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		} else {
 			sendImageMessage(message.getAppData());
 		}
-	}
-
-	private void scrollToEnd() {
-		messagesList.smoothScrollToPosition(messagesList.getCount());
-		chatRoom.markAsRead();
 	}
 
 	private void copyTextMessageToClipboard(int id) {
