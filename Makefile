@@ -474,7 +474,7 @@ release: update-project
 	patch -p1 < release.patch
 	cat ant.properties | grep version.name > default.properties
 	$(ANT) release
-	git checkout HEAD AndroidManifest.xml
+	patch -Rp1 < release.patch
 
 run-linphone:
 	ant run
