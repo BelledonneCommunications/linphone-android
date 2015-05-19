@@ -333,7 +333,7 @@ public class InAppPurchaseHelper {
 		}
 	}
 	
-	public void recoverAccount(String productId, String sipIdentity) {
+	public void recoverAccount(String productId, String sipUsername) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -364,7 +364,7 @@ public class InAppPurchaseHelper {
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
 				}
-			}, "recover_account", mGmailAccount, sipIdentity + "@sip.linphone.org");
+			}, "recover_account", mGmailAccount, sipUsername);
 		}
 	}
 	
@@ -481,7 +481,7 @@ public class InAppPurchaseHelper {
 					Log.e(error);
 					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
 				}
-			}, "create_account_from_in_app_purchase", mGmailAccount, username + "@sip.linphone.org", purchasedData, signature, "google", mGmailAccount);
+			}, "create_account_from_in_app_purchase", mGmailAccount, username, purchasedData, signature, "google", mGmailAccount);
 		}
 	}
 	
