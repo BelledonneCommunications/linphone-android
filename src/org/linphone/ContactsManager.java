@@ -83,9 +83,13 @@ public class ContactsManager {
 		return isContactPresenceDisabled;
 	}
 
-	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
+	public void initializeContactManager(Context context, ContentResolver contentResolver){
 		this.context = context;
 		this.contentResolver = contentResolver;
+	}
+
+	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
+		initializeContactManager(context,contentResolver);
 		Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type));
 		AccountManager accountManager = (AccountManager) context.getSystemService(context.ACCOUNT_SERVICE);
 		accountManager.addAccountExplicitly(newAccount, null, null);
@@ -342,7 +346,8 @@ public class ContactsManager {
 		if (sipUri.startsWith("sip:"))
 			sipUri = sipUri.substring(4);
 
-		if(LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if(lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
 			for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 				if (friend.getAddress().equals(address)) {
 					return getContact(friend.getRefKey(), contentResolver);
@@ -522,7 +527,7 @@ public class ContactsManager {
 		Thread sipContactsHandler = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if(sipContactCursor.getCount() > 0) {
+				if(sipContactCursor != null && sipContactCursor.getCount() > 0) {
 					for (int i = 0; i < sipContactCursor.getCount(); i++) {
 						Contact contact = Compatibility.getContact(contentResolver, sipContactCursor, i);
 						if (contact == null)

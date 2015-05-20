@@ -202,7 +202,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		contactsList.setVisibility(View.VISIBLE);
 		
 		if (onlyDisplayLinphoneContacts) {
-			if (sipContactsCursor.getCount() == 0) {
+			if (sipContactsCursor != null && sipContactsCursor.getCount() == 0) {
 				noSipContact.setVisibility(View.VISIBLE);
 				contactsList.setVisibility(View.GONE);
 			} else {
@@ -210,7 +210,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 				contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts(), sipContactsCursor));
 			}
 		} else {
-			if (allContactsCursor.getCount() == 0) {
+			if (allContactsCursor != null && allContactsCursor.getCount() == 0) {
 				noContact.setVisibility(View.VISIBLE);
 				contactsList.setVisibility(View.GONE);
 			} else {

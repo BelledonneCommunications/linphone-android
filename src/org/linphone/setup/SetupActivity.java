@@ -305,6 +305,14 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		if (accountCreated)
 			return;
 
+		if(username.startsWith("sip:")) {
+			username = username.substring(4);
+		}
+
+		if(domain.startsWith("sip:")) {
+			domain = domain.substring(4);
+		}
+
 		String identity = "sip:" + username + "@" + domain;
 		try {
 			address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
