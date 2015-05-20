@@ -19,6 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.util.ArrayList;
+
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
@@ -1154,6 +1156,19 @@ public class LinphonePreferences {
 	
 	public String getInAppPurchaseValidatingServerUrl() {
 		return getConfig().getString("in-app-purchase", "server_url", null);
+	}
+	
+	public ArrayList<String> getInAppPurchasables() {
+		ArrayList<String>  purchasables = new ArrayList<String>();
+		String list = getConfig().getString("in-app-purchase", "purchasable_items_ids", null);
+		if (list != null) {
+			for(String purchasable : list.split(";")) {
+				if (purchasable.length() > 0) {
+					purchasables.add(purchasable);
+				}
+			}
+		}
+		return purchasables;
 	}
 
 	public String getDebugPopupAddress(){

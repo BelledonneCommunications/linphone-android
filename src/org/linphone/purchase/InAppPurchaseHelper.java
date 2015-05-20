@@ -55,7 +55,6 @@ import de.timroes.axmlrpc.XMLRPCServerException;
  */
 public class InAppPurchaseHelper {
 	public static final int API_VERSION = 3;
-	public static final String TEST_ITEM = "test_account_subscription";
 	public static final int ACTIVITY_RESULT_CODE_PURCHASE_ITEM = 11089;
 	
     public static final String SKU_DETAILS_ITEM_LIST = "ITEM_ID_LIST";
@@ -182,8 +181,7 @@ public class InAppPurchaseHelper {
 	
 	private ArrayList<Purchasable> getAvailableItemsForPurchase() {
 		ArrayList<Purchasable> products = new ArrayList<Purchasable>();
-		ArrayList<String> skuList = new ArrayList<String> ();
-		skuList.add(TEST_ITEM);
+		ArrayList<String> skuList = LinphonePreferences.instance().getInAppPurchasables();
 		Bundle querySkus = new Bundle();
 		querySkus.putStringArrayList(SKU_DETAILS_ITEM_LIST, skuList);
 		
