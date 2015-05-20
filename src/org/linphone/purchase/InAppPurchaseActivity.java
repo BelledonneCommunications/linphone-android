@@ -118,7 +118,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	public void onClick(View v) {
 		Purchasable item = (Purchasable) v.getTag();
 		if (v.equals(recoverAccountButton)) {
-			inAppPurchaseHelper.recoverAccount(getUsername());
+			inAppPurchaseHelper.recoverAccount(getUsername(), item.getPayload(), item.getPayloadSignature());
 		} else {
 			inAppPurchaseHelper.purchaseItemAsync(item.getId(), getUsername());
 		}
@@ -137,6 +137,11 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 				recoverAccountButton.setEnabled(false);				
 			}
 		});
+	}
+
+	@Override
+	public void onActivateAccountSuccessful(boolean success) {
+		
 	}
 
 	@Override
