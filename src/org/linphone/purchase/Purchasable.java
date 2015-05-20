@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public class Purchasable {
 	private String id, title, description, price;
 	private long expire;
+	private String purchasePayload, purchasePayloadSignature; 
 
 	public Purchasable(String id) {
 		this.id = id;
@@ -78,5 +79,19 @@ public class Purchasable {
 	public Purchasable setExpire(long expire) {
 		this.expire = expire;
 		return this;
+	}
+	
+	public Purchasable setPayloadAndSignature(String payload, String signature) {
+		this.purchasePayload = payload;
+		this.purchasePayloadSignature = signature;
+		return this;
+	}
+	
+	public String getPayload() {
+		return this.purchasePayload;
+	}
+	
+	public String getPayloadSignature() {
+		return this.purchasePayloadSignature;
 	}
 }

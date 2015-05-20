@@ -49,9 +49,15 @@ public interface InAppPurchaseListener {
 
 	/**
 	 * Callback called when the account has been recovered (or not)
-	 * @param true if the recover has been successful, false otherwise
+	 * @param success true if the recover has been successful, false otherwise
 	 */
 	void onRecoverAccountSuccessful(boolean success);
+	
+	/**
+	 * Callback called when the account has been activated (or not)
+	 * @param success true if the activation has been successful, false otherwise
+	 */
+	void onActivateAccountSuccessful(boolean success);
 	
 	/**
 	 * Callback called when an error occurred.

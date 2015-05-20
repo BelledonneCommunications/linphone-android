@@ -333,7 +333,7 @@ public class InAppPurchaseHelper {
 		}
 	}
 	
-	public void recoverAccount(String productId, String sipUsername) {
+	public void recoverAccount(String sipUsername) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -354,7 +354,7 @@ public class InAppPurchaseHelper {
 				
 				@Override
 				public void onResponse(long id, Object result) {
-					Log.d("[In-app purchase] Server result is " + result);
+					Log.d("[In-app purchase] recoverAccount server result is " + result);
 					mListener.onRecoverAccountSuccessful(result.equals("OK"));
 				}
 				
@@ -365,6 +365,41 @@ public class InAppPurchaseHelper {
 		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
 				}
 			}, "recover_account", mGmailAccount, sipUsername);
+		}
+	}
+	
+	public void activateAccount(String sipUsername, String purchasedData, String signature) {
+		XMLRPCClient client = null;
+		try {
+			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
+		} catch (MalformedURLException e) {
+			Log.e(e);
+			Log.e("[In-app purchase] Can't reach the server !");
+    		mListener.onError(CLIENT_ERROR_SERVER_NOT_REACHABLE);
+		}
+		
+		if (client != null) {
+			client.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
+				}
+				
+				@Override
+				public void onResponse(long id, Object result) {
+					Log.d("[In-app purchase] activateAccount server result is " + result);
+					mListener.onActivateAccountSuccessful(result.equals("OK"));
+				}
+				
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					Log.e("[In-app purchase] Server can't validate the payload and it's signature !");
+		    		mListener.onError(SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED);
+				}
+			}, "activate_account", mGmailAccount, sipUsername, purchasedData, signature, "google");
 		}
 	}
 	
@@ -416,6 +451,7 @@ public class InAppPurchaseHelper {
 				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 				Purchasable item = new Purchasable(productId); 
 				item.setExpire(longExpire);
+				item.setPayloadAndSignature(purchasedData, signature);
 				//TODO parse JSON result to get the purchasable in it
 				return item;
 			} catch (XMLRPCException e) {
@@ -428,7 +464,7 @@ public class InAppPurchaseHelper {
 		return null;
 	}
 	
-	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, String signature, String username) {
+	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, final String signature, String username) {
 		XMLRPCClient client = null;
 		try {
 			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -466,6 +502,7 @@ public class InAppPurchaseHelper {
 						String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
 						Purchasable item = new Purchasable(productId); 
 						item.setExpire(longExpire);
+						item.setPayloadAndSignature(purchasedData, signature);
 						//TODO parse JSON result to get the purchasable in it
 				    	listener.onParsedAndVerifiedSignatureQueryFinished(item);
 				    	return;
