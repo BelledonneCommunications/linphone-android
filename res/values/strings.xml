@@ -313,7 +313,6 @@
   <string name="button_ok">Okay</string>
   <string name="button_back">Back</string>
   <string name="button_all_contacts">All</string>
-  <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">New contact</string>
   <string name="button_all_call">All</string>
   <string name="button_missed_call">Missed</string>
@@ -346,7 +345,7 @@
   <string name="image_not_saved">Error, image not saved</string>
   <string name="pref_linphone_friend_title">Friends</string>
   <string name="pref_auto_accept_friends_title">New friends</string>
-  <string name="pref_auto_accept_friends_desc">utomatically accept new friend requests</string>
+  <string name="pref_auto_accept_friends_desc">Automatically accept new friend requests</string>
   <string name="linphone_friend_new_request_title">Friend request</string>
   <string name="linphone_friend_new_request_desc">wants to share it\'s presence status with you and be aware of yours.</string>
   <string name="setup_ec_calibration">Echo canceller calibration in progress</string>

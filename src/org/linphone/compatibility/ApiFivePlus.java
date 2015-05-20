@@ -209,30 +209,34 @@ public class ApiFivePlus {
 
 	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
 		try {
-			cursor.moveToFirst();
-			boolean success = cursor.move(position);
-			if (!success)
-				return null;
-			
-			String id = cursor.getString(cursor.getColumnIndex(Data.CONTACT_ID));
-	    	String name = getContactDisplayName(cursor);
-	        Uri thumbnail = getContactPictureUri(id);
-			Uri photo = getContactPhotoUri(id);
-	        InputStream input = getContactPictureInputStream(cr, id);
+			if(cursor != null) {
+				cursor.moveToFirst();
+				boolean success = cursor.move(position);
+				if (!success)
+					return null;
 
-	        Contact contact;
-	        if (input == null) {
-	        	contact = new Contact(id, name);
-	        }
-	        else {
-	        	Bitmap bm = null;
-	        	try {
-	        		bm = BitmapFactory.decodeStream(input);
-	        	} catch (OutOfMemoryError oome) {}
-	        	contact = new Contact(id, name, photo, thumbnail, bm);
-	        }
-	        
-	        return contact;
+				String id = cursor.getString(cursor.getColumnIndex(Data.CONTACT_ID));
+				String name = getContactDisplayName(cursor);
+				Uri thumbnail = getContactPictureUri(id);
+				Uri photo = getContactPhotoUri(id);
+				InputStream input = getContactPictureInputStream(cr, id);
+
+				Contact contact;
+				if (input == null) {
+					contact = new Contact(id, name);
+				} else {
+					Bitmap bm = null;
+					try {
+						bm = BitmapFactory.decodeStream(input);
+					} catch (OutOfMemoryError oome) {
+					}
+					contact = new Contact(id, name, photo, thumbnail, bm);
+				}
+
+				return contact;
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
 			
 		}
