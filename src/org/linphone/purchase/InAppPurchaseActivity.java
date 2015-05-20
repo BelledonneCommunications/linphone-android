@@ -118,7 +118,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	public void onClick(View v) {
 		Purchasable item = (Purchasable) v.getTag();
 		if (v.equals(recoverAccountButton)) {
-			inAppPurchaseHelper.recoverAccount(item.getId(), getUsername());
+			inAppPurchaseHelper.recoverAccount(getUsername());
 		} else {
 			inAppPurchaseHelper.purchaseItemAsync(item.getId(), getUsername());
 		}
@@ -148,6 +148,13 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 				Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();	
 			}
 		});
+	}
+
+	@Override
+	public void onActivateAccountSuccessful(boolean success) {
+		if (success) {
+			Log.d("[In-app purchase] Account activated");
+		}
 	}
 	
 	private void displayBuySubscriptionButton(Purchasable item) {
