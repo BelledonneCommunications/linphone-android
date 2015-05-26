@@ -25,6 +25,7 @@ public class Tester {
 	}
 	
 	static	{
+		System.loadLibrary("cunit");
 		List<String> cpuabis=Version.getCpuAbis();
 		String ffmpegAbi;
 		boolean libLoaded=false;
