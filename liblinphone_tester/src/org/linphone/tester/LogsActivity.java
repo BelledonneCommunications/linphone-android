@@ -29,6 +29,7 @@ public class LogsActivity extends Activity {
 			list.addAll(Arrays.asList(mArgs));
 			String[] array = list.toArray(new String[list.size()]);
 			tester.run(array);
+			Tester.clearAccounts();
 			mLogsActivity.runOnUiThread(new Runnable() {
     			public void run() {
     				mLogsActivity.done();
