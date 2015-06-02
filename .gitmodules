@@ -33,7 +33,7 @@
 	url = git://git.linphone.org/msamr
 [submodule "submodules/externals/libvpx"]
 	path = submodules/externals/libvpx
-	url = http://git.chromium.org/webm/libvpx.git
+	url = https://chromium.googlesource.com/webm/libvpx
 	ignore = dirty
 [submodule "submodules/bzrtp"]
 	path = submodules/bzrtp
