@@ -42,6 +42,7 @@
 				<resourcecontains resource="${output.file}" substring="Native crash" />
 				<resourcecontains resource="${output.file}" substring="longMsg=junit.framework.AssertionFailedError: View with id: '" />
 				<resourcecontains resource="${output.file}" substring="longMsg=java.lang.RuntimeException:" />
+				<resourcecontains resource="${output.file}" substring="longMsg=java.lang.NullPointerException:" />
 			</or>
 		</condition>
 		<exec executable="bash" unless:set="has.crashed">

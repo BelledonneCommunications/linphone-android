@@ -268,14 +268,15 @@ public class ApiFivePlus {
 		String sipUri = username + "@" + domain;
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
-		Contact contact = getContact(cr, cursor, 0);
-		if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
-			address.setDisplayName(contact.getName());
+		if(cursor != null) {
+			Contact contact = getContact(cr, cursor, 0);
+			if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
+				address.setDisplayName(contact.getName());
+				cursor.close();
+				return contact.getPhotoUri();
+			}
 			cursor.close();
-			return contact.getPhotoUri();
 		}
-
-		cursor.close();
 		return null;
 	}
 
@@ -286,8 +287,6 @@ public class ApiFivePlus {
 			cursor.close();
 			return contactDisplayName;
 		}
-		
-		cursor.close();
 		return null;
 	}
 	
