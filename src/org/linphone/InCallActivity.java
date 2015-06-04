@@ -266,7 +266,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
         		switchCamera.setVisibility(View.INVISIBLE);
             }
 
-			if(!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()){
+			if(BluetoothManager.getInstance().isBluetoothHeadsetAvailable()){
 				BluetoothManager.getInstance().routeAudioToBluetooth();
 			}
 
