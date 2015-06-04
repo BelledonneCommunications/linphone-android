@@ -18,8 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -46,9 +44,6 @@ import android.os.RemoteException;
 import android.util.Patterns;
 
 import com.android.vending.billing.IInAppBillingService;
-
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
 
 /**
  * @author Sylvain Berfini
@@ -94,18 +89,9 @@ public class InAppPurchaseHelper {
     public static final String PURCHASE_DETAILS_PAYLOAD = "developerPayload";
     public static final String PURCHASE_DETAILS_PURCHASE_TOKEN = "purchaseToken";
     
-    public static final String SERVER_ERROR_INVALID_ACCOUNT = "ERROR_INVALID_ACCOUNT";
-    public static final String SERVER_ERROR_PURCHASE_CANCELLED = "ERROR_PURCHASE_CANCELLED";
-    public static final String SERVER_ERROR_RECEIPT_PARSING_FAILED = "ERROR_RECEIPT_PARSING_FAILED";
-    public static final String SERVER_ERROR_UID_ALREADY_IN_USE = "ERROR_UID_ALREADY_IN_USE";
-    public static final String SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED = "ERROR_SIGNATURE_VERIFICATION_FAILED";
-    public static final String SERVER_ERROR_ACCOUNT_ALREADY_EXISTS = "ERROR_ACCOUNT_ALREADY_EXISTS";
-    public static final String SERVER_ERROR_UNKNOWN_ERROR = "ERROR_UNKNOWN_ERROR";
-    
     public static final String CLIENT_ERROR_SUBSCRIPTION_PURCHASE_NOT_AVAILABLE = "SUBSCRIPTION_PURCHASE_NOT_AVAILABLE";
     public static final String CLIENT_ERROR_BIND_TO_BILLING_SERVICE_FAILED = "BIND_TO_BILLING_SERVICE_FAILED";
     public static final String CLIENT_ERROR_BILLING_SERVICE_UNAVAILABLE = "BILLING_SERVICE_UNAVAILABLE";
-    public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
     
 	private Context mContext;
 	private InAppPurchaseListener mListener;
@@ -374,43 +360,30 @@ public class InAppPurchaseHelper {
 	}
 	
 	private Purchasable verifySignatureAndGetExpire(String purchasedData, String signature) {
-		XMLRPCClient client = null;
+		XmlRpcHelper helper = new XmlRpcHelper();
+		Object result = helper.getAccountExpire(mGmailAccount, purchasedData, signature);
+		long longExpire = -1;
+		String expire = (String)result;
+				
 		try {
-			client = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
-		} catch (MalformedURLException e) {
+			longExpire = Long.parseLong(expire);
+		} catch (NumberFormatException nfe) {
+			Log.e("[In-app purchase] Server failure: " + result);
+    		mListener.onError(expire);
+			return null;
+		}
+		
+		try {
+			JSONObject json = new JSONObject(purchasedData);
+			String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
+			Purchasable item = new Purchasable(productId); 
+			item.setExpire(longExpire);
+			item.setPayloadAndSignature(purchasedData, signature);
+			//TODO parse JSON result to get the purchasable in it
+			return item;
+		} catch (JSONException e) {
 			Log.e(e);
 		}
-		
-		if (client != null) {
-			try {
-				Object result = client.call("get_expiration_date", mGmailAccount, purchasedData, signature, "google");
-				Log.e(purchasedData);
-				Log.e(signature);
-				long longExpire = -1;
-				String expire = (String)result;
-				
-				try {
-					longExpire = Long.parseLong(expire);
-				} catch (NumberFormatException nfe) {
-					Log.e("[In-app purchase] Server failure: " + result);
-		    		mListener.onError(SERVER_ERROR_UNKNOWN_ERROR);
-					return null;
-				}
-				
-				JSONObject json = new JSONObject(purchasedData);
-				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
-				Purchasable item = new Purchasable(productId); 
-				item.setExpire(longExpire);
-				item.setPayloadAndSignature(purchasedData, signature);
-				//TODO parse JSON result to get the purchasable in it
-				return item;
-			} catch (XMLRPCException e) {
-				Log.e(e);
-			} catch (JSONException e) {
-				Log.e(e);
-			}
-		}
-		
 		return null;
 	}
 	
@@ -428,7 +401,7 @@ public class InAppPurchaseHelper {
 					} catch (NumberFormatException nfe) {
 						Log.e("[In-app purchase] Server failure: " + result);
 						listener.onParsedAndVerifiedSignatureQueryFinished(null);
-			    		mListener.onError(SERVER_ERROR_UNKNOWN_ERROR);
+			    		mListener.onError(result);
 						return;
 					}
 

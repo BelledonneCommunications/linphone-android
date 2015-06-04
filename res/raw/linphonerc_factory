@@ -33,5 +33,5 @@ log_collection_upload_server_url=https://www.linphone.org:444/lft.php
 user_certificates_path=/data/data/org.linphone/files
 
 [in-app-purchase]
-server_url=https://www.linphone.org/inapp.php
+server_url=https://www.linphone.org/xmlrpc.php
 purchasable_items_ids=test_account_subscription
