@@ -140,11 +140,6 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	}
 
 	@Override
-	public void onActivateAccountSuccessful(boolean success) {
-		
-	}
-
-	@Override
 	public void onError(final String error) {
 		Log.e(error);
 		mHandler.post(new Runnable() {
