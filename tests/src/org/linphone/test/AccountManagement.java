@@ -6,7 +6,6 @@ import org.linphone.FragmentsAvailable;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 
 import android.test.suitebuilder.annotation.LargeTest;
@@ -33,7 +32,7 @@ public class AccountManagement extends SampleTest {
 		waitForRegistration(proxyConfig);
 		Assert.assertEquals(proxyConfigs.length, 2);
 		proxyConfig = proxyConfigs[1];
-		Assert.assertEquals(RegistrationState.RegistrationOk, proxyConfig.getState());
+		waitForRegistration(proxyConfig);
 		Assert.assertTrue(proxyConfig.getIdentity(), proxyConfig.getIdentity().contains("new"));
 	}
 

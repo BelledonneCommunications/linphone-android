@@ -2,8 +2,6 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.core.LinphoneCore.RegistrationState;
-
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -21,6 +19,6 @@ public class AinitTestEnv extends SampleTest {
 		
 		solo.sleep(5000);
 		Assert.assertEquals(1, LinphoneTestManager.getLc().getProxyConfigList().length);
-		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc().getProxyConfigList()[0].getState());
+		waitForRegistration(LinphoneTestManager.getLc().getProxyConfigList()[0]);
 	}
 }

@@ -2,6 +2,8 @@ package org.linphone.test;
 
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -9,6 +11,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ListView;
+import java.util.List;
 
 import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
@@ -54,11 +57,42 @@ public abstract class SampleTest extends ActivityInstrumentationTestCase2<Linpho
 	}
 	
 	protected void waitForRegistration(final LinphoneProxyConfig lpc) {
+		if(lpc == null) return;
 		solo.waitForCondition(new Condition() {
-		   @Override
-		   public boolean isSatisfied() {
-		       return RegistrationState.RegistrationOk == lpc.getState();
-		   }
-		},30000);
+			@Override
+			public boolean isSatisfied() {
+				return RegistrationState.RegistrationOk == lpc.getState();
+			}
+		}, 30000);
+	}
+
+	protected void waitForCallPaused(final LinphoneCall call) {
+		if(call == null) return;
+			solo.waitForCondition(new Condition() {
+				@Override
+				public boolean isSatisfied() {
+					return call.getState().equals(State.Paused) || call.getState().equals(State.Pausing);
+				}
+			}, 30000);
+	}
+
+	protected void waitForCallResumed(final LinphoneCall call) {
+		if(call == null) return;
+			solo.waitForCondition(new Condition() {
+				@Override
+				public boolean isSatisfied() {
+					return call.getState().equals(State.Resuming) || call.getState().equals(State.StreamsRunning);
+				}
+			}, 30000);
+	}
+
+	protected void waitForCallState(final LinphoneCall call, final State state) {
+		if(call == null) return;
+			solo.waitForCondition(new Condition() {
+				@Override
+				public boolean isSatisfied() {
+					return state.equals(call.getState());
+				}
+			}, 30000);
 	}
 }
