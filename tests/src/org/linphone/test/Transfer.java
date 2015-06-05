@@ -53,6 +53,6 @@ public class Transfer extends SampleTest {
 			Log.w("Call in progress but not running, retry = " + retry);
 		}
 		
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());
+		waitForCallState(call,LinphoneCall.State.StreamsRunning);
 	}
 }

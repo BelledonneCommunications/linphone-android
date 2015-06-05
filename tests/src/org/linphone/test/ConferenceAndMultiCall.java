@@ -28,7 +28,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		LinphoneTestManager.createAndStart(aContext, iContext, 2);
 
 		solo.sleep(2000);
-		Assert.assertEquals(RegistrationState.RegistrationOk, LinphoneTestManager.getLc(2).getProxyConfigList()[0].getState());
+		waitForRegistration(LinphoneTestManager.getLc(2).getProxyConfigList()[0]);
 
 		//Disable video
 		goToSettings();
@@ -79,13 +79,13 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.sleep(2000);
 		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
 		LinphoneCall call2 = LinphoneTestManager.getLc(2).getCalls()[0];
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call2.getState());
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
+		waitForCallState(call2,LinphoneCall.State.StreamsRunning);
+		waitForCallState(call1,LinphoneCall.State.PausedByRemote);
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.callStatus));
 		solo.sleep(2000);
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call1.getState());
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call2.getState());
+		waitForCallState(call1,LinphoneCall.State.StreamsRunning);
+		waitForCallState(call2,LinphoneCall.State.PausedByRemote);
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.sleep(1000);
@@ -101,14 +101,14 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.sleep(2000);
 		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
 		LinphoneCall call2 = LinphoneTestManager.getLc(2).getCalls()[0];
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call2.getState());
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
+		waitForCallState(call2,LinphoneCall.State.StreamsRunning);
+		waitForCallState(call1,LinphoneCall.State.PausedByRemote);
 		
 		ArrayList<View> views = solo.getViews(solo.getView(2));
 		solo.clickOnView(views.get(2)); // Second call pause button
 		solo.sleep(2000);
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call2.getState());
+		waitForCallState(call2,LinphoneCall.State.PausedByRemote);
+		waitForCallState(call1,LinphoneCall.State.PausedByRemote);
 		
 		// All calls are paused, one click on hangUp terminates them all
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -132,11 +132,11 @@ public class ConferenceAndMultiCall extends SampleTest {
 		
 		solo.sleep(2000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
-		
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, LinphoneTestManager.getLc(1).getCalls()[0].getState());
+
+		waitForCallState(LinphoneTestManager.getLc(1).getCalls()[0],LinphoneCall.State.PausedByRemote);
 		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
 		solo.sleep(1000);
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, LinphoneTestManager.getLc(1).getCalls()[0].getState());
+		waitForCallState(LinphoneTestManager.getLc(1).getCalls()[0],LinphoneCall.State.StreamsRunning);
 		
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -163,7 +163,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
 		
 		solo.sleep(2000);
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, LinphoneTestManager.getLc(1).getCalls()[0].getState());
+		waitForCallState(LinphoneTestManager.getLc(1).getCalls()[0],LinphoneCall.State.PausedByRemote);
 		
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -237,7 +237,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 
 		solo.sleep(1000);
 		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, call1.getState());
+		waitForCallState(call1,LinphoneCall.State.PausedByRemote);
 		assertCallIsCorrectlyRunning(2);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -292,7 +292,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 			retry++;
 			Log.w("Call in progress but not running, retry = " + retry);
 		}
-		
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());
+
+		waitForCallState(call, LinphoneCall.State.StreamsRunning);
 	}
 }

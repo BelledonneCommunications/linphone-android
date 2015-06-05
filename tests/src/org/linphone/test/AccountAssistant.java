@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.setup.SetupActivity;
@@ -53,8 +52,8 @@ public class AccountAssistant extends SampleTest {
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
 		Assert.assertEquals(1, proxyConfigs.length);
 		LinphoneProxyConfig proxyConfig = proxyConfigs[0];
-		Assert.assertEquals(RegistrationState.RegistrationOk, proxyConfig.getState());
-		
+		waitForRegistration(proxyConfig);
+
 		//Check the wizard added sip.linphone.org custom settings
 		LinphonePreferences prefs = LinphonePreferences.instance();
 		String stunServer = prefs.getStunServer();
@@ -98,7 +97,7 @@ public class AccountAssistant extends SampleTest {
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
 		Assert.assertEquals(proxyConfigs.length, 2);
 		LinphoneProxyConfig proxyConfig = proxyConfigs[1];
-		Assert.assertEquals(RegistrationState.RegistrationOk, proxyConfig.getState());
+		waitForRegistration(proxyConfig);
 	}
 	
 	@LargeTest

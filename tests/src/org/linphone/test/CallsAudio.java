@@ -18,6 +18,10 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Sylvain Berfini
  */
@@ -154,7 +158,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
 		
 		solo.sleep(2000);
-		Assert.assertEquals(LinphoneCall.State.OutgoingRinging, LinphoneManager.getLc().getCalls()[0].getState());
+		waitForCallState(LinphoneManager.getLc().getCalls()[0],LinphoneCall.State.OutgoingRinging);
 		
 		LinphoneTestManager.getInstance().autoAnswer = true;
 		
@@ -246,14 +250,13 @@ public class CallsAudio extends SampleTest {
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
 		solo.sleep(1000);
-		LinphoneCall.State state = LinphoneManager.getLc().getCalls()[0].getState();
 
-		Assert.assertTrue(LinphoneCall.State.Paused == state || LinphoneCall.State.Pausing == state);
+		waitForCallPaused(LinphoneManager.getLc().getCalls()[0]);
+
 		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
 		solo.sleep(1000);
-		
-		state = LinphoneManager.getLc().getCalls()[0].getState();
-		Assert.assertTrue(LinphoneCall.State.Resuming == state || LinphoneCall.State.StreamsRunning == state);
+
+		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
@@ -270,13 +273,13 @@ public class CallsAudio extends SampleTest {
 		
 		LinphoneTestManager.getLc().pauseAllCalls();
 		solo.sleep(1000);
-		
-		Assert.assertEquals(LinphoneCall.State.PausedByRemote, LinphoneManager.getLc().getCalls()[0].getState());
+
+		waitForCallState(LinphoneManager.getLc().getCalls()[0], LinphoneCall.State.PausedByRemote);
+
 		LinphoneTestManager.getLc().resumeCall(LinphoneTestManager.getLc().getCalls()[0]);
 		solo.sleep(1000);
-		
-		LinphoneCall.State state = LinphoneManager.getLc().getCalls()[0].getState();
-		Assert.assertTrue(LinphoneCall.State.Resuming == state || LinphoneCall.State.StreamsRunning == state);
+
+		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
 		
 		solo.clickLongOnScreen(200, 200); //To ensure controls are shown
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
@@ -362,15 +365,8 @@ public class CallsAudio extends SampleTest {
 		
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-		
-		int retry = 0;
-		while ((call.getState() == LinphoneCall.State.OutgoingProgress || call.getState() == LinphoneCall.State.IncomingReceived) && retry < 5) {
-			solo.sleep(1000);
-			retry++;
-			Log.w("Call in progress but not running, retry = " + retry);
-		}
-		
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, call.getState());
+
+		waitForCallState(call, LinphoneCall.State.StreamsRunning);
 	}
 	
 	private void goToSettings() {

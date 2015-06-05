@@ -44,7 +44,7 @@ public class History extends SampleTest {
 		
 		solo.sleep(2000);
 		Assert.assertEquals(1, LinphoneTestManager.getLc().getCallsNb());
-		Assert.assertEquals(LinphoneCall.State.StreamsRunning, LinphoneTestManager.getLc().getCalls()[0].getState());
+		waitForCallState(LinphoneTestManager.getLc().getCalls()[0],LinphoneCall.State.StreamsRunning);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
 		solo.waitForActivity("LinphoneActivity", 5000);
