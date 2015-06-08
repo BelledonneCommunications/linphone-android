@@ -46,6 +46,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("createAccountAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -74,6 +75,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("create_account_from_in_app_purchase", gmailAccount, username, payload, signature, OS, email, password == null ? "" : password);
 				String result = (String)object;
+				Log.d("createAccount: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -102,6 +104,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("getAccountExpireAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -130,6 +133,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("get_expiration_date", gmailAccount, payload, signature, OS);
 				String result = (String)object;
+				Log.d("getAccountExpire: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -158,6 +162,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("getAccountExpireAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -186,6 +191,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("get_expiration_for_account", username, password, OS);
 				String result = (String)object;
+				Log.d("getAccountExpire: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -214,6 +220,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("activateAccountAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -242,6 +249,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("activate_account", gmailAccount, username, payload, signature, OS);
 				String result = (String)object;
+				Log.d("activateAccount: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -270,6 +278,8 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("isAccountActivatedAsync: " + result);
+					
 					if ("OK".equals(result)) {
 						listener.onAccountActivatedFetched(true);
 					} else if (!"ERROR_ACCOUNT_NOT_ACTIVATED".equals(result)) {
@@ -293,6 +303,8 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("check_account_activated", username);
 				String result = (String)object;
+				Log.d("isAccountActivated: " + result);
+				
 				if ("OK".equals(result)) {
 					return true;
 				} else if (!"ERROR_ACCOUNT_NOT_ACTIVATED".equals(result)) {
@@ -319,7 +331,12 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
-					listener.onAccountFetched("OK".equals(result));
+					Log.d("isTrialAccountAsync: " + result);
+					
+					if (!"ERROR_TOKEN_NOT_FOUND".equals(result) && !"OK".equals(result)) {
+						listener.onError(result);
+					}
+					listener.onAccountFetched("ERROR_TOKEN_NOT_FOUND".equals(result));
 				}
 				
 				@Override
@@ -339,7 +356,9 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("is_account_paid", username, password, OS);
 				String result = (String)object;
-				return "OK".equals(result);
+				Log.d("isTrialAccount: " + result);
+				
+				return "ERROR_TOKEN_NOT_FOUND".equals(result);
 			} catch (XMLRPCException e) {
 				Log.e(e);
 			}
@@ -361,6 +380,8 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("isAccountAsync: " + result);
+					
 					if ("OK".equals(result)) {
 						listener.onAccountFetched(true);
 					} else if (!"ERROR_ACCOUNT_DOESNT_EXIST".equals(result)) {
@@ -386,6 +407,8 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("check_account_activated", username);
 				String result = (String)object;
+				Log.d("isAccount: " + result);
+				
 				if ("OK".equals(result)) {
 					return true;
 				} else if (!"ERROR_ACCOUNT_DOESNT_EXIST".equals(result)) {
@@ -412,6 +435,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("changeAccountEmailAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -440,6 +464,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("change_email", username, password, newEmail, OS);
 				String result = (String)object;
+				Log.d("changeAccountEmail: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -468,6 +493,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("changeAccountPasswordAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -496,6 +522,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("change_password", username, oldPassword, newPassword, OS);
 				String result = (String)object;
+				Log.d("changeAccountPassword: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -524,6 +551,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("sendRecoverPasswordLinkByEmailAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -552,6 +580,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("send_reset_account_password_email", usernameOrEmail);
 				String result = (String)object;
+				Log.d("sendRecoverPasswordLinkByEmail: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -580,6 +609,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
+					Log.d("sendActivateAccountLinkByEmailAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -608,6 +638,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("resend_activation_email", usernameOrEmail);
 				String result = (String)object;
+				Log.d("sendActivateAccountLinkByEmail: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
