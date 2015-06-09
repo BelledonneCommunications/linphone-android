@@ -284,6 +284,7 @@ public class XmlRpcHelper {
 						listener.onAccountActivatedFetched(true);
 					} else if (!"ERROR_ACCOUNT_NOT_ACTIVATED".equals(result)) {
 						Log.e(result);
+						listener.onError(result);
 					}
 					listener.onAccountActivatedFetched(false);
 			    	return;
@@ -386,6 +387,7 @@ public class XmlRpcHelper {
 						listener.onAccountFetched(true);
 					} else if (!"ERROR_ACCOUNT_DOESNT_EXIST".equals(result)) {
 						Log.e(result);
+						listener.onError(result);
 					}
 					listener.onAccountFetched(false);
 				}
@@ -497,7 +499,7 @@ public class XmlRpcHelper {
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
-						listener.onAccountPasswordChanged(result);
+						listener.onError(result);
 						return;
 					}
 					
