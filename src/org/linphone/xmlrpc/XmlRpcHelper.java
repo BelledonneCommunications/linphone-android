@@ -55,7 +55,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountCreated(result);
-			    	return;
 				}
 				
 				@Override
@@ -113,7 +112,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountExpireFetched(result);
-			    	return;
 				}
 				
 				@Override
@@ -171,7 +169,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountExpireFetched(result);
-			    	return;
 				}
 				
 				@Override
@@ -282,12 +279,12 @@ public class XmlRpcHelper {
 					
 					if ("OK".equals(result)) {
 						listener.onAccountActivatedFetched(true);
+						return;
 					} else if (!"ERROR_ACCOUNT_NOT_ACTIVATED".equals(result)) {
 						Log.e(result);
 						listener.onError(result);
 					}
 					listener.onAccountActivatedFetched(false);
-			    	return;
 				}
 				
 				@Override
@@ -385,6 +382,7 @@ public class XmlRpcHelper {
 					
 					if ("OK".equals(result)) {
 						listener.onAccountFetched(true);
+						return;
 					} else if (!"ERROR_ACCOUNT_DOESNT_EXIST".equals(result)) {
 						Log.e(result);
 						listener.onError(result);
@@ -446,7 +444,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountEmailChanged(result);
-			    	return;
 				}
 				
 				@Override
@@ -504,7 +501,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountPasswordChanged(result);
-			    	return;
 				}
 				
 				@Override
@@ -562,7 +558,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onRecoverPasswordLinkSent(result);
-			    	return;
 				}
 				
 				@Override
@@ -620,7 +615,6 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onActivateAccountLinkSent(result);
-			    	return;
 				}
 				
 				@Override
