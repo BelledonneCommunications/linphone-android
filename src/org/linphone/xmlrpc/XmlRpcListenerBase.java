@@ -66,5 +66,4 @@ public class XmlRpcListenerBase implements XmlRpcListener {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

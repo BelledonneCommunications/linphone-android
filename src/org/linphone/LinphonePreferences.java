@@ -35,6 +35,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LpConfig;
 import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.purchase.Purchasable;
 
 import android.content.Context;
 
@@ -1156,6 +1157,26 @@ public class LinphonePreferences {
 	
 	public String getInAppPurchaseValidatingServerUrl() {
 		return getConfig().getString("in-app-purchase", "server_url", null);
+	}
+	
+	public Purchasable getInAppPurchasedItem() {
+		String id = getConfig().getString("in-app-purchase", "purchase_item_id", null);
+		String payload = getConfig().getString("in-app-purchase", "purchase_item_payload", null);
+		String signature = getConfig().getString("in-app-purchase", "purchase_item_signature", null);
+		String username = getConfig().getString("in-app-purchase", "purchase_item_username", null);
+		
+		Purchasable item = new Purchasable(id).setPayloadAndSignature(payload, signature).setUserData(username);
+		return item;
+	}
+	
+	public void setInAppPurchasedItem(Purchasable item) {
+		if (item == null)
+			return;
+		
+		getConfig().setString("in-app-purchase", "purchase_item_id", item.getId());
+		getConfig().setString("in-app-purchase", "purchase_item_payload", item.getPayload());
+		getConfig().setString("in-app-purchase", "purchase_item_signature", item.getPayloadSignature());
+		getConfig().setString("in-app-purchase", "purchase_item_username", item.getUserData());
 	}
 	
 	public ArrayList<String> getInAppPurchasables() {

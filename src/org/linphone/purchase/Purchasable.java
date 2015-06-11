@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
 /*
 Purchasable.java
 Copyright (C) 2015  Belledonne Communications, Grenoble, France
@@ -30,7 +31,8 @@ public class Purchasable {
 	private String id, title, description, price;
 	private long expire;
 	private String purchasePayload, purchasePayloadSignature; 
-
+	private String userData;
+	
 	public Purchasable(String id) {
 		this.id = id;
 	}
@@ -93,5 +95,14 @@ public class Purchasable {
 	
 	public String getPayloadSignature() {
 		return this.purchasePayloadSignature;
+	}
+	
+	public Purchasable setUserData(String data) {
+		this.userData = data;
+		return this;
+	}
+	
+	public String getUserData() {
+		return this.userData;
 	}
 }
