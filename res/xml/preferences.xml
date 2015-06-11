@@ -111,8 +111,21 @@
 				android:dependency="@string/pref_video_enable_key"/>
 
 			<ListPreference
+				android:title="Video preset"
+				android:key="@string/pref_video_preset_key"/>
+
+			<ListPreference
 			    android:title="@string/pref_preferred_video_size"
 				android:key="@string/pref_preferred_video_size_key"/>
+
+			<ListPreference
+				android:title="Preferred FPS"
+				android:key="@string/pref_preferred_video_fps_key"/>
+
+			<EditTextPreference
+				android:title="@string/pref_bandwidth_limit"
+				android:key="@string/pref_bandwidth_limit_key"
+				android:numeric="integer" />
 
 				<PreferenceCategory
 					android:title="@string/pref_video_codecs_title"
