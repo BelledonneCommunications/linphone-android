@@ -269,7 +269,7 @@ public class InAppPurchaseHelper {
 		}).start();
 	}
 	
-	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data, String username, String email) {
+	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ACTIVITY_RESULT_CODE_PURCHASE_ITEM) {
 			int responseCode = data.getIntExtra(RESPONSE_CODE, 0);
 

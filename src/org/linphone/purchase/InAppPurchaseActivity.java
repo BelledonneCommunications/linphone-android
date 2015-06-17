@@ -141,7 +141,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data, getUsername(), email.getText().toString());
+		inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data);
 	}
 
 	@Override
