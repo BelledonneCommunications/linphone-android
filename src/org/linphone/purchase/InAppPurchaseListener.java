@@ -43,9 +43,9 @@ public interface InAppPurchaseListener {
 	
 	/**
 	 * Callback called when the purchase has been validated by our external server
-	 * @param item the item the user just bought
+	 * @param success true if ok, false otherwise
 	 */
-	void onPurchasedItemConfirmationQueryFinished(Purchasable item);
+	void onPurchasedItemConfirmationQueryFinished(boolean success);
 
 	/**
 	 * Callback called when the account has been recovered (or not)

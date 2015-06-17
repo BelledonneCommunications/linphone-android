@@ -12,7 +12,6 @@ import de.timroes.axmlrpc.XMLRPCException;
 import de.timroes.axmlrpc.XMLRPCServerException;
 
 public class XmlRpcHelper {
-    public static final String OS = "google";
     public static final String SERVER_ERROR_INVALID_ACCOUNT = "ERROR_INVALID_ACCOUNT";
     public static final String SERVER_ERROR_PURCHASE_CANCELLED = "ERROR_PURCHASE_CANCELLED";
     public static final String SERVER_ERROR_RECEIPT_PARSING_FAILED = "ERROR_RECEIPT_PARSING_FAILED";
@@ -34,7 +33,7 @@ public class XmlRpcHelper {
 		}
     }
 	
-	public void createAccountAsync(final XmlRpcListener listener, String gmailAccount, String username, String payload, String signature, String email, String password) {
+	public void createAccountAsync(final XmlRpcListener listener, String username, String email, String password) {
 		if (mXmlRpcClient != null) {
 			mXmlRpcClient.callAsync(new XMLRPCCallback() {
 				@Override
@@ -62,76 +61,19 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-			}, "create_account_from_in_app_purchase", gmailAccount, username, payload, signature, OS, email, password == null ? "" : password);
+			}, "create_account", username, email, password == null ? "" : password);
 		} else {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
 		}
 	}
 	
-	public String createAccount(String gmailAccount, String username, String payload, String signature, String email, String password) {
+	public String createAccount(String username, String email, String password) {
 		if (mXmlRpcClient != null) {
 			try {
-				Object object = mXmlRpcClient.call("create_account_from_in_app_purchase", gmailAccount, username, payload, signature, OS, email, password == null ? "" : password);
+				Object object = mXmlRpcClient.call("create_account", username, email, password == null ? "" : password);
 				String result = (String)object;
 				Log.d("createAccount: " + result);
-				
-				if (result.startsWith("ERROR_")) {
-					Log.e(result);
-					return null;
-				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
-			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
-	}
-	
-	public void getAccountExpireAsync(final XmlRpcListener listener, String gmailAccount, String payload, String signature) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("getAccountExpireAsync: " + result);
-					
-					if (result.startsWith("ERROR_")) {
-						Log.e(result);
-						listener.onError(result);
-						return;
-					}
-					
-					listener.onAccountExpireFetched(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "get_expiration_date", gmailAccount, payload, signature, OS);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String getAccountExpire(String gmailAccount, String payload, String signature) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("get_expiration_date", gmailAccount, payload, signature, OS);
-				String result = (String)object;
-				Log.d("getAccountExpire: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -176,7 +118,7 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-			}, "get_expiration_for_account", username, password, OS);
+			}, "get_expiration_for_account", username, password);
 		} else {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
@@ -186,7 +128,7 @@ public class XmlRpcHelper {
 	public String getAccountExpire(String username, String password) {
 		if (mXmlRpcClient != null) {
 			try {
-				Object object = mXmlRpcClient.call("get_expiration_for_account", username, password, OS);
+				Object object = mXmlRpcClient.call("get_expiration_for_account", username, password);
 				String result = (String)object;
 				Log.d("getAccountExpire: " + result);
 				
@@ -205,7 +147,64 @@ public class XmlRpcHelper {
 		return null;
 	}
 	
-	public void activateAccountAsync(final XmlRpcListener listener, String gmailAccount, String username, String payload, String signature) {
+	public void updateAccountExpireAsync(final XmlRpcListener listener, String username, String password, String payload, String signature) {
+		if (mXmlRpcClient != null) {
+			mXmlRpcClient.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+				
+				@Override
+				public void onResponse(long id, Object object) {
+					String result = (String)object;
+					Log.d("updateAccountExpireAsync: " + result);
+					
+					if (result.startsWith("ERROR_")) {
+						Log.e(result);
+						listener.onError(result);
+						return;
+					}
+					
+					listener.onAccountExpireUpdated(result);
+				}
+				
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+			}, "update_expiration_date", username, password, payload, signature);
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+	}
+	
+	public String updateAccountExpire(String username, String password, String payload, String signature) {
+		if (mXmlRpcClient != null) {
+			try {
+				Object object = mXmlRpcClient.call("update_expiration_date", username, password, payload, signature);
+				String result = (String)object;
+				Log.d("updateAccountExpire: " + result);
+				
+				if (result.startsWith("ERROR_")) {
+					Log.e(result);
+					return null;
+				}
+				return result;
+				
+			} catch (XMLRPCException e) {
+				Log.e(e);
+			}
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+		return null;
+	}
+	
+	public void activateAccountAsync(final XmlRpcListener listener, String username, String password) {
 		if (mXmlRpcClient != null) {
 			mXmlRpcClient.callAsync(new XMLRPCCallback() {
 				@Override
@@ -234,17 +233,17 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-			}, "activate_account", gmailAccount, username, payload, signature, OS);
+			}, "activate_account", username, password);
 		} else {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
 		}
 	}
 	
-	public String activateAccount(String gmailAccount, String username, String payload, String signature) {
+	public String activateAccount(String gmailAccount, String username, String password) {
 		if (mXmlRpcClient != null) {
 			try {
-				Object object = mXmlRpcClient.call("activate_account", gmailAccount, username, payload, signature, OS);
+				Object object = mXmlRpcClient.call("activate_account", username, password);
 				String result = (String)object;
 				Log.d("activateAccount: " + result);
 				
@@ -331,10 +330,10 @@ public class XmlRpcHelper {
 					String result = (String)object;
 					Log.d("isTrialAccountAsync: " + result);
 					
-					if (!"ERROR_TOKEN_NOT_FOUND".equals(result) && !"OK".equals(result)) {
+					if (!"NOK".equals(result) && !"OK".equals(result)) {
 						listener.onError(result);
 					}
-					listener.onAccountFetched("ERROR_TOKEN_NOT_FOUND".equals(result));
+					listener.onAccountFetched("OK".equals(result));
 				}
 				
 				@Override
@@ -342,7 +341,7 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-			}, "is_account_paid", username, password, OS);
+			}, "check_account_trial", username, password);
 		} else {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
@@ -352,11 +351,11 @@ public class XmlRpcHelper {
 	public boolean isTrialAccount(String username, String password) {
 		if (mXmlRpcClient != null) {
 			try {
-				Object object = mXmlRpcClient.call("is_account_paid", username, password, OS);
+				Object object = mXmlRpcClient.call("check_account_trial", username, password);
 				String result = (String)object;
 				Log.d("isTrialAccount: " + result);
 				
-				return "ERROR_TOKEN_NOT_FOUND".equals(result);
+				return "OK".equals(result);
 			} catch (XMLRPCException e) {
 				Log.e(e);
 			}
@@ -451,7 +450,7 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-			}, "change_email", username, password, newEmail, OS);
+			}, "change_email", username, password, newEmail);
 		} else {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
@@ -461,7 +460,7 @@ public class XmlRpcHelper {
 	public String changeAccountEmail(String username, String password, String newEmail) {
 		if (mXmlRpcClient != null) {
 			try {
-				Object object = mXmlRpcClient.call("change_email", username, password, newEmail, OS);
+				Object object = mXmlRpcClient.call("change_email", username, password, newEmail);
 				String result = (String)object;
 				Log.d("changeAccountEmail: " + result);
 				
@@ -508,7 +507,7 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-			}, "change_password", username, oldPassword, newPassword, OS);
+			}, "change_password", username, oldPassword, newPassword);
 		} else {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
@@ -518,7 +517,7 @@ public class XmlRpcHelper {
 	public String changeAccountPassword(String username, String oldPassword, String newPassword) {
 		if (mXmlRpcClient != null) {
 			try {
-				Object object = mXmlRpcClient.call("change_password", username, oldPassword, newPassword, OS);
+				Object object = mXmlRpcClient.call("change_password", username, oldPassword, newPassword);
 				String result = (String)object;
 				Log.d("changeAccountPassword: " + result);
 				
@@ -649,5 +648,62 @@ public class XmlRpcHelper {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 		}
 		return null;
+	}
+	
+	public void verifySignatureAsync(final XmlRpcListener listener, String payload, String signature) {
+		if (mXmlRpcClient != null) {
+			mXmlRpcClient.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+				
+				@Override
+				public void onResponse(long id, Object object) {
+					String result = (String)object;
+					Log.d("verifySignatureAsync: " + result);
+					
+					if (result.startsWith("ERROR_")) {
+						Log.e(result);
+						listener.onError(result);
+						return;
+					}
+					
+					listener.onSignatureVerified("OK".equals(result));
+				}
+				
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+			}, "verify_payload_signature", payload, signature);
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+	}
+	
+	public boolean verifySignature(String payload, String signature) {
+		if (mXmlRpcClient != null) {
+			try {
+				Object object = mXmlRpcClient.call("verify_payload_signature", payload, signature);
+				String result = (String)object;
+				Log.d("verifySignature: " + result);
+				
+				if (result.startsWith("ERROR_")) {
+					Log.e(result);
+					return false;
+				}
+				return "OK".equals(result);
+				
+			} catch (XMLRPCException e) {
+				Log.e(e);
+			}
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+		return false;
 	}
 }

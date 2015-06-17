@@ -25,6 +25,8 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.xmlrpc.XmlRpcHelper;
+import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -81,6 +83,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	public void onServiceAvailableForQueries() {
 		email.setText(inAppPurchaseHelper.getGmailAccount());
 		email.setEnabled(false);
+		
 		inAppPurchaseHelper.getPurchasedItemsAsync();
 	}
 
@@ -108,9 +111,15 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	}
 
 	@Override
-	public void onPurchasedItemConfirmationQueryFinished(Purchasable item) {
-		if (item != null) {
-			Log.d("[In-app purchase] Item bought, expires " + item.getExpireDate());
+	public void onPurchasedItemConfirmationQueryFinished(boolean success) {
+		if (success) {
+			XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
+			xmlRpcHelper.createAccountAsync(new XmlRpcListenerBase() {
+				@Override
+				public void onAccountCreated(String result) {
+					//TODO
+				}
+			}, getUsername(), email.getText().toString(), null);
 		}
 	}
 
@@ -118,7 +127,13 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	public void onClick(View v) {
 		Purchasable item = (Purchasable) v.getTag();
 		if (v.equals(recoverAccountButton)) {
-			inAppPurchaseHelper.recoverAccount(getUsername(), item.getPayload(), item.getPayloadSignature());
+			XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
+			xmlRpcHelper.createAccountAsync(new XmlRpcListenerBase() {
+				@Override
+				public void onAccountCreated(String result) {
+					//TODO
+				}
+			}, getUsername(), email.getText().toString(), null);
 		} else {
 			inAppPurchaseHelper.purchaseItemAsync(item.getId(), getUsername());
 		}
@@ -126,7 +141,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data, getUsername());
+		inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data, getUsername(), email.getText().toString());
 	}
 
 	@Override
@@ -163,7 +178,13 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		text.setText("Buy account (" + item.getPrice() + ")");
 		ImageView image = (ImageView) layout.findViewById(R.id.image);
 		image.setTag(item);
-		image.setOnClickListener(this);
+		image.setOnClickListener(this);XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
+		xmlRpcHelper.createAccountAsync(new XmlRpcListenerBase() {
+			@Override
+			public void onAccountCreated(String result) {
+				//TODO
+			}
+		}, getUsername(), email.getText().toString(), null);
 		
 		buyItemButton = image;
 		buyItemButton.setEnabled(usernameOk);

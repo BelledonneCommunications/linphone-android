@@ -66,4 +66,16 @@ public class XmlRpcListenerBase implements XmlRpcListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onAccountExpireUpdated(String result) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSignatureVerified(boolean success) {
+		// TODO Auto-generated method stub
+		
+	}
 }

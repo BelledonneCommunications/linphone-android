@@ -240,13 +240,13 @@ public class InAppPurchaseHelper {
         					ArrayList<String>  purchaseDataList = purchasedItems.getStringArrayList(RESPONSE_INAPP_PURCHASE_DATA_LIST);
         					ArrayList<String>  signatureList = purchasedItems.getStringArrayList(RESPONSE_INAPP_SIGNATURE_LIST);
         					continuationToken = purchasedItems.getString(RESPONSE_INAPP_CONTINUATION_TOKEN);
-        	
+        					
 				   			for (int i = 0; i < purchaseDataList.size(); ++i) {
 				   				String purchaseData = purchaseDataList.get(i);
     				   			String signature = signatureList.get(i);
     							Log.d("[In-app purchase] " + purchaseData);
         				      
-    				   			Purchasable item = verifySignatureAndGetExpire(purchaseData, signature);
+    				   			Purchasable item = verifySignature(purchaseData, signature);
     				   			if (item != null) {
     				   				items.add(item);
     				   			}
@@ -267,6 +267,25 @@ public class InAppPurchaseHelper {
             	}
             }
 		}).start();
+	}
+	
+	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data, String username, String email) {
+		if (requestCode == ACTIVITY_RESULT_CODE_PURCHASE_ITEM) {
+			int responseCode = data.getIntExtra(RESPONSE_CODE, 0);
+
+			if (resultCode == Activity.RESULT_OK && responseCode == RESPONSE_RESULT_OK) {
+				String payload = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
+				String signature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
+				
+				XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
+				xmlRpcHelper.verifySignatureAsync(new XmlRpcListenerBase() {
+					@Override
+					public void onSignatureVerified(boolean success) {
+						mListener.onPurchasedItemConfirmationQueryFinished(success);
+					}
+				}, payload, signature);
+			}
+		}
 	}
 	
 	private void purchaseItem(String productId, String sipIdentity) {
@@ -295,48 +314,6 @@ public class InAppPurchaseHelper {
 		}).start();
 	}
 	
-	public void parseAndVerifyPurchaseItemResultAsync(int requestCode, int resultCode, Intent data, String username) {
-		if (requestCode == ACTIVITY_RESULT_CODE_PURCHASE_ITEM) {
-			int responseCode = data.getIntExtra(RESPONSE_CODE, 0);
-			String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
-			String signature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
-
-			if (resultCode == Activity.RESULT_OK && responseCode == RESPONSE_RESULT_OK) {
-				verifySignatureAndCreateAccountAsync(new VerifiedSignatureListener() {
-					@Override
-					public void onParsedAndVerifiedSignatureQueryFinished(Purchasable item) {
-						if (item != null) {
-							mListener.onPurchasedItemConfirmationQueryFinished(item);
-						}
-					}
-				}, purchaseData, signature, username);
-			} else {
-				Log.e("[In-app purchase] Error: resultCode is " + resultCode + " and responseCode is " + responseCodeToErrorMessage(responseCode));
-	    		mListener.onError(responseCodeToErrorMessage(responseCode));
-			}
-		}
-	}
-	
-	public void recoverAccount(String sipUsername, String purchasedData, String signature) {
-		XmlRpcHelper helper = new XmlRpcHelper();
-		helper.createAccountAsync(new XmlRpcListenerBase() {
-			@Override
-			public void onAccountCreated(String result) {
-				mListener.onRecoverAccountSuccessful(true);
-			}
-		}, mGmailAccount, sipUsername, purchasedData, signature, mGmailAccount, null);
-	}
-	
-	public void activateAccount(String sipUsername, String purchasedData, String signature) {
-		XmlRpcHelper helper = new XmlRpcHelper();
-		helper.activateAccountAsync(new XmlRpcListenerBase() {
-			@Override
-			public void onAccountActivated(String result) {
-				mListener.onActivateAccountSuccessful(true);
-			}
-		}, mGmailAccount, sipUsername, purchasedData, signature);
-	}
-	
 	public void destroy() {
 		mContext.unbindService(mServiceConn);
 	}
@@ -359,65 +336,20 @@ public class InAppPurchaseHelper {
     	return emailPattern.matcher(email).matches();
 	}
 	
-	private Purchasable verifySignatureAndGetExpire(String purchasedData, String signature) {
+	private Purchasable verifySignature(String payload, String signature) {
 		XmlRpcHelper helper = new XmlRpcHelper();
-		Object result = helper.getAccountExpire(mGmailAccount, purchasedData, signature);
-		long longExpire = -1;
-		String expire = (String)result;
-				
-		try {
-			longExpire = Long.parseLong(expire);
-		} catch (NumberFormatException nfe) {
-			Log.e("[In-app purchase] Server failure: " + result);
-    		mListener.onError(expire);
-			return null;
-		}
-		
-		try {
-			JSONObject json = new JSONObject(purchasedData);
-			String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
-			Purchasable item = new Purchasable(productId); 
-			item.setExpire(longExpire);
-			item.setPayloadAndSignature(purchasedData, signature);
-			//TODO parse JSON result to get the purchasable in it
-			return item;
-		} catch (JSONException e) {
-			Log.e(e);
+		if (helper.verifySignature(payload, signature)) {
+			try {
+				JSONObject json = new JSONObject(payload);
+				String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
+				Purchasable item = new Purchasable(productId); 
+				item.setPayloadAndSignature(payload, signature);
+				return item;
+			} catch (JSONException e) {
+				Log.e(e);
+			}
 		}
 		return null;
-	}
-	
-	private void verifySignatureAndCreateAccountAsync(final VerifiedSignatureListener listener, final String purchasedData, final String signature, String username) {
-		XmlRpcHelper helper = new XmlRpcHelper();
-		helper.createAccountAsync(new XmlRpcListenerBase() {
-			@Override
-			public void onAccountCreated(String result) {
-				try {
-					long longExpire = -1;
-					String expire = (String)result;
-					
-					try {
-						longExpire = Long.parseLong(expire);
-					} catch (NumberFormatException nfe) {
-						Log.e("[In-app purchase] Server failure: " + result);
-						listener.onParsedAndVerifiedSignatureQueryFinished(null);
-			    		mListener.onError(result);
-						return;
-					}
-
-					JSONObject json = new JSONObject(purchasedData);
-					String productId = json.getString(PURCHASE_DETAILS_PRODUCT_ID);
-					Purchasable item = new Purchasable(productId); 
-					item.setExpire(longExpire);
-					item.setPayloadAndSignature(purchasedData, signature);
-					//TODO parse JSON result to get the purchasable in it
-			    	listener.onParsedAndVerifiedSignatureQueryFinished(item);
-			    	return;
-				} catch (JSONException e) {
-					Log.e(e);
-				}
-			}
-		}, mGmailAccount, username, purchasedData, signature, mGmailAccount, null);
 	}
 	
 	interface VerifiedSignatureListener {

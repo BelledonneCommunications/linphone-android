@@ -22,7 +22,7 @@ public class InAppPurchaseListenerBase implements InAppPurchaseListener {
 	}
 
 	@Override
-	public void onPurchasedItemConfirmationQueryFinished(Purchasable item) {
+	public void onPurchasedItemConfirmationQueryFinished(boolean success) {
 		// TODO Auto-generated method stub
 		
 	}
