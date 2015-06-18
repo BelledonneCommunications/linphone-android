@@ -74,6 +74,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -440,6 +441,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		message.removeTextChangedListener(textWatcher);
 		removeVirtualKeyboardVisiblityListener();
 
+
 		LinphoneService.instance().removeMessageNotification();
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -452,6 +454,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		onSaveInstanceState(getArguments());
+
+		//Hide keybord
+		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(message.getWindowToken(), 0);
 		super.onPause();
 	}
 
