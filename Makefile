@@ -433,6 +433,7 @@ MEDIASTREAMER2_OPTIONS = $(GENERATE_OPTIONS) BUILD_MEDIASTREAMER2_SDK=1
 
 generate-libs: prepare-sources javah
 	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(NDKBUILD_TARGET)
+	./bsed.sh # Fix path to libffmpeg library in linphone.so because of Android M Preview issue: https://code.google.com/p/android-developer-preview/issues/detail?id=2239
 
 generate-mediastreamer2-libs: prepare-sources
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
