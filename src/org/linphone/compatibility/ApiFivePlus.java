@@ -401,4 +401,20 @@ public class ApiFivePlus {
 		
 		return notif;
 	}
+
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification();
+		notif.icon = R.drawable.logo_linphone_57x57;
+		notif.iconLevel = 0;
+		notif.when = System.currentTimeMillis();
+		notif.flags &= Notification.FLAG_ONGOING_EVENT;
+		
+		notif.defaults |= Notification.DEFAULT_VIBRATE;
+		notif.defaults |= Notification.DEFAULT_SOUND;
+		notif.defaults |= Notification.DEFAULT_LIGHTS;
+		
+		notif.setLatestEventInfo(context, title, text, intent);
+		
+		return notif;
+	}
 }
