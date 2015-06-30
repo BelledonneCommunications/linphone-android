@@ -107,4 +107,18 @@ public class ApiSixteenPlus {
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);		
 	}
+
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context)
+		.setContentTitle(title)
+		.setContentText(text)
+		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setAutoCancel(true)
+		.setContentIntent(intent)
+		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+		.setWhen(System.currentTimeMillis())
+		.build();
+
+		return notif;
+	}
 }
