@@ -78,7 +78,7 @@ public class ApiTwentyOnePlus {
 		return notif;
 	}
 	
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
 		Notification notif;
 		
 		if (largeIcon != null) {
@@ -90,7 +90,7 @@ public class ApiTwentyOnePlus {
 		        .setContentIntent(intent)
 				.setCategory(Notification.CATEGORY_SERVICE)
 				.setVisibility(Notification.VISIBILITY_SECRET)
-				.setPriority(Notification.PRIORITY_DEFAULT)
+				.setPriority(priority)
 		        .build();
 		} else {
 			notif = new NotificationCompat.Builder(context)
@@ -100,7 +100,7 @@ public class ApiTwentyOnePlus {
 		        .setContentIntent(intent)
 				.setCategory(Notification.CATEGORY_SERVICE)
 				.setVisibility(Notification.VISIBILITY_SECRET)
-				.setPriority(Notification.PRIORITY_DEFAULT)
+				.setPriority(priority)
 		        .build();
 		}
 		
