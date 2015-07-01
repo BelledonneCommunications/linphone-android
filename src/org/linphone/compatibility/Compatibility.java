@@ -204,11 +204,11 @@ public class Compatibility {
 		return notif;
 	}
 
-	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
+	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
 		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
-			return ApiTwentyOnePlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
+			return ApiTwentyOnePlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent,priority);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
-			return ApiSixteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
+			return ApiSixteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent,priority);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			return ApiElevenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
 		} else {

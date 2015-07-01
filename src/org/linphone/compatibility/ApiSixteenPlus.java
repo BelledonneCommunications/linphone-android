@@ -76,7 +76,7 @@ public class ApiSixteenPlus {
 		return notif;
 	}
 	
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
 		Notification notif;
 		
 		if (largeIcon != null) {
@@ -87,6 +87,7 @@ public class ApiSixteenPlus {
 	        .setLargeIcon(largeIcon)
 	        .setContentIntent(intent)
 	        .setWhen(System.currentTimeMillis())
+	        .setPriority(priority)
 	        .build();
 		} else {
 			notif = new Notification.Builder(context)
@@ -95,6 +96,7 @@ public class ApiSixteenPlus {
 	        .setSmallIcon(icon, level)
 	        .setContentIntent(intent)
 	        .setWhen(System.currentTimeMillis())
+	        .setPriority(priority)
 	        .build();
 		}
 		if (isOngoingEvent) {
