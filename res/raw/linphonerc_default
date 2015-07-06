@@ -14,6 +14,7 @@ size=qvga
 [app]
 sharing_server=https://www.linphone.org:444/lft.php
 tunnel=disabled
+push_notification=1
 
 [tunnel]
 host=

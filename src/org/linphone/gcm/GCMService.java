@@ -18,8 +18,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static android.content.Intent.ACTION_MAIN;
+
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.UIThreadDispatcher;
 import org.linphone.mediastream.Log;
@@ -47,7 +50,9 @@ public class GCMService extends GCMBaseIntentService {
 	@Override
 	protected void onMessage(Context context, Intent intent) {
 		Log.d("Push notification received");
-		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
+		if (!LinphoneService.isReady()) {
+			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+		} else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
 			UIThreadDispatcher.dispatch(new Runnable(){
 				@Override
 				public void run() {

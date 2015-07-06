@@ -35,6 +35,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -552,6 +553,17 @@ public final class LinphoneService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
+			Log.d("Task removed, stop service");
+			LinphoneManager.getLc().setNetworkReachable(false);
+			stopSelf();
+		}
+		super.onTaskRemoved(rootIntent);
 	}
 
 	@Override
