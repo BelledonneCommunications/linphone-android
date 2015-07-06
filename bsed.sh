@@ -45,4 +45,4 @@ function patch_strings_in_file() {
 }
 
 patch_strings_in_file libs/armeabi-v7a/liblinphone-armeabi-v7a.so "./obj/local/armeabi-v7a/libffmpeg-linphone-arm.so" "libffmpeg-linphone-arm.so"
-patch_strings_in_file libs/armeabi-x86/liblinphone-armeabi-x86.so "./obj/local/armeabi-x86/libffmpeg-linphone-x86.so" "libffmpeg-linphone-x86.so"
+patch_strings_in_file libs/x86/liblinphone-x86.so "./obj/local/x86/libffmpeg-linphone-x86.so" "libffmpeg-linphone-x86.so"
