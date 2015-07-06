@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.Numpad;
@@ -120,7 +121,15 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
         isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
         showCallListInVideo = getApplicationContext().getResources().getBoolean(R.bool.show_current_calls_above_video);
         isSpeakerEnabled = LinphoneManager.getLcIfManagerNotDestroyedOrNull().isSpeakerEnabled();
-        
+
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			if(!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
+				BluetoothManager.getInstance().initBluetooth();
+			} else {
+				isSpeakerEnabled = false;
+			}
+		}
+
         isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
         cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
         
@@ -222,6 +231,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
         };
         
         if (findViewById(R.id.fragmentContainer) != null) {
+
             initUI();
             
             if (LinphoneManager.getLc().getCallsNb() > 0) {
@@ -255,6 +265,11 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
             	audioCallFragment = (AudioCallFragment) callFragment;
         		switchCamera.setVisibility(View.INVISIBLE);
             }
+
+			if(BluetoothManager.getInstance().isBluetoothHeadsetAvailable()){
+				BluetoothManager.getInstance().routeAudioToBluetooth();
+			}
+
             callFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
 
@@ -357,7 +372,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	        slideOutBottomToTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom_to_top);
 	        slideOutTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
         }
-		
+
 		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
 			try {
 				if (routeLayout != null)
@@ -507,8 +522,8 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
 				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
 				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
-				hideOrDisplayAudioRoutes();
 			}
+			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.routeReceiver) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
@@ -1049,11 +1064,11 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	private void hideOrDisplayAudioRoutes()
 	{		
 		if (routeSpeaker.getVisibility() == View.VISIBLE) {
-			routeSpeaker.setVisibility(View.INVISIBLE);
-			routeBluetooth.setVisibility(View.INVISIBLE);
-			routeReceiver.setVisibility(View.INVISIBLE);
+			routeSpeaker.setVisibility(View.GONE);
+			routeBluetooth.setVisibility(View.GONE);
+			routeReceiver.setVisibility(View.GONE);
 			audioRoute.setSelected(false);
-		} else {		
+		} else {
 			routeSpeaker.setVisibility(View.VISIBLE);
 			routeBluetooth.setVisibility(View.VISIBLE);
 			routeReceiver.setVisibility(View.VISIBLE);

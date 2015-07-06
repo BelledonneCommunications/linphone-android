@@ -117,7 +117,7 @@ public class BluetoothManager extends BroadcastReceiver {
 				        mBluetoothHeadset = null;
 				        isBluetoothConnected = false;
 				        Log.d("Bluetooth headset disconnected");
-				        LinphoneManager.getInstance().routeAudioToSpeaker();
+				        LinphoneManager.getInstance().routeAudioToReceiver();
 				    }
 				}
 			};
@@ -200,7 +200,6 @@ public class BluetoothManager extends BroadcastReceiver {
 	
 	public boolean isBluetoothHeadsetAvailable() {
 		ensureInit();
-		
 		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager != null && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			boolean isHeadsetConnected = false;
 			if (mBluetoothHeadset != null) {
@@ -234,7 +233,7 @@ public class BluetoothManager extends BroadcastReceiver {
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {}
-				
+
 				mAudioManager.stopBluetoothSco();
 				mAudioManager.setBluetoothScoOn(false);
 			}
@@ -257,7 +256,7 @@ public class BluetoothManager extends BroadcastReceiver {
 		Log.w("Bluetooth stopped!");
 		
 		if (LinphoneManager.isInstanciated()) {
-			LinphoneManager.getInstance().routeAudioToSpeaker();
+			LinphoneManager.getInstance().routeAudioToReceiver();
 		}
 	}
 	

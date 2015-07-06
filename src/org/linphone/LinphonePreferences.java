@@ -763,22 +763,58 @@ public class LinphonePreferences {
 		getLc().setVideoPolicy(shouldInitiateVideoCall(), accept);
 	}
 
+	public String getVideoPreset() {
+		String preset = getLc().getVideoPreset();
+		if (preset == null) preset = "default";
+		return preset;
+	}
+
+	public void setVideoPreset(String preset) {
+		if (preset.equals("default")) preset = null;
+		getLc().setVideoPreset(preset);
+		preset = getVideoPreset();
+		if (!preset.equals("custom")) {
+			getLc().setPreferredFramerate(0);
+		}
+		setPreferredVideoSize(getPreferredVideoSize()); // Apply the bandwidth limit
+	}
+
 	public String getPreferredVideoSize() {
 		//LinphoneCore can only return video size (width and height), not the name
 		return getConfig().getString("video", "size", "qvga");
 	}
 
 	public void setPreferredVideoSize(String preferredVideoSize) {
-		int bandwidth = 512;
-		if (preferredVideoSize.equals("720p")) {
-			bandwidth = 1024 + 128;
-		} else if (preferredVideoSize.equals("qvga")) {
-			bandwidth = 380;
-		}  else if (preferredVideoSize.equals("qcif")) {
-			bandwidth = 256;
-		}
-
 		getLc().setPreferredVideoSizeByName(preferredVideoSize);
+		String preset = getVideoPreset();
+		if (!preset.equals("custom")) {
+			int bandwidth = 512;
+			if (preferredVideoSize.equals("720p")) {
+				bandwidth = 1024 + 128;
+			} else if (preferredVideoSize.equals("vga")) {
+				bandwidth = 660;
+			} else if (preferredVideoSize.equals("qvga")) {
+				bandwidth = 380;
+			} else if (preferredVideoSize.equals("qcif")) {
+				bandwidth = 256;
+			}
+			setBandwidthLimit(bandwidth);
+		}
+	}
+
+	public int getPreferredVideoFps() {
+		return (int)getLc().getPreferredFramerate();
+	}
+
+	public void setPreferredVideoFps(int fps) {
+		getLc().setPreferredFramerate(fps);
+	}
+
+	public int getBandwidthLimit() {
+		return getLc().getDownloadBandwidth();
+	}
+
+	public void setBandwidthLimit(int bandwidth) {
 		getLc().setUploadBandwidth(bandwidth);
 		getLc().setDownloadBandwidth(bandwidth);
 	}

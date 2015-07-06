@@ -51,6 +51,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
@@ -127,8 +128,8 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Intent intent = new Intent(LinphoneService.instance(), SetupActivity.class);
-	        	startActivityForResult(intent, WIZARD_INTENT);
-	        	return true;
+				startActivityForResult(intent, WIZARD_INTENT);
+				return true;
 			}
 		});
 		findPreference(getString(R.string.pref_add_account_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -136,7 +137,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				int nbAccounts = mPrefs.getAccountCount();
 				LinphoneActivity.instance().displayAccountSettings(nbAccounts);
-	        	return true;
+				return true;
 			}
 		});
 		findPreference("in_app_store").setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -437,6 +438,21 @@ public class SettingsFragment extends PreferencesListFragment {
 		pref.setValue(key);
 	}
 
+	private void initializeVideoPresetPreferences(ListPreference pref) {
+		List<CharSequence> entries = new ArrayList<CharSequence>();
+		List<CharSequence> values = new ArrayList<CharSequence>();
+		entries.add("default");
+		values.add("default");
+		entries.add("high-fps");
+		values.add("high-fps");
+		entries.add("custom");
+		values.add("custom");
+		setListPreferenceValues(pref, entries, values);
+		String value = mPrefs.getVideoPreset();
+		pref.setSummary(value);
+		pref.setValue(value);
+	}
+
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
@@ -448,6 +464,25 @@ public class SettingsFragment extends PreferencesListFragment {
 		setListPreferenceValues(pref, entries, values);
 
 		String value = mPrefs.getPreferredVideoSize();
+		pref.setSummary(value);
+		pref.setValue(value);
+	}
+
+	private void initializePreferredVideoFpsPreferences(ListPreference pref) {
+		List<CharSequence> entries = new ArrayList<CharSequence>();
+		List<CharSequence> values = new ArrayList<CharSequence>();
+		entries.add("none");
+		values.add("0");
+		for (int i = 5; i <= 30; i += 5) {
+			String str = Integer.toString(i);
+			entries.add(str);
+			values.add(str);
+		}
+		setListPreferenceValues(pref, entries, values);
+		String value = Integer.toString(mPrefs.getPreferredVideoFps());
+		if (value.equals("0")) {
+			value = "none";
+		}
 		pref.setSummary(value);
 		pref.setValue(value);
 	}
@@ -545,7 +580,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_adaptive_rate_algorithm_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromString((String)newValue));
+				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromString((String) newValue));
 				preference.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
 				return true;
 			}
@@ -557,10 +592,10 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setCodecBitrateLimit(Integer.parseInt(newValue.toString()));
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				int bitrate=Integer.parseInt(newValue.toString());
+				int bitrate = Integer.parseInt(newValue.toString());
 
 				for (final PayloadType pt : lc.getAudioCodecs()) {
-					if(lc.payloadTypeIsVbr(pt)){
+					if (lc.payloadTypeIsVbr(pt)) {
 						lc.setPayloadTypeBitrate(pt, bitrate);
 					}
 				}
@@ -587,7 +622,13 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initVideoSettings() {
+		initializeVideoPresetPreferences((ListPreference) findPreference(getString(R.string.pref_video_preset_key)));
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
+		initializePreferredVideoFpsPreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_fps_key)));
+		EditTextPreference bandwidth = (EditTextPreference) findPreference(getString(R.string.pref_bandwidth_limit_key));
+		bandwidth.setText(Integer.toString(mPrefs.getBandwidthLimit()));
+		bandwidth.setSummary(bandwidth.getText());
+		updateVideoPreferencesAccordingToPreset();
 
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_video_codecs_key));
 		codecs.removeAll();
@@ -632,6 +673,24 @@ public class SettingsFragment extends PreferencesListFragment {
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
 		//((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_share_my_video_key))).setChecked(mPrefs.shouldAutomaticallyShareMyVideo());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_accept_video_key))).setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
+	}
+
+	private void updateVideoPreferencesAccordingToPreset() {
+		if (mPrefs.getVideoPreset().equals("custom")) {
+			findPreference(getString(R.string.pref_preferred_video_fps_key)).setEnabled(true);
+			findPreference(getString(R.string.pref_bandwidth_limit_key)).setEnabled(true);
+		} else {
+			findPreference(getString(R.string.pref_preferred_video_fps_key)).setEnabled(false);
+			findPreference(getString(R.string.pref_bandwidth_limit_key)).setEnabled(false);
+		}
+		((ListPreference) findPreference(getString(R.string.pref_video_preset_key))).setSummary(mPrefs.getVideoPreset());
+		int fps = mPrefs.getPreferredVideoFps();
+		String fpsStr = Integer.toString(fps);
+		if (fpsStr.equals("0")) {
+			fpsStr = "none";
+		}
+		((ListPreference) findPreference(getString(R.string.pref_preferred_video_fps_key))).setSummary(fpsStr);
+		((EditTextPreference) findPreference(getString(R.string.pref_bandwidth_limit_key))).setSummary(Integer.toString(mPrefs.getBandwidthLimit()));
 	}
 
 	private void setVideoPreferencesListener() {
@@ -682,11 +741,39 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 		});
 
+		findPreference(getString(R.string.pref_video_preset_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setVideoPreset(newValue.toString());
+				preference.setSummary(mPrefs.getVideoPreset());
+				updateVideoPreferencesAccordingToPreset();
+				return true;
+			}
+		});
 		findPreference(getString(R.string.pref_preferred_video_size_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setPreferredVideoSize(newValue.toString());
 				preference.setSummary(mPrefs.getPreferredVideoSize());
+				updateVideoPreferencesAccordingToPreset();
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_preferred_video_fps_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setPreferredVideoFps(Integer.parseInt(newValue.toString()));
+				updateVideoPreferencesAccordingToPreset();
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_bandwidth_limit_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setBandwidthLimit(Integer.parseInt(newValue.toString()));
+				preference.setSummary(newValue.toString());
 				return true;
 			}
 		});

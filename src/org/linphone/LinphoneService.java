@@ -35,6 +35,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -116,6 +117,7 @@ public final class LinphoneService extends Service {
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
 	private LinphoneCoreListenerBase mListener;
+	public static int notifcationsPriority = (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41) ? Notification.PRIORITY_DEFAULT : 0);
 
 	public int getMessageNotifCount() {
 		return mMsgNotifCount;
@@ -153,7 +155,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true,notifcationsPriority);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 
@@ -271,6 +273,7 @@ public final class LinphoneService extends Service {
 		}
 
 	};
+		
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
 	private IncallIconState mCurrentIncallIconState = IncallIconState.IDLE;
@@ -357,7 +360,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent);
+		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent,notifcationsPriority);
 		
 		mCustomNotif.defaults |= Notification.DEFAULT_VIBRATE;
 		mCustomNotif.defaults |= Notification.DEFAULT_SOUND;
@@ -529,7 +532,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent, true);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent, true,notifcationsPriority);
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
 
@@ -550,6 +553,17 @@ public final class LinphoneService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
+			Log.d("Task removed, stop service");
+			LinphoneManager.getLc().setNetworkReachable(false);
+			stopSelf();
+		}
+		super.onTaskRemoved(rootIntent);
 	}
 
 	@Override
