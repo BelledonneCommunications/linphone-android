@@ -73,7 +73,6 @@
 	<bool name="intercept_outgoing_gsm_calls">false</bool>
 	<bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool>
 	<bool name="use_linphonecore_ringing">false</bool>
-
 	<!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
 	<bool name="display_sms_remote_provisioning_activity">false</bool>
 	<bool name="forbid_app_usage_until_remote_provisioning_completed">false</bool>
@@ -91,5 +90,6 @@
 	<string name="temp_photo_name_with_date">linphone-android-photo-%s.jpg</string>
 
 	<bool name="enable_call_notification">true</bool>
+	<bool name="kill_service_with_task_manager">true</bool>
 </resources>
 
