@@ -319,7 +319,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			// For each, add menus to configure it
 			String username = mPrefs.getAccountUsername(accountId);
 			String domain = mPrefs.getAccountDomain(accountId);
-			LedPreference account = new LedPreference(LinphoneService.instance());
+			LedPreference account = new LedPreference(getActivity());
 
 			if (username == null) {
 				account.setTitle(getString(R.string.pref_sipaccount));
@@ -625,7 +625,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (final PayloadType pt : lc.getVideoCodecs()) {
-			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
+			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMime());
 
 			if (!pt.getMime().equals("VP8")) {
