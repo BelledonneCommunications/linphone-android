@@ -298,10 +298,12 @@ public class InAppPurchaseHelper {
 		
 		if (buyIntentBundle != null) {
 			PendingIntent pendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT);
-			try {
-				((Activity) mContext).startIntentSenderForResult(pendingIntent.getIntentSender(), ACTIVITY_RESULT_CODE_PURCHASE_ITEM, new Intent(), 0, 0, 0);
-			} catch (SendIntentException e) {
-				Log.e(e);
+			if (pendingIntent != null) {
+				try {
+					((Activity) mContext).startIntentSenderForResult(pendingIntent.getIntentSender(), ACTIVITY_RESULT_CODE_PURCHASE_ITEM, new Intent(), 0, 0, 0);
+				} catch (SendIntentException e) {
+					Log.e(e);
+				}
 			}
 		}
 	}
