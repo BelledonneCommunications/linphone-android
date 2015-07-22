@@ -2,6 +2,7 @@ package org.linphone.compatibility;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.media.AudioManager;
 import android.preference.Preference;
 import android.preference.TwoStatePreference;
 import android.view.View;
@@ -44,5 +45,9 @@ public class ApiFourteenPlus {
 	
 	public static void showNavigationBar(Activity activity) {
         activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+	}
+
+	public static String getAudioManagerEventForBluetoothConnectionStateChangedEvent() {
+		return AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED;
 	}
 }

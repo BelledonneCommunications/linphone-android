@@ -36,30 +36,27 @@ public class ApiSixteenPlus {
 	public static Notification createMessageNotification(Context context,
 			int msgCount, String msgSender, String msg, Bitmap contactIcon,
 			PendingIntent intent) {
-		String title, summary;
+		String title;
 		if (msgCount == 1) {
-			title = "Unread message from %s".replace("%s", msgSender);
-			summary = "";
+			title = msgSender;
 		} else {
-			title = "%i unread messages"
+			title = context.getString(R.string.unread_messages)
 					.replace("%i", String.valueOf(msgCount));
-			summary = "";
 		}
 
-		Notification notif = new Notification.BigPictureStyle(
-				new Notification.Builder(context)
+		Notification notif = new Notification.Builder(context)
 						.setContentTitle(title)
 						.setContentText(msg)
 						.setSmallIcon(R.drawable.chat_icon_over)
 						.setAutoCancel(true)
+						.setContentIntent(intent)
 						.setDefaults(
 								Notification.DEFAULT_LIGHTS
 										| Notification.DEFAULT_SOUND
 										| Notification.DEFAULT_VIBRATE)
 						.setWhen(System.currentTimeMillis())
-						.setLargeIcon(contactIcon)).setSummaryText(summary)
+						.setLargeIcon(contactIcon)
 				.build();
-		notif.contentIntent = intent;
 
 		return notif;
 	}
@@ -68,18 +65,62 @@ public class ApiSixteenPlus {
 			String title, String msg, int iconID, Bitmap contactIcon,
 			String contactName, PendingIntent intent) {
 
-		Notification notif = new Notification.BigPictureStyle(
-				new Notification.Builder(context).setContentTitle(contactName)
+		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
 						.setContentText(msg).setSmallIcon(iconID)
 						.setAutoCancel(false)
+						.setContentIntent(intent)
 						.setWhen(System.currentTimeMillis())
-						.setLargeIcon(contactIcon)).build();
-		notif.contentIntent = intent;
-
+						.setLargeIcon(contactIcon).build();
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		
+		return notif;
+	}
+	
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
+		Notification notif;
+		
+		if (largeIcon != null) {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setLargeIcon(largeIcon)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .setPriority(priority)
+	        .build();
+		} else {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .setPriority(priority)
+	        .build();
+		}
+		if (isOngoingEvent) {
+			notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		}
+		
 		return notif;
 	}
 
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);		
+	}
+
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context)
+		.setContentTitle(title)
+		.setContentText(text)
+		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setAutoCancel(true)
+		.setContentIntent(intent)
+		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+		.setWhen(System.currentTimeMillis())
+		.build();
+
+		return notif;
 	}
 }

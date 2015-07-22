@@ -21,14 +21,17 @@ import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneFriend;
-import org.linphone.core.OnlineStatus;
+import org.linphone.core.PresenceActivityType;
+import org.linphone.mediastream.Log;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +40,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AlphabetIndexer;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,9 +50,8 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
+@SuppressLint("DefaultLocale")
 public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
-	private Handler mHandler = new Handler();
-	
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView allContacts, linphoneContacts, newContact, noSipContact, noContact;
@@ -57,7 +60,20 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private AlphabetIndexer indexer;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
 	private String sipAddressToAdd;
+	private ImageView clearSearchField;
+	private EditText searchField;
+	private Cursor searchCursor;
+
+	private static ContactsFragment instance;
 	
+	static final boolean isInstanciated() {
+		return instance != null;
+	}
+
+	public static final ContactsFragment instance() {
+		return instance;
+	}
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
@@ -89,7 +105,30 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         
         allContacts.setEnabled(onlyDisplayLinphoneContacts);
         linphoneContacts.setEnabled(!allContacts.isEnabled());
+		
         
+		clearSearchField = (ImageView) view.findViewById(R.id.clearSearchField);
+		clearSearchField.setOnClickListener(this);
+		
+		searchField = (EditText) view.findViewById(R.id.searchField);
+		searchField.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				searchContacts(searchField.getText().toString());
+			}
+		});
+
 		return view;
     }
 
@@ -99,47 +138,87 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		
 		if (id == R.id.allContacts) {
 			onlyDisplayLinphoneContacts = false;
-			changeContactsAdapter();
+			if (searchField.getText().toString().length() > 0) {
+				searchContacts();
+			} else {
+				changeContactsAdapter();
+			}
 		} 
 		else if (id == R.id.linphoneContacts) {
 			onlyDisplayLinphoneContacts = true;
-			changeContactsAdapter();
-			
+			if (searchField.getText().toString().length() > 0) {
+				searchContacts();
+			} else {
+				changeContactsAdapter();
+			}
 		} 
 		else if (id == R.id.newContact) {
 			editConsumed = true;
 			LinphoneActivity.instance().addContact(null, sipAddressToAdd);
 		} 
+		else if (id == R.id.clearSearchField) {
+			searchField.setText("");
+		}
+	}
+	
+	private void searchContacts() {
+		searchContacts(searchField.getText().toString());
+	}
+
+	private void searchContacts(String search) {
+		if (search == null || search.length() == 0) {
+			changeContactsAdapter();
+			return;
+		}
+		changeContactsToggle();
+		
+		if (searchCursor != null) {
+			searchCursor.close();
+		}
+		
+		if (onlyDisplayLinphoneContacts) {
+			searchCursor = Compatibility.getSIPContactsCursor(getActivity().getContentResolver(), search, ContactsManager.getInstance().getContactsId());
+			indexer = new AlphabetIndexer(searchCursor, Compatibility.getCursorDisplayNameColumnIndex(searchCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			contactsList.setAdapter(new ContactsListAdapter(null, searchCursor));
+		} else {
+			searchCursor = Compatibility.getContactsCursor(getActivity().getContentResolver(), search, ContactsManager.getInstance().getContactsId());
+			indexer = new AlphabetIndexer(searchCursor, Compatibility.getCursorDisplayNameColumnIndex(searchCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			contactsList.setAdapter(new ContactsListAdapter(null, searchCursor));
+		}
 	}
 	
 	private void changeContactsAdapter() {
 		changeContactsToggle();
 		
-		Cursor allContactsCursor = LinphoneActivity.instance().getAllContactsCursor();
-		Cursor sipContactsCursor = LinphoneActivity.instance().getSIPContactsCursor();
+		if (searchCursor != null) {
+			searchCursor.close();
+		}
+		
+		Cursor allContactsCursor = ContactsManager.getInstance().getAllContactsCursor();
+		Cursor sipContactsCursor = ContactsManager.getInstance().getSIPContactsCursor();
 
 		noSipContact.setVisibility(View.GONE);
 		noContact.setVisibility(View.GONE);
 		contactsList.setVisibility(View.VISIBLE);
 		
 		if (onlyDisplayLinphoneContacts) {
-			if (sipContactsCursor.getCount() == 0) {
+			if (sipContactsCursor != null && sipContactsCursor.getCount() == 0) {
 				noSipContact.setVisibility(View.VISIBLE);
 				contactsList.setVisibility(View.GONE);
 			} else {
 				indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getSIPContacts(), sipContactsCursor));
+				contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts(), sipContactsCursor));
 			}
 		} else {
-			if (allContactsCursor.getCount() == 0) {
+			if (allContactsCursor != null && allContactsCursor.getCount() == 0) {
 				noContact.setVisibility(View.VISIBLE);
 				contactsList.setVisibility(View.GONE);
 			} else {
 				indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-				contactsList.setAdapter(new ContactsListAdapter(LinphoneActivity.instance().getAllContacts(), allContactsCursor));
+				contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
 			}
 		}
-		LinphoneActivity.instance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
+		ContactsManager.getInstance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
 	}
 	
 	private void changeContactsToggle() {
@@ -166,6 +245,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	
 	@Override
 	public void onResume() {
+		instance = this;
 		super.onResume();
 		
 		if (editConsumed) {
@@ -175,20 +255,32 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
-			onlyDisplayLinphoneContacts = LinphoneActivity.instance().isLinphoneContactsPrefered();
+			onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered();
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
 		}
 		
 		invalidate();
 	}
 	
+	@Override
+	public void onPause() {
+		instance = null;
+		if (searchCursor != null) {
+			searchCursor.close();
+		}
+		super.onPause();
+	}
+	
 	public void invalidate() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				changeContactsAdapter();
-				contactsList.setSelectionFromTop(lastKnownPosition, 0);
-			}
-		});
+		if (searchField != null && searchField.getText().toString().length() > 0) {
+			searchContacts(searchField.getText().toString());
+		} else {
+			changeContactsAdapter();
+		}
+		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
 	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
@@ -201,8 +293,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			contacts = contactsList;
 			cursor = c;
 
-			margin = LinphoneUtils.pixelsToDpi(getResources(), 10);
-			bitmapUnknown = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			margin = LinphoneUtils.pixelsToDpi(LinphoneActivity.instance().getResources(), 10);
+			bitmapUnknown = BitmapFactory.decodeResource(LinphoneActivity.instance().getResources(), R.drawable.unknown_small);
 		}
 		
 		public int getCount() {
@@ -210,7 +302,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 
 		public Object getItem(int position) {
-			if (position >= contacts.size()) {
+			if (contacts == null || position >= contacts.size()) {
 				return Compatibility.getContact(getActivity().getContentResolver(), cursor, position);
 			} else {
 				return contacts.get(position);
@@ -258,16 +350,17 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			}
 			
 			ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
-			LinphoneFriend friend = contact.getFriend();
-			if (!LinphoneActivity.instance().isContactPresenceDisabled() && friend != null) {
+			LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();
+			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
 				friendStatus.setVisibility(View.VISIBLE);
-				if (friend.getStatus() == OnlineStatus.Online) {
+				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();
+				if (presenceActivity == PresenceActivityType.Online) {
 					friendStatus.setImageResource(R.drawable.led_connected);
-				} else if (friend.getStatus() == OnlineStatus.Busy || friend.getStatus() == OnlineStatus.DoNotDisturb) {
+				} else if (presenceActivity == PresenceActivityType.Busy) {
 					friendStatus.setImageResource(R.drawable.led_error);
-				} else if (friend.getStatus() == OnlineStatus.Away || friend.getStatus() == OnlineStatus.BeRightBack) {
+				} else if (presenceActivity == PresenceActivityType.Away) {
 					friendStatus.setImageResource(R.drawable.led_inprogress);
-				} else if (friend.getStatus() == OnlineStatus.Offline) {
+				} else if (presenceActivity == PresenceActivityType.Offline) {
 					friendStatus.setImageResource(R.drawable.led_disconnected);
 				} else {
 					friendStatus.setImageResource(R.drawable.call_quality_indicator_0);

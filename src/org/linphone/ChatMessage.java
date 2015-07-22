@@ -47,6 +47,17 @@ public class ChatMessage {
 		this.isRead = read;
 	}
 	
+	public ChatMessage(int id, String message, Bitmap image, String timestamp, boolean incoming, int status, boolean read) {
+		super();
+		this.id = id;
+		this.message = message;
+		this.timestamp = timestamp;
+		this.incoming = incoming;
+		this.status = status;
+		this.image = image;
+		this.isRead = read;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -97,5 +108,9 @@ public class ChatMessage {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public String toString() {
+		return this.id + " : " + this.message + " (" + this.url + ") @ " + this.timestamp + ", read= " + this.isRead + ", incoming= " + this.incoming + ", status = " + this.status; 
 	}
 }

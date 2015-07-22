@@ -3,18 +3,17 @@ package org.linphone;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.AvatarWithShadow;
-
+import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.RawContacts;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
@@ -34,7 +33,6 @@ public class EditContactFragment extends Fragment {
 	private TextView ok;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
-	private View deleteContact;
 	
 	private boolean isNewContact = true;
 	private Contact contact;
@@ -43,7 +41,8 @@ public class EditContactFragment extends Fragment {
 	private ArrayList<ContentProviderOperation> ops;
 	private int firstSipAddressIndex = -1;
 	private String newSipOrNumberToAdd;
-	
+	private ContactsManager contactsManager;
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
 		
@@ -54,11 +53,17 @@ public class EditContactFragment extends Fragment {
 				isNewContact = false;
 				contactID = Integer.parseInt(contact.getID());
 				contact.refresh(getActivity().getContentResolver());
-			}
-			if (getArguments().getString("NewSipAdress") != null) {
+				if (getArguments().getString("NewSipAdress") != null) {
+					newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
+				}
+
+			} else if (getArguments().getString("NewSipAdress") != null) {
 				newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
+				isNewContact = true;
 			}
 		}
+
+		contactsManager = ContactsManager.getInstance();
 		
 		view = inflater.inflate(R.layout.edit_contact, container, false);
 		
@@ -88,9 +93,9 @@ public class EditContactFragment extends Fragment {
 							return;
 						}
 					}
-					createNewContact();
+					contactsManager.createNewContact(ops, firstName.getText().toString(), lastName.getText().toString());
 				} else {
-					updateExistingContact();
+					contactsManager.updateExistingContact(ops, contact, firstName.getText().toString(), lastName.getText().toString());
 				}
 				
 				for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
@@ -98,13 +103,18 @@ public class EditContactFragment extends Fragment {
 				}
 
 		        try {
-		            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-			        LinphoneActivity.instance().prepareContactsInBackground();
+					getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+					addLinphoneFriendIfNeeded();
+					removeLinphoneTagIfNeeded();
+					contactsManager.prepareContactsInBackground();
 		        } catch (Exception e) {
 		        	e.printStackTrace();
 		        }
-		        
+
 				getFragmentManager().popBackStackImmediate();
+
+				if(LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet))
+					ContactsFragment.instance().invalidate();
 			}
 		});
 		
@@ -157,7 +167,7 @@ public class EditContactFragment extends Fragment {
 			public void afterTextChanged(Editable s) {
 			}
 		});
-		
+
 		if (!isNewContact) {
 			String fn = findContactFirstName(String.valueOf(contactID));
 			String ln = findContactLastName(String.valueOf(contactID));
@@ -186,34 +196,32 @@ public class EditContactFragment extends Fragment {
 		return view;
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if (LinphoneActivity.isInstanciated()) {
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
+	}
+	
 	private void initNumbersFields(final TableLayout controls, final Contact contact) {
 		controls.removeAllViews();
 		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();
 		
 		if (contact != null) {
-			for (String numberOrAddress : contact.getNumerosOrAddresses()) {
+			for (String numberOrAddress : contact.getNumbersOrAddresses()) {
 				View view = displayNumberOrAddress(controls, numberOrAddress);
 				if (view != null)
 					controls.addView(view);
 			}
 		}
 		if (newSipOrNumberToAdd != null) {
-			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, true);
+			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
 			if (view != null)
 				controls.addView(view);
-		}
-		
-		if (!isNewContact) {
-			deleteContact = inflater.inflate(R.layout.contact_delete_button, null);
-			deleteContact.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					deleteExistingContact();
-					LinphoneActivity.instance().removeContactFromLists(contact);
-					LinphoneActivity.instance().displayContacts(false);
-				}
-			});
-			controls.addView(deleteContact, controls.getChildCount());
 		}
 
 		// Add one for phone numbers, one for SIP address
@@ -231,8 +239,10 @@ public class EditContactFragment extends Fragment {
 		return displayNumberOrAddress(controls, numberOrAddress, false);
 	}
 	
+	@SuppressLint("InflateParams")
 	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress, boolean forceAddNumber) {
-		boolean isSip = numberOrAddress.startsWith("sip:");
+		boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
+		
 		if (isSip) {
 			if (firstSipAddressIndex == -1) {
 				firstSipAddressIndex = controls.getChildCount();
@@ -250,7 +260,11 @@ public class EditContactFragment extends Fragment {
 		if (forceAddNumber) {
 			tempNounoa = new NewOrUpdatedNumberOrAddress(isSip);
 		} else {
-			tempNounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+			if(isNewContact || newSipOrNumberToAdd != null) {
+				tempNounoa = new NewOrUpdatedNumberOrAddress(isSip, numberOrAddress);
+			} else {
+				tempNounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+			}
 		}
 		final NewOrUpdatedNumberOrAddress nounoa = tempNounoa;
 		numbersAndAddresses.add(nounoa);
@@ -285,11 +299,13 @@ public class EditContactFragment extends Fragment {
 				nounoa.delete();
 				numbersAndAddresses.remove(nounoa);
 				view.setVisibility(View.GONE);
+
 			}
 		});
 		return view;
 	}
 	
+	@SuppressLint("InflateParams")
 	private void addEmptyRowToAllowNewNumberOrAddress(final TableLayout controls, final boolean isSip) {
 		final View view = inflater.inflate(R.layout.contact_add_row, null);
 		
@@ -348,87 +364,6 @@ public class EditContactFragment extends Fragment {
 				controls.addView(view);
 			}
 		}
-		if (deleteContact != null) {
-			// Move to the bottom the remove contact button
-			controls.removeView(deleteContact);
-			controls.addView(deleteContact, controls.getChildCount());
-		}
-	}
-	
-	private void createNewContact() {
-        contactID = 0;
-
-        ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-    		.withValue(RawContacts.ACCOUNT_TYPE, null)
-    		.withValue(RawContacts.ACCOUNT_NAME, null).build());
-        
-        if (getDisplayName() != null) {           
-            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)              
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, firstName.getText().toString())
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, lastName.getText().toString())
-                .build()
-            );
-        }
-	}
-	
-	private void updateExistingContact() {
-		if (getDisplayName() != null) {        
-			String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE +  "'" ; 
-			String[] args = new String[] { String.valueOf(contactID) };   
-			
-            ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
-        		.withSelection(select, args) 
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, firstName.getText().toString())
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, lastName.getText().toString())
-                .build()
-            );
-        }
-	}
-	
-	private void deleteExistingContact() {
-		String select = ContactsContract.Data.CONTACT_ID + "=?"; 
-		String[] args = new String[] { String.valueOf(contactID) };   
-		
-        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-    		.withSelection(select, args) 
-            .build()
-        );
-        
-        try {
-            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-	}
-	
-	private String getDisplayName() {
-		String displayName = null;
-		if (firstName.getText().length() > 0 && lastName.getText().length() > 0)
-			displayName = firstName.getText().toString() + " " + lastName.getText().toString();
-		else if (firstName.getText().length() > 0)
-			displayName = firstName.getText().toString();
-		else if (lastName.getText().length() > 0)
-			displayName = lastName.getText().toString();
-		return displayName;
-	}
-	
-	private String findRawContactID(String contactID) {
-		Cursor c = getActivity().getContentResolver().query(RawContacts.CONTENT_URI,
-		          new String[]{RawContacts._ID},
-		          RawContacts.CONTACT_ID + "=?",
-		          new String[]{contactID}, null);
-		if (c != null) {
-			String result = null;
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(RawContacts._ID));
-			}
-			c.close();
-			return result;
-		}
-		return null;
 	}
 	
 	private String findContactFirstName(String contactID) {
@@ -462,6 +397,43 @@ public class EditContactFragment extends Fragment {
 		}
 		return null;
 	}
+
+	private void addLinphoneFriendIfNeeded(){
+		for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
+			if(numberOrAddress.newNumberOrAddress != null && numberOrAddress.isSipAddress) {
+				if(isNewContact){
+					Contact c = contactsManager.findContactWithDisplayName(ContactsManager.getInstance().getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
+					if (c != null && !contactsManager.isContactHasAddress(c, numberOrAddress.newNumberOrAddress)) {
+						contactsManager.createNewFriend(c, numberOrAddress.newNumberOrAddress);
+					}
+				} else {
+					if (!contactsManager.isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)){
+						if (numberOrAddress.oldNumberOrAddress == null) {
+							contactsManager.createNewFriend(contact, numberOrAddress.newNumberOrAddress);
+						} else {
+							if (contact.hasFriends())
+								contactsManager.updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void removeLinphoneTagIfNeeded(){
+		if(!isNewContact) {
+			boolean areAllSipFielsEmpty = true;
+			for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
+				if (!nounoa.isSipAddress && (nounoa.oldNumberOrAddress != null && !nounoa.oldNumberOrAddress.equals("") || nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals(""))) {
+					areAllSipFielsEmpty = false;
+					break;
+				}
+			}
+			if (areAllSipFielsEmpty && contactsManager.findRawLinphoneContactID(contact.getID()) != null) {
+				contactsManager.removeLinphoneContactTag(contact);
+			}
+		}
+	}
 	
 	class NewOrUpdatedNumberOrAddress {
 		private String oldNumberOrAddress;
@@ -486,6 +458,12 @@ public class EditContactFragment extends Fragment {
 			isSipAddress = isSip;
 		}
 		
+		public NewOrUpdatedNumberOrAddress(boolean isSip, String newSip) {
+			oldNumberOrAddress = null;
+			newNumberOrAddress = newSip;
+			isSipAddress = isSip;
+		}
+		
 		public void setNewNumberOrAddress(String newN) {
 			newNumberOrAddress = newN;
 		}
@@ -504,44 +482,78 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		public void delete() {
-			if (isSipAddress) {
-				Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
-			} else {
-				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
-						+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
-				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
-				
-	            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI) 
-	        		.withSelection(select, args) 
-	                .build()
-	            );
+			if(contact != null) {
+				if (isSipAddress) {
+					if (contact.hasFriends()) {
+						ContactsManager.getInstance().removeFriend(oldNumberOrAddress);
+					} else {
+						Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
+					}
+					if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+						Compatibility.deleteLinphoneContactTag(ops, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
+					}
+				} else {
+					String select = ContactsContract.Data.CONTACT_ID + "=? AND "
+							+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND "
+							+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
+					String[] args = new String[]{String.valueOf(contactID), oldNumberOrAddress};
+
+					ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+									.withSelection(select, args)
+									.build()
+					);
+				}
 			}
 		}
 		
 		private void addNewNumber() {
+			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
+				return;
+			}
+			
 			if (isNewContact) {
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
+					if(!newNumberOrAddress.contains("@")) {
+						//Use default proxy config domain if it exists
+						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+						if(lpc != null){
+							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
+						} else {
+							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+						}
+					}
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
 				} else {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)        
+					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
 				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
 				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
 				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
 				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
+						.withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
 				        .build()
 				    );
 				}
 			} else {
-				String rawContactId = findRawContactID(String.valueOf(contactID));
-				
+				String rawContactId = contactsManager.findRawContactID(getActivity().getContentResolver(),String.valueOf(contactID));
 				if (isSipAddress) {
 					if (newNumberOrAddress.startsWith("sip:"))
 						newNumberOrAddress = newNumberOrAddress.substring(4);
+					if(!newNumberOrAddress.contains("@")) {
+						//Use default proxy config domain if it exists
+						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+						if(lpc != null){
+							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
+						} else {
+							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+						}
+					}
+
 					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
+					if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+						Compatibility.addLinphoneContactTag(getActivity(), ops, newNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
+					}
 				} else {
 					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
 					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
@@ -556,10 +568,26 @@ public class EditContactFragment extends Fragment {
 		}
 		
 		private void updateNumber() {
+			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
+				return;
+			}
+			
 			if (isSipAddress) {
 				if (newNumberOrAddress.startsWith("sip:"))
 					newNumberOrAddress = newNumberOrAddress.substring(4);
+				if(!newNumberOrAddress.contains("@")) {
+					//Use default proxy config domain if it exists
+					LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+					if(lpc != null){
+						newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
+					} else {
+						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
+					}
+				}
 				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
+				if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+					Compatibility.updateLinphoneContactTag(getActivity(), ops, newNumberOrAddress, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
+				}
 			} else {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
 						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 

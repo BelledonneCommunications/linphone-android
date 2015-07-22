@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.core.LinphoneCore;
 import org.linphone.mediastream.Log;
 
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -34,15 +35,18 @@ import android.widget.TextView;
  */
 public class AboutFragment extends Fragment implements OnClickListener {
 	private FragmentsAvailable about = FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
+	View exitButton = null;
+	View sendLogButton = null;
+	View resetLogButton = null;
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (getArguments() != null && getArguments().getSerializable("About") != null) {
 			about = (FragmentsAvailable) getArguments().getSerializable("About");
 		}
-		
+
 		View view = inflater.inflate(R.layout.about, container, false);
-		
+
 		TextView aboutText = (TextView) view.findViewById(R.id.AboutText);
 		try {
 			aboutText.setText(String.format(getString(R.string.about_text), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
@@ -50,31 +54,58 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			Log.e(e, "cannot get version name");
 		}
 
-		View issue = view.findViewById(R.id.exit);
-		issue.setOnClickListener(this);
-		issue.setVisibility(View.VISIBLE);
-		
+		sendLogButton = view.findViewById(R.id.send_log);
+		sendLogButton.setOnClickListener(this);
+		sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+
+		resetLogButton = view.findViewById(R.id.reset_log);
+		resetLogButton.setOnClickListener(this);
+		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+
+		exitButton = view.findViewById(R.id.exit);
+		exitButton.setOnClickListener(this);
+		exitButton.setVisibility(View.VISIBLE);
+
 		return view;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(about);
+
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
 		}
 	}
 	
+
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
-
-			if (getResources().getBoolean(R.bool.enable_log_collect)) {
-				LinphoneUtils.collectLogs(getString(R.string.app_name), getString(R.string.about_bugreport_email));
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (v == sendLogButton) {
+				//LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
+				if (lc != null) {
+					lc.uploadLogCollection();
+				}
+			} else if (v == resetLogButton) {
+				if (lc != null) {
+					lc.resetLogCollection();
+				}
 			} else {
 				LinphoneActivity.instance().exit();
 			}
 		}
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	
 }

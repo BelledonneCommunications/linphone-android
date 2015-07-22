@@ -32,14 +32,14 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:textAppearance="?android:attr/textAppearanceLarge"
-		    	android:textColor="@android:color/black" />
+		    	android:textColor="@color/text_contrast" />
 	        
 	        <TextView
 	            android:id="@+id/contactAddress"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:textAppearance="?android:attr/textAppearanceSmall"
-		    	android:textColor="@android:color/black" />
+		    	android:textColor="@color/text_contrast" />
         
         </LinearLayout>
         
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:textSize="13sp"
-	    	android:textColor="@android:color/black" />
+	    	android:textColor="@color/text_contrast" />
         
         <TextView
             android:id="@+id/date"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textSize="13sp"
-	    	android:textColor="@android:color/black" />
+	    	android:textColor="@color/text_contrast" />
         
         <TextView
             android:id="@+id/time"
@@ -79,7 +79,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:textSize="13sp"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/text_contrast" />
         
     </RelativeLayout>
     

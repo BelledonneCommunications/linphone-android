@@ -26,8 +26,9 @@
          application and should be checked into Version Control Systems.
 
          -->
-    <property file="ant.properties" />
     <property file="default.properties" />
+    <property file="ant.properties" />
+    <property file="ant_password.properties" />
 
     <!-- if sdk.dir was not set from one of the property file, then
          get it from the ANDROID_HOME env var.
@@ -87,7 +88,22 @@
          In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
          in order to avoid having your file be overridden by tools such as "android update project"
     -->
-    <!-- version-tag: custom -->
-    <import file="${sdk.dir}/tools/ant/build.xml" />
+	<path id="android.antlibs">
+		<pathelement path="${sdk.dir}/tools/lib/ant-tasks.jar" />
+	</path>
+
+	<!-- Custom tasks -->
+	<taskdef resource="anttasks.properties" classpathref="android.antlibs" />
+	<property name="exe" value="" />
+	<property name="bat" value="" />
+	
+	<getbuildtools name="android.build.tools.dir" verbose="${verbose}" />
+	<property name="aidl" location="${android.build.tools.dir}/aidl${exe}" />
+	<property name="aapt" location="${android.build.tools.dir}/aapt${exe}" />
+	<property name="dx" location="${android.build.tools.dir}/dx${bat}" />
+	<property name="zipalign" location="${android.build.tools.dir}/zipalign${exe}" />
+
+	<!-- version-tag: custom -->
+	<import file="${sdk.dir}/tools/ant/build.xml" />
 
 </project>

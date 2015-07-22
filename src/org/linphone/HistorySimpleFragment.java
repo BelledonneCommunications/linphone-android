@@ -130,8 +130,14 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (LinphoneActivity.isInstanciated())
+		
+		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
 		
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
@@ -385,22 +391,25 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 				address = log.getTo();
 				callDirection.setImageBitmap(outgoingCall);
 			}
-			
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
-			String displayName = address.getDisplayName(); 
-			String sipUri = address.asStringUriOnly();
+
+			Contact c = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
+			String displayName = null;
+			final String sipUri = address.asStringUriOnly();
+			if(c != null){
+				displayName = c.getName();
+			}
 
 			if (displayName == null) {
 				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-					contact.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
+					contact.setText(address.getUserName());
 				} else {
 					contact.setText(sipUri);
 				}
 			} else {
 				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(address.getDisplayName())) {
-					contact.setText(LinphoneUtils.getUsernameFromAddress(address.getDisplayName()));
-				} else {
 					contact.setText(displayName);
+				} else {
+					contact.setText(sipUri);
 				}
 			}
 			view.setTag(sipUri);
@@ -415,7 +424,7 @@ public class HistorySimpleFragment extends Fragment implements OnClickListener, 
 					@Override
 					public void onClick(View v) {
 						if (LinphoneActivity.isInstanciated()) {
-							LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
+							LinphoneActivity.instance().displayHistoryDetail(sipUri, log);
 						}
 					}
 				});

@@ -153,5 +153,14 @@
         <include layout="@layout/menu_about_settings_button" />
         
     </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/fragmentContainer2"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+    </LinearLayout>
 
 </RelativeLayout>

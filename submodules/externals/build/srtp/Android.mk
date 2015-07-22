@@ -50,14 +50,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/crypto/include 
 
 
+LOCAL_MODULE := libsrtp
+LOCAL_MODULE_FILENAME := libsrtp-$(TARGET_ARCH_ABI)
 
-# Build dynamic and static versions
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-LOCAL_MODULE:= libsrtp
-include $(BUILD_SHARED_LIBRARY)
-else
-LOCAL_MODULE:= libsrtp-static
 include $(BUILD_STATIC_LIBRARY)
-endif
-
-

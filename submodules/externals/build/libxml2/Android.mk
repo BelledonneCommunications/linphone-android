@@ -56,7 +56,12 @@ common_C_INCLUDES += \
 LOCAL_C_INCLUDES += $(common_C_INCLUDES)
 #LOCAL_CFLAGS += -fvisibility=hidden
 
+LOCAL_SRC_FILES := $(common_SRC_FILES)
+
 LOCAL_MODULE:= liblpxml2
+
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
 
 include $(BUILD_STATIC_LIBRARY)
 

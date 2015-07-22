@@ -1,0 +1,11 @@
+--- submodules/externals/ffmpeg/library.mak.orig	2013-09-26 10:58:19.000000000 +0200
++++ submodules/externals/ffmpeg/library.mak	2013-09-26 10:58:13.000000000 +0200
+@@ -54,7 +54,7 @@
+ 
+ $(SUBDIR)$(SLIBNAME_WITH_MAJOR): $(OBJS) $(SUBDIR)lib$(NAME).ver
+ 	$(SLIB_CREATE_DEF_CMD)
+-	$$(LD) $(SHFLAGS) $(LDFLAGS) $$(LD_O) $$(filter %.o,$$^) $(FFEXTRALIBS)
++	$$(LD) $(subst $$(@F),$(SLIBNAME),$(SHFLAGS)) $(LDFLAGS) $$(LD_O) $$(filter %.o,$$^) $(FFEXTRALIBS)
+ 	$(SLIB_EXTRA_CMD)
+ 
+ ifdef SUBDIR

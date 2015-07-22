@@ -7,6 +7,7 @@
     
     <TextView 
         android:id="@+id/message"
+        android:visibility="gone"
         android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,10 +15,13 @@
     
     <ImageView
         android:id="@+id/image"
+        android:visibility="gone"
         android:adjustViewBounds="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:maxWidth="250dp"
+        android:maxHeight="250dp" />
     
     <Button
         android:id="@+id/download"
@@ -26,11 +30,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
+    
+    <ProgressBar 
+        android:id="@+id/spinner"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <TextView 
         android:id="@+id/time"
         android:textColor="@android:color/darker_gray"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:gravity="bottom"
         android:singleLine="true"
         android:paddingLeft="5dp"

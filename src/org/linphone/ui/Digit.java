@@ -20,12 +20,16 @@ package org.linphone.ui;
 
 import org.linphone.InCallActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +62,10 @@ public class Digit extends Button implements AddressAware {
 		setOnTouchListener(lListener);
 		
 		if ("0+".equals(text)) {
+			setOnLongClickListener(lListener);
+		}
+		
+		if ("1".equals(text)) {
 			setOnLongClickListener(lListener);
 		}
 	}
@@ -113,7 +121,45 @@ public class Digit extends Button implements AddressAware {
 				if (lBegin >= 0) {
 					mAddress.getEditableText().insert(lBegin,String.valueOf(mKeyCode));
 				}
+
+				if(LinphonePreferences.instance().getDebugPopupAddress() != null
+						&& mAddress.getText().toString().equals(LinphonePreferences.instance().getDebugPopupAddress())){
+					displayDebugPopup();
+				}
 			}
+		}
+
+		public void displayDebugPopup(){
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+			alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
+			if(LinphonePreferences.instance().isDebugLogsEnabled()) {
+				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						if(which == 0){
+							LinphonePreferences.instance().enableDebugLogs(false);
+							LinphoneCoreFactory.instance().enableLogCollection(false);
+						}
+						if(which == 1) {
+							LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+							if (lc != null) {
+								lc.uploadLogCollection();
+							}
+						}
+					}
+				});
+
+			} else {
+				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						if(which == 0) {
+							LinphonePreferences.instance().enableDebugLogs(true);
+							LinphoneCoreFactory.instance().enableLogCollection(true);
+						}
+					}
+				});
+			}
+			alertDialog.show();
+			mAddress.getEditableText().clear();
 		}
 
 		public boolean onTouch(View v, MotionEvent event) {
@@ -138,12 +184,25 @@ public class Digit extends Button implements AddressAware {
 		}
 		
 		public boolean onLongClick(View v) {
+			int id = v.getId();
+			LinphoneCore lc = LinphoneManager.getLc();
+
 			if (mPlayDtmf) {
 				if (!linphoneServiceReady()) return true;
 				// Called if "0+" dtmf
-				LinphoneCore lc = LinphoneManager.getLc();
 				lc.stopDtmf();
 			}
+			
+			if(id == R.id.Digit1 && lc.getCalls().length == 0){
+				String voiceMail = LinphonePreferences.instance().getVoiceMailUri();
+				mAddress.getEditableText().clear();
+				if(voiceMail != null){
+					mAddress.getEditableText().append(voiceMail);
+					LinphoneManager.getInstance().newOutgoingCall(mAddress);
+				}
+				return true;
+			}
+			
 			
 			if (mAddress == null) return true;
 

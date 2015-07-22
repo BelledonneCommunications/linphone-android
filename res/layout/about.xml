@@ -1,44 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent" 
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-  	android:background="@drawable/background"
-	android:gravity="center">
-    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:gravity="center">
+
+    <View android:layout_weight="30" android:layout_width="0dp" android:layout_height="0dp" />
+
     <ImageView
         android:contentDescription="@string/content_description_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/logo_linphone_57x57" />
 
+    <View android:layout_weight="5" android:layout_width="0dp" android:layout_height="0dp" />
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
         android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/text_default"
         android:textSize="30dp"
         android:textStyle="bold" />
-    
-	<TextView 
-	    android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-		android:text="@string/about_text"
-		android:autoLink="web" 
-		android:gravity="center" 
-		android:paddingTop="50sp"
-		android:textStyle="bold" 
-		android:textColor="@android:color/black"
-		android:id="@+id/AboutText"/>
-	
-	<Button android:id="@+id/exit"
+
+
+    <View android:layout_weight="50" android:layout_width="0dp" android:layout_height="0dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/about_text"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/text_contrast"
+        android:id="@+id/AboutText"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/about_link"
+        android:autoLink="web"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/text_contrast"
+        android:id="@+id/AboutLink"/>
+
+    <View android:layout_weight="30" android:layout_width="0dp" android:layout_height="0dp" />
+
+	<LinearLayout
+		android:orientation="horizontal"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/menu_exit"
-		android:visibility="visible"
-		android:layout_marginTop="30sp"/>
-	
+		android:gravity="center">
+
+		<Button
+       		android:id="@+id/send_log"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+       		android:text="@string/menu_send_log"/>
+
+		<Button
+            android:id="@+id/reset_log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_reset_log"/>
+	</LinearLayout>
+
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="30dp">
+
+		<Button android:id="@+id/exit"
+        	android:gravity="center"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/menu_exit"/>
+
+    </LinearLayout>
+
 </LinearLayout>

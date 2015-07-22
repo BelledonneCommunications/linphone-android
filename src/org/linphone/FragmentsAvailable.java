@@ -35,10 +35,6 @@ public enum FragmentsAvailable {
 	SETTINGS,
 	CHATLIST,
 	CHAT;
-	
-	public boolean shouldAddToBackStack() {
-		return true;
-	}
 
 	public boolean shouldAnimate() {
 		return true;
@@ -68,9 +64,6 @@ public enum FragmentsAvailable {
 		case CHATLIST:
 			return DIALER.isRightOf(fragment) || fragment == DIALER;
 			
-		case CHAT:
-			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
-			
 		case ABOUT_INSTEAD_OF_SETTINGS:
 		case SETTINGS:
 			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
@@ -78,6 +71,9 @@ public enum FragmentsAvailable {
 		case ABOUT:
 		case ACCOUNT_SETTINGS:
 			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
+			
+		case CHAT:
+			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
 			
 		default:
 			return false;

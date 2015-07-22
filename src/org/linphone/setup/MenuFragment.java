@@ -30,7 +30,7 @@ import android.widget.ImageView;
  * @author Sylvain Berfini
  */
 public class MenuFragment extends Fragment implements OnClickListener {
-	private ImageView createAccount, logLinphoneAccount, logGenericAccount;
+	private ImageView createAccount, logLinphoneAccount, logGenericAccount, remoteProvisioning;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +54,13 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			logGenericAccount.setOnClickListener(this);
 		}
 		
+		remoteProvisioning = (ImageView) view.findViewById(R.id.setup_remote_provisioning);
+		if (getResources().getBoolean(R.bool.hide_remote_provisioning_in_wizard)) {
+			view.findViewById(R.id.setup_remote_provisioning_layout).setVisibility(View.GONE);
+		} else {
+			remoteProvisioning.setOnClickListener(this);
+		}
+		
 		return view;
 	}
 
@@ -67,6 +74,8 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			SetupActivity.instance().displayLoginLinphone();
 		} else if (id == R.id.setup_create_account) {
 			SetupActivity.instance().displayWizard();
+		} else if (id == R.id.setup_remote_provisioning) {
+			SetupActivity.instance().displayRemoteProvisioning();
 		}
 	}
 }

@@ -17,7 +17,7 @@
     	android:scrollHorizontally="true"
     	android:fadingEdge="horizontal"
         android:singleLine="true"
-		android:textColor="@android:color/black"
+		android:textColor="@color/text_contrast"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:gravity="left" />
    	
@@ -26,7 +26,7 @@
    	    android:layout_width="0dp"
    	    android:layout_height="match_parent"
    	    android:layout_weight="0.2"
-   	    android:contentDescription="@string/content_description_dial_back"
+   	    android:contentDescription="@string/content_description_call"
    	    android:gravity="right"
    	    android:paddingLeft="5dp"
    	    android:paddingRight="5dp"
@@ -34,7 +34,7 @@
    	    android:src="@drawable/call_answer" />
    	
    	<ImageView
-   	    android:id="@+id/chat"
+   	    android:id="@+id/start_chat"
    	    android:layout_width="0dp"
    	    android:layout_height="match_parent"
    	    android:layout_weight="0.2"

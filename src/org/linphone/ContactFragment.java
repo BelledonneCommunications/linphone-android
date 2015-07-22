@@ -18,13 +18,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +47,7 @@ import android.widget.TextView;
  */
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private TextView editContact;
+	private TextView editContact, deleteContact;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -47,16 +55,33 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	private OnClickListener dialListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if (LinphoneActivity.isInstanciated())
-				LinphoneActivity.instance().setAddresGoToDialerAndCall(v.getTag().toString(), contact.getName(), contact.getPhotoUri());
+			if (LinphoneActivity.isInstanciated()) {
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				if (lc != null) {
+					LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+					String to;
+					if (lpc != null) {
+						String address = v.getTag().toString();
+						if (!address.contains("@")) {
+							to = lpc.normalizePhoneNumber(address);
+						} else {
+							to = v.getTag().toString();
+						}
+					} else {
+						to = v.getTag().toString();
+					}
+					LinphoneActivity.instance().setAddresGoToDialerAndCall(to, contact.getName(), contact.getPhotoUri());
+				}
+			}
 		}
 	};
 	
 	private OnClickListener chatListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if (LinphoneActivity.isInstanciated())
+			if (LinphoneActivity.isInstanciated()) {
 				LinphoneActivity.instance().displayChat(v.getTag().toString());
+			}
 		}
 	};
 	
@@ -73,6 +98,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		editContact = (TextView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
 		
+		deleteContact = (TextView) view.findViewById(R.id.deleteContact);
+		deleteContact.setOnClickListener(this);
+		
 		return view;
 	}
 	
@@ -82,6 +110,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		displayContact(inflater, view);
 	}
 	
+	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
 		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
 		if (contact.getPhotoUri() != null) {
@@ -92,11 +121,12 @@ public class ContactFragment extends Fragment implements OnClickListener {
         }
 		
 		TextView contactName = (TextView) view.findViewById(R.id.contactName);
-		contactName.setText(contact.getName());	
+		contactName.setText(contact.getName());
+
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
-		for (String numberOrAddress : contact.getNumerosOrAddresses()) {
+		for (String numberOrAddress : contact.getNumbersOrAddresses()) {
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
 			String displayednumberOrAddress = numberOrAddress;
@@ -115,9 +145,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				v.findViewById(R.id.dial).setVisibility(View.GONE);
 			}
 
-			v.findViewById(R.id.chat).setOnClickListener(chatListener);
+			v.findViewById(R.id.start_chat).setOnClickListener(chatListener);
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
+				displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
 				if (!displayednumberOrAddress.startsWith("sip:")) {
 					numberOrAddress = "sip:" + displayednumberOrAddress;
 				}
@@ -126,9 +157,9 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				if (!numberOrAddress.contains("@")) {
 					tag = numberOrAddress + "@" + lpc.getDomain();
 				}
-				v.findViewById(R.id.chat).setTag(tag);
+				v.findViewById(R.id.start_chat).setTag(tag);
 			} else {
-				v.findViewById(R.id.chat).setTag(numberOrAddress);
+				v.findViewById(R.id.start_chat).setTag(numberOrAddress);
 			}
 			
 			final String finalNumberOrAddress = numberOrAddress;
@@ -142,7 +173,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 					friend.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (LinphoneActivity.instance().newFriend(contact, finalNumberOrAddress)) {
+							if (ContactsManager.getInstance().createNewFriend(contact, finalNumberOrAddress)) {
 								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
 							}
 						}
@@ -152,7 +183,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 					friend.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (LinphoneActivity.instance().removeFriend(contact, finalNumberOrAddress)) {
+							if (ContactsManager.getInstance().removeFriend(finalNumberOrAddress)) {
 								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
 							}
 						}
@@ -161,7 +192,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			}
 			
 			if (getResources().getBoolean(R.bool.disable_chat)) {
-				v.findViewById(R.id.chat).setVisibility(View.GONE);
+				v.findViewById(R.id.start_chat).setVisibility(View.GONE);
 			}
 			
 			controls.addView(v);
@@ -171,9 +202,15 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT);
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
 		}
+		
 		contact.refresh(getActivity().getContentResolver());
 		if (contact.getName() == null || contact.getName().equals("")) {
 			//Contact has been deleted, return
@@ -188,6 +225,36 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
+		} else if (id == R.id.deleteContact) {
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+			alertDialog.setMessage(getString(R.string.delete_contact_dialog));
+			alertDialog.setPositiveButton(getString(R.string.button_ok),new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+				deleteExistingContact();
+				ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(),contact);
+				LinphoneActivity.instance().displayContacts(false);
+				}
+			});
+			alertDialog.setNegativeButton(getString(R.string.button_cancel),null);
+			alertDialog.show();
 		}
+	}
+	
+	private void deleteExistingContact() {
+		String select = ContactsContract.Data.CONTACT_ID + " = ?"; 
+		String[] args = new String[] { contact.getID() };
+
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+			.withSelection(select, args)
+			.build()
+		);
+        
+        try {
+            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+			ContactsManager.getInstance().removeAllFriends(contact);
+        } catch (Exception e) {
+        	Log.w(e.getMessage() + ":" + e.getStackTrace());
+        }
 	}
 }

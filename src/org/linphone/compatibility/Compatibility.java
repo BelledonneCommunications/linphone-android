@@ -37,7 +37,6 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.Preference;
-import android.view.Display;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /**
@@ -51,10 +50,11 @@ public class Compatibility {
 	}
 	
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			return ApiElevenPlus.prepareAddContactIntent(displayName, sipUri);
+		} else {
 			return ApiFivePlus.prepareAddContactIntent(displayName, sipUri);
 		}
-		return null;
 	}
 	
 	public static Intent prepareEditContactIntent(int id) {
@@ -65,31 +65,63 @@ public class Compatibility {
 	}
 	
 	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipAddress) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
-			return ApiFivePlus.prepareEditContactIntentWithSipAddress(id, sipAddress);
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			return ApiElevenPlus.prepareEditContactIntentWithSipAddress(id, sipAddress);
+		} else {
+			return ApiFivePlus.prepareEditContactIntent(id);	
 		}
-		return null;
 	}
 	
 	public static List<String> extractContactNumbersAndAddresses(String id, ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.extractContactNumbersAndAddresses(id, cr);
+		} else {
 			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
 		}
-		return null;
+	}
+
+	public static List<String> extractContactImAddresses(String id, ContentResolver cr) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiFivePlus.extractContactNumbersAndAddresses(id, cr);
+		} else {
+			return null;
+		}
 	}
 	
-	public static Cursor getContactsCursor(ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
-			return ApiFivePlus.getContactsCursor(cr);
+	public static Cursor getContactsCursor(ContentResolver cr, List<String> contactsId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getContactsCursor(cr, null, contactsId);
+		} else {
+			return ApiFivePlus.getContactsCursor(cr, contactsId);
 		}
-		return null;
 	}
 	
-	public static Cursor getSIPContactsCursor(ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
-			return ApiFivePlus.getSIPContactsCursor(cr);
+	public static Cursor getContactsCursor(ContentResolver cr, String search, List<String> contactsId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getContactsCursor(cr, search, contactsId);
+		} else {
+			return ApiFivePlus.getContactsCursor(cr, contactsId);
 		}
-		return null;
+	}
+
+	public static Cursor getSIPContactsCursor(ContentResolver cr, List<String> contactsId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getSIPContactsCursor(cr, null, contactsId);
+		} else {
+			return ApiFivePlus.getSIPContactsCursor(cr, contactsId);
+		}
+	}
+	
+	public static Cursor getSIPContactsCursor(ContentResolver cr, String search, List<String> contactsId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.getSIPContactsCursor(cr, search, contactsId);
+		} else {
+			return ApiFivePlus.getSIPContactsCursor(cr, contactsId);
+		}
+	}
+
+	public static Cursor getImContactsCursor(ContentResolver cr) {
+		return ApiFivePlus.getSIPContactsCursor(cr,null);
 	}
 	
 	public static int getCursorDisplayNameColumnIndex(Cursor cursor) {
@@ -114,10 +146,26 @@ public class Compatibility {
 	}
 	
 	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver cr) {
-		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			return ApiNinePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
+		} else {
 			return ApiFivePlus.findUriPictureOfContactAndSetDisplayName(address, cr);
 		}
-		return null;
+	}
+	
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = null;
+		
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createSimpleNotification(context, title, text, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+			notif = ApiSixteenPlus.createSimpleNotification(context, title, text, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			notif = ApiElevenPlus.createSimpleNotification(context, title, text, intent);
+		} else {
+			notif = ApiFivePlus.createSimpleNotification(context, title, text, intent);
+		}
+		return notif;
 	}
 	
 	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
@@ -129,7 +177,9 @@ public class Compatibility {
 			title = "%i unread messages".replace("%i", String.valueOf(msgCount));
 		}
 		
-		if (Version.sdkAboveOrEqual(16)) {
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
@@ -142,7 +192,9 @@ public class Compatibility {
 	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 		Notification notif = null;
 		
-		if (Version.sdkAboveOrEqual(16)) {
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
@@ -152,27 +204,23 @@ public class Compatibility {
 		return notif;
 	}
 
+	public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent,priority);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+			return ApiSixteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent,priority);
+		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			return ApiElevenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
+		} else {
+			return ApiFivePlus.createNotification(context, title, message, icon, iconLevel, intent, isOngoingEvent);
+		}
+	}
+
 	public static String refreshContactName(ContentResolver cr, String id) {
 		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.refreshContactName(cr, id);
 		}
 		return null;
-	}
-
-	public static int getRotation(Display display) {
-		if (Version.sdkStrictlyBelow(Version.API08_FROYO_22)) {
-			return ApiFivePlus.getRotation(display);
-		} else {
-			return ApiEightPlus.getRotation(display);
-		}
-	}
-	
-	public static void setNotificationLatestEventInfo(Notification notif, Context context, String title, String content, PendingIntent intent) {
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			ApiElevenPlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
-		} else {
-			ApiFivePlus.setNotificationLatestEventInfo(notif, context, title, content, intent);
-		}
 	}
 
 	public static CompatibilityScaleGestureDetector getScaleGestureDetector(Context context, CompatibilityScaleGestureListener listener) {
@@ -246,7 +294,36 @@ public class Compatibility {
 			ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
 		}
 	}
-	
+
+	public static void deleteImAddressFromContact(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String contactID) {
+		ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
+	}
+
+	//Linphone Contacts Tag
+	public static void addLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newSipAddress, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.addLinphoneContactTag(context, ops, newSipAddress, rawContactId);
+		}
+	}
+
+	public static void updateLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newSipAddress, String oldSipAddress, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.updateLinphoneContactTag(context, ops, newSipAddress, oldSipAddress, rawContactId);
+		}
+	}
+
+	public static void deleteLinphoneContactTag(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.deleteLinphoneContactTag(ops, oldSipAddress, rawContactId);
+		}
+	}
+
+	public static void createLinphoneContactTag(Context context, ContentResolver contentResolver, Contact contact, String rawContactId) {
+		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
+			ApiNinePlus.createLinphoneContactTag(context, contentResolver, contact, rawContactId);
+		}
+	}
+	//End of Linphone Contact Tag
 
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
@@ -275,6 +352,14 @@ public class Compatibility {
 			ApiElevenPlus.setAudioManagerInCallMode(manager);
 		} else {
 			ApiFivePlus.setAudioManagerInCallMode(manager);
+		}
+	}
+	
+	public static String getAudioManagerEventForBluetoothConnectionStateChangedEvent() {
+		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
+			return ApiFourteenPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
+		} else {
+			return ApiEightPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
 		}
 	}
 }

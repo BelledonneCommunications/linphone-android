@@ -1,0 +1,3 @@
+Fist compile linphone libraries using the makefile in the parent folder (with the make command)
+Then set the url to your configuration in the res/raw/linphonerc_default file
+Finally install and run this app on your device (using eclipse for example)

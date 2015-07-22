@@ -17,19 +17,32 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatMessage.State;
+import org.linphone.core.LinphoneContent;
+import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -42,6 +55,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -85,115 +99,126 @@ public class BubbleChat {
 	
 	private RelativeLayout view;
 	private ImageView statusView;
-	private Button download;
+	private LinphoneChatMessage nativeMessage;
+	private LinphoneChatMessage.LinphoneChatMessageListener fileTransferListener;
+	private Context mContext;
+	private static final int SIZE_MAX = 512;
 	
-	public BubbleChat(Context context, int id, String message, Bitmap image, String time, boolean isIncoming, LinphoneChatMessage.State status, int previousID) {
-		view = new RelativeLayout(context);
+	@SuppressLint("InflateParams") 
+	public BubbleChat(final Context context, LinphoneChatMessage message, LinphoneChatMessage.LinphoneChatMessageListener listener) {
+		if (message == null) {
+			return;
+		}
+		nativeMessage = message;
+		fileTransferListener = listener;
+		mContext = context;
 		
-		LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		view = new RelativeLayout(context);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	
-    	if (isIncoming) {
-    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-    		view.setBackgroundResource(R.drawable.chat_bubble_incoming);
-    	}
-    	else {
+    	if (message.isOutgoing()) {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
     		view.setBackgroundResource(R.drawable.chat_bubble_outgoing);
     	}
-    	
-    	if (previousID != -1) {
-    		layoutParams.addRule(RelativeLayout.BELOW, previousID);
+    	else {
+    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+    		view.setBackgroundResource(R.drawable.chat_bubble_incoming);
     	}
 
-    	view.setId(id);
-    	layoutParams.setMargins(0, LinphoneUtils.pixelsToDpi(context.getResources(), 10), 0, 0);
-    	view.setLayoutParams(layoutParams);	
+    	layoutParams.setMargins(10, 0, 10, 0);
     	
-    	Spanned text = null;
-    	if (message != null) {
-	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
-	    		text = getSmiledText(context, getTextWithHttpLinks(message));
-	    	} else {
-	    		text = getTextWithHttpLinks(message);
-	    	}
-    	}
+    	view.setId(message.getStorageId());	
+    	view.setLayoutParams(layoutParams);
     	
-    	if (context.getResources().getBoolean(R.bool.display_messages_time_and_status)) {
-    		LinearLayout layout;
-	    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
-		    	if (isIncoming) {
-		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_incoming, null);
-		    	} else {
-		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_outgoing, null);
-		    	}
+		LinearLayout layout;
+    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
+	    	if (message.isOutgoing()) {
+	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_outgoing, null);
 	    	} else {
-	    		if (isIncoming) {
-		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
-		    	} else {
-		    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
-		    	}
+	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_incoming, null);
 	    	}
-	    	
-	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
-	    	if (message != null && msgView != null) {
-		    	msgView.setText(text);
-		    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
-	    	} else if (msgView != null) {
-	    		msgView.setVisibility(View.GONE);
-	    	}
-	    	
-	    	ImageView imageView = (ImageView) layout.findViewById(R.id.image);
-	    	if (image != null && imageView != null) {
-		    	imageView.setImageBitmap(image);
-	    	} else if (imageView != null) {
-	    		imageView.setVisibility(View.GONE);
-	    	}
-	    	
-	    	download = (Button) layout.findViewById(R.id.download);
-	    	if (download != null && image == null && message == null) {
-	    		download.setVisibility(View.VISIBLE);
-	    	}
-	    	
-	    	TextView timeView = (TextView) layout.findViewById(R.id.time);
-	    	timeView.setText(timestampToHumanDate(context, time));
-	    	
-	    	statusView = (ImageView) layout.findViewById(R.id.status);
-	    	if (statusView != null) {
-	    		if (status == LinphoneChatMessage.State.Delivered) {
-	    			statusView.setImageResource(R.drawable.chat_message_delivered);
-	    		} else if (status == LinphoneChatMessage.State.NotDelivered) {
-	    			statusView.setImageResource(R.drawable.chat_message_not_delivered);
-	    		} else {
-	    			statusView.setImageResource(R.drawable.chat_message_inprogress);
-	    		}
-	    	}
-	    	
-	    	view.addView(layout);
     	} else {
-    		TextView messageView = new TextView(context);
-    		messageView.setId(id);
-        	messageView.setTextColor(Color.BLACK);
-        	messageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        	messageView.setText(text);
-        	messageView.setLinksClickable(true);
-        	messageView.setMovementMethod(LinkMovementMethod.getInstance());
-        	
-        	view.addView(messageView);
+    		if (message.isOutgoing()) {
+	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
+	    	} else {
+	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
+	    	}
     	}
+
+    	String externalBodyUrl = message.getExternalBodyUrl();
+    	LinphoneContent fileTransferContent = message.getFileTransferInformation();
+    	if (externalBodyUrl != null || fileTransferContent != null) {
+			Button download = (Button) layout.findViewById(R.id.download);
+	    	ImageView imageView = (ImageView) layout.findViewById(R.id.image);
+	    	
+	    	String appData = message.getAppData();
+    		if (appData == null) {
+    	    	download.setVisibility(View.VISIBLE);
+    	    	download.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						v.setEnabled(false);
+						ProgressBar spinner = (ProgressBar) view.findViewById(R.id.spinner);
+						spinner.setVisibility(View.VISIBLE);
+						v.setVisibility(View.GONE);
+
+						nativeMessage.setListener(fileTransferListener);
+						nativeMessage.downloadFile();
+					}
+				});
+    		} else {
+    	    	imageView.setVisibility(View.VISIBLE);
+    	    	loadBitmap(appData, imageView);
+    		}
+    	} else {
+	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
+	    	if (msgView != null) {
+	        	Spanned text = null;
+	        	String msg = message.getText();
+	        	if (msg != null) {
+	    	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+	    	    		text = getSmiledText(context, getTextWithHttpLinks(msg));
+	    	    	} else {
+	    	    		text = getTextWithHttpLinks(msg);
+	    	    	}
+	    	    	msgView.setText(text);
+	    	    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
+	        		msgView.setVisibility(View.VISIBLE);
+	        	}
+	    	}
+    	}
+    	
+    	TextView timeView = (TextView) layout.findViewById(R.id.time);
+    	timeView.setText(timestampToHumanDate(context, message.getTime()));
+    	
+    	LinphoneChatMessage.State status = message.getStatus();
+    	statusView = (ImageView) layout.findViewById(R.id.status);
+    	if (statusView != null) {
+    		if (status == LinphoneChatMessage.State.Delivered) {
+    			statusView.setImageResource(R.drawable.chat_message_delivered);
+    		} else if (status == LinphoneChatMessage.State.NotDelivered) {
+    			statusView.setImageResource(R.drawable.chat_message_not_delivered);
+    		} else {
+    			statusView.setImageResource(R.drawable.chat_message_inprogress);
+    		}
+    	}
+    	
+    	view.addView(layout);
 	}
 	
-	public void updateStatusView(LinphoneChatMessage.State status) {
+	public void updateStatusView() {
 		if (statusView == null) {
 			return;
 		}
 		
-		if (status == LinphoneChatMessage.State.Delivered) {
+		if (nativeMessage.getStatus() == LinphoneChatMessage.State.Delivered) {
 			statusView.setImageResource(R.drawable.chat_message_delivered);
-		} else if (status == LinphoneChatMessage.State.NotDelivered) {
+		} else if (nativeMessage.getStatus() == LinphoneChatMessage.State.NotDelivered) {
 			statusView.setImageResource(R.drawable.chat_message_not_delivered);
 		} else {
 			statusView.setImageResource(R.drawable.chat_message_inprogress);
 		}
+		
 		view.invalidate();
 	}
 	
@@ -201,10 +226,10 @@ public class BubbleChat {
 		return view;
 	}
 	
-	private String timestampToHumanDate(Context context, String timestamp) {
+	private String timestampToHumanDate(Context context, long timestamp) {
 		try {
 			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(Long.parseLong(timestamp));
+			cal.setTimeInMillis(timestamp);
 			
 			SimpleDateFormat dateFormat;
 			if (isToday(cal)) {
@@ -215,7 +240,7 @@ public class BubbleChat {
 			
 			return dateFormat.format(cal.getTime());
 		} catch (NumberFormatException nfe) {
-			return timestamp;
+			return String.valueOf(timestamp);
 		}
 	}
 	
@@ -233,27 +258,30 @@ public class BubbleChat {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 	
-	public static Spannable getSmiledText(Context context, Spanned text) {
-		SpannableStringBuilder builder = new SpannableStringBuilder(text);
-		int index;
+	public static Spannable getSmiledText(Context context, Spanned spanned) {
+		SpannableStringBuilder builder = new SpannableStringBuilder(spanned);
+		String text = spanned.toString();
 
-		for (index = 0; index < builder.length(); index++) {
-		    for (Entry<String, Integer> entry : emoticons.entrySet()) {
-		        int length = entry.getKey().length();
-		        if (index + length > builder.length())
-		            continue;
-		        if (builder.subSequence(index, index + length).toString().equals(entry.getKey())) {
-		            builder.setSpan(new ImageSpan(context, entry.getValue()), index, index + length,
-		            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		            index += length - 1;
-		            break;
-		        }
-		    }
+		for (Entry<String, Integer> entry : emoticons.entrySet()) {
+			String key = entry.getKey();
+			int indexOf = text.indexOf(key);
+			while (indexOf >= 0) {
+				int end = indexOf + key.length();
+				builder.setSpan(new ImageSpan(context, entry.getValue()), indexOf, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				indexOf = text.indexOf(key, end);
+			}
 		}
+		
 		return builder;
 	}
 	
 	public static Spanned getTextWithHttpLinks(String text) {
+		if (text.contains("<")) {
+			text = text.replace("<", "&lt;");
+		}
+		if (text.contains(">")) {
+			text = text.replace(">", "&gt;");
+		}
 		if (text.contains("http://")) {
 			int indexHttp = text.indexOf("http://");
 			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
@@ -271,10 +299,137 @@ public class BubbleChat {
 		
 		return Html.fromHtml(text);
 	}
+	
+	public String getTextMessage() {
+		return nativeMessage.getText();
+	}
 
-	public void setDownloadImageButtonListener(OnClickListener onClickListener) {
-		if (download != null) {
-			download.setOnClickListener(onClickListener);
+	public State getStatus() {
+		return nativeMessage.getStatus();
+	}
+	
+	public LinphoneChatMessage getNativeMessageObject() {
+		return nativeMessage;
+	}
+	
+	public int getId() {
+		return nativeMessage.getStorageId();
+	}
+	
+	public void loadBitmap(String path, ImageView imageView) {
+		if (cancelPotentialWork(path, imageView)) {
+			BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+			Bitmap defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_photo_default);
+			final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), defaultBitmap, task);
+			imageView.setImageDrawable(asyncBitmap);
+			task.execute(path);
 		}
+    }
+	
+	private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+	    private final WeakReference<ImageView> imageViewReference;
+	    public String path;
+
+	    public BitmapWorkerTask(ImageView imageView) {
+	    	path = null;
+	        // Use a WeakReference to ensure the ImageView can be garbage collected
+	        imageViewReference = new WeakReference<ImageView>(imageView);
+	    }
+
+	    // Decode image in background.
+	    @Override
+	    protected Bitmap doInBackground(String... params) {
+	    	path = params[0];
+	    	Bitmap bm = null;
+	    	
+	    	if (path.startsWith("content")) {
+	    		try {
+	    			bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));
+				} catch (FileNotFoundException e) {
+					Log.e(e);
+				} catch (IOException e) {
+					Log.e(e);
+				}
+	    	} else {
+	    		bm = BitmapFactory.decodeFile(path);
+	    		path = "file://" + path;
+	    	}
+	    	
+	    	if (bm != null) {
+	    		if (bm.getWidth() >= bm.getHeight() && bm.getWidth() > SIZE_MAX) {
+					bm = ThumbnailUtils.extractThumbnail(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth());
+				} else if (bm.getHeight() >= bm.getWidth() && bm.getHeight() > SIZE_MAX) {
+					bm = ThumbnailUtils.extractThumbnail(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX);
+				}
+	    	}
+	    	return bm;
+	    }
+
+	    // Once complete, see if ImageView is still around and set bitmap.
+	    @Override
+	    protected void onPostExecute(Bitmap bitmap) {
+	    	if (isCancelled()) {
+	            bitmap = null;
+	        }
+
+	        if (imageViewReference != null && bitmap != null) {
+	            final ImageView imageView = imageViewReference.get();
+	            final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+	            if (this == bitmapWorkerTask && imageView != null) {
+	                imageView.setImageBitmap(bitmap);
+	                imageView.setTag(path);
+			    	imageView.setOnClickListener(new OnClickListener() {
+		    			@Override
+		    			public void onClick(View v) {
+		    				Intent intent = new Intent(Intent.ACTION_VIEW);
+		    				intent.setDataAndType(Uri.parse((String)v.getTag()), "image/*");
+		    				mContext.startActivity(intent);
+		    			}
+		    		});
+	            }
+		    }
+	    }
+	}
+	
+	static class AsyncBitmap extends BitmapDrawable {
+	    private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+	    public AsyncBitmap(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+	        super(res, bitmap);
+	        bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+	    }
+
+	    public BitmapWorkerTask getBitmapWorkerTask() {
+	        return bitmapWorkerTaskReference.get();
+	    }
+	}
+	
+	public static boolean cancelPotentialWork(String path, ImageView imageView) {
+	    final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+	    if (bitmapWorkerTask != null) {
+	        final String bitmapData = bitmapWorkerTask.path;
+	        // If bitmapData is not yet set or it differs from the new data
+	        if (bitmapData == null || bitmapData != path) {
+	            // Cancel previous task
+	            bitmapWorkerTask.cancel(true);
+	        } else {
+	            // The same work is already in progress
+	            return false;
+	        }
+	    }
+	    // No task associated with the ImageView, or an existing task was cancelled
+	    return true;
+	}
+	
+	private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+	   if (imageView != null) {
+	       final Drawable drawable = imageView.getDrawable();
+	       if (drawable instanceof AsyncBitmap) {
+	           final AsyncBitmap asyncDrawable = (AsyncBitmap) drawable;
+	           return asyncDrawable.getBitmapWorkerTask();
+	       }
+	    }
+	    return null;
 	}
 }
