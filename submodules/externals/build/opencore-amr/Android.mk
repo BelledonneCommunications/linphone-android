@@ -277,6 +277,9 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/oscl
 endif
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
+
 include $(BUILD_STATIC_LIBRARY)
 
 

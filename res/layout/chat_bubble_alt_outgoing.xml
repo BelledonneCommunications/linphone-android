@@ -8,6 +8,7 @@
     <ImageView 
 	    android:contentDescription="@string/content_description_message_status"
         android:id="@+id/status"
+        android:visibility="gone"
         android:layout_gravity="bottom"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
     <TextView 
         android:id="@+id/time"
         android:textColor="@android:color/darker_gray"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:gravity="bottom"
         android:singleLine="true"
         android:paddingRight="5dp"
@@ -25,6 +26,7 @@
     
     <TextView 
         android:id="@+id/message"
+        android:visibility="gone"
         android:linksClickable="true"
 		android:autoLink="web"
         android:textColor="@android:color/black"
@@ -34,6 +36,15 @@
     <ImageView
         android:id="@+id/image"
         android:adjustViewBounds="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="250dp"
+        android:maxHeight="250dp" />
+    
+    <Button
+        android:id="@+id/download"
+        android:text="@string/download_image"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     

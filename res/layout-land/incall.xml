@@ -44,6 +44,7 @@
         android:visibility="invisible" />
     
     <org.linphone.ui.Numpad
+        android:contentDescription="@string/content_description_numpad"
         android:id="@+id/numpad"
         android:background="@drawable/dialer_alt_background"
         android:layout_width="wrap_content"
@@ -55,44 +56,62 @@
     
     <LinearLayout
         android:id="@+id/menu"
-       	android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
         android:orientation="horizontal" >
 
-        <ImageView
+        <TextView
+            android:contentDescription="@string/content_description_pause"
             android:id="@+id/pause"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_pause"
-            android:scaleType="fitXY"
-            android:src="@drawable/pause_off" />
+            android:background="@drawable/pause_off"
+            android:gravity="center"
+            android:paddingTop="30dp" />
            
-        <ImageView
+        <TextView
+            android:contentDescription="@string/content_description_conference"
             android:id="@+id/conference"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_conference"
-            android:scaleType="fitXY"
-            android:src="@drawable/conference" />
-
-        <TextView
-        	android:id="@+id/video"
-        	android:background="@drawable/video_off"
-            android:text="@string/button_video"
+            android:background="@drawable/conference"
             android:gravity="center"
-            android:paddingTop="30dp"
-            android:textColor="@drawable/text_incall_button_color"
-        	android:layout_width="match_parent"
-       		android:layout_height="wrap_content"
-       		android:layout_weight="1" />
+            android:paddingTop="30dp" />
+
+        	
+       	<RelativeLayout   
+                android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:gravity="center">
+	            
+           	 <TextView
+	        	android:id="@+id/video"
+	        	android:background="@drawable/video_off"
+	            android:text="@string/button_video"
+	            android:gravity="center"
+	            android:paddingTop="30dp"
+	            android:textColor="@drawable/text_incall_button_color"
+	        	android:layout_width="match_parent"
+	       		android:layout_height="wrap_content"/>
+                
+            <ProgressBar
+                android:id="@+id/videoInProgress"
+                style="?android:attr/progressBarStyle" 
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+	            android:layout_height="wrap_content"/>
+
+            </RelativeLayout>  
+            
+       
 
        	<TextView
         	android:id="@+id/micro"
@@ -105,15 +124,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageView
+        <TextView
+            android:contentDescription="@string/content_description_hang_up"
             android:id="@+id/hangUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.94"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_hang_up"
-            android:scaleType="fitXY"
-            android:src="@drawable/hangup" />
+            android:background="@drawable/hangup"
+            android:gravity="center"
+            android:paddingTop="30dp" />
 
         <TextView
             android:id="@+id/speaker"
@@ -219,15 +238,15 @@
               	
           </LinearLayout>
 
-          <ImageView
-              android:id="@+id/dialer"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:adjustViewBounds="true"
-              android:contentDescription="@string/content_description_numpad"
-              android:scaleType="fitXY"
-              android:src="@drawable/dialer_alt" />
+          <TextView
+          	android:id="@+id/dialer"
+            android:contentDescription="@string/content_description_dialer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/dialer_alt"
+          	android:gravity="center"
+            android:paddingTop="30dp" />
            
        </LinearLayout>
 

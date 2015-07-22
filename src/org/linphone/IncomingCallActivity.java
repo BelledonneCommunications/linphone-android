@@ -20,11 +20,12 @@ package org.linphone;
 
 import java.util.List;
 
-import org.linphone.LinphoneSimpleListener.LinphoneOnCallStateChangedListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.LinphoneSliders;
@@ -44,7 +45,7 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements LinphoneOnCallStateChangedListener, LinphoneSliderTriggered {
+public class IncomingCallActivity extends Activity implements LinphoneSliderTriggered {
 
 	private static IncomingCallActivity instance;
 	
@@ -53,6 +54,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	private AvatarWithShadow mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneSliders mIncomingCallWidget;
+	private LinphoneCoreListenerBase mListener;
 	
 	public static IncomingCallActivity instance() {
 		return instance;
@@ -78,6 +80,19 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
         // "Dial-to-answer" widget for incoming calls.
         mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
         mIncomingCallWidget.setOnTriggerListener(this);
+        
+        mListener = new LinphoneCoreListenerBase(){
+        	@Override
+        	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+        		if (call == mCall && State.CallEnd == state) {
+        			finish();
+        		}
+        		if (state == State.StreamsRunning) {
+        			// The following should not be needed except some devices need it (e.g. Galaxy S).
+        			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+        		}
+        	}
+        };
 
         super.onCreate(savedInstanceState);
 		instance = this;
@@ -87,7 +102,10 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	protected void onResume() {
 		super.onResume();
 		instance = this;
-		LinphoneManager.addListener(this);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
 		
 		// Only one call ringing at a time is allowed
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
@@ -106,11 +124,12 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
 		// May be greatly sped up using a drawable cache
-		Uri uri = LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getContentResolver());
-		LinphoneUtils.setImagePictureFromUri(this, mPictureView.getView(), uri, R.drawable.unknown_small);
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		LinphoneUtils.setImagePictureFromUri(this, mPictureView.getView(), contact != null ? contact.getPhotoUri() : null,
+				 contact != null ? contact.getThumbnailUri() : null, R.drawable.unknown_small);
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
-		mNameView.setText(address.getDisplayName());
+		mNameView.setText(contact != null ? contact.getName() : "");
 		if (getResources().getBoolean(R.bool.only_display_username_if_unknown)) {
 			mNumberView.setText(address.getUserName());
 		} else {
@@ -120,8 +139,11 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	
 	@Override
 	protected void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
+		}
 		super.onPause();
-		LinphoneManager.removeListener(this);
 	}
 	
 	@Override
@@ -139,16 +161,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	public void onCallStateChanged(LinphoneCall call, State state, String msg) {
-		if (call == mCall && State.CallEnd == state) {
-			finish();
-		}
-		if (state == State.StreamsRunning) {
-			// The following should not be needed except some devices need it (e.g. Galaxy S).
-			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
-		}
-	}
+
 
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
@@ -156,13 +169,8 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 	
 	private void answer() {
 		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
-		if (mCall != null && mCall.getRemoteParams() != null && mCall.getRemoteParams().getVideoEnabled() && LinphoneManager.isInstanciated() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
-			params.setVideoEnabled(true);
-		} else {
-			params.setVideoEnabled(false);
-		}
 		
-		boolean isLowBandwidthConnection = !LinphoneUtils.isHightBandwidthConnection(this);
+		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(this);
 		if (isLowBandwidthConnection) {
 			params.enableLowBandwidth(true);
 			Log.d("Low bandwidth enabled in call params");
@@ -176,7 +184,7 @@ public class IncomingCallActivity extends Activity implements LinphoneOnCallStat
 				return;
 			}
 			final LinphoneCallParams remoteParams = mCall.getRemoteParams();
-			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphoneManager.getInstance().isAutoAcceptCamera()) {
+			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
 				LinphoneActivity.instance().startVideoActivity(mCall);
 			} else {
 				LinphoneActivity.instance().startIncallActivity(mCall);

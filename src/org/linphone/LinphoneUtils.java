@@ -21,7 +21,9 @@ package org.linphone;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,12 +33,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -52,6 +58,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -68,25 +75,37 @@ public final class LinphoneUtils {
 
 	private LinphoneUtils(){}
 
-	private static boolean preventVolumeBarToDisplay = false;
 	//private static final String sipAddressRegExp = "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
 	//private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
 	public static boolean isSipAddress(String numberOrAddress) {
-		return LinphoneCoreFactory.instance().createLinphoneAddress(numberOrAddress) != null;
+		try {
+			LinphoneCoreFactory.instance().createLinphoneAddress(numberOrAddress);
+			return true;
+		} catch (LinphoneCoreException e) {
+			return false;
+		}
+	}
+	
+	public static boolean isNumberAddress(String numberOrAddress) {
+		LinphoneProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
+		if(proxy.normalizePhoneNumber(numberOrAddress) != null){
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
 		return isSipAddress(numberOrAddress) && numberOrAddress.startsWith("sip:");
 	}
-	
+
 	public static String getUsernameFromAddress(String address) {
 		if (address.contains("sip:"))
 			address = address.replace("sip:", "");
-		
+
 		if (address.contains("@"))
 			address = address.split("@")[0];
-		
+
 		return address;
 	}
 	
@@ -115,24 +134,13 @@ public final class LinphoneUtils {
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 			LinphoneManager.getInstance().adjustVolume(-1);
 		}
-		return preventVolumeBarToDisplay;
+		return true;
 	}
 
 
-	/**
-	 * @param contact sip uri
-	 * @return url/uri of the resource
-	 */
-//	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
-//		return Compatibility.findUriPictureOfContactAndSetDisplayName(address, resolver);
-//	}
+
 	
-	public static Uri findUriPictureOfContactAndSetDisplayName(LinphoneAddress address, ContentResolver resolver) {
-		ContactHelper helper = new ContactHelper(address, resolver);
-		helper.query();
-		return helper.getUri();
-	}
-	
+
 	public static Bitmap downloadBitmap(Uri uri) {
 		URL url;
 		InputStream is = null;
@@ -151,7 +159,7 @@ public final class LinphoneUtils {
 	}
 
 	
-	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, int notFoundResource) {
+	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri, int notFoundResource) {
 		if (uri == null) {
 			view.setImageResource(notFoundResource);
 			return;
@@ -162,7 +170,17 @@ public final class LinphoneUtils {
 			view.setImageBitmap(bm);
 		} else {
 			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
-				view.setImageURI(uri);
+				Bitmap bm = null;
+				try {
+					bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),uri);
+				} catch (IOException e) {
+					if(tUri != null){
+						view.setImageURI(tUri);
+					}
+				}
+				if(bm != null) {
+					view.setImageBitmap(bm);
+				}
 			} else {
 				@SuppressWarnings("deprecation")
 				Bitmap bitmap = android.provider.Contacts.People.loadContactPhoto(c, uri, notFoundResource, null);
@@ -278,54 +296,23 @@ public final class LinphoneUtils {
 				state == LinphoneCall.State.Pausing;
 	}
 	
-	public static boolean isHightBandwidthConnection(Context context){
+	public static boolean isHighBandwidthConnection(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return (info != null && info.isConnected() && isConnectionFast(info.getType(),info.getSubtype()));
     }
 	
 	private static boolean isConnectionFast(int type, int subType){
-        if (type == ConnectivityManager.TYPE_WIFI) {
-            return true;
-        } else if (type == ConnectivityManager.TYPE_MOBILE) {
+		if (type == ConnectivityManager.TYPE_MOBILE) {
             switch (subType) {
-	            case TelephonyManager.NETWORK_TYPE_1xRTT:
-	                return false; // ~ 50-100 kbps
-	            case TelephonyManager.NETWORK_TYPE_CDMA:
-	                return false; // ~ 14-64 kbps
-	            case TelephonyManager.NETWORK_TYPE_EDGE:
-	                return false; // ~ 50-100 kbps
-	            case TelephonyManager.NETWORK_TYPE_GPRS:
-	                return false; // ~ 100 kbps
-	            case TelephonyManager.NETWORK_TYPE_EVDO_0:
-	                return false; // ~25 kbps 
-	            case TelephonyManager.NETWORK_TYPE_LTE:
-	                return true; // ~ 400-1000 kbps
-	            case TelephonyManager.NETWORK_TYPE_EVDO_A:
-	                return true; // ~ 600-1400 kbps
-	            case TelephonyManager.NETWORK_TYPE_HSDPA:
-	                return true; // ~ 2-14 Mbps
-	            case TelephonyManager.NETWORK_TYPE_HSPA:
-	                return true; // ~ 700-1700 kbps
-	            case TelephonyManager.NETWORK_TYPE_HSUPA:
-	                return true; // ~ 1-23 Mbps
-	            case TelephonyManager.NETWORK_TYPE_UMTS:
-	                return true; // ~ 400-7000 kbps
-	            case TelephonyManager.NETWORK_TYPE_EHRPD:
-	                return true; // ~ 1-2 Mbps
-	            case TelephonyManager.NETWORK_TYPE_EVDO_B:
-	                return true; // ~ 5 Mbps
-	            case TelephonyManager.NETWORK_TYPE_HSPAP:
-	                return true; // ~ 10-20 Mbps
-	            case TelephonyManager.NETWORK_TYPE_IDEN:
-	                return true; // ~ 10+ Mbps
-	            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
-	            default:
-	                return false;
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+            	return false;
             }
-        } else {
-            return false;
-        }
+		}
+        //in doubt, assume connection is good.
+        return true;
     }
 	
 	public static void clearLogs() {
@@ -335,8 +322,29 @@ public final class LinphoneUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void collectLogs(String logTag, String email) {
+
+    public static boolean zipLogs(StringBuilder sb, String toZipFile){
+        boolean success = false;
+        try {
+            FileOutputStream zip = new FileOutputStream(toZipFile);
+
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(zip));
+            ZipEntry entry = new ZipEntry("logs.txt");
+            out.putNextEntry(entry);
+
+            out.write(sb.toString().getBytes());
+
+            out.close();
+            success = true;
+
+        } catch (Exception e){
+            Log.e("Exception when trying to zip the logs: " + e.getMessage());
+        }
+
+        return success;
+    }
+
+	public static void collectLogs(Context context, String email) {
         BufferedReader br = null;
         Process p = null;
         StringBuilder sb = new StringBuilder();
@@ -350,16 +358,26 @@ public final class LinphoneUtils {
 	    		sb.append(line);
 	    		sb.append("\r\n");
 	    	}
-	    	
-	    	Intent i = new Intent(Intent.ACTION_SEND);
-	    	i.setType("message/rfc822");
-	    	i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-	    	i.putExtra(Intent.EXTRA_SUBJECT, "Linphone Logs");
-	    	i.putExtra(Intent.EXTRA_TEXT, sb.toString());
-	    	try {
-	    	    LinphoneActivity.instance().startActivity(Intent.createChooser(i, "Send mail..."));
-	    	} catch (android.content.ActivityNotFoundException ex) {
-	    	}
+            String zipFilePath = context.getExternalFilesDir(null).getAbsolutePath() + "/logs.zip";
+            Log.i("Saving logs to " + zipFilePath);
+
+            if( zipLogs(sb, zipFilePath) ) {
+            	final String appName = (context != null) ? context.getString(R.string.app_name) : "Linphone(?)";
+            	
+                Uri zipURI = Uri.parse("file://" + zipFilePath);
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+                i.putExtra(Intent.EXTRA_TEXT, appName + " logs");
+                i.setType("application/zip");
+                i.putExtra(Intent.EXTRA_STREAM, zipURI);
+                try {
+                    context.startActivity(Intent.createChooser(i, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    
+                }
+            }
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

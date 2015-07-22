@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
 
 import android.content.ContentResolver;
@@ -37,39 +38,43 @@ public class Contact implements Serializable {
 	private String id;
 	private String name;
 	private transient Uri photoUri;
+	private transient Uri thumbnailUri;
 	private transient Bitmap photo;
-	private List<String> numerosOrAddresses;
-	private LinphoneFriend friend;
+	private List<String> numbersOrAddresses;
+	private boolean hasFriends;
 	
 	public Contact(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.photoUri = null;
+		this.thumbnailUri = null;
+		this.hasFriends = false;
 	}
 	
-	public Contact(String id, String name, Uri photo) {
+	public Contact(String id, String name, Uri photo, Uri thumbnail) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.photoUri = photo;
+		this.thumbnailUri = thumbnail;
 		this.photo = null;
+		this.hasFriends = false;
 	}
 	
-	public Contact(String id, String name, Uri photo, Bitmap picture) {
+	public Contact(String id, String name, Uri photo, Uri thumbnail, Bitmap picture) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.photoUri = photo;
+		this.thumbnailUri = thumbnail;
 		this.photo = picture;
+		this.hasFriends = false;
 	}
-	
-	public void setFriend(LinphoneFriend friend) {
-		this.friend = friend;
-	}
-	
-	public LinphoneFriend getFriend() {
-		return friend;
+
+
+	public boolean hasFriends() {
+		return hasFriends;
 	}
 	
 	public String getID() {
@@ -83,19 +88,32 @@ public class Contact implements Serializable {
 	public Uri getPhotoUri() {
 		return photoUri;
 	}
+
+	public Uri getThumbnailUri() {
+		return thumbnailUri;
+	}
 	
 	public Bitmap getPhoto() {
 		return photo;
 	}
 
-	public List<String> getNumerosOrAddresses() {
-		if (numerosOrAddresses == null)
-			numerosOrAddresses = new ArrayList<String>();
-		return numerosOrAddresses;
+	public List<String> getNumbersOrAddresses() {
+		if (numbersOrAddresses == null)
+			numbersOrAddresses = new ArrayList<String>();
+		return numbersOrAddresses;
 	}
 	
 	public void refresh(ContentResolver cr) {
-		this.numerosOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if(lc != null && lc.getFriendList() != null) {
+			for (LinphoneFriend friend :lc.getFriendList()){
+				if (friend.getRefKey().equals(id)) {
+					hasFriends = true;
+					this.numbersOrAddresses.add(friend.getAddress().asStringUriOnly());
+				}
+			}
+		}
 		this.name = Compatibility.refreshContactName(cr, id);
 	}
 }

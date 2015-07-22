@@ -25,23 +25,25 @@ import java.util.TimerTask;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.SlidingDrawer;
 import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +54,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
@@ -60,7 +61,7 @@ import android.widget.Toast;
 public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText;
+	private TextView statusText, exit, voicemailCount;
 	private ImageView statusLed, callQuality, encryption, background;
 	private ListView sliderContentAccounts;
 	private TableLayout callStats;
@@ -68,12 +69,9 @@ public class StatusFragment extends Fragment {
 //	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
-	
-	private Toast zrtpToast;
-	private CountDownTimer zrtpHack;
-	private boolean hideZrtpToast = false;
 	private Timer mTimer;
 	private TimerTask mTask;
+	private LinphoneCoreListenerBase mListener;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -98,8 +96,81 @@ public class StatusFragment extends Fragment {
 		
 		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
 
+		voicemailCount = (TextView) view.findViewById(R.id.voicemailCount);
+		
+		exit = (TextView) view.findViewById(R.id.exit);
+		exit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (LinphoneActivity.isInstanciated()) {
+					LinphoneActivity.instance().exit();
+				}
+			}
+		});
+		if (getResources().getBoolean(R.bool.exit_button_on_dialer))
+			exit.setVisibility(View.VISIBLE);
+		
 		// We create it once to not delay the first display
 		populateSliderContent();
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
+				if (!isAttached || !LinphoneService.isReady()) {
+					return;
+				}
+						if (lc.getDefaultProxyConfig().equals(proxy)) {
+							statusLed.setImageResource(getStatusIconResource(state, true));
+							statusText.setText(getStatusIconText(state));
+						}
+				
+				try {
+					if (getResources().getBoolean(R.bool.lock_statusbar)) {
+						statusText.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								lc.refreshRegisters();
+							}
+						});
+					}
+//						setMiniLedsForEachAccount();
+					populateSliderContent();
+					sliderContentAccounts.invalidate();
+				} catch (IllegalStateException ise) {}
+			}
+			
+			@Override
+			public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
+				
+				if(!content.getType().equals("application")) return;
+				if(!content.getSubtype().equals("simple-message-summary")) return;
+
+				if (content.getData() == null) return;
+
+				int unreadCount = -1;
+				String data = content.getDataAsString();
+				String[] voiceMail = data.split("voice-message: ");
+				final String[] intToParse = voiceMail[1].split("/",0);
+
+				unreadCount = Integer.parseInt(intToParse[0]);
+				if (unreadCount > 0) {
+					voicemailCount.setText(unreadCount + " " + getResources().getString(R.string.voicemail_unread));
+					voicemailCount.setVisibility(View.VISIBLE);
+				} else {
+					voicemailCount.setVisibility(View.GONE);
+				}
+			}
+			
+		};
+
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			if (lpc != null) {
+				mListener.registrationState(lc, lpc, lpc.getState(), null);
+			}
+		}
 
         return view;
     }
@@ -156,46 +227,19 @@ public class StatusFragment extends Fragment {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
 			sliderContentAccounts.setVisibility(View.GONE);
 			callStats.setVisibility(View.GONE);
+			voicemailCount.setVisibility(View.GONE);
 			
 			if (isInCall && isAttached && getResources().getBoolean(R.bool.display_call_stats)) {
 				callStats.setVisibility(View.VISIBLE);
 				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 				initCallStatsRefresher(call, callStats);
 			} else if (!isInCall) {
+				voicemailCount.setVisibility(View.VISIBLE);
 				sliderContentAccounts.setVisibility(View.VISIBLE);
 				AccountsListAdapter adapter = new AccountsListAdapter();
 				sliderContentAccounts.setAdapter(adapter);
 			}
 		}
-	}
-	
-	public void registrationStateChanged(final RegistrationState state) {
-		if (!isAttached || !LinphoneService.isReady()) {
-			return;
-		}
-		
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				statusLed.setImageResource(getStatusIconResource(state, true));
-				statusText.setText(getStatusIconText(state));
-				try {
-					if (getResources().getBoolean(R.bool.lock_statusbar)) {
-						statusText.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								if (LinphoneManager.isInstanciated()) {
-									LinphoneManager.getLc().refreshRegisters();
-								}
-							}
-						});
-					}
-	//				setMiniLedsForEachAccount();
-					populateSliderContent();
-					sliderContentAccounts.invalidate();
-				} catch (IllegalStateException ise) {}
-			}
-		});
 	}
 	
 //	private void setMiniLedsForEachAccount() {
@@ -217,7 +261,8 @@ public class StatusFragment extends Fragment {
 	
 	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
 		try {
-			boolean defaultAccountConnected = (isDefaultAccount && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			boolean defaultAccountConnected = (isDefaultAccount && lc != null && lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
 			if (state == RegistrationState.RegistrationOk && defaultAccountConnected) {
 				return R.drawable.led_connected;
 			} else if (state == RegistrationState.RegistrationProgress) {
@@ -236,8 +281,10 @@ public class StatusFragment extends Fragment {
 	
 	private String getStatusIconText(LinphoneCore.RegistrationState state) {
 		Context context = getActivity();
-		if (!isAttached)
+		if (!isAttached && LinphoneActivity.isInstanciated())
 			context = LinphoneActivity.instance();
+		else if (!isAttached && LinphoneService.isReady())
+			context = LinphoneService.instance();
 		
 		try {
 			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
@@ -309,8 +356,8 @@ public class StatusFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		LinphoneCore lc = LinphoneManager.getLc();
-
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		LinphoneCall call = lc.getCurrentCall();
 		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 			if (call != null) {
@@ -320,6 +367,7 @@ public class StatusFragment extends Fragment {
 			
 			statusText.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
+			exit.setVisibility(View.GONE);
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
@@ -328,6 +376,8 @@ public class StatusFragment extends Fragment {
 			statusText.setVisibility(View.VISIBLE);
 			background.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);
+			if (getResources().getBoolean(R.bool.exit_button_on_dialer))
+				exit.setVisibility(View.VISIBLE);
 			
 			if (drawer != null && getResources().getBoolean(R.bool.lock_statusbar)) {
 				drawer.lock();
@@ -341,18 +391,25 @@ public class StatusFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		
-		if (zrtpToast != null) {
-			hideZRTPDialog();
-		}
-		
 		if (mCallQualityUpdater != null) {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater = null;
 		}
 	}
 	
+	@Override
+	public void onDestroy() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
+		}
+		
+		super.onDestroy();
+	}
+	
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
 		if (call != null) {
+			voicemailCount.setVisibility(View.GONE);
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 
 			if (isVideoEnabled) {
@@ -361,7 +418,7 @@ public class StatusFragment extends Fragment {
 				background.setVisibility(View.VISIBLE);
 			}
 			
-			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified())) {
+			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
 				encryption.setImageResource(R.drawable.security_ok);
 			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
 				encryption.setImageResource(R.drawable.security_pending);
@@ -382,80 +439,33 @@ public class StatusFragment extends Fragment {
 		}
 	}
 	
-	private void hideZRTPDialog() {
-		hideZrtpToast = true;
-		
-		if (zrtpToast != null) {
-			zrtpToast.cancel();
-		}
-		if (zrtpHack != null) {
-			zrtpHack.cancel();
-		}
-	}
-	
 	private void showZRTPDialog(final LinphoneCall call) {
-        boolean authVerified = call.isAuthenticationTokenVerified();
-        String format = getString(authVerified ? R.string.reset_sas_fmt : R.string.verify_sas_fmt);
-        
-		LayoutInflater inflater = LayoutInflater.from(getActivity());
-		View layout = inflater.inflate(R.layout.zrtp_dialog, (ViewGroup) getActivity().findViewById(R.id.toastRoot));
-		
-		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
-		toastText.setText(String.format(format, call.getAuthenticationToken()));
-		
-		zrtpToast = new Toast(getActivity());
-		zrtpToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0, LinphoneUtils.pixelsToDpi(getResources(), 40));
-		zrtpToast.setDuration(Toast.LENGTH_LONG);
-		
-		ImageView ok = (ImageView) layout.findViewById(R.id.toastOK);
-		ok.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (call != null) {
-					call.setAuthenticationTokenVerified(true);
-				}
-				if (encryption != null) {
-					encryption.setImageResource(R.drawable.security_ok);
-				}
-				hideZRTPDialog();
-			}
-		});
-		
-		ImageView notOk = (ImageView) layout.findViewById(R.id.toastNotOK);
-		notOk.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (call != null) {
-					call.setAuthenticationTokenVerified(false);
-				}
-				if (encryption != null) {
-					encryption.setImageResource(R.drawable.security_pending);
-				}
-				hideZRTPDialog();
-			}
-		});
-		
-		zrtpHack = new CountDownTimer(3000, 1000)
-		{
-		    public void onTick(long millisUntilFinished) 
-		    { 
-		    	if (!hideZrtpToast) {
-		    		zrtpToast.show(); 
-		    	}
-		    }
-		    public void onFinish() { 
-		    	if (!hideZrtpToast) { 
-		    		zrtpToast.show();
-		    		zrtpHack.start();
-		    	}
-		    }
-
-		};
-
-		zrtpToast.setView(layout);
-		hideZrtpToast = false;
-		zrtpToast.show();
-		zrtpHack.start();
+		if (getActivity() == null) {
+			Log.w("Can't display ZRTP popup, no Activity");
+			return;
+		}
+		new AlertDialog.Builder(getActivity())
+	        .setTitle(call.getAuthenticationToken())
+	        .setMessage(getString(R.string.zrtp_help))
+	        .setPositiveButton(R.string.zrtp_accept, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) { 
+	            	call.setAuthenticationTokenVerified(true);
+					if (encryption != null) {
+						encryption.setImageResource(R.drawable.security_ok);
+					}
+	            }
+	         })
+	        .setNegativeButton(R.string.zrtp_deny, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) { 
+	            	if (call != null) {
+						call.setAuthenticationTokenVerified(false);
+						if (encryption != null) {
+							encryption.setImageResource(R.drawable.security_pending);
+						}
+					}
+	            }
+	         })
+	         .show();
 	}
 	
 	private void initCallStatsRefresher(final LinphoneCall call, final View view) {
@@ -477,7 +487,10 @@ public class StatusFragment extends Fragment {
 				final TextView dl = (TextView) view.findViewById(R.id.downloadBandwith);
 				final TextView ul = (TextView) view.findViewById(R.id.uploadBandwith);
 				final TextView ice = (TextView) view.findViewById(R.id.ice);
-				if (codec == null || dl == null || ul == null || ice == null) {
+				final TextView videoResolution = (TextView) view.findViewById(R.id.video_resolution);
+				final View videoResolutionLayout = view.findViewById(R.id.video_resolution_layout);
+				
+				if (codec == null || dl == null || ul == null || ice == null || videoResolution == null || videoResolutionLayout == null) {
 					mTimer.cancel();
 					return;
 				}
@@ -500,6 +513,9 @@ public class StatusFragment extends Fragment {
 									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " / " + (int) audioStats.getDownloadBandwidth() + " kbits/s");
 									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) +  " / " + (int) audioStats.getUploadBandwidth() + " kbits/s");
 									ice.setText(videoStats.getIceState().toString());
+									
+									videoResolutionLayout.setVisibility(View.VISIBLE);
+									videoResolution.setText("\u2191 " + params.getSentVideoSize().toDisplayableString() + " / \u2193 " + params.getReceivedVideoSize().toDisplayableString());
 								}
 							} else {
 								final LinphoneCallStats audioStats = call.getAudioStats();
@@ -512,6 +528,8 @@ public class StatusFragment extends Fragment {
 									dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
 									ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
 									ice.setText(audioStats.getIceState().toString());
+									
+									videoResolutionLayout.setVisibility(View.GONE);
 								}
 							}
 						}
@@ -519,17 +537,13 @@ public class StatusFragment extends Fragment {
 				});
 			}
 		};
-		mTimer.scheduleAtFixedRate(mTask, 0, 1500);
+		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
 	
 	class AccountsListAdapter extends BaseAdapter {
-		private SharedPreferences prefs;
 		private List<CheckBox> checkboxes;
 		
 		AccountsListAdapter() {
-			if (LinphoneActivity.isInstanciated()) {
-				prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
-			}
 			checkboxes = new ArrayList<CheckBox>();
 		}
 		
@@ -539,23 +553,16 @@ public class StatusFragment extends Fragment {
 			public void onClick(View v) {
 				CheckBox checkBox = (CheckBox) v;
 				if (checkBox.isChecked()) {
-					SharedPreferences.Editor editor = prefs.edit();
 					String tag = (String) checkBox.getTag();
 					String sipAddress = tag.split(":")[0];
 					int accountPosition = Integer.parseInt(tag.split(":")[1]);
 					
-					int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
+					int nbAccounts = LinphonePreferences.instance().getAccountCount();
 					int accountIndex = 0;
 					for (int i = 0; i < nbAccounts; i++)
 					{
-						String keyUsername = getString(R.string.pref_username_key);
-						String keyDomain = getString(R.string.pref_domain_key);
-						if (i > 0) {
-							keyUsername += i + "";
-							keyDomain += i + "";
-						}
-						String username = prefs.getString(keyUsername, "");
-						String domain = prefs.getString(keyDomain, "");
+						String username = LinphonePreferences.instance().getAccountUsername(i);
+						String domain = LinphonePreferences.instance().getAccountDomain(i);
 						String identity = username + "@" + domain;
 						if (identity.equals(sipAddress)) {
 							accountIndex = i;
@@ -563,8 +570,7 @@ public class StatusFragment extends Fragment {
 						}
 					}
 					
-					editor.putInt(getString(R.string.pref_default_account_key), accountIndex);
-					editor.commit();
+					LinphonePreferences.instance().setDefaultAccount(accountIndex);
 
 					for (CheckBox cb : checkboxes) {
 						cb.setChecked(false);
@@ -628,34 +634,30 @@ public class StatusFragment extends Fragment {
 			isDefault.setChecked(false);
 			isDefault.setEnabled(true);
 			
-			if (prefs != null) {
-				int nbAccounts = prefs.getInt(getString(R.string.pref_extra_accounts), 0);
-				int accountIndex = 0;
-				for (int i = 0; i < nbAccounts; i++)
-				{
-					String keyUsername = getString(R.string.pref_username_key);
-					String keyDomain = getString(R.string.pref_domain_key);
-					if (i > 0) {
-						keyUsername += i + "";
-						keyDomain += i + "";
-					}
-					String username = prefs.getString(keyUsername, "");
-					String domain = prefs.getString(keyDomain, "");
-					String id = username + "@" + domain;
-					if (id.equals(sipAddress)) {
-						accountIndex = i;
-						break;
-					}
+			int nbAccounts = LinphonePreferences.instance().getAccountCount();
+			int accountIndex = 0;
+			for (int i = 0; i < nbAccounts; i++)
+			{
+				String username = LinphonePreferences.instance().getAccountUsername(i);
+				String domain = LinphonePreferences.instance().getAccountDomain(i);
+				String id = username + "@" + domain;
+				if (id.equals(sipAddress)) {
+					accountIndex = i;
+					break;
 				}
-				if (prefs.getInt(getString(R.string.pref_default_account_key), 0) == accountIndex) {
+			}
+			
+			// Force led if account is disabled
+			if (!LinphonePreferences.instance().isAccountEnabled(accountIndex)) {
+				status.setImageResource(getStatusIconResource(RegistrationState.RegistrationNone, false));
+			} else {
+				if (LinphonePreferences.instance().getDefaultAccountIndex() == accountIndex) {
 					isDefault.setChecked(true);
 					isDefault.setEnabled(false);
 					status.setImageResource(getStatusIconResource(lpc.getState(), true));
 				} else {
 					status.setImageResource(getStatusIconResource(lpc.getState(), false));
 				}
-			} else {
-				status.setImageResource(getStatusIconResource(lpc.getState(), false));
 			}
 			
 			isDefault.setOnClickListener(defaultListener);
@@ -663,4 +665,5 @@ public class StatusFragment extends Fragment {
 			return view;
 		}
 	}
+
 }

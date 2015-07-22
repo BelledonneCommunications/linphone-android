@@ -1,15 +1,26 @@
 package org.linphone.compatibility;
 
+import java.util.ArrayList;
+
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.SipAddress;
+import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Intents.Insert;
 
 /*
 ApiElevenPlus.java
@@ -41,15 +52,16 @@ public class ApiElevenPlus {
 			PendingIntent intent) {
 		String title;
 		if (msgCount == 1) {
-			title = "Unread message from %s".replace("%s", msgSender);
+			title = msgSender;
 		} else {
-			title = "%i unread messages"
+			title = context.getString(R.string.unread_messages)
 					.replace("%i", String.valueOf(msgCount));
 		}
 
 		Notification notif = new Notification.Builder(context)
 						.setContentTitle(title)
 						.setContentText(msg)
+						.setContentIntent(intent)
 						.setSmallIcon(R.drawable.chat_icon_over)
 						.setAutoCancel(true)
 						.setDefaults(
@@ -58,7 +70,6 @@ public class ApiElevenPlus {
 										| Notification.DEFAULT_VIBRATE)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).getNotification();
-		notif.contentIntent = intent;
 
 		return notif;
 	}
@@ -71,17 +82,41 @@ public class ApiElevenPlus {
 		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
 						.setContentText(msg).setSmallIcon(iconID)
 						.setAutoCancel(false)
+						.setContentIntent(intent)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).getNotification();
-		notif.contentIntent = intent;
-
+		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		
 		return notif;
 	}
-
+	
 	@SuppressWarnings("deprecation")
-	public static void setNotificationLatestEventInfo(Notification notif,
-			Context context, String title, String content, PendingIntent intent) {
-		notif.setLatestEventInfo(context, title, content, intent);
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
+		Notification notif;
+		
+		if (largeIcon != null) {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setLargeIcon(largeIcon)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .getNotification();
+		} else {
+			notif = new Notification.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setSmallIcon(icon, level)
+	        .setContentIntent(intent)
+	        .setWhen(System.currentTimeMillis())
+	        .getNotification();
+		}
+		if (isOngoingEvent) {
+			notif.flags |= Notification.FLAG_ONGOING_EVENT;
+		}
+		
+		return notif;
 	}
 
 	public static void copyTextToClipboard(Context context, String msg) {
@@ -91,6 +126,58 @@ public class ApiElevenPlus {
 	}
 
 	public static void setAudioManagerInCallMode(AudioManager manager) {
+		if (manager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
+			Log.w("---AudioManager: already in MODE_IN_COMMUNICATION, skipping..."); 
+			return;
+		}
+		Log.d("---AudioManager: set mode to MODE_IN_COMMUNICATION");
 		manager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+	}
+	
+	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
+		Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
+		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
+		
+		if (sipUri != null && sipUri.startsWith("sip:")) {
+			sipUri = sipUri.substring(4);
+		}
+		
+		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
+		ContentValues sipAddressRow = new ContentValues();
+		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
+		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+		data.add(sipAddressRow);
+		intent.putParcelableArrayListExtra(Insert.DATA, data);
+		
+		return intent;
+	}
+	
+	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipUri) {
+		Intent intent = new Intent(Intent.ACTION_EDIT, Contacts.CONTENT_URI);
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
+		intent.setData(contactUri);
+		
+		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
+		ContentValues sipAddressRow = new ContentValues();
+		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
+		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
+		data.add(sipAddressRow);
+		intent.putParcelableArrayListExtra(Insert.DATA, data);
+		
+		return intent;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context)
+		.setContentTitle(title)
+		.setContentText(text)
+		.setContentIntent(intent)
+		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setAutoCancel(true)
+		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+		.setWhen(System.currentTimeMillis()).getNotification();
+
+		return notif;
 	}
 }

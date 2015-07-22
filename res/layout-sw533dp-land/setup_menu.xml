@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <TextView 
+   		android:contentDescription="@string/content_description_welcome"
+	    android:paddingTop="40dp"
+	    android:textSize="20sp"
+	    android:textStyle="bold"
+	    android:textColor="@android:color/black"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/setup_title_assistant"/>
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:paddingTop="40dp"
+	    android:orientation="vertical">
+        
+        <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:paddingRight="10dp">
+            
+	        <ImageView
+	            android:id="@+id/setup_create_account"
+                android:contentDescription="@string/setup_create_account"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	        <TextView 
+		    	android:layout_centerInParent="true"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/setup_create_account"
+			    android:textColor="@android:color/black"/>
+        
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/setup_login_linphone_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            
+	        <ImageView
+	            android:id="@+id/setup_login_linphone"
+                android:contentDescription="@string/setup_login_linphone"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	        <TextView 
+		    	android:layout_centerInParent="true"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/setup_login_linphone"
+			    android:textColor="@android:color/black"/>
+	        
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/setup_login_generic_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1" 
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            
+	        <ImageView
+	            android:id="@+id/setup_login_generic"
+                android:contentDescription="@string/setup_login_generic"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	         <TextView 
+		    	android:layout_centerInParent="true"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/setup_login_generic"
+			    android:textColor="@android:color/black"/>
+        
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/setup_remote_provisioning_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1"    
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            
+	        <ImageView
+	            android:id="@+id/setup_remote_provisioning"
+                android:contentDescription="@string/setup_remote_provisioning"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/button"
+		    	android:layout_centerInParent="true" />
+	        
+	         <TextView 
+		    	android:layout_centerInParent="true"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/setup_remote_provisioning"
+			    android:textColor="@android:color/black"/>
+        
+        </RelativeLayout>
+        
+    </LinearLayout>
+    
+</LinearLayout>

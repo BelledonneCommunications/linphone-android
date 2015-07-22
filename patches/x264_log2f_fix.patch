@@ -1,0 +1,41 @@
+diff -urN submodules/externals/x264/common/osdep.h.orig submodules/externals/x264/common/osdep.h
+--- submodules/externals/x264/common/osdep.h.orig	2014-02-06 13:56:59.243663951 +0100
++++ submodules/externals/x264/common/osdep.h	2014-02-06 13:57:17.215685078 +0100
+@@ -35,11 +35,6 @@
+ 
+ #include "config.h"
+ 
+-#if !HAVE_LOG2F
+-#define log2f(x) (logf(x)/0.693147180559945f)
+-#define log2(x) (log(x)/0.693147180559945)
+-#endif
+-
+ #ifdef _WIN32
+ #include <io.h>    // _setmode()
+ #include <fcntl.h> // _O_BINARY
+@@ -55,6 +60,11 @@
+ #include <math.h>
+ #endif
+ 
++#if !HAVE_LOG2F
++#define log2f(x) (logf(x)/0.693147180559945f)
++#define log2(x) (log(x)/0.693147180559945)
++#endif
++
+ #if (defined(__GNUC__) || defined(__INTEL_COMPILER)) && (ARCH_X86 || ARCH_X86_64)
+ #define HAVE_X86_INLINE_ASM 1
+ #endif
+diff -urN submodules/externals/x264/configure.orig submodules/externals/x264/configure
+--- submodules/externals/x264/configure.orig	2014-02-06 13:56:59.231663937 +0100
++++ submodules/externals/x264/configure	2014-02-06 13:57:17.219685083 +0100
+@@ -816,10 +816,6 @@
+ fi
+ [ "$thread" != "no" ] && define HAVE_THREAD
+ 
+-if cc_check "math.h" "-Werror" "return log2f(2);" ; then
+-    define HAVE_LOG2F
+-fi
+-
+ if [ "$vis" = "yes" ] ; then
+     save_CFLAGS="$CFLAGS"
+     CFLAGS="$CFLAGS -I/usr/X11R6/include"

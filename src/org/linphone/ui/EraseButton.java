@@ -19,13 +19,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.ui;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 
-public class EraseButton extends ImageView implements AddressAware, OnClickListener, OnLongClickListener{
+public class EraseButton extends ImageView implements AddressAware, OnClickListener, OnLongClickListener, TextWatcher{
 
 	private AddressText address;
 
@@ -54,6 +56,23 @@ public class EraseButton extends ImageView implements AddressAware, OnClickListe
 
 	public void setAddressWidget(AddressText view) {
 		address = view;
+		view.addTextChangedListener(this);
+	}
+
+	
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {		
+	}
+	
+	@Override
+	public void afterTextChanged(Editable s) {
+		setEnabled(s.length() > 0);
 	}
 
 }

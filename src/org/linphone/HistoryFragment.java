@@ -30,7 +30,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -53,7 +52,6 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryFragment extends Fragment implements OnClickListener, OnChildClickListener, OnGroupClickListener {
-	private Handler mHandler = new Handler();
 	private ExpandableListView historyList;
 	private LayoutInflater mInflater;
 	private TextView allCalls, missedCalls, edit, ok, deleteAll, noCallHistory, noMissedCallHistory;
@@ -115,8 +113,14 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (LinphoneActivity.isInstanciated())
+		
+		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
+			
+			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
+				LinphoneActivity.instance().hideStatusBar();
+			}
+		}
 		
 		initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
@@ -158,16 +162,11 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	}
 	
 	private void expandAllGroups() {
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				for (int groupToExpand = 0; groupToExpand < historyList.getExpandableListAdapter().getGroupCount(); groupToExpand++) {
-					if (!historyList.isGroupExpanded(groupToExpand)) {
-						historyList.expandGroup(groupToExpand);
-					}
-				}
+		for (int groupToExpand = 0; groupToExpand < historyList.getExpandableListAdapter().getGroupCount(); groupToExpand++) {
+			if (!historyList.isGroupExpanded(groupToExpand)) {
+				historyList.expandGroup(groupToExpand);
 			}
-		});
+		}
 	}
 	
 	private String getCorrespondentDisplayName(LinphoneCallLog log) {
@@ -179,15 +178,16 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			address = log.getTo();
 		}
 		
-		LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, getActivity().getContentResolver());
-		displayName = address.getDisplayName(); 
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 		String sipUri = address.asStringUriOnly();
-		if (displayName == null) {
+		if (contact == null) {
 			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-				displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
+				displayName = address.getUserName();
 			} else {
 				displayName = sipUri;
 			}
+		} else {
+			displayName = contact.getName();
 		}
 		
 		return displayName;
@@ -390,8 +390,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 				address = log.getTo();
 				callDirection.setImageBitmap(outgoingCall);
 			}
-			
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
+
 			String sipUri = address.asStringUriOnly();
 			dateAndTime.setText(log.getStartDate() + " " + log.getCallDuration());
 			view.setTag(sipUri);
@@ -456,8 +455,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			} else {
 				address = log.getTo();
 			}
-			
-			LinphoneUtils.findUriPictureOfContactAndSetDisplayName(address, view.getContext().getContentResolver());
+
 			String displayName = getCorrespondentDisplayName(log);
 			String sipUri = address.asStringUriOnly();
 			contact.setText(displayName + " (" + getChildrenCount(groupPosition) + ")");

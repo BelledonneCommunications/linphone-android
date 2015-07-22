@@ -22,19 +22,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.net.URL;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneManager.EcCalibrationListener;
-import org.linphone.LinphoneService;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,43 +45,43 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 /**
  * @author Ghislain MARY
  */
-public class EchoCancellerCalibrationFragment extends Fragment implements EcCalibrationListener {
+public class EchoCancellerCalibrationFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private boolean mSendEcCalibrationResult = false;
+	private LinphoneCoreListenerBase mListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.setup_ec_calibration, container, false);
+		
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void ecCalibrationStatus(LinphoneCore lc,LinphoneCore.EcCalibratorStatus status, int delay_ms, Object data) {
+				LinphoneManager.getInstance().routeAudioToReceiver();
+				
+				if (status == EcCalibratorStatus.DoneNoEcho) {
+					LinphonePreferences.instance().setEchoCancellation(false);
+				} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
+					LinphonePreferences.instance().setEchoCancellation(true);
+				}
+				if (mSendEcCalibrationResult) {
+					sendEcCalibrationResult(status, delay_ms);
+				} else {
+					SetupActivity.instance().isEchoCalibrationFinished();
+				}
+			}
+		};
 
 		try {
-			LinphoneManager.getInstance().startEcCalibration(this);
+			LinphoneManager.getInstance().startEcCalibration(mListener);
 		} catch (LinphoneCoreException e) {
 			Log.e(e, "Unable to calibrate EC");
 		}
-
 		return view;
 	}
 
-	@Override
-	public void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SetupActivity.instance());
-		SharedPreferences.Editor editor = prefs.edit();
-		
-		Context context = SetupActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : SetupActivity.instance();
-		
-		if (status == EcCalibratorStatus.DoneNoEcho) {
-			editor.putBoolean(context.getString(R.string.pref_echo_cancellation_key), false);
-		} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
-			editor.putBoolean(context.getString(R.string.pref_echo_cancellation_key), true);
-		}
-		editor.commit();
-		if (mSendEcCalibrationResult) {
-			sendEcCalibrationResult(status, delayMs);
-		} else {
-			SetupActivity.instance().isEchoCalibrationFinished();
-		}
-	}
+	
 
 	public void enableEcCalibrationResultSending(boolean enabled) {
 		mSendEcCalibrationResult = enabled;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="linphone/j2se"/>
+	<classpathentry kind="src" path="linphone/impl"/>
+	<classpathentry kind="src" path="linphone/common"/>
+	<classpathentry excluding="org/linphone/mediastream/MediastreamerActivity.java" kind="src" path="mediastreamer2"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="libs/android-junit-report-1.5.8.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

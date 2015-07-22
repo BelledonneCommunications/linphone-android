@@ -16,7 +16,7 @@
 		
 	    <RelativeLayout
 			android:layout_width="match_parent" 
-			android:layout_height="wrap_content">
+			android:layout_height="75dp">
 	        
 		    <ImageView
 		        android:layout_width="match_parent"
@@ -33,7 +33,7 @@
 	        	android:paddingLeft="20dp"
 			    android:textColor="@android:color/white"
 			    android:textSize="22dp" />
-	    
+
 	    </RelativeLayout>
 	
 		<LinearLayout

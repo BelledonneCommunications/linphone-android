@@ -15,7 +15,7 @@
     
 		<ImageView
 		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="match_parent"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
 		    android:adjustViewBounds="true"
@@ -25,7 +25,7 @@
 		
 		<ImageView
 		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="match_parent"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
 		    android:adjustViewBounds="true"
@@ -35,7 +35,7 @@
 		
 		<ImageView
 		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="match_parent"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
 		    android:adjustViewBounds="true"
@@ -45,7 +45,7 @@
 		
 		<ImageView
 		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="match_parent"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
 		    android:adjustViewBounds="true"
@@ -55,7 +55,7 @@
 		
 		<ImageView
 		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="match_parent"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="0.2"
 		    android:adjustViewBounds="true"
@@ -95,9 +95,10 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2">
+            android:layout_weight="1"
+			android:adjustViewBounds="true">
 
             <include layout="@layout/menu_history_button" />
 
@@ -117,9 +118,9 @@
         
         <ImageView
             android:id="@+id/dialer"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="1"
 			android:adjustViewBounds="true"
 			android:scaleType="fitCenter"
             android:contentDescription="@string/content_description_dialer"
@@ -129,9 +130,10 @@
 
         <RelativeLayout
             android:id="@+id/completeChat"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2">
+            android:layout_weight="1"
+			android:adjustViewBounds="true">
 
             <include layout="@layout/menu_chat_button" />
 
@@ -151,6 +153,15 @@
         <include layout="@layout/menu_settings_button" />
         
         <include layout="@layout/menu_about_settings_button" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/fragmentContainer2"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         
     </LinearLayout>
 

@@ -3,21 +3,12 @@
 	<property name="linphone.package.name" value="org.linphone" />
 
 	<target name="-pre-build" description="Move file that is not to be compiled.">
-		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
-			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
-			failonerror="false" />
 		<copy file="submodules/linphone/share/xml/lpconfig.xsd"
 			tofile="res/raw/lpconfig.xsd"
-			failonerror="false" />	
-	</target>
-
-	<target name="-post-build" description="Restore file that has been moved so that it was not compiled.">
-		<move file="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.wnin"
-			tofile="submodules/linphone/mediastreamer2/java/src/org/linphone/mediastream/MediastreamerActivity.java"
 			failonerror="false" />
 	</target>
 
-	<target name="javah">
+	<target name="javah" depends="-set-debug-mode,-compile">
 		<echo level="info">Generate JNI header</echo>
 		<javah outputfile="gen/linphonecore_jni.h">
 			<classpath>
@@ -37,6 +28,14 @@
 			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
 			<class name="org.linphone.core.PayloadTypeImpl" />
 			<class name="org.linphone.core.LpConfigImpl" />
+			<class name="org.linphone.core.LinphoneInfoMessageImpl" />
+			<class name="org.linphone.core.LinphoneEventImpl" />
+			<class name="org.linphone.core.PresenceActivityImpl" />
+			<class name="org.linphone.core.PresenceModelImpl" />
+			<class name="org.linphone.core.PresenceNoteImpl" />
+			<class name="org.linphone.core.PresencePersonImpl" />
+			<class name="org.linphone.core.PresenceServiceImpl" />
+			<class name="org.linphone.core.ErrorInfoImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>
@@ -51,34 +50,25 @@
 			<class name="org.linphone.tools.Lpc2Xml" />
 		</javah>
 	</target>
-	
+
 	<target name="partial-clean">
 	    <delete file="bin/${ant.project.name}.ap_" />
 	</target>
 
-	<target name="build-libs">
-		<exec executable="make" failonerror="true">
-			<arg value="generate-libs" />
-		</exec>
-	</target>
-
-	<target name="-post-compile" depends="javah, build-libs">
-	</target>
-
 	<target name="javadoc">
 		<echo level="info">Generate Javadoc</echo>
-		<javadoc 
+		<javadoc
 			destdir="${javadoc.dir}"
-			verbose="off" 
-		    use="true" 
-		    classpath="${sdk.dir}/platforms/${target}/android.jar:libs/android-support-v4.jar:libs/gcm.jar"
-		    sourcepath="${source.dir}:gen"
+			verbose="off"
+			use="true"
+			classpath="${sdk.dir}/platforms/${target}/android.jar:libs/android-support-v4.jar:libs/gcm.jar"
+			sourcepath="${source.dir}:gen"
 			linkoffline="http://developer.android.com/reference file:/${sdk.dir}/docs/reference"
-    		stylesheetfile="${sdk.dir}/docs/assets/android-developer-docs.css">
-    	</javadoc>
+			stylesheetfile="${sdk.dir}/docs/assets/android-developer-docs.css">
+		</javadoc>
 	</target>
 
-	<target name="-package-resources" depends="-crunch">	    
+	<target name="-package-resources" depends="-crunch">
 		<!-- only package resources if *not* a library project -->
 		<do-only-if-not-library elseText="Library project: do not package resources...">
 			<exec executable="${aapt}" failonerror="true">
@@ -106,7 +96,7 @@
 				<arg value="${linphone.package.name}" />
 				<arg value="--custom-package" />
 				<arg value="${linphone.package.name}" />
-			</exec> 
+			</exec>
 		</do-only-if-not-library>
 	</target>
 
@@ -121,4 +111,39 @@
 			<arg value="${linphone.package.name}/org.linphone.LinphoneLauncherActivity" />
 		</exec>
 	</target>
+
+	<target name="liblinphone-android-sdk">
+		<echo level="info">Creating library output jar file...</echo>
+		<property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone.jar" />
+		<jar destfile="${out.library.jar.file}">
+			<fileset dir="${out.classes.absolute.dir}"
+				includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class"/>
+			<fileset dir="submodules/linphone/java" >
+				<include name="common/org/linphone/core/*.java"/>
+				<include name="j2se/org/linphone/core/*.java"/>
+			</fileset>
+		</jar>
+		<zip destfile="liblinphone-android-sdk-${version.name}.zip">
+			<zipfileset dir="libs" prefix="libs" includes="**/*.so" />
+			<zipfileset dir="${out.absolute.dir}" includes="liblinphone.jar" prefix="libs"/>
+		</zip>
+	</target>
+
+	<target name="linphone-android-sdk">
+                <echo level="info">Creating library output jar file...</echo>
+                <property name="out.library.jar.file" location="${out.absolute.dir}/linphone.jar" />
+                <jar destfile="${out.library.jar.file}">
+                        <fileset dir="${out.classes.absolute.dir}"
+                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class"/>
+                        <fileset dir="submodules/linphone/java" >
+                                <include name="common/org/linphone/core/*.java"/>
+                                <include name="j2se/org/linphone/core/*.java"/>
+                        </fileset>
+                </jar>
+		<zip destfile="linphone-android-sdk-${version.name}.zip">
+                        <zipfileset dir="libs" prefix="libs" includes="**/*.so" />
+                        <zipfileset dir="${out.absolute.dir}" includes="linphone.jar" prefix="libs"/>
+                </zip>
+        </target>
+
 </project>

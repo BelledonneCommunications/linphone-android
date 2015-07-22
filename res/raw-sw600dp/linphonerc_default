@@ -1,0 +1,21 @@
+[net]
+download_bw=512
+upload_bw=512
+
+[sip]
+contact="Linphone Android" <sip:linphone.android@unknown-host>
+use_info=0
+use_ipv6=0
+keepalive_period=30000
+
+[video]
+size=vga
+
+[app]
+sharing_server=https://www.linphone.org:444/lft.php
+tunnel=disabled
+push_notification=1
+
+[tunnel]
+host=
+port=443

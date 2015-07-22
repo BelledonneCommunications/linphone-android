@@ -18,18 +18,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneSimpleListener.LinphoneOnRegistrationStateChangedListener;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAddress.TransportType;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.mediastream.Log;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -46,11 +50,12 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	private static SetupActivity instance;
 	private RelativeLayout back, next, cancel;
 	private SetupFragmentsEnum currentFragment;
-	private SharedPreferences mPref;
 	private SetupFragmentsEnum firstFragment;
 	private Fragment fragment;
+	private LinphonePreferences mPrefs;
 	private boolean accountCreated = false;
-	private Handler mHandler = new Handler();
+	private LinphoneCoreListenerBase mListener;
+	private LinphoneAddress address;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,12 +74,49 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
             	currentFragment = (SetupFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
             }
         }
-        
-        mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mPrefs = LinphonePreferences.instance();
         
         initUI();
+        
+        mListener = new LinphoneCoreListenerBase(){
+        	@Override
+        	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
+				if(accountCreated){
+					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
+						if (state == RegistrationState.RegistrationOk) {
+							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+								launchEchoCancellerCalibration(true);
+							}
+						} else if (state == RegistrationState.RegistrationFailed) {
+							Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+						}
+					}
+				}
+        	}
+        };
+        
         instance = this;
 	};
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
+		}
+		
+		super.onPause();
+	}
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -109,9 +151,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.setup_cancel) {
+			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		} else if (id == R.id.setup_next) {
@@ -138,9 +182,11 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		if (currentFragment == firstFragment) {
+			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		}
@@ -151,7 +197,10 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			
 			next.setVisibility(View.VISIBLE);
 			back.setVisibility(View.GONE);
-		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN || currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN || currentFragment == SetupFragmentsEnum.WIZARD) {
+		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN 
+				|| currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN 
+				|| currentFragment == SetupFragmentsEnum.WIZARD 
+				|| currentFragment == SetupFragmentsEnum.REMOTE_PROVISIONING) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
 			currentFragment = SetupFragmentsEnum.MENU;
@@ -161,7 +210,9 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
-		if (LinphoneManager.getLc().needsEchoCalibration() && !mPref.getBoolean(getString(R.string.first_launch_suceeded_once_key), false)) {
+		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
+		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+			mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, false); //We'll enable it after the echo calibration
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
@@ -171,6 +222,9 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			next.setEnabled(false);
 			cancel.setEnabled(false);
 		} else {
+			if (mPrefs.isFirstLaunch()) {
+				mPrefs.setEchoCancellation(LinphoneManager.getLc().needsEchoCanceler());
+			}
 			success();
 		}		
 	}
@@ -182,60 +236,14 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		}
 
         saveCreatedAccount(username, password, domain);
-		LinphoneManager.getInstance().initializePayloads();
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-		} catch (Throwable e) {
-			Log.e(e, "Error while initializing from config in first login activity");
-			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-		}
 
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			launchEchoCancellerCalibration(sendEcCalibrationResult);
 		}
 	}
 	
-	
-	private LinphoneOnRegistrationStateChangedListener registrationListener = new LinphoneOnRegistrationStateChangedListener() {
-		public void onRegistrationStateChanged(RegistrationState state) {
-			if (state == RegistrationState.RegistrationOk) {
-				LinphoneManager.removeListener(registrationListener);
-				
-				if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-					mHandler .post(new Runnable () {
-						public void run() {
-							launchEchoCancellerCalibration(true);
-						}
-					});
-				}
-			} else if (state == RegistrationState.RegistrationFailed) {
-				LinphoneManager.removeListener(registrationListener);
-				deleteCreatedAccount();
-				mHandler.post(new Runnable () {
-					public void run() {
-						Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
-					}
-				});
-			}
-		}
-	};
 	public void checkAccount(String username, String password, String domain) {
-		LinphoneManager.removeListener(registrationListener);
-		LinphoneManager.addListener(registrationListener);
-		
 		saveCreatedAccount(username, password, domain);
-		LinphoneManager.getInstance().initializePayloads();
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-		} catch (Throwable e) {
-			LinphoneManager.removeListener(registrationListener);
-			deleteCreatedAccount();
-			
-			Log.e(e, "Error while initializing from config in first login activity");
-			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-		}
 	}
 
 	public void linphoneLogIn(String username, String password, boolean validate) {
@@ -248,22 +256,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 
 	public void genericLogIn(String username, String password, String domain) {
 		logIn(username, password, domain, false);
-	}
-
-	private void writePreference(int key, String value) {
-		mPref.edit().putString(getString(key), value).commit();
-	}
-	
-	private void writePreference(String key, String value) {
-		mPref.edit().putString(key, value).commit();
-	}
-	
-	private void writePreference(int key, int value) {
-		mPref.edit().putInt(getString(key), value).commit();
-	}
-	
-	private void writePreference(int key, boolean value) {
-		mPref.edit().putBoolean(getString(key), value).commit();
 	}
 
 	private void display(SetupFragmentsEnum fragment) {
@@ -302,57 +294,84 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.WIZARD;
 	}
-	
-	public void deleteCreatedAccount() {
-		if (!accountCreated)
-			return;
-		
-		writePreference(R.string.pref_extra_accounts, 0);
-		accountCreated = false;
+
+	public void displayRemoteProvisioning() {
+		fragment = new RemoteProvisioningFragment();
+		changeFragment(fragment);
+		currentFragment = SetupFragmentsEnum.REMOTE_PROVISIONING;
 	}
 	
 	public void saveCreatedAccount(String username, String password, String domain) {
 		if (accountCreated)
 			return;
+
+		if(username.startsWith("sip:")) {
+			username = username.substring(4);
+		}
+
+		if(domain.startsWith("sip:")) {
+			domain = domain.substring(4);
+		}
+
+		String identity = "sip:" + username + "@" + domain;
+		try {
+			address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
+		boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
+		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
+		.setUsername(username)
+		.setDomain(domain)
+		.setPassword(password);
 		
-		int newAccountId = mPref.getInt(getString(R.string.pref_extra_accounts), 0);
-		if (newAccountId == -1)
-			newAccountId = 0;
-		writePreference(R.string.pref_extra_accounts, newAccountId+1);
-		
-		if (newAccountId == 0) {
-			writePreference(R.string.pref_username_key, username);
-			writePreference(R.string.pref_passwd_key, password);
-			writePreference(R.string.pref_domain_key, domain);
-			
-			boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
-			if (isMainAccountLinphoneDotOrg) {
-				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-					writePreference(R.string.pref_proxy_key, domain + ":5228");
-					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tcp_key));
-				}
-				else {
-					writePreference(R.string.pref_proxy_key, domain + ":5223");
-					writePreference(R.string.pref_transport_key, getString(R.string.pref_transport_tls_key));
-				}
-				
-				writePreference(R.string.pref_expire_key, "604800"); // 3600*24*7
-				writePreference(R.string.pref_enable_outbound_proxy_key, true);
-				writePreference(R.string.pref_stun_server_key, getString(R.string.default_stun));
-				writePreference(R.string.pref_ice_enable_key, true);
-				writePreference(R.string.pref_push_notification_key, true);
+		if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
+			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
+				builder.setProxy(domain + ":5228")
+				.setTransport(TransportType.LinphoneTransportTcp);
 			}
+			else {
+				builder.setProxy(domain + ":5223")
+				.setTransport(TransportType.LinphoneTransportTls);
+			}
+			
+			builder.setExpires("604800")
+			.setOutboundProxyEnabled(true)
+			.setAvpfEnabled(true)
+			.setAvpfRRInterval(3)
+			.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
+			.setQualityReportingEnabled(true)
+			.setQualityReportingInterval(180)
+			.setRealm("sip.linphone.org");
+			
+			
+			mPrefs.setStunServer(getString(R.string.default_stun));
+			mPrefs.setIceEnabled(true);
 		} else {
-			writePreference(getString(R.string.pref_username_key) + newAccountId, username);
-			writePreference(getString(R.string.pref_passwd_key) + newAccountId, password);
-			writePreference(getString(R.string.pref_domain_key) + newAccountId, domain);
+			String forcedProxy = getResources().getString(R.string.setup_forced_proxy);
+			if (!TextUtils.isEmpty(forcedProxy)) {
+				builder.setProxy(forcedProxy)
+				.setOutboundProxyEnabled(true)
+				.setAvpfRRInterval(5);
+			}
 		}
-		String forcedProxy=getResources().getString(R.string.setup_forced_proxy);
-		if (!TextUtils.isEmpty(forcedProxy)) {
-			writePreference(R.string.pref_enable_outbound_proxy_key, true);
-			writePreference(R.string.pref_proxy_key, forcedProxy);
+		
+		if (getResources().getBoolean(R.bool.enable_push_id)) {
+			String regId = mPrefs.getPushNotificationRegistrationID();
+			String appId = getString(R.string.push_sender_id);
+			if (regId != null && mPrefs.isPushNotificationEnabled()) {
+				String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
+				builder.setContactParameters(contactInfos);
+			}
 		}
-		accountCreated = true;
+		
+		try {
+			builder.saveNewAccount();
+			accountCreated = true;
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void displayWizardConfirm(String username) {
@@ -370,27 +389,19 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 		back.setVisibility(View.GONE);
 	}
 	
-	public void isAccountVerified() {
+	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
-		
-		LinphoneManager.getInstance().initializePayloads();
-
-		try {
-			LinphoneManager.getInstance().initFromConf();
-		} catch (Throwable e) {
-			Log.e(e, "Error while initializing from config in first login activity");
-			Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-		}
-
+		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
 		launchEchoCancellerCalibration(true);
 	}
 
 	public void isEchoCalibrationFinished() {
+		mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, true);
 		success();
 	}
 	
 	public void success() {
-		writePreference(R.string.first_launch_suceeded_once_key, true);
+		mPrefs.firstLaunchSuccessful();
 		setResult(Activity.RESULT_OK);
 		finish();
 	}

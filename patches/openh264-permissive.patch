@@ -1,0 +1,40 @@
+commit 6b3de978d928b6c0baec3305c9803c21a4367d0c
+Author: Simon Morlat <simon.morlat@linphone.org>
+Date:   Tue Apr 15 15:19:37 2014 +0200
+
+    permissive mode: allow reference frames to be used even if there were lost slices.
+
+diff --git a/codec/decoder/core/src/manage_dec_ref.cpp b/codec/decoder/core/src/manage_dec_ref.cpp
+index dcf61ca..5582ec9 100644
+--- a/codec/decoder/core/src/manage_dec_ref.cpp
++++ b/codec/decoder/core/src/manage_dec_ref.cpp
+@@ -165,6 +165,7 @@ int32_t WelsReorderRefList (PWelsDecoderContext pCtx) {
+                 && (pSliceHeader->iSpsId != ppRefList[i]->iSpsId)) {   //check;
+               WelsLog (pCtx, WELS_LOG_WARNING, "WelsReorderRefList()-1::::BASE LAYER::::iSpsId:%d, ref_sps_id:%d\n",
+                        pSliceHeader->iSpsId, ppRefList[i]->iSpsId);
++			  return ERR_NONE;
+               pCtx->iErrorCode = dsNoParamSets;	//cross-IDR reference frame selection, SHOULD request IDR.--
+               return ERR_INFO_REFERENCE_PIC_LOST;
+             } else {
+
+commit a1f3b95ad18d0788c2c803fac80e78d6365673ce
+Author: Simon Morlat <simon.morlat@linphone.org>
+Date:   Tue Apr 15 17:54:58 2014 +0200
+
+    permissive mode (2)
+
+diff --git a/codec/decoder/core/src/decoder_core.cpp b/codec/decoder/core/src/decoder_core.cpp
+index a14e971..e742dbf 100644
+--- a/codec/decoder/core/src/decoder_core.cpp
++++ b/codec/decoder/core/src/decoder_core.cpp
+@@ -1738,8 +1738,8 @@ int32_t DecodeCurrentAccessUnit (PWelsDecoderContext pCtx, uint8_t** ppDst, int3
+       if ((iLastIdD < 0) ||  //case 1: first layer
+           (iLastIdD == iCurrIdD)) { //case 2: same uiDId
+         InitDqLayerInfo (dq_cur, &pLayerInfo, pNalCur, pCtx->pDec);
+-
+-        if (!dq_cur->sLayerInfo.pSps->bGapsInFrameNumValueAllowedFlag) {
++        if (0){
++        //if (!dq_cur->sLayerInfo.pSps->bGapsInFrameNumValueAllowedFlag) {
+           const bool kbIdrFlag = dq_cur->sLayerInfo.sNalHeaderExt.bIdrFlag
+                                  || (dq_cur->sLayerInfo.sNalHeaderExt.sNalUnitHeader.eNalUnitType == NAL_UNIT_CODED_SLICE_IDR);
+           // Subclause 8.2.5.2 Decoding process for gaps in frame_num

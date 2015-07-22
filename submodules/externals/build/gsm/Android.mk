@@ -30,5 +30,8 @@ LOCAL_SRC_FILES := \
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/inc
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
+
 include $(BUILD_STATIC_LIBRARY)
 

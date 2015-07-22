@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@drawable/background"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+        
+        <TextView
+			android:contentDescription="@string/content_description_delete"
+			android:id="@+id/deleteContact"
+			android:background="@drawable/contact_delete"
+			android:text="@string/delete_contact"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+        
+        <TextView 
+            android:contentDescription="@string/content_description_edit"
+            android:id="@+id/editContact"
+            android:background="@drawable/contact_edit"
+            android:text="@string/button_edit"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:textColor="@color/text_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+	    android:gravity="center"
+	    android:orientation="horizontal">
+        
+        <org.linphone.ui.AvatarWithShadow
+		    android:id="@+id/contactPicture"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    linphone:picture="@drawable/unknown_small" />
+	        
+        <TextView
+            android:id="@+id/contactName"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+	    	android:textColor="@color/text_contrast" />
+        
+    </LinearLayout>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+	    <TableLayout
+	        android:id="@+id/controls"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:stretchColumns="*"
+	        android:paddingTop="20dp"/>
+    
+    </ScrollView>
+
+</LinearLayout>

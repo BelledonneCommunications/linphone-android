@@ -1,38 +1,146 @@
-			   LINPHONE for ANDROID
-			****************************
+              ****************************
+              *   LINPHONE for ANDROID   *
+              ****************************
+
+COMPILATION INSTRUCTIONS
+************************
 
 To build liblinphone for Android, you must:
+-------------------------------------------
 0) download the Android sdk with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both 'tools' and 'platform-tools' folders in your path.
-1) download the Android ndk (>=r8b) from google and add it to your path.
-2) install the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig
-2bis) on some 64 bits systems you'll need the ia32-libs package
+1) download the Android ndk (=r10c) from google and add it to your path (no symlink !!!).
+2) install yasm, nasm, curl, ant, rsync and the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig
+	On 64 bits linux systems you'll need the ia32-libs package
+	With the latest Debian (multiarch), you need this:
+		dpkg --add-architecture i386
+		aptitude update
+		aptitude install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
 3) run the Makefile script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
 	$ make
-4) To install the generated apk into a plugged device, run
+4) (Optional) To install the generated apk into a plugged device, run
 	$ make install
+5) (Optional) To generate a liblinphone SDK zip containing a full jar and native libraries, run
+	$ make liblinphone-android-sdk
+6) (Optional) To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run
+	$ make mediastreamer2-sdk
+7) (Optional) To generate a signed apk to publish on the Google Play, run
+	$ make release
+Make sure you filled the ant.properties values for version.name, key.store and key.alias in order to correctly sign the generated apk. 
+You also may want to create a file name ant_password.properties with the following:
+key.store.password=[your_password]
+key.alias.password=[your_password]
+If you don't, the passwords will be asked at the signing phase.
 
 To run the tutorials:
+--------------------
 1) open the res/values/non_localizable_custom.xml file and change the value of the show_tutorials_instead_of_app to true.
 2) compile again using make && make install.
 3) /!\ don't forget to put it back to false to run the linphone application normally. /!\
 
-To create an apk with a different package name, you need to edit the custom_rules.xml file:
+To create an apk with a different package name
+----------------------------------------------
+You need to edit the custom_rules.xml file:
 1) look for the property named "linphone.package.name" and change it value accordingly
-2) run again the Makefile script by calling "make"
+2) also update the values in the AndroidManifest file where the comment <!-- Change package ! --> appears
+3) update the path to the sounds in the linphonerc-factory files in the res folders and optionally change default sip account on linphonerc-default
+4) run again the Makefile script by calling "make"
+
+To run the liblinphone test suite on android
+--------------------------------------------
+Simply run 
+	$ make liblinphone_tester
+This will be build everything, generate an apk, and install it on the connected device if any.
+
+You can speed up the compilation by using ccache (compiler cache, see https://ccache.samba.org/). Simply export:
+export NDK_CCACHE=ccache
+
+TROUBLESHOOTING
+***************
+If you encounter the following issue:
+E/dalvikvm( 2465): dlopen("/data/app-lib/org.linphone-1/liblinphone-armeabi-v7a.so") failed: Cannot load library: soinfo_relocate(linker.cpp:975): cannot locate symbol "rand" referenced by "liblinphone-armeabi-v7a.so"...
+it's because you have installed the android-21 platform (which is chosen automatically because it's the most recent) and you deployed the apk on a android < 5 device. 
+To fix this, in the Makefile, force ANDROID_MOST_RECENT_TARGET=android-19
+
+If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
+
+If you built the app using eclipse, ensure you ran at least once the make command (see above steps 0 to 3) ! Else you'll have this exceptions:
+FATAL EXCEPTION: main
+java.lang.ExceptionInInitializerError
+...
+Caused by: java.lang.UnsatisfiedLinkError: Couldn't load linphone-armeabi-v7a: findLibrary returned null
+...
+
+BUILD OPTIONS
+*************
 
 Some options can be passed to make, like "make SOME_OPTION=SOME_VALUE".
 
-Option Name     |     Possible values                                                                                                   	 | Default value 
--------------------------------------------------------------------------------------------------------------------------------------------------------
-BUILD_X264            0 (don't build x264) or 1 (build x264)																				 | 0
-BUILD_AMRNB           0 (don't build amrnb codec), light (try to use amrnb codec from android), full (build your own amrnb codec)       	 | full
-BUILD_AMRWB           0 (don't build amrwb codec), 1 (build your own amrwb codec)                                                       	 | 0
-BUILD_GPLV3_ZRTP      0 (don't support ZRTP), 1 (support ZRTP and make the whole program GPLv3)												 | 0
-BUILD_SILK            0 (don't build silk plugin), 1 (build silk) [silk is Skype nonfree patented audio codec]								 | 1
-BUILD_G729            0 (don't build g729 plugin), 1 (build g729) [g729 is nonfree patented audio codec, contact Sipro lab for more details] | 0
-BUILD_TUNNEL          0 (don't build tunnel), 1 (build tunnel) [requires a tunnel implementation in submodules/linphone/tunnel]				 | 0
-BUILD_WEBRTC_AECM     0 (don't build echo canceler), 1 (build echo canceler)																 | 1
-USE_JAVAH             0 (don't generate header), 1 (generate header for linphone_core_jni) [used to check errors at liblinphone compilation] | 1
-BUILD_FOR_X86		  0 (don't generate liblinphone libraries for x86 architecture), 1 (build liblinphone libraries for x86 architecture)    | 1
+ENABLE_GPL_THIRD_PARTIES
+	values: 0 (GPL third parties disabled) or 1 (GPL third parties enabled), default value: 1
+	GPL third parties are: X264 and G729
 
-If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU
+BUILD_VIDEO
+	values: 0 (no video) or 1 (video enabled), default value: 1
+
+BUILD_OPENH264
+	values: 0 (don't build openH264) or 1 (build openH264), default value: 1
+
+ENABLE_OPENH264_DECODER
+	values: 0 (disable openh264 decoder) or 1 (enable openh264 decoder), default value: 1
+
+BUILD_X264
+	values: 0 (don't build x264) or 1 (build x264), default value: 0
+
+BUILD_AMRNB
+	values: 0 (don't build amrnb codec), light (try to use amrnb codec from android), full (build your own amrnb codec), default value: full
+
+BUILD_AMRWB
+	values: 0 (don't build amrwb codec), 1 (build your own amrwb codec): default value: 1
+
+BUILD_ZRTP
+	values: 0 (don't support ZRTP), 1 (support ZRTP), default value: 1
+
+BUILD_SILK
+	values: 0 (don't build silk plugin), 1 (build silk) [silk is Skype nonfree patented audio codec], default value: 1
+
+BUILD_G729
+	values: 0 (don't build g729 plugin), 1 (build g729) [g729 is nonfree patented audio codec, contact Sipro lab for more details]
+	default value: 1
+
+BUILD_TUNNEL
+	values: 0 (don't build tunnel), 1 (build tunnel) [requires a non-free tunnel implementation in submodules/linphone/tunnel]
+	default value: 0
+
+BUILD_WEBRTC_AECM
+	values: 0 (don't build echo canceler), 1 (build echo canceler)
+	default value: 1
+
+USE_JAVAH
+	values: 0 (don't generate header), 1 (generate header for linphone_core_jni) [used to check errors at liblinphone compilation]
+	default value: 1
+
+BUILD_FOR_X86
+	values: 0 (don't generate liblinphone libraries for x86 architecture), 1 (build liblinphone libraries for x86 architecture)
+	default value: 1
+
+BUILD_SQLITE
+	values: 0 (don't build sqlite3), 1 (build sqlite3) [used to store chat messages inside liblinphone]
+	default value: 1
+
+BUILD_TLS
+	values: 0 (don't build tls), 1 (do build tls), default value: 1
+
+BUILD_WEBRTC_ISAC
+	values: 0 (don't build isac), 1 (do build isac), default value: 1
+
+BUILD_OPUS
+	values: 0 (don't build opus), 1 (do build opus), default value: 1
+
+BUILD_UPNP
+	values: 0 (don't build upnp), 1 (do build upnp), default value: 1
+
+BUILD_MATROSKA
+	values: 0 (don't build matroska and ebml), 1 (do build matroska and ebml), default value: 0
+
+BUILD_ILBC
+	values: 0 (don't build iLBC), 1 (do build iLBC), default value: 1

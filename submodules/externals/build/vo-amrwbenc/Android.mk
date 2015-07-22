@@ -106,6 +106,9 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/amrwbenc/inc/ \
 	$(LOCAL_PATH)/common/include/
 
+#turn off warnings since we cannot fix them
+LOCAL_CFLAGS += -w
+
 include $(BUILD_STATIC_LIBRARY)
 
 
