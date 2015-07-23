@@ -50,20 +50,16 @@ import org.linphone.ui.AddressText;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.Fragment.SavedState;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -84,7 +80,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends FragmentActivity implements OnClickListener, ContactPicked {
+public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
@@ -103,7 +99,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
 	private ChatFragment chatFragment;
-	private SavedState dialerSavedState;
+	private Fragment.SavedState dialerSavedState;
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
@@ -172,7 +168,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			if (findViewById(R.id.fragmentContainer) != null) {
 				dialerFragment = new DialerFragment();
 				dialerFragment.setArguments(getIntent().getExtras());
-				getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
+				getFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
 				selectMenu(FragmentsAvailable.DIALER);
 			}
 		}
@@ -334,7 +330,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 		if (currentFragment == FragmentsAvailable.DIALER) {
 			try {
-				dialerSavedState = getSupportFragmentManager().saveFragmentInstanceState(dialerFragment);
+				dialerSavedState = getFragmentManager().saveFragmentInstanceState(dialerFragment);
 			} catch (Exception e) {
 			}
 		}
@@ -423,7 +419,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			statusFragment.closeStatusBar();
 		}
 
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
 		if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 			if (newFragmentType.isRightOf(currentFragment)) {
@@ -449,7 +445,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
-		getSupportFragmentManager().executePendingTransactions();
+		getFragmentManager().executePendingTransactions();
 
 		currentFragment = newFragmentType;
 	}
@@ -468,7 +464,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
 			ll.setVisibility(View.VISIBLE);
 
@@ -497,7 +493,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			transaction.replace(R.id.fragmentContainer, newFragment);
 		}
 		transaction.commitAllowingStateLoss();
-		getSupportFragmentManager().executePendingTransactions();
+		getFragmentManager().executePendingTransactions();
 
 		currentFragment = newFragmentType;
 		if (newFragmentType == FragmentsAvailable.DIALER
@@ -508,7 +504,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 				|| newFragmentType == FragmentsAvailable.CHATLIST
 				|| newFragmentType == FragmentsAvailable.HISTORY) {
 			try {
-				getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			} catch (java.lang.IllegalStateException e) {
 
 			}
@@ -543,7 +539,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		String callTime = secondsToDisplayableString(log.getCallDuration());
 		String callDate = String.valueOf(log.getTimestamp());
 
-		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
 			HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
 			historyDetailFragment.changeDisplayedHistory(sipUri, displayName, pictureUri, status, callTime, callDate);
@@ -571,7 +567,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	public void displayContact(Contact contact, boolean chatOnly) {
-		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT) {
 			ContactFragment contactFragment = (ContactFragment) fragment2;
 			contactFragment.changeDisplayedContact(contact);
@@ -639,7 +635,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 		if (isTablet()){
 			if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT){
-				Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+				Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 				if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
 					ChatFragment chatFragment = (ChatFragment) fragment2;
 					chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);

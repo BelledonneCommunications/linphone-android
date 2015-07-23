@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
       android:versionCode="2411" android:installLocation="auto">
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="22"/>
-    
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="22"/>
+
     <!-- Permissions for Push Notification -->
     <permission android:name="org.linphone.permission.C2D_MESSAGE" android:protectionLevel="signature" /> <!-- Change package ! -->
 	<uses-permission android:name="org.linphone.permission.C2D_MESSAGE" />  <!-- Change package ! -->

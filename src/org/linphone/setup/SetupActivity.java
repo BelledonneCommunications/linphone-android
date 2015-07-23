@@ -31,12 +31,11 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +45,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class SetupActivity extends FragmentActivity implements OnClickListener {
+public class SetupActivity extends Activity implements OnClickListener {
 	private static SetupActivity instance;
 	private RelativeLayout back, next, cancel;
 	private SetupFragmentsEnum currentFragment;
@@ -138,7 +137,7 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	private void changeFragment(Fragment newFragment) {
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		
 //		transaction.addToBackStack("");
 		transaction.replace(R.id.fragmentContainer, newFragment);
