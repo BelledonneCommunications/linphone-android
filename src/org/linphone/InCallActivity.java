@@ -36,6 +36,8 @@ import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.Numpad;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -44,10 +46,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -70,7 +69,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class InCallActivity extends FragmentActivity implements OnClickListener {
+public class InCallActivity extends Activity implements OnClickListener {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 3000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	
@@ -271,7 +270,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 			}
 
             callFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
+            getFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
 
         }
 	}
@@ -635,7 +634,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	private void replaceFragmentVideoByAudio() {
 		audioCallFragment = new AudioCallFragment();
 		
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, audioCallFragment);
 		try {
 			transaction.commitAllowingStateLoss();
@@ -650,7 +649,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 		
 		videoCallFragment = new VideoCallFragment();
 		
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, videoCallFragment);
 		try {
 			transaction.commitAllowingStateLoss();
@@ -1157,7 +1156,7 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 	
 	
 	private void showAcceptCallUpdateDialog() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         callUpdateDialog = new AcceptCallUpdateDialogFragment();
         callUpdateDialog.show(fm, "Accept Call Update Dialog");
     }

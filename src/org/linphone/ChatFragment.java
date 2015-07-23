@@ -22,6 +22,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+
+import android.content.CursorLoader;
 import android.graphics.Matrix;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,6 @@ import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 
 import android.media.ExifInterface;
-import android.support.v4.content.CursorLoader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -62,7 +63,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;

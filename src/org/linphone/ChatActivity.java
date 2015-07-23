@@ -18,14 +18,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
 /**
  * @author Margaux Clerc
  */
-public class ChatActivity extends FragmentActivity {
+public class ChatActivity extends Activity {
 	private static final String CHAT_FRAGMENT = "chatFragment";
 	private ChatFragment chatFragment;
 	
@@ -42,9 +42,9 @@ public class ChatActivity extends FragmentActivity {
 		
 		ChatFragment fragment = new ChatFragment();
 		fragment.setArguments(extras);
-		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "ChatFragment").commit();
+		getFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "ChatFragment").commit();
 		
-		FragmentManager fm = getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 		chatFragment = (ChatFragment) fm.findFragmentByTag(CHAT_FRAGMENT);
 
 	    // If the Fragment is non-null, then it is currently being
