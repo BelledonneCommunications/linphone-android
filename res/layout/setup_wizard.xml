@@ -200,7 +200,7 @@
 				android:layout_height="wrap_content"
 				android:textColor="@android:color/black"
 				android:contentDescription="@string/content_description_validate"
-				android:background="@drawable/resizable_assistant_button_2"
+				android:background="@drawable/resizable_assistant_button"
 				android:text="@string/setup_create"
 				android:layout_centerVertical="true"/>
         

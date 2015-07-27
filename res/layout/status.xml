@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	xmlns:linphone="http://schemas.android.com/apk/res-auto" 
+	android:id="@+id/statusBar"
+	android:background="@color/footer_select"
 	xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-		    
-    <org.linphone.ui.SlidingDrawer
-		android:id="@+id/statusBar"
-		linphone:direction="topToBottom"
+    android:layout_height="50dp"
+    android:orientation="horizontal">
+
+
+	<RelativeLayout
+		android:id="@+id/content"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		linphone:handle="@+id/handle"
-		linphone:content="@+id/content">
-	
-        <RelativeLayout
-			android:id="@id/content"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content">
+		android:layout_height="wrap_content">
+
+
             
-	            <TableLayout
+	       <!--     <TableLayout
 				    android:id="@+id/callStats"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
@@ -165,42 +161,39 @@
 				        
 				    </TableRow>
 			    
-			</TableLayout>
-			
-	        <ListView
-				android:id="@+id/accounts"
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:stackFromBottom="true"
-			    android:paddingBottom="10dp"
-			    android:background="@android:color/black"/>
-		
-        </RelativeLayout>
+			</TableLayout> -->
+
+	</RelativeLayout>
         
 		<RelativeLayout
-			android:id="@id/handle"
+			android:id="@+id/handle"
 		    android:layout_width="match_parent"
-		    android:layout_height="40dp"
-		    android:layout_marginBottom="10dp">
-    
-		    <ImageView 
-		        android:id="@+id/background"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:scaleType="fitXY"
-		        android:src="@drawable/statebar_background"/>
-		    
-		    <ImageView 
+		    android:layout_height="match_parent">
+
+			<ImageView
+				android:id="@+id/menu_bar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleType="center"
+				android:src="@drawable/menu"
+				android:layout_centerVertical="true"
+				android:layout_marginLeft="5dp"
+				android:layout_centerInParent="true"
+				android:layout_alignParentLeft="true"/>
+
+			<ImageView
 		        android:contentDescription="@string/content_description_led"
 		        android:id="@+id/statusLed"
 		        android:paddingLeft="5dp"
-		        android:src="@drawable/led_disconnected"
+				android:src="@drawable/led_disconnected"
 		        android:adjustViewBounds="true"
-            	android:layout_centerVertical="true"
-		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent" />
-		    
-		    <TextView 
+				android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+				android:layout_alignParentTop="true"
+				android:layout_toRightOf="@+id/menu_bar"
+				android:layout_toEndOf="@+id/menu_bar"/>
+
+			<TextView
 		        android:id="@+id/statusText" 
 		        android:text="@string/status_not_connected"
 		        android:textColor="@android:color/white"
@@ -256,17 +249,11 @@
 				android:layout_height="match_parent"
 				android:gravity="center_vertical"
 				android:visibility="gone" />
-		
 		</RelativeLayout>
-		
-	</org.linphone.ui.SlidingDrawer>
 
     <ImageView
         android:contentDescription="@string/content_description_encryption"
         android:id="@+id/encryption"
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -275,5 +262,5 @@
         android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true" />
-	
+
 </RelativeLayout>

@@ -63,9 +63,6 @@ public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit, voicemailCount;
 	private ImageView statusLed, callQuality, encryption, background;
-	private ListView sliderContentAccounts;
-	private TableLayout callStats;
-	private SlidingDrawer drawer;
 //	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
@@ -84,17 +81,6 @@ public class StatusFragment extends Fragment {
 		encryption = (ImageView) view.findViewById(R.id.encryption);
 		background = (ImageView) view.findViewById(R.id.background);
 //		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
-		callStats = (TableLayout) view.findViewById(R.id.callStats);
-		
-		drawer = (SlidingDrawer) view.findViewById(R.id.statusBar);
-		drawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-			@Override
-			public void onDrawerOpened() {
-				populateSliderContent();
-			}
-		});
-		
-		sliderContentAccounts = (ListView) view.findViewById(R.id.accounts);
 
 		voicemailCount = (TextView) view.findViewById(R.id.voicemailCount);
 		
@@ -134,8 +120,6 @@ public class StatusFragment extends Fragment {
 						});
 					}
 //						setMiniLedsForEachAccount();
-					populateSliderContent();
-					sliderContentAccounts.invalidate();
 				} catch (IllegalStateException ise) {}
 			}
 			
@@ -203,41 +187,24 @@ public class StatusFragment extends Fragment {
 		if (getResources().getBoolean(R.bool.lock_statusbar) && !force) {
 			return;
 		}
-		
-		if (getResources().getBoolean(R.bool.disable_animations)) {
-			drawer.toggle();
-		} else {
-			drawer.animateToggle();
-		}
+
 	}
 	
 	public void closeStatusBar() {
 		if (getResources().getBoolean(R.bool.lock_statusbar)) {
 			return;
 		}
-
-		if (getResources().getBoolean(R.bool.disable_animations)) {
-			drawer.close();
-		} else {
-			drawer.animateClose();
-		}
 	}
 	
 	private void populateSliderContent() {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
-			sliderContentAccounts.setVisibility(View.GONE);
-			callStats.setVisibility(View.GONE);
 			voicemailCount.setVisibility(View.GONE);
 			
 			if (isInCall && isAttached && getResources().getBoolean(R.bool.display_call_stats)) {
-				callStats.setVisibility(View.VISIBLE);
 				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-				initCallStatsRefresher(call, callStats);
+				//initCallStatsRefresher(call, callStats);
 			} else if (!isInCall) {
 				voicemailCount.setVisibility(View.VISIBLE);
-				sliderContentAccounts.setVisibility(View.VISIBLE);
-				AccountsListAdapter adapter = new AccountsListAdapter();
-				sliderContentAccounts.setAdapter(adapter);
 			}
 		}
 	}
@@ -378,12 +345,7 @@ public class StatusFragment extends Fragment {
 			encryption.setVisibility(View.GONE);
 			if (getResources().getBoolean(R.bool.exit_button_on_dialer))
 				exit.setVisibility(View.VISIBLE);
-			
-			if (drawer != null && getResources().getBoolean(R.bool.lock_statusbar)) {
-				drawer.lock();
-			} else if (drawer != null) {
-				drawer.unlock();
-			}
+
 		}
 	}
 	

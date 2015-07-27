@@ -36,7 +36,7 @@
 				android:textColor="@android:color/black"
 				android:textAllCaps="true"
 				android:contentDescription="@string/setup_create_account"
-				android:background="@drawable/resizable_assistant_button_2"
+				android:background="@drawable/resizable_assistant_button"
 				android:text="@string/setup_create_account"/>
 
         </RelativeLayout>
@@ -55,7 +55,7 @@
 				android:textAllCaps="true"
 				android:textColor="@android:color/black"
 				android:contentDescription="@string/setup_login_linphone"
-				android:background="@drawable/resizable_assistant_button_2"
+				android:background="@drawable/resizable_assistant_button"
 				android:text="@string/setup_login_linphone"/>
 
         </RelativeLayout>
@@ -74,7 +74,7 @@
 				android:textColor="@android:color/black"
 				android:textAllCaps="true"
 				android:contentDescription="@string/setup_login_generic"
-				android:background="@drawable/resizable_assistant_button_2"
+				android:background="@drawable/resizable_assistant_button"
 				android:text="@string/setup_login_generic"/>
         
         </RelativeLayout>
@@ -93,7 +93,7 @@
 				android:textColor="@android:color/black"
 				android:textAllCaps="true"
 				android:contentDescription="@string/setup_remote_provisioning"
-				android:background="@drawable/resizable_assistant_button_2"
+				android:background="@drawable/resizable_assistant_button"
 				android:text="@string/setup_remote_provisioning"/>
         
         </RelativeLayout>

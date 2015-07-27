@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * @author Sylvain Berfini
@@ -44,7 +45,7 @@ public class DialerFragment extends Fragment {
 	public boolean mVisible;
 	private AddressText mAddress;
 	private CallButton mCall;
-	private ImageView mAddContact;
+	private RelativeLayout mAddContact;
 	private OnClickListener addContactListener, cancelListener, transferListener;
 	private boolean shouldEmptyAddressField = true;
 	
@@ -54,7 +55,7 @@ public class DialerFragment extends Fragment {
 		instance = this;
         View view = inflater.inflate(R.layout.dialer, container, false);
 		
-		mAddress = (AddressText) view.findViewById(R.id.Adress); 
+		mAddress = (AddressText) view.findViewById(R.id.Address);
 		mAddress.setDialerFragment(this);
 		
 		EraseButton erase = (EraseButton) view.findViewById(R.id.Erase);
@@ -69,7 +70,7 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.add_call);
 			}
 		} else {
-			mCall.setImageResource(R.drawable.call);
+			mCall.setImageResource(R.drawable.call_audio_start);
 		}
 		
 		AddressAware numpad = (AddressAware) view.findViewById(R.id.Dialer);
@@ -77,7 +78,7 @@ public class DialerFragment extends Fragment {
 			numpad.setAddressWidget(mAddress);
 		}
 		
-		mAddContact = (ImageView) view.findViewById(R.id.addContact);
+		mAddContact = (RelativeLayout) view.findViewById(R.id.addContact);
 		
 		addContactListener = new OnClickListener() {
 			@Override
@@ -165,12 +166,13 @@ public class DialerFragment extends Fragment {
 				mCall.resetClickListener();
 			}
 			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.cancel);
+			//mAddContact.setImageResource(R.drawable.cancel);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			mCall.setImageResource(R.drawable.call);
+			mCall.setImageResource(R.drawable.call_audio_start);
+			//mCall.setAlpha(30);
 			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.add_contact);
+			//mAddContact.setImageResource(R.drawable.add_contact_button);
 			mAddContact.setOnClickListener(addContactListener);
 			enableDisableAddContact();
 		}

@@ -22,6 +22,12 @@
     <item>always</item>
     <item>auto</item>
   </string-array>
+	<string-array name="params">
+		<item>name</item>
+		<item>about</item>
+		<item>lala</item>
+		<item>exit</item>
+	</string-array>
   <string name="incall_notif_active">Audio call ongoing</string>
   <string name="incall_notif_paused">Paused call ongoing</string>
   <string name="incall_notif_video">Video capturing call ongoing</string>
