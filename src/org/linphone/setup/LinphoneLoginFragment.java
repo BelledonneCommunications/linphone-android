@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ import android.widget.Toast;
  */
 public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 	private EditText login, password;
-	private ImageView apply;
+	private Button apply;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +43,7 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 		
 		login = (EditText) view.findViewById(R.id.setup_username);
 		password = (EditText) view.findViewById(R.id.setup_password);
-		apply = (ImageView) view.findViewById(R.id.setup_apply);
+		apply = (Button) view.findViewById(R.id.setup_apply);
 		apply.setOnClickListener(this);
 		
 		if (getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment)) {

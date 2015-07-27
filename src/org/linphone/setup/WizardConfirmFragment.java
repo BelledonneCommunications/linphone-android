@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import de.timroes.axmlrpc.XMLRPCCallback;
@@ -48,7 +49,7 @@ public class WizardConfirmFragment extends Fragment {
 		
 		username = getArguments().getString("Username");
 		
-		ImageView checkAccount = (ImageView) view.findViewById(R.id.setup_check);
+		Button checkAccount = (Button) view.findViewById(R.id.setup_check);
 		checkAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -40,7 +40,7 @@ import android.widget.Toast;
  */
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
 	private EditText login, password, domain;
-	private RelativeLayout next, cancel;
+	private RelativeLayout  cancel;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		login = (EditText) findViewById(R.id.setup_username);
 		password = (EditText) findViewById(R.id.setup_password);
 		domain = (EditText) findViewById(R.id.setup_domain);
-		
-		next = (RelativeLayout) findViewById(R.id.setup_next);
-		next.setOnClickListener(this);
+
 		cancel = (RelativeLayout) findViewById(R.id.setup_cancel);
 		cancel.setOnClickListener(this);
 		
@@ -97,15 +95,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.setup_next) {
-			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0 || domain.getText() == null || domain.length() == 0) {
-				Toast.makeText(this, getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			storeAccount(login.getText().toString(), password.getText().toString(), domain.getText().toString());
-			cancelWizard(true);
-		} else if (id == R.id.setup_cancel) {
+		if (id == R.id.setup_cancel) {
 			cancelWizard(false);
 		}
 	}

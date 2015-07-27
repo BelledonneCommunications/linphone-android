@@ -43,6 +43,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,7 +62,7 @@ public class WizardFragment extends Fragment {
 	private boolean passwordOk = false;
 	private boolean emailOk = false;
 	private boolean confirmPasswordOk = false;
-	private ImageView createAccount;
+	private Button createAccount;
 	private TextView errorMessage;
 	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -120,7 +121,7 @@ public class WizardFragment extends Fragment {
 
     	errorMessage = (TextView) view.findViewById(R.id.setup_error);
     	
-    	createAccount = (ImageView) view.findViewById(R.id.setup_create);
+    	createAccount = (Button) view.findViewById(R.id.setup_create);
     	createAccount.setEnabled(false);
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

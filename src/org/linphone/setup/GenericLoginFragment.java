@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ import android.widget.Toast;
  */
 public class GenericLoginFragment extends Fragment implements OnClickListener {
 	private EditText login, password, domain;
-	private ImageView apply;
+	private Button apply;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +44,7 @@ public class GenericLoginFragment extends Fragment implements OnClickListener {
 		login = (EditText) view.findViewById(R.id.setup_username);
 		password = (EditText) view.findViewById(R.id.setup_password);
 		domain = (EditText) view.findViewById(R.id.setup_domain);
-		apply = (ImageView) view.findViewById(R.id.setup_apply);
+		apply = (Button) view.findViewById(R.id.setup_apply);
 		apply.setOnClickListener(this);
 		
 		return view;
