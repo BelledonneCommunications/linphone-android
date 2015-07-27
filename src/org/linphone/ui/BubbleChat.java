@@ -66,36 +66,6 @@ import android.widget.TextView;
 @SuppressLint("SimpleDateFormat")
 public class BubbleChat {
 	private static final HashMap<String, Integer> emoticons = new HashMap<String, Integer>();
-	static {
-	    emoticons.put(":)", R.drawable.emo_im_happy);
-	    emoticons.put(":-)", R.drawable.emo_im_happy);
-	    emoticons.put(":(", R.drawable.emo_im_sad);
-	    emoticons.put(":-(", R.drawable.emo_im_sad);
-	    emoticons.put(":-P", R.drawable.emo_im_tongue_sticking_out);
-	    emoticons.put(":P", R.drawable.emo_im_tongue_sticking_out);
-	    emoticons.put(";-)", R.drawable.emo_im_winking);
-	    emoticons.put(";)", R.drawable.emo_im_winking);
-	    emoticons.put(":-D", R.drawable.emo_im_laughing);
-	    emoticons.put(":D", R.drawable.emo_im_laughing);
-	    emoticons.put("8-)", R.drawable.emo_im_cool);
-	    emoticons.put("8)", R.drawable.emo_im_cool);
-	    emoticons.put("O:)", R.drawable.emo_im_angel);
-	    emoticons.put("O:-)", R.drawable.emo_im_angel);
-	    emoticons.put(":-*", R.drawable.emo_im_kissing);
-	    emoticons.put(":*", R.drawable.emo_im_kissing);
-	    emoticons.put(":-/", R.drawable.emo_im_undecided);
-	    emoticons.put(":/ ", R.drawable.emo_im_undecided); // The space after is needed to avoid bad display of links
-	    emoticons.put(":-\\", R.drawable.emo_im_undecided);
-	    emoticons.put(":\\", R.drawable.emo_im_undecided);
-	    emoticons.put(":-O", R.drawable.emo_im_surprised);
-	    emoticons.put(":O", R.drawable.emo_im_surprised);
-	    emoticons.put(":-@", R.drawable.emo_im_yelling);
-	    emoticons.put(":@", R.drawable.emo_im_yelling);
-	    emoticons.put("O.o", R.drawable.emo_im_wtf);
-	    emoticons.put("o.O", R.drawable.emo_im_wtf);
-	    emoticons.put(":'(", R.drawable.emo_im_crying);
-	    emoticons.put("$.$", R.drawable.emo_im_money_mouth);
-	}
 	
 	private RelativeLayout view;
 	private ImageView statusView;
