@@ -4,38 +4,45 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
-    
-    <ImageView 
-	    android:paddingTop="40dp"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:src="@drawable/setup_title_assistant"/>
-    
-    <TextView 
-	    android:paddingTop="40dp"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/setup_validate_account"
-	    android:textColor="@android:color/black" />
+
+	<TextView
+		android:contentDescription="@string/content_description_welcome"
+		android:paddingTop="20dp"
+		android:textSize="30sp"
+		android:textStyle="bold"
+		android:layout_gravity="center"
+		android:textColor="@color/footer_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/setup_create_account"
+		android:gravity="center_horizontal"/>
+
+	<TextView
+		android:textSize="20sp"
+		android:layout_gravity="center"
+		android:textColor="@color/footer_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/setup_create_account_part_2"/>
     
     <RelativeLayout
     	android:layout_marginTop="20dp"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content">
-           
-        <ImageView
-            android:id="@+id/setup_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/button"
-	    	android:layout_centerInParent="true" />
-        
-         <TextView 
-	    	android:layout_centerInParent="true"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/setup_check_account_validation"
-		    android:textColor="@android:color/black" />
+
+		<Button
+			android:id="@+id/setup_check"
+			android:layout_width="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textAllCaps="true"
+			android:layout_centerInParent="true"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/black"
+			android:contentDescription="@string/setup_check_account_validation"
+			android:background="@drawable/resizable_assistant_button_2"
+			android:text="@string/setup_create"
+			android:layout_centerVertical="true"/>
        
        </RelativeLayout>
 

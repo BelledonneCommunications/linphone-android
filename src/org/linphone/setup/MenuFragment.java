@@ -25,36 +25,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 /**
  * @author Sylvain Berfini
  */
 public class MenuFragment extends Fragment implements OnClickListener {
-	private ImageView createAccount, logLinphoneAccount, logGenericAccount, remoteProvisioning;
+	private Button createAccount, logLinphoneAccount, logGenericAccount, remoteProvisioning;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.setup_menu, container, false);
 		
-		createAccount = (ImageView) view.findViewById(R.id.setup_create_account);
+		createAccount = (Button) view.findViewById(R.id.setup_create_account);
 		createAccount.setOnClickListener(this);
 		
-		logLinphoneAccount = (ImageView) view.findViewById(R.id.setup_login_linphone);
+		logLinphoneAccount = (Button) view.findViewById(R.id.setup_login_linphone);
 		if (getResources().getBoolean(R.bool.hide_linphone_accounts_wizard)) {
 			view.findViewById(R.id.setup_login_linphone_layout).setVisibility(View.GONE);
 		} else {
 			logLinphoneAccount.setOnClickListener(this);
 		}
 		
-		logGenericAccount = (ImageView) view.findViewById(R.id.setup_login_generic);
+		logGenericAccount = (Button) view.findViewById(R.id.setup_login_generic);
 		if (getResources().getBoolean(R.bool.hide_generic_accounts_wizard)) {
 			view.findViewById(R.id.setup_login_generic_layout).setVisibility(View.GONE);
 		} else {
 			logGenericAccount.setOnClickListener(this);
 		}
 		
-		remoteProvisioning = (ImageView) view.findViewById(R.id.setup_remote_provisioning);
+		remoteProvisioning = (Button) view.findViewById(R.id.setup_remote_provisioning);
 		if (getResources().getBoolean(R.bool.hide_remote_provisioning_in_wizard)) {
 			view.findViewById(R.id.setup_remote_provisioning_layout).setVisibility(View.GONE);
 		} else {

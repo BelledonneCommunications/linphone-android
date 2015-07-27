@@ -47,7 +47,7 @@ import android.widget.Toast;
  */
 public class SetupActivity extends Activity implements OnClickListener {
 	private static SetupActivity instance;
-	private RelativeLayout back, next, cancel;
+	private RelativeLayout back, cancel;
 	private SetupFragmentsEnum currentFragment;
 	private SetupFragmentsEnum firstFragment;
 	private Fragment fragment;
@@ -65,7 +65,7 @@ public class SetupActivity extends Activity implements OnClickListener {
 		
 		setContentView(R.layout.setup);
 		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
-				SetupFragmentsEnum.LINPHONE_LOGIN : SetupFragmentsEnum.WELCOME;
+				SetupFragmentsEnum.LINPHONE_LOGIN : SetupFragmentsEnum.MENU;
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState == null) {
             	display(firstFragment);
@@ -130,8 +130,6 @@ public class SetupActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		back = (RelativeLayout) findViewById(R.id.setup_back);
 		back.setOnClickListener(this);
-		next = (RelativeLayout) findViewById(R.id.setup_next);
-		next.setOnClickListener(this);
 		cancel = (RelativeLayout) findViewById(R.id.setup_cancel);
 		cancel.setOnClickListener(this);
 	}
@@ -157,22 +155,6 @@ public class SetupActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-		} else if (id == R.id.setup_next) {
-			if (firstFragment == SetupFragmentsEnum.LINPHONE_LOGIN) {
-				LinphoneLoginFragment linphoneFragment = (LinphoneLoginFragment) fragment;
-				linphoneFragment.linphoneLogIn();
-			} else {
-				if (currentFragment == SetupFragmentsEnum.WELCOME) {
-					MenuFragment fragment = new MenuFragment();
-					changeFragment(fragment);
-					currentFragment = SetupFragmentsEnum.MENU;
-					
-					next.setVisibility(View.GONE);
-					back.setVisibility(View.VISIBLE);
-				} else if (currentFragment == SetupFragmentsEnum.WIZARD_CONFIRM) {
-					finish();
-				}
-			}
 		} else if (id == R.id.setup_back) {
 			onBackPressed();
 		}
@@ -188,22 +170,14 @@ public class SetupActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-		}
-		if (currentFragment == SetupFragmentsEnum.MENU) {
-			WelcomeFragment fragment = new WelcomeFragment();
-			changeFragment(fragment);
-			currentFragment = SetupFragmentsEnum.WELCOME;
-			
-			next.setVisibility(View.VISIBLE);
-			back.setVisibility(View.GONE);
-		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN 
+		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN
 				|| currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN 
 				|| currentFragment == SetupFragmentsEnum.WIZARD 
 				|| currentFragment == SetupFragmentsEnum.REMOTE_PROVISIONING) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
 			currentFragment = SetupFragmentsEnum.MENU;
-		} else if (currentFragment == SetupFragmentsEnum.WELCOME) {
+		} else if (currentFragment == SetupFragmentsEnum.MENU) {
 			finish();
 		}
 	}
@@ -217,8 +191,6 @@ public class SetupActivity extends Activity implements OnClickListener {
 			changeFragment(fragment);
 			currentFragment = SetupFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
 			back.setVisibility(View.VISIBLE);
-			next.setVisibility(View.GONE);
-			next.setEnabled(false);
 			cancel.setEnabled(false);
 		} else {
 			if (mPrefs.isFirstLaunch()) {
@@ -259,8 +231,8 @@ public class SetupActivity extends Activity implements OnClickListener {
 
 	private void display(SetupFragmentsEnum fragment) {
 		switch (fragment) {
-		case WELCOME:
-			displayWelcome();
+		case MENU:
+			displayMenu();
 			break;
 		case LINPHONE_LOGIN:
 			displayLoginLinphone();
@@ -270,10 +242,10 @@ public class SetupActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void displayWelcome() {
-		fragment = new WelcomeFragment();
+	public void displayMenu() {
+		fragment = new MenuFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.WELCOME;
+		currentFragment = SetupFragmentsEnum.MENU;
 	}
 
 	public void displayLoginGeneric() {
@@ -382,9 +354,6 @@ public class SetupActivity extends Activity implements OnClickListener {
 		changeFragment(fragment);
 		
 		currentFragment = SetupFragmentsEnum.WIZARD_CONFIRM;
-
-		next.setVisibility(View.VISIBLE);
-		next.setEnabled(false);
 		back.setVisibility(View.GONE);
 	}
 	
