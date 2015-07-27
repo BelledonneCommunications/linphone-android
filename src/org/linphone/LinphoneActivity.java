@@ -318,39 +318,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	/* Called whenever we call invalidateOptionsMenu() */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// The action bar home/up action should open or close the drawer.
-		// ActionBarDrawerToggle will take care of this.
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		// Handle action buttons
-		switch(item.getItemId()) {
-			case R.id.action_websearch:
-
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
 	/* The click listner for ListView in the navigation drawer */
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
@@ -457,7 +424,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			statusFragment.getView().setVisibility(View.VISIBLE);
 		}*/
 		//findViewById(R.id.status).setVisibility(View.VISIBLE);
-		findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
+		//findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
