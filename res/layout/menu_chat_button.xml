@@ -2,8 +2,10 @@
 <RelativeLayout
 	android:id="@+id/chat"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+	android:background="@color/footer_button"
+	android:layout_weight="1"
+	android:layout_width="0dp"
+	android:layout_height="match_parent">
     
     <ImageView
         android:id="@+id/image"
@@ -11,7 +13,7 @@
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/content_description_chat_button"
-		android:src="@drawable/chat" />
+		android:src="@drawable/footer_chat" />
 
     <TextView
         android:id="@+id/text"

@@ -1,141 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/drawer_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<!-- The main content view -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Hack to adjust perfectly on every screen the bottom of the fragment with the curved menu -->
-    <LinearLayout
-	    android:id="@+id/mark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-    
-		<ImageView
-		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
-		    android:src="@drawable/mark"
-		    android:visibility="invisible" />
-		
-		<ImageView
-		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
-		    android:src="@drawable/mark"
-		    android:visibility="invisible" />
-		
-		<ImageView
-		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
-		    android:src="@drawable/mark"
-		    android:visibility="invisible" />
-		
-		<ImageView
-		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
-		    android:src="@drawable/mark"
-		    android:visibility="invisible" />
-		
-		<ImageView
-		    android:contentDescription="@string/content_description_mark"
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.2"
-		    android:adjustViewBounds="true"
-		    android:scaleType="fitXY"
-		    android:src="@drawable/mark"
-		    android:visibility="invisible" />
-        
-    </LinearLayout>
-    
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/mark"
-        android:layout_alignParentTop="true">
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_above="@id/footer">
 
-        <LinearLayout
-            android:id="@+id/fragmentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="40dp" />
+		<include layout="@layout/status" android:id="@+id/status" />
 
-        <fragment
-            android:id="@+id/status"
-            android:name="org.linphone.StatusFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/status" />
-        
-    </FrameLayout>
+		<include layout="@layout/toolbar" android:id="@+id/toolbar" />
+
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentTop="true">
+
+			<LinearLayout
+				android:id="@+id/fragmentContainer"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:orientation="horizontal" />
+
+
+		</FrameLayout>
+
+	</LinearLayout>
+
 
     <LinearLayout
-        android:id="@+id/menu"
+        android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+		<RelativeLayout
+			android:id="@+id/history"
+			android:background="@drawable/footer_button"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent">
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:layout_margin="10dp"
+				android:scaleType="center"
+				android:contentDescription="@string/content_description_history"
+				android:src="@drawable/footer_history" />
+
+			<RelativeLayout
+				android:visibility="gone"
+				android:id="@+id/history_select"
+				android:layout_width="match_parent"
+				android:layout_height="5dp"
+				android:layout_alignParentBottom="true"
+				android:background="@color/footer_select" />
+
+			<TextView
+				android:id="@+id/missedCalls"
+				android:layout_width="25dp"
+				android:layout_height="25dp"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:background="@drawable/missed_calls_bg"
+				android:gravity="center"
+				android:textSize="20sp"
+				android:visibility="gone" />
+
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:id="@+id/contacts"
+			android:background="@drawable/footer_button"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
 			android:adjustViewBounds="true">
 
-            <include layout="@layout/menu_history_button" />
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:scaleType="center"
+				android:layout_margin="10dp"
+				android:contentDescription="@string/content_description_contacts"
+				android:src="@drawable/footer_contacts" />
 
-            <TextView
-                android:id="@+id/missedCalls"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/missed_calls_bg"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:visibility="gone" />
-        </RelativeLayout>
+			<RelativeLayout
+				android:visibility="gone"
+				android:id="@+id/contacts_select"
+				android:layout_width="match_parent"
+				android:layout_height="5dp"
+				android:layout_alignParentBottom="true"
+				android:contentDescription="@string/content_description_contacts"
+				android:background="@color/footer_select" />
+		</RelativeLayout>
 
-        <include layout="@layout/menu_contact_button" />
-        
-        <ImageView
-            android:id="@+id/dialer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-			android:adjustViewBounds="true"
-			android:scaleType="fitCenter"
-            android:contentDescription="@string/content_description_dialer"
-            android:src="@drawable/dialer" />
-        
-        <include layout="@layout/menu_about_chat_button" />
 
-        <RelativeLayout
-            android:id="@+id/completeChat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+		<RelativeLayout
+			android:id="@+id/dialer"
+			android:background="@drawable/footer_button"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
 			android:adjustViewBounds="true">
 
-            <include layout="@layout/menu_chat_button" />
+			<ImageView
+				android:id="@+id/image"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:scaleType="center"
+				android:layout_margin="10dp"
+				android:contentDescription="@string/content_description_contacts"
+				android:src="@drawable/footer_dialer" />
+
+			<RelativeLayout
+				android:id="@+id/dialer_select"
+				android:layout_width="match_parent"
+				android:layout_height="5dp"
+				android:layout_alignParentBottom="true"
+				android:contentDescription="@string/content_description_contacts"
+				android:background="@color/footer_select" />
+		</RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:background="@drawable/footer_button"
+			android:adjustViewBounds="true">
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:scaleType="center"
+				android:contentDescription="@string/content_description_contacts"
+				android:src="@drawable/footer_chat" />
+
+			<RelativeLayout
+				android:visibility="gone"
+				android:id="@+id/chat_select"
+				android:layout_width="match_parent"
+				android:layout_height="5dp"
+				android:layout_alignParentBottom="true"
+				android:contentDescription="@string/content_description_contacts"
+				android:background="@color/footer_select" />
 
             <TextView
                 android:id="@+id/missedChats"
@@ -149,10 +174,6 @@
                 android:visibility="gone" />
             
         </RelativeLayout>
-
-        <include layout="@layout/menu_settings_button" />
-        
-        <include layout="@layout/menu_about_settings_button" />
         
     </LinearLayout>
     
@@ -166,3 +187,15 @@
     </LinearLayout>
 
 </RelativeLayout>
+
+	<!-- The navigation drawer -->
+	<ListView android:id="@+id/left_drawer"
+			  android:layout_width="300dp"
+			  android:layout_height="match_parent"
+			  android:layout_gravity="start"
+			  android:choiceMode="singleChoice"
+			  android:divider="@android:color/transparent"
+			  android:dividerHeight="0dp"
+			  android:background="@color/background"/>
+
+</android.support.v4.widget.DrawerLayout>

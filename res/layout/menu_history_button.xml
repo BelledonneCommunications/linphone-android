@@ -2,26 +2,28 @@
 <RelativeLayout
 	android:id="@+id/history"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+	android:background="@color/footer_button"
+	android:layout_weight="1"
+	android:layout_width="0dp"
+	android:layout_height="match_parent"
+	android:adjustViewBounds="true">
     
     <ImageView
         android:id="@+id/image"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
+		android:scaleType="center"
 		android:contentDescription="@string/content_description_history"
-		android:src="@drawable/history" />
-    
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@id/image"
-        android:paddingBottom="10dp"
-        android:textColor="@drawable/text_color"
-        android:text="@string/button_history"
-        android:textSize="12sp" />
+		android:src="@drawable/footer_history" />
+
+	<RelativeLayout
+		android:visibility="gone"
+		android:id="@+id/select"
+		android:layout_width="match_parent"
+		android:layout_height="8dp"
+		android:layout_alignParentBottom="true"
+		android:contentDescription="@string/content_description_contacts"
+		android:background="@color/footer_select" />
     
 </RelativeLayout>

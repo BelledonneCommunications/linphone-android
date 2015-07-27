@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	android:id="@+id/contacts"
+	android:background="@color/footer_button"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_weight="1"
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
 	android:adjustViewBounds="true">
     
     <ImageView
@@ -12,18 +13,16 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
+		android:scaleType="center"
 		android:contentDescription="@string/content_description_contacts"
-		android:src="@drawable/contacts" />
+		android:src="@drawable/footer_contacts" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@id/image"
-        android:paddingBottom="10dp"
-        android:textColor="@drawable/text_color"
-        android:text="@string/button_contacts"
-        android:textSize="12sp" />
-    
+	<RelativeLayout
+		android:visibility="gone"
+		android:id="@+id/select"
+		android:layout_width="match_parent"
+		android:layout_height="8dp"
+		android:layout_alignParentBottom="true"
+		android:contentDescription="@string/content_description_contacts"
+		android:background="@color/footer_select" />
 </RelativeLayout>
