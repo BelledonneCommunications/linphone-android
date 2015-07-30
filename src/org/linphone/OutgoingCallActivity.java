@@ -34,7 +34,6 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,24 +45,24 @@ import android.widget.Toast;
  *
  * @author Guillaume Beraudo
  */
-public class IncomingCallActivity extends Activity implements LinphoneSliderTriggered {
+public class OutgoingCallActivity extends Activity {
 
-	private static IncomingCallActivity instance;
-	
+	private static OutgoingCallActivity instance;
+
 	private TextView mNameView;
 	private TextView mNumberView;
 	private ImageView mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
-	
-	public static IncomingCallActivity instance() {
+
+	public static OutgoingCallActivity instance() {
 		return instance;
 	}
-	
+
 	public static boolean isInstanciated() {
 		return instance != null;
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -73,42 +72,26 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
 		mPictureView = (ImageView) findViewById(R.id.incoming_picture);
 
-        // set this flag so this activity will stay in front of the keyguard
-        int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-        getWindow().addFlags(flags);
+		// set this flag so this activity will stay in front of the keyguard
+		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+		getWindow().addFlags(flags);
 
-		ImageView accept = (ImageView) findViewById(R.id.accept);
-		accept.setOnClickListener(new View.OnClickListener() {
+		// "Dial-to-answer" widget for incoming calls.
+
+		mListener = new LinphoneCoreListenerBase(){
 			@Override
-			public void onClick(View v) {
-				answer();
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				if (call == mCall && State.CallEnd == state) {
+					finish();
+				}
+				if (state == State.StreamsRunning) {
+					// The following should not be needed except some devices need it (e.g. Galaxy S).
+					LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+				}
 			}
-		});
+		};
 
-		ImageView decline = (ImageView) findViewById(R.id.decline);
-		decline.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				decline();
-			}
-		});
-
-        // "Dial-to-answer" widget for incoming calls.
-
-        mListener = new LinphoneCoreListenerBase(){
-        	@Override
-        	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-        		if (call == mCall && State.CallEnd == state) {
-        			finish();
-        		}
-        		if (state == State.StreamsRunning) {
-        			// The following should not be needed except some devices need it (e.g. Galaxy S).
-        			LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
-        		}
-        	}
-        };
-
-        super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		instance = this;
 	}
 
@@ -120,7 +103,7 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
-		
+
 		// Only one call ringing at a time is allowed
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
@@ -150,7 +133,7 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 			mNumberView.setText(address.asStringUriOnly());
 		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -159,13 +142,13 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		}
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		instance = null;
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneManager.isInstanciated() && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
@@ -180,16 +163,16 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
 	}
-	
+
 	private void answer() {
 		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
-		
+
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(this);
 		if (isLowBandwidthConnection) {
 			params.enableLowBandwidth(true);
 			Log.d("Low bandwidth enabled in call params");
 		}
-		
+
 		if (!LinphoneManager.getInstance().acceptCallWithParams(mCall, params)) {
 			// the above method takes care of Samsung Galaxy S
 			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
@@ -206,15 +189,4 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		}
 	}
 
-	@Override
-	public void onLeftHandleTriggered() {
-		answer();
-		finish();
-	}
-
-	@Override
-	public void onRightHandleTriggered() {
-		decline();
-		finish();
-	}
 }

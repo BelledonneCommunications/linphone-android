@@ -165,7 +165,7 @@
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/missed_calls_bg"
+                android:background="@drawable/history_chat_indicator"
                 android:gravity="center"
                 android:textSize="20sp"
                 android:visibility="gone" />

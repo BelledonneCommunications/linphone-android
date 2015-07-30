@@ -77,7 +77,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 	private Handler mControlsHandler = new Handler(); 
 	private Runnable mControls;
 	private ImageView switchCamera;
-	private TextView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference;
+	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference;
 	private TextView audioRoute, routeSpeaker, routeReceiver, routeBluetooth;
 	private LinearLayout routeLayout;
 	private ProgressBar videoProgress;
@@ -171,7 +171,7 @@ public class InCallActivity extends Activity implements OnClickListener {
         			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 
         			isMicMuted = LinphoneManager.getLc().isMicMuted();
-        			enableAndRefreshInCallActions();
+        			//enableAndRefreshInCallActions();
         			
         			if (status != null) {
         				videoProgress.setVisibility(View.GONE);
@@ -179,9 +179,9 @@ public class InCallActivity extends Activity implements OnClickListener {
         			}
         		}
         		
-        		refreshInCallActions();
+        		//refreshInCallActions();
         		
-        		refreshCallList(getResources());
+        		//refreshCallList(getResources());
         		
         		if (state == State.CallUpdatedByRemote) {
         			// If the correspondent proposes video while audio call
@@ -236,7 +236,7 @@ public class InCallActivity extends Activity implements OnClickListener {
             	LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 
             	if (LinphoneUtils.isCallEstablished(call)) {
-	    			enableAndRefreshInCallActions();
+	    			//enableAndRefreshInCallActions();
             	}
             }
             
@@ -245,7 +245,7 @@ public class InCallActivity extends Activity implements OnClickListener {
             	isSpeakerEnabled = savedInstanceState.getBoolean("Speaker");
             	isMicMuted = savedInstanceState.getBoolean("Mic");
             	isVideoCallPaused = savedInstanceState.getBoolean("VideoCallPaused");
-            	refreshInCallActions();
+            	//refreshInCallActions();
             	return;
             }
             
@@ -303,35 +303,35 @@ public class InCallActivity extends Activity implements OnClickListener {
         	
         }
         
-		video = (TextView) findViewById(R.id.video);
+		video = (ImageView) findViewById(R.id.video);
 		video.setOnClickListener(this);
 		video.setEnabled(false);
-		micro = (TextView) findViewById(R.id.micro);
+		micro = (ImageView) findViewById(R.id.micro);
 		micro.setOnClickListener(this);
 //		micro.setEnabled(false);
-		speaker = (TextView) findViewById(R.id.speaker);
+		speaker = (ImageView) findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
 		if(isTablet()){
 			speaker.setEnabled(false);
 		}
 //		speaker.setEnabled(false);
-		addCall = (TextView) findViewById(R.id.addCall);
+		addCall = (ImageView) findViewById(R.id.addCall);
 		addCall.setOnClickListener(this);
 		addCall.setEnabled(false);
-		transfer = (TextView) findViewById(R.id.transfer);
+		transfer = (ImageView) findViewById(R.id.transfer);
 		transfer.setOnClickListener(this);
 		transfer.setEnabled(false);
-		options = (TextView) findViewById(R.id.options);
+		options = (ImageView) findViewById(R.id.options);
 		options.setOnClickListener(this);
 		options.setEnabled(false);
-		pause = (TextView) findViewById(R.id.pause);
-		pause.setOnClickListener(this);
-		pause.setEnabled(false);
-		hangUp = (TextView) findViewById(R.id.hangUp);
+		//pause = (ImageView) findViewById(R.id.pause);
+		//pause.setOnClickListener(this);
+		//pause.setEnabled(false);
+		hangUp = (ImageView) findViewById(R.id.hangUp);
 		hangUp.setOnClickListener(this);
-		conference = (TextView) findViewById(R.id.conference);
-		conference.setOnClickListener(this);
-		dialer = (TextView) findViewById(R.id.dialer);
+		//conference = (ImageView) findViewById(R.id.conference);
+		//conference.setOnClickListener(this);
+		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
 		dialer.setEnabled(false);
 		numpad = (Numpad) findViewById(R.id.numpad);
@@ -339,7 +339,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 		videoProgress.setVisibility(View.GONE);
 		
 		
-		try {
+		/*try {
 			routeLayout = (LinearLayout) findViewById(R.id.routesLayout);
 			audioRoute = (TextView) findViewById(R.id.audioRoute);
 			audioRoute.setOnClickListener(this);
@@ -351,7 +351,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 			routeBluetooth.setOnClickListener(this);
 		} catch (NullPointerException npe) {
 			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (1)");
-		}
+		}*/
 		
 		switchCamera = (ImageView) findViewById(R.id.switchCamera);
 		switchCamera.setOnClickListener(this);
@@ -457,7 +457,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 			speaker.setEnabled(true);
     	}
 		transfer.setEnabled(true);
-		pause.setEnabled(true);
+		//pause.setEnabled(true);
 		dialer.setEnabled(true);
 		conference.setEnabled(true);
 
