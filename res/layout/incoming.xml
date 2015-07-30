@@ -5,37 +5,62 @@
 	android:layout_height="match_parent"
 	android:background="@color/background">
 
+	<include layout="@layout/status"  android:id="@+id/statusBar" />
+
+	<RelativeLayout
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_below="@id/statusBar"
+		android:background="@color/colorF">
+
+		<TextView
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textColor="@color/colorA"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:text="@string/incoming"
+			android:textAllCaps="true"
+			android:paddingLeft="10dp"
+			android:gravity="center"/>
+
+	</RelativeLayout>
+
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:paddingTop="50dp"
+		android:layout_below="@id/toolbar"
 		android:orientation="vertical"
 		android:layout_above="@id/menu">
 
-		<TextView
-			android:id="@+id/incoming_caller_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:textAlignment="center"
-			android:layout_marginBottom="20dp"
-			android:textColor="@android:color/black"
-			android:textSize="28sp" />
 
 		<LinearLayout
 			android:id="@+id/incoming_caller_profile"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"
-			android:orientation="vertical" >
+			android:orientation="vertical"
+			android:paddingTop="10dp"
+			android:weightSum="1">
 
 			<ImageView
 				android:id="@+id/incoming_picture"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
+				android:layout_width="259dp"
+				android:layout_height="207dp"
 				android:src="@drawable/avatar"
 				android:paddingBottom="10dp"
-				android:layout_marginTop="10dp" />
+				android:layout_marginTop="10dp"
+				android:layout_weight="1.30"/>
+
+			<TextView
+				android:id="@+id/incoming_caller_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:textAlignment="center"
+				android:layout_marginBottom="20dp"
+				android:textColor="@android:color/black"
+				android:textSize="28sp" />
 
 			<TextView
 				android:id="@+id/incoming_caller_number"
@@ -43,7 +68,7 @@
 				android:layout_height="40dp"
 				android:textColor="@android:color/black"
 				android:textSize="28sp"
-				android:layout_gravity="center_horizontal" />
+				android:layout_gravity="center_horizontal"/>
 
 
 		</LinearLayout>
