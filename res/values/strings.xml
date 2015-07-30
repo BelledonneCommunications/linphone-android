@@ -3,6 +3,9 @@
 
 	<!-- NEW STRINGS -->
 
+	<!-- splashscreen -->
+	<string name="app_description">free SIP VOIP client</string>
+
 	<!-- Setup -->
 	<string name="setup_title_assistant">Welcome</string>
 	<string name="setup_title">Assistant</string>
