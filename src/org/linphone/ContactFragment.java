@@ -24,7 +24,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.AvatarWithShadow;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -47,7 +46,7 @@ import android.widget.TextView;
  */
 public class ContactFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private TextView editContact, deleteContact;
+	private ImageView editContact, deleteContact, back;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -95,11 +94,19 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
 		}
 		
-		editContact = (TextView) view.findViewById(R.id.editContact);
+		editContact = (ImageView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
 		
-		deleteContact = (TextView) view.findViewById(R.id.deleteContact);
+		deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
 		deleteContact.setOnClickListener(this);
+
+		ImageView back = (ImageView) view.findViewById(R.id.back);
+		back.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getFragmentManager().popBackStackImmediate();
+			}
+		});
 		
 		return view;
 	}
@@ -112,12 +119,12 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	
 	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
-		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
+		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		if (contact.getPhotoUri() != null) {
-			InputStream input = Compatibility.getContactPictureInputStream(LinphoneActivity.instance().getContentResolver(), contact.getID());
-			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
+			//InputStream input = Compatibility.getContactPictureInputStream(LinphoneActivity.instance().getContentResolver(), contact.getID());
+			//contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
-        	contactPicture.setImageResource(R.drawable.unknown_small);
+        	//contactPicture.setImageResource(R.drawable.unknown_small);
         }
 		
 		TextView contactName = (TextView) view.findViewById(R.id.contactName);
@@ -169,7 +176,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				
 				boolean isAlreadyAFriend = LinphoneManager.getLc().findFriendByAddress(finalNumberOrAddress) != null;
 				if (!isAlreadyAFriend) {
-					friend.setImageResource(R.drawable.friend_add);
+					friend.setImageResource(R.drawable.contact_add);
 					friend.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -179,7 +186,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 						}
 					});
 				} else {
-					friend.setImageResource(R.drawable.friend_remove);
+					friend.setImageResource(R.drawable.delete);
 					friend.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {

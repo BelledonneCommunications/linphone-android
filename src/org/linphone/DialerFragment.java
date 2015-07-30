@@ -65,7 +65,7 @@ public class DialerFragment extends Fragment {
 		mCall.setAddressWidget(mAddress);
 		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
-				mCall.setImageResource(R.drawable.transfer_call);
+				mCall.setImageResource(R.drawable.call_transfer);
 			} else {
 				mCall.setImageResource(R.drawable.add_call);
 			}
@@ -159,7 +159,7 @@ public class DialerFragment extends Fragment {
 		
 		if (lc.getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
-				mCall.setImageResource(R.drawable.transfer_call);
+				mCall.setImageResource(R.drawable.call_transfer);
 				mCall.setExternalClickListener(transferListener);
 			} else {
 				mCall.setImageResource(R.drawable.add_call);

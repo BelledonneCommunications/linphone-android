@@ -5,7 +5,7 @@
     android:layout_height="75dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:background="@drawable/cell_call_first">
+    android:background="@color/footer_select">
 	    
     <TextView
         android:layout_width="0dip"

@@ -13,7 +13,6 @@
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 
 	<!-- Interface settings -->
-    <bool name="use_simple_history">true</bool>
     <bool name="replace_settings_by_about">false</bool>
     <bool name="replace_chat_by_about">false</bool>
     <bool name="display_about_in_settings">true</bool>

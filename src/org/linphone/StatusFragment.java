@@ -328,8 +328,8 @@ public class StatusFragment extends Fragment {
 		LinphoneCall call = lc.getCurrentCall();
 		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 			if (call != null) {
-				startCallQuality();
-				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+				//startCallQuality();
+				//refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			}
 			
 			statusText.setVisibility(View.GONE);

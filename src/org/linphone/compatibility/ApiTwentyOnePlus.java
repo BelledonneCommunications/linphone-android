@@ -46,7 +46,7 @@ public class ApiTwentyOnePlus {
 		Notification notif = new Notification.Builder(context)
 			.setContentTitle(title)
 			.setContentText(msg)
-			.setSmallIcon(R.drawable.chat_icon_over)
+			.setSmallIcon(R.drawable.chat_icon_default)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
 			.setDefaults(Notification.DEFAULT_ALL)

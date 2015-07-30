@@ -22,7 +22,6 @@ import java.util.List;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.PresenceActivityType;
-import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -44,6 +43,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -54,8 +54,10 @@ import android.widget.TextView;
 public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
-	private TextView allContacts, linphoneContacts, newContact, noSipContact, noContact;
+	private TextView noSipContact, noContact;
+	private ImageView allContacts, linphoneContacts, newContact;
 	private boolean onlyDisplayLinphoneContacts;
+	private RelativeLayout allContactsSelected, linphoneContactsSelected;
 	private int lastKnownPosition;
 	private AlphabetIndexer indexer;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
@@ -93,13 +95,19 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
         contactsList = (ListView) view.findViewById(R.id.contactsList);
         contactsList.setOnItemClickListener(this);
         
-        allContacts = (TextView) view.findViewById(R.id.allContacts);
+        allContacts = (ImageView) view.findViewById(R.id.all_contacts);
         allContacts.setOnClickListener(this);
         
-        linphoneContacts = (TextView) view.findViewById(R.id.linphoneContacts);
+        linphoneContacts = (ImageView) view.findViewById(R.id.linphone_contacts);
         linphoneContacts.setOnClickListener(this);
+
+		allContactsSelected = (RelativeLayout) view.findViewById(R.id.all_contacts_select);
+		allContactsSelected.setOnClickListener(this);
+
+		linphoneContactsSelected = (RelativeLayout) view.findViewById(R.id.linphone_contacts_select);
+		linphoneContactsSelected.setOnClickListener(this);
         
-        newContact = (TextView) view.findViewById(R.id.newContact);
+        newContact = (ImageView) view.findViewById(R.id.newContact);
         newContact.setOnClickListener(this);
         newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
         
@@ -136,15 +144,23 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.allContacts) {
+		if (id == R.id.all_contacts) {
 			onlyDisplayLinphoneContacts = false;
+			allContactsSelected.setVisibility(View.VISIBLE);
+			allContacts.setEnabled(false);
+			linphoneContacts.setEnabled(true);
+			linphoneContactsSelected.setVisibility(View.INVISIBLE);
 			if (searchField.getText().toString().length() > 0) {
 				searchContacts();
 			} else {
 				changeContactsAdapter();
 			}
 		} 
-		else if (id == R.id.linphoneContacts) {
+		else if (id == R.id.linphone_contacts) {
+			allContactsSelected.setVisibility(View.INVISIBLE);
+			linphoneContactsSelected.setVisibility(View.VISIBLE);
+			linphoneContacts.setEnabled(false);
+			allContacts.setEnabled(true);
 			onlyDisplayLinphoneContacts = true;
 			if (searchField.getText().toString().length() > 0) {
 				searchContacts();

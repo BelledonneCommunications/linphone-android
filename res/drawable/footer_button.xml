@@ -4,6 +4,7 @@
 		  android:drawable="@color/footer_select" />
 	<item android:state_selected="true"
 		  android:drawable="@color/footer_button" />
+
 	<item
 		android:drawable="@color/footer_button" />
 </selector>

@@ -53,6 +53,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -62,7 +63,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private LayoutInflater mInflater;
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
-	private TextView edit, ok, newDiscussion, noChatHistory;
+	private TextView noChatHistory;
+	private ImageView edit, selectAll, deselectAll, delete, newDiscussion;
 	private ImageView clearFastChat;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
@@ -80,14 +82,20 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
 		
-		edit = (TextView) view.findViewById(R.id.edit);
+		edit = (ImageView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
 		
-		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
+		newDiscussion = (ImageView) view.findViewById(R.id.new_discussion);
 		newDiscussion.setOnClickListener(this);
 		
-		ok = (TextView) view.findViewById(R.id.ok);
-		ok.setOnClickListener(this);
+		selectAll = (ImageView) view.findViewById(R.id.select_all);
+		selectAll.setOnClickListener(this);
+
+		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
+		deselectAll.setOnClickListener(this);
+
+		delete = (ImageView) view.findViewById(R.id.delete);
+		delete.setOnClickListener(this);
 		
 		clearFastChat = (ImageView) view.findViewById(R.id.clearFastChatField);
 		clearFastChat.setOnClickListener(this);
@@ -207,19 +215,32 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (id == R.id.clearFastChatField) {
 			fastNewChat.setText("");
 		}
-		else if (id == R.id.ok) {
+		else if (id == R.id.delete) {
 			edit.setVisibility(View.VISIBLE);
-			ok.setVisibility(View.GONE);
+			selectAll.setVisibility(View.GONE);
+			deselectAll.setVisibility(View.GONE);
+			delete.setVisibility(View.GONE);
 			isEditMode = false;
 			hideAndDisplayMessageIfNoChat();
 		}
+		else if (id == R.id.select_all) {
+			deselectAll.setVisibility(View.VISIBLE);
+			selectAll.setVisibility(View.GONE);
+			//TODO select all chatrooms
+		}
+		else if (id == R.id.deselect_all) {
+			deselectAll.setVisibility(View.GONE);
+			selectAll.setVisibility(View.VISIBLE);
+			//TODO deselect all chatrooms
+		}
 		else if (id == R.id.edit) {
 			edit.setVisibility(View.GONE);
-			ok.setVisibility(View.VISIBLE);
+			selectAll.setVisibility(View.VISIBLE);
+			delete.setVisibility(View.VISIBLE);
 			isEditMode = true;
 			hideAndDisplayMessageIfNoChat();
 		}
-		else if (id == R.id.newDiscussion) {
+		else if (id == R.id.new_discussion) {
 			String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);

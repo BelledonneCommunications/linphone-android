@@ -40,7 +40,7 @@
 	    android:orientation="vertical"
 	    android:layout_alignParentBottom="true"
 	    android:layout_centerHorizontal="true"
-   		android:background="@drawable/chat_background">
+   		android:background="@color/colorD">
        
 	    <RelativeLayout 
 	        android:id="@+id/messageLayout"
@@ -84,7 +84,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_toRightOf="@id/sendPicture"
 	            android:layout_toLeftOf="@id/sendMessage"
-	            android:background="@drawable/chat_field_background"
+	            android:background="@drawable/resizable_textfield"
 	            android:layout_centerVertical="true"/>
 	        
 	    </RelativeLayout>

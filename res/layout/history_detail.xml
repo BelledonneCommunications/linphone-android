@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:linphone="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@drawable/background"
+  	android:background="@color/colorH"
     android:orientation="vertical" >
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_gravity="bottom"
+		android:background="@color/colorF"
+		android:id="@+id/relativeLayout">
+
+
+		<ImageView
+			android:id="@+id/back"
+			android:contentDescription="@string/content_description_back"
+			android:src="@drawable/back"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"/>
+
+
+		<ImageView
+			android:id="@+id/add_contact"
+			android:contentDescription="@string/content_description_add_contact"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:src="@drawable/add_contact"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:adjustViewBounds="true"/>
+
+	</RelativeLayout>
     
     <LinearLayout 
 	    android:layout_width="match_parent"
@@ -13,84 +45,51 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
 	    android:gravity="center"
-	    android:orientation="horizontal">
-        
-        <org.linphone.ui.AvatarWithShadow
-		    android:id="@+id/contactPicture"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    linphone:picture="@drawable/unknown_small" />
+	    android:orientation="vertical">
+
+
+        <RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center">
+
+			<ImageView
+				android:id="@+id/contactPicture"
+				android:layout_width="120dp"
+				android:layout_height="120dp"
+				android:src="@drawable/avatar" />
+		</RelativeLayout>
+
+
+		<TextView
+			android:id="@+id/contactName"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textColor="@color/colorC" />
 	        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp">
-            
-	        <TextView
-	            android:id="@+id/contactName"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-		    	android:textColor="@color/text_contrast" />
-	        
-	        <TextView
-	            android:id="@+id/contactAddress"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textAppearance="?android:attr/textAppearanceSmall"
-		    	android:textColor="@color/text_contrast" />
-        
-        </LinearLayout>
+		<TextView
+			android:id="@+id/contactAddress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="@color/colorA" />
+
         
     </LinearLayout>
     
-    <RelativeLayout 
+    <LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/logRow"
-	    android:paddingTop="20dp">
-        
-        <TextView
-            android:id="@+id/callDirection"
-            android:paddingLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-	    	android:textColor="@color/text_contrast" />
-        
-        <TextView
-            android:id="@+id/date"
-            android:paddingRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-	    	android:textColor="@color/text_contrast" />
-        
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_toLeftOf="@id/date"
-            android:layout_toRightOf="@id/callDirection"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textColor="@color/text_contrast" />
-        
-    </RelativeLayout>
-    
-    <RelativeLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:paddingTop="20dp">
+	    android:paddingTop="20dp"
+		android:gravity="center"
+		android:orientation="horizontal">
         
         <RelativeLayout
-		    android:layout_width="match_parent"
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/callBackRow"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             
 	        <ImageView
 	            android:contentDescription="@string/content_description_dial_back"
@@ -98,72 +97,85 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
-	            android:src="@drawable/button"
+	            android:src="@drawable/call_start_body_default"
 		    	android:layout_centerInParent="true" />
-	        
-	        <TextView 
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/call"
-		    	android:textColor="@android:color/black"
-		    	android:layout_centerInParent="true" />
-        
+
         </RelativeLayout>
         
         <RelativeLayout
-		    android:layout_width="match_parent"
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/chatRow"
-		    android:layout_below="@id/callBackRow"
-	    	android:layout_marginTop="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
-            
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
 	        <ImageView
 	            android:contentDescription="@string/content_description_chat"
 	            android:id="@+id/chat"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
-	            android:src="@drawable/button"
+	            android:src="@drawable/chat_start_body_default"
 		    	android:layout_centerInParent="true" />
-	        
-	        <TextView 
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/chat"
-		    	android:textColor="@android:color/black"
-		    	android:layout_centerInParent="true" />
-        
+
+
         </RelativeLayout>
         
-        <RelativeLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/addContactRow"
-		    android:layout_below="@id/chatRow"
-	    	android:layout_marginTop="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
-            
-	        <ImageView
-	            android:contentDescription="@string/content_description_add_contact"
-	            android:id="@+id/addToContacts"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:adjustViewBounds="true"
-	            android:src="@drawable/button"
-		    	android:layout_centerInParent="true" />
-	        
-	        <TextView 
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/add_to_contacts"
-		    	android:textColor="@android:color/black"
-		    	android:layout_centerInParent="true" />
-        
-        </RelativeLayout>
-        
-    </RelativeLayout>
+    </LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/logRow"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingTop="20dp">
+
+		<View
+			android:layout_width="wrap_content"
+			android:layout_height="1dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:background="@color/colorE"/>
+
+		<TextView
+			android:layout_marginTop="10dp"
+			android:layout_gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/call"
+			android:textAllCaps="true"
+			android:textColor="@color/colorE" />
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center"
+			android:padding="10dp">
+
+			<TextView
+				android:id="@+id/callDirection"
+				android:paddingRight="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/text_contrast" />
+
+			<TextView
+				android:id="@+id/date"
+				android:paddingRight="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/text_contrast" />
+
+			<TextView
+				android:id="@+id/time"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/text_contrast" />
+
+		</LinearLayout>
+
+
+	</LinearLayout>
 
 </LinearLayout>

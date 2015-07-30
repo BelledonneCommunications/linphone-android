@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.linphone.core.CallDirection;
@@ -26,75 +28,99 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * @author Sylvain Berfini
  */
-public class HistoryFragment extends Fragment implements OnClickListener, OnChildClickListener, OnGroupClickListener {
-	private ExpandableListView historyList;
+public class HistoryFragment extends Fragment implements OnClickListener, OnItemClickListener {
+	private ListView historyList;
 	private LayoutInflater mInflater;
-	private TextView allCalls, missedCalls, edit, ok, deleteAll, noCallHistory, noMissedCallHistory;
+	private TextView noCallHistory, noMissedCallHistory;
+	private ImageView missedCalls, allCalls, edit, ok, deleteAll;
+	private RelativeLayout allCallsSelected, missedCallsSelected;
 	private boolean onlyDisplayMissedCalls, isEditMode;
-	private SparseArray<List<LinphoneCallLog>> mLogs; 
-	
+	private List<LinphoneCallLog> mLogs;
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-        Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
 		mInflater = inflater;
-        View view = inflater.inflate(R.layout.history, container, false);
-        
-        noCallHistory = (TextView) view.findViewById(R.id.noCallHistory);
-        noMissedCallHistory = (TextView) view.findViewById(R.id.noMissedCallHistory);
-        
-        historyList = (ExpandableListView) view.findViewById(R.id.historyList);
-        historyList.setOnChildClickListener(this);
-        historyList.setOnGroupClickListener(this);
-        
-        deleteAll = (TextView) view.findViewById(R.id.deleteAll);
-        deleteAll.setOnClickListener(this);
-        deleteAll.setVisibility(View.INVISIBLE);
-        
-        allCalls = (TextView) view.findViewById(R.id.allCalls);
-        allCalls.setOnClickListener(this);
-        
-        missedCalls = (TextView) view.findViewById(R.id.missedCalls);
-        missedCalls.setOnClickListener(this);
-        
-        allCalls.setEnabled(false);
-        onlyDisplayMissedCalls = false;
-        
-        edit = (TextView) view.findViewById(R.id.edit);
-        edit.setOnClickListener(this);
-        
-        ok = (TextView) view.findViewById(R.id.ok);
-        ok.setOnClickListener(this);
-        
+		View view = inflater.inflate(R.layout.history, container, false);
+
+		noCallHistory = (TextView) view.findViewById(R.id.noCallHistory);
+		noMissedCallHistory = (TextView) view.findViewById(R.id.noMissedCallHistory);
+
+		historyList = (ListView) view.findViewById(R.id.historyList);
+		historyList.setOnItemClickListener(this);
+		registerForContextMenu(historyList);
+
+		deleteAll = (ImageView) view.findViewById(R.id.deleteAll);
+		deleteAll.setOnClickListener(this);
+		deleteAll.setVisibility(View.INVISIBLE);
+
+		allCalls = (ImageView) view.findViewById(R.id.all_calls);
+		allCalls.setOnClickListener(this);
+
+		allCallsSelected = (RelativeLayout) view.findViewById(R.id.all_calls_select);
+		allCallsSelected.setOnClickListener(this);
+
+		missedCalls = (ImageView) view.findViewById(R.id.missed_calls);
+		missedCalls.setOnClickListener(this);
+
+		missedCallsSelected = (RelativeLayout) view.findViewById(R.id.missed_calls_select);
+		missedCallsSelected.setOnClickListener(this);
+
+		allCalls.setEnabled(false);
+		onlyDisplayMissedCalls = false;
+
+		edit = (ImageView) view.findViewById(R.id.edit);
+		edit.setOnClickListener(this);
+
+		ok = (ImageView) view.findViewById(R.id.ok);
+		ok.setOnClickListener(this);
+
 		return view;
-    }
-	
+	}
+
+	private void removeNotMissedCallsFromLogs() {
+		if (onlyDisplayMissedCalls) {
+			List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
+			for (LinphoneCallLog log : mLogs) {
+				if (log.getStatus() == CallStatus.Missed) {
+					missedCalls.add(log);
+				}
+			}
+			mLogs = missedCalls;
+		}
+	}
+
 	private boolean hideHistoryListAndDisplayMessageIfEmpty() {
-		if (mLogs.size() == 0) {
+		removeNotMissedCallsFromLogs();
+		if (mLogs.isEmpty()) {
 			if (onlyDisplayMissedCalls) {
 				noMissedCallHistory.setVisibility(View.VISIBLE);
 			} else {
@@ -109,88 +135,23 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
-			
+
 			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 				LinphoneActivity.instance().hideStatusBar();
 			}
 		}
-		
-		initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
+
+		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+			historyList.setAdapter(new CallHistoryAdapter(getActivity()));
 		}
-        expandAllGroups();
-	}
-	
-	private void initLogsLists(List<LinphoneCallLog> logs) {
-		mLogs = new SparseArray<List<LinphoneCallLog>>(); 
-		String[] keys = new String[logs.size()];
-		for (LinphoneCallLog log : logs) {
-			String groupBy = getCorrespondentDisplayName(log);
-			int key = -1;
-			for (int k = 0; k < keys.length; k++) {
-				if (keys[k] == null || keys[k].equals(groupBy)) {
-					key = k;
-					keys[k] = groupBy;
-					break;
-				}
-			}
-			
-			List<LinphoneCallLog> group = mLogs.get(key, new ArrayList<LinphoneCallLog>());
-			group.add(log);
-			if (group.size() == 1) {
-				mLogs.append(key, group);
-			}
-		}
-	}
-	
-	private void initMissedLogsLists(List<LinphoneCallLog> logs) {
-		List<LinphoneCallLog> missedLogs = new ArrayList<LinphoneCallLog>();
-		for (LinphoneCallLog log : logs) {
-			if (log.getDirection() == CallDirection.Incoming && log.getStatus() == CallStatus.Missed) {
-				missedLogs.add(log);
-			}
-		}
-		initLogsLists(missedLogs);
-	}
-	
-	private void expandAllGroups() {
-		for (int groupToExpand = 0; groupToExpand < historyList.getExpandableListAdapter().getGroupCount(); groupToExpand++) {
-			if (!historyList.isGroupExpanded(groupToExpand)) {
-				historyList.expandGroup(groupToExpand);
-			}
-		}
-	}
-	
-	private String getCorrespondentDisplayName(LinphoneCallLog log) {
-		String displayName;
-		LinphoneAddress address;
-		if (log.getDirection() == CallDirection.Incoming) {
-			address = log.getFrom();
-		} else {
-			address = log.getTo();
-		}
-		
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
-		String sipUri = address.asStringUriOnly();
-		if (contact == null) {
-			if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-				displayName = address.getUserName();
-			} else {
-				displayName = sipUri;
-			}
-		} else {
-			displayName = contact.getName();
-		}
-		
-		return displayName;
 	}
 
 	@Override
@@ -200,29 +161,43 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 	}
 
 	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		LinphoneCallLog log = mLogs.get(info.position);
+		LinphoneManager.getLc().removeCallLog(log);
+		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+		}
+		return true;
+	}
+
+	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
-		if (id == R.id.allCalls) {
+
+		if (id == R.id.all_calls) {
 			allCalls.setEnabled(false);
+			allCallsSelected.setVisibility(View.VISIBLE);
+			missedCallsSelected.setVisibility(View.INVISIBLE);
 			missedCalls.setEnabled(true);
 			onlyDisplayMissedCalls = false;
-			
-			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-		} 
-		else if (id == R.id.missedCalls) {
+
+			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+		}
+		else if (id == R.id.missed_calls) {
 			allCalls.setEnabled(true);
+			allCallsSelected.setVisibility(View.INVISIBLE);
+			missedCallsSelected.setVisibility(View.VISIBLE);
 			missedCalls.setEnabled(false);
 			onlyDisplayMissedCalls = true;
-			
-			initMissedLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-		} 
+		}
 		else if (id == R.id.ok) {
 			edit.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
 			hideDeleteAllButton();
 			isEditMode = false;
-		} 
+		}
 		else if (id == R.id.edit) {
 			edit.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
@@ -231,58 +206,42 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 		}
 		else if (id == R.id.deleteAll) {
 			LinphoneManager.getLc().clearCallLogs();
-			initLogsLists(new ArrayList<LinphoneCallLog>());
+			mLogs = new ArrayList<LinphoneCallLog>();
 		}
-		
+
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
 			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 		}
-		expandAllGroups();
-	}
-	
-	@Override
-	public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-		if (isEditMode) {
-			for (LinphoneCallLog log : mLogs.get(groupPosition)) {
-				LinphoneManager.getLc().removeCallLog(log);
-			}
-			
-			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
-			if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-				historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
-			}
-	        expandAllGroups();
-		}
-		return false;
 	}
 
 	@Override
-	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-		LinphoneCallLog log = mLogs.get(groupPosition).get(childPosition);
+	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		if (isEditMode) {
+			LinphoneCallLog log = mLogs.get(position);
 			LinphoneManager.getLc().removeCallLog(log);
-			initLogsLists(Arrays.asList(LinphoneManager.getLc().getCallLogs()));
+			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 			if (!hideHistoryListAndDisplayMessageIfEmpty()) {
 				historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 			}
-	        expandAllGroups();
 		} else {
-			LinphoneAddress address;
-			if (log.getDirection() == CallDirection.Incoming) {
-				address = log.getFrom();
-			} else {
-				address = log.getTo();
+			if (LinphoneActivity.isInstanciated()) {
+				LinphoneCallLog log = mLogs.get(position);
+				LinphoneAddress address;
+				if (log.getDirection() == CallDirection.Incoming) {
+					address = log.getFrom();
+				} else {
+					address = log.getTo();
+				}
+				LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
 			}
-			LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
 		}
-		return false;
 	}
-	
+
 	private void hideDeleteAllButton() {
 		if (deleteAll == null || deleteAll.getVisibility() != View.VISIBLE) {
 			return;
 		}
-			
+
 		if (LinphoneActivity.instance().isAnimationDisabled()) {
 			deleteAll.setVisibility(View.INVISIBLE);
 		} else {
@@ -290,14 +249,14 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			animation.setAnimationListener(new AnimationListener() {
 				@Override
 				public void onAnimationStart(Animation animation) {
-					
+
 				}
-				
+
 				@Override
 				public void onAnimationRepeat(Animation animation) {
-					
+
 				}
-				
+
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					deleteAll.setVisibility(View.INVISIBLE);
@@ -307,12 +266,12 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			deleteAll.startAnimation(animation);
 		}
 	}
-	
+
 	private void showDeleteAllButton() {
 		if (deleteAll == null || deleteAll.getVisibility() == View.VISIBLE) {
 			return;
 		}
-		
+
 		if (LinphoneActivity.instance().isAnimationDisabled()) {
 			deleteAll.setVisibility(View.VISIBLE);
 		} else {
@@ -320,14 +279,14 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			animation.setAnimationListener(new AnimationListener() {
 				@Override
 				public void onAnimationStart(Animation animation) {
-					
+
 				}
-				
+
 				@Override
 				public void onAnimationRepeat(Animation animation) {
-					
+
 				}
-				
+
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					deleteAll.setVisibility(View.VISIBLE);
@@ -337,48 +296,103 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 			deleteAll.startAnimation(animation);
 		}
 	}
-	
-	class CallHistoryAdapter extends BaseExpandableListAdapter {
+
+	class CallHistoryAdapter extends  BaseAdapter {
 		private Bitmap missedCall, outgoingCall, incomingCall;
-		
+
 		CallHistoryAdapter(Context aContext) {
 			missedCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_missed);
-			
+
 			if (!onlyDisplayMissedCalls) {
 				outgoingCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_outgoing);
 				incomingCall = BitmapFactory.decodeResource(getResources(), R.drawable.call_status_incoming);
 			}
 		}
-		
-		@Override
-		public Object getChild(int groupPosition, int childPosition) {
-			return mLogs.get(groupPosition).get(childPosition);
+		public int getCount() {
+			return mLogs.size();
 		}
-		
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			return childPosition;
+
+		public Object getItem(int position) {
+			return mLogs.get(position);
 		}
-		
-		@Override
-		public View getChildView(int groupPosition, int childPosition,
-				boolean isLastChild, View convertView, ViewGroup parent) {
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@SuppressLint("SimpleDateFormat")
+		private String timestampToHumanDate(Calendar cal) {
+			SimpleDateFormat dateFormat;
+			if (isToday(cal)) {
+				return getString(R.string.today);
+			} else if (isYesterday(cal)) {
+				return getString(R.string.yesterday);
+			} else {
+				dateFormat = new SimpleDateFormat(getResources().getString(R.string.history_date_format));
+			}
+
+			return dateFormat.format(cal.getTime());
+		}
+
+		private boolean isSameDay(Calendar cal1, Calendar cal2) {
+			if (cal1 == null || cal2 == null) {
+				return false;
+			}
+
+			return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+					cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+					cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+		}
+
+		private boolean isToday(Calendar cal) {
+			return isSameDay(cal, Calendar.getInstance());
+		}
+
+		private boolean isYesterday(Calendar cal) {
+			Calendar yesterday = Calendar.getInstance();
+			yesterday.roll(Calendar.DAY_OF_MONTH, -1);
+			return isSameDay(cal, yesterday);
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
 			if (convertView != null) {
 				view = convertView;
 			} else {
 				view = mInflater.inflate(R.layout.history_cell, parent,false);
 			}
-			
-			final LinphoneCallLog log = (LinphoneCallLog) getChild(groupPosition, childPosition);
+
+			final LinphoneCallLog log = mLogs.get(position);
+			long timestamp = log.getTimestamp();
 			final LinphoneAddress address;
-			
-			TextView dateAndTime = (TextView) view.findViewById(R.id.dateAndTime);
+
+			TextView contact = (TextView) view.findViewById(R.id.sipUri);
+			contact.setSelected(true); // For automated horizontal scrolling of long texts
+
 			ImageView detail = (ImageView) view.findViewById(R.id.detail);
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			ImageView callDirection = (ImageView) view.findViewById(R.id.icon);
-			
-			
+
+			TextView separator = (TextView) view.findViewById(R.id.separator);
+			Calendar logTime = Calendar.getInstance();
+			logTime.setTimeInMillis(timestamp);
+			separator.setText(timestampToHumanDate(logTime));
+
+			if (position > 0) {
+				LinphoneCallLog previousLog = mLogs.get(position-1);
+				long previousTimestamp = previousLog.getTimestamp();
+				Calendar previousLogTime = Calendar.getInstance();
+				previousLogTime.setTimeInMillis(previousTimestamp);
+
+				if (isSameDay(previousLogTime, logTime)) {
+					separator.setVisibility(View.GONE);
+				} else {
+					separator.setVisibility(View.VISIBLE);
+				}
+			} else {
+				separator.setVisibility(View.VISIBLE);
+			}
+
 			if (log.getDirection() == CallDirection.Incoming) {
 				address = log.getFrom();
 				if (log.getStatus() == CallStatus.Missed) {
@@ -391,10 +405,28 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 				callDirection.setImageBitmap(outgoingCall);
 			}
 
-			String sipUri = address.asStringUriOnly();
-			dateAndTime.setText(log.getStartDate() + " " + log.getCallDuration());
+			Contact c = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
+			String displayName = null;
+			final String sipUri = address.asStringUriOnly();
+			if(c != null){
+				displayName = c.getName();
+			}
+
+			if (displayName == null) {
+				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+					contact.setText(address.getUserName());
+				} else {
+					contact.setText(sipUri);
+				}
+			} else {
+				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(address.getDisplayName())) {
+					contact.setText(displayName);
+				} else {
+					contact.setText(sipUri);
+				}
+			}
 			view.setTag(sipUri);
-			
+
 			if (isEditMode) {
 				delete.setVisibility(View.VISIBLE);
 				detail.setVisibility(View.GONE);
@@ -405,79 +437,13 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnChil
 					@Override
 					public void onClick(View v) {
 						if (LinphoneActivity.isInstanciated()) {
-							LinphoneActivity.instance().displayHistoryDetail(address.asStringUriOnly(), log);
+							LinphoneActivity.instance().displayHistoryDetail(sipUri, log);
 						}
 					}
 				});
 			}
 
 			return view;
-		}
-		
-		@Override
-		public int getChildrenCount(int groupPosition) {
-			return mLogs.get(groupPosition).size();
-		}
-		
-		@Override
-		public Object getGroup(int groupPosition) {
-			return mLogs.get(groupPosition);
-		}
-		
-		@Override
-		public int getGroupCount() {
-			return mLogs.size();
-		}
-		
-		@Override
-		public long getGroupId(int groupPosition) {
-			return groupPosition;
-		}
-		
-		@Override
-		public View getGroupView(int groupPosition, boolean isExpanded,
-				View convertView, ViewGroup parent) {
-			View view = null;
-			if (convertView != null) {
-				view = convertView;
-			} else {
-				view = mInflater.inflate(R.layout.history_group, parent,false);
-			}
-			
-			LinphoneCallLog log = (LinphoneCallLog) getChild(groupPosition, 0);			
-			LinphoneAddress address;
-			
-			TextView contact = (TextView) view.findViewById(R.id.sipUri);
-			ImageView delete = (ImageView) view.findViewById(R.id.delete);
-			
-			if (log.getDirection() == CallDirection.Incoming) {
-				address = log.getFrom();
-			} else {
-				address = log.getTo();
-			}
-
-			String displayName = getCorrespondentDisplayName(log);
-			String sipUri = address.asStringUriOnly();
-			contact.setText(displayName + " (" + getChildrenCount(groupPosition) + ")");
-			view.setTag(sipUri);
-			
-			if (isEditMode) {
-				delete.setVisibility(View.VISIBLE);
-			} else {
-				delete.setVisibility(View.GONE);
-			}
-
-			return view;
-		}
-		
-		@Override
-		public boolean hasStableIds() {
-			return false;
-		}
-		
-		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
-			return true;
 		}
 	}
 }

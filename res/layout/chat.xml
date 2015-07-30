@@ -1,74 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:linphone="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/top_layout"
-  	android:background="@drawable/background" >
+  	android:background="@color/background" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/topbar">
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_gravity="bottom"
+		android:background="@color/colorF"
+		android:id="@+id/relativeLayout">
 
-        <TextView
-            android:contentDescription="@string/content_description_back"
-            android:id="@+id/back"
-            android:background="@drawable/chat_back"
-            android:text="@string/button_back"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"/>
 
-        <TextView
-            android:contentDescription="@string/content_description_mark"
-            android:id="@+id/mark"
-            android:background="@drawable/toolsbar_background"
-            android:gravity="center"
-            android:enabled="false"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"/>
+		<ImageView
+			android:id="@+id/back"
+			android:contentDescription="@string/content_description_back"
+			android:src="@drawable/back"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"/>
 
-    </LinearLayout>
-    
-   <LinearLayout 
-       android:id="@+id/header"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:paddingTop="10dp"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-	    android:gravity="center"
-	    android:orientation="horizontal"
-       android:layout_below="@+id/topbar"
-	    android:layout_centerHorizontal="true">
-        
-        <org.linphone.ui.AvatarWithShadow
-		    android:id="@+id/contactPicture"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    linphone:picture="@drawable/unknown_small" />
-	        
-        <TextView
-            android:id="@+id/contactName"
-            android:paddingLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-	    	android:textColor="@color/text_contrast" />
-    </LinearLayout>
-    
+
+		<ImageView
+			android:id="@+id/edit"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:src="@drawable/edit_list"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:adjustViewBounds="true"/>
+
+		<ImageView
+			android:id="@+id/start_call"
+			android:contentDescription="@string/content_description_call"
+			android:layout_toLeftOf="@id/edit"
+			android:padding="10dp"
+			android:src="@drawable/call_alt_start"
+			android:background="@drawable/toolbar_button"
+			android:gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"/>
+
+		<ImageView
+			android:id="@+id/delete"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/delete"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:id="@+id/select_all"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/select_all"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:id="@+id/deselect_all"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/deselect_all"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+		<TextView
+			android:id="@+id/contact_name"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textColor="@color/text_contrast"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@id/back"
+			android:layout_toLeftOf="@id/start_call"
+			android:paddingLeft="10dp"
+			android:gravity="center"/>
+
+
+	</RelativeLayout>
+
    <LinearLayout 
         android:id="@+id/footer"
 	    android:layout_width="match_parent"
@@ -76,7 +104,7 @@
 	    android:orientation="vertical"
 	    android:layout_alignParentBottom="true"
 	    android:layout_centerHorizontal="true"
-   		android:background="@drawable/chat_background">
+   		android:background="@color/colorD">
        
 	    <RelativeLayout 
 	        android:id="@+id/messageLayout"
@@ -85,7 +113,6 @@
 	        
 	        <TextView
 	            android:id="@+id/sendPicture"
-	            android:text="@string/button_send_picture"
 	            android:gravity="center"
 	            android:textColor="@drawable/text_color"
 	            android:layout_width="wrap_content"
@@ -98,16 +125,16 @@
 	        
 	        <TextView
 	            android:id="@+id/sendMessage"
-	            android:text="@string/button_send_message"
 	            android:gravity="center"
 	            android:textColor="@drawable/text_color"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_centerVertical="true"
-	            android:layout_alignParentRight="true"
-	            android:drawableTop="@drawable/chat_send_message"
+				android:drawableTop="@drawable/chat_send_message"
 	            android:paddingRight="10dp"
-	            android:paddingLeft="10dp" />
+	            android:paddingLeft="10dp"
+				android:layout_alignTop="@+id/message"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"/>
 	        
 	        <EditText
                 android:imeOptions="flagNoExtractUi"
@@ -120,7 +147,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_toRightOf="@id/sendPicture"
 	            android:layout_toLeftOf="@id/sendMessage"
-	            android:background="@drawable/chat_field_background"
+	            android:background="@drawable/resizable_textfield"
 	            android:layout_centerVertical="true"/>
 	        
 	    </RelativeLayout>
@@ -133,7 +160,7 @@
 	        <ImageView 
 	            android:contentDescription="@string/content_description_cancel"
 	            android:id="@+id/cancelUpload"
-	            android:src="@drawable/list_delete"
+	            android:src="@drawable/clean_field_default"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
@@ -191,6 +218,6 @@
 		android:cacheColorHint="@color/transparent"
 		android:dividerHeight="1dp"
 		android:layout_above="@id/remoteComposing"
-		android:layout_below="@id/header"/>
-    
+		android:layout_below="@+id/relativeLayout"/>
+
 </RelativeLayout>

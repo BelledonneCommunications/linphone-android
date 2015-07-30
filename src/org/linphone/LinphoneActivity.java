@@ -280,7 +280,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void createDrawer() {
 		mTitle = "lala";
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mParams = getResources().getStringArray(R.array.params);
+		mParams = getResources().getStringArray(R.array.menu_entry);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 		// set a custom shadow that overlays the main content when the drawer opens
@@ -336,9 +336,30 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-		// update selected item and title, then close the drawer
+		// update selected item and title, then close the drawer*/
+
+		Log.w("position " + position);
+
+		switch(position) {
+			case 0:
+				break;
+			case 1:
+				displaySettings();
+				break;
+			case 2:
+				break;
+			case 3:
+				displayAbout();
+				break;
+			case 4:
+				exit();
+				break;
+			default:
+				break;
+		}
+
 		mDrawerList.setItemChecked(position, true);
-		setTitle(mPlanetTitles[position]);*/
+		//
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
@@ -410,7 +431,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		//findViewById(R.id.status).setVisibility(View.GONE);
-		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
+		//findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
 	}
 
 	public void showStatusBar() {
@@ -448,11 +469,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		switch (newFragmentType) {
 		case HISTORY:
-			if (getResources().getBoolean(R.bool.use_simple_history)) {
-				newFragment = new HistorySimpleFragment();
-			} else {
-				newFragment = new HistoryFragment();
-			}
+			newFragment = new HistoryFragment();
 			break;
 		case HISTORY_DETAIL:
 			newFragment = new HistoryDetailFragment();

@@ -5,45 +5,86 @@
 	android:layout_margin="2dp"
 	android:gravity="center_vertical"
 	android:padding="10dp">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+	<View
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:background="@color/colorE"/>
+
+	<TextView
+		android:layout_marginTop="10dp"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/sip_address"
+		android:textAllCaps="true"
+		android:textColor="@color/colorE" />
    
    	<TextView 
    	    android:id="@+id/numeroOrAddress"
 	    android:lines="1"
- 		android:layout_width="0dp"
+ 		android:layout_width="match_parent"
  		android:layout_height="wrap_content"
- 		android:layout_weight="1"
-	    android:ellipsize="marquee"
+		android:ellipsize="marquee"
     	android:marqueeRepeatLimit="marquee_forever"
     	android:scrollHorizontally="true"
     	android:fadingEdge="horizontal"
         android:singleLine="true"
-		android:textColor="@color/text_contrast"
+		android:textColor="@color/colorC"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="left" />
-   	
-   	<ImageView
-   	    android:id="@+id/dial"
-   	    android:layout_width="0dp"
-   	    android:layout_height="match_parent"
-   	    android:layout_weight="0.2"
-   	    android:contentDescription="@string/content_description_call"
-   	    android:gravity="right"
-   	    android:paddingLeft="5dp"
-   	    android:paddingRight="5dp"
-   	    android:scaleType="fitCenter"
-   	    android:src="@drawable/call_answer" />
-   	
-   	<ImageView
-   	    android:id="@+id/start_chat"
-   	    android:layout_width="0dp"
-   	    android:layout_height="match_parent"
-   	    android:layout_weight="0.2"
-   	    android:contentDescription="@string/content_description_chat"
-   	    android:gravity="right"
-   	    android:paddingLeft="5dp"
-   	    android:paddingRight="5dp"
-   	    android:scaleType="fitCenter"
-   	    android:src="@drawable/chat_icon_over" />
+        android:gravity="center" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingTop="20dp"
+		android:gravity="center"
+		android:orientation="horizontal">
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp">
+
+			<ImageView
+				android:contentDescription="@string/content_description_dial_back"
+				android:id="@+id/dial"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:src="@drawable/call_start_body_default"
+				android:layout_centerInParent="true" />
+
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/chatRow"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp">
+
+			<ImageView
+				android:contentDescription="@string/content_description_chat"
+				android:id="@+id/start_chat"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:src="@drawable/chat_start_body_default"
+				android:layout_centerInParent="true" />
+
+
+		</RelativeLayout>
+
+	</LinearLayout>
    	
    	<ImageView
    	    android:id="@+id/addFriend"
@@ -56,6 +97,8 @@
    	    android:paddingLeft="5dp"
    	    android:paddingRight="5dp"
    	    android:scaleType="fitCenter"
-   	    android:src="@drawable/friend_add" />
+   	    android:src="@drawable/contact_add" />
+
+	</LinearLayout>
   
   </TableRow>
