@@ -27,7 +27,6 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.LinphoneSliders;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
@@ -36,6 +35,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,9 +51,8 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 	
 	private TextView mNameView;
 	private TextView mNumberView;
-	private AvatarWithShadow mPictureView;
+	private ImageView mPictureView;
 	private LinphoneCall mCall;
-	private LinphoneSliders mIncomingCallWidget;
 	private LinphoneCoreListenerBase mListener;
 	
 	public static IncomingCallActivity instance() {
@@ -71,16 +70,14 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 
 		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
 		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
-		mPictureView = (AvatarWithShadow) findViewById(R.id.incoming_picture);
+		mPictureView = (ImageView) findViewById(R.id.incoming_picture);
 
         // set this flag so this activity will stay in front of the keyguard
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
         // "Dial-to-answer" widget for incoming calls.
-        mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
-        mIncomingCallWidget.setOnTriggerListener(this);
-        
+
         mListener = new LinphoneCoreListenerBase(){
         	@Override
         	public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
@@ -125,8 +122,8 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		LinphoneAddress address = mCall.getRemoteAddress();
 		// May be greatly sped up using a drawable cache
 		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
-		LinphoneUtils.setImagePictureFromUri(this, mPictureView.getView(), contact != null ? contact.getPhotoUri() : null,
-				 contact != null ? contact.getThumbnailUri() : null, R.drawable.unknown_small);
+		//LinphoneUtils.setImagePictureFromUri(this, mPictureView, contact != null ? contact.getPhotoUri() : null,
+		//		 contact != null ? contact.getThumbnailUri() : null, R.drawable.unknown_small);
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
 		mNameView.setText(contact != null ? contact.getName() : "");

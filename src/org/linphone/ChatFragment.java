@@ -42,7 +42,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.BubbleChat;
 
 import android.media.ExifInterface;
@@ -100,10 +99,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private String displayName;
 	private String pictureUri;
 	private EditText message;
-	private ImageView cancelUpload;
+	private ImageView cancelUpload, edit, selectAll, deselectAll, startCall, delete;
 	private LinearLayout topBar;
-	private TextView sendImage, sendMessage, contactName, remoteComposing, back;
-	private AvatarWithShadow contactPicture;
+	private TextView sendImage, sendMessage, contactName, remoteComposing;
+	private ImageView back;
 	private RelativeLayout uploadLayout, textLayout;
 	private ListView messagesList;
 
@@ -138,8 +137,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		pictureUri = getArguments().getString("PictureUri");
 
 		//Initialize UI
-		contactName = (TextView) view.findViewById(R.id.contactName);
-		contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
+		contactName = (TextView) view.findViewById(R.id.contact_name);
+		//contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		messagesList = (ListView) view.findViewById(R.id.chatMessageList);
 		textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
 		progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
@@ -153,6 +152,22 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		uploadLayout = (RelativeLayout) view.findViewById(R.id.uploadLayout);
 		uploadLayout.setVisibility(View.GONE);
+
+		edit = (ImageView) view.findViewById(R.id.edit);
+		edit.setOnClickListener(this);
+
+		startCall = (ImageView) view.findViewById(R.id.start_call);
+		startCall.setOnClickListener(this);
+
+		selectAll = (ImageView) view.findViewById(R.id.select_all);
+		selectAll.setOnClickListener(this);
+
+		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
+		deselectAll.setOnClickListener(this);
+
+		delete = (ImageView) view.findViewById(R.id.delete);
+		delete.setOnClickListener(this);
+
 
 		displayChatHeader(displayName, pictureUri);
 
@@ -175,7 +190,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			sendImage.setEnabled(false);
 		}
 
-		back = (TextView) view.findViewById(R.id.back);
+		back = (ImageView) view.findViewById(R.id.back);
 		if (back != null) {
 			back.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -283,13 +298,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.GONE);
 		}
-		contactPicture.setVisibility(View.GONE);
+		//contactPicture.setVisibility(View.GONE);
 		//scrollToEnd();
 	}
 
 	public void hideKeyboardVisibleMode() {
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-		contactPicture.setVisibility(View.VISIBLE);
+		//contactPicture.setVisibility(View.VISIBLE);
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.VISIBLE);
 		}
@@ -351,10 +366,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 			if (contact != null) {
-				LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture.getView(), contact.getPhotoUri(), contact.getThumbnailUri(), R.drawable.unknown_small);
+				//LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture.getView(), contact.getPhotoUri(), contact.getThumbnailUri(), R.drawable.unknown_small);
 
 			} else {
-				contactPicture.setImageResource(R.drawable.unknown_small);
+				//contactPicture.setImageResource(R.drawable.unknown_small);
 			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
@@ -491,7 +506,36 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onClick(View v) {
-		sendTextMessage();
+		int id = v.getId();
+
+		if(id == R.id.sendMessage){
+			sendTextMessage();
+		} else if (id == R.id.delete) {
+			edit.setVisibility(View.VISIBLE);
+			selectAll.setVisibility(View.GONE);
+			deselectAll.setVisibility(View.GONE);
+			startCall.setVisibility(View.VISIBLE);
+			delete.setVisibility(View.GONE);;
+		}
+		else if (id == R.id.select_all) {
+			deselectAll.setVisibility(View.VISIBLE);
+			selectAll.setVisibility(View.GONE);
+			//TODO select all chatrooms
+		}
+		else if (id == R.id.deselect_all) {
+			deselectAll.setVisibility(View.GONE);
+			selectAll.setVisibility(View.VISIBLE);
+			//TODO deselect all chatrooms
+		}
+		else if (id == R.id.edit) {
+			startCall.setVisibility(View.INVISIBLE);
+			edit.setVisibility(View.GONE);
+			selectAll.setVisibility(View.VISIBLE);
+			delete.setVisibility(View.VISIBLE);
+		}
+		else if (id == R.id.new_discussion) {
+			//TODO call sipUri
+		}
 	}
 
 	private void sendTextMessage() {

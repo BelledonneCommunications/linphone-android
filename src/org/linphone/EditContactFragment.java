@@ -6,7 +6,6 @@ import java.util.List;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Version;
-import org.linphone.ui.AvatarWithShadow;
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -30,7 +29,7 @@ import android.widget.TextView;
 
 public class EditContactFragment extends Fragment {
 	private View view;
-	private TextView ok;
+	private ImageView back, edit, ok;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
 	
@@ -66,16 +65,16 @@ public class EditContactFragment extends Fragment {
 		contactsManager = ContactsManager.getInstance();
 		
 		view = inflater.inflate(R.layout.edit_contact, container, false);
-		
-		TextView cancel = (TextView) view.findViewById(R.id.cancel);
-		cancel.setOnClickListener(new OnClickListener() {
+
+		ImageView back = (ImageView) view.findViewById(R.id.back);
+		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getFragmentManager().popBackStackImmediate();
 			}
 		});
 		
-		ok = (TextView) view.findViewById(R.id.ok);
+		ok = (ImageView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -180,12 +179,12 @@ public class EditContactFragment extends Fragment {
 			}
 		}
 		
-		AvatarWithShadow contactPicture = (AvatarWithShadow) view.findViewById(R.id.contactPicture);
+		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		if (contact != null && contact.getPhotoUri() != null) {
-			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
-			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
+			//InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
+			//contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
-        	contactPicture.setImageResource(R.drawable.unknown_small);
+        	//contactPicture.setImageResource(R.drawable.unknown_small);
         }
 		
 		initNumbersFields((TableLayout) view.findViewById(R.id.controls), contact);

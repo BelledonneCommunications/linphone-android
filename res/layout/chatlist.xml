@@ -2,56 +2,75 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@drawable/background"
+  	android:background="@color/background"
     android:orientation="vertical" >
-    
-    <LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
-        
-        <TextView 
-            android:contentDescription="@string/content_description_new_discussion"
-            android:id="@+id/newDiscussion"
-            android:background="@drawable/chat_new"
-            android:text="@string/button_new_chat"
-            android:gravity="center"
-            android:paddingTop="25dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_edit"
-            android:id="@+id/edit"
-            android:background="@drawable/chat_edit"
-            android:text="@string/button_edit"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_validate"
-            android:id="@+id/ok"
-            android:background="@drawable/chat_ok"
-            android:text="@string/button_ok"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-            android:visibility="gone"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-    </LinearLayout>
+
+	<RelativeLayout
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_gravity="bottom"
+		android:background="@color/colorF">
+
+		<ImageView
+			android:id="@+id/new_discussion"
+			android:contentDescription="@string/content_description_new_discussion"
+			android:src="@drawable/chat_add"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"/>
+
+		<ImageView
+			android:id="@+id/edit"
+			android:contentDescription="@string/content_description_edit"
+			android:src="@drawable/edit_list"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"/>
+
+		<ImageView
+			android:id="@+id/delete"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/delete"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:id="@+id/select_all"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/select_all"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:id="@+id/deselect_all"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/deselect_all"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+	</RelativeLayout>
     
     <RelativeLayout
         android:layout_width="match_parent"
@@ -63,7 +82,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:adjustViewBounds="true"
-	        android:src="@drawable/list_delete"
+	        android:src="@drawable/clean_field_default"
 	        android:layout_centerVertical="true"
 	        android:layout_alignParentRight="true"
 	        android:paddingLeft="5dp"
@@ -76,7 +95,7 @@
 	        android:layout_height="wrap_content"
 	        android:hint="@string/new_fast_chat"
 	        android:textColor="@android:color/black"
-	        android:background="@drawable/chat_fast_address_background"
+	        android:background="@drawable/resizable_cancel_button"
 	        android:gravity="center"
 	        android:layout_toLeftOf="@id/clearFastChatField"
 	        android:paddingRight="5dp"

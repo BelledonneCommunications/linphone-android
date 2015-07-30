@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android" 
-    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="75dp"
 	android:layout_margin="2dp"
@@ -8,11 +7,11 @@
 	android:orientation="horizontal"
 	android:padding="10dp">
 	
-	<org.linphone.ui.AvatarWithShadow
+	<ImageView
 	    android:id="@+id/contactPicture"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
     	android:gravity="center_horizontal|top"
-	    linphone:picture="@drawable/unknown_small" />
+	    android:src="@drawable/avatar" />
 	    
 </TableRow>

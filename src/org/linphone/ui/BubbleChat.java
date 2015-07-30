@@ -88,11 +88,11 @@ public class BubbleChat {
     	
     	if (message.isOutgoing()) {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    		view.setBackgroundResource(R.drawable.chat_bubble_outgoing);
+    		view.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
     	}
     	else {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-    		view.setBackgroundResource(R.drawable.chat_bubble_incoming);
+    		view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
     	}
 
     	layoutParams.setMargins(10, 0, 10, 0);

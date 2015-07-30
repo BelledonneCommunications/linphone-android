@@ -32,7 +32,6 @@ import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.ui.AvatarWithShadow;
 import org.linphone.ui.Numpad;
 
 import android.app.Activity;
@@ -405,19 +404,19 @@ public class InCallActivity extends Activity implements OnClickListener {
 		try {
 			if (isSpeakerEnabled) {
 				speaker.setBackgroundResource(R.drawable.speaker_on);
-				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
+				/*routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
 				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);*/
 			} else {
 				speaker.setBackgroundResource(R.drawable.speaker_off);
-				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+				/*routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
 				if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
 					routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
 					routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
 				} else {
 					routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
 					routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
-				}
+				}*/
 			}
 		} catch (NullPointerException npe) {
 			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (4)");
@@ -518,26 +517,26 @@ public class InCallActivity extends Activity implements OnClickListener {
 		else if (id == R.id.routeBluetooth) {
 			if (BluetoothManager.getInstance().routeAudioToBluetooth()) {
 				isSpeakerEnabled = false;
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
+				/*routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
 				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);*/
 			}
 			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.routeReceiver) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			isSpeakerEnabled = false;
-			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+			/*routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
 			routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);*/
 			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.routeSpeaker) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			isSpeakerEnabled = true;
-			routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
+			/*routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
 			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);
+			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);*/
 			hideOrDisplayAudioRoutes();
 		}
 		
@@ -1287,7 +1286,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 		ImageView conferenceState = (ImageView) conferenceHeader.findViewById(R.id.conferenceStatus);
 		conferenceState.setOnClickListener(this);
 		if (LinphoneManager.getLc().isInConference()) {
-			conferenceState.setImageResource(R.drawable.play);
+			conferenceState.setImageResource(R.drawable.pause);
 		} else {
 			conferenceState.setImageResource(R.drawable.pause);
 		}
@@ -1366,15 +1365,15 @@ public class InCallActivity extends Activity implements OnClickListener {
 			isCallPaused = true;
 			isInConference = false;
 		} else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {
-			callState.setImageResource(R.drawable.call_state_ringing_default);
+			//callState.setImageResource(R.drawable.call_state_ringing_default);
 			isCallPaused = false;
 			isInConference = false;
 		} else {
 			if (isConferenceRunning && call.isInConference()) {
-				callState.setImageResource(R.drawable.remove);
+				//callState.setImageResource(R.drawable.remove);
 				isInConference = true;
 			} else {
-				callState.setImageResource(R.drawable.play);
+				//callState.setImageResource(R.drawable.play);
 				isInConference = false;
 			}
 			isCallPaused = false;
@@ -1384,23 +1383,23 @@ public class InCallActivity extends Activity implements OnClickListener {
 	}
 	
 	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, Uri thumbnailUri, boolean hide) {
-		AvatarWithShadow contactPicture = (AvatarWithShadow) callView.findViewById(R.id.contactPicture);
+		/*ImageView contactPicture = (ImageView) callView.findViewById(R.id.contactPicture);
 		if (pictureUri != null) {
-        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture.getView(), Uri.parse(pictureUri.toString()), thumbnailUri, R.drawable.unknown_small);
+        	LinphoneUtils.setImagePictureFromUri(callView.getContext(), contactPicture, Uri.parse(pictureUri.toString()), thumbnailUri, R.drawable.unknown_small);
         }
-		callView.setVisibility(hide ? View.GONE : View.VISIBLE);
+		callView.setVisibility(hide ? View.GONE : View.VISIBLE);*/
 	}
 	
 	private void setRowBackground(LinearLayout callView, int index) {
 		int backgroundResource;
 		if (index == 0) {
 //			backgroundResource = active ? R.drawable.cell_call_first_highlight : R.drawable.cell_call_first;
-			backgroundResource = R.drawable.cell_call_first;
+			//backgroundResource = R.drawable.cell_call_first;
 		} else {
 //			backgroundResource = active ? R.drawable.cell_call_highlight : R.drawable.cell_call;
-			backgroundResource = R.drawable.cell_call;
+//			backgroundResource = R.drawable.cell_call;
 		}
-		callView.setBackgroundResource(backgroundResource);
+//		callView.setBackgroundResource(backgroundResource);
 	}
 	
 	private void registerCallDurationTimer(View v, LinphoneCall call) {

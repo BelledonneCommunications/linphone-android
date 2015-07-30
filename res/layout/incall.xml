@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res/org.linphone">
+    android:layout_height="match_parent">
     
     <FrameLayout
         android:layout_width="match_parent"
@@ -81,7 +81,6 @@
 	        <TextView
 				android:id="@+id/routeBluetooth"
 	           	android:visibility="invisible"
-	       		android:background="@drawable/route_bluetooth_off"
 	        	android:text="@string/button_bluetooth"
 	        	android:gravity="center"
 	        	android:paddingTop="40dp"
@@ -118,7 +117,6 @@
 	        <TextView
 				android:id="@+id/routeReceiver"
 	           	android:visibility="invisible"
-	       		android:background="@drawable/route_receiver_off"
 	        	android:text="@string/button_receiver"
 	        	android:gravity="center"
 	        	android:paddingTop="40dp"
@@ -161,7 +159,6 @@
 	        <TextView
 				android:id="@+id/routeSpeaker"
 	           	android:visibility="invisible"
-	       		android:background="@drawable/route_speaker_off"
 	        	android:text="@string/button_speaker"
 	        	android:gravity="center"
 	        	android:paddingTop="40dp"
@@ -241,7 +238,6 @@
 
             <TextView
                 android:id="@+id/audioRoute"
-                android:background="@drawable/routes"
 	            android:text="@string/button_route"
 	            android:gravity="center"
 	            android:paddingTop="45dp"

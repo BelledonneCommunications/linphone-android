@@ -1,74 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/topLayout"
-    xmlns:linphone="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent" 
+	android:id="@+id/topLayout"
+	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-  	android:background="@drawable/background">
-    
-    <include layout="@layout/incoming_header" />
-    
-	<LinearLayout 
-		android:layout_width="match_parent" 
+	android:background="@color/background">
+
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:paddingTop="50dp"
-		android:orientation="vertical">
-		
-	    <RelativeLayout
-			android:layout_width="match_parent" 
-			android:layout_height="75dp">
-	        
-		    <ImageView
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:scaleType="fitXY"
-		        android:adjustViewBounds="true"
-		        android:src="@drawable/cell_call" />
-		    
-		    <TextView
-			    android:id="@+id/incoming_caller_number"
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_centerInParent="true"
-	        	android:paddingLeft="20dp"
-			    android:textColor="@android:color/white"
-			    android:textSize="22dp" />
+		android:orientation="vertical"
+		android:layout_above="@id/menu">
 
-	    </RelativeLayout>
-	
+		<TextView
+			android:id="@+id/incoming_caller_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:textAlignment="center"
+			android:layout_marginBottom="20dp"
+			android:textColor="@android:color/black"
+			android:textSize="28sp" />
+
 		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:gravity="center_horizontal"
-		    android:orientation="vertical"
-		    android:paddingTop="30dip" >
-			
-		    <org.linphone.ui.AvatarWithShadow
-			    android:id="@+id/incoming_picture"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    linphone:picture="@drawable/unknown_small"
-				android:scaleType="fitCenter"
-				android:minWidth="128dp" 
-				android:minHeight="128dp"
-				android:paddingBottom="10sp" />
-			
-			<TextView 
-			    android:id="@+id/incoming_caller_name"
-				android:layout_width="wrap_content" 
-				android:layout_height="wrap_content"
-				android:textAppearance="?android:attr/textAppearanceLarge"
+			android:id="@+id/incoming_caller_profile"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:orientation="vertical" >
+
+			<ImageView
+				android:id="@+id/incoming_picture"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:src="@drawable/avatar"
+				android:paddingBottom="10dp"
+				android:layout_marginTop="10dp" />
+
+			<TextView
+				android:id="@+id/incoming_caller_number"
+				android:layout_width="wrap_content"
+				android:layout_height="40dp"
+				android:textColor="@android:color/black"
+				android:textSize="28sp"
 				android:layout_gravity="center_horizontal" />
-	
+
+
 		</LinearLayout>
-		
+
+		<org.linphone.mediastream.video.display.GL2JNIView
+			android:layout_width="match_parent"
+			android:layout_height="0dip"
+			android:layout_weight="1"
+			android:id="@+id/videoSurface"
+			android:visibility="gone" />
 	</LinearLayout>
 
-    <org.linphone.ui.LinphoneSliders
-        android:id="@+id/sliding_widget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp" />
+
+	<LinearLayout
+		android:id="@+id/menu"
+		android:layout_width="match_parent"
+		android:layout_height="80dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true"
+		android:orientation="horizontal" >
+
+		<ImageView
+			android:id="@+id/accept"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@color/colorD"
+			android:adjustViewBounds="true"
+			android:contentDescription="@string/content_description_pause"
+			android:scaleType="center"
+			android:src="@drawable/call_audio_start" />
+
+		<ImageView
+			android:id="@+id/decline"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@color/footer_select"
+			android:adjustViewBounds="true"
+			android:contentDescription="@string/content_description_pause"
+			android:scaleType="center"
+			android:src="@drawable/call_hangup" />
+
+	</LinearLayout>
 
 </RelativeLayout>

@@ -3,7 +3,7 @@
     <item android:state_pressed="true" 
         android:drawable="@drawable/chat_send_over" />
     <item android:state_enabled="false" 
-        android:drawable="@drawable/chat_send_disabled" />
+        android:drawable="@drawable/chat_send_default" />
     <item
          android:drawable="@drawable/chat_send_default" />
 </selector>

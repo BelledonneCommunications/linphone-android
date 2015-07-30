@@ -8,8 +8,20 @@
 	<color name="footer_button">#444444</color>
 	<color name="footer_select">#ff5e00</color>
 	<color name="call_selected">#96c11f</color>
+
+
+	<color name="colorA">#ff5e00</color>
+	<color name="colorB">#000000</color>
+	<color name="colorC">#444444</color>
 	<color name="colorD">#808080</color>
-	<color name="colorE">#e1e1e1</color>
+	<color name="colorE">#c4c4c4</color>
+	<color name="colorF">#e1e1e1</color>
+	<color name="colorG">#f3f3f3</color>
+	<color name="colorH">#ffffff</color>
+	<color name="colorI">#ff0000</color>
+	<color name="colorJ">#ffa645</color>
+	<color name="colorK">#3eb5c0</color>
+	<color name="colorL">#96c11f</color>
 
 	<!-- end -->
 
