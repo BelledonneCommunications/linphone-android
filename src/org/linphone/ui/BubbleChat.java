@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
@@ -88,32 +89,26 @@ public class BubbleChat {
     	
     	if (message.isOutgoing()) {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			layoutParams.setMargins(10, 0, 10, 0);
     		view.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
     	}
     	else {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			layoutParams.setMargins(10, 0, 10, 0);
     		view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
     	}
 
-    	layoutParams.setMargins(10, 0, 10, 0);
-    	
     	view.setId(message.getStorageId());	
     	view.setLayoutParams(layoutParams);
     	
 		LinearLayout layout;
-    	if (context.getResources().getBoolean(R.bool.display_time_aside)) {
-	    	if (message.isOutgoing()) {
-	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_outgoing, null);
-	    	} else {
-	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_alt_incoming, null);
-	    	}
-    	} else {
-    		if (message.isOutgoing()) {
-	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
-	    	} else {
-	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
-	    	}
-    	}
+
+		if (message.isOutgoing()) {
+			layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
+		} else {
+			layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
+		}
+
 
     	String externalBodyUrl = message.getExternalBodyUrl();
     	LinphoneContent fileTransferContent = message.getFileTransferInformation();
@@ -158,8 +153,8 @@ public class BubbleChat {
 	    	}
     	}
     	
-    	TextView timeView = (TextView) layout.findViewById(R.id.time);
-    	timeView.setText(timestampToHumanDate(context, message.getTime()));
+    	TextView contact = (TextView) layout.findViewById(R.id.contact_header);
+    	contact.setText(timestampToHumanDate(context, message.getTime()) + " - " + LinphoneUtils.getUsernameFromAddress(message.getFrom().asStringUriOnly()));
     	
     	LinphoneChatMessage.State status = message.getStatus();
     	statusView = (ImageView) layout.findViewById(R.id.status);
@@ -289,7 +284,7 @@ public class BubbleChat {
 	public void loadBitmap(String path, ImageView imageView) {
 		if (cancelPotentialWork(path, imageView)) {
 			BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-			Bitmap defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_photo_default);
+			Bitmap defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_picture_default);
 			final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), defaultBitmap, task);
 			imageView.setImageDrawable(asyncBitmap);
 			task.execute(path);

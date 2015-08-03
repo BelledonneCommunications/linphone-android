@@ -99,9 +99,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private String displayName;
 	private String pictureUri;
 	private EditText message;
-	private ImageView cancelUpload, edit, selectAll, deselectAll, startCall, delete;
+	private ImageView cancelUpload, edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage;
 	private LinearLayout topBar;
-	private TextView sendImage, sendMessage, contactName, remoteComposing;
+	private TextView contactName, remoteComposing;
 	private ImageView back;
 	private RelativeLayout uploadLayout, textLayout;
 	private ListView messagesList;
@@ -144,7 +144,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 		topBar = (LinearLayout) view.findViewById(R.id.topbar);
 
-		sendMessage = (TextView) view.findViewById(R.id.sendMessage);
+		sendMessage = (ImageView) view.findViewById(R.id.sendMessage);
 		sendMessage.setOnClickListener(this);
 
 		remoteComposing = (TextView) view.findViewById(R.id.remoteComposing);
@@ -178,7 +178,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			message.setMaxLines(1);
 		}
 
-		sendImage = (TextView) view.findViewById(R.id.sendPicture);
+		sendImage = (ImageView) view.findViewById(R.id.sendPicture);
 		if (!getResources().getBoolean(R.bool.disable_chat_send_file)) {
 			sendImage.setOnClickListener(new View.OnClickListener() {
 				@Override

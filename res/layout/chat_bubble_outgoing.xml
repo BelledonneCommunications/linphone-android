@@ -1,60 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bubble"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="left"
-    android:orientation="vertical" >
-    
-    <TextView 
-        android:id="@+id/message"
-    	android:layout_gravity="right"
-        android:visibility="gone"
-        android:textColor="@android:color/black"
-        android:linksClickable="true"
-		android:autoLink="web"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-    <ImageView
-        android:id="@+id/image"
-        android:visibility="gone"
-        android:adjustViewBounds="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="250dp"
-        android:maxHeight="250dp" />
-    
-    <Button
-        android:id="@+id/download"
-        android:visibility="gone"
-        android:text="@string/download_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+	  android:id="@+id/bubble"
+	  android:padding="10dp"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:orientation="horizontal" >
 
-    <LinearLayout
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="right"
-	    android:orientation="horizontal" >
-	    
-	    <TextView 
-	        android:id="@+id/time"
-	        android:textColor="@android:color/darker_gray"
-	        android:textSize="12sp"
-	        android:singleLine="true"
-	        android:paddingRight="5dp"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" />
-	
-		<ImageView 
-		    android:contentDescription="@string/content_description_message_status"
-	        android:id="@+id/status"
-	        android:layout_weight="1"
-		    android:layout_width="0dip"
-		    android:layout_height="wrap_content"
-		    android:adjustViewBounds="true" />
-	
+	<ImageView
+		android:id="@+id/contact_picture"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:src="@drawable/avatar"/>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingLeft="10dp">
+
+		<TextView
+			android:id="@+id/contact_header"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:singleLine="true"
+			android:paddingRight="5dp"
+			style="@style/font3"/>
+
+		<TextView
+			android:id="@+id/message"
+			android:visibility="gone"
+			android:linksClickable="true"
+			android:autoLink="web"
+			android:textColor="@android:color/black"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
+		<ImageView
+			android:id="@+id/image"
+			android:adjustViewBounds="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:maxWidth="250dp"
+			android:maxHeight="250dp" />
+
 	</LinearLayout>
-    
+
+	<ImageView
+		android:contentDescription="@string/content_description_message_status"
+		android:id="@+id/status"
+		android:visibility="gone"
+		android:layout_gravity="bottom"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:adjustViewBounds="true" />
+
+	<Button
+		android:id="@+id/download"
+		android:text="@string/download_image"
+		android:visibility="gone"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
 </LinearLayout>
