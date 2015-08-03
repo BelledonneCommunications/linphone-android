@@ -5,4 +5,108 @@
     <style name="NoTitle" parent="android:Theme.Holo.Light.NoActionBar" />
     <style name="FullScreen" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen" />
 
+	<style name="font1" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorA</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">30sp</item>
+	</style>
+
+	<style name="font2" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorA</item>
+		<item name="android:textSize">20sp</item>
+	</style>
+
+	<style name="font3" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorA</item>
+		<item name="android:textSize">20sp</item>
+	</style>
+
+	<style name="font4" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorB</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">28sp</item>
+	</style>
+
+	<style name="font5" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorC</item>
+		<item name="android:textSize">40sp</item>
+	</style>
+
+	<style name="font6" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorC</item>
+		<item name="android:textSize">28sp</item>
+	</style>
+
+	<style name="font7" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorC</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">26sp</item>
+	</style>
+
+	<style name="font8" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorC</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textSize">25sp</item>
+	</style>
+
+	<style name="font9" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorC</item>
+		<item name="android:textSize">20sp</item>
+	</style>
+
+	<style name="font10" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">26sp</item>
+	</style>
+
+	<style name="font11" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">15sp</item>
+	</style>
+
+	<style name="font12" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">25sp</item>
+	</style>
+
+	<style name="font13" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">20sp</item>
+	</style>
+
+	<style name="font14" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textSize">32sp</item>
+	</style>
+
+	<style name="font15" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textSize">25sp</item>
+	</style>
+
+	<style name="font16" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textSize">22sp</item>
+	</style>
+
+	<style name="font17" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">20sp</item>
+	</style>
+
+	<style name="font18" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textSize">15sp</item>
+	</style>
+
+	<style name="font19" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textSize">22sp</item>
+	</style>
 </resources>

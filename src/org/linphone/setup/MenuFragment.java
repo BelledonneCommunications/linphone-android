@@ -26,7 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+
 /**
  * @author Sylvain Berfini
  */
@@ -36,7 +36,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_menu, container, false);
+		View view = inflater.inflate(R.layout.assistant_menu, container, false);
 		
 		createAccount = (Button) view.findViewById(R.id.setup_create_account);
 		createAccount.setOnClickListener(this);

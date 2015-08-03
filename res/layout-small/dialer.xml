@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@drawable/add_contact" />
+            android:src="@drawable/toolbar_button" />
         
         <org.linphone.ui.CallButton
             android:id="@+id/Call"

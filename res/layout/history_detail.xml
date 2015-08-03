@@ -30,7 +30,7 @@
 			android:contentDescription="@string/content_description_add_contact"
 			android:layout_alignParentRight="true"
 			android:padding="10dp"
-			android:src="@drawable/add_contact"
+			android:src="@drawable/contact_add"
 			android:background="@drawable/toolbar_button"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"

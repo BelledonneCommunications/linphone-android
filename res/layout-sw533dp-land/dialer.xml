@@ -70,7 +70,7 @@
 	            android:adjustViewBounds="true"
 	            android:contentDescription="@string/content_description_add_contact"
 	            android:scaleType="fitXY"
-	            android:src="@drawable/add_contact_button" />
+	            android:src="@drawable/contact_add" />
 	        
 	        <org.linphone.ui.CallButton
 	            android:id="@+id/Call"

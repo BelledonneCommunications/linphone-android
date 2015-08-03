@@ -63,7 +63,7 @@ public class SetupActivity extends Activity implements OnClickListener {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 		
-		setContentView(R.layout.setup);
+		setContentView(R.layout.assistant);
 		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
 				SetupFragmentsEnum.LINPHONE_LOGIN : SetupFragmentsEnum.MENU;
         if (findViewById(R.id.fragmentContainer) != null) {

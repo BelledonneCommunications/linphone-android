@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@color/background">
+  	android:background="@color/colorH">
 
 	<RelativeLayout
-		android:background="@color/button_addContact"
 		android:id="@+id/AddressBar"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_marginBottom="10dp"
@@ -27,14 +27,15 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:gravity="center"
+			android:background="@color/colorF"
 			android:ellipsize="start"
-			android:background="@color/transparent"
 			android:inputType="phone"
 			android:enabled="false"
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp"
 			android:layout_toLeftOf="@id/Erase"
-			android:layout_centerVertical="true" />
+			android:layout_centerVertical="true"
+			style="@style/font5"/>
 
 	</RelativeLayout>
 
@@ -46,20 +47,21 @@
         android:layout_height="60dp">
 
 		<RelativeLayout
-			android:id="@+id/addContact"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:background="@drawable/add_contact_button"
+			android:focusable="true"
+			android:background="@drawable/toolbar_button"
 			android:adjustViewBounds="true">
 
 			<ImageView
+				android:id="@+id/addContact"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:scaleType="center"
 				android:contentDescription="@string/content_description_contacts"
-				android:src="@drawable/contact_add" />
+				android:src="@drawable/contact_add_button" />
 
 		</RelativeLayout>
 
@@ -72,7 +74,7 @@
             android:adjustViewBounds="true"
             android:scaleType="center"
             android:layout_weight="0.5"
-            android:src="@drawable/call_alt_start" />
+            android:src="@drawable/call_audio_start" />
 
 	</LinearLayout>
 	
@@ -80,8 +82,8 @@
         android:contentDescription="@string/content_description_numpad"
 	    android:id="@+id/Dialer"
 		android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@id/controls"
         android:layout_below="@id/AddressBar" />
 
