@@ -249,7 +249,7 @@
 
 			<org.linphone.ui.Digit
 				android:id="@+id/Digit00"
-				android:text="0"
+				android:text="0+"
 				style="@style/DialerDigit"
 				android:background="@android:color/transparent"
 				android:soundEffectsEnabled="true"

@@ -54,6 +54,7 @@
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
+				android:scaleType="center"
 				android:contentDescription="@string/content_description_history"
 				android:src="@drawable/footer_history" />
 
@@ -91,6 +92,7 @@
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
+				android:scaleType="center"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_contacts" />
 
@@ -119,6 +121,7 @@
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
+				android:scaleType="center"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_dialer" />
 
@@ -144,6 +147,7 @@
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
+				android:scaleType="center"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_chat" />
 
