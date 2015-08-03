@@ -23,11 +23,7 @@
 	<TextView
 		android:id="@+id/toolbar_text"
 		android:text="@string/setup_title"
-		android:textColor="@color/footer_select"
-		android:textSize="28sp"
-		android:textAllCaps="true"
-		android:textStyle="bold"
-		android:paddingLeft="10dp"
+		style="@style/font1"
 		android:layout_centerInParent="true"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"

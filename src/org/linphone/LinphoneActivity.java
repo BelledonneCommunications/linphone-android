@@ -347,6 +347,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				displaySettings();
 				break;
 			case 2:
+				displayAssistant();
 				break;
 			case 3:
 				displayAbout();
@@ -728,9 +729,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		//settings.setSelected(true);
 	}
 
+	public void displayAssistant() {
+		startActivity(new Intent(LinphoneActivity.this, SetupActivity.class));
+	}
+
 	public boolean displayChatMessageNotification(String address){
 		if(chatFragment != null) {
-			if(chatFragment.getSipUri().equals(address)){
+			if(chatFragment.getSipUri().equals(address)) {
 				return false;
 			}
 		}

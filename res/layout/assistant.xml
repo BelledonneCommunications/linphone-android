@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-  	android:background="@color/background"
+  	android:background="@color/colorH"
 	android:layout_height="match_parent">
 
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:layout_above="@id/footer">
+		android:orientation="vertical">
 
 		<include layout="@layout/status" android:id="@+id/status" />
-
-		<include layout="@layout/setup_toolbar" android:id="@+id/toolbar" />
+		<include layout="@layout/assistant_toolbar" android:id="@+id/toolbar" />
 
 		<LinearLayout
 			android:id="@+id/fragmentContainer"

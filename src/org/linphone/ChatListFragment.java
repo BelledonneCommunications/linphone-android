@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -64,9 +66,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
 	private TextView noChatHistory;
-	private ImageView edit, selectAll, deselectAll, delete, newDiscussion;
-	private ImageView clearFastChat;
-	private EditText fastNewChat;
+	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, contactPicture;
 	private boolean isEditMode = false;
 	private boolean useLinphoneStorage;
 	
@@ -81,6 +81,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		registerForContextMenu(chatList);
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
+
 		
 		edit = (ImageView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
@@ -96,12 +97,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
-		
-		clearFastChat = (ImageView) view.findViewById(R.id.clearFastChatField);
-		clearFastChat.setOnClickListener(this);
-		
-		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
-		
 		return view;
 	}
 	
@@ -212,10 +207,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.clearFastChatField) {
+		/*if (id == R.id.clearFastChatField) {
 			fastNewChat.setText("");
-		}
-		else if (id == R.id.delete) {
+		}*/
+		if (id == R.id.delete) {
 			edit.setVisibility(View.VISIBLE);
 			selectAll.setVisibility(View.GONE);
 			deselectAll.setVisibility(View.GONE);
@@ -241,7 +236,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			hideAndDisplayMessageIfNoChat();
 		}
 		else if (id == R.id.new_discussion) {
-			String sipUri = fastNewChat.getText().toString();
+			/*String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);
 			} else {
@@ -255,7 +250,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					sipUri = "sip:" + sipUri;
 				}
 				LinphoneActivity.instance().displayChat(sipUri);
-			}
+			}*/
 		}
 	}
 
@@ -330,6 +325,38 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 		return null;
 	}
+
+	public String timestampToHumanDate(long timestamp) {
+		try {
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(timestamp);
+
+			SimpleDateFormat dateFormat;
+			if (isToday(cal)) {
+				dateFormat = new SimpleDateFormat(getResources().getString(R.string.today_date_format));
+			} else {
+				dateFormat = new SimpleDateFormat(getResources().getString(R.string.messages_list_date_format));
+			}
+
+			return dateFormat.format(cal.getTime());
+		} catch (NumberFormatException nfe) {
+			return String.valueOf(timestamp);
+		}
+	}
+
+	private boolean isToday(Calendar cal) {
+		return isSameDay(cal, Calendar.getInstance());
+	}
+
+	private boolean isSameDay(Calendar cal1, Calendar cal2) {
+		if (cal1 == null || cal2 == null) {
+			return false;
+		}
+
+		return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+				cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+	}
 	
 	class ChatListAdapter extends BaseAdapter {
 		private boolean useNativeAPI;
@@ -380,35 +407,21 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			Contact lContact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 
 			String message = "";
-			if (useNativeAPI) {
-				LinphoneChatRoom chatRoom = LinphoneManager.getLc().getOrCreateChatRoom(contact);
-				LinphoneChatMessage[] history = chatRoom.getHistory(20);
-				if (history != null && history.length > 0) {
-					for (int i = history.length - 1; i >= 0; i--) {
-						LinphoneChatMessage msg = history[i];
-						if (msg.getText() != null && msg.getText().length() > 0 && msg.getFileTransferInformation() == null) {
-							message = msg.getText();
-							break;
-						}
+			Long time = null;
+			LinphoneChatRoom chatRoom = LinphoneManager.getLc().getOrCreateChatRoom(contact);
+			LinphoneChatMessage[] history = chatRoom.getHistory(20);
+			if (history != null && history.length > 0) {
+				for (int i = history.length - 1; i >= 0; i--) {
+					LinphoneChatMessage msg = history[i];
+					if (msg.getText() != null && msg.getText().length() > 0 && msg.getFileTransferInformation() == null) {
+						message = msg.getText();
+						time = msg.getTime();
+						break;
 					}
-				}
-			} else {
-				List<ChatMessage> messages = LinphoneActivity.instance().getChatMessages(contact);
-				if (messages != null && messages.size() > 0) {
-					int iterator = messages.size() - 1;
-					ChatMessage lastMessage = null;
-					
-					while (iterator >= 0) {
-						lastMessage = messages.get(iterator);
-						if (lastMessage.getMessage() == null) {
-							iterator--;
-						} else {
-							iterator = -1;
-						}
-					}
-					message = (lastMessage == null || lastMessage.getMessage() == null) ? "" : lastMessage.getMessage();
 				}
 			}
+			TextView date = (TextView) view.findViewById(R.id.date);
+			date.setText(timestampToHumanDate(time));
 			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
 			lastMessageView.setText(message);
 			

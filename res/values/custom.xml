@@ -3,6 +3,7 @@
 	<string name="history_date_format">d MMM</string>
 	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm</string>
 	<string name="messages_date_format">HH:mm d MMM</string>
+	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">HH:mm</string>
 	<string name="picture_name_format">linphone-mms-%s.jpg</string>
 

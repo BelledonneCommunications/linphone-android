@@ -38,7 +38,7 @@
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
@@ -54,7 +54,6 @@
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
-				android:scaleType="center"
 				android:contentDescription="@string/content_description_history"
 				android:src="@drawable/footer_history" />
 
@@ -91,7 +90,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
-				android:scaleType="center"
 				android:layout_margin="10dp"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_contacts" />
@@ -120,7 +118,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
-				android:scaleType="center"
 				android:layout_margin="10dp"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_dialer" />
@@ -146,7 +143,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:layout_margin="10dp"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_chat" />
 
