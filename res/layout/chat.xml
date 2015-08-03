@@ -104,37 +104,34 @@
 	    android:orientation="vertical"
 	    android:layout_alignParentBottom="true"
 	    android:layout_centerHorizontal="true"
-   		android:background="@color/colorD">
+   		android:background="@color/colorF">
        
 	    <RelativeLayout 
 	        android:id="@+id/messageLayout"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content">
 	        
-	        <TextView
+	        <ImageView
 	            android:id="@+id/sendPicture"
-	            android:gravity="center"
+				android:padding="5dp"
+				android:scaleType="center"
 	            android:textColor="@drawable/text_color"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_centerVertical="true"
-	            android:drawableTop="@drawable/chat_send_picture"
-	            android:paddingLeft="10dp"
-	            android:paddingRight="10dp" />
+	            android:src="@drawable/chat_send_picture" />
 	        
-	        <TextView
+	        <ImageView
 	            android:id="@+id/sendMessage"
 	            android:gravity="center"
-	            android:textColor="@drawable/text_color"
+				android:padding="5dp"
+				android:scaleType="center"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-				android:drawableTop="@drawable/chat_send_message"
-	            android:paddingRight="10dp"
-	            android:paddingLeft="10dp"
+				android:src="@drawable/chat_send_message"
 				android:layout_alignTop="@+id/message"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"/>
+				android:layout_alignParentRight="true"/>
 	        
 	        <EditText
                 android:imeOptions="flagNoExtractUi"
@@ -212,11 +209,12 @@
 		android:id="@+id/chatMessageList"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_margin="10dp"
 		android:divider="@android:color/transparent"
 		android:stackFromBottom="true"
 		android:transcriptMode="alwaysScroll"
 		android:cacheColorHint="@color/transparent"
-		android:dividerHeight="1dp"
+		android:dividerHeight="10dp"
 		android:layout_above="@id/remoteComposing"
 		android:layout_below="@+id/relativeLayout"/>
 

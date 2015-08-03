@@ -19,7 +19,7 @@
 
 	<style name="font3" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorA</item>
-		<item name="android:textSize">20sp</item>
+		<item name="android:textSize">18sp</item>
 	</style>
 
 	<style name="font4" parent="@android:style/TextAppearance.Medium">
