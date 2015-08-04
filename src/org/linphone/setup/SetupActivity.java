@@ -309,6 +309,9 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			username = username.substring(4);
 		}
 
+		if (username.contains("@"))
+			username = username.split("@")[0];
+
 		if(domain.startsWith("sip:")) {
 			domain = domain.substring(4);
 		}

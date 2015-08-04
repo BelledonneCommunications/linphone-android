@@ -430,8 +430,10 @@ public class LinphonePreferences {
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
 
-			info.setUsername(username);
-			saveAuthInfo(info);
+			if(info != null) {
+				info.setUsername(username);
+				saveAuthInfo(info);
+			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
@@ -468,8 +470,10 @@ public class LinphonePreferences {
 
 	public void setAccountUserId(int n, String userId) {
 		LinphoneAuthInfo info = getClonedAuthInfo(n);
-		info.setUserId(userId);
-		saveAuthInfo(info);
+		if(info != null) {
+			info.setUserId(userId);
+			saveAuthInfo(info);
+		}
 	}
 
 	public String getAccountUserId(int n) {
@@ -479,8 +483,10 @@ public class LinphonePreferences {
 
 	public void setAccountPassword(int n, String password) {
 		LinphoneAuthInfo info = getClonedAuthInfo(n);
-		info.setPassword(password);
-		saveAuthInfo(info);
+		if(info != null) {
+			info.setPassword(password);
+			saveAuthInfo(info);
+		}
 	}
 
 	public String getAccountPassword(int n) {
@@ -492,8 +498,10 @@ public class LinphonePreferences {
 
 		try {
 			LinphoneAuthInfo authInfo = getClonedAuthInfo(n);
-			authInfo.setDomain(domain);
-			saveAuthInfo(authInfo);
+			if(authInfo != null) {
+				authInfo.setDomain(domain);
+				saveAuthInfo(authInfo);
+			}
 
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
@@ -1026,7 +1034,7 @@ public class LinphonePreferences {
 	}
 
 	public boolean isAutoStartEnabled() {
-		return getConfig().getBool("app", "auto_start", false);
+		return getConfig().getBool("app", "auto_start", true);
 	}
 
 	public void setAutoStart(boolean autoStartEnabled) {
