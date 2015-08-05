@@ -554,6 +554,9 @@ public class StatusFragment extends Fragment {
 				CheckBox checkBox = (CheckBox) v;
 				if (checkBox.isChecked()) {
 					String tag = (String) checkBox.getTag();
+					if(tag.startsWith("sip:")) {
+						tag = tag.substring(4);
+					}
 					String sipAddress = tag.split(":")[0];
 					int accountPosition = Integer.parseInt(tag.split(":")[1]);
 					
