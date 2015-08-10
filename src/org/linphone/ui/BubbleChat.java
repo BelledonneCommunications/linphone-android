@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -25,6 +26,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
@@ -42,6 +44,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spannable;
@@ -100,17 +103,15 @@ public class BubbleChat {
 	private RelativeLayout view;
 	private ImageView statusView;
 	private LinphoneChatMessage nativeMessage;
-	private LinphoneChatMessage.LinphoneChatMessageListener fileTransferListener;
 	private Context mContext;
 	private static final int SIZE_MAX = 512;
 	
 	@SuppressLint("InflateParams") 
-	public BubbleChat(final Context context, LinphoneChatMessage message, LinphoneChatMessage.LinphoneChatMessageListener listener) {
+	public BubbleChat(final Context context, LinphoneChatMessage message) {
 		if (message == null) {
 			return;
 		}
 		nativeMessage = message;
-		fileTransferListener = listener;
 		mContext = context;
 		
 		view = new RelativeLayout(context);
@@ -153,22 +154,32 @@ public class BubbleChat {
 	    	
 	    	String appData = message.getAppData();
     		if (appData == null) {
-    	    	download.setVisibility(View.VISIBLE);
-    	    	download.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						v.setEnabled(false);
-						ProgressBar spinner = (ProgressBar) view.findViewById(R.id.spinner);
-						spinner.setVisibility(View.VISIBLE);
-						v.setVisibility(View.GONE);
+				if(LinphoneManager.getInstance().isMessagePending(nativeMessage)){
+					download.setEnabled(false);
+					ProgressBar spinner = (ProgressBar) layout.findViewById(R.id.spinner);
+					spinner.setVisibility(View.VISIBLE);
+					download.setVisibility(View.GONE);
+				} else {
+					download.setVisibility(View.VISIBLE);
+					download.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							v.setEnabled(false);
+							ProgressBar spinner = (ProgressBar) view.findViewById(R.id.spinner);
+							spinner.setVisibility(View.VISIBLE);
+							v.setVisibility(View.GONE);
 
-						nativeMessage.setListener(fileTransferListener);
-						nativeMessage.downloadFile();
-					}
-				});
+							File file = new File(Environment.getExternalStorageDirectory(), nativeMessage.getFileTransferInformation().getName());
+							nativeMessage.setListener(LinphoneManager.getInstance());
+							nativeMessage.setFileTransferFilepath(file.getPath());
+							nativeMessage.downloadFile();
+							LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
+						}
+					});
+				}
     		} else {
-    	    	imageView.setVisibility(View.VISIBLE);
-    	    	loadBitmap(appData, imageView);
+				imageView.setVisibility(View.VISIBLE);
+				loadBitmap(appData, imageView);
     		}
     	} else {
 	    	TextView msgView = (TextView) layout.findViewById(R.id.message);
@@ -325,7 +336,7 @@ public class BubbleChat {
 			task.execute(path);
 		}
     }
-	
+
 	private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 	    private final WeakReference<ImageView> imageViewReference;
 	    public String path;
