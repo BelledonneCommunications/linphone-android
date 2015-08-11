@@ -43,6 +43,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.setup.RemoteProvisioningLoginActivity;
 import org.linphone.setup.SetupActivity;
@@ -104,6 +105,7 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
 	private ChatFragment chatFragment;
 	private SavedState dialerSavedState;
+	private boolean newProxyConfig;
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
@@ -198,6 +200,19 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 							lc.removeAuthInfo(authInfo);
 					}
 				}
+
+				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
+					newProxyConfig = false;
+					if (proxy.getError() == Reason.BadCredentials) {
+						displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
+					}
+					if (proxy.getError() == Reason.Unauthorized) {
+						displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
+					}
+					if (proxy.getError() == Reason.IOError) {
+						displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
+					}
+				}
 			}
 
 			@Override
@@ -212,11 +227,11 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 					}
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
-					if (message != null && message.equals("Call declined.")) {
+					if (message != null && call.getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
-					} else if (message != null && message.equals("Not Found")) {
+					} else if (message != null && call.getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
-					} else if (message != null && message.equals("Unsupported media type")) {
+					} else if (message != null && call.getReason() == Reason.Media) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_LONG);
 					} else if (message != null && state == State.Error) {
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_LONG);
@@ -258,7 +273,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 		updateAnimationsState();
 	}
-
 
 	private void initButtons() {
 		menu = (LinearLayout) findViewById(R.id.menu);
@@ -320,6 +334,10 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 		}
 		findViewById(R.id.status).setVisibility(View.VISIBLE);
 		findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
+	}
+
+	public void isNewProxyConfig(){
+		newProxyConfig = true;
 	}
 
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {

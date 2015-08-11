@@ -499,7 +499,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			} catch (LinphoneCoreException e) {
 				e.printStackTrace();
 			}
-
+			LinphoneActivity.instance().isNewProxyConfig();
 			LinphoneManager.getLc().refreshRegisters();
 		}
 	}
