@@ -66,6 +66,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -210,6 +211,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
 					invalidate();
+					messagesList.setSelection(adapter.getCount()-1);
 				}
 			}
 			
@@ -239,7 +241,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		// Force hide keyboard
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
 		return view;
 	}
 
@@ -329,6 +330,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			registerForContextMenu(v);
 			RelativeLayout rlayout = new RelativeLayout(context);
+
+	 		if(message.isOutgoing()){
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				layoutParams.setMargins(100, 10, 10, 10);
+				v.setLayoutParams(layoutParams);
+			} else {
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				layoutParams.setMargins(10, 10, 100, 10);
+				v.setLayoutParams(layoutParams);
+			}
 			rlayout.addView(v);
 
 			return rlayout;
@@ -481,7 +494,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		LinphoneManager.addListener(this);
 
 		final LinphoneChatMessage msg = LinphoneManager.getInstance().getMessageUploadPending();
-		if(msg != null){
+		if(msg != null && msg.getTo().asString().equals(sipUri)){
 			uploadLayout.setVisibility(View.VISIBLE);
 			textLayout.setVisibility(View.GONE);
 			if(msg.getFileTransferInformation() != null){
