@@ -800,11 +800,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 	}
 
-	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
-			LinphoneAddress from, String message) {
-		//deprecated
-	}
-
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
 		Log.d("DTMF received: " + dtmf);
