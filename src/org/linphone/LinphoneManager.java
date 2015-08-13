@@ -279,7 +279,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
-		if (state == LinphoneChatMessage.State.FileTransferDone) {
+		if (state == LinphoneChatMessage.State.FileTransferDone || state == LinphoneChatMessage.State.FileTransferError) {
 			if(msg.isOutgoing() && mUploadingImageStream != null){
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;

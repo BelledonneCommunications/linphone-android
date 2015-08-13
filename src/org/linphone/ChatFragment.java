@@ -66,7 +66,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -467,6 +466,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		onSaveInstanceState(getArguments());
 
+		uploadLayout.setVisibility(View.GONE);
+		textLayout.setVisibility(View.VISIBLE);
+		progressBar.setProgress(0);
+
 		//Hide keybord
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(message.getWindowToken(), 0);
@@ -519,7 +522,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 		dispayMessageList();
-
 		super.onResume();
 	}
 
