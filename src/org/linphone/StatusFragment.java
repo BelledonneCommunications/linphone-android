@@ -119,10 +119,14 @@ public class StatusFragment extends Fragment {
 				if (!isAttached || !LinphoneService.isReady()) {
 					return;
 				}
-						if (lc.getDefaultProxyConfig().equals(proxy)) {
-							statusLed.setImageResource(getStatusIconResource(state, true));
-							statusText.setText(getStatusIconText(state));
-						}
+
+				if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
+					statusLed.setImageResource(getStatusIconResource(state, true));
+					statusText.setText(getStatusIconText(state));
+				} else if(lc.getDefaultProxyConfig() == null) {
+					statusLed.setImageResource(getStatusIconResource(state, true));
+					statusText.setText(getStatusIconText(state));
+				}
 				
 				try {
 					if (getResources().getBoolean(R.bool.lock_statusbar)) {
