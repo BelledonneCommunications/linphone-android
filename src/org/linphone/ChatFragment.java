@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import android.app.Fragment;
 import android.graphics.Matrix;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -296,7 +296,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.GONE);
 		}
-		contactPicture.setVisibility(View.GONE);
+		//contactPicture.setVisibility(View.GONE);
 	}
 
 	public void hideKeyboardVisibleMode() {

@@ -84,18 +84,13 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 		}
 		nativeMessage = message;
 		mContext = context;
-			layoutParams.setMargins(10, 0, 10, 0);
-    		view.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
-			layoutParams.setMargins(10, 0, 10, 0);
-    		view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
-
 
 		if (message.isOutgoing()) {
 			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
-			view.setBackgroundResource(R.drawable.chat_bubble_outgoing);
+			view.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
 		} else {
 			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
-			view.setBackgroundResource(R.drawable.chat_bubble_incoming);
+			view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
 		}
 
 		view.setId(message.getStorageId());
@@ -156,7 +151,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 	    	}
     	}
     	
-    	TextView contact = (TextView) layout.findViewById(R.id.contact_header);
+    	TextView contact = (TextView) view.findViewById(R.id.contact_header);
     	contact.setText(timestampToHumanDate(context, message.getTime()) + " - " + LinphoneUtils.getUsernameFromAddress(message.getFrom().asStringUriOnly()));
     	
     	LinphoneChatMessage.State status = message.getStatus();
