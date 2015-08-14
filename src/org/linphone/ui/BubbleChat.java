@@ -122,6 +122,8 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			view.setBackgroundResource(R.drawable.chat_bubble_incoming);
 		}
 
+		view.setId(message.getStorageId());
+
 		spinner = (ProgressBar) view.findViewById(R.id.spinner);
 
     	String externalBodyUrl = message.getExternalBodyUrl();

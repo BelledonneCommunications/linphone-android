@@ -600,7 +600,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			// Rotate the bitmap if possible/needed, using EXIF data
-			Log.w(path);
 			try {
 				if (path != null) {
 					ExifInterface exif = new ExifInterface(path);
