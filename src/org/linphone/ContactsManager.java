@@ -92,8 +92,11 @@ public class ContactsManager {
 		initializeContactManager(context,contentResolver);
 		Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type));
 		AccountManager accountManager = (AccountManager) context.getSystemService(context.ACCOUNT_SERVICE);
-		accountManager.addAccountExplicitly(newAccount, null, null);
-		mAccount = newAccount;
+		if(accountManager.addAccountExplicitly(newAccount, null, null)){
+			mAccount = newAccount;
+		} else {
+			mAccount = null;
+		}
 	}
 
 	public String getDisplayName(String firstName, String lastName) {

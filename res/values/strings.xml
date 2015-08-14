@@ -374,6 +374,9 @@
   <string name="error_incompatible_media">Incompatible media parameters</string>
   <string name="error_low_bandwidth">Your correspondent has low bandwidth, video can\'t be started</string>
   <string name="error_network_unreachable">Network is unreachable</string>
+  <string name="error_bad_credentials">Bad credentials</string>
+  <string name="error_unauthorized">Unauthorized</string>
+  <string name="error_io_error">Network error</string>
   <string name="today">Today</string>
   <string name="yesterday">Yesterday</string>
   <string name="call_state_missed">Missed</string>
