@@ -89,10 +89,6 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			layoutParams.setMargins(10, 0, 10, 0);
     		view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
 
-    	view.setId(message.getStorageId());	
-    	view.setLayoutParams(layoutParams);
-    	
-		LinearLayout layout;
 
 		if (message.isOutgoing()) {
 			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
