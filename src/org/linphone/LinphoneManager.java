@@ -22,13 +22,17 @@ import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,6 +40,7 @@ import java.util.TimerTask;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
@@ -88,10 +93,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -116,7 +123,7 @@ import android.widget.Toast;
  * @author Guillaume Beraudo
  *
  */
-public class LinphoneManager implements LinphoneCoreListener {
+public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessage.LinphoneChatMessageListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -133,8 +140,20 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private ConnectivityManager mConnectivityManager;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
+	private static List<LinphoneChatMessage> mPendingChatFileMessage;
+	private static LinphoneChatMessage mUploadPendingFileMessage;
 
 	public String wizardLoginViewDomain = null;
+
+	private static List<LinphoneChatMessage.LinphoneChatMessageListener> simpleListeners = new ArrayList<LinphoneChatMessage.LinphoneChatMessageListener>();
+	public static void addListener(LinphoneChatMessage.LinphoneChatMessageListener listener) {
+		if (!simpleListeners.contains(listener)) {
+			simpleListeners.add(listener);
+		}
+	}
+	public static void removeListener(LinphoneChatMessage.LinphoneChatMessageListener listener) {
+		simpleListeners.remove(listener);
+	}
 
 	protected LinphoneManager(final Context c) {
 		sExited = false;
@@ -156,6 +175,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
+		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -170,6 +190,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
 	private final String mErrorToneFile;
+	private ByteArrayInputStream mUploadingImageStream;
 
 	private Timer mTimer;
 
@@ -211,6 +232,98 @@ public class LinphoneManager implements LinphoneCoreListener {
 		setGsmIdle(gsmIdle);
 
 		return instance;
+	}
+
+	public void addDownloadMessagePending(LinphoneChatMessage message){
+		synchronized (mPendingChatFileMessage) {
+			mPendingChatFileMessage.add(message);
+		}
+	}
+
+	public boolean isMessagePending(LinphoneChatMessage message){
+		boolean messagePending = false;
+		synchronized (mPendingChatFileMessage) {
+			for (LinphoneChatMessage chat : mPendingChatFileMessage) {
+				if (chat.getStorageId() == message.getStorageId()) {
+					messagePending = true;
+					break;
+				}
+			}
+		}
+		return messagePending;
+	}
+
+	public void removePendingMessage(LinphoneChatMessage message){
+		synchronized (mPendingChatFileMessage) {
+			for (LinphoneChatMessage chat : mPendingChatFileMessage) {
+				if (chat.getStorageId() == message.getStorageId()) {
+					mPendingChatFileMessage.remove(chat);
+				}
+				break;
+			}
+		}
+	}
+
+	public void setUploadPendingFileMessage(LinphoneChatMessage message){
+		mUploadPendingFileMessage = message;
+	}
+
+	public LinphoneChatMessage getMessageUploadPending(){
+		return mUploadPendingFileMessage;
+	}
+
+	public void setUploadingImageStream(ByteArrayInputStream array){
+		this.mUploadingImageStream = array;
+	}
+
+
+	@Override
+	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
+		if (state == LinphoneChatMessage.State.FileTransferDone || state == LinphoneChatMessage.State.FileTransferError) {
+			if(msg.isOutgoing() && mUploadingImageStream != null){
+				mUploadPendingFileMessage = null;
+				mUploadingImageStream = null;
+			} else {
+				File file = new File(Environment.getExternalStorageDirectory(), msg.getFileTransferInformation().getName());
+				try {
+					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), msg.getFileTransferInformation().getName(), null);
+					msg.setAppData(url);
+					file.delete();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				removePendingMessage(msg);
+			}
+		}
+
+		for (LinphoneChatMessage.LinphoneChatMessageListener l: simpleListeners) {
+			l.onLinphoneChatMessageStateChanged(msg, state);
+		}
+	}
+
+	@Override
+	public void onLinphoneChatMessageFileTransferReceived(LinphoneChatMessage msg, LinphoneContent content, LinphoneBuffer buffer) {
+	}
+
+	@Override
+	public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {
+		if (mUploadingImageStream != null && size > 0) {
+			byte[] data = new byte[size];
+			int read = mUploadingImageStream.read(data, 0, size);
+			if (read > 0) {
+				bufferToFill.setContent(data);
+				bufferToFill.setSize(read);
+			} else {
+				Log.e("Error, upload task asking for more bytes(" + size + ") than available (" + mUploadingImageStream.available() + ")");
+			}
+		}
+	}
+
+	@Override
+	public void onLinphoneChatMessageFileTransferProgressChanged(LinphoneChatMessage msg, LinphoneContent content, int offset, int total) {
+		for (LinphoneChatMessage.LinphoneChatMessageListener l: simpleListeners) {
+			l.onLinphoneChatMessageFileTransferProgressChanged(msg, content, offset, total);
+		}
 	}
 
 	private boolean isPresenceModelActivitySet() {
@@ -330,7 +443,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 		}
 		LinphoneManager.getLc().setVideoDevice(camId);
 	}
-
 
 	public static interface AddressType {
 		void setText(CharSequence s);
@@ -686,11 +798,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 	}
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-	}
-
-	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
-			LinphoneAddress from, String message) {
-		//deprecated
 	}
 
 	@Override
@@ -1096,7 +1203,6 @@ public class LinphoneManager implements LinphoneCoreListener {
 
 		return distanceInCm < threshold;
 	}
-
 
 	private static boolean sLastProximitySensorValueNearby;
 	private static Set<Activity> sProximityDependentActivities = new HashSet<Activity>();
