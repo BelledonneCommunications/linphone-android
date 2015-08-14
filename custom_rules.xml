@@ -134,7 +134,7 @@
                 <property name="out.library.jar.file" location="${out.absolute.dir}/linphone.jar" />
                 <jar destfile="${out.library.jar.file}">
                         <fileset dir="${out.classes.absolute.dir}"
-                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class"/>
+                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class  de/timroes/axmlrpc/**/*.class de/timroes/base64/Base64.class"/>
                         <fileset dir="submodules/linphone/java" >
                                 <include name="common/org/linphone/core/*.java"/>
                                 <include name="j2se/org/linphone/core/*.java"/>

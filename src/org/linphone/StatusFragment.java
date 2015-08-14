@@ -105,10 +105,14 @@ public class StatusFragment extends Fragment {
 				if (!isAttached || !LinphoneService.isReady()) {
 					return;
 				}
-						if (lc.getDefaultProxyConfig().equals(proxy)) {
-							statusLed.setImageResource(getStatusIconResource(state, true));
-							statusText.setText(getStatusIconText(state));
-						}
+
+				if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
+					statusLed.setImageResource(getStatusIconResource(state, true));
+					statusText.setText(getStatusIconText(state));
+				} else if(lc.getDefaultProxyConfig() == null) {
+					statusLed.setImageResource(getStatusIconResource(state, true));
+					statusText.setText(getStatusIconText(state));
+				}
 				
 				try {
 					if (getResources().getBoolean(R.bool.lock_statusbar)) {
@@ -516,6 +520,9 @@ public class StatusFragment extends Fragment {
 				CheckBox checkBox = (CheckBox) v;
 				if (checkBox.isChecked()) {
 					String tag = (String) checkBox.getTag();
+					if(tag.startsWith("sip:")) {
+						tag = tag.substring(4);
+					}
 					String sipAddress = tag.split(":")[0];
 					int accountPosition = Integer.parseInt(tag.split(":")[1]);
 					

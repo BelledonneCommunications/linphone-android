@@ -43,6 +43,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.setup.RemoteProvisioningLoginActivity;
 import org.linphone.setup.SetupActivity;
@@ -50,19 +51,23 @@ import org.linphone.ui.AddressText;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.ContentObserver;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment.SavedState;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.view.Gravity;
@@ -85,6 +90,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.widget.DrawerLayout;
@@ -94,7 +100,7 @@ import android.support.v4.view.GravityCompat;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked {
+public class LinphoneActivity extends FragmentActivity implements OnClickListener, ContactPicked {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
@@ -113,15 +119,17 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
 	private ChatFragment chatFragment;
-	private Fragment.SavedState dialerSavedState;
+	private SavedState dialerSavedState;
+	private boolean newProxyConfig;
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private String[] mParams;
 	private String mTitle;
-	private ListView mDrawerList;
+	private RelativeLayout mDrawerList;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
+	ListView mDrawerListB;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -190,7 +198,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (findViewById(R.id.fragmentContainer) != null) {
 				dialerFragment = new DialerFragment();
 				dialerFragment.setArguments(getIntent().getExtras());
-				getFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
+				getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
 				selectMenu(FragmentsAvailable.DIALER);
 			}
 		}
@@ -216,6 +224,19 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 							lc.removeAuthInfo(authInfo);
 					}
 				}
+
+				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
+					newProxyConfig = false;
+					if (proxy.getError() == Reason.BadCredentials) {
+						displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
+					}
+					if (proxy.getError() == Reason.Unauthorized) {
+						displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
+					}
+					if (proxy.getError() == Reason.IOError) {
+						displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
+					}
+				}
 			}
 
 			@Override
@@ -230,11 +251,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					}
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
-					if (message != null && message.equals("Call declined.")) {
+					if (message != null && call.getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_LONG);
-					} else if (message != null && message.equals("Not Found")) {
+					} else if (message != null && call.getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_LONG);
-					} else if (message != null && message.equals("Unsupported media type")) {
+					} else if (message != null && call.getReason() == Reason.Media) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_LONG);
 					} else if (message != null && state == State.Error) {
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_LONG);
@@ -278,53 +299,142 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void createDrawer() {
-		mTitle = "lala";
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mParams = getResources().getStringArray(R.array.menu_entry);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList = (RelativeLayout) findViewById(R.id.left_drawer);
+		mDrawerListB = (ListView) findViewById(R.id.list_drawer);
+		List<DrawerItem> dataList = new ArrayList<DrawerItem>();
+
+
+		dataList.add(new DrawerItem("About"));
+		dataList.add(new DrawerItem("Settings"));
+		dataList.add(new DrawerItem("Help"));
+
+		CustomDrawerAdapter adapter;
+
+		adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item,
+				dataList);
+
+		mDrawerListB.setAdapter(adapter);
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		//mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		// set up the drawer's list view with items and click listener
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mParams));
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		//getActionBar().setDisplayHomeAsUpEnabled(true);
 		//getActionBar().setHomeButtonEnabled(true);
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
-		mDrawerToggle = new ActionBarDrawerToggle(
-				this,                  /* host Activity */
-				mDrawerLayout,         /* DrawerLayout object */
-				R.drawable.menu,  /* nav drawer image to replace 'Up' caret */
-				R.string.menu_about,  /* "open drawer" description for accessibility */
-				R.string.menu_exit  /* "close drawer" description for accessibility */
-		) {
-			public void onDrawerClosed(View view) {
-				//getActionBar().setTitle(mTitle);
-				//invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
 
-			public void onDrawerOpened(View drawerView) {
-				//getActionBar().setTitle(mTitle);
-				//invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		//mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 
 	}
 
-	/* The click listner for ListView in the navigation drawer */
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	class DrawerItem {
+
+		String ItemName;
+		int imgResID;
+		String title;
+		boolean isAccount;
+
+		public DrawerItem(boolean isAccount) {
+			this(null, 0);
+			this.isAccount = isAccount;
+		}
+
+		public DrawerItem(String itemName, int imgResID) {
+			ItemName = itemName;
+			this.imgResID = imgResID;
+		}
+
+		public DrawerItem(String title) {
+			this(null, 0);
+			this.title = title;
+		}
+
+		public String getItemName() {
+			return ItemName;
+		}
+
+		public void setItemName(String itemName) {
+			ItemName = itemName;
+		}
+
+		public int getImgResID() {
+			return imgResID;
+		}
+
+		public void setImgResID(int imgResID) {
+			this.imgResID = imgResID;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public boolean isAccount() {
+			return isAccount;
+		}
+
+	}
+
+	public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
+
+		Context context;
+		List<DrawerItem> drawerItemList;
+		int layoutResID;
+
+		public CustomDrawerAdapter(Context context, int layoutResourceID,
+								   List<DrawerItem> listItems) {
+			super(context, layoutResourceID, listItems);
+			this.context = context;
+			this.drawerItemList = listItems;
+			this.layoutResID = layoutResourceID;
+
+		}
+
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(position);
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			// TODO Auto-generated method stub
+			DrawerItemHolder drawerHolder;
+			View view = convertView;
+
+
+			if (view == null) {
+				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				drawerHolder = new DrawerItemHolder();
+
+				view = inflater.inflate(layoutResID, parent, false);
+				drawerHolder.ItemName = (TextView) view.findViewById(R.id.drawer_itemName);
+				drawerHolder.icon = (ImageView) view.findViewById(R.id.drawer_icon);
+
+				//drawerHolder. = (ImageView) view
+				//		.findViewById(R.id.s);
+
+				//	drawerHolder.title = (TextView) view.findViewById(R.id.drawerTitle);
+
+
+			}
+
+			return view;
+		}
+
+
+		private class DrawerItemHolder {
+			TextView ItemName, title;
+			ImageView icon;
+			LinearLayout itemLayout;
+			RelativeLayout headerLayout, exitLayout;
 		}
 	}
+
 
 	private void selectItem(int position) {
 		// update the main content by replacing fragments
@@ -359,9 +469,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				break;
 		}
 
-		mDrawerList.setItemChecked(position, true);
+		mDrawerListB.setItemChecked(position, true);
 		//
-		mDrawerLayout.closeDrawer(mDrawerList);
+		mDrawerLayout.closeDrawer(mDrawerListB);
 	}
 
 	@Override
@@ -379,14 +489,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
+		//mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
-		mDrawerToggle.onConfigurationChanged(newConfig);
+		//mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 
@@ -449,6 +559,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		//findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 
+	public void isNewProxyConfig(){
+		newProxyConfig = true;
+	}
+
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
 		changeCurrentFragment(newFragmentType, extras, false);
 	}
@@ -461,7 +575,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		if (currentFragment == FragmentsAvailable.DIALER) {
 			try {
-				dialerSavedState = getFragmentManager().saveFragmentInstanceState(dialerFragment);
+				dialerSavedState = getSupportFragmentManager().saveFragmentInstanceState(dialerFragment);
 			} catch (Exception e) {
 			}
 		}
@@ -546,7 +660,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			statusFragment.closeStatusBar();
 		}*/
 
-		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
 		if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 			if (newFragmentType.isRightOf(currentFragment)) {
@@ -572,7 +687,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
-		getFragmentManager().executePendingTransactions();
+		getSupportFragmentManager().executePendingTransactions();
 
 		currentFragment = newFragmentType;
 	}
@@ -591,7 +706,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
-		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
 			ll.setVisibility(View.VISIBLE);
 
@@ -620,7 +735,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			transaction.replace(R.id.fragmentContainer, newFragment);
 		}
 		transaction.commitAllowingStateLoss();
-		getFragmentManager().executePendingTransactions();
+		getSupportFragmentManager().executePendingTransactions();
 
 		currentFragment = newFragmentType;
 		if (newFragmentType == FragmentsAvailable.DIALER
@@ -631,7 +746,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				|| newFragmentType == FragmentsAvailable.CHATLIST
 				|| newFragmentType == FragmentsAvailable.HISTORY) {
 			try {
-				getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			} catch (java.lang.IllegalStateException e) {
 
 			}
@@ -666,7 +781,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		String callTime = secondsToDisplayableString(log.getCallDuration());
 		String callDate = String.valueOf(log.getTimestamp());
 
-		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
+		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
 			HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
 			historyDetailFragment.changeDisplayedHistory(sipUri, displayName, pictureUri, status, callTime, callDate);
@@ -694,7 +809,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayContact(Contact contact, boolean chatOnly) {
-		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
+		Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT) {
 			ContactFragment contactFragment = (ContactFragment) fragment2;
 			contactFragment.changeDisplayedContact(contact);
@@ -766,7 +881,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		if (isTablet()){
 			if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT){
-				Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
+				Fragment fragment2 = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
 				if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
 					ChatFragment chatFragment = (ChatFragment) fragment2;
 					chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);

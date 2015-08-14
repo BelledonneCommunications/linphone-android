@@ -21,9 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 
-import android.content.CursorLoader;
 import android.graphics.Matrix;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatMessage.LinphoneChatMessageListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
@@ -45,6 +42,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.ui.BubbleChat;
 
 import android.media.ExifInterface;
+import android.support.v4.content.CursorLoader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -62,7 +60,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -85,7 +83,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessageListener {
+public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener {
 	private static ChatFragment instance;
 
 	private static final int ADD_PHOTO = 1337;
@@ -113,9 +111,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ChatMessageAdapter adapter;
 	
 	private LinphoneCoreListenerBase mListener;
-	private ByteArrayOutputStream mDownloadedImageStream;
 	private ByteArrayInputStream mUploadingImageStream;
-	private int mDownloadedImageStreamSize;
 	private LinphoneChatMessage currentMessageInFileTransferUploadState;
 
 	public static boolean isInstanciated() {
@@ -127,7 +123,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		super.onCreate(savedInstanceState);
 		instance = this;
 		View view = inflater.inflate(R.layout.chat, container, false);
-		
+
+		LinphoneManager.addListener(this);
 		// Retain the fragment across configuration changes
 		setRetainInstance(true);
 
@@ -210,6 +207,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					progressBar.setProgress(0);
 					currentMessageInFileTransferUploadState.cancelFileTransfer();
 					currentMessageInFileTransferUploadState = null;
+					LinphoneManager.getInstance().setUploadPendingFileMessage(null);
 				}
 			}
 		});
@@ -227,6 +225,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
 					invalidate();
+					messagesList.setSelection(adapter.getCount()-1);
 				}
 			}
 			
@@ -256,7 +255,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		// Force hide keyboard
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
 		return view;
 	}
 
@@ -299,7 +297,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			topBar.setVisibility(View.GONE);
 		}
 		//contactPicture.setVisibility(View.GONE);
-		//scrollToEnd();
 	}
 
 	public void hideKeyboardVisibleMode() {
@@ -308,7 +305,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.VISIBLE);
 		}
-		//scrollToEnd();
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
@@ -343,11 +339,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinphoneChatMessage message = history[position];
 			
-			BubbleChat bubble = new BubbleChat(context, message, ChatFragment.this);
+			BubbleChat bubble = new BubbleChat(context, message);
 			View v = bubble.getView();
 
 			registerForContextMenu(v);
 			RelativeLayout rlayout = new RelativeLayout(context);
+
+	 		if(message.isOutgoing()){
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				layoutParams.setMargins(100, 10, 10, 10);
+				v.setLayoutParams(layoutParams);
+			} else {
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				layoutParams.setMargins(10, 10, 100, 10);
+				v.setLayoutParams(layoutParams);
+			}
 			rlayout.addView(v);
 
 			return rlayout;
@@ -469,7 +477,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			lc.removeListener(mListener);
 		}
 
+		LinphoneManager.removeListener(this);
+
 		onSaveInstanceState(getArguments());
+
+		uploadLayout.setVisibility(View.GONE);
+		textLayout.setVisibility(View.VISIBLE);
+		progressBar.setProgress(0);
 
 		//Hide keybord
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -495,12 +509,34 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneActivity.instance().updateChatFragment(this);
 		}
 
+		LinphoneManager.addListener(this);
+
+		final LinphoneChatMessage msg = LinphoneManager.getInstance().getMessageUploadPending();
+		if(msg != null && msg.getTo().asString().equals(sipUri)){
+			uploadLayout.setVisibility(View.VISIBLE);
+			textLayout.setVisibility(View.GONE);
+			if(msg.getFileTransferInformation() != null){
+				progressBar.setProgress(msg.getFileTransferInformation().getRealSize());
+			}
+
+			cancelUpload.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					uploadLayout.setVisibility(View.GONE);
+					textLayout.setVisibility(View.VISIBLE);
+					progressBar.setProgress(0);
+					msg.cancelFileTransfer();
+					LinphoneManager.getInstance().setUploadPendingFileMessage(null);
+
+				}
+			});
+		}
+
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
 
 		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 		dispayMessageList();
-
 		super.onResume();
 	}
 
@@ -549,12 +585,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		if (chatRoom != null && messageToSend != null && messageToSend.length() > 0 && isNetworkReachable) {
 			LinphoneChatMessage message = chatRoom.createLinphoneChatMessage(messageToSend);
-			message.setListener(this);
 			chatRoom.sendChatMessage(message);
 
 			if (LinphoneActivity.isInstanciated()) {
 				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
 			}
+
+			message.setListener(LinphoneManager.getInstance());
 
 			invalidate();
 			Log.i("Sent message current status: " + message.getStatus());
@@ -607,7 +644,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			// Rotate the bitmap if possible/needed, using EXIF data
-			Log.w(path);
 			try {
 				if (path != null) {
 					ExifInterface exif = new ExifInterface(path);
@@ -645,9 +681,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			content.setName(fileName);
 			
 			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
-			message.setListener(ChatFragment.this);
+			message.setListener(LinphoneManager.getInstance());
 			message.setAppData(path);
-			
+
+		 	LinphoneManager.getInstance().setUploadPendingFileMessage(message);
+			LinphoneManager.getInstance().setUploadingImageStream(mUploadingImageStream);
+
 			chatRoom.sendChatMessage(message);
 			currentMessageInFileTransferUploadState = message;
 		}
@@ -748,32 +787,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
-		if (LinphoneActivity.isInstanciated() && state != LinphoneChatMessage.State.InProgress) {
-			if (msg != null) {
-				LinphoneActivity.instance().onMessageStateChanged(sipUri, msg.getText(), state.toInt());
-			}
-			invalidate();
-		}
-		
-		if (state == State.FileTransferDone) {
-			if (mDownloadedImageStream != null) {
-				byte[] bytes = mDownloadedImageStream.toByteArray();
-				Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, mDownloadedImageStreamSize);
-				
-				String path = msg.getExternalBodyUrl();
-				String fileName = path.substring(path.lastIndexOf("/") + 1);
-				String url = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bm, fileName, null);
-				if (url != null) {
-					msg.setAppData(url);
-				}
-				
-				mDownloadedImageStream = null;
-				mDownloadedImageStreamSize = 0;
-			} else if (mUploadingImageStream != null) {
-				mUploadingImageStream = null;
-			}
-		} 
-		
 		if (state == State.FileTransferDone || state == State.FileTransferError) {
 			uploadLayout.setVisibility(View.GONE);
 			textLayout.setVisibility(View.VISIBLE);
@@ -785,33 +798,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onLinphoneChatMessageFileTransferReceived(LinphoneChatMessage msg, LinphoneContent content, LinphoneBuffer buffer) {
-		if (mDownloadedImageStream == null) {
-			mDownloadedImageStream = new ByteArrayOutputStream();
-			mDownloadedImageStreamSize = 0;
-		}
-
-		if (buffer != null && buffer.getSize() > 0) {
-			try {
-				mDownloadedImageStream.write(buffer.getContent());
-				mDownloadedImageStreamSize += buffer.getSize();
-			} catch (IOException e) {
-				Log.e(e);
-			}
-		}
 	}
 
 	@Override
 	public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {
-		if (mUploadingImageStream != null && size > 0) {
-			byte[] data = new byte[size];
-			int read = mUploadingImageStream.read(data, 0, size);
-			if (read > 0) {
-				bufferToFill.setContent(data);
-				bufferToFill.setSize(read);
-			} else {
-				Log.e("Error, upload task asking for more bytes(" + size + ") than available (" + mUploadingImageStream.available() + ")");
-			}
-		}
 	}
 
 	@Override

@@ -187,13 +187,103 @@
 </RelativeLayout>
 
 	<!-- The navigation drawer -->
-	<ListView android:id="@+id/left_drawer"
-			  android:layout_width="300dp"
-			  android:layout_height="match_parent"
-			  android:layout_gravity="start"
-			  android:choiceMode="singleChoice"
-			  android:divider="@android:color/transparent"
-			  android:dividerHeight="0dp"
-			  android:background="@color/background"/>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/left_drawer"
+		android:layout_gravity="start">
+
+		<RelativeLayout
+			android:id="@+id/headerLayout"
+			android:layout_width="match_parent"
+			android:layout_height="80dp"
+			android:background="@color/colorF">
+
+			<ImageView
+				android:id="@+id/icon"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				android:layout_alignParentTop="true"
+				android:layout_marginLeft="12dp"
+				android:layout_marginRight="12dp"
+				android:src="@drawable/avatar"
+				android:layout_centerVertical="true" />
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_centerVertical="true"
+				android:layout_toRightOf="@+id/icon">
+
+				<TextView
+					android:id="@+id/title"
+					android:text="CLERC Margaux"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					style="@style/font7"
+					android:minHeight="?android:attr/listPreferredItemHeightSmall"
+					android:textAppearance="?android:attr/textAppearanceListItemSmall"
+					android:gravity="bottom"/>
+
+				<TextView
+					android:id="@+id/subtitle"
+					android:gravity="top"
+					android:text="margaux-mac@sip.linphone.org"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@id/icon"
+					style="@style/font3"
+					android:minHeight="?android:attr/listPreferredItemHeightSmall"
+					android:textAppearance="?android:attr/textAppearanceListItemSmall"/>
+
+			</LinearLayout>
+		</RelativeLayout>
+
+
+		<ListView android:id="@+id/list_drawer"
+				  android:layout_width="wrap_content"
+				  android:layout_height="fill_parent"
+				  android:layout_gravity="start"
+				  android:choiceMode="singleChoice"
+				  android:divider="@android:color/transparent"
+				  android:dividerHeight="0dp"
+				  android:background="@color/background"/>
+
+
+
+	<RelativeLayout
+		android:id="@+id/exitLayout"
+		android:gravity="bottom"
+		android:layout_alignParentBottom="true"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:background="@color/colorA">
+
+		<ImageView
+			android:id="@+id/lol"
+			android:layout_width="25dp"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="12dp"
+			android:layout_marginRight="12dp"
+			android:src="@drawable/quit_default"
+			android:layout_centerVertical="true" />
+
+		<TextView
+			android:id="@+id/exit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/lol"
+			android:text="@string/menu_exit"
+			android:minHeight="?android:attr/listPreferredItemHeightSmall"
+			android:textAppearance="?android:attr/textAppearanceListItemSmall"
+			android:gravity="center_vertical"
+			android:paddingRight="40dp"/>
+
+	</RelativeLayout>
+
+	</RelativeLayout>
+
 
 </android.support.v4.widget.DrawerLayout>

@@ -339,13 +339,6 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 	}
 
 	@Override
-	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
-			LinphoneAddress from, String message) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneChatMessage message) {
 		// TODO Auto-generated method stub
