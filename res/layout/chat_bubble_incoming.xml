@@ -7,7 +7,6 @@
    	android:gravity="left"
     android:orientation="horizontal" >
 
-
 	<ImageView
 		android:id="@+id/contact_picture"
 		android:layout_width="40dp"
@@ -40,11 +39,20 @@
 
 		<ImageView
 			android:id="@+id/image"
+			android:visibility="gone"
 			android:adjustViewBounds="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:maxWidth="250dp"
 			android:maxHeight="250dp" />
+
+		<Button
+			android:id="@+id/download"
+			android:visibility="gone"
+			android:text="@string/download_image"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
 
 	</LinearLayout>
     
