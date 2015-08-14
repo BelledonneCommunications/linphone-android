@@ -296,7 +296,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (isOrientationLandscape && topBar != null) {
 			topBar.setVisibility(View.GONE);
 		}
-		//contactPicture.setVisibility(View.GONE);
+		contactPicture.setVisibility(View.GONE);
 	}
 
 	public void hideKeyboardVisibleMode() {
