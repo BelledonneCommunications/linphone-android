@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphonePreferences.AccountBuilder;
@@ -194,7 +195,7 @@ public class SetupActivity extends Activity implements OnClickListener {
 			cancel.setEnabled(false);
 		} else {
 			if (mPrefs.isFirstLaunch()) {
-				mPrefs.setEchoCancellation(LinphoneManager.getLc().needsEchoCanceler());
+				mPrefs.setEchoCancellation(LinphoneManager.getLc().hasBuiltInEchoCanceler());
 			}
 			success();
 		}		
@@ -279,6 +280,9 @@ public class SetupActivity extends Activity implements OnClickListener {
 		if(username.startsWith("sip:")) {
 			username = username.substring(4);
 		}
+
+		if (username.contains("@"))
+			username = username.split("@")[0];
 
 		if(domain.startsWith("sip:")) {
 			domain = domain.substring(4);
@@ -370,6 +374,7 @@ public class SetupActivity extends Activity implements OnClickListener {
 	
 	public void success() {
 		mPrefs.firstLaunchSuccessful();
+		LinphoneActivity.instance().isNewProxyConfig();
 		setResult(Activity.RESULT_OK);
 		finish();
 	}
