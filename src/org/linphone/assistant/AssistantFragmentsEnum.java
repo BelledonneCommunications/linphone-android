@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 SetupFragments.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -20,10 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /**
  * @author Sylvain Berfini
  */
-public enum SetupFragmentsEnum {
+public enum AssistantFragmentsEnum {
 	MENU,
-	WIZARD,
-	WIZARD_CONFIRM,
+	CREATE_ACCOUNT,
+	CREATE_ACCOUNT_CONFIRM,
 	LINPHONE_LOGIN,
 	GENERIC_LOGIN,
 	REMOTE_PROVISIONING,

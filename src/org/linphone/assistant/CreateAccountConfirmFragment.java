@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 WizardConfirmFragment.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 import de.timroes.axmlrpc.XMLRPCCallback;
 import de.timroes.axmlrpc.XMLRPCClient;
@@ -38,18 +37,18 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 /**
  * @author Sylvain Berfini
  */
-public class WizardConfirmFragment extends Fragment {
+public class CreateAccountConfirmFragment extends Fragment {
 	private String username;
 	private Handler mHandler = new Handler();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_wizard_confirm, container, false);
+		View view = inflater.inflate(R.layout.assistant_account_creation_confirm, container, false);
 		
 		username = getArguments().getString("Username");
 		
-		Button checkAccount = (Button) view.findViewById(R.id.setup_check);
+		Button checkAccount = (Button) view.findViewById(R.id.assistant_check);
 		checkAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

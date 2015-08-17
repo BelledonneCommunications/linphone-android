@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 WizardFragment.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -54,7 +54,7 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 /**
  * @author Sylvain Berfini
  */
-public class WizardFragment extends Fragment {
+public class CreateAccountFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private EditText username, password, passwordConfirm, email;
 	
@@ -81,7 +81,7 @@ public class WizardFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_wizard, container, false);
+		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 		
 		username = (EditText) view.findViewById(R.id.setup_username);
     	ImageView usernameOkIV = (ImageView) view.findViewById(R.id.setup_username_ok);
@@ -121,7 +121,7 @@ public class WizardFragment extends Fragment {
 
     	errorMessage = (TextView) view.findViewById(R.id.setup_error);
     	
-    	createAccount = (Button) view.findViewById(R.id.setup_create);
+    	createAccount = (Button) view.findViewById(R.id.assistant_create);
     	createAccount.setEnabled(false);
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -253,7 +253,7 @@ public class WizardFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					SetupActivity.instance().saveCreatedAccount(username, password, context.getString(R.string.default_domain));
+    					SetupActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain));
     					SetupActivity.instance().displayWizardConfirm(username);
 					}
 	    		};

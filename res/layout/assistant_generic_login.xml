@@ -5,15 +5,16 @@
     android:orientation="vertical" >
 
 	<TextView
+		android:text="@string/assistant_general_account_title"
 		android:contentDescription="@string/content_description_welcome"
 		android:paddingTop="20dp"
 		android:textSize="30sp"
 		android:textStyle="bold"
 		android:layout_gravity="center"
-		android:textColor="@color/footer_button"
+		android:textColor="@color/colorD"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/setup_general_account_hint"
+
 		android:gravity="center_horizontal"/>
 
     <LinearLayout
@@ -32,7 +33,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textAllCaps="true"
-			android:text="@string/setup_username_hint"/>
+			android:text="@string/username"/>
         
         <EditText
             android:textCursorDrawable="@null"
@@ -53,7 +54,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textAllCaps="true"
-			android:text="@string/setup_password_hint"/>
+			android:text="@string/password"/>
         
         <EditText
             android:textCursorDrawable="@null"
@@ -89,6 +90,26 @@
             android:singleLine="true"
             android:textColor="@android:color/black"
             android:background="@drawable/resizable_textfield" />
+
+		<TextView
+			android:text="@string/display_name"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<EditText
+			android:id="@+id/assistant_display_name"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
         
         <RelativeLayout
             android:layout_marginTop="20dp"
