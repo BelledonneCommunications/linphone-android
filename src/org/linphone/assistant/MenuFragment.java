@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 MenuFragment.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France

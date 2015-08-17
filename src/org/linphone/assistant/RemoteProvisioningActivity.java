@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 RemoteProvisioningActivity.java
 Copyright (C) 2014  Belledonne Communications, Grenoble, France

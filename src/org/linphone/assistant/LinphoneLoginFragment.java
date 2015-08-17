@@ -1,6 +1,6 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
-GenericLoginFragment.java
+LinphoneLoginFragment.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -27,27 +27,38 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class GenericLoginFragment extends Fragment implements OnClickListener {
-	private EditText login, password, domain;
+public class LinphoneLoginFragment extends Fragment implements OnClickListener {
+	private EditText login, password;
 	private Button apply;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_generic_login, container, false);
+		View view = inflater.inflate(R.layout.assistant_linphone_login, container, false);
 		
 		login = (EditText) view.findViewById(R.id.setup_username);
 		password = (EditText) view.findViewById(R.id.setup_password);
-		domain = (EditText) view.findViewById(R.id.setup_domain);
 		apply = (Button) view.findViewById(R.id.setup_apply);
 		apply.setOnClickListener(this);
 		
+		if (getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment)) {
+			view.findViewById(R.id.setup_apply_button).setVisibility(View.GONE);
+		}
+		
 		return view;
+	}
+	
+	public void linphoneLogIn() {
+		if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
+			Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		SetupActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), getResources().getBoolean(R.bool.setup_account_validation_mandatory));
 	}
 
 	@Override
@@ -55,12 +66,7 @@ public class GenericLoginFragment extends Fragment implements OnClickListener {
 		int id = v.getId();
 		
 		if (id == R.id.setup_apply) {
-			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0 || domain.getText() == null || domain.length() == 0) {
-				Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			SetupActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), domain.getText().toString());
+			linphoneLogIn();
 		}
 	}
 }

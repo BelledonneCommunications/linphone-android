@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneLauncherActivity;
@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 public class RemoteProvisioningFragment extends Fragment implements OnClickListener {
 	private EditText remoteProvisioningUrl;

@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 
 /*
 EchoCancellerCalibrationFragment.java

@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 SetupActivity.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -46,8 +46,8 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class SetupActivity extends Activity implements OnClickListener {
-	private static SetupActivity instance;
+public class AssistantActivity extends Activity implements OnClickListener {
+	private static AssistantActivity instance;
 	private RelativeLayout back, cancel;
 	private SetupFragmentsEnum currentFragment;
 	private SetupFragmentsEnum firstFragment;
@@ -63,8 +63,11 @@ public class SetupActivity extends Activity implements OnClickListener {
 		if (getResources().getBoolean(R.bool.isTablet) && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-		
+
 		setContentView(R.layout.assistant);
+
+		initUI();
+
 		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
 				SetupFragmentsEnum.LINPHONE_LOGIN : SetupFragmentsEnum.MENU;
         if (findViewById(R.id.fragmentContainer) != null) {
@@ -76,8 +79,6 @@ public class SetupActivity extends Activity implements OnClickListener {
         }
         mPrefs = LinphonePreferences.instance();
         
-        initUI();
-        
         mListener = new LinphoneCoreListenerBase(){
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
@@ -88,7 +89,7 @@ public class SetupActivity extends Activity implements OnClickListener {
 								launchEchoCancellerCalibration(true);
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
-							Toast.makeText(SetupActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+							Toast.makeText(AssistantActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
 						}
 					}
 				}
@@ -124,23 +125,21 @@ public class SetupActivity extends Activity implements OnClickListener {
 		super.onSaveInstanceState(outState);
 	}
 	
-	public static SetupActivity instance() {
+	public static AssistantActivity instance() {
 		return instance;
 	}
 	
 	private void initUI() {
-		back = (RelativeLayout) findViewById(R.id.setup_back);
+		back = (RelativeLayout) findViewById(R.id.assistant_back);
 		back.setOnClickListener(this);
-		cancel = (RelativeLayout) findViewById(R.id.setup_cancel);
+		cancel = (RelativeLayout) findViewById(R.id.assistant_cancel);
 		cancel.setOnClickListener(this);
 	}
 	
 	private void changeFragment(Fragment newFragment) {
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		
 //		transaction.addToBackStack("");
 		transaction.replace(R.id.fragmentContainer, newFragment);
-		
 		transaction.commitAllowingStateLoss();
 	}
 
@@ -148,7 +147,7 @@ public class SetupActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.setup_cancel) {
+		if (id == R.id.assistant_cancel) {
 			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
@@ -156,7 +155,7 @@ public class SetupActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-		} else if (id == R.id.setup_back) {
+		} else if (id == R.id.assistant_back) {
 			onBackPressed();
 		}
 	}
@@ -173,11 +172,12 @@ public class SetupActivity extends Activity implements OnClickListener {
 			}
 		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN
 				|| currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN 
-				|| currentFragment == SetupFragmentsEnum.WIZARD 
+				|| currentFragment == SetupFragmentsEnum.CREATE_ACCOUNT
 				|| currentFragment == SetupFragmentsEnum.REMOTE_PROVISIONING) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
 			currentFragment = SetupFragmentsEnum.MENU;
+			back.setVisibility(View.GONE);
 		} else if (currentFragment == SetupFragmentsEnum.MENU) {
 			finish();
 		}
@@ -201,33 +201,33 @@ public class SetupActivity extends Activity implements OnClickListener {
 		}		
 	}
 
-	private void logIn(String username, String password, String domain, boolean sendEcCalibrationResult) {
+	private void logIn(String username, String password, String displayName, String domain, boolean sendEcCalibrationResult) {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null && getCurrentFocus() != null) {
 			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 		}
 
-        saveCreatedAccount(username, password, domain);
+        saveCreatedAccount(username, password, displayName, domain);
 
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			launchEchoCancellerCalibration(sendEcCalibrationResult);
 		}
 	}
 	
-	public void checkAccount(String username, String password, String domain) {
-		saveCreatedAccount(username, password, domain);
+	public void checkAccount(String username, String password, String displayName, String domain) {
+		saveCreatedAccount(username, password, displayName, domain);
 	}
 
-	public void linphoneLogIn(String username, String password, boolean validate) {
+	public void linphoneLogIn(String username, String password, String displayName, boolean validate) {
 		if (validate) {
-			checkAccount(username, password, getString(R.string.default_domain));
+			checkAccount(username, password, displayName, getString(R.string.default_domain));
 		} else {
-			logIn(username, password, getString(R.string.default_domain), true);
+			logIn(username, password, displayName, getString(R.string.default_domain), true);
 		}
 	}
 
-	public void genericLogIn(String username, String password, String domain) {
-		logIn(username, password, domain, false);
+	public void genericLogIn(String username, String password, String displayName, String domain) {
+		logIn(username, password, displayName, domain, false);
 	}
 
 	private void display(SetupFragmentsEnum fragment) {
@@ -241,39 +241,45 @@ public class SetupActivity extends Activity implements OnClickListener {
 		default:
 			throw new IllegalStateException("Can't handle " + fragment);
 		}
+		back.setVisibility(View.VISIBLE);
 	}
 
 	public void displayMenu() {
 		fragment = new MenuFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.MENU;
+		back.setVisibility(View.GONE);
 	}
 
 	public void displayLoginGeneric() {
 		fragment = new GenericLoginFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.GENERIC_LOGIN;
+		back.setVisibility(View.VISIBLE);
 	}
 	
 	public void displayLoginLinphone() {
 		fragment = new LinphoneLoginFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.LINPHONE_LOGIN;
+		back.setVisibility(View.VISIBLE);
 	}
 
 	public void displayWizard() {
-		fragment = new WizardFragment();
+		fragment = new CreateAccountFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.WIZARD;
+		currentFragment = SetupFragmentsEnum.CREATE_ACCOUNT;
+		back.setVisibility(View.VISIBLE);
 	}
 
 	public void displayRemoteProvisioning() {
 		fragment = new RemoteProvisioningFragment();
 		changeFragment(fragment);
 		currentFragment = SetupFragmentsEnum.REMOTE_PROVISIONING;
+		back.setVisibility(View.VISIBLE);
 	}
 	
-	public void saveCreatedAccount(String username, String password, String domain) {
+	public void saveCreatedAccount(String username, String password, String displayName, String domain) {
 		if (accountCreated)
 			return;
 
@@ -294,6 +300,11 @@ public class SetupActivity extends Activity implements OnClickListener {
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
+
+		if(displayName != null && !displayName.equals("")){
+			address.setDisplayName(displayName);
+		}
+
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
@@ -350,14 +361,14 @@ public class SetupActivity extends Activity implements OnClickListener {
 	}
 
 	public void displayWizardConfirm(String username) {
-		WizardConfirmFragment fragment = new WizardConfirmFragment();
+		CreateAccountConfirmFragment fragment = new CreateAccountConfirmFragment();
 		
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		
-		currentFragment = SetupFragmentsEnum.WIZARD_CONFIRM;
+		currentFragment = SetupFragmentsEnum.CREATE_ACCOUNT_CONFIRM;
 		back.setVisibility(View.GONE);
 	}
 	

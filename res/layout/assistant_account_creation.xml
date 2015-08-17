@@ -7,10 +7,8 @@
 	<TextView
 		android:contentDescription="@string/content_description_welcome"
 		android:paddingTop="20dp"
-		android:textSize="30sp"
-		android:textStyle="bold"
+		style="@style/font6"
 		android:layout_gravity="center"
-		android:textColor="@color/footer_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/setup_create_account"
@@ -19,10 +17,10 @@
 	<TextView
 		android:textSize="20sp"
 		android:layout_gravity="center"
-		android:textColor="@color/footer_button"
+		android:textColor="@color/colorD"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/setup_create_account_part_1"/>
+		android:text="@string/assistant_create_account_part_1"/>
     
    	<TextView 
 	    android:paddingTop="10dp"

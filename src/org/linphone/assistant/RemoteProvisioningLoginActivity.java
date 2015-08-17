@@ -1,4 +1,4 @@
-package org.linphone.setup;
+package org.linphone.assistant;
 /*
 RemoteProvisioningLoginActivity.java
 Copyright (C) 2014  Belledonne Communications, Grenoble, France
@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 /**
  * @author Sylvain Berfini
