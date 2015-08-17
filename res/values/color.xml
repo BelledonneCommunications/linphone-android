@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- NEW COLORS -->
-	<color name="background">#ffffff</color>
-	<color name="background_splashscreen">#000000</color>
-	<color name="button_addContact">#e1e1e1</color>
-	<color name="button_addContactGrey">#c4c4c4</color>
-	<color name="footer_button">#444444</color>
-	<color name="footer_select">#ff5e00</color>
-	<color name="call_selected">#96c11f</color>
-
-
 	<color name="colorA">#ff5e00</color>
 	<color name="colorB">#000000</color>
 	<color name="colorC">#444444</color>

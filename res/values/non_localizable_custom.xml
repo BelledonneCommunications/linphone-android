@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<!-- New settings -->
+	<bool name="setup_use_linphone_as_first_fragment">false</bool>
+
+
+
+
+
+
     <!-- Tutorial settings -->
     <bool name="show_tutorials_instead_of_app">false</bool> <!-- Be careful ! Setting this to true prevent the app from working ! It will only display tutorial activities -->
 
@@ -23,7 +31,7 @@
     <bool name="hide_wizard">false</bool>
     <string name="setup_forced_proxy"></string>
     <bool name="setup_cancel_move_to_back">false</bool>
-    <bool name="setup_use_linphone_as_first_fragment">false</bool>
+
     <bool name="setup_account_validation_mandatory">false</bool>
     <bool name="hide_linphone_accounts_wizard">false</bool>
     <bool name="hide_generic_accounts_wizard">false</bool>

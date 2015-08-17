@@ -22,10 +22,10 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_remote_provisioning, container, false);
+		View view = inflater.inflate(R.layout.assistant_remote_provisioning, container, false);
 		
 		remoteProvisioningUrl = (EditText) view.findViewById(R.id.setup_remote_provisioning_url);
-		apply = (Button) view.findViewById(R.id.setup_apply);
+		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setOnClickListener(this);
 		
 		return view;
@@ -35,7 +35,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.setup_apply) {
+		if (id == R.id.assistant_apply) {
 			String url = remoteProvisioningUrl.getText().toString();
 			LinphonePreferences.instance().setRemoteProvisioningUrl(url);
 			

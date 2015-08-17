@@ -68,15 +68,14 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
 		if (id == R.id.setup_login_generic) {
-			SetupActivity.instance().displayLoginGeneric();
+			AssistantActivity.instance().displayLoginGeneric();
 		} else if (id == R.id.setup_login_linphone) {
-			SetupActivity.instance().displayLoginLinphone();
+			AssistantActivity.instance().displayLoginLinphone();
 		} else if (id == R.id.setup_create_account) {
-			SetupActivity.instance().displayWizard();
+			AssistantActivity.instance().displayWizard();
 		} else if (id == R.id.setup_remote_provisioning) {
-			SetupActivity.instance().displayRemoteProvisioning();
+			AssistantActivity.instance().displayRemoteProvisioning();
 		}
 	}
 }

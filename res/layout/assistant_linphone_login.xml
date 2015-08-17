@@ -5,92 +5,103 @@
     android:orientation="vertical">
 
 	<TextView
+		android:text="@string/assistant_linphone_account_title"
 		android:contentDescription="@string/content_description_welcome"
+		style="@style/font6"
+		android:textAllCaps="true"
 		android:paddingTop="20dp"
-		android:textSize="30sp"
-		android:textStyle="bold"
 		android:layout_gravity="center"
-		android:textColor="@color/colorD"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/setup_linphone_account_hint"
 		android:gravity="center_horizontal"/>
     
     <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
+		android:orientation="vertical"
 	    android:paddingTop="20dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-	    android:gravity="center"
-	    android:orientation="vertical">
+	    android:gravity="center">
 
 		<TextView
-			android:textSize="16sp"
-			android:paddingTop="10dp"
-			android:textColor="@color/colorD"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:text="@string/username"
+			style="@style/font13"
 			android:textAllCaps="true"
-			android:text="@string/setup_username_hint"/>
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
 
 		<EditText
+			android:id="@+id/assistant_username"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
 			android:textCursorDrawable="@null"
-			android:id="@+id/setup_username"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
 			android:inputType="textEmailAddress"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:singleLine="true"
-			android:textColor="@android:color/black"
-			android:background="@drawable/resizable_textfield" />
-
-
-		<TextView
-			android:textSize="16sp"
-			android:paddingTop="10dp"
-			android:textColor="@color/colorD"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:textAllCaps="true"
-			android:text="@string/setup_password_hint"/>
-
-		<EditText
-			android:textCursorDrawable="@null"
-			android:id="@+id/setup_password"
 			android:layout_width="match_parent"
 			android:layout_height="40dp"
-			android:inputType="textPassword"
-			android:layout_marginTop="5dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:singleLine="true"
-			android:textColor="@android:color/black"
-			android:background="@drawable/resizable_textfield" />
+			android:singleLine="true"/>
+
+		<TextView
+			android:text="@string/password"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<EditText
+			android:id="@+id/assistant_password"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textPassword"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
+
+		<TextView
+			android:text="@string/display_name"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<EditText
+			android:id="@+id/assistant_display_name"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
         
         <RelativeLayout
-            android:id="@+id/setup_apply_button"
             android:layout_marginTop="20dp"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content">
 
 			<Button
-				android:id="@+id/setup_apply"
+				android:id="@+id/assistant_apply"
+				android:text="@string/assistant_apply"
+				android:background="@drawable/resizable_assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/content_description_validate"
 				android:layout_width="wrap_content"
 				android:paddingLeft="10dp"
 				android:paddingRight="10dp"
-				android:textAllCaps="true"
 				android:layout_centerInParent="true"
 				android:layout_height="wrap_content"
-				android:textColor="@android:color/black"
-				android:contentDescription="@string/content_description_validate"
-				android:background="@drawable/resizable_assistant_button"
-				android:text="@string/setup_apply"
 				android:layout_centerVertical="true"/>
-        
-        </RelativeLayout>
 
+        </RelativeLayout>
 	</LinearLayout>
-    
 </LinearLayout>

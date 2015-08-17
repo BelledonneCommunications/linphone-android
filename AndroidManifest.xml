@@ -99,6 +99,16 @@
             </intent-filter>
          </activity>
 
+		<activity android:name="org.linphone.OutgoingCallActivity"
+				  android:theme="@style/NoTitle"
+				  android:noHistory="true"
+				  android:launchMode="singleTop"
+				  android:screenOrientation="behind">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+
         <activity android:name="org.linphone.InCallActivity"
 		   android:theme="@style/FullScreen"
            android:noHistory="true"
@@ -125,7 +135,7 @@
             </intent-filter>
         </activity>
          
-        <activity android:name="org.linphone.setup.SetupActivity"
+        <activity android:name=".assistant.AssistantActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>
@@ -133,7 +143,7 @@
             </intent-filter>
          </activity>
          
-        <activity android:name="org.linphone.setup.RemoteProvisioningLoginActivity"
+        <activity android:name="org.linphone.assistant.RemoteProvisioningLoginActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>
@@ -141,7 +151,7 @@
             </intent-filter>
          </activity>
          
-        <activity android:name="org.linphone.setup.RemoteProvisioningActivity"
+        <activity android:name="org.linphone.assistant.RemoteProvisioningActivity"
             android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>

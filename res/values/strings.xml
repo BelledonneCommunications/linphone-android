@@ -6,24 +6,53 @@
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
 
-	<!-- Setup -->
-	<string name="setup_title_assistant">Welcome</string>
-	<string name="setup_title">Assistant</string>
-	<string name="setup_create_account_part_1">1/2</string>
-	<string name="setup_create_account_part_2">2/2</string>
+	<!-- 0. Assistant -->
+	<string name="assistant_welcome">Welcome</string>
+	<string name="assistant_title">Assistant</string>
+	<string name="assistant_create_account">Create a linphone account</string>
+	<string name="assistant_login_linphone">I have a linphone account</string>
+	<string name="assistant_login_generic">I have a sip account</string>
+	<string name="assistant_remote_provisioning">Remote provisioning</string>
+	<string name="assistant_create_account_title">Create an account</string>
+	<string name="assistant_create_account_part_1">1/2</string>
+	<string name="assistant_create_account_part_2">2/2</string>
+	<string name="assistant_linphone_account_title">Configure linphohe account</string>
+	<string name="assistant_general_account_title">Configure Sip account</string>
+	<string name="assistant_remote_provisioning_title">Remote provisioning</string>
+	<string name="assistant_create">Create account</string>
+	<string name="assistant_apply">Apply</string>
+	<string name="assistant_password_confirm">Apply</string>
 
+	<!-- 1. Dailer -->
 	<string-array name="menu_entry">
 		<item>Account</item>
 		<item>Settings</item>
 		<item>Wizard</item>
 		<item>About</item>
-		<item>Exit</item>
 	</string-array>
 
+	<!-- 2. History -->
+
+
+	<!-- Call -->
+	<string name="incoming_call">incoming call</string>
+	<string name="outgoing_call">outgoing call</string>
+
+
+
+
+	<!-- Common -->
+	<string name="username">Username</string>
+	<string name="display_name">Display name</string>
+	<string name="password">Password</string>
+	<string name="domain">Domain</string>
+	<string name="remote_provisioning_url">Provisioning url</string>
+	<string name="email">Email</string>
 
 	<!-- Content description -->
 	<string name="content_description_edit">Edit button</string>
 	<string name="content_description_valid">Valid button</string>
+	<string name="content_description_validate">Valid button</string>
 
 	<string name="content_description_add_contact">Add to contacts</string>
 	<string name="content_description_new_contact">New contact</string>
@@ -109,9 +138,6 @@
   <string name="state_paused">paused</string>
   <string name="state_paused_by_remote">paused by remote</string>
   <string name="state_streams_running"></string>
-  <string name="state_incoming_received">incoming</string>
-  <string name="state_outgoing_ringing">ringing</string>
-  <string name="state_outgoing_progress">calling</string>
   <string name="mutemic_button_txt">Mute</string>
   <string name="speaker_button_txt">Speaker</string>
   <string name="bluetooth_button_txt">Bluetooth</string>
@@ -300,7 +326,6 @@
   <string name="status_error">Registration failed</string>
   <string name="addressHint">Number or address</string>
   <string name="conference">Conference</string>
-  <string name="incoming">Incoming call</string>
   <string name="draft">Draft</string>
   <string name="new_fast_chat">Enter a SIP address to chat with…</string>
   <string name="no_call_history">No call in your history.</string>
@@ -317,7 +342,6 @@
   <string name="call_stats_video_resolution">Video size:</string>
   <!--Used by Android to help blind people by describing them images-->
 
-  <string name="setup_apply">Apply</string>
   <string name="setup_password_hint">password</string>
   <string name="setup_domain_hint">domain</string>
   <string name="setup_password_confirm_hint">confirm password</string>
@@ -422,7 +446,6 @@
   <string name="wait">Please wait...</string>
   <string name="importing_messages">Updating messages database</string>
   <string name="default_account_flag">Default account</string>
-  <string name="setup_remote_provisioning">Download provisioning</string>
   <string name="setup_remote_provisioning_hint">This assistant will download an existing configuration.</string>
   <string name="setup_remote_provisioning_url_hint">provisioning url</string>
   <string name="setup_remote_provisioning_login_hint">The configuration you downloaded doesn\'t include your account. Please fill it in.</string>

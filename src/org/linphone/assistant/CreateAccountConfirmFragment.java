@@ -78,7 +78,7 @@ public class CreateAccountConfirmFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					SetupActivity.instance().isAccountVerified(username);
+    					AssistantActivity.instance().isAccountVerified(username);
 					}
 	    		};
 	    		

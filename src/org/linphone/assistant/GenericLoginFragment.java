@@ -32,18 +32,19 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class GenericLoginFragment extends Fragment implements OnClickListener {
-	private EditText login, password, domain;
+	private EditText login, password, displayName, domain;
 	private Button apply;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_generic_login, container, false);
+		View view = inflater.inflate(R.layout.assistant_generic_login, container, false);
 		
-		login = (EditText) view.findViewById(R.id.setup_username);
-		password = (EditText) view.findViewById(R.id.setup_password);
-		domain = (EditText) view.findViewById(R.id.setup_domain);
-		apply = (Button) view.findViewById(R.id.setup_apply);
+		login = (EditText) view.findViewById(R.id.assistant_username);
+		password = (EditText) view.findViewById(R.id.assistant_password);
+		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
+		domain = (EditText) view.findViewById(R.id.assistant_domain);
+		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setOnClickListener(this);
 		
 		return view;
@@ -53,13 +54,13 @@ public class GenericLoginFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.setup_apply) {
+		if (id == R.id.assistant_apply) {
 			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0 || domain.getText() == null || domain.length() == 0) {
 				Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
 				return;
 			}
 			
-			SetupActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), domain.getText().toString());
+			AssistantActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), displayName.getText().toString(), domain.getText().toString());
 		}
 	}
 }

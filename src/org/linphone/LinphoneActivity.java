@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.assistant.AssistantActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -45,8 +46,7 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-import org.linphone.setup.RemoteProvisioningLoginActivity;
-import org.linphone.setup.SetupActivity;
+import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.ui.AddressText;
 
 import android.annotation.SuppressLint;
@@ -54,24 +54,17 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.ContentObserver;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
@@ -81,17 +74,14 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
 
 /**
  * @author Sylvain Berfini
@@ -122,7 +112,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private LinphoneCoreListenerBase mListener;
 	private String[] mParams;
 	private String mTitle;
-	private RelativeLayout mDrawerList;
+	private RelativeLayout mDrawerList, exitLayout, headerLayout;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	ListView mDrawerListB;
@@ -165,7 +155,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
 				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
-				startActivityForResult(new Intent().setClass(this, SetupActivity.class), FIRST_LOGIN_ACTIVITY);
+				startActivityForResult(new Intent().setClass(this, AssistantActivity.class), FIRST_LOGIN_ACTIVITY);
 			}
 		}
 
@@ -239,12 +229,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (state == State.IncomingReceived) {
 					startActivity(new Intent(LinphoneActivity.instance(), IncomingCallActivity.class));
-				} else if (state == State.OutgoingInit) {
-					if (call.getCurrentParamsCopy().getVideoEnabled()) {
-						startVideoActivity(call);
-					} else {
-						startIncallActivity(call);
-					}
+				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+					startActivity(new Intent(LinphoneActivity.instance(), OutgoingCallActivity.class));
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
 					if (message != null && call.getReason() == Reason.Declined) {
@@ -299,138 +285,63 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		mParams = getResources().getStringArray(R.array.menu_entry);
 		mDrawerList = (RelativeLayout) findViewById(R.id.left_drawer);
 		mDrawerListB = (ListView) findViewById(R.id.list_drawer);
-		List<DrawerItem> dataList = new ArrayList<DrawerItem>();
+		List<String> dataList = new ArrayList<String>();
+		mDrawerListB.setAdapter(new ArrayAdapter<String>(this,R.layout.drawer_list_item, mParams));
+		mDrawerListB.setOnItemClickListener(new DrawerItemClickListener());
 
-
-		dataList.add(new DrawerItem("About"));
-		dataList.add(new DrawerItem("Settings"));
-		dataList.add(new DrawerItem("Help"));
-
-		CustomDrawerAdapter adapter;
-
-		adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item,
-				dataList);
-
-		mDrawerListB.setAdapter(adapter);
-
-		// set a custom shadow that overlays the main content when the drawer opens
-		//mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-		//getActionBar().setDisplayHomeAsUpEnabled(true);
-		//getActionBar().setHomeButtonEnabled(true);
-
-		// ActionBarDrawerToggle ties together the the proper interactions
-		// between the sliding drawer and the action bar app icon
-
-		//mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-
-	}
-
-	class DrawerItem {
-
-		String ItemName;
-		int imgResID;
-		String title;
-		boolean isAccount;
-
-		public DrawerItem(boolean isAccount) {
-			this(null, 0);
-			this.isAccount = isAccount;
-		}
-
-		public DrawerItem(String itemName, int imgResID) {
-			ItemName = itemName;
-			this.imgResID = imgResID;
-		}
-
-		public DrawerItem(String title) {
-			this(null, 0);
-			this.title = title;
-		}
-
-		public String getItemName() {
-			return ItemName;
-		}
-
-		public void setItemName(String itemName) {
-			ItemName = itemName;
-		}
-
-		public int getImgResID() {
-			return imgResID;
-		}
-
-		public void setImgResID(int imgResID) {
-			this.imgResID = imgResID;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public boolean isAccount() {
-			return isAccount;
-		}
-
-	}
-
-	public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
-
-		Context context;
-		List<DrawerItem> drawerItemList;
-		int layoutResID;
-
-		public CustomDrawerAdapter(Context context, int layoutResourceID,
-								   List<DrawerItem> listItems) {
-			super(context, layoutResourceID, listItems);
-			this.context = context;
-			this.drawerItemList = listItems;
-			this.layoutResID = layoutResourceID;
-
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			// TODO Auto-generated method stub
-			DrawerItemHolder drawerHolder;
-			View view = convertView;
-
-
-			if (view == null) {
-				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-				drawerHolder = new DrawerItemHolder();
-
-				view = inflater.inflate(layoutResID, parent, false);
-				drawerHolder.ItemName = (TextView) view.findViewById(R.id.drawer_itemName);
-				drawerHolder.icon = (ImageView) view.findViewById(R.id.drawer_icon);
-
-				//drawerHolder. = (ImageView) view
-				//		.findViewById(R.id.s);
-
-				//	drawerHolder.title = (TextView) view.findViewById(R.id.drawerTitle);
-
-
+		ImageView menubar = (ImageView) findViewById(R.id.menu_bar);
+		menubar.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mDrawerLayout.openDrawer(mDrawerList);
 			}
+		});
 
-			return view;
+		exitLayout = (RelativeLayout) findViewById(R.id.exitLayout);
+		exitLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				exit();
+			}
+		});
+
+		headerLayout = (RelativeLayout) findViewById(R.id.headerLayout);
+
+		LinphoneProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
+		if(proxy != null){
+			try {
+				LinphoneAddress identity = LinphoneCoreFactory.instance().createLinphoneAddress(proxy.getIdentity());
+				TextView address = (TextView) findViewById(R.id.address);
+
+				address.setText(identity.asStringUriOnly());
+				TextView displayName = (TextView) findViewById(R.id.display_name);
+				if(identity.getDisplayName() !=  null)
+					displayName.setText(identity.getDisplayName());
+				else
+					displayName.setText(identity.getUserName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			headerLayout.setVisibility(View.GONE);
 		}
 
+		headerLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				displayAccountSettings(0);
+				mDrawerLayout.closeDrawer(mDrawerList);
+			}
+		});
 
-		private class DrawerItemHolder {
-			TextView ItemName, title;
-			ImageView icon;
-			LinearLayout itemLayout;
-			RelativeLayout headerLayout, exitLayout;
-		}
 	}
 
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			selectItem(position);
+		}
+	}
 
 	private void selectItem(int position) {
 		// update the main content by replacing fragments
@@ -458,16 +369,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			case 3:
 				displayAbout();
 				break;
-			case 4:
-				exit();
-				break;
 			default:
 				break;
 		}
 
 		mDrawerListB.setItemChecked(position, true);
 		//
-		mDrawerLayout.closeDrawer(mDrawerListB);
+		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	@Override
@@ -841,7 +749,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayAssistant() {
-		startActivity(new Intent(LinphoneActivity.this, SetupActivity.class));
+		startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
 	}
 
 	public boolean displayChatMessageNotification(String address){
@@ -1346,15 +1254,16 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				LinphoneCall.State callState = call.getState();
 				if (callState == State.IncomingReceived) {
 					startActivity(new Intent(this, IncomingCallActivity.class));
+				} else if (callState == State.OutgoingInit) {
+					startActivity(new Intent(this, OutgoingCallActivity.class));
 				} else {
-
-						if (call.getCurrentParamsCopy().getVideoEnabled()) {
-							startVideoActivity(call);
-						} else {
-							startIncallActivity(call);
-						}
+					if (call.getCurrentParamsCopy().getVideoEnabled()) {
+						startVideoActivity(call);
+					} else {
+						startIncallActivity(call);
 					}
 				}
+			}
 		}
 	}
 
@@ -1428,7 +1337,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						if (call.getCurrentParamsCopy().getVideoEnabled()) {
 							startVideoActivity(call);
 						} else {
-							startIncallActivity(call);
+							//startIncallActivity(call);
 						}
 					}
 				}

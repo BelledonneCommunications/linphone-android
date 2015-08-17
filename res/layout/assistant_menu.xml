@@ -5,22 +5,21 @@
     android:orientation="vertical">
     
     <TextView
+		android:text="@string/assistant_welcome"
+		style="@style/font6"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 	    android:paddingTop="20dp"
-	    android:textSize="30sp"
-	    android:textStyle="bold"
-		android:layout_gravity="center"
-	    android:textColor="@color/footer_button"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/setup_title_assistant"/>
+		android:layout_gravity="center"/>
     
     <LinearLayout 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+		android:orientation="vertical"
 	    android:gravity="center"
 		android:layout_margin="20dp"
-		android:layout_gravity="center"
-	    android:orientation="vertical">
+		android:layout_gravity="center">
 
         <RelativeLayout
 		    android:layout_width="match_parent"
@@ -29,14 +28,13 @@
 
 			<Button
 				android:id="@+id/setup_create_account"
-				android:layout_centerInParent="true"
+				android:text="@string/assistant_create_account"
+				android:background="@drawable/resizable_assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/setup_create_account"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textColor="@android:color/black"
-				android:textAllCaps="true"
-				android:contentDescription="@string/setup_create_account"
-				android:background="@drawable/resizable_assistant_button"
-				android:text="@string/setup_create_account"/>
+				android:layout_centerInParent="true"/>
 
         </RelativeLayout>
 
@@ -48,14 +46,13 @@
 
 			<Button
 				android:id="@+id/setup_login_linphone"
+				android:text="@string/assistant_login_linphone"
+				android:background="@drawable/resizable_assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/setup_login_linphone"
 				android:layout_centerInParent="true"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textAllCaps="true"
-				android:textColor="@android:color/black"
-				android:contentDescription="@string/setup_login_linphone"
-				android:background="@drawable/resizable_assistant_button"
-				android:text="@string/setup_login_linphone"/>
+				android:layout_height="wrap_content"/>
 
         </RelativeLayout>
         
@@ -67,14 +64,13 @@
 
 			<Button
 				android:id="@+id/setup_login_generic"
+				android:text="@string/assistant_login_generic"
+				android:background="@drawable/resizable_assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/setup_login_generic"
 				android:layout_centerInParent="true"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textColor="@android:color/black"
-				android:textAllCaps="true"
-				android:contentDescription="@string/setup_login_generic"
-				android:background="@drawable/resizable_assistant_button"
-				android:text="@string/setup_login_generic"/>
+				android:layout_height="wrap_content"/>
         
         </RelativeLayout>
         
@@ -86,14 +82,13 @@
 
 			<Button
 				android:id="@+id/setup_remote_provisioning"
+				android:text="@string/assistant_remote_provisioning"
+				android:background="@drawable/resizable_assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/setup_remote_provisioning"
 				android:layout_centerInParent="true"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textColor="@android:color/black"
-				android:textAllCaps="true"
-				android:contentDescription="@string/setup_remote_provisioning"
-				android:background="@drawable/resizable_assistant_button"
-				android:text="@string/setup_remote_provisioning"/>
+				android:layout_height="wrap_content"/>
         
         </RelativeLayout>
 

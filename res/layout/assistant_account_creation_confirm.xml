@@ -6,40 +6,38 @@
     android:orientation="vertical" >
 
 	<TextView
+		android:text="@string/assistant_create_account"
 		android:contentDescription="@string/content_description_welcome"
-		android:paddingTop="20dp"
 		style="@style/font6"
+		android:textAllCaps="true"
+		android:paddingTop="20dp"
 		android:layout_gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/setup_create_account"
 		android:gravity="center_horizontal"/>
 
 	<TextView
-		android:textSize="20sp"
+		android:text="@string/assistant_create_account_part_2"
+		style="@style/font11"
 		android:layout_gravity="center"
-		android:textColor="@color/colorD"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/assistant_create_account_part_2"/>
+		android:layout_height="wrap_content"/>
     
     <RelativeLayout
     	android:layout_marginTop="20dp"
-	    android:layout_width="match_parent"
+	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content">
 
 		<Button
-			android:id="@+id/setup_check"
+			android:id="@+id/assistant_check"
+			android:text="@string/assistant_create"
+			android:background="@drawable/resizable_assistant_button"
+			style="@style/font8"
+			android:contentDescription="@string/content_description_validate"
 			android:layout_width="wrap_content"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:textAllCaps="true"
-			android:layout_centerInParent="true"
 			android:layout_height="wrap_content"
-			android:textColor="@android:color/black"
-			android:contentDescription="@string/setup_check_account_validation"
-			android:background="@drawable/resizable_assistant_button"
-			android:text="@string/setup_create"
 			android:layout_centerVertical="true"/>
        
        </RelativeLayout>
