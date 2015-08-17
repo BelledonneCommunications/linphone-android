@@ -44,13 +44,13 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.setup_remote_provisioning_login);
+		setContentView(R.layout.assistant_remote_provisioning_login);
 		
 		login = (EditText) findViewById(R.id.setup_username);
 		password = (EditText) findViewById(R.id.setup_password);
 		domain = (EditText) findViewById(R.id.setup_domain);
 
-		cancel = (RelativeLayout) findViewById(R.id.setup_cancel);
+		cancel = (RelativeLayout) findViewById(R.id.assistant_cancel);
 		cancel.setOnClickListener(this);
 		
 		String defaultDomain = getIntent().getStringExtra("Domain");
@@ -94,7 +94,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.setup_cancel) {
+		if (id == R.id.assistant_cancel) {
 			cancelWizard(false);
 		}
 	}

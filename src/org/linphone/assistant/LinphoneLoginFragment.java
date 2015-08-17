@@ -32,7 +32,7 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class LinphoneLoginFragment extends Fragment implements OnClickListener {
-	private EditText login, password;
+	private EditText login, password, displayName;
 	private Button apply;
 	
 	@Override
@@ -40,13 +40,14 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_linphone_login, container, false);
 		
-		login = (EditText) view.findViewById(R.id.setup_username);
-		password = (EditText) view.findViewById(R.id.setup_password);
-		apply = (Button) view.findViewById(R.id.setup_apply);
+		login = (EditText) view.findViewById(R.id.assistant_username);
+		password = (EditText) view.findViewById(R.id.assistant_password);
+		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
+		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setOnClickListener(this);
 		
 		if (getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment)) {
-			view.findViewById(R.id.setup_apply_button).setVisibility(View.GONE);
+			view.findViewById(R.id.assistant_apply).setVisibility(View.GONE);
 		}
 		
 		return view;
@@ -58,14 +59,14 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 			return;
 		}
 		
-		SetupActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), getResources().getBoolean(R.bool.setup_account_validation_mandatory));
+		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), displayName.getText().toString(), getResources().getBoolean(R.bool.setup_account_validation_mandatory));
 	}
 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.setup_apply) {
+		if (id == R.id.assistant_apply) {
 			linphoneLogIn();
 		}
 	}

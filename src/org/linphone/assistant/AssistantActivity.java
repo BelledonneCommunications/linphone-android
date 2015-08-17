@@ -49,8 +49,8 @@ import android.widget.Toast;
 public class AssistantActivity extends Activity implements OnClickListener {
 	private static AssistantActivity instance;
 	private RelativeLayout back, cancel;
-	private SetupFragmentsEnum currentFragment;
-	private SetupFragmentsEnum firstFragment;
+	private AssistantFragmentsEnum currentFragment;
+	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
 	private boolean accountCreated = false;
@@ -69,12 +69,12 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		initUI();
 
 		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
-				SetupFragmentsEnum.LINPHONE_LOGIN : SetupFragmentsEnum.MENU;
+				AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.MENU;
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState == null) {
             	display(firstFragment);
             } else {
-            	currentFragment = (SetupFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
+            	currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
             }
         }
         mPrefs = LinphonePreferences.instance();
@@ -170,15 +170,15 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-		} else if (currentFragment == SetupFragmentsEnum.GENERIC_LOGIN
-				|| currentFragment == SetupFragmentsEnum.LINPHONE_LOGIN 
-				|| currentFragment == SetupFragmentsEnum.CREATE_ACCOUNT
-				|| currentFragment == SetupFragmentsEnum.REMOTE_PROVISIONING) {
+		} else if (currentFragment == AssistantFragmentsEnum.GENERIC_LOGIN
+				|| currentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
+				|| currentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
+				|| currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
 			MenuFragment fragment = new MenuFragment();
 			changeFragment(fragment);
-			currentFragment = SetupFragmentsEnum.MENU;
+			currentFragment = AssistantFragmentsEnum.MENU;
 			back.setVisibility(View.GONE);
-		} else if (currentFragment == SetupFragmentsEnum.MENU) {
+		} else if (currentFragment == AssistantFragmentsEnum.MENU) {
 			finish();
 		}
 	}
@@ -190,7 +190,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
-			currentFragment = SetupFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
+			currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
 			back.setVisibility(View.VISIBLE);
 			cancel.setEnabled(false);
 		} else {
@@ -230,7 +230,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		logIn(username, password, displayName, domain, false);
 	}
 
-	private void display(SetupFragmentsEnum fragment) {
+	private void display(AssistantFragmentsEnum fragment) {
 		switch (fragment) {
 		case MENU:
 			displayMenu();
@@ -247,35 +247,35 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	public void displayMenu() {
 		fragment = new MenuFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.MENU;
+		currentFragment = AssistantFragmentsEnum.MENU;
 		back.setVisibility(View.GONE);
 	}
 
 	public void displayLoginGeneric() {
 		fragment = new GenericLoginFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.GENERIC_LOGIN;
+		currentFragment = AssistantFragmentsEnum.GENERIC_LOGIN;
 		back.setVisibility(View.VISIBLE);
 	}
 	
 	public void displayLoginLinphone() {
 		fragment = new LinphoneLoginFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.LINPHONE_LOGIN;
+		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
 		back.setVisibility(View.VISIBLE);
 	}
 
 	public void displayWizard() {
 		fragment = new CreateAccountFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.CREATE_ACCOUNT;
+		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
 		back.setVisibility(View.VISIBLE);
 	}
 
 	public void displayRemoteProvisioning() {
 		fragment = new RemoteProvisioningFragment();
 		changeFragment(fragment);
-		currentFragment = SetupFragmentsEnum.REMOTE_PROVISIONING;
+		currentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
 		back.setVisibility(View.VISIBLE);
 	}
 	
@@ -368,7 +368,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		
-		currentFragment = SetupFragmentsEnum.CREATE_ACCOUNT_CONFIRM;
+		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CONFIRM;
 		back.setVisibility(View.GONE);
 	}
 	

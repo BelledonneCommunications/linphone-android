@@ -83,8 +83,8 @@ public class CreateAccountFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 		
-		username = (EditText) view.findViewById(R.id.setup_username);
-    	ImageView usernameOkIV = (ImageView) view.findViewById(R.id.setup_username_ok);
+		username = (EditText) view.findViewById(R.id.assistant_username);
+    	ImageView usernameOkIV = (ImageView) view.findViewById(R.id.assistant_username_ok);
     	addXMLRPCUsernameHandler(username, usernameOkIV);
     	
     	inputFilterCharacters = new String(acceptedChars);
@@ -106,20 +106,20 @@ public class CreateAccountFragment extends Fragment {
         };
     	username.setFilters(new InputFilter[] { filter });
 
-    	password = (EditText) view.findViewById(R.id.setup_password);
-    	passwordConfirm = (EditText) view.findViewById(R.id.setup_password_confirm);
+    	password = (EditText) view.findViewById(R.id.assistant_password);
+    	passwordConfirm = (EditText) view.findViewById(R.id.assistant_password_confirm);
     	
-    	ImageView passwordOkIV = (ImageView) view.findViewById(R.id.setup_password_ok);
+    	ImageView passwordOkIV = (ImageView) view.findViewById(R.id.assistant_password_ok);
     	addXMLRPCPasswordHandler(password, passwordOkIV);
     	
-    	ImageView passwordConfirmOkIV = (ImageView) view.findViewById(R.id.setup_confirm_password_ok);
+    	ImageView passwordConfirmOkIV = (ImageView) view.findViewById(R.id.assistant_confirm_password_ok);
     	addXMLRPCConfirmPasswordHandler(password, passwordConfirm, passwordConfirmOkIV);
 
-    	email = (EditText) view.findViewById(R.id.setup_email);
-    	ImageView emailOkIV = (ImageView) view.findViewById(R.id.setup_email_ok);
+    	email = (EditText) view.findViewById(R.id.assistant_email);
+    	ImageView emailOkIV = (ImageView) view.findViewById(R.id.assistant_email_ok);
     	addXMLRPCEmailHandler(email, emailOkIV);
 
-    	errorMessage = (TextView) view.findViewById(R.id.setup_error);
+    	errorMessage = (TextView) view.findViewById(R.id.assistant_error);
     	
     	createAccount = (Button) view.findViewById(R.id.assistant_create);
     	createAccount.setEnabled(false);
@@ -239,7 +239,7 @@ public class CreateAccountFragment extends Fragment {
 			}
 		};
 		
-		final Context context = SetupActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : SetupActivity.instance();
+		final Context context = AssistantActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : AssistantActivity.instance();
 		
 		try {
 			XMLRPCClient client = new XMLRPCClient(new URL(context.getString(R.string.wizard_url)));
@@ -253,8 +253,8 @@ public class CreateAccountFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					SetupActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain));
-    					SetupActivity.instance().displayWizardConfirm(username);
+    					AssistantActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain));
+    					AssistantActivity.instance().displayWizardConfirm(username);
 					}
 	    		};
 	    		

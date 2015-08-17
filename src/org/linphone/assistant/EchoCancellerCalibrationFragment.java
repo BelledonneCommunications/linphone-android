@@ -53,7 +53,7 @@ public class EchoCancellerCalibrationFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.setup_ec_calibration, container, false);
+		View view = inflater.inflate(R.layout.assistant_ec_calibration, container, false);
 		
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
@@ -68,7 +68,7 @@ public class EchoCancellerCalibrationFragment extends Fragment {
 				if (mSendEcCalibrationResult) {
 					sendEcCalibrationResult(status, delay_ms);
 				} else {
-					SetupActivity.instance().isEchoCalibrationFinished();
+					AssistantActivity.instance().isEchoCalibrationFinished();
 				}
 			}
 		};
@@ -92,7 +92,7 @@ public class EchoCancellerCalibrationFragment extends Fragment {
 			XMLRPCCallback listener = new XMLRPCCallback() {
 				Runnable runFinished = new Runnable() {
     				public void run() {
-    					SetupActivity.instance().isEchoCalibrationFinished();
+    					AssistantActivity.instance().isEchoCalibrationFinished();
 					}
 	    		};
 
