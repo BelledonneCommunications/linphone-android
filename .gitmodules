@@ -91,3 +91,6 @@
 [submodule "submodules/externals/webrtc"]
 	path = submodules/externals/webrtc
 	url = git://git.linphone.org/webrtc.git
+[submodule "submodules/mscodec2"]
+	path = submodules/mscodec2
+	url = git://git.linphone.org/mscodec2.git
