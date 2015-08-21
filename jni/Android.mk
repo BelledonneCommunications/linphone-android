@@ -86,6 +86,11 @@ ifeq ($(BUILD_ILBC), 1)
 include $(linphone-root-dir)/submodules/msilbc/Android.mk
 endif
 
+ifeq ($(BUILD_CODEC2), 1)
+include $(linphone-root-dir)/submodules/mscodec2/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/codec2/Android.mk
+endif
+
 ifeq ($(_BUILD_VIDEO),1)
 
 ifeq ($(_BUILD_X264),1)
