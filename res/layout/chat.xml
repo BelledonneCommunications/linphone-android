@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/top_layout"
-  	android:background="@color/background" >
+  	android:background="@color/colorH" >
 
 	<RelativeLayout
+		android:id="@+id/topBar"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="bottom"
-		android:background="@color/colorF"
-		android:id="@+id/relativeLayout">
+		android:background="@color/colorF">
 
 
 		<ImageView
@@ -209,13 +209,15 @@
 		android:id="@+id/chatMessageList"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_margin="10dp"
 		android:divider="@android:color/transparent"
 		android:stackFromBottom="true"
 		android:transcriptMode="alwaysScroll"
 		android:cacheColorHint="@color/transparent"
 		android:dividerHeight="10dp"
 		android:layout_above="@id/remoteComposing"
-		android:layout_below="@+id/relativeLayout"/>
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:layout_marginBottom="10dp"
+		android:layout_below="@+id/topBar"/>
 
 </RelativeLayout>

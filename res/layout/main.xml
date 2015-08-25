@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/drawer_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	<!-- The main content view -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/topLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
 	<include layout="@layout/status" android:id="@+id/statusBar" />
 
+<android.support.v4.widget.DrawerLayout
+	android:id="@+id/drawer_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_below="@id/statusBar">
+	<!-- The main content view -->
+
+<RelativeLayout
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:orientation="vertical"
-		android:layout_below="@id/statusBar"
 		android:layout_above="@id/footer">
 
 		<FrameLayout
@@ -59,22 +63,22 @@
 				android:src="@drawable/footer_history" />
 
 			<RelativeLayout
-				android:visibility="gone"
 				android:id="@+id/history_select"
+				android:background="@color/colorA"
 				android:layout_width="match_parent"
 				android:layout_height="5dp"
 				android:layout_alignParentBottom="true"
-				android:background="@color/footer_select" />
+				android:visibility="gone" />
 
 			<TextView
 				android:id="@+id/missedCalls"
+				style="@style/font18"
 				android:layout_width="25dp"
 				android:layout_height="25dp"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentTop="true"
-				android:background="@drawable/missed_calls_bg"
+				android:background="@drawable/history_chat_indicator"
 				android:gravity="center"
-				android:textSize="20sp"
 				android:visibility="gone" />
 
 		</RelativeLayout>
@@ -88,22 +92,21 @@
 			android:adjustViewBounds="true">
 
 			<ImageView
+				android:src="@drawable/footer_contacts"
+				android:contentDescription="@string/content_description_contacts"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
-				android:scaleType="center"
-				android:contentDescription="@string/content_description_contacts"
-				android:src="@drawable/footer_contacts" />
+				android:scaleType="center" />
 
 			<RelativeLayout
-				android:visibility="gone"
 				android:id="@+id/contacts_select"
+				android:background="@color/colorA"
 				android:layout_width="match_parent"
 				android:layout_height="5dp"
 				android:layout_alignParentBottom="true"
-				android:contentDescription="@string/content_description_contacts"
-				android:background="@color/footer_select" />
+				android:visibility="gone" />
 		</RelativeLayout>
 
 
@@ -116,59 +119,57 @@
 			android:adjustViewBounds="true">
 
 			<ImageView
-				android:id="@+id/image"
+				android:src="@drawable/footer_dialer"
+				android:contentDescription="@string/content_description_dialer"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
-				android:scaleType="center"
-				android:contentDescription="@string/content_description_contacts"
-				android:src="@drawable/footer_dialer" />
+				android:scaleType="center"/>
 
 			<RelativeLayout
 				android:id="@+id/dialer_select"
+				android:background="@color/colorA"
 				android:layout_width="match_parent"
 				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"
-				android:contentDescription="@string/content_description_contacts"
-				android:background="@color/footer_select" />
+				android:layout_alignParentBottom="true"/>
+
 		</RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/chat"
+			android:background="@drawable/footer_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-			android:background="@drawable/footer_button"
 			android:adjustViewBounds="true">
 
 			<ImageView
+				android:src="@drawable/footer_chat"
+				android:contentDescription="@string/content_description_chat"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 				android:layout_margin="10dp"
-				android:scaleType="center"
-				android:contentDescription="@string/content_description_contacts"
-				android:src="@drawable/footer_chat" />
+				android:scaleType="center" />
 
 			<RelativeLayout
-				android:visibility="gone"
 				android:id="@+id/chat_select"
+				android:background="@color/colorA"
 				android:layout_width="match_parent"
 				android:layout_height="5dp"
 				android:layout_alignParentBottom="true"
-				android:contentDescription="@string/content_description_contacts"
-				android:background="@color/footer_select" />
+				android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/missedChats"
+				style="@style/font18"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/history_chat_indicator"
                 android:gravity="center"
-                android:textSize="20sp"
                 android:visibility="gone" />
             
         </RelativeLayout>
@@ -203,7 +204,6 @@
 				android:id="@+id/icon"
 				android:layout_width="30dp"
 				android:layout_height="30dp"
-				android:layout_alignParentTop="true"
 				android:layout_marginLeft="12dp"
 				android:layout_marginRight="12dp"
 				android:src="@drawable/avatar"
@@ -217,38 +217,34 @@
 				android:layout_toRightOf="@+id/icon">
 
 				<TextView
-					android:id="@+id/title"
-					android:text="CLERC Margaux"
+					android:id="@+id/display_name"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					style="@style/font7"
-					android:minHeight="?android:attr/listPreferredItemHeightSmall"
-					android:textAppearance="?android:attr/textAppearanceListItemSmall"
-					android:gravity="bottom"/>
+					android:gravity="bottom"
+					android:editable="false"/>
 
 				<TextView
-					android:id="@+id/subtitle"
+					android:id="@+id/address"
 					android:gravity="top"
-					android:text="margaux-mac@sip.linphone.org"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_toRightOf="@id/icon"
 					style="@style/font3"
-					android:minHeight="?android:attr/listPreferredItemHeightSmall"
-					android:textAppearance="?android:attr/textAppearanceListItemSmall"/>
+					android:editable="false"/>
 
 			</LinearLayout>
 		</RelativeLayout>
 
 
 		<ListView android:id="@+id/list_drawer"
-				  android:layout_width="wrap_content"
-				  android:layout_height="fill_parent"
-				  android:layout_gravity="start"
-				  android:choiceMode="singleChoice"
-				  android:divider="@android:color/transparent"
-				  android:dividerHeight="0dp"
-				  android:background="@color/background"/>
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_below="@id/headerLayout"
+			android:choiceMode="singleChoice"
+			android:divider="@android:color/transparent"
+			android:dividerHeight="0dp"
+			android:background="@color/colorH"/>
 
 
 
@@ -285,5 +281,6 @@
 
 	</RelativeLayout>
 
-
 </android.support.v4.widget.DrawerLayout>
+
+</RelativeLayout>

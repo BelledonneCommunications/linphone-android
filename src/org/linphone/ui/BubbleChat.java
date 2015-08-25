@@ -87,10 +87,10 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 
 		if (message.isOutgoing()) {
 			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
-			view.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
+			//view.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
 		} else {
 			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
-			view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
+			//view.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
 		}
 
 		view.setId(message.getStorageId());

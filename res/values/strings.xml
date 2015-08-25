@@ -3,6 +3,17 @@
 
 	<!-- NEW STRINGS -->
 
+	<!-- Common -->
+	<string name="username">Username</string>
+	<string name="display_name">Display name</string>
+	<string name="password">Password</string>
+	<string name="domain">Domain</string>
+	<string name="remote_provisioning_url">Provisioning url</string>
+	<string name="email">Email</string>
+	<string name="delete_text">Are you sure you want to delete all your selection ?</string>
+	<string name="delete">Delete</string>
+	<string name="cancel">Cancel</string>
+
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
 
@@ -38,16 +49,6 @@
 	<string name="incoming_call">incoming call</string>
 	<string name="outgoing_call">outgoing call</string>
 
-
-
-
-	<!-- Common -->
-	<string name="username">Username</string>
-	<string name="display_name">Display name</string>
-	<string name="password">Password</string>
-	<string name="domain">Domain</string>
-	<string name="remote_provisioning_url">Provisioning url</string>
-	<string name="email">Email</string>
 
 	<!-- Content description -->
 	<string name="content_description_edit">Edit button</string>
@@ -316,7 +317,7 @@
   <string name="pref_help_username">Example: john if your account is john@sip.example.org</string>
   <string name="pref_help_domain">sip.example.org if your account is john@sip.example.org</string>
   <string name="pref_help_password">You have to re-enter your password if you edit your username and/or the domain</string>
-  <string name="delete">Delete</string>
+
   <string name="chat">Chat</string>
   <string name="call">Call</string>
   <string name="add_to_contacts">Add to contacts</string>

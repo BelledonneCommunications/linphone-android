@@ -8,7 +8,7 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
-		android:layout_gravity="bottom"
+		android:layout_gravity="top"
 		android:background="@color/colorF">
 
 		<RelativeLayout
@@ -67,36 +67,51 @@
 		</RelativeLayout>
 
 		<ImageView
-			android:contentDescription="@string/content_description_delete"
-			android:id="@+id/deleteAll"
+			android:id="@+id/delete"
+			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/delete"
-			android:gravity="center"
-			android:layout_width="match_parent"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:scaleType="center"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
 			android:adjustViewBounds="true"
 			android:visibility="gone"/>
 
 		<ImageView
-			android:contentDescription="@string/content_description_edit"
-			android:id="@+id/edit"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:src="@drawable/edit_list"
+			android:id="@+id/select_all"
+			android:contentDescription="@string/content_description_valid"
+			android:src="@drawable/select_all"
+			android:background="@drawable/toolbar_button"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:adjustViewBounds="true"/>
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
 
 		<ImageView
+			android:id="@+id/deselect_all"
 			android:contentDescription="@string/content_description_valid"
-			android:id="@+id/ok"
-			android:background="@drawable/valid"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:visibility="gone"
-			android:layout_width="match_parent"
+			android:src="@drawable/deselect_all"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+
+		<ImageView
+			android:id="@+id/edit"
+			android:contentDescription="@string/content_description_edit"
+			android:src="@drawable/edit_list"
+			android:background="@drawable/toolbar_button"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
 			android:adjustViewBounds="true"/>
 
 	</RelativeLayout>

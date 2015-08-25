@@ -1,6 +1,9 @@
 [net]
 mtu=1300
 
+[app]
+animations=0
+
 [sip]
 guess_hostname=1
 inc_timeout=15

@@ -143,12 +143,8 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		//		 contact != null ? contact.getThumbnailUri() : null, R.drawable.unknown_small);
 
 		// To be done after findUriPictureOfContactAndSetDisplayName called
-		mNameView.setText(contact != null ? contact.getName() : "");
-		if (getResources().getBoolean(R.bool.only_display_username_if_unknown)) {
-			mNumberView.setText(address.getUserName());
-		} else {
-			mNumberView.setText(address.asStringUriOnly());
-		}
+		mNameView.setText(contact != null ? contact.getName() : address.getUserName());
+		mNumberView.setText(address.asStringUriOnly());
 	}
 	
 	@Override

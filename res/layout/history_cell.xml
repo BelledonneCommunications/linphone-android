@@ -12,7 +12,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="30dp"
 		android:textSize="20sp"
-		android:background="@color/background"
+		android:background="@color/colorH"
 		android:textColor="@color/colorA"
 		android:textStyle="bold"
 		android:textAllCaps="true"
@@ -72,16 +72,15 @@
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp"/>
 
-		<ImageView
+		<CheckBox
 			android:id="@+id/delete"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:adjustViewBounds="true"
+			android:layout_alignParentRight="true"
 			android:contentDescription="@string/content_description_delete"
+			android:visibility="gone"
 			android:paddingLeft="5dp"
-			android:paddingRight="5dp"
-			android:src="@drawable/list_delete"
-			android:visibility="gone" />
+			android:paddingRight="5dp" />
 
 	</RelativeLayout>
 

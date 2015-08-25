@@ -51,6 +51,8 @@ import org.linphone.ui.AddressText;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -60,6 +62,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -70,6 +75,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -163,11 +169,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
 		} else {
 				ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
-		}
-
-	 	if(!LinphonePreferences.instance().isContactsMigrationDone()){
-			ContactsManager.getInstance().migrateContacts();
-			LinphonePreferences.instance().contactsMigrationDone();
 		}
 
 		setContentView(R.layout.main);
@@ -532,7 +533,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			break;
 		case CHATLIST:
 			newFragment = new ChatListFragment();
-			messageListFragment = new Fragment();
+			messageListFragment = newFragment;
 			break;
 		case CHAT:
 			newFragment = new ChatFragment();
@@ -1022,6 +1023,18 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		toast.setDuration(duration);
 		toast.setView(layout);
 		toast.show();
+	}
+
+	public Dialog displayDialog(String text){
+		Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		Drawable d = new ColorDrawable(Color.BLACK);
+		d.setAlpha(0);
+		dialog.getWindow().setBackgroundDrawable(d);
+		dialog.setContentView(R.layout.dialog);
+		TextView customText = (TextView) dialog.findViewById(R.id.customText);
+		customText.setText(text);
+		return dialog;
 	}
 
 	@Override

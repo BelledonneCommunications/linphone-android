@@ -69,6 +69,7 @@
 				<RelativeLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:paddingBottom="10dp"
 					android:gravity="center">
 
 					<ImageView
@@ -78,46 +79,135 @@
 						android:src="@drawable/avatar" />
 				</RelativeLayout>
 
+
+				<TextView
+					android:text="@string/contact_last_name"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:paddingTop="10dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
 				<EditText
-					android:textCursorDrawable="@null"
 					android:id="@+id/contactLastName"
+					android:background="@drawable/resizable_textfield"
+					style="@style/font9"
+					android:textCursorDrawable="@null"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/contact_last_name"
-					android:textColor="@color/text_contrast"
-					android:background="@drawable/resizable_textfield"
 					android:gravity="left"
 					android:paddingRight="5dp"
 					android:inputType="textPersonName|textCapWords"
 					android:layout_column="0"/>
 
+				<TextView
+					android:text="@string/contact_first_name"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:paddingTop="10dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
 				<EditText
-					android:textCursorDrawable="@null"
 					android:id="@+id/contactFirstName"
+					android:textCursorDrawable="@null"
+					android:background="@drawable/resizable_textfield"
+					style="@style/font9"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/contact_first_name"
-					android:textColor="@color/text_contrast"
-					android:background="@drawable/resizable_textfield"
 					android:gravity="left"
 					android:paddingRight="5dp"
 					android:inputType="textPersonName|textCapWords"
 					android:layout_column="1"/>
 		        
 		    </LinearLayout>
-		        
-		    <TableLayout
-		        android:id="@+id/controls"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:paddingTop="20dp">
 
-				<TableRow
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent">
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:orientation="vertical">
 
-				</TableRow>
-			</TableLayout>
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+					<TextView
+						android:text="@string/sip_address"
+						style="@style/font13"
+						android:textAllCaps="true"
+						android:paddingTop="10dp"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+
+					<ImageView
+						android:id="@+id/add_address_field"
+						android:src="@drawable/add_field_default"
+						android:contentDescription="@string/content_description_add"
+						android:layout_alignParentRight="true"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:paddingLeft="5dp"/>
+				</RelativeLayout>
+
+				<TableLayout
+					android:id="@+id/controls_sip_address"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:paddingTop="20dp">
+
+					<TableRow
+						android:layout_width="match_parent"
+						android:layout_height="match_parent">
+
+					</TableRow>
+				</TableLayout>
+
+			</LinearLayout>
+
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:orientation="vertical">
+
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+					<TextView
+						android:text="@string/phone_number"
+						style="@style/font13"
+						android:textAllCaps="true"
+						android:paddingTop="10dp"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+
+					<ImageView
+						android:id="@+id/add_number_field"
+						android:src="@drawable/add_field_default"
+						android:contentDescription="@string/content_description_add"
+						android:layout_alignParentRight="true"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:paddingLeft="5dp"/>
+				</RelativeLayout>
+
+				<TableLayout
+					android:id="@+id/controls_numbers"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:paddingTop="20dp">
+
+					<TableRow
+						android:layout_width="match_parent"
+						android:layout_height="match_parent">
+
+					</TableRow>
+				</TableLayout>
+
+			</LinearLayout>
 
 		</LinearLayout>
     
