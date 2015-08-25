@@ -98,10 +98,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private String pictureUri;
 	private EditText message;
 	private ImageView cancelUpload, edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage;
-	private LinearLayout topBar;
 	private TextView contactName, remoteComposing;
 	private ImageView back;
-	private RelativeLayout uploadLayout, textLayout;
+	private RelativeLayout uploadLayout, textLayout, topBar;
 	private ListView messagesList;
 
 	private ProgressBar progressBar;
@@ -139,7 +138,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		messagesList = (ListView) view.findViewById(R.id.chatMessageList);
 		textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
 		progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-		topBar = (LinearLayout) view.findViewById(R.id.topbar);
+		topBar = (RelativeLayout) view.findViewById(R.id.topBar);
 
 		sendMessage = (ImageView) view.findViewById(R.id.sendMessage);
 		sendMessage.setOnClickListener(this);
@@ -571,6 +570,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		else if (id == R.id.new_discussion) {
 			//TODO call sipUri
+		}
+		else if(id == R.id.start_call){
+			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, LinphoneUtils.getUsernameFromAddress(sipUri), null);
 		}
 	}
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				android:id="@+id/topLayout"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:background="@color/colorH">
+	android:id="@+id/topLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorH">
 
 	<include layout="@layout/status"  android:id="@+id/statusBar" />
 
@@ -29,6 +29,7 @@
 		android:layout_height="match_parent"
 		android:layout_below="@id/toolbar"
 		android:orientation="vertical"
+		android:gravity="center"
 		android:layout_above="@id/menu">
 
 		<LinearLayout
@@ -41,8 +42,8 @@
 
 			<ImageView
 				android:id="@+id/incoming_picture"
-				android:layout_width="300dp"
-				android:layout_height="300dp"
+				android:layout_width="220dp"
+				android:layout_height="220dp"
 				android:src="@drawable/avatar"
 				android:paddingBottom="10dp"
 				android:layout_marginTop="10dp"/>
@@ -84,38 +85,36 @@
 
 		<ImageView
 			android:id="@+id/micro"
+			android:src="@drawable/micro_default"
+			android:background="@drawable/button_background"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:background="@color/colorF"
 			android:adjustViewBounds="true"
 			android:contentDescription="@string/content_description_pause"
-			android:scaleType="center"
-			android:src="@drawable/micro_default" />
+			android:scaleType="center"/>
 
 		<ImageView
 			android:id="@+id/speaker"
+			android:src="@drawable/speaker_default"
+			android:background="@drawable/button_background"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:background="@color/colorF"
 			android:adjustViewBounds="true"
 			android:contentDescription="@string/content_description_pause"
-			android:scaleType="center"
-			android:src="@drawable/speaker_default" />
+			android:scaleType="center"/>
 
 		<ImageView
-			android:id="@+id/hangUp"
+			android:id="@+id/hang_up"
+			android:src="@drawable/call_hangup"
+			android:background="@drawable/hangup"
+			android:contentDescription="@string/content_description_hang_up"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="0.7"
-			android:background="@drawable/call"
 			android:adjustViewBounds="true"
-			android:contentDescription="@string/content_description_pause"
-			android:scaleType="center"
-			android:src="@drawable/call_hangup" />
-
-
+			android:scaleType="center"/>
 
 	</LinearLayout>
 

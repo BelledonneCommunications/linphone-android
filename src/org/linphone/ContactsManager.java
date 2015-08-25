@@ -89,14 +89,23 @@ public class ContactsManager {
 	}
 
 	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
-		initializeContactManager(context,contentResolver);
-		Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type));
 		AccountManager accountManager = (AccountManager) context.getSystemService(context.ACCOUNT_SERVICE);
-		if(accountManager.addAccountExplicitly(newAccount, null, null)){
-			mAccount = newAccount;
+		Account[] accounts = accountManager.getAccountsByType(context.getPackageName());
+
+		if(accounts != null && accounts.length == 0) {
+			Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type));
+			try {
+				accountManager.addAccountExplicitly(newAccount, null, null);
+				mAccount = newAccount;
+			} catch (Exception e) {
+				Log.w("Catch " + e);
+				mAccount = null;
+			}
 		} else {
-			mAccount = null;
+			Log.w("Get Account");
+			mAccount = accounts[0];
 		}
+		initializeContactManager(context,contentResolver);
 	}
 
 	public String getDisplayName(String firstName, String lastName) {
@@ -523,6 +532,8 @@ public class ContactsManager {
 		if (sipContactCursor != null) {
 			sipContactCursor.close();
 		}
+
+		if(mAccount == null) return;
 
 		contactCursor = Compatibility.getContactsCursor(contentResolver, getContactsId());
 		sipContactCursor = Compatibility.getSIPContactsCursor(contentResolver, getContactsId());

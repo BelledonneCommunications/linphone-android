@@ -362,7 +362,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 			} else if (contact.getPhotoUri() != null) {
 				icon.setImageURI(contact.getPhotoUri());
 			} else {
-				icon.setImageBitmap(bitmapUnknown);
+				icon.setImageResource(R.drawable.avatar);
 			}
 			
 			ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);

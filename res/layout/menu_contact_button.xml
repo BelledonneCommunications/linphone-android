@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	android:id="@+id/contacts"
-	android:background="@color/footer_button"
+	android:background="@color/colorD"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_weight="1"
     android:layout_width="0dp"
@@ -24,5 +24,5 @@
 		android:layout_height="8dp"
 		android:layout_alignParentBottom="true"
 		android:contentDescription="@string/content_description_contacts"
-		android:background="@color/footer_select" />
+		android:background="@color/colorD" />
 </RelativeLayout>

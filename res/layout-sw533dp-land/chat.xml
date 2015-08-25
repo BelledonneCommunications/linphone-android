@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/top_layout"
-  	android:background="@drawable/background" >
+  	android:background="@color/colorH" >
 
    <LinearLayout 
        android:id="@+id/header"
@@ -15,7 +15,6 @@
 		android:paddingRight="10dp"
 	    android:gravity="center"
 	    android:orientation="horizontal"
-       android:layout_below="@+id/topbar"
 	    android:layout_centerHorizontal="true">
         
         <org.linphone.ui.AvatarWithShadow

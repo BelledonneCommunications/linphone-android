@@ -6,6 +6,7 @@ import java.util.List;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Version;
+import org.linphone.mediastream.Log;
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -25,11 +26,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
-import android.widget.TextView;
 
 public class EditContactFragment extends Fragment {
 	private View view;
 	private ImageView back, edit, ok;
+	private ImageView addNumber, addSipAddress;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
 	
@@ -39,6 +40,7 @@ public class EditContactFragment extends Fragment {
 	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
 	private ArrayList<ContentProviderOperation> ops;
 	private int firstSipAddressIndex = -1;
+	private TableLayout sipAddresses, numbers;
 	private String newSipOrNumberToAdd;
 	private ContactsManager contactsManager;
 
@@ -181,14 +183,30 @@ public class EditContactFragment extends Fragment {
 		
 		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		if (contact != null && contact.getPhotoUri() != null) {
-			//InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
-			//contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
+			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
+			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
         	//contactPicture.setImageResource(R.drawable.unknown_small);
         }
-		
-		initNumbersFields((TableLayout) view.findViewById(R.id.controls), contact);
-		
+
+		numbers = initNumbersFields(contact);
+		sipAddresses = initSipAddressFields(contact);
+
+		addNumber = (ImageView) view.findViewById(R.id.add_number_field);
+		addNumber.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				addEmptyRowToAllowNewNumberOrAddress(numbers,false);
+			}
+		});
+		addSipAddress = (ImageView) view.findViewById(R.id.add_address_field);
+		addSipAddress.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				addEmptyRowToAllowNewNumberOrAddress(sipAddresses,true);
+			}
+		});
+
 		ops = new ArrayList<ContentProviderOperation>();
 		lastName.requestFocus();
 		
@@ -206,32 +224,68 @@ public class EditContactFragment extends Fragment {
 		}
 	}
 	
-	private void initNumbersFields(final TableLayout controls, final Contact contact) {
+	private TableLayout initNumbersFields(final Contact contact) {
+		TableLayout controls = (TableLayout) view.findViewById(R.id.controls_numbers);
 		controls.removeAllViews();
 		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();
 		
 		if (contact != null) {
 			for (String numberOrAddress : contact.getNumbersOrAddresses()) {
-				View view = displayNumberOrAddress(controls, numberOrAddress);
+				boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
+				if(!isSip) {
+					View view = displayNumberOrAddress(controls, numberOrAddress);
+					if (view != null)
+						controls.addView(view);
+				}
+			}
+		}
+
+		if (newSipOrNumberToAdd != null) {
+			boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
+			if(!isSip) {
+				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
 				if (view != null)
 					controls.addView(view);
 			}
 		}
-		if (newSipOrNumberToAdd != null) {
-			View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
-			if (view != null)
-				controls.addView(view);
+
+		if (controls.getChildCount() == 0) {
+			addEmptyRowToAllowNewNumberOrAddress(controls,false);
 		}
 
-		// Add one for phone numbers, one for SIP address
-		if (!getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)) {
-			addEmptyRowToAllowNewNumberOrAddress(controls, false);
+		return controls;
+	}
+
+	private TableLayout initSipAddressFields(final Contact contact) {
+		TableLayout controls = (TableLayout) view.findViewById(R.id.controls_sip_address);
+		controls.removeAllViews();
+		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();
+
+		if (contact != null) {
+			for (String numberOrAddress : contact.getNumbersOrAddresses()) {
+				boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
+				if(isSip) {
+					View view = displayNumberOrAddress(controls, numberOrAddress);
+					if (view != null)
+						controls.addView(view);
+				}
+			}
 		}
-		
-		if (!getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
-			firstSipAddressIndex = controls.getChildCount() - 2; // Update the value to always display phone numbers before SIP accounts
-			addEmptyRowToAllowNewNumberOrAddress(controls, true);
+
+		if (newSipOrNumberToAdd != null) {
+			boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
+			if(isSip) {
+				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
+				if (view != null)
+					controls.addView(view);
+			}
 		}
+
+		if (controls.getChildCount() == 0) {
+			addEmptyRowToAllowNewNumberOrAddress(controls,true);
+		}
+
+		return controls;
 	}
 	
 	private View displayNumberOrAddress(final TableLayout controls, String numberOrAddress) {
@@ -306,7 +360,7 @@ public class EditContactFragment extends Fragment {
 	
 	@SuppressLint("InflateParams")
 	private void addEmptyRowToAllowNewNumberOrAddress(final TableLayout controls, final boolean isSip) {
-		final View view = inflater.inflate(R.layout.contact_add_row, null);
+		final View view = inflater.inflate(R.layout.contact_edit_row, null);
 		
 		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(isSip);
 		
@@ -330,39 +384,32 @@ public class EditContactFragment extends Fragment {
 			}
 		});
 		
-		final ImageView add = (ImageView) view.findViewById(R.id.add);
-		add.setOnClickListener(new OnClickListener() {
+		final ImageView delete = (ImageView) view.findViewById(R.id.delete);
+		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Add a line, and change add button for a delete button
-				add.setImageResource(R.drawable.list_delete);
-				ImageView delete = add;
-				delete.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						nounoa.delete();
-						numbersAndAddresses.remove(nounoa);
-						view.setVisibility(View.GONE);
-					}
-				});
-				if (!isSip) {
+				nounoa.delete();
+				numbersAndAddresses.remove(nounoa);
+				view.setVisibility(View.GONE);
+			}
+
+		});
+				/*if (!isSip) {
 					firstSipAddressIndex++;
 					addEmptyRowToAllowNewNumberOrAddress(controls, false);
 				} else {
 					addEmptyRowToAllowNewNumberOrAddress(controls, true);
 				}
-			}
-		});
-		
-		if (isSip) {
-			controls.addView(view, controls.getChildCount());
-		} else {
-			if (firstSipAddressIndex != -1) {
-				controls.addView(view, firstSipAddressIndex);
-			} else {
-				controls.addView(view);
-			}
-		}
+			}*/
+
+		controls.addView(view, controls.getChildCount());
+
+			//if (firstSipAddressIndex != -1) {
+			//	controls.addView(view, firstSipAddressIndex);
+			//} else {
+			//	controls.addView(view);
+			//}
+		//}
 	}
 	
 	private String findContactFirstName(String contactID) {

@@ -2,7 +2,7 @@
 <RelativeLayout
 	android:id="@+id/chat"
     xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@color/footer_button"
+	android:background="@color/colorD"
 	android:layout_weight="1"
 	android:layout_width="0dp"
 	android:layout_height="match_parent">
