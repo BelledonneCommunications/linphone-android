@@ -284,9 +284,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
-				File file = new File(Environment.getExternalStorageDirectory(), msg.getFileTransferInformation().getName());
+				File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
 				try {
-					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), msg.getFileTransferInformation().getName(), null);
+					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
 					msg.setAppData(url);
 					file.delete();
 				} catch (FileNotFoundException e) {

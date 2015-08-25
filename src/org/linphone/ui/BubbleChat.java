@@ -133,14 +133,8 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 	    	ImageView imageView = (ImageView) view.findViewById(R.id.image);
 	    	
 	    	String appData = message.getAppData();
-    		if (appData == null) {
+    		if (appData == null || (! LinphoneManager.getInstance().isMessagePending(nativeMessage) && appData.contains(context.getString(R.string.temp_photo_name_with_date).split("%s")[0]))) {
 				LinphoneManager.addListener(this);
-				if(LinphoneManager.getInstance().isMessagePending(nativeMessage)){
-					download.setEnabled(false);
-					ProgressBar spinner = (ProgressBar) view.findViewById(R.id.spinner);
-					spinner.setVisibility(View.VISIBLE);
-					download.setVisibility(View.GONE);
-				} else {
 					download.setVisibility(View.VISIBLE);
 					download.setOnClickListener(new OnClickListener() {
 						@Override
@@ -148,19 +142,27 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 							v.setEnabled(false);
 							spinner.setVisibility(View.VISIBLE);
 							v.setVisibility(View.GONE);
-
-							File file = new File(Environment.getExternalStorageDirectory(), nativeMessage.getFileTransferInformation().getName());
+							String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
+							File file = new File(Environment.getExternalStorageDirectory(), filename);
 							nativeMessage.setListener(LinphoneManager.getInstance());
 							nativeMessage.setFileTransferFilepath(file.getPath());
 							nativeMessage.downloadFile();
+							nativeMessage.setAppData(filename);
 							LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
 						}
 					});
-				}
     		} else {
-				LinphoneManager.removeListener(this);
-				imageView.setVisibility(View.VISIBLE);
-				loadBitmap(appData, imageView);
+				if(LinphoneManager.getInstance().isMessagePending(nativeMessage)){
+					LinphoneManager.addListener(this);
+					download.setEnabled(false);
+					ProgressBar spinner = (ProgressBar) view.findViewById(R.id.spinner);
+					spinner.setVisibility(View.VISIBLE);
+					download.setVisibility(View.GONE);
+				} else {
+					LinphoneManager.removeListener(this);
+					imageView.setVisibility(View.VISIBLE);
+					loadBitmap(appData, imageView);
+				}
     		}
     	} else {
 	    	TextView msgView = (TextView) view.findViewById(R.id.message);
