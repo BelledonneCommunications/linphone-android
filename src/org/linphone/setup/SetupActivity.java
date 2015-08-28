@@ -222,9 +222,6 @@ public class SetupActivity extends FragmentActivity implements OnClickListener {
 			next.setEnabled(false);
 			cancel.setEnabled(false);
 		} else {
-			if (mPrefs.isFirstLaunch()) {
-				mPrefs.setEchoCancellation(LinphoneManager.getLc().needsEchoCanceler());
-			}
 			success();
 		}		
 	}
