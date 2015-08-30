@@ -342,13 +342,13 @@ LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
 LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-debug
 
 $(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt:
-	@patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
+	cd $(LIBVPX_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
 	touch $@
 
 $(LIBVPX_BUILD_DIR)/arm/libvpx.a:
 	mkdir -p $(LIBVPX_BUILD_DIR)/arm && \
 	cd $(LIBVPX_BUILD_DIR)/arm && \
-	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
+	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --extra-cflags="-mfloat-abi=softfp -mfpu=neon" --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
 	make -j${NUMCPUS} \
 	|| ( echo "Build of libvpx for arm failed." ; exit 1 )
 
