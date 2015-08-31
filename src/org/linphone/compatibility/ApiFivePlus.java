@@ -32,6 +32,7 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
+import android.support.v4.app.NotificationCompat;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.view.ViewTreeObserver;
@@ -291,32 +292,28 @@ public class ApiFivePlus {
 	}
 	
 	public static Notification createMessageNotification(Context context, String title, String msg, PendingIntent intent) {
-		Notification notif = new Notification();
-		notif.icon = R.drawable.chat_icon_over;
-		notif.iconLevel = 0;
-		notif.when = System.currentTimeMillis();
-		notif.flags &= Notification.FLAG_ONGOING_EVENT;
-		
+		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
+		.setSmallIcon(R.drawable.chat_icon_over)
+		.setContentTitle(title)
+		.setContentText(msg)
+		.setContentIntent(intent);
+	
+		Notification notif = notifBuilder.build();
 		notif.defaults |= Notification.DEFAULT_VIBRATE;
 		notif.defaults |= Notification.DEFAULT_SOUND;
 		notif.defaults |= Notification.DEFAULT_LIGHTS;
 		
-		notif.setLatestEventInfo(context, title, msg, intent);
-		
 		return notif;
 	}
 	
-	public static Notification createInCallNotification(Context context,
-			String title, String msg, int iconID, PendingIntent intent) {
-		Notification notif = new Notification();
-		notif.icon = iconID;
-		notif.iconLevel = 0;
-		notif.when = System.currentTimeMillis();
-		notif.flags &= Notification.FLAG_ONGOING_EVENT;
-		
-		notif.setLatestEventInfo(context, title, msg, intent);
-
-		return notif;
+	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, PendingIntent intent) {
+		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
+		.setSmallIcon(iconID)
+		.setContentTitle(title)
+		.setContentText(msg)
+		.setContentIntent(intent);
+	
+	return notifBuilder.build();
 	}
 
 	public static void setPreferenceChecked(Preference preference, boolean checked) {
@@ -390,30 +387,26 @@ public class ApiFivePlus {
 	}
 
 	public static Notification createNotification(Context context, String title, String message, int icon, int level, PendingIntent intent, boolean isOngoingEvent) {
-		Notification notif = new Notification();
-		notif.icon = icon;
-		notif.iconLevel = level;
-		notif.when = System.currentTimeMillis();
-		if (isOngoingEvent) {
-			notif.flags |= Notification.FLAG_ONGOING_EVENT;
-		}
-		notif.setLatestEventInfo(context, title, message, intent);
+		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
+			.setSmallIcon(icon, level)
+			.setContentTitle(title)
+			.setContentText(message)
+			.setContentIntent(intent);
 		
-		return notif;
+		return notifBuilder.build();
 	}
 
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
-		Notification notif = new Notification();
-		notif.icon = R.drawable.logo_linphone_57x57;
-		notif.iconLevel = 0;
-		notif.when = System.currentTimeMillis();
-		notif.flags &= Notification.FLAG_ONGOING_EVENT;
+		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
+		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setContentTitle(title)
+		.setContentText(text)
+		.setContentIntent(intent);
 		
+		Notification notif = notifBuilder.build();
 		notif.defaults |= Notification.DEFAULT_VIBRATE;
 		notif.defaults |= Notification.DEFAULT_SOUND;
 		notif.defaults |= Notification.DEFAULT_LIGHTS;
-		
-		notif.setLatestEventInfo(context, title, text, intent);
 		
 		return notif;
 	}
