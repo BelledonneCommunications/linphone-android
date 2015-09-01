@@ -25,7 +25,10 @@ import java.io.File;
 import android.app.Fragment;
 import android.graphics.Matrix;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.Inflater;
 
 
 import org.linphone.compatibility.Compatibility;
@@ -39,6 +42,8 @@ import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
+import org.linphone.core.PresenceActivityType;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.BubbleChat;
 
@@ -73,13 +78,18 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +110,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ImageView cancelUpload, edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage;
 	private TextView contactName, remoteComposing;
 	private ImageView back;
+	private AutoCompleteTextView searchContactField;
 	private RelativeLayout uploadLayout, textLayout, topBar;
 	private ListView messagesList;
 
@@ -112,6 +123,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private LinphoneCoreListenerBase mListener;
 	private ByteArrayInputStream mUploadingImageStream;
 	private LinphoneChatMessage currentMessageInFileTransferUploadState;
+	private boolean newChatConversation = false;
 
 	public static boolean isInstanciated() {
 		return instance != null;
@@ -127,15 +139,21 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		// Retain the fragment across configuration changes
 		setRetainInstance(true);
 
-		//Retrieve parameter from intent
-		sipUri = getArguments().getString("SipUri");
-		displayName = getArguments().getString("DisplayName");
-		pictureUri = getArguments().getString("PictureUri");
+		if(getArguments() == null || getArguments().getString("SipUri") == null) {
+			newChatConversation = true;
+		} else {
+			//Retrieve parameter from intent
+			sipUri = getArguments().getString("SipUri");
+			displayName = getArguments().getString("DisplayName");
+			pictureUri = getArguments().getString("PictureUri");
+		}
 
 		//Initialize UI
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		//contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		messagesList = (ListView) view.findViewById(R.id.chatMessageList);
+		searchContactField = (AutoCompleteTextView) view.findViewById(R.id.searchContactField);
+
 		textLayout = (RelativeLayout) view.findViewById(R.id.messageLayout);
 		progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 		topBar = (RelativeLayout) view.findViewById(R.id.topBar);
@@ -164,8 +182,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
-
-		displayChatHeader(displayName, pictureUri);
+		if (newChatConversation) {
+			messagesList.setVisibility(View.GONE);
+			searchContactField.setVisibility(View.VISIBLE);
+			searchContactField.setAdapter(new SearchContactsListAdapter(ContactsManager.getInstance().getAllContacts(), null, inflater));
+			edit.setVisibility(View.INVISIBLE);
+			startCall.setVisibility(View.INVISIBLE);
+		} else {
+			displayChatHeader(displayName, pictureUri);
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				chatRoom = lc.getOrCreateChatRoom(sipUri);
+				chatRoom.markAsRead();
+			}
+		}
 
 		//Manage multiline
 		message = (EditText) view.findViewById(R.id.message);
@@ -210,13 +240,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 			}
 		});
-
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			chatRoom = lc.getOrCreateChatRoom(sipUri);
-			//Only works if using liblinphone storage
-			chatRoom.markAsRead();
-		}
 		
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
@@ -534,8 +557,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
 
-		remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
-		dispayMessageList();
+
+		if(!newChatConversation) {
+			remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
+			dispayMessageList();
+		}
 		super.onResume();
 	}
 
@@ -585,20 +611,52 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
 
-		if (chatRoom != null && messageToSend != null && messageToSend.length() > 0 && isNetworkReachable) {
-			LinphoneChatMessage message = chatRoom.createLinphoneChatMessage(messageToSend);
-			chatRoom.sendChatMessage(message);
+		if(newChatConversation){
+			String address = searchContactField.getText().toString();
+			if(address != null &&  !address.equals("")) {
+				if (!LinphoneUtils.isSipAddress(address)) {
+					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
+						Log.w("Error");
+					}
+					address = address + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+					if (!LinphoneUtils.isStrictSipAddress(address)) {
+						address = "sip:" + address;
+					}
+				}
 
-			if (LinphoneActivity.isInstanciated()) {
-				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
+				Log.w(address);
+				LinphoneAddress lAddress;
+				try {
+					lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(address);
+				} catch (LinphoneCoreException e) {
+					Log.e("Cannot display chat",e);
+					return;
+				}
+
+				chatRoom = lc.getOrCreateChatRoom(lAddress.toString());
+
+				if (chatRoom != null && messageToSend != null && messageToSend.length() > 0 && isNetworkReachable) {
+					LinphoneChatMessage message = chatRoom.createLinphoneChatMessage(messageToSend);
+					chatRoom.sendChatMessage(message);
+					LinphoneActivity.instance().displayChat(lAddress.toString());
+				}
 			}
+		} else {
 
-			message.setListener(LinphoneManager.getInstance());
+			if (chatRoom != null && messageToSend != null && messageToSend.length() > 0 && isNetworkReachable) {
+				LinphoneChatMessage message = chatRoom.createLinphoneChatMessage(messageToSend);
+				chatRoom.sendChatMessage(message);
 
-			invalidate();
-			Log.i("Sent message current status: " + message.getStatus());
-		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+				if (LinphoneActivity.isInstanciated()) {
+					LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
+				}
+
+				message.setListener(LinphoneManager.getInstance());
+				invalidate();
+				Log.i("Sent message current status: " + message.getStatus());
+			} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
+				LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+			}
 		}
 	}
 
@@ -810,4 +868,111 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void onLinphoneChatMessageFileTransferProgressChanged(LinphoneChatMessage msg, LinphoneContent content, int offset, int total) {
 		progressBar.setProgress(offset * 100 / total);
 	}
+
+	class SearchContactsListAdapter extends BaseAdapter implements Filterable {
+		private List<ContactAddress> contacts;
+		private Cursor cursor;
+		private LayoutInflater mInflater;
+
+		SearchContactsListAdapter(List<Contact> contactsList, Cursor c, LayoutInflater inflater) {
+			cursor = c;
+			mInflater = inflater;
+			contacts = new ArrayList<ContactAddress>();
+			for(Contact con: ContactsManager.getInstance().getAllContacts()){
+				for(String numberOrAddress : con.getNumbersOrAddresses()){
+					contacts.add(new ContactAddress(con,numberOrAddress));
+				}
+			}
+		}
+
+		@Override
+		public Filter getFilter() {
+			return new Filter() {
+				@Override
+				protected void publishResults(CharSequence constraint,
+											  FilterResults results) {
+					if (results.count > 0) {
+						notifyDataSetChanged();
+					} else {
+						notifyDataSetInvalidated();
+					}
+				}
+
+				@Override
+				protected FilterResults performFiltering(CharSequence constraint) {
+					List<ContactAddress> result = new ArrayList<ContactAddress>();
+					Log.w(constraint);
+					if(constraint != null) {
+						for (ContactAddress c : contacts) {
+							Log.w(c.mAddress);
+							Log.w(c.mContact.getName());
+							if (c.mContact.getName().startsWith(constraint.toString()) || c.mAddress.startsWith(constraint.toString())) {
+								result.add(c);
+							}
+						}
+					}
+					FilterResults r = new FilterResults();
+					r.values = result;
+					r.count = result.size();
+					return r;
+				}
+			};
+		}
+
+		class ContactAddress {
+			public Contact mContact;
+			public String mAddress;
+
+			ContactAddress(Contact contact, String address){
+				mContact = contact;
+				mAddress = address;
+			}
+		}
+
+		public int getCount() {
+			return contacts.size();
+		}
+
+		public Object getItem(int position) {
+			if (contacts == null || position >= contacts.size()) {
+				List<ContactAddress> contacts_list = new ArrayList<ContactAddress>();
+				for(Contact c: ContactsManager.getInstance().getAllContacts()){
+					for(String numberOrAddress : c.getNumbersOrAddresses()){
+						contacts_list.add(new ContactAddress(c,numberOrAddress));
+					}
+				}
+				return contacts_list;
+			} else {
+				return contacts.get(position);
+			}
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = null;
+			ContactAddress contact = null;
+			do {
+				contact = (ContactAddress) getItem(position);
+			} while (contact == null);
+
+			if (convertView != null) {
+				view = convertView;
+			} else {
+				view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
+			}
+
+			TextView name = (TextView) view.findViewById(R.id.Contact_name);
+			name.setText(contact.mContact.getName());
+
+			TextView address = (TextView) view.findViewById(R.id.contact_address);
+			address.setText(contact.mAddress);
+
+			return view;
+		}
+	}
+
+
 }

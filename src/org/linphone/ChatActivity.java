@@ -28,32 +28,41 @@ import android.os.Bundle;
 public class ChatActivity extends Activity {
 	private static final String CHAT_FRAGMENT = "chatFragment";
 	private ChatFragment chatFragment;
+	private StatusFragment status;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat_activity);
-		
+
 		Bundle extras = new Bundle();
-		extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
-		extras.putString("DisplayName", getIntent().getExtras().getString("DisplayName"));
-		extras.putString("PictureUri", getIntent().getExtras().getString("PictureUri"));
-		extras.putString("ThumbnailUri", getIntent().getExtras().getString("ThumbnailUri"));
-		
+		if( getIntent().getExtras() != null) {
+			extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
+			extras.putString("DisplayName", getIntent().getExtras().getString("DisplayName"));
+			extras.putString("PictureUri", getIntent().getExtras().getString("PictureUri"));
+			extras.putString("ThumbnailUri", getIntent().getExtras().getString("ThumbnailUri"));
+		}
+
 		ChatFragment fragment = new ChatFragment();
 		fragment.setArguments(extras);
 		getFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "ChatFragment").commit();
-		
+
 		FragmentManager fm = getFragmentManager();
 		chatFragment = (ChatFragment) fm.findFragmentByTag(CHAT_FRAGMENT);
 
-	    // If the Fragment is non-null, then it is currently being
-	    // retained across a configuration change.
+		// If the Fragment is non-null, then it is currently being
+		// retained across a configuration change.
 		if (chatFragment == null) {
 			chatFragment = new ChatFragment();
 			chatFragment.setArguments(extras);
 			fm.beginTransaction().add(R.id.fragmentContainer, chatFragment, CHAT_FRAGMENT).commit();
-	    }
+		}
+
 	}
+
+	public void updateStatusFragment(StatusFragment fragment) {
+		status = fragment;
+	}
+
 }
 

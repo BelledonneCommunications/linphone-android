@@ -97,7 +97,7 @@
 
 	</RelativeLayout>
 
-   <LinearLayout 
+	<LinearLayout
         android:id="@+id/footer"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_centerVertical="true"
-	            android:src="@drawable/chat_send_picture" />
+	            android:src="@drawable/chat_send_file" />
 	        
 	        <ImageView
 	            android:id="@+id/sendMessage"
@@ -194,9 +194,9 @@
 	        
 	    </RelativeLayout>
     
-    </LinearLayout>
+	</LinearLayout>
         
-    <TextView 
+	<TextView
         android:id="@+id/remoteComposing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -219,5 +219,22 @@
 		android:layout_marginRight="10dp"
 		android:layout_marginBottom="10dp"
 		android:layout_below="@+id/topBar"/>
+
+	<AutoCompleteTextView
+		android:contentDescription="@string/content_description_search"
+		android:textCursorDrawable="@null"
+		android:visibility="gone"
+		android:layout_margin="10dp"
+		android:id="@+id/searchContactField"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:textColor="@android:color/black"
+		android:background="@drawable/resizable_textfield"
+		android:gravity="center"
+		android:completionThreshold="1"
+		android:layout_below="@+id/topBar"
+		android:paddingRight="5dp"
+		android:inputType="textPersonName"/>
+
 
 </RelativeLayout>

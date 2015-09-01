@@ -234,6 +234,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			hideAndDisplayMessageIfNoChat();
 		}
 		else if (id == R.id.new_discussion) {
+			LinphoneActivity.instance().displayChat(null);
 			/*String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);
@@ -247,7 +248,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
 					sipUri = "sip:" + sipUri;
 				}
-				LinphoneActivity.instance().displayChat(sipUri);
+
 			}*/
 		}
 	}
