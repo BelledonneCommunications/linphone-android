@@ -79,10 +79,11 @@
     <org.linphone.ui.Numpad
         android:contentDescription="@string/content_description_numpad"
 	    android:id="@+id/Dialer"
-		android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+		android:padding="10dp"
         android:layout_above="@id/controls"
-        android:layout_below="@id/AddressBar" />
+        android:layout_below="@id/AddressBar"
+		android:layout_centerInParent="true"/>
 
 </RelativeLayout>
