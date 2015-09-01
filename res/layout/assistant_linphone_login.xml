@@ -65,7 +65,7 @@
 			android:singleLine="true"/>
 
 		<TextView
-			android:text="@string/display_name"
+			android:text="@string/assistant_display_name"
 			style="@style/font13"
 			android:textAllCaps="true"
 			android:paddingTop="10dp"
@@ -92,7 +92,7 @@
 			<Button
 				android:id="@+id/assistant_apply"
 				android:text="@string/assistant_apply"
-				android:background="@drawable/resizable_assistant_button"
+				android:background="@drawable/assistant_button"
 				style="@style/font8"
 				android:contentDescription="@string/content_description_validate"
 				android:layout_width="wrap_content"

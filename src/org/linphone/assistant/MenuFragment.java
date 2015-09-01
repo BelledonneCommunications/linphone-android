@@ -38,26 +38,26 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_menu, container, false);
 		
-		createAccount = (Button) view.findViewById(R.id.setup_create_account);
+		createAccount = (Button) view.findViewById(R.id.create_account);
 		createAccount.setOnClickListener(this);
 		
-		logLinphoneAccount = (Button) view.findViewById(R.id.setup_login_linphone);
+		logLinphoneAccount = (Button) view.findViewById(R.id.login_linphone);
 		if (getResources().getBoolean(R.bool.hide_linphone_accounts_wizard)) {
-			view.findViewById(R.id.setup_login_linphone_layout).setVisibility(View.GONE);
+			logLinphoneAccount.setVisibility(View.GONE);
 		} else {
 			logLinphoneAccount.setOnClickListener(this);
 		}
 		
-		logGenericAccount = (Button) view.findViewById(R.id.setup_login_generic);
+		logGenericAccount = (Button) view.findViewById(R.id.login_generic);
 		if (getResources().getBoolean(R.bool.hide_generic_accounts_wizard)) {
-			view.findViewById(R.id.setup_login_generic_layout).setVisibility(View.GONE);
+			logGenericAccount.setVisibility(View.GONE);
 		} else {
 			logGenericAccount.setOnClickListener(this);
 		}
 		
-		remoteProvisioning = (Button) view.findViewById(R.id.setup_remote_provisioning);
+		remoteProvisioning = (Button) view.findViewById(R.id.remote_provisioning);
 		if (getResources().getBoolean(R.bool.hide_remote_provisioning_in_wizard)) {
-			view.findViewById(R.id.setup_remote_provisioning_layout).setVisibility(View.GONE);
+			remoteProvisioning.setVisibility(View.GONE);
 		} else {
 			remoteProvisioning.setOnClickListener(this);
 		}
@@ -68,13 +68,13 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		if (id == R.id.setup_login_generic) {
+		if (id == R.id.login_generic) {
 			AssistantActivity.instance().displayLoginGeneric();
-		} else if (id == R.id.setup_login_linphone) {
+		} else if (id == R.id.login_linphone) {
 			AssistantActivity.instance().displayLoginLinphone();
-		} else if (id == R.id.setup_create_account) {
-			AssistantActivity.instance().displayWizard();
-		} else if (id == R.id.setup_remote_provisioning) {
+		} else if (id == R.id.create_account) {
+			AssistantActivity.instance().displayCreateAccount();
+		} else if (id == R.id.remote_provisioning) {
 			AssistantActivity.instance().displayRemoteProvisioning();
 		}
 	}

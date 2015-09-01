@@ -3,30 +3,29 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical" >
+
+	<TextView
+		android:text="@string/assistant_ec_calibration"
+		android:contentDescription="@string/content_description_welcome"
+		style="@style/font6"
+		android:textAllCaps="true"
+		android:paddingTop="20dp"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"/>
 	
   	<ImageView 
         android:contentDescription="@string/content_description_welcome"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" 
-	    android:adjustViewBounds="true"
-	    android:scaleType="centerCrop"
+	    android:layout_width="200dp"
+	    android:layout_height="200dp"
 	    android:layout_centerInParent="true"
-	    android:src="@drawable/logo"/>
+	    android:src="@drawable/linphone_orange"/>
   	
     <ProgressBar 
         android:layout_height="wrap_content" 
         android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/setup_ec_calibration" />
     
 </RelativeLayout>

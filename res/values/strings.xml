@@ -27,11 +27,13 @@
 	<string name="assistant_create_account_title">Create an account</string>
 	<string name="assistant_create_account_part_1">1/2</string>
 	<string name="assistant_create_account_part_2">2/2</string>
+	<string name="assistant_display_name">Display name (optional)</string>
 	<string name="assistant_linphone_account_title">Configure linphohe account</string>
 	<string name="assistant_general_account_title">Configure Sip account</string>
 	<string name="assistant_remote_provisioning_title">Remote provisioning</string>
 	<string name="assistant_create">Create account</string>
 	<string name="assistant_apply">Apply</string>
+	<string name="assistant_ec_calibration">Echo canceller calibration in progress</string>
 	<string name="assistant_password_confirm">Apply</string>
 
 	<!-- 1. Dailer -->
@@ -401,7 +403,7 @@
   <string name="pref_auto_accept_friends_desc">Automatically accept new friend requests</string>
   <string name="linphone_friend_new_request_title">Friend request</string>
   <string name="linphone_friend_new_request_desc">wants to share it\'s presence status with you and be aware of yours.</string>
-  <string name="setup_ec_calibration">Echo canceller calibration in progress</string>
+
   <string name="pref_image_sharing_server_title">Sharing server</string>
   <string name="pref_remote_provisioning_title">Remote provisioning</string>
   <string name="delete_contact">Delete</string>

@@ -18,7 +18,7 @@
 		    android:textColor="@android:color/black"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/setup_title_assistant"/>
+		    android:text="@string/assistant_title"/>
 	    
 	    <TextView 
 		    android:paddingTop="10dp"
