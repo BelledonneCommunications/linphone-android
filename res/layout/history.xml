@@ -49,6 +49,7 @@
 				android:contentDescription="@string/content_description_missed_calls"
 				android:id="@+id/missed_calls"
 				android:src="@drawable/history_missed"
+				android:background="@drawable/toolbar_button"
 				android:padding="10dp"
 				android:gravity="center"
 				android:layout_width="wrap_content"
