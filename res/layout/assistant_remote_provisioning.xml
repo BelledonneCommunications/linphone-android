@@ -33,7 +33,7 @@
 			android:layout_height="wrap_content"/>
 
 		<EditText
-			android:id="@+id/setup_remote_provisioning_url"
+			android:id="@+id/assistant_remote_provisioning_url"
 			android:background="@drawable/resizable_textfield"
 			android:textColor="@color/colorB"
 			android:textCursorDrawable="@null"
@@ -52,7 +52,7 @@
 			<Button
 				android:id="@+id/assistant_apply"
 				android:text="@string/assistant_apply"
-				android:background="@drawable/resizable_assistant_button"
+				android:background="@drawable/assistant_button"
 				style="@style/font8"
 				android:contentDescription="@string/content_description_validate"
 				android:layout_width="wrap_content"

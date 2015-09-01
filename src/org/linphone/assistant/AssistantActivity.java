@@ -22,6 +22,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
+import org.linphone.StatusFragment;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
@@ -56,6 +57,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private boolean accountCreated = false;
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
+	private StatusFragment status;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,10 +67,9 @@ public class AssistantActivity extends Activity implements OnClickListener {
         }
 
 		setContentView(R.layout.assistant);
-
 		initUI();
 
-		firstFragment = getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment) ?
+		firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ?
 				AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.MENU;
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState == null) {
@@ -95,7 +96,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				}
         	}
         };
-        
         instance = this;
 	};
 	
@@ -128,17 +128,21 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	public static AssistantActivity instance() {
 		return instance;
 	}
-	
+
+	public void updateStatusFragment(StatusFragment fragment) {
+		status = fragment;
+	}
+
 	private void initUI() {
 		back = (RelativeLayout) findViewById(R.id.assistant_back);
 		back.setOnClickListener(this);
 		cancel = (RelativeLayout) findViewById(R.id.assistant_cancel);
 		cancel.setOnClickListener(this);
+		status.enableLeftMenu(false);
 	}
 	
 	private void changeFragment(Fragment newFragment) {
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//		transaction.addToBackStack("");
 		transaction.replace(R.id.fragmentContainer, newFragment);
 		transaction.commitAllowingStateLoss();
 	}
@@ -194,9 +198,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			back.setVisibility(View.VISIBLE);
 			cancel.setEnabled(false);
 		} else {
-			if (mPrefs.isFirstLaunch()) {
-				mPrefs.setEchoCancellation(LinphoneManager.getLc().hasBuiltInEchoCanceler());
-			}
 			success();
 		}		
 	}
@@ -241,7 +242,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		default:
 			throw new IllegalStateException("Can't handle " + fragment);
 		}
-		back.setVisibility(View.VISIBLE);
 	}
 
 	public void displayMenu() {
@@ -260,12 +260,19 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	
 	public void displayLoginLinphone() {
 		fragment = new LinphoneLoginFragment();
+
+		//LinphoneManager.getInstance().loadConfig(R.raw.config_linphone_account);
+		//LinphoneManager.getInstance().resetLinphoneCore(this);
+
+
+		//Log.w(LinphoneManager.getLc().getConfig().getString("proxy_default_values","reg_proxy","loool"));
+
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void displayWizard() {
+	public void displayCreateAccount() {
 		fragment = new CreateAccountFragment();
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;

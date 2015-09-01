@@ -84,8 +84,7 @@ public class CreateAccountFragment extends Fragment {
 		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 		
 		username = (EditText) view.findViewById(R.id.assistant_username);
-    	ImageView usernameOkIV = (ImageView) view.findViewById(R.id.assistant_username_ok);
-    	addXMLRPCUsernameHandler(username, usernameOkIV);
+    	addXMLRPCUsernameHandler(username, null);
     	
     	inputFilterCharacters = new String(acceptedChars);
     	if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
@@ -108,16 +107,12 @@ public class CreateAccountFragment extends Fragment {
 
     	password = (EditText) view.findViewById(R.id.assistant_password);
     	passwordConfirm = (EditText) view.findViewById(R.id.assistant_password_confirm);
-    	
-    	ImageView passwordOkIV = (ImageView) view.findViewById(R.id.assistant_password_ok);
-    	addXMLRPCPasswordHandler(password, passwordOkIV);
-    	
-    	ImageView passwordConfirmOkIV = (ImageView) view.findViewById(R.id.assistant_confirm_password_ok);
-    	addXMLRPCConfirmPasswordHandler(password, passwordConfirm, passwordConfirmOkIV);
+
+    	addXMLRPCPasswordHandler(password, null);
+    	addXMLRPCConfirmPasswordHandler(password, passwordConfirm, null);
 
     	email = (EditText) view.findViewById(R.id.assistant_email);
-    	ImageView emailOkIV = (ImageView) view.findViewById(R.id.assistant_email_ok);
-    	addXMLRPCEmailHandler(email, emailOkIV);
+    	addXMLRPCEmailHandler(email, null);
 
     	errorMessage = (TextView) view.findViewById(R.id.assistant_error);
     	
@@ -170,7 +165,6 @@ public class CreateAccountFragment extends Fragment {
 			public void run() {
 				errorMessage.setText(R.string.wizard_server_unavailable);
 				usernameOk = false;
-				icon.setImageResource(R.drawable.wizard_notok);
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
 		};
@@ -183,7 +177,6 @@ public class CreateAccountFragment extends Fragment {
     				public void run() {
     					errorMessage.setText(R.string.wizard_username_unavailable);
     					usernameOk = false;
-						icon.setImageResource(R.drawable.wizard_notok);
 						createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 					}
 	    		};
@@ -191,7 +184,6 @@ public class CreateAccountFragment extends Fragment {
 	    		Runnable runOk = new Runnable() {
     				public void run() {
     					errorMessage.setText("");
-    					icon.setImageResource(R.drawable.wizard_ok);
 						usernameOk = true;
 						createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 					}
@@ -304,7 +296,6 @@ public class CreateAccountFragment extends Fragment {
 					isUsernameRegistred(username, icon);
 				} else {
 					errorMessage.setText(R.string.wizard_username_incorrect);
-					icon.setImageResource(R.drawable.wizard_notok);
 				}
 			}
 		});
@@ -324,13 +315,11 @@ public class CreateAccountFragment extends Fragment {
 			{
 				emailOk = false;
 				if (isEmailCorrect(field.getText().toString())) {
-					icon.setImageResource(R.drawable.wizard_ok);
 					emailOk = true;
 					errorMessage.setText("");
 				}
 				else {
 					errorMessage.setText(R.string.wizard_email_incorrect);
-					icon.setImageResource(R.drawable.wizard_notok);
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
@@ -352,12 +341,10 @@ public class CreateAccountFragment extends Fragment {
 				passwordOk = false;
 				if (isPasswordCorrect(field1.getText().toString())) {
 					passwordOk = true;
-					icon.setImageResource(R.drawable.wizard_ok);
 					errorMessage.setText("");
 				}
 				else {
 					errorMessage.setText(R.string.wizard_password_incorrect);
-					icon.setImageResource(R.drawable.wizard_notok);
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
@@ -381,7 +368,6 @@ public class CreateAccountFragment extends Fragment {
 				confirmPasswordOk = false;
 				if (field1.getText().toString().equals(field2.getText().toString())) {
 					confirmPasswordOk = true;
-					icon.setImageResource(R.drawable.wizard_ok);
 
 					if (!isPasswordCorrect(field1.getText().toString())) {
 						errorMessage.setText(R.string.wizard_password_incorrect);
@@ -392,7 +378,6 @@ public class CreateAccountFragment extends Fragment {
 				}
 				else {
 					errorMessage.setText(R.string.wizard_passwords_unmatched);
-					icon.setImageResource(R.drawable.wizard_notok);
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}

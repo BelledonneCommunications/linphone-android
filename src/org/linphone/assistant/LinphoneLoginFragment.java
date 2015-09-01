@@ -17,10 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,10 +48,10 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setOnClickListener(this);
 		
-		if (getResources().getBoolean(R.bool.setup_use_linphone_as_first_fragment)) {
+		if (getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment)) {
 			view.findViewById(R.id.assistant_apply).setVisibility(View.GONE);
 		}
-		
+
 		return view;
 	}
 	

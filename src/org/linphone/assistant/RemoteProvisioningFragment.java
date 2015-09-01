@@ -24,7 +24,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_remote_provisioning, container, false);
 		
-		remoteProvisioningUrl = (EditText) view.findViewById(R.id.setup_remote_provisioning_url);
+		remoteProvisioningUrl = (EditText) view.findViewById(R.id.assistant_remote_provisioning_url);
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setOnClickListener(this);
 		

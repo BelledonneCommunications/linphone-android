@@ -45,34 +45,18 @@
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-			<EditText
-				android:id="@+id/assistant_username"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:textCursorDrawable="@null"
-				android:inputType="textEmailAddress"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:singleLine="true"/>
-	        
-	        <ImageView
-				android:id="@+id/assistant_username_ok"
-				android:src="@drawable/wizard_notok"
-	    		android:contentDescription="@string/content_description_setup_ok"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="5dp"
-	            android:layout_centerVertical="true"
-	            android:layout_alignParentRight="true" />
-        
-        </RelativeLayout>
+		<EditText
+			android:id="@+id/assistant_username"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
 
 		<TextView
 			android:text="@string/password"
@@ -81,35 +65,19 @@
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            
-	        <EditText
-	            android:id="@+id/assistant_password"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:textCursorDrawable="@null"
-				android:inputType="textEmailAddress"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:singleLine="true"/>
-	        
-	        <ImageView
-				android:id="@+id/assistant_password_ok"
-				android:src="@drawable/wizard_notok"
-				android:contentDescription="@string/content_description_setup_ok"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="5dp"
-				android:layout_centerVertical="true"
-				android:layout_alignParentRight="true" />
 
 
-		</RelativeLayout>
+		<EditText
+			android:id="@+id/assistant_password"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
 
 		<TextView
 			android:text="@string/assistant_password_confirm"
@@ -118,34 +86,19 @@
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-	        
-	        <EditText
-	            android:id="@+id/assistant_password_confirm"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:textCursorDrawable="@null"
-				android:inputType="text"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:singleLine="true"/>
-	        
-	        <ImageView
-				android:id="@+id/assistant_confirm_password_ok"
-	            android:src="@drawable/wizard_notok"
-				android:contentDescription="@string/content_description_setup_ok"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="5dp"
-				android:layout_centerVertical="true"
-				android:layout_alignParentRight="true" />
 
-		</RelativeLayout>
+
+		<EditText
+			android:id="@+id/assistant_password_confirm"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="text"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
 
 		<TextView
 			android:text="@string/email"
@@ -154,34 +107,18 @@
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            
-        	<EditText
-	            android:id="@+id/assistant_email"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:textCursorDrawable="@null"
-				android:inputType="text"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:singleLine="true"/>
-	        
-	        <ImageView
-				android:id="@+id/assistant_email_ok"
-	            android:src="@drawable/wizard_notok"
-				android:contentDescription="@string/content_description_setup_ok"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="5dp"
-				android:layout_centerVertical="true"
-				android:layout_alignParentRight="true" />
-        
-        </RelativeLayout>
+
+		<EditText
+			android:id="@+id/assistant_email"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="text"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
         
         <RelativeLayout
             android:layout_marginTop="20dp"
@@ -191,7 +128,7 @@
 			<Button
 				android:id="@+id/assistant_create"
 				android:text="@string/assistant_create"
-				android:background="@drawable/resizable_assistant_button"
+				android:background="@drawable/assistant_button"
 				style="@style/font8"
 				android:contentDescription="@string/content_description_validate"
 				android:layout_width="wrap_content"
