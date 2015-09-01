@@ -39,7 +39,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
-	private ImageView dialBack, chat, addToContacts;
+	private ImageView dialBack, chat, addToContacts, back;
 	private View view;
 	private ImageView contactPicture;
 	private TextView contactName, contactAddress, callDirection, time, date;
@@ -59,6 +59,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		dialBack = (ImageView) view.findViewById(R.id.dialBack);
 		dialBack.setOnClickListener(this);
+
+		back = (ImageView) view.findViewById(R.id.back);
+		back.setOnClickListener(this);
 		
 		chat = (ImageView) view.findViewById(R.id.chat);
 		chat.setOnClickListener(this);
@@ -151,8 +154,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
-		if (id == R.id.dialBack) {
+
+		if (id == R.id.back) {
+			getFragmentManager().popBackStackImmediate();
+		} if (id == R.id.dialBack) {
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
