@@ -77,6 +77,7 @@ public class DialerFragment extends Fragment {
 		}
 		
 		mAddContact = (ImageView) view.findViewById(R.id.addContact);
+		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
 		
 		addContactListener = new OnClickListener() {
 			@Override
@@ -102,8 +103,7 @@ public class DialerFragment extends Fragment {
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		};
-		
-		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
+
 		resetLayout(isCallTransferOngoing);
 		
 		if (getArguments() != null) {
@@ -164,12 +164,12 @@ public class DialerFragment extends Fragment {
 				mCall.resetClickListener();
 			}
 			mAddContact.setEnabled(true);
-			//mAddContact.setImageResource(R.drawable.cancel);
+			mAddContact.setImageResource(R.drawable.call_back);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
 			mCall.setImageResource(R.drawable.call_audio_start);
-			mAddContact.setEnabled(true);
-			//mAddContact.setImageResource(R.drawable.add_contact_button);
+			mAddContact.setEnabled(false);
+			mAddContact.setImageResource(R.drawable.contact_add_button);
 			mAddContact.setOnClickListener(addContactListener);
 			enableDisableAddContact();
 		}
