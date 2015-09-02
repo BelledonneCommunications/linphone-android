@@ -29,6 +29,7 @@
 			android:background="@color/colorF"
 			android:ellipsize="start"
 			android:inputType="textEmailAddress"
+			android:hint="@string/addressHint"
 			android:paddingLeft="20dp"
 			android:paddingRight="5dp"
 			android:layout_toLeftOf="@id/Erase"
