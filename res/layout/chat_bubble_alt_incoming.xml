@@ -12,16 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
-    
-    <ImageView
-        android:id="@+id/image"
-        android:visibility="gone"
-        android:adjustViewBounds="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_weight="1"
-        android:maxWidth="250dp"
-        android:maxHeight="250dp" />
+
+	<ImageView
+		android:id="@+id/image"
+		android:visibility="gone"
+		android:layout_width="150dp"
+		android:layout_height="150dp"
+		android:scaleType="center"
+		android:maxWidth="250dp"
+		android:maxHeight="250dp" />
     
     <Button
         android:id="@+id/download"
