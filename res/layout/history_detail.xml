@@ -6,18 +6,17 @@
     android:orientation="vertical" >
 
 	<RelativeLayout
+		android:id="@+id/relativeLayout"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="bottom"
-		android:background="@color/colorF"
-		android:id="@+id/relativeLayout">
-
+		android:background="@color/colorF">
 
 		<ImageView
 			android:id="@+id/back"
-			android:contentDescription="@string/content_description_back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_back"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
@@ -27,11 +26,11 @@
 
 		<ImageView
 			android:id="@+id/add_contact"
+			android:src="@drawable/contact_add"
+			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_add_contact"
 			android:layout_alignParentRight="true"
 			android:padding="10dp"
-			android:src="@drawable/contact_add"
-			android:background="@drawable/toolbar_button"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:adjustViewBounds="true"/>
@@ -48,34 +47,46 @@
 	    android:orientation="vertical">
 
 
-        <RelativeLayout
+		<RelativeLayout
+			android:id="@+id/avatar_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center">
 
 			<ImageView
-				android:id="@+id/contactPicture"
+				android:id="@+id/contact_picture"
+				android:src="@drawable/avatar"
+				android:contentDescription="@string/content_description_contact_picture"
 				android:layout_width="120dp"
 				android:layout_height="120dp"
-				android:src="@drawable/avatar" />
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
+			<ImageView
+				android:id="@+id/mask"
+				android:src="@drawable/avatar_mask"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="120dp"
+				android:layout_height="120dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
 		</RelativeLayout>
 
-
 		<TextView
-			android:id="@+id/contactName"
+			android:id="@+id/contact_name"
+			style="@style/font5"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="@color/colorC" />
+			android:layout_height="wrap_content"/>
 	        
 		<TextView
-			android:id="@+id/contactAddress"
+			android:id="@+id/contact_address"
+			style="@style/font2"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="@color/colorA" />
+			android:layout_height="wrap_content"/>
 
-        
     </LinearLayout>
     
     <LinearLayout
@@ -92,59 +103,58 @@
             android:paddingRight="10dp">
             
 	        <ImageView
+				android:id="@+id/call"
+				android:src="@drawable/call_start_body_default"
 	            android:contentDescription="@string/content_description_dial_back"
-	            android:id="@+id/dialBack"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
-	            android:src="@drawable/call_start_body_default"
-		    	android:layout_centerInParent="true" />
+		    	android:layout_centerInParent="true"/>
 
         </RelativeLayout>
         
         <RelativeLayout
+			android:id="@+id/chat_row"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/chatRow"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
 	        <ImageView
+				android:id="@+id/chat"
+				android:src="@drawable/chat_start_body_default"
 	            android:contentDescription="@string/content_description_chat"
-	            android:id="@+id/chat"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
-	            android:src="@drawable/chat_start_body_default"
 		    	android:layout_centerInParent="true" />
 
-
         </RelativeLayout>
-        
     </LinearLayout>
 
 	<LinearLayout
-		android:id="@+id/logRow"
+		android:id="@+id/log_row"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:paddingTop="20dp">
 
 		<View
+			android:background="@color/colorE"
 			android:layout_width="wrap_content"
 			android:layout_height="1dp"
 			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:background="@color/colorE"/>
+			android:layout_marginRight="10dp"/>
 
 		<TextView
-			android:layout_marginTop="10dp"
+			android:id="@+id/call_direction"
+			android:text="@string/call"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:layout_marginTop="2dp"
 			android:layout_gravity="center"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/call"
-			android:textAllCaps="true"
-			android:textColor="@color/colorE" />
+			android:layout_height="wrap_content"/>
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -154,28 +164,18 @@
 			android:padding="10dp">
 
 			<TextView
-				android:id="@+id/callDirection"
-				android:paddingRight="10dp"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="@color/text_contrast" />
-
-			<TextView
 				android:id="@+id/date"
+				style="@style/font10"
 				android:paddingRight="10dp"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="@color/text_contrast" />
+				android:layout_height="wrap_content"/>
 
 			<TextView
 				android:id="@+id/time"
+				style="@style/font10"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="@color/text_contrast" />
+				android:layout_height="wrap_content" />
 
 		</LinearLayout>
-
-
 	</LinearLayout>
-
 </LinearLayout>

@@ -2,21 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="@drawable/list_selector"
+	android:background="@color/colorH"
 	android:gravity="center_vertical"
 	android:orientation="vertical" >
 
-	<TextView
+	<LinearLayout
 		android:id="@+id/separator"
-		android:paddingLeft="10dp"
 		android:layout_width="match_parent"
-		android:layout_height="30dp"
-		android:textSize="20sp"
-		android:background="@color/colorH"
-		android:textColor="@color/colorA"
-		android:textStyle="bold"
-		android:textAllCaps="true"
-		android:gravity="center"/>
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/separator_text"
+			style="@style/font1"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:gravity="center"/>
+
+		<ImageView
+			android:background="@color/colorE"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"/>
+
+	</LinearLayout>
+
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -24,47 +33,63 @@
 		android:layout_margin="5dp"
 		android:gravity="center_vertical">
 
-		<ImageView
-			android:id="@+id/contact_picture"
-			android:contentDescription="@string/content_description_contact_picture"
-			android:src="@drawable/avatar"
+		<RelativeLayout
+			android:id="@+id/avatar_layout"
 			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:adjustViewBounds="true"
-			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="5dp"/>
+			android:layout_height="wrap_content">
+
+			<ImageView
+				android:id="@+id/contact_picture"
+				android:src="@drawable/avatar"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
+			<ImageView
+				android:id="@+id/mask"
+				android:src="@drawable/avatar_mask"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
+		</RelativeLayout>
+
 
 		<ImageView
 			android:id="@+id/icon"
+			android:src="@drawable/call_status_incoming"
 			android:contentDescription="@string/content_description_call_direction"
 			android:padding="5dp"
-			android:layout_toRightOf="@id/contact_picture"
+			android:layout_toRightOf="@id/avatar_layout"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:adjustViewBounds="true"
-			android:src="@drawable/call_status_incoming"
 			android:layout_marginLeft="5dp"/>
 
 		<TextView
-			android:id="@+id/sipUri"
+			android:id="@+id/sip_uri"
+			style="@style/font6"
 			android:lines="1"
-			android:textSize="30sp"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/icon"
 			android:ellipsize="marquee"
 			android:marqueeRepeatLimit="marquee_forever"
 			android:scrollHorizontally="true"
 			android:fadingEdge="horizontal"
 			android:singleLine="true"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="@color/text_contrast"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@id/icon"
 			android:layout_marginLeft="10dp" />
 
 		<ImageView
 			android:id="@+id/detail"
-			android:contentDescription="@string/content_description_detail"
 			android:src="@drawable/list_detail"
+			android:contentDescription="@string/content_description_detail"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
@@ -75,10 +100,10 @@
 		<CheckBox
 			android:id="@+id/delete"
 			android:button="@drawable/checkbox"
+			android:contentDescription="@string/content_description_delete"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
-			android:contentDescription="@string/content_description_delete"
 			android:visibility="gone"
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp" />

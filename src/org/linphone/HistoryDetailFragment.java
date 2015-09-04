@@ -54,10 +54,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		String status = getArguments().getString("CallStatus");
 		String callTime = getArguments().getString("CallTime");
 		String callDate = getArguments().getString("CallDate");
-		
+
 		view = inflater.inflate(R.layout.history_detail, container, false);
 		
-		dialBack = (ImageView) view.findViewById(R.id.dialBack);
+		dialBack = (ImageView) view.findViewById(R.id.call);
 		dialBack.setOnClickListener(this);
 
 		back = (ImageView) view.findViewById(R.id.back);
@@ -71,16 +71,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		addToContacts = (ImageView) view.findViewById(R.id.add_contact);
 		addToContacts.setOnClickListener(this);
 		
-		contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
+		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		
-		contactName = (TextView) view.findViewById(R.id.contactName);
+		contactName = (TextView) view.findViewById(R.id.contact_name);
 		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
 			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
 		}
 		
-		contactAddress = (TextView) view.findViewById(R.id.contactAddress);
+		contactAddress = (TextView) view.findViewById(R.id.contact_address);
 		
-		callDirection = (TextView) view.findViewById(R.id.callDirection);
+		callDirection = (TextView) view.findViewById(R.id.call_direction);
 		
 		time = (TextView) view.findViewById(R.id.time);
 		date = (TextView) view.findViewById(R.id.date);
@@ -99,11 +99,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		}
 		
 		if (status.equals("Missed")) {
-			callDirection.setText(getString(R.string.call_state_missed));
+			callDirection.setText(getString(R.string.call_state_missed) + " call");
 		} else if (status.equals("Incoming")) {
-			callDirection.setText(getString(R.string.call_state_incoming));
+			callDirection.setText(getString(R.string.call_state_incoming) + " call");
 		} else if (status.equals("Outgoing")) {
-			callDirection.setText(getString(R.string.call_state_outgoing));
+			callDirection.setText(getString(R.string.call_state_outgoing) + " call");
 		} else {
 			callDirection.setText(status);
 		}
@@ -116,10 +116,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 			if (contact != null) {
-				//LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),contact.getPhotoUri(), contact.getThumbnailUri(), R.drawable.unknown_small);
+				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
 				view.findViewById(R.id.add_contact).setVisibility(View.GONE);
 			} else {
-				//LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture.getView(),null, null ,R.drawable.unknown_small);
+				contactPicture.setImageResource(R.drawable.avatar);
 			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
@@ -157,7 +157,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
 		if (id == R.id.back) {
 			getFragmentManager().popBackStackImmediate();
-		} if (id == R.id.dialBack) {
+		} if (id == R.id.call) {
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
