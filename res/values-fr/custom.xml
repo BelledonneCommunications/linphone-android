@@ -8,6 +8,9 @@
   <string name="app_name">Linphone</string>
   <string name="service_name">Linphone Service</string>
   <string name="addressbook_label">Linphone</string>
+  <string name="sync_account_type">org.linphone</string>
+  <string name="sync_account_name">contacts linphone</string>
+  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">Enregistré sur %s</string>
@@ -21,5 +24,6 @@
   <string name="setup_linphone_account_hint">Entrez votre nom d\'utilisateur et mot de passe de linphone.org</string>
   <string name="setup_general_account_hint">Entrez votre nom d\'utilisateur, mot de passe et nom de domaine de votre compte SIP</string>
   <string name="setup_username_hint">nom d\'utilisateur</string>
+  <string name="button_sip_contacts">SIP</string>
   <string name="tunnel_host"></string>
 </resources>

@@ -311,7 +311,6 @@
   <string name="button_ok">حسنا</string>
   <string name="button_back">الرجوع</string>
   <string name="button_all_contacts">الكل</string>
-  <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">جهة اتصال جديدة</string>
   <string name="button_all_call">الكل</string>
   <string name="button_missed_call">الفائتة</string>
@@ -344,7 +343,6 @@
   <string name="image_not_saved">خطأ، لم تُحفَظ الصورة</string>
   <string name="pref_linphone_friend_title">الأصدقاء</string>
   <string name="pref_auto_accept_friends_title">أصدقاء جدد</string>
-  <string name="pref_auto_accept_friends_desc">اقبل تلقائيا طلبات الأصدقاء الجدد</string>
   <string name="linphone_friend_new_request_title">طلب صديق</string>
   <string name="linphone_friend_new_request_desc">يريد مشاركة حالة حضوره معك ويريد كذلك أن يكون مطَّلعا على حالة حضورك.</string>
   <string name="setup_ec_calibration">تجري معايرة مزيل الصدى</string>
@@ -393,7 +391,6 @@
   <string name="setup_remote_provisioning_hint">سينزِّل هذا المرشد تهيئة موجودة</string>
   <string name="setup_remote_provisioning_url_hint">عنوان التهيئة</string>
   <string name="setup_remote_provisioning_login_hint">لا تتضمن التهيئة التي نزَّلت هذا الحساب. يُرجى ملؤه فيها.</string>
-  <string name="setup_confirm_username">سيكون إسم المستخدم الخاص بك هو %s (الأحرف الكبيرة غير مسموح بها). هل أنت موافق ؟</string>
   <string name="setup_title_assistant">مرشد تهيئة الحساب</string>
   <string name="zrtp_accept">قبول</string>
   <string name="zrtp_deny">رفض</string>

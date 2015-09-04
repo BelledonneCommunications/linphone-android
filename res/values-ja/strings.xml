@@ -311,7 +311,6 @@
   <string name="button_ok">はい</string>
   <string name="button_back">戻る</string>
   <string name="button_all_contacts">すべて</string>
-  <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">新しい連絡先</string>
   <string name="button_all_call">すべて</string>
   <string name="button_missed_call">ミス</string>
@@ -344,7 +343,6 @@
   <string name="image_not_saved">エラー、画像が保存できません。</string>
   <string name="pref_linphone_friend_title">友だち</string>
   <string name="pref_auto_accept_friends_title">新しい友だち</string>
-  <string name="pref_auto_accept_friends_desc">utomaticallyで新しい友だちリクエストを受け入れる</string>
   <string name="linphone_friend_new_request_title">友だちリクエスト</string>
   <string name="linphone_friend_new_request_desc">あなたとプレゼンス状態のシェアをしたいと考えています。</string>
   <string name="setup_ec_calibration">エコーキャンセラーの調整進行中</string>
@@ -393,7 +391,6 @@
   <string name="setup_remote_provisioning_hint">このアシスタントは、既存の設定をダウンロードします。</string>
   <string name="setup_remote_provisioning_url_hint">プロビジョニングのURL</string>
   <string name="setup_remote_provisioning_login_hint">ダウンロードした設定にはあなたのアカウント情報が含まれていませんのでそれを記入してください。</string>
-  <string name="setup_confirm_username">あなたのユーザー名は %s のになります(大文字は使用できません)。こちらでよろしいですか？</string>
   <string name="setup_title_assistant">アカウント設定アシスタント</string>
   <string name="zrtp_accept">受理</string>
   <string name="zrtp_deny">拒否</string>

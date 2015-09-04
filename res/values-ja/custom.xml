@@ -13,7 +13,6 @@
   <string name="notification_registered">%s に登録しました</string>
   <string name="notification_register_failure">%s への登録に失敗しました</string>
   <string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2</string>
-  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2015 Belledonne Communications</string>
   <string name="setup_welcome">アシスタントがSIPアカウントを使ってあなたの通話を助けます。</string>
   <string name="setup_create_account">linphone.orgのアカウントを作成する</string>
   <string name="setup_login_linphone">linphone.orgのアカウントをすでに持っている</string>
@@ -21,5 +20,6 @@
   <string name="setup_linphone_account_hint">linphone.orgのユーザー名とパスワードを入力してください</string>
   <string name="setup_general_account_hint">SIPアカウントのユーザー名とパスワードとドメインを入力してください</string>
   <string name="setup_username_hint">ユーザー名</string>
+  <string name="button_sip_contacts">SIP</string>
   <string name="tunnel_host"></string>
 </resources>

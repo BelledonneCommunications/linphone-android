@@ -13,7 +13,6 @@
   <string name="notification_registered">Уписан на „%s“ </string>
   <string name="notification_register_failure">Нисам успео да се упишем на „%s“</string>
   <string name="about_text">Линфон %s телефон сагласан са СИП-ом (rfc 3261) под Гнуовом Јавном Лиценцом и2</string>
-  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2015 Belledonne Communications</string>
   <string name="setup_welcome">Овај помоћник ће вам помоћи да користите СИП налог за ваше позиве.</string>
   <string name="setup_create_account">Направи налог на линфон.орг-у</string>
   <string name="setup_login_linphone">Већ имам налог линфон.орг-а</string>

@@ -133,7 +133,6 @@
   <string name="button_setup_cancel">Annuleren</string>
   <string name="button_cancel">Annuleren</string>
   <string name="button_all_contacts">Alle</string>
-  <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">Nieuw contact</string>
   <string name="button_all_call">Alle</string>
   <string name="button_missed_call">Gemist</string>
