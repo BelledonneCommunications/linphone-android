@@ -33,10 +33,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,7 +42,6 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -64,7 +60,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 	private ListView historyList;
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
-	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, deleteAll;
+	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete;
 	private RelativeLayout allCallsSelected, missedCallsSelected;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs;
@@ -80,11 +76,10 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 
 		historyList = (ListView) view.findViewById(R.id.historyList);
 		historyList.setOnItemClickListener(this);
-		registerForContextMenu(historyList);
 
-		deleteAll = (ImageView) view.findViewById(R.id.delete);
-		deleteAll.setOnClickListener(this);
-		deleteAll.setVisibility(View.INVISIBLE);
+		delete = (ImageView) view.findViewById(R.id.delete);
+		delete.setOnClickListener(this);
+		delete.setVisibility(View.INVISIBLE);
 
 		allCalls = (ImageView) view.findViewById(R.id.all_calls);
 		allCalls.setOnClickListener(this);
@@ -115,6 +110,23 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 
 	public void refresh() {
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+	}
+
+	private void selectAllList(boolean isSelectAll){
+		int size = historyList.getAdapter().getCount();
+		for(int i=0; i<size; i++) {
+			historyList.setItemChecked(i,isSelectAll);
+		}
+	}
+
+	private void removeCallLogs(){
+		int size = historyList.getAdapter().getCount();
+		for(int i=0; i<size; i++) {
+			if(historyList.isItemChecked(i)){
+				LinphoneCallLog log = mLogs.get(i);
+				LinphoneManager.getLc().removeCallLog(log);
+			}
+		}
 	}
 
 	private void removeNotMissedCallsFromLogs() {
@@ -165,75 +177,20 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, v.getId(), 0, getString(R.string.delete));
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		LinphoneCallLog log = mLogs.get(info.position);
-		LinphoneManager.getLc().removeCallLog(log);
-		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-			historyList.setAdapter(new CallHistoryAdapter(getActivity()));
-		}
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-
-		if (id == R.id.edit) {
-			edit.setVisibility(View.GONE);
-			selectAll.setVisibility(View.VISIBLE);
-			deleteAll.setVisibility(View.VISIBLE);
-			isEditMode = true;
-		}
-		if (id == R.id.all_calls) {
-			allCalls.setEnabled(false);
-			allCallsSelected.setVisibility(View.VISIBLE);
-			missedCallsSelected.setVisibility(View.INVISIBLE);
-			missedCalls.setEnabled(true);
-			onlyDisplayMissedCalls = false;
-
-			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-		}
-		if (id == R.id.missed_calls) {
-			allCalls.setEnabled(true);
-			allCallsSelected.setVisibility(View.INVISIBLE);
-			missedCallsSelected.setVisibility(View.VISIBLE);
-			missedCalls.setEnabled(false);
-			onlyDisplayMissedCalls = true;
-		}
-
-		if (!hideHistoryListAndDisplayMessageIfEmpty() && !isEditMode) {
-			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
-		}
-
-		if(isEditMode){
-			deselectAll.setVisibility(View.GONE);
-			selectAll.setVisibility(View.VISIBLE);
-		}
 
 		if (id == R.id.select_all) {
 			deselectAll.setVisibility(View.VISIBLE);
 			selectAll.setVisibility(View.GONE);
-			int size = historyList.getAdapter().getCount();
-			for(int i=0; i<size; i++) {
-				historyList.setItemChecked(i, true);
-			}
+			selectAllList(true);
+			return;
 		}
 		if (id == R.id.deselect_all) {
 			deselectAll.setVisibility(View.GONE);
 			selectAll.setVisibility(View.VISIBLE);
-			int size = historyList.getAdapter().getCount();
-			for(int i=0; i<size; i++) {
-				historyList.setItemChecked(i, false);
-			}
+			selectAllList(false);
+			return;
 		}
 
 		if (id == R.id.delete) {
@@ -244,13 +201,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			delete.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					int size = historyList.getAdapter().getCount();
-					for(int i=0; i<size; i++) {
-						if(historyList.isItemChecked(i)){
-							LinphoneCallLog log = mLogs.get(i);
-							LinphoneManager.getLc().removeCallLog(log);
-						}
-					}
+					removeCallLogs();
 					dialog.dismiss();
 					quitEditMode();
 				}
@@ -264,7 +215,41 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 				}
 			});
 			dialog.show();
+			return;
 		}
+
+		if (id == R.id.edit) {
+			edit.setVisibility(View.GONE);
+			selectAll.setVisibility(View.VISIBLE);
+			delete.setVisibility(View.VISIBLE);
+			isEditMode = true;
+		}
+		if (id == R.id.all_calls) {
+			allCalls.setEnabled(false);
+			allCallsSelected.setVisibility(View.VISIBLE);
+			missedCallsSelected.setVisibility(View.INVISIBLE);
+			missedCalls.setEnabled(true);
+			onlyDisplayMissedCalls = false;
+			refresh();
+		}
+		if (id == R.id.missed_calls) {
+			allCalls.setEnabled(true);
+			allCallsSelected.setVisibility(View.INVISIBLE);
+			missedCallsSelected.setVisibility(View.VISIBLE);
+			missedCalls.setEnabled(false);
+			onlyDisplayMissedCalls = true;
+		}
+
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
+			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
+
+		if(isEditMode){
+			deselectAll.setVisibility(View.GONE);
+			selectAll.setVisibility(View.VISIBLE);
+		}
+
 	}
 
 	@Override
@@ -288,12 +273,12 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 	}
 
 	private void hideDeleteAllButton() {
-		if (deleteAll == null || deleteAll.getVisibility() != View.VISIBLE) {
+		if (delete == null || delete.getVisibility() != View.VISIBLE) {
 			return;
 		}
 
 		if (LinphoneActivity.instance().isAnimationDisabled()) {
-			deleteAll.setVisibility(View.INVISIBLE);
+			delete.setVisibility(View.INVISIBLE);
 		} else {
 			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_right_to_left);
 			animation.setAnimationListener(new AnimationListener() {
@@ -309,21 +294,21 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					deleteAll.setVisibility(View.INVISIBLE);
+					delete.setVisibility(View.INVISIBLE);
 					animation.setAnimationListener(null);
 				}
 			});
-			deleteAll.startAnimation(animation);
+			delete.startAnimation(animation);
 		}
 	}
 
 	private void showDeleteAllButton() {
-		if (deleteAll == null || deleteAll.getVisibility() == View.VISIBLE) {
+		if (delete == null || delete.getVisibility() == View.VISIBLE) {
 			return;
 		}
 
 		if (LinphoneActivity.instance().isAnimationDisabled()) {
-			deleteAll.setVisibility(View.VISIBLE);
+			delete.setVisibility(View.VISIBLE);
 		} else {
 			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_left_to_right);
 			animation.setAnimationListener(new AnimationListener() {
@@ -339,11 +324,11 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					deleteAll.setVisibility(View.VISIBLE);
+					delete.setVisibility(View.VISIBLE);
 					animation.setAnimationListener(null);
 				}
 			});
-			deleteAll.startAnimation(animation);
+			delete.startAnimation(animation);
 		}
 	}
 
@@ -351,7 +336,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		isEditMode = false;
 		selectAll.setVisibility(View.GONE);
 		deselectAll.setVisibility(View.GONE);
-		deleteAll.setVisibility(View.GONE);
+		delete.setVisibility(View.GONE);
 		edit.setVisibility(View.VISIBLE);
 		refresh();
 		if (!hideHistoryListAndDisplayMessageIfEmpty()){

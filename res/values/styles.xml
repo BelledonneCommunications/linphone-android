@@ -58,7 +58,7 @@
 
 	<style name="font10" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorD</item>
-		<item name="android:textSize">26sp</item>
+		<item name="android:textSize">24sp</item>
 	</style>
 
 	<style name="font11" parent="@android:style/TextAppearance.Small">
@@ -67,12 +67,12 @@
 	</style>
 
 	<style name="font12" parent="@android:style/TextAppearance.Small">
-		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textColor">@color/colorE</item>
 		<item name="android:textSize">25sp</item>
 	</style>
 
 	<style name="font13" parent="@android:style/TextAppearance.Small">
-		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textColor">@color/colorE</item>
 		<item name="android:textSize">18sp</item>
 	</style>
 
