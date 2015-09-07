@@ -495,9 +495,10 @@ install-apk:
 	ant installd
 
 release: update-project
-	$(ANT) clean
+	$(MAKE) java-clean
 	patch -p1 < release.patch
 	cat ant.properties | grep version.name > default.properties
+	$(MAKE) generate-libs
 	$(ANT) release
 	patch -Rp1 < release.patch
 
@@ -529,8 +530,10 @@ java-clean:
 	$(ANT) clean
 
 clean:	clean-native java-clean
+	patch -Rp1 -f < release.patch || echo "patch already cleaned"
+	rm -f AndroidManifest.xml.rej
+	rm -f AndroidManifest.xml.orig
 
-veryclean: clean
 
 .PHONY: clean install-apk run-linphone
 
