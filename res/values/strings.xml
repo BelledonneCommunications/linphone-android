@@ -10,7 +10,7 @@
 	<string name="domain">Domain</string>
 	<string name="remote_provisioning_url">Provisioning url</string>
 	<string name="email">Email</string>
-	<string name="delete_text">Are you sure you want to delete all your selection ?</string>
+	<string name="delete_text">Are you sure you want to delete your selection ?</string>
 	<string name="delete">Delete</string>
 	<string name="cancel">Cancel</string>
 

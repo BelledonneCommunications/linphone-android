@@ -106,7 +106,7 @@
 
 		<ImageView
 			android:id="@+id/edit"
-			android:src="@drawable/edit_list"
+			android:src="@drawable/edit_list_button"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
 			android:layout_width="wrap_content"
