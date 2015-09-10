@@ -170,11 +170,11 @@
 		    android:layout_height="match_parent">
 
 			<ImageView
-				android:id="@+id/menu_bar"
+				android:id="@+id/menu_icon"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:padding="10dp"
-				android:src="@drawable/menu"
+				android:src="@drawable/menu_burger"
 				android:layout_centerVertical="true"
 				android:layout_centerInParent="true"
 				android:layout_alignParentLeft="true"/>
@@ -188,8 +188,7 @@
 				android:layout_width="wrap_content"
 		        android:layout_height="match_parent"
 				android:layout_alignParentTop="true"
-				android:layout_toRightOf="@+id/menu_bar"
-				android:layout_toEndOf="@+id/menu_bar"/>
+				android:layout_toRightOf="@+id/menu_icon"/>
 
 			<TextView
 		        android:id="@+id/statusText" 

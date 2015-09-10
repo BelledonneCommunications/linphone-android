@@ -144,3 +144,6 @@ BUILD_MATROSKA
 
 BUILD_ILBC
 	values: 0 (don't build iLBC), 1 (do build iLBC), default value: 1
+
+BUILD_CODEC2
+	values: 0 (don't build codec2 support), 1 (do build codec2 support), default value: 0

@@ -65,7 +65,6 @@
 				android:gravity="center"
 				android:orientation="vertical">
 
-
 				<RelativeLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -156,11 +155,6 @@
 					android:layout_height="wrap_content"
 					android:paddingTop="20dp">
 
-					<TableRow
-						android:layout_width="match_parent"
-						android:layout_height="match_parent">
-
-					</TableRow>
 				</TableLayout>
 
 			</LinearLayout>
@@ -200,11 +194,6 @@
 					android:layout_height="wrap_content"
 					android:paddingTop="20dp">
 
-					<TableRow
-						android:layout_width="match_parent"
-						android:layout_height="match_parent">
-
-					</TableRow>
 				</TableLayout>
 
 			</LinearLayout>

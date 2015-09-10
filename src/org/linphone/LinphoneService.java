@@ -289,7 +289,7 @@ public final class LinphoneService extends Service {
 			mNM.cancel(INCALL_NOTIF_ID);
 			return;
 		case INCALL:
-			inconId = R.drawable.conf_unhook;
+			inconId = R.drawable.topbar_call_notification;
 			notificationTextId = R.string.incall_notif_active;
 			break;
 		case PAUSE:
@@ -321,7 +321,7 @@ public final class LinphoneService extends Service {
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 		} catch (Exception e) {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 		}
 		String name = address.getDisplayName() == null ? address.getUserName() : address.getDisplayName();
 		mIncallNotif = Compatibility.createInCallNotification(getApplicationContext(), mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);

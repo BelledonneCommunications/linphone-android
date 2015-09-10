@@ -112,6 +112,7 @@
   <string name="pref_video_initiate_call_with_video_title">Initier les appels en vidéo</string>
   <string name="pref_video_initiate_call_with_video">Toujours envoyer des demandes d\'appels vidéo</string>
   <string name="pref_video_enable_title">Activer la vidéo</string>
+  <string name="pref_bandwidth_limit">Bande passante maximale en kb/s</string>
   <string name="pref_animation_enable_title">Activer les animations</string>
   <string name="pref_escape_plus">Remplacer + par 00</string>
   <string name="pref_ilbc_summary">iLBC peut être indisponible suivant le processeur ARM et la version d\'Android.</string>
@@ -311,7 +312,6 @@
   <string name="button_ok">Valider</string>
   <string name="button_back">Retour</string>
   <string name="button_all_contacts">Tous</string>
-  <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">+ Contact</string>
   <string name="button_all_call">Tous</string>
   <string name="button_missed_call">Manqués</string>
@@ -344,13 +344,14 @@
   <string name="image_not_saved">Erreur, image non sauvegardée</string>
   <string name="pref_linphone_friend_title">Amis</string>
   <string name="pref_auto_accept_friends_title">Nouveaux amis</string>
-  <string name="pref_auto_accept_friends_desc">Toujours accepter les nouvelles demandes d\'amis</string>
+  <string name="pref_auto_accept_friends_desc">Toujours accepter les demandes d\'amis</string>
   <string name="linphone_friend_new_request_title">Requête d\'ami</string>
   <string name="linphone_friend_new_request_desc">voudrait être partager son status avec vous et voir le votre.</string>
   <string name="setup_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>
   <string name="pref_remote_provisioning_title">Configuration distante</string>
   <string name="delete_contact">Supprimer</string>
+  <string name="delete_contact_dialog">Ce contact va être supprimé.</string>
   <string name="sip_address">Adresse SIP</string>
   <string name="phone_number">Numéro de téléphone</string>
   <string name="contact_first_name">Prénom</string>
@@ -371,6 +372,9 @@
   <string name="error_incompatible_media">Paramètres média incompatibles</string>
   <string name="error_low_bandwidth">Votre correspondant à un débit faible, la vidéo ne peut démarrer</string>
   <string name="error_network_unreachable">Le réseau n\'est pas joignable</string>
+  <string name="error_bad_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
+  <string name="error_unauthorized">Non autorisé</string>
+  <string name="error_io_error">Erreur réseau</string>
   <string name="today">Aujourd\'hui</string>
   <string name="yesterday">Hier</string>
   <string name="call_state_missed">Manqué</string>
@@ -393,7 +397,7 @@
   <string name="setup_remote_provisioning_hint">Cet assistant va télécharger une configuration existante.</string>
   <string name="setup_remote_provisioning_url_hint">addresse où télécharger la configuration</string>
   <string name="setup_remote_provisioning_login_hint">La configuration téléchargée ne contient pas votre compte. Veuillez le remplir.</string>
-  <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de celui que vous avez choisi afin de remplir certains critères nécessaires.\r\nAcceptez-vous ?</string>
+  <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut être différent de celui que vous aviez entré.\r\nAcceptez-vous ce nom d\'utilisateur ?</string>
   <string name="setup_title_assistant">Assistant de création de compte</string>
   <string name="zrtp_accept">Accepter</string>
   <string name="zrtp_deny">Refuser</string>
@@ -404,4 +408,5 @@
   <string name="remote_provisioning_failure">Erreur durant le téléchargement ou l\'application de la configuration distante...</string>
   <string name="remote_provisioning_again_title">Configuration distante</string>
   <string name="remote_provisioning_again_message">Souhaitez-vous changer l\'URI de configuration ?</string>
+  <string name="processing_image">Traitement de l\'image, cela peut prendre quelques secondes selon sa taille</string>
 </resources>

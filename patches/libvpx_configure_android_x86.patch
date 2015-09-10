@@ -1,36 +1,38 @@
---- a/submodules/externals/libvpx/build/make/configure.sh
-+++ b/submodules/externals/libvpx/build/make/configure.sh
-@@ -1037,6 +1037,33 @@ EOF
-             os2)
-                 AS=${AS:-nasm}
-                 ;;
-+	    android*)
-+                SDK_PATH=${sdk_path}
-+                COMPILER_LOCATION=`find "${SDK_PATH}" \
-+                                   -name "i686-linux-android-gcc*" -print -quit`
-+                TOOLCHAIN_PATH=${COMPILER_LOCATION%/*}/i686-linux-android-
-+                CC=${TOOLCHAIN_PATH}gcc
-+                CXX=${TOOLCHAIN_PATH}g++
-+                AR=${TOOLCHAIN_PATH}ar
-+                LD=${TOOLCHAIN_PATH}gcc
-+                STRIP=${TOOLCHAIN_PATH}strip
-+                NM=${TOOLCHAIN_PATH}nm
+diff --git a/build/make/configure.sh b/build/make/configure.sh
+index 25c9f80..336b006 100644
+--- a/build/make/configure.sh
++++ b/build/make/configure.sh
+@@ -1082,6 +1082,33 @@ EOF
+         os2)
+           AS=${AS:-nasm}
+           ;;
++		android*)
++			SDK_PATH=${sdk_path}
++			COMPILER_LOCATION=`find "${SDK_PATH}" \
++								-name "i686-linux-android-gcc*" -print -quit`
++			TOOLCHAIN_PATH=${COMPILER_LOCATION%/*}/i686-linux-android-
++			CC=${TOOLCHAIN_PATH}gcc
++			CXX=${TOOLCHAIN_PATH}g++
++			AR=${TOOLCHAIN_PATH}ar
++			LD=${TOOLCHAIN_PATH}gcc
++			STRIP=${TOOLCHAIN_PATH}strip
++			NM=${TOOLCHAIN_PATH}nm
 +
-+                if [ -z "${alt_libc}" ]; then
-+                    alt_libc=`find "${SDK_PATH}" -name arch-x86 -print | \
-+                              awk '{n = split($0,a,"/"); \
-+                                    split(a[n-1],b,"-"); \
-+                                    print $0 " " b[2]}' | \
-+                              sort -g -k 2 | \
-+                              awk '{ print $1 }' | tail -1`
-+                fi
++			if [ -z "${alt_libc}" ]; then
++				alt_libc=`find "${SDK_PATH}" -name arch-x86 -print | \
++							awk '{n = split($0,a,"/"); \
++								split(a[n-1],b,"-"); \
++								print $0 " " b[2]}' | \
++							sort -g -k 2 | \
++							awk '{ print $1 }' | tail -1`
++			fi
 +
-+                add_cflags "--sysroot=${alt_libc}"
-+                add_ldflags "--sysroot=${alt_libc}"
++			add_cflags "--sysroot=${alt_libc}"
++			add_ldflags "--sysroot=${alt_libc}"
 +
-+                soft_enable realtime_only
-+            ;;
++			soft_enable realtime_only
++         ;;
 +
-         esac
+       esac
  
-         AS="${alt_as:-${AS:-auto}}"
+       AS="${alt_as:-${AS:-auto}}"

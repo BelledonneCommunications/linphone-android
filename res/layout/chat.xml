@@ -2,16 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/top_layout"
   	android:background="@color/colorH" >
 
 	<RelativeLayout
-		android:id="@+id/topBar"
+		android:id="@+id/top_bar"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
-		android:layout_gravity="bottom"
-		android:background="@color/colorF">
-
+		android:layout_gravity="bottom">
 
 		<ImageView
 			android:id="@+id/back"
@@ -24,34 +22,11 @@
 			android:padding="10dp"
 			android:adjustViewBounds="true"/>
 
-
-		<ImageView
-			android:id="@+id/edit"
-			android:contentDescription="@string/content_description_edit"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:src="@drawable/edit_list"
-			android:background="@drawable/toolbar_button"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:adjustViewBounds="true"/>
-
-		<ImageView
-			android:id="@+id/start_call"
-			android:contentDescription="@string/content_description_call"
-			android:layout_toLeftOf="@id/edit"
-			android:padding="10dp"
-			android:src="@drawable/call_alt_start"
-			android:background="@drawable/toolbar_button"
-			android:gravity="center"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"/>
-
 		<ImageView
 			android:id="@+id/delete"
-			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/delete"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
@@ -61,9 +36,9 @@
 
 		<ImageView
 			android:id="@+id/select_all"
-			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/select_all"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_toLeftOf="@id/delete"
@@ -73,9 +48,9 @@
 
 		<ImageView
 			android:id="@+id/deselect_all"
-			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/deselect_all"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_toLeftOf="@id/delete"
@@ -83,17 +58,39 @@
 			android:adjustViewBounds="true"
 			android:visibility="gone"/>
 
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"/>
+
+		<ImageView
+			android:id="@+id/start_call"
+			android:src="@drawable/call_alt_start"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_call"
+			android:layout_toLeftOf="@id/edit"
+			android:padding="10dp"
+			android:gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"/>
+
 		<TextView
 			android:id="@+id/contact_name"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="@color/text_contrast"
+			style="@style/font6"
+			android:ellipsize="end"
+			android:singleLine="true"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_toRightOf="@id/back"
 			android:layout_toLeftOf="@id/start_call"
 			android:paddingLeft="10dp"
 			android:gravity="center"/>
-
 
 	</RelativeLayout>
 
@@ -218,7 +215,7 @@
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
 		android:layout_marginBottom="10dp"
-		android:layout_below="@+id/topBar"/>
+		android:layout_below="@+id/top_bar"/>
 
 	<AutoCompleteTextView
 		android:contentDescription="@string/content_description_search"
@@ -232,7 +229,7 @@
 		android:background="@drawable/resizable_textfield"
 		android:gravity="center"
 		android:completionThreshold="1"
-		android:layout_below="@+id/topBar"
+		android:layout_below="@+id/top_bar"
 		android:paddingRight="5dp"
 		android:inputType="textPersonName"/>
 

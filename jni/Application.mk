@@ -36,6 +36,10 @@ ifeq ($(BUILD_G729),)
 BUILD_G729=0
 endif
 
+ifeq ($(BUILD_CODEC2),)
+BUILD_CODEC2=0
+endif
+
 ifeq ($(BUILD_VIDEO),)
 BUILD_VIDEO=1
 endif
@@ -125,6 +129,10 @@ endif
 
 ifeq ($(BUILD_ZRTP), 1)
 APP_MODULES      += libbzrtp
+endif
+
+ifeq ($(BUILD_CODEC2), 1)
+APP_MODULES      +=libcodec2 libmscodec2
 endif
 
 ifeq ($(BUILD_ILBC), 1)

@@ -1,5 +1,7 @@
 package org.linphone;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +10,27 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.Log;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.app.Fragment;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -30,9 +46,11 @@ import android.widget.TableLayout;
 public class EditContactFragment extends Fragment {
 	private View view;
 	private ImageView back, edit, ok;
-	private ImageView addNumber, addSipAddress;
+	private ImageView addNumber, addSipAddress, contactPicture;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
+	private Uri imageToUploadUri;
+	private static final int ADD_PHOTO = 1337;
 	
 	private boolean isNewContact = true;
 	private Contact contact;
@@ -181,13 +199,20 @@ public class EditContactFragment extends Fragment {
 			}
 		}
 		
-		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
+		contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		if (contact != null && contact.getPhotoUri() != null) {
 			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
 			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
-        	//contactPicture.setImageResource(R.drawable.unknown_small);
+        	contactPicture.setImageResource(R.drawable.avatar);
         }
+
+		contactPicture.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				pickImage();
+			}
+		});
 
 		numbers = initNumbersFields(contact);
 		sipAddresses = initSipAddressFields(contact);
@@ -221,6 +246,76 @@ public class EditContactFragment extends Fragment {
 			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
 				LinphoneActivity.instance().hideStatusBar();
 			}
+		}
+	}
+
+	private void pickImage() {
+		List<Intent> cameraIntents = new ArrayList<Intent>();
+		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())));
+		imageToUploadUri = Uri.fromFile(file);
+		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
+		cameraIntents.add(captureIntent);
+
+		Intent galleryIntent = new Intent();
+		galleryIntent.setType("image/*");
+		galleryIntent.setAction(Intent.ACTION_PICK);
+
+		Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
+		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
+
+		startActivityForResult(chooserIntent, ADD_PHOTO);
+	}
+
+	public String getRealPathFromURI(Uri contentUri) {
+		String[] proj = {MediaStore.Images.Media.DATA};
+		CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
+		Cursor cursor = loader.loadInBackground();
+		if (cursor != null && cursor.moveToFirst()) {
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			String result = cursor.getString(column_index);
+			cursor.close();
+			return result;
+		}
+		return null;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
+			String filePicturePath = null;
+
+			if (data != null && data.getData() != null) {
+				filePicturePath = getRealPathFromURI(data.getData());
+			} else if (imageToUploadUri != null) {
+				filePicturePath = imageToUploadUri.getPath();
+			}
+
+			if (filePicturePath != null) {
+				int SIZE_SMALL = 256;
+				int COMPRESSOR_QUALITY = 100;
+
+				/*Bitmap bm = null;
+
+					int pixelsMax = SIZE_SMALL;
+					//Resize image
+					BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = 1;
+				bm = BitmapFactory.decodeFile(filePicturePath,options);
+					if (bm != null) {
+						if (bm.getWidth() > bm.getHeight() && bm.getWidth() > pixelsMax) {
+							bm = Bitmap.createScaledBitmap(bm, 256, 256, false);
+						}
+					}
+
+				ByteArrayOutputStream bstream = new ByteArrayOutputStream();
+				bm.compress(Bitmap.CompressFormat.PNG , 100, bstream);
+				byte[] bArray = bstream.toByteArray();
+				contactPicture.setImageBitmap(bm);*/
+				contactsManager.updateExistingContactPicture(ops, contact, filePicturePath);
+			}
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 	

@@ -121,10 +121,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	private void displayContact(LayoutInflater inflater, View view) {
 		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
 		if (contact.getPhotoUri() != null) {
-			//InputStream input = Compatibility.getContactPictureInputStream(LinphoneActivity.instance().getContentResolver(), contact.getID());
-			//contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
+			InputStream input = Compatibility.getContactPictureInputStream(LinphoneActivity.instance().getContentResolver(), contact.getID());
+			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
-        	//contactPicture.setImageResource(R.drawable.unknown_small);
+        	contactPicture.setImageResource(R.drawable.avatar);
         }
 		
 		TextView contactName = (TextView) view.findViewById(R.id.contactName);

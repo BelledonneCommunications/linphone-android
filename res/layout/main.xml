@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+	xmlns:tools="http://schemas.android.com/tools"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<include layout="@layout/status" android:id="@+id/statusBar" />
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		tools:layout="@layout/status" />
 
 <android.support.v4.widget.DrawerLayout
 	android:id="@+id/drawer_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:layout_below="@id/statusBar">
+	android:background="@color/transparent"
+	android:layout_below="@id/status">
 	<!-- The main content view -->
 
 <RelativeLayout
@@ -192,59 +199,32 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:id="@+id/left_drawer"
-		android:layout_gravity="start">
+		android:layout_gravity="left">
 
-		<RelativeLayout
-			android:id="@+id/headerLayout"
-			android:layout_width="match_parent"
-			android:layout_height="80dp"
-			android:background="@color/colorF">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
-			<ImageView
-				android:id="@+id/icon"
-				android:layout_width="30dp"
-				android:layout_height="30dp"
-				android:layout_marginLeft="12dp"
-				android:layout_marginRight="12dp"
-				android:src="@drawable/avatar"
-				android:layout_centerVertical="true" />
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				android:layout_centerVertical="true"
-				android:layout_toRightOf="@+id/icon">
-
-				<TextView
-					android:id="@+id/display_name"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					style="@style/font7"
-					android:gravity="bottom"
-					android:editable="false"/>
-
-				<TextView
-					android:id="@+id/address"
-					android:gravity="top"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_toRightOf="@id/icon"
-					style="@style/font3"
-					android:editable="false"/>
-
-			</LinearLayout>
-		</RelativeLayout>
-
-
-		<ListView android:id="@+id/list_drawer"
+		<ListView android:id="@+id/accounts_list"
 			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_below="@id/headerLayout"
+			android:layout_height="wrap_content"
 			android:choiceMode="singleChoice"
+			android:cacheColorHint="@color/transparent"
 			android:divider="@android:color/transparent"
 			android:dividerHeight="0dp"
+			android:background="@color/colorB"/>
+
+		<ListView android:id="@+id/list_drawer"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:choiceMode="singleChoice"
+			android:divider="@color/colorE"
+			android:cacheColorHint="@color/transparent"
+			android:dividerHeight="1dp"
 			android:background="@color/colorH"/>
+
+		</LinearLayout>
 
 
 

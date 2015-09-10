@@ -23,21 +23,10 @@
 			android:adjustViewBounds="true"/>
 
 		<ImageView
-			android:id="@+id/edit"
-			android:contentDescription="@string/content_description_edit"
-			android:src="@drawable/edit_list"
-			android:background="@drawable/toolbar_button"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"/>
-
-		<ImageView
 			android:id="@+id/delete"
-			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/delete"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
@@ -47,9 +36,9 @@
 
 		<ImageView
 			android:id="@+id/select_all"
-			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/select_all"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_toLeftOf="@id/delete"
@@ -59,15 +48,27 @@
 
 		<ImageView
 			android:id="@+id/deselect_all"
-			android:contentDescription="@string/content_description_valid"
 			android:src="@drawable/deselect_all"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_toLeftOf="@id/delete"
 			android:padding="10dp"
 			android:adjustViewBounds="true"
 			android:visibility="gone"/>
+
+
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"/>
 
 	</RelativeLayout>
     

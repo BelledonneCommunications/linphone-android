@@ -224,6 +224,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			delete.setVisibility(View.VISIBLE);
 			isEditMode = true;
 		}
+
 		if (id == R.id.all_calls) {
 			allCalls.setEnabled(false);
 			allCallsSelected.setVisibility(View.VISIBLE);
@@ -405,7 +406,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 				holder = new ViewHolder();
 				holder.contact = (TextView) view.findViewById(R.id.sip_uri);
 				holder.detail = (ImageView) view.findViewById(R.id.detail);
-				holder.delete = (CheckBox) view.findViewById(R.id.delete);
+				holder.select = (CheckBox) view.findViewById(R.id.delete);
 				holder.callDirection = (ImageView) view.findViewById(R.id.icon);
 				holder.contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 			}
@@ -475,8 +476,8 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			//view.setTag(sipUri);
 
 			if (isEditMode) {
-				holder.delete.setVisibility(View.VISIBLE);
-				holder.delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				holder.select.setVisibility(View.VISIBLE);
+				holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						historyList.setItemChecked(position, b);
@@ -484,12 +485,12 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 				});
 				holder.detail.setVisibility(View.GONE);
 				if(historyList.isItemChecked(position)) {
-					holder.delete.setChecked(true);
+					holder.select.setChecked(true);
 				} else {
-					holder.delete.setChecked(false);
+					holder.select.setChecked(false);
 				}
 			} else {
-				holder.delete.setVisibility(View.GONE);
+				holder.select.setVisibility(View.GONE);
 				holder.detail.setVisibility(View.VISIBLE);
 				holder.detail.setOnClickListener(new OnClickListener() {
 					@Override
@@ -508,7 +509,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 	static class ViewHolder {
 		TextView contact;
 		ImageView detail;
-		CheckBox delete;
+		CheckBox select;
 		ImageView callDirection;
 		ImageView contactPicture;
 	}

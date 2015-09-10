@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bubble"
+	android:background="@drawable/resizable_chat_bubble_incoming"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
    	android:gravity="left"
-	android:background="@drawable/resizable_chat_bubble_incoming"
     android:orientation="horizontal" >
 
 	<ImageView
 		android:id="@+id/contact_picture"
+		android:src="@drawable/avatar"
 		android:layout_width="50dp"
 		android:layout_height="50dp"
 		android:paddingTop="10dp"
-		android:paddingLeft="10dp"
-		android:src="@drawable/avatar"/>
+		android:paddingLeft="10dp"/>
 
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:paddingLeft="10dp">
+		android:padding="12dp">
 
 		<TextView
 			android:id="@+id/contact_header"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			style="@style/font9"
 			android:singleLine="true"
-			android:paddingRight="5dp"
-			android:paddingTop="10dp"
-			style="@style/font3"/>
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
 
 		<TextView
 			android:id="@+id/message"
-			android:layout_gravity="left"
-			android:visibility="gone"
+			style="@style/font11"
 			android:linksClickable="true"
 			android:autoLink="web"
-			android:paddingBottom="10dp"
-			android:textColor="@android:color/black"
+			android:layout_gravity="left"
+			android:visibility="gone"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 
@@ -52,31 +49,19 @@
 
 		<Button
 			android:id="@+id/download"
-			android:visibility="gone"
 			android:text="@string/download_image"
+			android:visibility="gone"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
-
 
 	</LinearLayout>
     
     <ProgressBar 
         android:id="@+id/spinner"
+		style="@android:style/Widget.ProgressBar.Horizontal"
 		android:visibility="gone"
 		android:layout_marginTop="20dp"
-		style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="5dp" />
+        android:layout_height="5dp"/>
 
-    <TextView 
-        android:id="@+id/time"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp"
-        android:singleLine="true"
-        android:paddingLeft="5dp"
-        android:linksClickable="true"
-		android:autoLink="web"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
 </LinearLayout>

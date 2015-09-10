@@ -60,6 +60,7 @@ BUILD_CONTACT_HEADER=0
 BUILD_RTP_MAP=0
 BUILD_DONT_CHECK_HEADERS_IN_MESSAGE=0
 BUILD_ILBC=1
+BUILD_CODEC2=0
 LIBLINPHONE_EXTENDED_SRC_FILES=
 LIBLINPHONE_EXTENDED_C_INCLUDES=
 LIBLINPHONE_EXTENDED_CFLAGS=
@@ -255,6 +256,29 @@ clean-x264:
 	rm -rf $(X264_BUILD_DIR)/arm && \
 	rm -rf $(X264_BUILD_DIR)/x86
 
+#codec2
+ifeq ($(BUILD_CODEC2),1)
+CODEC2_SRC_DIR=$(TOPDIR)/submodules/externals/codec2
+CODEC2_BUILD_DIR=$(TOPDIR)/submodules/externals/build/codec2
+PREPARE_CODEC2_DEPS=codec2-install-headers
+endif
+
+fetch-codec2:
+ifneq "$(wildcard $(CODEC2_SRC_DIR) )" ""
+	# source directory for codec2 already exists, update it
+	svn up $(CODEC2_SRC_DIR)
+else
+	#source directory for codec2 doesn't exist, create it and fetch the source from svn depot
+	mkdir $(CODEC2_SRC_DIR)
+	svn co https://svn.code.sf.net/p/freetel/code/codec2/branches/0.3/ $(CODEC2_SRC_DIR)
+endif
+
+codec2-install-headers: fetch-codec2
+	mkdir -p $(CODEC2_SRC_DIR)/include/codec2
+	rsync -rvLpgoc $(CODEC2_SRC_DIR)/src/codec2.h $(CODEC2_SRC_DIR)/include/codec2/codec2.h
+
+prepare-codec2: $(PREPARE_CODEC2_DEPS)
+
 #openh264
 ifeq ($(BUILD_VIDEO),1)
 ifeq ($(BUILD_OPENH264), 1)
@@ -318,13 +342,13 @@ LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
 LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-debug
 
 $(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt:
-	@patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
+	cd $(LIBVPX_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
 	touch $@
 
 $(LIBVPX_BUILD_DIR)/arm/libvpx.a:
 	mkdir -p $(LIBVPX_BUILD_DIR)/arm && \
 	cd $(LIBVPX_BUILD_DIR)/arm && \
-	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
+	$(LIBVPX_SRC_DIR)/configure --target=armv7-android-gcc --extra-cflags="-mfloat-abi=softfp -mfpu=neon" --sdk-path=$(NDK_PATH) $(LIBVPX_CONFIGURE_OPTIONS) && \
 	make -j${NUMCPUS} \
 	|| ( echo "Build of libvpx for arm failed." ; exit 1 )
 
@@ -409,10 +433,10 @@ $(MATROSKA_SRC_DIR)/patch_applied.txt: $(MATROSKA_BUILD_DIR)/fix_libmatroska2.pa
 	cd $(MATROSKA_SRC_DIR);	patch -p1 < $<; touch $@
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2
+prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2 prepare-codec2
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
-	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) \
+	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) BUILD_CODEC2=$(BUILD_CODEC2)\
 	BUILD_VIDEO=$(BUILD_VIDEO) BUILD_X264=$(BUILD_X264) BUILD_OPENH264=$(BUILD_OPENH264) ENABLE_OPENH264_DECODER=$(ENABLE_OPENH264_DECODER) BUILD_MATROSKA=$(BUILD_MATROSKA) \
 	BUILD_UPNP=$(BUILD_UPNP) BUILD_ZRTP=$(BUILD_ZRTP) BUILD_WEBRTC_AECM=$(BUILD_WEBRTC_AECM) BUILD_WEBRTC_ISAC=$(BUILD_WEBRTC_ISAC) BUILD_ILBC=$(BUILD_ILBC) \
 	BUILD_FOR_ARM=$(BUILD_FOR_ARM) BUILD_NON_FREE_CODECS=$(BUILD_NON_FREE_CODECS)
@@ -471,9 +495,10 @@ install-apk:
 	ant installd
 
 release: update-project
-	$(ANT) clean
+	$(MAKE) java-clean
 	patch -p1 < release.patch
 	cat ant.properties | grep version.name > default.properties
+	$(MAKE) generate-libs
 	$(ANT) release
 	patch -Rp1 < release.patch
 
@@ -505,8 +530,10 @@ java-clean:
 	$(ANT) clean
 
 clean:	clean-native java-clean
+	patch -Rp1 -f < release.patch || echo "patch already cleaned"
+	rm -f AndroidManifest.xml.rej
+	rm -f AndroidManifest.xml.orig
 
-veryclean: clean
 
 .PHONY: clean install-apk run-linphone
 
@@ -526,4 +553,4 @@ pull-transifex:
 	tx pull -af
 
 push-transifex:
-	tx push -s -t -f --no-interactive
+	tx push -s -f --no-interactive

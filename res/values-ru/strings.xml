@@ -263,7 +263,6 @@
   <string name="button_ok">ОК</string>
   <string name="button_back">Назад</string>
   <string name="button_all_contacts">Все</string>
-  <string name="button_sip_contacts">SIP</string>
   <string name="button_add_contact">Новый контакт</string>
   <string name="button_all_call">Все</string>
   <string name="button_missed_call">Пропущенные</string>
@@ -296,7 +295,6 @@
   <string name="image_not_saved">Ошибка, картинка не сохранена</string>
   <string name="pref_linphone_friend_title">Друзья</string>
   <string name="pref_auto_accept_friends_title">Новые друзья</string>
-  <string name="pref_auto_accept_friends_desc">Автоматически принимать запросы дружбы</string>
   <string name="linphone_friend_new_request_title">Запрос дружбы</string>
   <string name="linphone_friend_new_request_desc">хочет поделиться своим статусом с Вами и получать обновления Вашего статуса.</string>
   <string name="setup_ec_calibration">Идёт настройка шумоподавления</string>
@@ -339,7 +337,6 @@
   <string name="setup_remote_provisioning">Download provisioning</string>
   <string name="setup_remote_provisioning_hint">This assistant will download an existing configuration.</string>
   <string name="setup_remote_provisioning_url_hint">provisioning url</string>
-  <string name="setup_confirm_username">Your username will be %s (uppercase characters are not allowed). Do you accept ?</string>
   <string name="setup_title_assistant">Account setup assistant</string>
   <string name="zrtp_accept">Accept</string>
   <string name="zrtp_deny">Deny</string>
