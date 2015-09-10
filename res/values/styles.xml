@@ -17,9 +17,9 @@
 		<item name="android:textSize">20sp</item>
 	</style>
 
-	<style name="font3" parent="@android:style/TextAppearance.Medium">
+	<style name="font3" parent="@android:style/TextAppearance.Small">
 		<item name="android:textColor">@color/colorA</item>
-		<item name="android:textSize">18sp</item>
+		<item name="android:textSize">16sp</item>
 	</style>
 
 	<style name="font4" parent="@android:style/TextAppearance.Medium">
@@ -53,7 +53,7 @@
 
 	<style name="font9" parent="@android:style/TextAppearance.Small">
 		<item name="android:textColor">@color/colorC</item>
-		<item name="android:textSize">20sp</item>
+		<item name="android:textSize">16sp</item>
 	</style>
 
 	<style name="font10" parent="@android:style/TextAppearance.Medium">
@@ -61,9 +61,9 @@
 		<item name="android:textSize">24sp</item>
 	</style>
 
-	<style name="font11" parent="@android:style/TextAppearance.Small">
+	<style name="font11" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorD</item>
-		<item name="android:textSize">15sp</item>
+		<item name="android:textSize">16sp</item>
 	</style>
 
 	<style name="font12" parent="@android:style/TextAppearance.Small">
@@ -71,7 +71,7 @@
 		<item name="android:textSize">25sp</item>
 	</style>
 
-	<style name="font13" parent="@android:style/TextAppearance.Small">
+	<style name="font13" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorE</item>
 		<item name="android:textSize">18sp</item>
 	</style>

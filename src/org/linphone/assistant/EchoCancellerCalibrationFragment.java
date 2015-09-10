@@ -59,12 +59,6 @@ public class EchoCancellerCalibrationFragment extends Fragment {
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc,LinphoneCore.EcCalibratorStatus status, int delay_ms, Object data) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
-				
-				if (status == EcCalibratorStatus.DoneNoEcho) {
-					LinphonePreferences.instance().setEchoCancellation(false);
-				} else if ((status == EcCalibratorStatus.Done) || (status == EcCalibratorStatus.Failed)) {
-					LinphonePreferences.instance().setEchoCancellation(true);
-				}
 				if (mSendEcCalibrationResult) {
 					sendEcCalibrationResult(status, delay_ms);
 				} else {

@@ -78,25 +78,51 @@
 			android:scaleType="center"/>
 
 		<ImageView
-			android:contentDescription="@string/content_description_edit"
-			android:id="@+id/edit"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:src="@drawable/edit_list"
+			android:id="@+id/delete"
+			android:src="@drawable/delete"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:adjustViewBounds="true"/>
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
 
 		<ImageView
+			android:id="@+id/select_all"
+			android:src="@drawable/select_all"
+			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_valid"
-			android:id="@+id/ok"
-			android:background="@drawable/valid"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:visibility="gone"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:id="@+id/deselect_all"
+			android:src="@drawable/deselect_all"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/delete"
+			android:padding="10dp"
+			android:adjustViewBounds="true"
+			android:visibility="gone"/>
+
+
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="10dp"
 			android:adjustViewBounds="true"/>
 
 	</RelativeLayout>
@@ -142,7 +168,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:divider="@color/colorE"
-			android:cacheColorHint="@color/transparent"
 			android:fastScrollAlwaysVisible="true"
 			android:fastScrollEnabled="true"
 			android:dividerHeight="1dp" />

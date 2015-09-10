@@ -86,6 +86,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 	private StatusFragment status;
 	private AudioCallFragment audioCallFragment;
 	private VideoCallFragment videoCallFragment;
+	private ConferenceCallFragment conferenceCallFragment;
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed, isAnimationDisabled;
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
@@ -639,6 +640,12 @@ public class InCallActivity extends Activity implements OnClickListener {
 		replaceFragmentVideoByAudio();
 		setCallControlsVisibleAndRemoveCallbacks();
 	}
+
+	private void showConferenceView() {
+		LinphoneManager.startProximitySensorForActivity(InCallActivity.this);
+		replaceFragmentByConference();
+		displayConference();
+	}
 	
 	private void showVideoView() {
 		if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
@@ -653,6 +660,18 @@ public class InCallActivity extends Activity implements OnClickListener {
 		displayVideoCallControlsIfHidden();
 	}
 	
+	private void replaceFragmentByConference() {
+		mControlsLayout.setVisibility(View.GONE);
+		switchCamera.setVisibility(View.INVISIBLE);
+		conferenceCallFragment = new ConferenceCallFragment();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		transaction.replace(R.id.fragmentContainer, conferenceCallFragment);
+		try {
+			transaction.commitAllowingStateLoss();
+		} catch (Exception e) {
+		}
+	}
+
 	private void replaceFragmentVideoByAudio() {
 		audioCallFragment = new AudioCallFragment();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -761,6 +780,12 @@ public class InCallActivity extends Activity implements OnClickListener {
 		} else {
 			lc.enterConference();
 		}
+	}
+
+	private void displayConference(){
+		mControlsLayout.setVisibility(View.VISIBLE);
+		callsList.setVisibility(View.GONE);
+		mActiveCallHeader.setVisibility(View.GONE);
 	}
 	
 	public void displayVideoCallControlsIfHidden() {
@@ -1033,7 +1058,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 			
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				options.setBackgroundResource(R.drawable.options_alt);
+				options.setBackgroundResource(R.drawable.options_default);
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.VISIBLE);
 				}
@@ -1061,7 +1086,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				addCall.setAnimation(null);
-				options.setBackgroundResource(R.drawable.options_alt);
+				options.setBackgroundResource(R.drawable.options_default);
 				addCall.setVisibility(View.VISIBLE);
 				if (isTransferAllowed) {
 					animation.setAnimationListener(new AnimationListener() {
@@ -1194,6 +1219,8 @@ public class InCallActivity extends Activity implements OnClickListener {
 		
 		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			displayVideoCallControlsIfHidden();
+		} else if(isConferenceRunning) {
+			displayConference();
 		} else {
 			LinphoneManager.startProximitySensorForActivity(this);
 			setCallControlsVisibleAndRemoveCallbacks();
@@ -1206,10 +1233,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 			lc.addListener(mListener);
 		}
 
-		displayActiveCall(LinphoneManager.getLc().getCurrentCall());
-		if (LinphoneManager.getLc().getCalls().length > 1) {
-			refreshCallList(getResources());
-		}
+		refreshCallList(getResources());
 		handleViewIntent();
 	}
 	
@@ -1309,19 +1333,9 @@ public class InCallActivity extends Activity implements OnClickListener {
 	public void bindVideoFragment(VideoCallFragment fragment) {
 		videoCallFragment = fragment;
 	}
-	
-	private void displayConferenceHeader() {
-		LinearLayout conferenceHeader = (LinearLayout) inflater.inflate(R.layout.conference_header, container, false);
-		
-		ImageView conferenceState = (ImageView) conferenceHeader.findViewById(R.id.conferenceStatus);
-		conferenceState.setOnClickListener(this);
-		if (LinphoneManager.getLc().isInConference()) {
-			conferenceState.setImageResource(R.drawable.pause);
-		} else {
-			conferenceState.setImageResource(R.drawable.pause);
-		}
-		
-		callsList.addView(conferenceHeader);
+
+	public void bindConferenceFragment(ConferenceCallFragment fragment) {
+		conferenceCallFragment = fragment;
 	}
 
 	private void displayActiveCall(LinphoneCall call){
@@ -1364,6 +1378,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 	}
 	
 	private void displayOtherCalls(Resources resources, LinphoneCall call, int index) {
+		Log.w("Display other calls");
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
         LinphoneAddress lAddress;
 		try {
@@ -1488,23 +1503,34 @@ public class InCallActivity extends Activity implements OnClickListener {
 		if (callDuration == 0 && call.getState() != State.StreamsRunning) {
 			return;
 		}
-		
+
 		Chronometer timer = (Chronometer) v.findViewById(R.id.callTimer);
 		if (timer == null) {
 			throw new IllegalArgumentException("no callee_duration view found");
 		}
-		
+
 		timer.setBase(SystemClock.elapsedRealtime() - 1000 * callDuration);
 		timer.start();
 	}
 	
 	public void refreshCallList(Resources resources) {
+		isConferenceRunning = LinphoneManager.getLc().isInConference();
+		if (isConferenceRunning) {
+			callsList.removeAllViews();
+			callsList.setVisibility(View.GONE);
+			showConferenceView();
+			return;
+		}
+
 		if(LinphoneManager.getLc().getCalls().length == 1) {
+			Log.w(LinphoneManager.getLc().getCalls()[0].getRemoteContact());
 			displayActiveCall(LinphoneManager.getLc().getCalls()[0]);
 			return;
 		}
 
+		Log.w("Plusieurs call");
 		if(callsList != null) {
+			callsList.setVisibility(View.VISIBLE);
 			callsList.removeAllViews();
 			int index = 0;
 
@@ -1513,11 +1539,6 @@ public class InCallActivity extends Activity implements OnClickListener {
 				return;
 			}
 
-			isConferenceRunning = LinphoneManager.getLc().getConferenceSize() > 1;
-			if (isConferenceRunning) {
-				displayConferenceHeader();
-				index++;
-			}
 			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
 				if (call != LinphoneManager.getLc().getCurrentCall()) {
 					displayOtherCalls(resources, call, index);

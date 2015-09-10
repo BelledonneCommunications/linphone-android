@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
@@ -62,7 +63,7 @@ public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, exit, voicemailCount;
-	private ImageView statusLed, callQuality, encryption, background;
+	private ImageView statusLed, callQuality, encryption, menu;
 //	private LinearLayout allAccountsLed;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
@@ -79,7 +80,7 @@ public class StatusFragment extends Fragment {
 		statusLed = (ImageView) view.findViewById(R.id.statusLed);
 		callQuality = (ImageView) view.findViewById(R.id.callQuality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
-		background = (ImageView) view.findViewById(R.id.background);
+		menu = (ImageView) view.findViewById(R.id.menu_icon);
 //		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
 
 		voicemailCount = (TextView) view.findViewById(R.id.voicemailCount);
@@ -104,6 +105,11 @@ public class StatusFragment extends Fragment {
 			public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
 				if (!isAttached || !LinphoneService.isReady()) {
 					return;
+				}
+
+				if(lc.getProxyConfigList() == null){
+					statusLed.setVisibility(View.INVISIBLE);
+					statusText.setText("");
 				}
 
 				if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
@@ -174,6 +180,12 @@ public class StatusFragment extends Fragment {
 		} else if (activity instanceof InCallActivity) {
 			((InCallActivity) activity).updateStatusFragment(this);
 			isInCall = true;
+		} else if (activity instanceof ChatActivity) {
+			((ChatActivity) activity).updateStatusFragment(this);
+			isInCall = false;
+		} else if (activity instanceof AssistantActivity) {
+			((AssistantActivity) activity).updateStatusFragment(this);
+			isInCall = false;
 		}
 	}
 	
@@ -210,7 +222,16 @@ public class StatusFragment extends Fragment {
 			} else if (!isInCall) {
 				voicemailCount.setVisibility(View.VISIBLE);
 			}
+
+			if(LinphoneManager.getLc().getProxyConfigList().length == 0){
+				statusLed.setVisibility(View.INVISIBLE);
+				statusText.setText("");
+			}
 		}
+	}
+
+	public void enableLeftMenu(boolean enabled) {
+		menu.setEnabled(enabled);
 	}
 	
 //	private void setMiniLedsForEachAccount() {
@@ -338,18 +359,13 @@ public class StatusFragment extends Fragment {
 			
 			statusText.setVisibility(View.GONE);
 			encryption.setVisibility(View.VISIBLE);
-			exit.setVisibility(View.GONE);
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
 			statusText.setText(getString(R.string.status_connected));
 		} else {
 			statusText.setVisibility(View.VISIBLE);
-			background.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);
-			if (getResources().getBoolean(R.bool.exit_button_on_dialer))
-				exit.setVisibility(View.VISIBLE);
-
 		}
 	}
 	
@@ -379,9 +395,9 @@ public class StatusFragment extends Fragment {
 			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
 
 			if (isVideoEnabled) {
-				background.setVisibility(View.GONE);
+				//background.setVisibility(View.GONE);
 			} else {
-				background.setVisibility(View.VISIBLE);
+				//background.setVisibility(View.VISIBLE);
 			}
 			
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
@@ -439,7 +455,7 @@ public class StatusFragment extends Fragment {
 			return;
 		}
 		
-	    mTimer = new Timer();
+	  /*  mTimer = new Timer();
 		mTask = new TimerTask() {
 			@Override
 			public void run() {
@@ -503,136 +519,9 @@ public class StatusFragment extends Fragment {
 				});
 			}
 		};
-		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
+		mTimer.scheduleAtFixedRate(mTask, 0, 1000);*/
 	}
 	
-	class AccountsListAdapter extends BaseAdapter {
-		private List<CheckBox> checkboxes;
-		
-		AccountsListAdapter() {
-			checkboxes = new ArrayList<CheckBox>();
-		}
-		
-		private OnClickListener defaultListener = new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				CheckBox checkBox = (CheckBox) v;
-				if (checkBox.isChecked()) {
-					String tag = (String) checkBox.getTag();
-					if(tag.startsWith("sip:")) {
-						tag = tag.substring(4);
-					}
-					String sipAddress = tag.split(":")[0];
-					int accountPosition = Integer.parseInt(tag.split(":")[1]);
-					
-					int nbAccounts = LinphonePreferences.instance().getAccountCount();
-					int accountIndex = 0;
-					for (int i = 0; i < nbAccounts; i++)
-					{
-						String username = LinphonePreferences.instance().getAccountUsername(i);
-						String domain = LinphonePreferences.instance().getAccountDomain(i);
-						String identity = username + "@" + domain;
-						if (identity.equals(sipAddress)) {
-							accountIndex = i;
-							break;
-						}
-					}
-					
-					LinphonePreferences.instance().setDefaultAccount(accountIndex);
 
-					for (CheckBox cb : checkboxes) {
-						cb.setChecked(false);
-						cb.setEnabled(true);
-					}
-					checkBox.setChecked(true);
-					checkBox.setEnabled(false);
-					
-					LinphoneCore lc = LinphoneManager.getLc();
-					lc.setDefaultProxyConfig((LinphoneProxyConfig) getItem(accountPosition));
-					if (lc.isNetworkReachable()) {
-						lc.refreshRegisters();
-					}
-				}
-			}
-		};
-		
-		public int getCount() {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (lc != null) {
-				return lc.getProxyConfigList().length;
-			} else {
-				return 0;
-			}
-		}
-
-		public Object getItem(int position) {
-			return LinphoneManager.getLc().getProxyConfigList()[position];
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			View view = null;			
-			if (convertView != null) {
-				view = convertView;
-			} else {
-				view = LayoutInflater.from(getActivity()).inflate(R.layout.accounts, parent, false);
-			}
-
-			LinphoneProxyConfig lpc = (LinphoneProxyConfig) getItem(position);
-			
-			ImageView status = (ImageView) view.findViewById(R.id.State);
-			
-			TextView identity = (TextView) view.findViewById(R.id.Identity);
-			String sipAddress = (lpc.getIdentity() != null && lpc.getIdentity().startsWith("sip:")) ? lpc.getIdentity().split("sip:")[1] : lpc.getIdentity();
-			identity.setText(sipAddress);
-			view.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					LinphoneManager.getLc().refreshRegisters();
-				}
-			});
-			
-			CheckBox isDefault = (CheckBox) view.findViewById(R.id.Default);
-			checkboxes.add(isDefault);
-			
-			isDefault.setTag(sipAddress + ":" + position);
-			isDefault.setChecked(false);
-			isDefault.setEnabled(true);
-			
-			int nbAccounts = LinphonePreferences.instance().getAccountCount();
-			int accountIndex = 0;
-			for (int i = 0; i < nbAccounts; i++)
-			{
-				String username = LinphonePreferences.instance().getAccountUsername(i);
-				String domain = LinphonePreferences.instance().getAccountDomain(i);
-				String id = username + "@" + domain;
-				if (id.equals(sipAddress)) {
-					accountIndex = i;
-					break;
-				}
-			}
-			
-			// Force led if account is disabled
-			if (!LinphonePreferences.instance().isAccountEnabled(accountIndex)) {
-				status.setImageResource(getStatusIconResource(RegistrationState.RegistrationNone, false));
-			} else {
-				if (LinphonePreferences.instance().getDefaultAccountIndex() == accountIndex) {
-					isDefault.setChecked(true);
-					isDefault.setEnabled(false);
-					status.setImageResource(getStatusIconResource(lpc.getState(), true));
-				} else {
-					status.setImageResource(getStatusIconResource(lpc.getState(), false));
-				}
-			}
-			
-			isDefault.setOnClickListener(defaultListener);
-			
-			return view;
-		}
-	}
 
 }

@@ -159,32 +159,53 @@ public final class LinphoneUtils {
 	}
 
 	
-	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri, int notFoundResource) {
+	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri) {
 		if (uri == null) {
-			view.setImageResource(notFoundResource);
+			view.setImageResource(R.drawable.avatar);
 			return;
 		}
 		if (uri.getScheme().startsWith("http")) {
 			Bitmap bm = downloadBitmap(uri);
-			if (bm == null) view.setImageResource(notFoundResource);
+			if (bm == null) view.setImageResource(R.drawable.avatar);
 			view.setImageBitmap(bm);
 		} else {
-			if (Version.sdkAboveOrEqual(Version.API06_ECLAIR_201)) {
-				Bitmap bm = null;
-				try {
-					bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),uri);
-				} catch (IOException e) {
-					if(tUri != null){
+			Bitmap bm = null;
+			try {
+				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),uri);
+			} catch (IOException e) {
+				if(tUri != null){
+					try {
+						bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
+					} catch (IOException ie) {
 						view.setImageURI(tUri);
 					}
 				}
-				if(bm != null) {
-					view.setImageBitmap(bm);
-				}
-			} else {
-				@SuppressWarnings("deprecation")
-				Bitmap bitmap = android.provider.Contacts.People.loadContactPhoto(c, uri, notFoundResource, null);
-				view.setImageBitmap(bitmap);
+			}
+			if(bm != null) {
+				view.setImageBitmap(bm);
+			}
+
+		}
+	}
+
+	public static void setThumbnailPictureFromUri(Context c, ImageView view, Uri tUri) {
+		if (tUri == null) {
+			view.setImageResource(R.drawable.avatar);
+			return;
+		}
+		if (tUri.getScheme().startsWith("http")) {
+			Bitmap bm = downloadBitmap(tUri);
+			if (bm == null) view.setImageResource(R.drawable.avatar);
+			view.setImageBitmap(bm);
+		} else {
+			Bitmap bm = null;
+			try {
+				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
+			} catch (IOException e) {
+				view.setImageURI(tUri);
+			}
+			if(bm != null) {
+				view.setImageBitmap(bm);
 			}
 		}
 	}

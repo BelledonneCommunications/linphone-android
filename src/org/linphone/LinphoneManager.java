@@ -168,6 +168,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mPauseSoundFile = basePath + "/toy_mono.wav";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 		mErrorToneFile = basePath + "/error.wav";
+		mConfigFile = basePath + "/configrc";
 
 		mPrefs = LinphonePreferences.instance();
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -190,6 +191,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
 	private final String mErrorToneFile;
+	private final String mConfigFile;
 	private ByteArrayInputStream mUploadingImageStream;
 
 	private Timer mTimer;
@@ -219,6 +221,21 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void routeAudioToReceiver() {
 		routeAudioToSpeakerHelper(false);
+	}
+
+	public synchronized final void destroyLinphoneCore(Context c) {
+		BluetoothManager.getInstance().destroy();
+		try {
+			mTimer.cancel();
+			mLc.destroy();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		finally {
+			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+			mLc = null;
+		}
 	}
 
 	public synchronized static final LinphoneManager createAndStart(Context c) {
@@ -284,9 +301,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
-				File file = new File(Environment.getExternalStorageDirectory(), msg.getFileTransferInformation().getName());
+				File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
 				try {
-					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), msg.getFileTransferInformation().getName(), null);
+					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
 					msg.setAppData(url);
 					file.delete();
 				} catch (FileNotFoundException e) {
@@ -550,6 +567,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+	public void resetLinphoneCore(Context c){
+		destroyLinphoneCore(c);
+		startLibLinphone(c);
+	}
+
 	private synchronized void startLibLinphone(Context c) {
 		try {
 			copyAssetsFromPackage();
@@ -653,8 +675,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			BluetoothManager.getInstance().initBluetooth();
 		}
-        resetCameraFromPreferences();
-        
+
+		resetCameraFromPreferences();
 		mLc.setFileTransferServer(LinphonePreferences.instance().getSharingPictureServerUrl());
 	}
 
@@ -688,6 +710,17 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		lOutputStream.close();
 		lInputStream.close();
 	}
+
+	public void loadConfig(int config_rc){
+		try {
+			copyIfNotExist(config_rc, mConfigFile);
+		} catch (Exception e){
+			Log.w(e);
+		}
+		LinphonePreferences.instance().setRemoteProvisioningUrl("file://" + mConfigFile);
+		getLc().getConfig().setInt("misc","transient_provisioning",1);
+	}
+
 
 	public boolean detectVideoCodec(String mime) {
 		for (PayloadType videoCodec : mLc.getVideoCodecs()) {

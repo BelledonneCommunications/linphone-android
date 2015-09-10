@@ -47,7 +47,7 @@ public class ApiSixteenPlus {
 		Notification notif = new Notification.Builder(context)
 						.setContentTitle(title)
 						.setContentText(msg)
-						.setSmallIcon(R.drawable.chat_icon_default)
+						.setSmallIcon(R.drawable.topbar_chat_notification)
 						.setAutoCancel(true)
 						.setContentIntent(intent)
 						.setDefaults(

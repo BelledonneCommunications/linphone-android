@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -48,10 +49,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -80,7 +85,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
 
-		
 		edit = (ImageView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
 		
@@ -95,17 +99,52 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
+		delete.setVisibility(View.INVISIBLE);
 		return view;
+	}
+
+	private void selectAllList(boolean isSelectAll){
+		int size = chatList.getAdapter().getCount();
+		for(int i=0; i<size; i++) {
+			chatList.setItemChecked(i,isSelectAll);
+		}
+	}
+
+	private void removeChatsConversation(){
+		int size = chatList.getAdapter().getCount();
+
+		for(int i=0; i<size; i++) {
+			if(chatList.isItemChecked(i)){
+				View item = chatList.getAdapter().getView(i, null, null);
+				if(item != null) {
+					LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(item.getTag().toString());
+					if (chatroom != null)
+						chatroom.deleteHistory();
+				}
+			}
+		}
+	}
+
+	public void quitEditMode(){
+		isEditMode = false;
+		selectAll.setVisibility(View.GONE);
+		deselectAll.setVisibility(View.GONE);
+		delete.setVisibility(View.GONE);
+		edit.setVisibility(View.VISIBLE);
+		refresh();
 	}
 	
 	private void hideAndDisplayMessageIfNoChat() {
 		if (mConversations.size() == 0 && mDrafts.size() == 0) {
 			noChatHistory.setVisibility(View.VISIBLE);
 			chatList.setVisibility(View.GONE);
+			edit.setEnabled(false);
 		} else {
 			noChatHistory.setVisibility(View.GONE);
 			chatList.setVisibility(View.VISIBLE);
+			chatList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			chatList.setAdapter(new ChatListAdapter(useLinphoneStorage));
+			edit.setEnabled(true);
 		}
 	}
 	
@@ -204,27 +243,43 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
-		/*if (id == R.id.clearFastChatField) {
-			fastNewChat.setText("");
-		}*/
-		if (id == R.id.delete) {
-			edit.setVisibility(View.VISIBLE);
-			selectAll.setVisibility(View.GONE);
-			deselectAll.setVisibility(View.GONE);
-			delete.setVisibility(View.GONE);
-			isEditMode = false;
-			hideAndDisplayMessageIfNoChat();
-		}
-		else if (id == R.id.select_all) {
+
+		if (id == R.id.select_all) {
 			deselectAll.setVisibility(View.VISIBLE);
 			selectAll.setVisibility(View.GONE);
-			//TODO select all chatrooms
+			selectAllList(true);
+			return;
 		}
-		else if (id == R.id.deselect_all) {
+		if (id == R.id.deselect_all) {
 			deselectAll.setVisibility(View.GONE);
 			selectAll.setVisibility(View.VISIBLE);
-			//TODO deselect all chatrooms
+			selectAllList(false);
+			return;
+		}
+
+		if (id == R.id.delete) {
+			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+			Button delete = (Button) dialog.findViewById(R.id.delete);
+			Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+			delete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					removeChatsConversation();
+					dialog.dismiss();
+					quitEditMode();
+				}
+			});
+
+			cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					quitEditMode();
+				}
+			});
+			dialog.show();
+			return;
 		}
 		else if (id == R.id.edit) {
 			edit.setVisibility(View.GONE);
@@ -376,7 +431,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			return position;
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
 			
 			if (convertView != null) {
@@ -407,22 +462,25 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 			String message = "";
 			Long time = null;
+			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
 			LinphoneChatRoom chatRoom = LinphoneManager.getLc().getOrCreateChatRoom(contact);
-			LinphoneChatMessage[] history = chatRoom.getHistory(20);
-			if (history != null && history.length > 0) {
-				for (int i = history.length - 1; i >= 0; i--) {
-					LinphoneChatMessage msg = history[i];
-					if (msg.getText() != null && msg.getText().length() > 0 && msg.getFileTransferInformation() == null) {
-						message = msg.getText();
-						time = msg.getTime();
-						break;
-					}
+			LinphoneChatMessage[] history = chatRoom.getHistory(1);
+			LinphoneChatMessage msg = history[0];
+			if (msg.getText() != null && msg.getText().length() > 0) {
+				message = msg.getText();
+				time = msg.getTime();
+				lastMessageView.setText(message);
+			} else {
+				if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null){
+					lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
+					time = msg.getTime();
+
 				}
 			}
+
 			TextView date = (TextView) view.findViewById(R.id.date);
-			date.setText(timestampToHumanDate(time));
-			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
-			lastMessageView.setText(message);
+			if(time != null)
+				date.setText(timestampToHumanDate(time));
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
 			sipUri.setSelected(true); // For animation
@@ -436,9 +494,25 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			if (isDraft) {
 				view.findViewById(R.id.draft).setVisibility(View.VISIBLE);
 			}
-			
-			
-			ImageView delete = (ImageView) view.findViewById(R.id.delete);
+
+			CheckBox select = (CheckBox) view.findViewById(R.id.delete);
+			if (isEditMode) {
+				select.setVisibility(View.VISIBLE);
+				select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+						chatList.setItemChecked(position, b);
+					}
+				});
+				if(chatList.isItemChecked(position)) {
+					select.setChecked(true);
+				} else {
+					select.setChecked(false);
+				}
+			} else {
+				delete.setVisibility(View.GONE);
+			}
+
 			TextView unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
 			
 			if (unreadMessagesCount > 0) {
@@ -446,12 +520,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				unreadMessages.setText(String.valueOf(unreadMessagesCount));
 			} else {
 				unreadMessages.setVisibility(View.GONE);
-			}
-			
-			if (isEditMode) {
-				delete.setVisibility(View.VISIBLE);
-			} else {
-				delete.setVisibility(View.INVISIBLE);
 			}
 			
 			return view;

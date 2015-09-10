@@ -47,7 +47,6 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@color/edittextcolor"
 	            android:background="@drawable/resizable_textfield" />
 	        
 	        <EditText
@@ -61,7 +60,6 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@color/edittextcolor"
 	            android:background="@drawable/resizable_textfield" />
 	        
 	        <EditText
@@ -75,7 +73,6 @@
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@color/edittextcolor"
 	            android:background="@drawable/resizable_textfield" />
 
 		</LinearLayout>

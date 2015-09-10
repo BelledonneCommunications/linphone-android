@@ -89,16 +89,17 @@ public class ContactsManager {
 	}
 
 	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
+		initializeContactManager(context,contentResolver);
 		AccountManager accountManager = (AccountManager) context.getSystemService(context.ACCOUNT_SERVICE);
+
 		Account[] accounts = accountManager.getAccountsByType(context.getPackageName());
 
 		if(accounts != null && accounts.length == 0) {
-			Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type));
+			Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getPackageName());
 			try {
 				accountManager.addAccountExplicitly(newAccount, null, null);
 				mAccount = newAccount;
 			} catch (Exception e) {
-				Log.w("Catch " + e);
 				mAccount = null;
 			}
 		} else {
@@ -155,6 +156,19 @@ public class ContactsManager {
 				.build()
 			);
 		}
+	}
+
+	public void updateExistingContactPicture(ArrayList<ContentProviderOperation> ops, Contact contact, String path){
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE + "'";
+		String[] args =new String[]{String.valueOf(contact.getID())};
+
+		ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+						.withSelection(select, args)
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO_FILE_ID, path)
+								//.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO_FILE_ID, )
+						.build()
+		);
 	}
 
 //Manage Linphone Friend if we cannot use Sip address
@@ -349,6 +363,22 @@ public class ContactsManager {
 				}
 			}
 			c.close();
+		}
+		return null;
+	}
+
+	public Contact findContactWithAddress(LinphoneAddress address) {
+		String sipUri = address.asStringUriOnly();
+		if (sipUri.startsWith("sip:"))
+			sipUri = sipUri.substring(4);
+
+		for(Contact c: getAllContacts()){
+			for(String a: c.getNumbersOrAddresses()){
+				Log.w(a);
+				Log.w(address.asStringUriOnly());
+				if(a.equals(sipUri))
+					return c;
+			}
 		}
 		return null;
 	}
