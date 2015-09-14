@@ -73,7 +73,7 @@
 	url = git://git.linphone.org/polarssl.git
 [submodule "submodules/externals/opus"]
 	path = submodules/externals/opus
-	url = git://git.opus-codec.org/opus.git
+	url = git://git.linphone.org/opus.git
 [submodule "submodules/mswebrtc"]
 	path = submodules/mswebrtc
 	url = git://git.linphone.org/mswebrtc.git
