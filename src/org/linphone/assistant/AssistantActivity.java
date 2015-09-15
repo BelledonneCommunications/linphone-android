@@ -42,6 +42,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 /**
@@ -49,7 +50,7 @@ import android.widget.Toast;
  */
 public class AssistantActivity extends Activity implements OnClickListener {
 	private static AssistantActivity instance;
-	private RelativeLayout back, cancel;
+	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
 	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
@@ -134,9 +135,9 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		back = (RelativeLayout) findViewById(R.id.assistant_back);
+		back = (ImageView) findViewById(R.id.back);
 		back.setOnClickListener(this);
-		cancel = (RelativeLayout) findViewById(R.id.assistant_cancel);
+		cancel = (ImageView) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 		status.enableLeftMenu(false);
 	}
@@ -151,7 +152,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.assistant_cancel) {
+		if (id == R.id.cancel) {
 			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
@@ -159,7 +160,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-		} else if (id == R.id.assistant_back) {
+		} else if (id == R.id.back) {
 			onBackPressed();
 		}
 	}
@@ -178,7 +179,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				|| currentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
 				|| currentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
 				|| currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
-			MenuFragment fragment = new MenuFragment();
+			WelcomeFragment fragment = new WelcomeFragment();
 			changeFragment(fragment);
 			currentFragment = AssistantFragmentsEnum.MENU;
 			back.setVisibility(View.GONE);
@@ -245,14 +246,14 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	public void displayMenu() {
-		fragment = new MenuFragment();
+		fragment = new WelcomeFragment();
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.MENU;
 		back.setVisibility(View.GONE);
 	}
 
 	public void displayLoginGeneric() {
-		fragment = new GenericLoginFragment();
+		fragment = new LoginFragment();
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.GENERIC_LOGIN;
 		back.setVisibility(View.VISIBLE);
@@ -368,7 +369,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	public void displayWizardConfirm(String username) {
-		CreateAccountConfirmFragment fragment = new CreateAccountConfirmFragment();
+		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
 		
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);

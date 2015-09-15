@@ -6,13 +6,13 @@
 
 	<TextView
 		android:text="@string/assistant_create_account_title"
-		android:contentDescription="@string/content_description_welcome"
 		style="@style/font6"
 		android:textAllCaps="true"
+		android:contentDescription="@string/content_description_welcome"
 		android:paddingTop="20dp"
-		android:layout_gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_gravity="center"
 		android:gravity="center_horizontal"/>
 
 	<TextView
@@ -21,15 +21,15 @@
 		android:layout_gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"/>
-    
-   	<TextView
+
+	<TextView
 		android:id="@+id/assistant_error"
 		android:textColor="@color/colorI"
-	    android:paddingTop="10dp"
-	    android:gravity="center"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" />
-    
+		android:paddingTop="10dp"
+		android:gravity="center"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
     <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
@@ -42,7 +42,6 @@
 			android:text="@string/username"
 			style="@style/font13"
 			android:textAllCaps="true"
-			android:paddingTop="10dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
@@ -119,25 +118,17 @@
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
 			android:singleLine="true"/>
-        
-        <RelativeLayout
-            android:layout_marginTop="20dp"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content">
 
-			<Button
-				android:id="@+id/assistant_create"
-				android:text="@string/assistant_create"
-				android:background="@drawable/assistant_button"
-				style="@style/font8"
-				android:contentDescription="@string/content_description_validate"
-				android:layout_width="wrap_content"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:layout_height="wrap_content"
-				android:layout_centerVertical="true"/>
-        
-        </RelativeLayout>
+		<Button
+			android:id="@+id/assistant_create"
+			android:text="@string/assistant_create"
+			android:background="@drawable/assistant_button"
+			style="@style/font8"
+			android:contentDescription="@string/content_description_validate"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="15dp"
+			android:layout_centerVertical="true"/>
 
 	</LinearLayout>
 

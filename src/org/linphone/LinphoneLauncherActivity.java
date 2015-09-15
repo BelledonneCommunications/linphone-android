@@ -55,7 +55,7 @@ public class LinphoneLauncherActivity extends Activity {
         } else {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-		setContentView(R.layout.launcher);
+		setContentView(R.layout.launch_screen);
         
 		mHandler = new Handler();
 		
@@ -99,7 +99,6 @@ public class LinphoneLauncherActivity extends Activity {
 					throw new RuntimeException("waiting thread sleep() has been interrupted");
 				}
 			}
-
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
