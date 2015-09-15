@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 /**
@@ -39,7 +40,7 @@ import android.widget.RelativeLayout;
  */
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
 	private EditText login, password, domain;
-	private RelativeLayout  cancel;
+	private ImageView  cancel;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		password = (EditText) findViewById(R.id.setup_password);
 		domain = (EditText) findViewById(R.id.setup_domain);
 
-		cancel = (RelativeLayout) findViewById(R.id.assistant_cancel);
+		cancel = (ImageView) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 		
 		String defaultDomain = getIntent().getStringExtra("Domain");
@@ -94,7 +95,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.assistant_cancel) {
+		if (id == R.id.cancel) {
 			cancelWizard(false);
 		}
 	}

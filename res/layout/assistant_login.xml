@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
 	<TextView
-		android:text="@string/assistant_linphone_account_title"
+		android:text="@string/assistant_general_account_title"
 		android:contentDescription="@string/content_description_welcome"
 		style="@style/font6"
 		android:textAllCaps="true"
@@ -14,14 +14,14 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center_horizontal"/>
-    
-    <LinearLayout 
+
+    <LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-		android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-	    android:gravity="center">
+	    android:gravity="center"
+	    android:orientation="vertical">
 
 		<TextView
 			android:text="@string/username"
@@ -63,6 +63,28 @@
 			android:paddingRight="10dp"
 			android:singleLine="true"/>
 
+
+		<TextView
+			android:text="@string/domain"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+
+		<EditText
+			android:id="@+id/assistant_domain"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
+
 		<TextView
 			android:text="@string/assistant_display_name"
 			style="@style/font13"
@@ -82,6 +104,8 @@
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
 			android:singleLine="true"/>
+
+
 
 		<Button
 			android:id="@+id/assistant_apply"
