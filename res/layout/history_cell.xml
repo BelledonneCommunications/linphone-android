@@ -36,14 +36,15 @@
 		<RelativeLayout
 			android:id="@+id/avatar_layout"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_height="match_parent"
+			android:gravity="center">
 
 			<ImageView
 				android:id="@+id/contact_picture"
 				android:src="@drawable/avatar"
 				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
+				android:layout_width="35dp"
+				android:layout_height="35dp"
 				android:adjustViewBounds="true"
 				android:layout_alignParentLeft="true"
 				android:layout_marginLeft="5dp"/>
@@ -52,39 +53,24 @@
 				android:id="@+id/mask"
 				android:src="@drawable/avatar_mask"
 				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
+				android:layout_width="35dp"
+				android:layout_height="35dp"
 				android:adjustViewBounds="true"
 				android:layout_alignParentLeft="true"
 				android:layout_marginLeft="5dp"/>
 
 		</RelativeLayout>
 
-
 		<ImageView
 			android:id="@+id/icon"
 			android:src="@drawable/call_status_incoming"
 			android:contentDescription="@string/content_description_call_direction"
-			android:padding="5dp"
+			android:padding="7dp"
 			android:layout_toRightOf="@id/avatar_layout"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:adjustViewBounds="true"
 			android:layout_marginLeft="5dp"/>
-
-		<TextView
-			android:id="@+id/sip_uri"
-			style="@style/font6"
-			android:lines="1"
-			android:ellipsize="marquee"
-			android:marqueeRepeatLimit="marquee_forever"
-			android:scrollHorizontally="true"
-			android:fadingEdge="horizontal"
-			android:singleLine="true"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/icon"
-			android:layout_marginLeft="10dp" />
 
 		<ImageView
 			android:id="@+id/detail"
@@ -104,9 +90,24 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
+			android:layout_centerInParent="true"
 			android:visibility="gone"
-			android:paddingLeft="5dp"
-			android:paddingRight="5dp" />
+			android:padding="5dp" />
+
+		<TextView
+			android:id="@+id/sip_uri"
+			style="@style/font6"
+			android:lines="1"
+			android:ellipsize="marquee"
+			android:marqueeRepeatLimit="marquee_forever"
+			android:scrollHorizontally="true"
+			android:fadingEdge="horizontal"
+			android:singleLine="true"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@id/icon"
+			android:layout_toLeftOf="@id/detail"
+			android:layout_marginLeft="10dp" />
 
 	</RelativeLayout>
 

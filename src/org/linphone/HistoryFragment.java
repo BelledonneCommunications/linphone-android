@@ -60,8 +60,8 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 	private ListView historyList;
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
-	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete;
-	private RelativeLayout allCallsSelected, missedCallsSelected;
+	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel;
+	private RelativeLayout allCallsSelected, missedCallsSelected, editList, topBar;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs;
 
@@ -79,7 +79,12 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
-		delete.setVisibility(View.INVISIBLE);
+
+		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
+		topBar = (RelativeLayout) view.findViewById(R.id.top_bar);
+
+		cancel = (ImageView) view.findViewById(R.id.cancel);
+		cancel.setOnClickListener(this);
 
 		allCalls = (ImageView) view.findViewById(R.id.all_calls);
 		allCalls.setOnClickListener(this);
@@ -193,7 +198,17 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			return;
 		}
 
+		if (id == R.id.cancel) {
+			quitEditMode();
+			return;
+		}
+
 		if (id == R.id.delete) {
+			if(historyList.getCheckedItemCount() == 0) {
+				quitEditMode();
+				return;
+			}
+
 			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
 			Button delete = (Button) dialog.findViewById(R.id.delete);
 			Button cancel = (Button) dialog.findViewById(R.id.cancel);
@@ -218,13 +233,6 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			return;
 		}
 
-		if (id == R.id.edit) {
-			edit.setVisibility(View.GONE);
-			selectAll.setVisibility(View.VISIBLE);
-			delete.setVisibility(View.VISIBLE);
-			isEditMode = true;
-		}
-
 		if (id == R.id.all_calls) {
 			allCalls.setEnabled(false);
 			allCallsSelected.setVisibility(View.VISIBLE);
@@ -239,6 +247,12 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			missedCallsSelected.setVisibility(View.VISIBLE);
 			missedCalls.setEnabled(false);
 			onlyDisplayMissedCalls = true;
+		}
+
+		if (id == R.id.edit) {
+			topBar.setVisibility(View.GONE);
+			editList.setVisibility(View.VISIBLE);
+			isEditMode = true;
 		}
 
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
@@ -335,10 +349,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 
 	public void quitEditMode(){
 		isEditMode = false;
-		selectAll.setVisibility(View.GONE);
-		deselectAll.setVisibility(View.GONE);
-		delete.setVisibility(View.GONE);
-		edit.setVisibility(View.VISIBLE);
+		editList.setVisibility(View.GONE);
+		topBar.setVisibility(View.VISIBLE);
+
 		refresh();
 		if (!hideHistoryListAndDisplayMessageIfEmpty()){
 			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -483,7 +496,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 						historyList.setItemChecked(position, b);
 					}
 				});
-				holder.detail.setVisibility(View.GONE);
+				holder.detail.setVisibility(View.INVISIBLE);
 				if(historyList.isItemChecked(position)) {
 					holder.select.setChecked(true);
 				} else {
