@@ -44,7 +44,7 @@
 		android:layout_height="25dp"
 		android:src="@drawable/status_available"
 		android:padding="5dp"
-		android:layout_marginBottom="5dp"
+		android:layout_marginBottom="10dp"
 		android:layout_alignParentRight="true"
 		android:layout_alignBottom="@id/layout"/>
 
