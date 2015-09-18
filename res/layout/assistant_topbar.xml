@@ -9,9 +9,9 @@
 		android:id="@+id/back"
 		android:src="@drawable/back"
 		android:contentDescription="@string/content_description_back"
-		android:layout_width="30dp"
+		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:layout_margin="20dp"
+		android:padding="20dp"
 		android:layout_alignParentLeft="true"
 		android:layout_centerInParent="true"/>
 
@@ -27,9 +27,9 @@
 		android:id="@+id/cancel"
 		android:src="@drawable/dialer_back"
 		android:contentDescription="@string/content_description_dialer"
-		android:layout_width="30dp"
+		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:layout_margin="20dp"
+		android:padding="20dp"
 		android:layout_centerInParent="true"
 		android:layout_alignParentRight="true"/>
 
