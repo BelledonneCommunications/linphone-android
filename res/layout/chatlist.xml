@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
 	<RelativeLayout
+		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="top"
@@ -13,70 +14,32 @@
 
 		<ImageView
 			android:id="@+id/new_discussion"
-			android:contentDescription="@string/content_description_new_discussion"
 			android:src="@drawable/chat_add"
 			android:background="@drawable/toolbar_button"
-			android:layout_width="wrap_content"
+			android:contentDescription="@string/content_description_new_discussion"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"/>
-
-		<ImageView
-			android:id="@+id/delete"
-			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/select_all"
-			android:src="@drawable/select_all"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/delete"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/deselect_all"
-			android:src="@drawable/deselect_all"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/delete"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
+			android:padding="15dp"/>
 
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"/>
-
+			android:padding="15dp"/>
 	</RelativeLayout>
+
+	<include layout="@layout/edit_list"/>
     
     <ListView 
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/darker_gray"
+        android:divider="@color/colorE"
         android:cacheColorHint="@color/transparent"
         android:dividerHeight="1dp" />
     

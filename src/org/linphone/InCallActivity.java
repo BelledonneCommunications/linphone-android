@@ -1355,7 +1355,6 @@ public class InCallActivity extends Activity implements OnClickListener {
 	}
 	
 	private void displayOtherCalls(Resources resources, final LinphoneCall call, int index) {
-		Log.w("Display other calls");
 		String sipUri = call.getRemoteAddress().asStringUriOnly();
         LinphoneAddress lAddress;
 		try {
@@ -1507,7 +1506,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 				}
 			}
 
-			if (LinphoneManager.getLc().getCurrentCall() == null) {
+			if (LinphoneManager.getLc().getCurrentCall() == null && !isConferenceRunning ) {
 				showAudioView();
 				mActiveCallHeader.setVisibility(View.GONE);
 				mNoCurrentCall.setVisibility(View.VISIBLE);
@@ -1535,6 +1534,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 	private void enterConference() {
 		LinphoneManager.getLc().addAllToConference();
 		displayConferenceHeader();
+		mNoCurrentCall.setVisibility(View.GONE);
 		displayOrHideCallsHeader(false);
 	}
 
@@ -1587,6 +1587,7 @@ public class InCallActivity extends Activity implements OnClickListener {
 		mControlsLayout.setVisibility(View.VISIBLE);
 		LinphoneManager.startProximitySensorForActivity(InCallActivity.this);
 		mActiveCallHeader.setVisibility(View.GONE);
+		mNoCurrentCall.setVisibility(View.GONE);
 		callsList.setVisibility(View.VISIBLE);
 		conferenceList.removeAllViews();
 
