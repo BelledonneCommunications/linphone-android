@@ -38,11 +38,20 @@
 
 		<ImageView
 			android:id="@+id/image"
-			android:adjustViewBounds="true"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:layout_width="150dp"
+			android:layout_height="150dp"
+			android:scaleType="center"
 			android:maxWidth="250dp"
 			android:maxHeight="250dp" />
+
+		<ProgressBar
+			android:id="@+id/spinner"
+			style="@android:style/Widget.ProgressBar.Horizontal"
+			android:visibility="gone"
+			android:layout_marginTop="20dp"
+			android:layout_width="wrap_content"
+			android:layout_height="5dp"/>
 
 	</LinearLayout>
 

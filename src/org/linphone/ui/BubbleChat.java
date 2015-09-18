@@ -26,6 +26,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.linphone.Contact;
+import org.linphone.ContactsManager;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
@@ -73,7 +75,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 	private static final HashMap<String, Integer> emoticons = new HashMap<String, Integer>();
 
 	private LinearLayout view;
-	private ImageView statusView;
+	private ImageView statusView, contactPicture;
 	private LinphoneChatMessage nativeMessage;
 	private Context mContext;
 	private static final int SIZE_MAX = 512;
@@ -81,7 +83,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 	private Bitmap defaultBitmap;
 	
 	@SuppressLint("InflateParams") 
-	public BubbleChat(final Context context, LinphoneChatMessage message) {
+	public BubbleChat(final Context context, LinphoneChatMessage message, Contact c) {
 		if (message == null) {
 			return;
 		}
@@ -94,7 +96,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
 		}
 
-		defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_photo_default);
+		defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_picture_over);
 
 		view.setId(message.getStorageId());
 
@@ -102,6 +104,12 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 
     	String externalBodyUrl = message.getExternalBodyUrl();
     	LinphoneContent fileTransferContent = message.getFileTransferInformation();
+
+		if(LinphoneManager.getInstance().getMessageUploadPending() != null){
+			spinner.setVisibility(View.VISIBLE);
+			nativeMessage.setListener(LinphoneManager.getInstance());
+		}
+
     	if (externalBodyUrl != null || fileTransferContent != null) {
 			Button download = (Button) view.findViewById(R.id.download);
 	    	ImageView imageView = (ImageView) view.findViewById(R.id.image);
@@ -158,8 +166,24 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
     	}
     	
     	TextView contact = (TextView) view.findViewById(R.id.contact_header);
-    	contact.setText(timestampToHumanDate(context, message.getTime()) + " - " + LinphoneUtils.getUsernameFromAddress(message.getFrom().asStringUriOnly()));
-    	
+
+
+
+		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+
+		String displayName = nativeMessage.getFrom().getUserName();
+		final String sipUri = nativeMessage.getFrom().asStringUriOnly();
+		if(!nativeMessage.isOutgoing()) {
+			if (c != null) {
+				displayName = c.getName();
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, c.getPhotoUri(), c.getThumbnailUri());
+			} else {
+				contactPicture.setImageResource(R.drawable.avatar);
+			}
+		}
+
+		contact.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
+
     	LinphoneChatMessage.State status = message.getStatus();
     	statusView = (ImageView) view.findViewById(R.id.status);
 		inprogress = (ProgressBar) view.findViewById(R.id.inprogress);
