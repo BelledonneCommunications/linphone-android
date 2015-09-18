@@ -66,7 +66,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		chat = (ImageView) view.findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 		if (getResources().getBoolean(R.bool.disable_chat))
-			view.findViewById(R.id.chatRow).setVisibility(View.GONE);
+			view.findViewById(R.id.chat).setVisibility(View.GONE);
 		
 		addToContacts = (ImageView) view.findViewById(R.id.add_contact);
 		addToContacts.setOnClickListener(this);

@@ -6,6 +6,7 @@
 	android:orientation="vertical" >
 
 	<RelativeLayout
+		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="top"
@@ -13,19 +14,17 @@
 
 		<RelativeLayout
 			android:id="@+id/all_calls_layout"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:adjustViewBounds="true">
+			android:layout_width="70dp"
+			android:layout_height="match_parent">
 
 			<ImageView
 				android:id="@+id/all_calls"
 				android:src="@drawable/history_all"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_all_calls"
-				android:layout_alignParentLeft="true"
-				android:padding="10dp"
 				android:gravity="center"
-				android:layout_width="wrap_content"
+				android:padding="15dp"
+				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
 			<RelativeLayout
@@ -41,8 +40,8 @@
 
 		<RelativeLayout
 			android:layout_toRightOf="@id/all_calls_layout"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
 			android:adjustViewBounds="true">
 
 			<ImageView
@@ -50,9 +49,9 @@
 				android:src="@drawable/history_missed"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_missed_calls"
-				android:padding="10dp"
 				android:gravity="center"
-				android:layout_width="wrap_content"
+				android:padding="15dp"
+				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
 			<RelativeLayout
@@ -68,54 +67,17 @@
 		</RelativeLayout>
 
 		<ImageView
-			android:id="@+id/delete"
-			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/select_all"
-			android:src="@drawable/select_all"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/delete"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/deselect_all"
-			android:src="@drawable/deselect_all"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/delete"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-
-		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"/>
-
+			android:padding="15dp"/>
 	</RelativeLayout>
+
+	<include layout="@layout/edit_list"/>
 
 	<ListView
 		android:id="@+id/historyList"
