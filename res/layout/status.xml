@@ -1,263 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/status"
 	android:background="@color/colorA"
-	xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:orientation="horizontal">
-
-	<RelativeLayout
-		android:id="@+id/content"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-
-            
-	       <!--     <TableLayout
-				    android:id="@+id/callStats"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-			    	android:layout_gravity="center"
-				    android:paddingBottom="10dp"
-				    android:paddingLeft="5dp"
-				    android:paddingRight="5dp"
-				    android:background="@android:color/black">
-			    
-				    <TableRow
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content">
-				        
-				        <TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-					    	android:gravity="left|center_vertical"
-					    	android:id="@+id/call_stats_title"
-					        android:textStyle="bold"
-					        android:textColor="@color/text_default"
-					        android:textSize="18sp"/>
-				        
-				    </TableRow>
-			    
-				    <TableRow
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content">
-				        
-				        <TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-					    	android:gravity="left|center_vertical"
-					    	android:text="@string/call_stats_codec"
-					        android:textStyle="bold"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				        <TextView 
-				            android:id="@+id/codec"
-						    android:layout_width="match_parent"
-						    android:layout_height="wrap_content"
-						    android:paddingLeft="5dp"
-					    	android:gravity="right|center_vertical"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				    </TableRow>
-				    
-				    <TableRow
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content">
-				        
-				        <TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-					    	android:gravity="left|center_vertical"
-					    	android:text="@string/call_stats_upload"
-					        android:textStyle="bold"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				        <TextView 
-				            android:id="@+id/uploadBandwith"
-						    android:layout_width="match_parent"
-						    android:layout_height="wrap_content"
-						    android:paddingLeft="5dp"
-					    	android:gravity="right|center_vertical"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				    </TableRow>
-				    
-				    <TableRow
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content">
-				        
-				        <TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-					    	android:gravity="left|center_vertical"
-					    	android:text="@string/call_stats_download"
-					        android:textColor="@android:color/white"
-					        android:textStyle="bold"
-					        android:textSize="12sp"/>
-				        
-				        <TextView 
-				            android:id="@+id/downloadBandwith"
-						    android:layout_width="match_parent"
-						    android:layout_height="wrap_content"
-						    android:paddingLeft="5dp"
-					    	android:gravity="right|center_vertical"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				    </TableRow>
-				    
-				    <TableRow
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content">
-				        
-				        <TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-					    	android:gravity="left|center_vertical"
-					    	android:text="@string/call_stats_ice"
-					        android:textStyle="bold"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				        <TextView 
-				            android:id="@+id/ice"
-						    android:layout_width="match_parent"
-						    android:layout_height="wrap_content"
-						    android:paddingLeft="5dp"
-					    	android:gravity="right|center_vertical"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				    </TableRow>
-				    
-				    <TableRow
-				        android:id="@+id/video_resolution_layout"
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content">
-				        
-				        <TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-					    	android:gravity="left|center_vertical"
-					    	android:text="@string/call_stats_video_resolution"
-					        android:textStyle="bold"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				        <TextView 
-				            android:id="@+id/video_resolution"
-						    android:layout_width="match_parent"
-						    android:layout_height="wrap_content"
-						    android:paddingLeft="5dp"
-					    	android:gravity="right|center_vertical"
-					        android:textColor="@android:color/white"
-					        android:textSize="12sp"/>
-				        
-				    </TableRow>
-			    
-			</TableLayout> -->
-
-	</RelativeLayout>
         
-		<RelativeLayout
-			android:id="@+id/handle"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent">
+	<RelativeLayout
+		android:id="@+id/status_bar"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-			<ImageView
-				android:id="@+id/menu_icon"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:padding="10dp"
-				android:src="@drawable/menu_burger"
-				android:layout_centerVertical="true"
-				android:layout_centerInParent="true"
-				android:layout_alignParentLeft="true"/>
+		<ImageView
+			android:id="@+id/side_menu_button"
+			android:src="@drawable/menu_burger"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="10dp"
+			android:layout_centerInParent="true"
+			android:layout_alignParentLeft="true"/>
 
-			<ImageView
-		        android:contentDescription="@string/content_description_led"
-		        android:id="@+id/statusLed"
-		        android:paddingLeft="5dp"
-				android:src="@drawable/led_disconnected"
-		        android:adjustViewBounds="true"
-				android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
-				android:layout_alignParentTop="true"
-				android:layout_toRightOf="@+id/menu_icon"/>
+		<ImageView
+			android:id="@+id/call_quality"
+			android:src="@drawable/call_quality_indicator_0"
+			android:contentDescription="@string/content_description_call_quality"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="10dp"
+			android:layout_centerInParent="true"
+			android:layout_alignParentLeft="true"
+			android:visibility="invisible" />
 
-			<TextView
-		        android:id="@+id/statusText" 
-		        android:text="@string/status_not_connected"
-		        android:textColor="@android:color/white"
-		        android:textSize="18sp"
-		        android:paddingLeft="5dp"
-            	android:layout_centerVertical="true"
-		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
-		        android:gravity="center_vertical"
-		        android:layout_toRightOf="@id/statusLed" />
-		    
-		    <LinearLayout 
-		        android:id="@+id/moreStatusLed"
-		        android:layout_width="wrap_content"
-		        android:layout_height="10dp"
-		        android:orientation="horizontal"
-		        android:layout_toRightOf="@id/statusLed"/>
-		    
-		    <ImageView
-		        android:contentDescription="@string/content_description_call_quality"
-		        android:id="@+id/callQuality"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_centerVertical="true"
-		        android:src="@drawable/call_quality_indicator_0" 
-		        android:adjustViewBounds="true"
-		        android:layout_centerHorizontal="true"
-		        android:visibility="gone" />
-		    
-		    <TextView
-		        android:id="@+id/exit"
-		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
-		        android:layout_alignParentRight="true"
-		        android:layout_centerVertical="true"
-		        android:gravity="center_vertical"
-		        android:paddingLeft="10dp"
-		        android:paddingRight="10dp"
-		        android:text="@string/menu_exit"
-		        android:textColor="@android:color/white"
-		        android:visibility="gone"
-		        android:textSize="18sp" />
-		    
-			<TextView 
-				android:id="@+id/voicemailCount" 
-				android:textColor="@android:color/white"
-				android:layout_alignParentRight="true"
-				android:textSize="18sp"
-				android:paddingLeft="5dp"
-				android:paddingRight="10dp"
-				android:layout_centerVertical="true"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:gravity="center_vertical"
-				android:visibility="gone" />
-		</RelativeLayout>
+		<ImageView
+			android:id="@+id/status_led"
+			android:src="@drawable/led_disconnected"
+			android:contentDescription="@string/content_description_led"
+			android:paddingLeft="5dp"
+			android:adjustViewBounds="true"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@id/side_menu_button"/>
 
-    <ImageView
-        android:contentDescription="@string/content_description_encryption"
-        android:id="@+id/encryption"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:src="@drawable/security_pending" 
-        android:adjustViewBounds="true"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+		<TextView
+			android:id="@+id/status_text"
+			android:text="@string/status_not_connected"
+			style="@style/font16"
+			android:paddingLeft="5dp"
+			android:layout_centerVertical="true"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:gravity="center_vertical"
+			android:layout_toRightOf="@id/status_led" />
 
+		<ImageView
+			android:id="@+id/voicemail"
+			android:src="@drawable/voicemail"
+			android:layout_centerVertical="true"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:gravity="center_vertical"
+			android:visibility="gone" />
+
+		<TextView
+			android:id="@+id/voicemail_count"
+			style="@style/font16"
+			android:layout_alignParentRight="true"
+			android:paddingLeft="5dp"
+			android:paddingRight="10dp"
+			android:layout_centerVertical="true"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:visibility="gone" />
+
+		<ImageView
+			android:id="@+id/encryption"
+			android:src="@drawable/security_ko"
+			android:contentDescription="@string/content_description_encryption"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			android:padding="5dp"
+			android:layout_centerInParent="true"
+			android:visibility="gone"
+			android:layout_alignParentRight="true" />
+	</RelativeLayout>
 </RelativeLayout>

@@ -22,7 +22,6 @@ import static android.content.Intent.ACTION_MAIN;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -44,17 +43,15 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphonePlayer;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.ui.AddressText;
-import org.linphone.ui.LedPreference;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -65,12 +62,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Layout;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -85,16 +81,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.ActionBarDrawerToggle;
 
 /**
  * @author Sylvain Berfini
@@ -111,7 +103,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
-	private LinearLayout menu, mark;
 	private RelativeLayout contacts, history, dialer, chat;
 	private RelativeLayout contacts_selected, history_selected, dialer_selected, chat_selected;
 	private FragmentsAvailable currentFragment, nextFragment;
@@ -123,12 +114,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
-	private String[] mParams;
+
+	private DrawerLayout sideMenu;
+	private String[] sideMenuItems;
 	private String mTitle;
-	private RelativeLayout mDrawerList, exitLayout, headerLayout;
-	private DrawerLayout mDrawerLayout;
-	private ActionBarDrawerToggle mDrawerToggle;
-	ListView mDrawerListB;
+	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
+	private ListView accountsList, sideMenuItemList;
+	private ImageView menu;
+
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -151,7 +144,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
         }
 
 		if (!LinphoneManager.isInstanciated()) {
-			Log.e("No service running: avoid crash by starting the launcher", this.getClass().getName());
+			Log.e("No service running: avoid crash by starting the launch", this.getClass().getName());
 			// super.onCreate called earlier
 			finish();
 			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
@@ -175,16 +168,15 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
 			ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
 		} else {
-				ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
+			ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
 		}
 
 		setContentView(R.layout.main);
 		instance = this;
 		fragmentsHistory = new ArrayList<FragmentsAvailable>();
 
-
-		createDrawer();
 		initButtons();
+		createSideMenu();
 
 		currentFragment = nextFragment = FragmentsAvailable.DIALER;
 		fragmentsHistory.add(currentFragment);
@@ -231,13 +223,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
 					}
 				}
-
-				//initAccounts();
+				initAccounts();
 			}
 
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (state == State.IncomingReceived) {
+					//finish();
 					startActivity(new Intent(LinphoneActivity.instance(), IncomingCallActivity.class));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
 					startActivity(new Intent(LinphoneActivity.instance(), OutgoingCallActivity.class));
@@ -290,212 +282,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		updateAnimationsState();
 	}
 
-	public void createDrawer() {
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mParams = getResources().getStringArray(R.array.menu_entry);
-		mDrawerList = (RelativeLayout) findViewById(R.id.left_drawer);
-		mDrawerListB = (ListView) findViewById(R.id.list_drawer);
-		List<String> dataList = new ArrayList<String>();
-		mDrawerListB.setAdapter(new ArrayAdapter<String>(this,R.layout.drawer_list_item, mParams));
-		mDrawerListB.setOnItemClickListener(new DrawerItemClickListener());
-
-		initAccounts();
-
-		ImageView menubar = (ImageView) findViewById(R.id.menu_icon);
-		menubar.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if(mDrawerLayout.isDrawerVisible(Gravity.LEFT)){
-					mDrawerLayout.closeDrawer(mDrawerList);
-				} else {
-					mDrawerLayout.openDrawer(mDrawerList);
-				}
-			}
-		});
-
-		exitLayout = (RelativeLayout) findViewById(R.id.exitLayout);
-		exitLayout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				exit();
-			}
-		});
-
-
-
-	}
-
-	public void initAccounts() {
-		ListView accounts = (ListView) findViewById(R.id.accounts_list);
-		//accounts.setVisibility(View.VISIBLE);
-
-		accounts.setAdapter(new AccountsListAdapter());
-		accounts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				Log.w("Tag " + i);
-				int position = (int) view.getTag();
-				displayAccountSettings(position);
-				mDrawerLayout.closeDrawer(mDrawerList);
-			}
-		});
-
-	}
-
-	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
-		try {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			boolean defaultAccountConnected = (isDefaultAccount && lc != null && lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
-			if (state == RegistrationState.RegistrationOk && defaultAccountConnected) {
-				return R.drawable.led_connected;
-			} else if (state == RegistrationState.RegistrationProgress) {
-				return R.drawable.led_inprogress;
-			} else if (state == RegistrationState.RegistrationFailed) {
-				return R.drawable.led_error;
-			} else {
-				return R.drawable.led_disconnected;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return R.drawable.led_disconnected;
-	}
-
-	class AccountsListAdapter extends BaseAdapter {
-		List<LinphoneProxyConfig> proxy_list;
-
-		AccountsListAdapter() {
-			proxy_list = new ArrayList<LinphoneProxyConfig>();
-			refresh();
-
-		}
-
-		public void refresh(){
-			proxy_list = new ArrayList<LinphoneProxyConfig>();
-
-			proxy_list.add(LinphoneManager.getLc().getDefaultProxyConfig());
-			for(LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
-				if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
-					proxy_list.add(proxyConfig);
-				}
-			}
-		}
-
-		public int getCount() {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (proxy_list != null) {
-				return proxy_list.size();
-			} else {
-				return 0;
-			}
-		}
-
-		public Object getItem(int position) {
-			return proxy_list.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			refresh();
-			boolean isDefaultAccount = false;
-			View view = null;
-			Log.w(position);
-			LinphoneProxyConfig lpc = (LinphoneProxyConfig) getItem(position);
-			//if (convertView != null) {
-			//	view = convertView;
-			//} else {
-			if(lpc == LinphoneManager.getLc().getDefaultProxyConfig()) {
-				isDefaultAccount = true;
-				view = getLayoutInflater().inflate(R.layout.main_account, parent, false);
-				Log.w("Default account");
-
-			} else {
-				view = getLayoutInflater().inflate(R.layout.accounts, parent, false);
-			}
-			//}
-
-			ImageView status = (ImageView) view.findViewById(R.id.statusLed);
-
-			TextView address = (TextView) view.findViewById(R.id.address);
-			String sipAddress = (lpc.getIdentity() != null && lpc.getIdentity().startsWith("sip:")) ? lpc.getIdentity().split("sip:")[1] : lpc.getIdentity();
-			//identity.setText(sipAddress);
-
-			try {
-				LinphoneAddress identity = LinphoneCoreFactory.instance().createLinphoneAddress(lpc.getIdentity());
-				address.setText(identity.asStringUriOnly());
-				if(isDefaultAccount) {
-					TextView displayName = (TextView) findViewById(R.id.display_name);
-					if (identity.getDisplayName() != null)
-						displayName.setText(identity.getDisplayName());
-					else
-						displayName.setText(identity.getUserName());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			int nbAccounts = LinphonePreferences.instance().getAccountCount();
-			int accountIndex = 0;
-
-			for (int i = 0; i < nbAccounts; i++) {
-				String username = LinphonePreferences.instance().getAccountUsername(i);
-				String domain = LinphonePreferences.instance().getAccountDomain(i);
-				String id = username + "@" + domain;
-				if (id.equals(address)) {
-					accountIndex = i;
-					view.setTag(accountIndex);
-
-					break;
-				}
-			}
-
-			status.setImageResource(getStatusIconResource(lpc.getState(),isDefaultAccount));
-
-			view.setTag(accountIndex);
-
-			return view;
-		}
-	}
-
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(view,position);
-		}
-	}
-
-	private void selectItem(View view,int position) {
-
-		Log.w(mDrawerListB.getAdapter().getItem(position).toString());
-		mDrawerListB.setItemChecked(position, true);
-
-		if(mDrawerListB.getAdapter().getItem(position).toString().equals("Settings")){
-			displaySettings();
-		}
-		if(mDrawerListB.getAdapter().getItem(position).toString().equals("About")){
-			displayAbout();
-		}
-
-		if(mDrawerListB.getAdapter().getItem(position).toString().equals("Assistant")){
-			displayAssistant();
-		}
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
-
-	@Override
-	public void setTitle(CharSequence title) {
-		mTitle = (String) title;
-		//getActionBar().setTitle(mTitle);
-	}
-
-	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
-	 */
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -513,8 +299,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 
 	private void initButtons() {
-		menu = (LinearLayout) findViewById(R.id.menu);
-
 		history = (RelativeLayout) findViewById(R.id.history);
 		history.setOnClickListener(this);
 		contacts = (RelativeLayout) findViewById(R.id.contacts);
@@ -863,11 +647,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			return;
 		}
 
+		Log.w("Display chat sipuri" + sipUri);
+
 		if(sipUri == null) {
-			Intent intent = new Intent(this, ChatActivity.class);
-			startOrientationSensor();
-			startActivityForResult(intent, CHAT_ACTIVITY);
+			Bundle extras = new Bundle();
+			changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 		} else {
+			Log.w("Display chat");
 			LinphoneAddress lAddress;
 			try {
 				lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
@@ -885,37 +671,37 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				thumbnailUri = contact.getThumbnailUri().toString();
 			}
 
-
-			if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT){
-				if (isTablet()){
-						Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
-						if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
-							ChatFragment chatFragment = (ChatFragment) fragment2;
-							chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
-						} else {
-							Bundle extras = new Bundle();
-							extras.putString("SipUri", sipUri);
-							if (contact != null) {
-								extras.putString("DisplayName", displayName);
-								extras.putString("PictureUri", pictureUri);
-								extras.putString("ThumbnailUri", thumbnailUri);
-							}
-							changeCurrentFragment(FragmentsAvailable.CHAT, extras);
-						}
+			if (currentFragment == FragmentsAvailable.CHATLIST || currentFragment == FragmentsAvailable.CHAT) {
+				Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
+				if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+					ChatFragment chatFragment = (ChatFragment) fragment2;
+					chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
 				} else {
 					Bundle extras = new Bundle();
 					extras.putString("SipUri", sipUri);
 					if (lAddress.getDisplayName() != null) {
-						extras.putString("DisplayName", contact.getName());
+						extras.putString("DisplayName", displayName);
 						extras.putString("PictureUri", pictureUri);
 						extras.putString("ThumbnailUri", thumbnailUri);
 					}
 					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 				}
-				if (messageListFragment != null && messageListFragment.isVisible()) {
-					((ChatListFragment) messageListFragment).refresh();
+			} else {
+				Bundle extras = new Bundle();
+				extras.putString("SipUri", sipUri);
+				if (lAddress.getDisplayName() != null) {
+					extras.putString("DisplayName", displayName);
+					extras.putString("PictureUri", pictureUri);
+					extras.putString("ThumbnailUri", thumbnailUri);
 				}
+				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 			}
+
+
+			if (messageListFragment != null && messageListFragment.isVisible()) {
+				((ChatListFragment) messageListFragment).refresh();
+			}
+
 
 			LinphoneService.instance().resetMessageNotifCount();
 			LinphoneService.instance().removeMessageNotification();
@@ -997,11 +783,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void updateChatListFragment(ChatListFragment fragment) {
 		messageListFragment = fragment;
-	}
-
-	public void hideMenu(boolean hide) {
-		menu.setVisibility(hide ? View.GONE : View.VISIBLE);
-		mark.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}
 
 	public void updateStatusFragment(StatusFragment fragment) {
@@ -1094,11 +875,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void displayMissedChats(final int missedChatCount) {
 		if (missedChatCount > 0) {
 			missedChats.setText(missedChatCount + "");
-			if (missedChatCount > 99) {
-				missedChats.setTextSize(12);
-			} else {
-				missedChats.setTextSize(20);
-			}
 			missedChats.setVisibility(View.VISIBLE);
 			if (!isAnimationDisabled) {
 				missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
@@ -1311,7 +1087,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
-	public void exit() {
+	public void quit() {
 		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 	}
@@ -1320,7 +1096,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
-				exit();
+				quit();
 			} else {
 				FragmentsAvailable newFragment = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
 				changeCurrentFragment(newFragment, null, true);
@@ -1497,6 +1273,206 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 		}*/
 		return super.onKeyDown(keyCode, event);
+	}
+
+	//SIDE MENU
+
+	public void openOrCloseSideMenu(boolean open) {
+		if(open) {
+			sideMenu.openDrawer(sideMenuContent);
+		} else {
+			sideMenu.closeDrawer(sideMenuContent);
+		}
+	}
+
+	public void createSideMenu() {
+		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
+		sideMenuItems = getResources().getStringArray(R.array.side_menu_item);
+		sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
+		sideMenuItemList = (ListView)findViewById(R.id.item_list);
+		menu = (ImageView) findViewById(R.id.side_menu_button);
+
+		sideMenuItemList.setAdapter(new ArrayAdapter<String>(this, R.layout.side_menu_item, sideMenuItems));
+		sideMenuItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("Settings")){
+					LinphoneActivity.instance().displaySettings();
+				}
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("About")){
+					LinphoneActivity.instance().displayAbout();
+				}
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("Assistant")){
+					LinphoneActivity.instance().displayAssistant();
+				}
+				openOrCloseSideMenu(false);
+			}
+		});
+
+		initAccounts();
+
+		menu.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if(sideMenu.isDrawerVisible(Gravity.LEFT)){
+					sideMenu.closeDrawer(sideMenuContent);
+				} else {
+					sideMenu.openDrawer(sideMenuContent);
+				}
+			}
+		});
+
+		quitLayout = (RelativeLayout) findViewById(R.id.side_menu_quit);
+		quitLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				LinphoneActivity.instance().quit();
+			}
+		});
+	}
+
+	private void initAccounts() {
+		accountsList = (ListView) findViewById(R.id.accounts_list);
+		defaultAccount = (RelativeLayout) findViewById(R.id.default_account);
+
+		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+			defaultAccount.setVisibility(View.VISIBLE);
+			ImageView status = (ImageView)findViewById(R.id.status_led);
+			TextView address = (TextView) findViewById(R.id.address);
+			TextView displayName = (TextView) findViewById(R.id.display_name);
+
+			try {
+				LinphoneAddress identity = LinphoneCoreFactory.instance().createLinphoneAddress((LinphoneManager.getLc().getDefaultProxyConfig().getIdentity()));
+				address.setText(identity.asStringUriOnly());
+				if (identity.getDisplayName() != null) {
+					displayName.setText(identity.getDisplayName());
+				} else if (identity.getUserName() != null) {
+					displayName.setText(identity.getUserName());
+				} else {
+					displayName.setText("");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			status.setImageResource(getStatusIconResource(LinphoneManager.getLc().getDefaultProxyConfig().getState()));
+
+			defaultAccount.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					LinphoneActivity.instance().displayAccountSettings(LinphonePreferences.instance().getDefaultAccountIndex());
+					openOrCloseSideMenu(false);
+				}
+			});
+
+		} else {
+			defaultAccount.setVisibility(View.GONE);
+		}
+
+		if(LinphoneManager.getLc().getProxyConfigList().length > 1) {
+			accountsList.setVisibility(View.VISIBLE);
+			accountsList.setAdapter(new AccountsListAdapter());
+			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+					int position = Integer.parseInt(view.getTag().toString());
+					LinphoneActivity.instance().displayAccountSettings(position);
+					openOrCloseSideMenu(false);
+				}
+			});
+		} else {
+			accountsList.setVisibility(View.GONE);
+		}
+	}
+
+	private int getStatusIconResource(LinphoneCore.RegistrationState state) {
+		try {
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (state == RegistrationState.RegistrationOk) {
+				return R.drawable.led_connected;
+			} else if (state == RegistrationState.RegistrationProgress) {
+				return R.drawable.led_inprogress;
+			} else if (state == RegistrationState.RegistrationFailed) {
+				return R.drawable.led_error;
+			} else {
+				return R.drawable.led_disconnected;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return R.drawable.led_disconnected;
+	}
+
+	class AccountsListAdapter extends BaseAdapter {
+		List<LinphoneProxyConfig> proxy_list;
+
+		AccountsListAdapter() {
+			proxy_list = new ArrayList<LinphoneProxyConfig>();
+			refresh();
+		}
+
+		public void refresh(){
+			proxy_list = new ArrayList<LinphoneProxyConfig>();
+			for(LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
+				if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
+					proxy_list.add(proxyConfig);
+				}
+			}
+		}
+
+		public int getCount() {
+			if (proxy_list != null) {
+				return proxy_list.size();
+			} else {
+				return 0;
+			}
+		}
+
+		public Object getItem(int position) {
+			return proxy_list.get(position);
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			View view = null;
+			LinphoneProxyConfig lpc = (LinphoneProxyConfig) getItem(position);
+			if (convertView != null) {
+				view = convertView;
+			} else {
+				view = getLayoutInflater().inflate(R.layout.accounts, parent, false);
+			}
+
+			ImageView status = (ImageView) view.findViewById(R.id.statusLed);
+			TextView address = (TextView) view.findViewById(R.id.address);
+			String sipAddress = (lpc.getIdentity() != null && lpc.getIdentity().startsWith("sip:")) ? lpc.getIdentity().split("sip:")[1] : lpc.getIdentity();
+
+			try {
+				LinphoneAddress identity = LinphoneCoreFactory.instance().createLinphoneAddress(lpc.getIdentity());
+				address.setText(identity.asStringUriOnly());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			int nbAccounts = LinphonePreferences.instance().getAccountCount();
+			int accountIndex = 0;
+
+			for (int i = 0; i < nbAccounts; i++) {
+				String username = LinphonePreferences.instance().getAccountUsername(i);
+				String domain = LinphonePreferences.instance().getAccountDomain(i);
+				String id = username + "@" + domain;
+				if (id.equals(sipAddress)) {
+					accountIndex = i;
+					view.setTag(accountIndex);
+					break;
+				}
+			}
+			status.setImageResource(getStatusIconResource(lpc.getState()));
+			return view;
+		}
 	}
 }
 

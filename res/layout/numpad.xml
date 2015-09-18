@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			 android:layout_width="match_parent" android:layout_height="match_parent" android:shrinkColumns="*" >
+			 android:layout_width="match_parent" android:layout_height="match_parent" >
 
 <TableRow android:layout_weight="1" android:gravity="center">
 	<org.linphone.ui.Digit android:id="@+id/Digit1"	android:text="1" style="@style/DialerDigit" android:background="@drawable/numpad_one" android:soundEffectsEnabled="true"/>
@@ -10,7 +10,7 @@
 </TableRow>
 
 <TableRow android:layout_weight="1" android:gravity="center">
-	<org.linphone.ui.Digit android:id="@+id/Digit4"	android:text="4" style="@style/DialerDigit" android:background="@drawable/numpad_four" android:soundEffectsEnabled="true" />
+	<org.linphone.ui.Digit android:id="@+id/Digit4" android:text="4" style="@style/DialerDigit" android:background="@drawable/numpad_four" android:soundEffectsEnabled="true" />
 	<org.linphone.ui.Digit android:id="@+id/Digit5"	android:text="5" style="@style/DialerDigit" android:background="@drawable/numpad_five" android:soundEffectsEnabled="true" />
 	<org.linphone.ui.Digit android:id="@+id/Digit6"	android:text="6" style="@style/DialerDigit" android:background="@drawable/numpad_six" android:soundEffectsEnabled="true" />
 </TableRow>

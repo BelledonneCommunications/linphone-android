@@ -138,7 +138,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		back.setOnClickListener(this);
 		cancel = (ImageView) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
-		status.enableLeftMenu(false);
+		status.enableSideMenu(false);
 	}
 	
 	private void changeFragment(Fragment newFragment) {
