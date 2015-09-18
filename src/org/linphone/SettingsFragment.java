@@ -151,10 +151,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	// Read the values set in resources and hides the settings accordingly
 	private void hideSettings() {
-		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
-			hidePreference(R.string.menu_about_key);
-		}
-
 		if (getResources().getBoolean(R.bool.hide_accounts)) {
 			emptyAndHidePreference(R.string.pref_sipaccounts_key);
 		}

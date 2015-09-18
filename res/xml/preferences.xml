@@ -10,7 +10,7 @@
 	    android:key="@string/pref_sipaccounts_key"/>
 
 	<Preference
-	    android:title="@string/setup_title"
+	    android:title="@string/assistant_title"
 	    android:key="@string/setup_key"/>
 	
 	<Preference

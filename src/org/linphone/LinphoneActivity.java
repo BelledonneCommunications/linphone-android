@@ -791,7 +791,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void displaySettings() {
 		changeCurrentFragment(FragmentsAvailable.SETTINGS, null);
-		//settings.setSelected(true);
 	}
 
 	public void applyConfigChangesIfNeeded() {
