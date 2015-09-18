@@ -34,7 +34,7 @@
 	<string name="assistant_create">Create account</string>
 	<string name="assistant_apply">Apply</string>
 	<string name="assistant_ec_calibration">Echo canceller calibration in progress</string>
-	<string name="assistant_password_confirm">Apply</string>
+	<string name="assistant_password_confirm">Confirm password</string>
 
 	<!-- 1. Dailer -->
 	<string name="addressHint">Enter a number or an address</string>
@@ -350,7 +350,6 @@
 
   <string name="setup_password_hint">password</string>
   <string name="setup_domain_hint">domain</string>
-  <string name="setup_password_confirm_hint">confirm password</string>
   <string name="setup_email_hint">email</string>
   <string name="setup_create">Create Account</string>
   <string name="setup_validate_account">An email has been sent to the address you gave. In order to activate your account, you need to click on the link inside it. Once it is done, come back here and click on the button above.</string>
