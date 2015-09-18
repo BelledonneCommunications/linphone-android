@@ -119,7 +119,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	
 	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
-		ImageView contactPicture = (ImageView) view.findViewById(R.id.contactPicture);
+		ImageView contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		if (contact.getPhotoUri() != null) {
 			InputStream input = Compatibility.getContactPictureInputStream(LinphoneActivity.instance().getContentResolver(), contact.getID());
 			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
@@ -127,9 +127,8 @@ public class ContactFragment extends Fragment implements OnClickListener {
         	contactPicture.setImageResource(R.drawable.avatar);
         }
 		
-		TextView contactName = (TextView) view.findViewById(R.id.contactName);
+		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getName());
-
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
@@ -140,19 +139,26 @@ public class ContactFragment extends Fragment implements OnClickListener {
 			if (numberOrAddress.startsWith("sip:")) {
 				displayednumberOrAddress = displayednumberOrAddress.replace("sip:", "");
 			}
+
+			TextView label = (TextView) v.findViewById(R.id.address_label);
+			if(LinphoneUtils.isSipAddress(numberOrAddress)) {
+				label.setText(R.string.sip_address);
+			} else {
+				label.setText(R.string.phone_number);
+			}
 			
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
 			tv.setText(displayednumberOrAddress);
 			tv.setSelected(true);
 			
 			if (!displayChatAddressOnly) {
-				v.findViewById(R.id.dial).setOnClickListener(dialListener);
-				v.findViewById(R.id.dial).setTag(displayednumberOrAddress);
+				v.findViewById(R.id.call).setOnClickListener(dialListener);
+				v.findViewById(R.id.call).setTag(displayednumberOrAddress);
 			} else {
-				v.findViewById(R.id.dial).setVisibility(View.GONE);
+				v.findViewById(R.id.call).setVisibility(View.GONE);
 			}
 
-			v.findViewById(R.id.start_chat).setOnClickListener(chatListener);
+			v.findViewById(R.id.chat).setOnClickListener(chatListener);
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
 				displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
@@ -164,13 +170,13 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				if (!numberOrAddress.contains("@")) {
 					tag = numberOrAddress + "@" + lpc.getDomain();
 				}
-				v.findViewById(R.id.start_chat).setTag(tag);
+				v.findViewById(R.id.chat).setTag(tag);
 			} else {
-				v.findViewById(R.id.start_chat).setTag(numberOrAddress);
+				v.findViewById(R.id.chat).setTag(numberOrAddress);
 			}
 			
 			final String finalNumberOrAddress = numberOrAddress;
-			ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
+			/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
 			if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {
 				friend.setVisibility(View.VISIBLE);
 				
@@ -196,10 +202,10 @@ public class ContactFragment extends Fragment implements OnClickListener {
 						}
 					});
 				}
-			}
+			}*/
 			
 			if (getResources().getBoolean(R.bool.disable_chat)) {
-				v.findViewById(R.id.start_chat).setVisibility(View.GONE);
+				v.findViewById(R.id.chat).setVisibility(View.GONE);
 			}
 			
 			controls.addView(v);
@@ -209,7 +215,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT);
 			
@@ -217,13 +223,13 @@ public class ContactFragment extends Fragment implements OnClickListener {
 				LinphoneActivity.instance().hideStatusBar();
 			}
 		}
-		
 		contact.refresh(getActivity().getContentResolver());
 		if (contact.getName() == null || contact.getName().equals("")) {
 			//Contact has been deleted, return
 			LinphoneActivity.instance().displayContacts(false);
+		} else {
+			displayContact(inflater, view);
 		}
-		displayContact(inflater, view);
 	}
 
 	@Override

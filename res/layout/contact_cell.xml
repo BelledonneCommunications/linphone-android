@@ -2,39 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="@drawable/list_selector"
-    android:orientation="vertical" >
-    
-    <TextView
-        android:id="@+id/separator"
-	    android:paddingLeft="10dp"
-		android:textSize="30sp"
-		android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorH"
-        android:textColor="@color/colorA"
-        android:layout_marginBottom="10dp"
-        android:textStyle="bold" />
-    
-    <RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="40dp"
-    	android:orientation="horizontal">
+	android:background="@color/colorH"
+    android:orientation="vertical">
+
+	<LinearLayout
+		android:id="@+id/separator"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/separator_text"
+			style="@style/font1"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:gravity="center" />
+
+		<ImageView
+			android:background="@color/colorE"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"/>
+
+	</LinearLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:layout_margin="5dp"
+		android:gravity="center_vertical">
 
 		<RelativeLayout
 			android:id="@+id/avatar_layout"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_height="match_parent"
+			android:gravity="center">
 
 			<ImageView
 				android:id="@+id/contact_picture"
 				android:src="@drawable/avatar"
 				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
+				android:layout_width="35dp"
+				android:layout_height="35dp"
 				android:adjustViewBounds="true"
 				android:layout_alignParentLeft="true"
 				android:layout_marginLeft="5dp"/>
@@ -43,8 +53,8 @@
 				android:id="@+id/mask"
 				android:src="@drawable/avatar_mask"
 				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
+				android:layout_width="35dp"
+				android:layout_height="35dp"
 				android:adjustViewBounds="true"
 				android:layout_alignParentLeft="true"
 				android:layout_marginLeft="5dp"/>
@@ -81,6 +91,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
+			android:layout_centerInParent="true"
 			android:visibility="gone"
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp" />
