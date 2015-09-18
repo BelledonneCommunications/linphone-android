@@ -17,15 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -33,10 +29,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.SlidingDrawer;
-import org.linphone.ui.SlidingDrawer.OnDrawerOpenListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,11 +42,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
@@ -62,9 +51,8 @@ import android.widget.TextView;
 public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText, exit, voicemailCount;
-	private ImageView statusLed, callQuality, encryption, menu;
-//	private LinearLayout allAccountsLed;
+	private TextView statusText, voicemailCount;
+	private ImageView statusLed, callQuality, encryption, menu, voicemail;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
 	private Timer mTimer;
@@ -76,27 +64,14 @@ public class StatusFragment extends Fragment {
         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.status, container, false);
 		
-		statusText = (TextView) view.findViewById(R.id.statusText);
-		statusLed = (ImageView) view.findViewById(R.id.statusLed);
-		callQuality = (ImageView) view.findViewById(R.id.callQuality);
+		statusText = (TextView) view.findViewById(R.id.status_text);
+		statusLed = (ImageView) view.findViewById(R.id.status_led);
+		callQuality = (ImageView) view.findViewById(R.id.call_quality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
-		menu = (ImageView) view.findViewById(R.id.menu_icon);
-//		allAccountsLed = (LinearLayout) view.findViewById(R.id.moreStatusLed);
+		menu = (ImageView) view.findViewById(R.id.side_menu_button);
+		voicemail = (ImageView) view.findViewById(R.id.voicemail);
+		voicemailCount = (TextView) view.findViewById(R.id.voicemail_count);
 
-		voicemailCount = (TextView) view.findViewById(R.id.voicemailCount);
-		
-		exit = (TextView) view.findViewById(R.id.exit);
-		exit.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().exit();
-				}
-			}
-		});
-		if (getResources().getBoolean(R.bool.exit_button_on_dialer))
-			exit.setVisibility(View.VISIBLE);
-		
 		// We create it once to not delay the first display
 		populateSliderContent();
 		
@@ -110,6 +85,8 @@ public class StatusFragment extends Fragment {
 				if(lc.getProxyConfigList() == null){
 					statusLed.setVisibility(View.INVISIBLE);
 					statusText.setText("");
+				} else {
+					statusLed.setVisibility(View.VISIBLE);
 				}
 
 				if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
@@ -121,15 +98,12 @@ public class StatusFragment extends Fragment {
 				}
 				
 				try {
-					if (getResources().getBoolean(R.bool.lock_statusbar)) {
-						statusText.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								lc.refreshRegisters();
-							}
-						});
-					}
-//						setMiniLedsForEachAccount();
+					statusText.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							lc.refreshRegisters();
+						}
+					});
 				} catch (IllegalStateException ise) {}
 			}
 			
@@ -148,9 +122,11 @@ public class StatusFragment extends Fragment {
 
 				unreadCount = Integer.parseInt(intToParse[0]);
 				if (unreadCount > 0) {
-					voicemailCount.setText(unreadCount + " " + getResources().getString(R.string.voicemail_unread));
+					voicemailCount.setText(unreadCount);
+					voicemail.setVisibility(View.VISIBLE);
 					voicemailCount.setVisibility(View.VISIBLE);
 				} else {
+					voicemail.setVisibility(View.GONE);
 					voicemailCount.setVisibility(View.GONE);
 				}
 			}
@@ -180,12 +156,15 @@ public class StatusFragment extends Fragment {
 		} else if (activity instanceof InCallActivity) {
 			((InCallActivity) activity).updateStatusFragment(this);
 			isInCall = true;
-		} else if (activity instanceof ChatActivity) {
-			((ChatActivity) activity).updateStatusFragment(this);
-			isInCall = false;
 		} else if (activity instanceof AssistantActivity) {
 			((AssistantActivity) activity).updateStatusFragment(this);
 			isInCall = false;
+		} else if (activity instanceof IncomingCallActivity) {
+			((IncomingCallActivity) activity).updateStatusFragment(this);
+			isInCall = true;
+		} else if (activity instanceof OutgoingCallActivity) {
+			((OutgoingCallActivity) activity).updateStatusFragment(this);
+			isInCall = true;
 		}
 	}
 	
@@ -194,24 +173,9 @@ public class StatusFragment extends Fragment {
 		super.onDetach();
 		isAttached = false;
 	}
-	
-	public void openOrCloseStatusBar() {
-		openOrCloseStatusBar(false);
-	}
-	
-	public void openOrCloseStatusBar(boolean force) {
-		if (getResources().getBoolean(R.bool.lock_statusbar) && !force) {
-			return;
-		}
 
-	}
-	
-	public void closeStatusBar() {
-		if (getResources().getBoolean(R.bool.lock_statusbar)) {
-			return;
-		}
-	}
-	
+	//NORMAL STATUS BAR
+
 	private void populateSliderContent() {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
 			voicemailCount.setVisibility(View.GONE);
@@ -230,27 +194,10 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
-	public void enableLeftMenu(boolean enabled) {
+	public void enableSideMenu(boolean enabled) {
 		menu.setEnabled(enabled);
 	}
-	
-//	private void setMiniLedsForEachAccount() {
-//		if (allAccountsLed == null)
-//			return;
-//		
-//		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
-//			allAccountsLed.removeAllViews();
-//			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-//				ImageView led = new ImageView(getActivity());
-//				LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-//				led.setLayoutParams(params);
-//				led.setAdjustViewBounds(true);
-//				led.setImageResource(getStatusIconResource(lpc.getState(), false));
-//				allAccountsLed.addView(led);
-//			}
-//		}
-//	}
-	
+
 	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
 		try {
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -294,7 +241,8 @@ public class StatusFragment extends Fragment {
 		
 		return context.getString(R.string.status_not_connected);
 	}
-	
+
+	//INCALL STATUS BAR
 	private void startCallQuality() {
 		callQuality.setVisibility(View.VISIBLE);
 		refreshHandler.postDelayed(mCallQualityUpdater = new Runnable() {
@@ -353,12 +301,12 @@ public class StatusFragment extends Fragment {
 		LinphoneCall call = lc.getCurrentCall();
 		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 			if (call != null) {
-				//startCallQuality();
-				//refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+				startCallQuality();
+				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 			}
-			
-			statusText.setVisibility(View.GONE);
+			menu.setVisibility(View.INVISIBLE);
 			encryption.setVisibility(View.VISIBLE);
+			callQuality.setVisibility(View.VISIBLE);
 			
 			// We are obviously connected
 			statusLed.setImageResource(R.drawable.led_connected);
