@@ -24,6 +24,16 @@
             android:layout_height="match_parent"
             android:orientation="horizontal" />
 
+			<LinearLayout
+				android:id="@+id/conferenceCalls"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="top"
+				android:layout_alignParentTop="true"
+				android:orientation="vertical"
+				android:visibility="gone">
+			</LinearLayout>
+
 			<RelativeLayout
 				android:id="@+id/activeCallHeader"
 				android:layout_width="match_parent"
@@ -35,8 +45,8 @@
 				<ImageView
 					android:id="@+id/contactPicture"
 					android:src="@drawable/avatar"
-					android:layout_width="220dp"
-					android:layout_height="220dp"
+					android:layout_width="200dp"
+					android:layout_height="200dp"
 					android:layout_centerHorizontal="true"
 					android:paddingBottom="10dp"/>
 
@@ -70,23 +80,49 @@
 
 			</RelativeLayout>
 
+		<LinearLayout
+			android:id="@+id/noCurrentCall"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:gravity="center_vertical"
+			android:background="@color/colorC"
+			android:visibility="gone">
 
-		<TableLayout
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:src="@drawable/waiting_time"/>
+
+			<TextView
+				android:text="No current call"
+				style="@style/font16"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"/>
+		</LinearLayout>
+
+
+		<LinearLayout
 			android:id="@+id/calls"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/activeCallHeader"
 			android:layout_alignParentBottom="true"
-			android:layout_gravity="bottom"/>
+			android:background="@color/colorH"
+			android:layout_gravity="bottom"
+			android:orientation="vertical">
+		</LinearLayout>
 
 	</FrameLayout>
 
     <ImageView
         android:id="@+id/switchCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentLeft="true"
-        android:adjustViewBounds="true"
+		android:padding="10dp"
         android:contentDescription="@string/content_description_switch_camera"
         android:layout_marginTop="40dp"
         android:visibility="invisible"
@@ -118,14 +154,13 @@
             <RelativeLayout   
                 android:layout_width="match_parent"
 	            android:layout_height="match_parent"
+				android:padding="25dp"
 	            android:layout_weight="1">
 	            
            	<ImageView
 	            android:id="@+id/video"
 	           	android:src="@drawable/camera_default"
 				android:background="@drawable/button_background"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
 	            android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
                 
@@ -144,8 +179,7 @@
                 android:id="@+id/micro"
                 android:src="@drawable/micro_default"
 				android:background="@drawable/button_background"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:padding="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -154,8 +188,7 @@
                 android:id="@+id/speaker"
 				android:src="@drawable/speaker_default"
 				android:background="@drawable/button_background"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:padding="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
@@ -171,8 +204,7 @@
                 android:id="@+id/options"
 				android:src="@drawable/options_default"
 				android:background="@drawable/button_background"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:padding="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -191,19 +223,17 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:padding="20dp"
 				android:background="@color/colorC"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_dialer" />
 
 			<ImageView
 				android:id="@+id/hangUp"
-				android:scaleType="center"
 				android:layout_gravity="center"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:adjustViewBounds="true"
+				android:padding="15dp"
 				android:layout_weight="0.5"
 				android:background="@color/colorD"
 				android:contentDescription="@string/content_description_contacts"
@@ -214,8 +244,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:padding="20dp"
 				android:background="@color/colorC"
 				android:contentDescription="@string/content_description_contacts"
 				android:src="@drawable/footer_chat" />
@@ -253,15 +282,14 @@
 			android:layout_weight="0.5" />
 
 		<ImageView
-			android:id="@+id/conference"
-			android:src="@drawable/options_start_conference"
+			android:id="@+id/addCall"
+			android:src="@drawable/options_add_call"
 			android:background="@drawable/button_background"
-			android:adjustViewBounds="true"
-			android:scaleType="center"
+			android:padding="20dp"
 			android:visibility="invisible"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="0.5"/>
+			android:layout_weight="0.5" />
 
 	</LinearLayout>
 
@@ -296,8 +324,7 @@
 			android:id="@+id/transfer"
 			android:src="@drawable/options_transfer_call"
 			android:background="@drawable/button_background"
-			android:adjustViewBounds="true"
-			android:scaleType="center"
+			android:padding="20dp"
 			android:visibility="invisible"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -333,15 +360,14 @@
 			android:layout_weight="0.5" />
 
 		<ImageView
-			android:id="@+id/addCall"
-			android:src="@drawable/options_add_call"
+			android:id="@+id/conference"
+			android:src="@drawable/options_start_conference"
 			android:background="@drawable/button_background"
-			android:adjustViewBounds="true"
-			android:scaleType="center"
 			android:visibility="invisible"
+			android:padding="20dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="0.5" />
+			android:layout_weight="0.5"/>
 
 	</LinearLayout>
 
