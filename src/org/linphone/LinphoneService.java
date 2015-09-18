@@ -297,7 +297,7 @@ public final class LinphoneService extends Service {
 			notificationTextId = R.string.incall_notif_paused;
 			break;
 		case VIDEO:
-			inconId = R.drawable.conf_video;
+			inconId = R.drawable.topbar_videocall_notification;
 			notificationTextId = R.string.incall_notif_video;
 			break;	
 		default:
@@ -405,10 +405,10 @@ public final class LinphoneService extends Service {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 			}
 		} else {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 		}
 		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
 		

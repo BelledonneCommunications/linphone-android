@@ -2,30 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:background="@color/colorG"
-	android:layout_height="30dp">
-    
-    <LinearLayout
-        android:layout_centerVertical="true"
-        android:gravity="center"
-		android:layout_width="match_parent" 
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+	android:layout_height="30dp"
+	android:gravity="center">
 
-		<TextView
-			android:id="@+id/address"
-			style="@style/font13"
-			android:paddingLeft="10dp"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center"/>
-	
-	    <ImageView
-	        android:contentDescription="@string/content_description_led"
-	        android:id="@+id/statusLed"
-	        android:src="@drawable/led_disconnected"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"/>
+	<TextView
+		android:id="@+id/address"
+		style="@style/font13"
+		android:paddingLeft="10dp"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"/>
 
-    </LinearLayout>
-    
+	<ImageView
+		android:id="@+id/statusLed"
+		android:layout_width="25dp"
+		android:layout_height="25dp"
+		android:src="@drawable/status_available"
+		android:padding="5dp"
+		android:layout_alignParentRight="true"/>
+
 </RelativeLayout>

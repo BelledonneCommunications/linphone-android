@@ -14,12 +14,12 @@
 
 		<org.linphone.ui.EraseButton
 			android:id="@+id/Erase"
-			android:layout_width="wrap_content"
+			android:layout_width="40dp"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
 			android:layout_centerVertical="true"
-			android:paddingRight="10dp"
-			android:scaleType="fitXY"
+			android:layout_marginRight="10dp"
+			android:layout_marginLeft="10dp"
 			android:src="@drawable/backspace" />
 
 		<org.linphone.ui.AddressText
@@ -29,7 +29,7 @@
 			android:background="@color/colorF"
 			android:ellipsize="start"
 			android:inputType="textEmailAddress"
-			android:hint="@string/addressHint"
+			android:hint="@string/address_bar_hint"
 			android:paddingLeft="20dp"
 			android:paddingRight="5dp"
 			android:layout_toLeftOf="@id/Erase"
@@ -57,29 +57,28 @@
 				android:id="@+id/addContact"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:adjustViewBounds="true"
-				android:scaleType="center"
+				android:padding="20dp"
 				android:contentDescription="@string/content_description_contacts"
-				android:src="@drawable/contact_add_button" />
+				android:src="@drawable/contact_add_button"
+				android:layout_alignParentBottom="true"/>
 
 		</RelativeLayout>
 
         <org.linphone.ui.CallButton
+			android:id="@+id/Call"
             android:contentDescription="@string/content_description_call"
-            android:id="@+id/Call"
 			android:background="@drawable/call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="center"
+			android:padding="15dp"
             android:layout_weight="0.5"
             android:src="@drawable/call_audio_start" />
 
 	</LinearLayout>
 	
     <org.linphone.ui.Numpad
+		android:id="@+id/Dialer"
         android:contentDescription="@string/content_description_numpad"
-	    android:id="@+id/Dialer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 		android:padding="10dp"

@@ -37,19 +37,21 @@
 	<string name="assistant_password_confirm">Confirm password</string>
 
 	<!-- 1. Dailer -->
-	<string name="addressHint">Enter a number or an address</string>
+	<string name="address_bar_hint">Enter a number or an address</string>
 
 	<!-- 2. History -->
 
 
 	<!-- 3. Contacts -->
 
-	<!-- Left Menu -->
-	<string-array name="menu_entry">
+	<!-- Side Menu -->
+	<string-array name="side_menu_item">
 		<item>Settings</item>
 		<item>Assistant</item>
 		<item>About</item>
 	</string-array>
+
+	<string name="quit">Quit</string>
 
 	<!-- Call -->
 	<string name="incoming_call">incoming call</string>
@@ -258,7 +260,6 @@
   <string name="menu_send_log">Send log</string>
   <string name="menu_reset_log">Reset log</string>
   <string name="pref_audio">Audio</string>
-  <string name="menu_exit">Exit</string>
   <string name="pref_prefix">Prefix</string>
   <string name="pref_advanced">Advanced</string>
   <string name="menu_settings">Settings</string>

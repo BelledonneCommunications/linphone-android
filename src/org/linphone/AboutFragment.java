@@ -62,10 +62,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		resetLogButton.setOnClickListener(this);
 		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-		exitButton = view.findViewById(R.id.exit);
-		exitButton.setOnClickListener(this);
-		exitButton.setVisibility(View.VISIBLE);
-
 		return view;
 	}
 
@@ -88,7 +84,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (v == sendLogButton) {
-				//LinphoneUtils.collectLogs(LinphoneActivity.instance(), getString(R.string.about_bugreport_email));
 				if (lc != null) {
 					lc.uploadLogCollection();
 				}
@@ -96,8 +91,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 				if (lc != null) {
 					lc.resetLogCollection();
 				}
-			} else {
-				LinphoneActivity.instance().exit();
 			}
 		}
 	}

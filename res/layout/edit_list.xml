@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/edit_list"
+	android:background="@color/colorF"
+	android:layout_width="match_parent"
+	android:layout_height="60dp"
+	android:visibility="gone">
+
+	<ImageView
+		android:id="@+id/cancel"
+		android:src="@drawable/cancel_edit"
+		android:background="@drawable/toolbar_button"
+		android:contentDescription="@string/content_description_valid"
+		android:layout_width="70dp"
+		android:layout_height="match_parent"
+		android:padding="15dp"
+		android:layout_alignParentLeft="true"/>
+
+	<ImageView
+		android:id="@+id/delete"
+		android:src="@drawable/delete"
+		android:background="@drawable/toolbar_button"
+		android:contentDescription="@string/content_description_valid"
+		android:layout_width="70dp"
+		android:layout_height="match_parent"
+		android:padding="15dp"
+		android:layout_alignParentRight="true"/>
+
+	<ImageView
+		android:id="@+id/select_all"
+		android:src="@drawable/select_all"
+		android:background="@drawable/toolbar_button"
+		android:contentDescription="@string/content_description_valid"
+		android:layout_width="70dp"
+		android:layout_height="match_parent"
+		android:padding="15dp"
+		android:layout_toLeftOf="@id/delete"/>
+
+	<ImageView
+		android:id="@+id/deselect_all"
+		android:src="@drawable/deselect_all"
+		android:background="@drawable/toolbar_button"
+		android:contentDescription="@string/content_description_valid"
+		android:layout_width="70dp"
+		android:layout_height="match_parent"
+		android:padding="15dp"
+		android:layout_toLeftOf="@id/delete"
+		android:visibility="gone"/>
+
+</RelativeLayout>
