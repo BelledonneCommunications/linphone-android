@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/topLayout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/colorH">
 
-	<include layout="@layout/status"  android:id="@+id/statusBar" />
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		tools:layout="@layout/status" />
 
 	<RelativeLayout
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
-		android:layout_below="@id/statusBar"
+		android:layout_below="@id/status"
 		android:background="@color/colorF">
 
 		<TextView
@@ -42,8 +48,8 @@
 
 			<ImageView
 				android:id="@+id/incoming_picture"
-				android:layout_width="220dp"
-				android:layout_height="220dp"
+				android:layout_width="200dp"
+				android:layout_height="200dp"
 				android:src="@drawable/avatar"
 				android:paddingBottom="10dp"
 				android:layout_marginTop="10dp"/>
@@ -90,9 +96,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:adjustViewBounds="true"
 			android:contentDescription="@string/content_description_pause"
-			android:scaleType="center"/>
+			android:padding="15dp"/>
 
 		<ImageView
 			android:id="@+id/speaker"
@@ -101,9 +106,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:adjustViewBounds="true"
 			android:contentDescription="@string/content_description_pause"
-			android:scaleType="center"/>
+			android:padding="20dp"/>
 
 		<ImageView
 			android:id="@+id/hang_up"
@@ -113,8 +117,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="0.7"
-			android:adjustViewBounds="true"
-			android:scaleType="center"/>
+			android:padding="15dp"/>
 
 	</LinearLayout>
 

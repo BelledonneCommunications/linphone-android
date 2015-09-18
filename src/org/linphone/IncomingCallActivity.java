@@ -27,11 +27,9 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.LinphoneSliders;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -55,6 +53,7 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 	private ImageView mPictureView;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
+	private StatusFragment status;
 	
 	public static IncomingCallActivity instance() {
 		return instance;
@@ -66,6 +65,8 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.incoming);
 
@@ -171,7 +172,9 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 		return super.onKeyDown(keyCode, event);
 	}
 
-
+	public void updateStatusFragment(StatusFragment fragment) {
+		status = fragment;
+	}
 
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);

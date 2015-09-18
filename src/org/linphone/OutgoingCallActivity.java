@@ -55,6 +55,7 @@ public class OutgoingCallActivity extends Activity {
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
 	private boolean isMicMuted, isSpeakerEnabled;
+	private StatusFragment status;
 
 	public static OutgoingCallActivity instance() {
 		return instance;
@@ -64,8 +65,14 @@ public class OutgoingCallActivity extends Activity {
 		return instance != null;
 	}
 
+	public void updateStatusFragment(StatusFragment fragment) {
+		status = fragment;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.outgoing_call);
 
