@@ -6,6 +6,7 @@
 	android:orientation="vertical" >
 
 	<RelativeLayout
+		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="bottom"
@@ -14,18 +15,18 @@
 
 		<RelativeLayout
 			android:id="@+id/all_contacts_layout"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="wrap_content"
 			android:adjustViewBounds="true">
 
 			<ImageView
-				android:contentDescription="@string/content_description_all_contacts"
 				android:id="@+id/all_contacts"
+				android:contentDescription="@string/content_description_all_contacts"
 				android:layout_alignParentLeft="true"
-				android:padding="10dp"
 				android:src="@drawable/contacts_all"
 				android:gravity="center"
-				android:layout_width="wrap_content"
+				android:padding="15dp"
+				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
 			<RelativeLayout
@@ -40,8 +41,8 @@
 		</RelativeLayout>
 
 		<RelativeLayout
-			android:layout_width="wrap_content"
 			android:layout_toRightOf="@id/all_contacts_layout"
+			android:layout_width="70dp"
 			android:layout_height="wrap_content"
 			android:adjustViewBounds="true">
 
@@ -49,9 +50,9 @@
 				android:contentDescription="@string/content_description_linphone_contacts"
 				android:id="@+id/linphone_contacts"
 				android:src="@drawable/contacts_sip"
-				android:padding="10dp"
 				android:gravity="center"
-				android:layout_width="wrap_content"
+				android:padding="15dp"
+				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
 			<RelativeLayout
@@ -67,65 +68,28 @@
 		</RelativeLayout>
 
 		<ImageView
-			android:contentDescription="@string/content_description_new_contact"
 			android:id="@+id/newContact"
-			android:padding="10dp"
 			android:src="@drawable/contact_add"
-			android:adjustViewBounds="true"
-			android:layout_width="wrap_content"
+			android:contentDescription="@string/content_description_new_contact"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_toLeftOf="@id/edit"
-			android:scaleType="center"/>
-
-		<ImageView
-			android:id="@+id/delete"
-			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/select_all"
-			android:src="@drawable/select_all"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/delete"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/deselect_all"
-			android:src="@drawable/deselect_all"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/delete"
-			android:padding="10dp"
-			android:adjustViewBounds="true"
-			android:visibility="gone"/>
-
+			android:padding="15dp"
+			android:adjustViewBounds="true"/>
 
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="10dp"
+			android:padding="15dp"
 			android:adjustViewBounds="true"/>
-
 	</RelativeLayout>
+
+	<include layout="@layout/edit_list"/>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -147,10 +111,8 @@
 		<ImageView
 			android:contentDescription="@string/content_description_cancel"
 			android:id="@+id/clearSearchField"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:adjustViewBounds="true"
-			android:scaleType="center"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
 			android:src="@drawable/clean_field_default"
 			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"

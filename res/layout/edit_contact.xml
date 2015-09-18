@@ -9,40 +9,38 @@
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="bottom"
-		android:background="@color/colorF"
-		android:id="@+id/relativeLayout">
+		android:background="@color/colorF">
 
 		<ImageView
-			android:contentDescription="@string/content_description_back"
 			android:id="@+id/back"
-			android:layout_alignParentLeft="true"
-			android:padding="10dp"
 			android:src="@drawable/back"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_back"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:padding="20dp"/>
+
+
+		<ImageView
+			android:id="@+id/ok"
+			android:contentDescription="@string/content_description_valid"
+			android:layout_alignParentRight="true"
+			android:padding="20dp"
+			android:src="@drawable/valid"
 			android:gravity="center"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"/>
 
 		<ImageView
-			android:contentDescription="@string/content_description_valid"
-			android:id="@+id/ok"
-			android:layout_alignParentRight="true"
-			android:padding="10dp"
-			android:src="@drawable/valid"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:adjustViewBounds="true"/>
-
-		<ImageView
-			android:contentDescription="@string/content_description_delete"
 			android:id="@+id/deleteContact"
-			android:padding="10dp"
+			android:contentDescription="@string/content_description_delete"
+			android:padding="15dp"
 			android:src="@drawable/delete"
 			android:gravity="center"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentTop="true"
-			android:layout_toLeftOf="@+id/ok"
-			android:layout_toStartOf="@+id/editContact"/>
+			android:layout_toLeftOf="@+id/ok"/>
 
 	</RelativeLayout>
 
@@ -66,16 +64,31 @@
 				android:orientation="vertical">
 
 				<RelativeLayout
+					android:id="@+id/avatar_layout"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:paddingBottom="10dp"
 					android:gravity="center">
 
 					<ImageView
-						android:id="@+id/contactPicture"
-						android:layout_width="120dp"
-						android:layout_height="120dp"
-						android:src="@drawable/avatar" />
+						android:id="@+id/contact_picture"
+						android:src="@drawable/avatar"
+						android:contentDescription="@string/content_description_contact_picture"
+						android:layout_width="100dp"
+						android:layout_height="100dp"
+						android:adjustViewBounds="true"
+						android:layout_alignParentLeft="true"
+						android:layout_marginLeft="5dp"/>
+
+					<ImageView
+						android:id="@+id/mask"
+						android:src="@drawable/avatar_mask"
+						android:contentDescription="@string/content_description_contact_picture"
+						android:layout_width="100dp"
+						android:layout_height="100dp"
+						android:adjustViewBounds="true"
+						android:layout_alignParentLeft="true"
+						android:layout_marginLeft="5dp"/>
+
 				</RelativeLayout>
 
 
@@ -96,8 +109,7 @@
 					android:layout_height="wrap_content"
 					android:gravity="left"
 					android:paddingRight="5dp"
-					android:inputType="textPersonName|textCapWords"
-					android:layout_column="0"/>
+					android:inputType="textPersonName|textCapWords"/>
 
 				<TextView
 					android:text="@string/contact_first_name"
@@ -116,8 +128,7 @@
 					android:layout_height="wrap_content"
 					android:gravity="left"
 					android:paddingRight="5dp"
-					android:inputType="textPersonName|textCapWords"
-					android:layout_column="1"/>
+					android:inputType="textPersonName|textCapWords"/>
 		        
 		    </LinearLayout>
 
@@ -129,15 +140,15 @@
 
 				<RelativeLayout
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
+					android:layout_height="30dp"
+					android:layout_gravity="center">
 
 					<TextView
 						android:text="@string/sip_address"
 						style="@style/font13"
 						android:textAllCaps="true"
-						android:paddingTop="10dp"
 						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"/>
+						android:layout_height="match_parent"/>
 
 					<ImageView
 						android:id="@+id/add_address_field"
@@ -149,13 +160,13 @@
 						android:paddingLeft="5dp"/>
 				</RelativeLayout>
 
-				<TableLayout
+				<LinearLayout
 					android:id="@+id/controls_sip_address"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:paddingTop="20dp">
+					android:orientation="vertical">
 
-				</TableLayout>
+				</LinearLayout>
 
 			</LinearLayout>
 
@@ -168,15 +179,15 @@
 
 				<RelativeLayout
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
+					android:layout_height="30dp"
+					android:layout_gravity="center">
 
 					<TextView
 						android:text="@string/phone_number"
 						style="@style/font13"
 						android:textAllCaps="true"
-						android:paddingTop="10dp"
 						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"/>
+						android:layout_height="match_parent"/>
 
 					<ImageView
 						android:id="@+id/add_number_field"
@@ -188,13 +199,13 @@
 						android:paddingLeft="5dp"/>
 				</RelativeLayout>
 
-				<TableLayout
+				<LinearLayout
 					android:id="@+id/controls_numbers"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:paddingTop="20dp">
+					android:orientation="vertical">
 
-				</TableLayout>
+				</LinearLayout>
 
 			</LinearLayout>
 

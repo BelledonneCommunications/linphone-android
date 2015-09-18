@@ -12,48 +12,33 @@
 		android:background="@color/colorF">
 
 		<ImageView
-			android:contentDescription="@string/content_description_back"
 			android:id="@+id/back"
-			android:layout_alignParentLeft="true"
-			android:padding="10dp"
 			android:src="@drawable/back"
-			android:gravity="center"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"/>
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_back"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:padding="20dp"/>
 
 		<ImageView
 			android:contentDescription="@string/content_description_edit"
 			android:id="@+id/editContact"
 			android:layout_alignParentRight="true"
-			android:padding="10dp"
+			android:padding="15dp"
 			android:src="@drawable/edit"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:adjustViewBounds="true"/>
+			android:layout_width="70dp"
+			android:layout_height="match_parent"/>
 
 		<ImageView
 			android:contentDescription="@string/content_description_delete"
 			android:id="@+id/deleteContact"
-			android:padding="10dp"
+			android:padding="15dp"
 			android:src="@drawable/delete"
 			android:gravity="center"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentTop="true"
-			android:layout_toLeftOf="@+id/editContact"
-			android:layout_toStartOf="@+id/editContact"/>
-
-		<ImageView
-			android:contentDescription="@string/content_description_valid"
-			android:id="@+id/ok"
-			android:background="@drawable/valid"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
-			android:adjustViewBounds="true"/>
+			android:layout_toLeftOf="@+id/editContact"/>
 
 	</RelativeLayout>
 
@@ -61,40 +46,44 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingTop="20dp"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
 		android:gravity="center"
 		android:orientation="vertical">
 
-
 		<RelativeLayout
+			android:id="@+id/avatar_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center">
 
 			<ImageView
-				android:id="@+id/contactPicture"
-				android:layout_width="120dp"
-				android:layout_height="120dp"
-				android:src="@drawable/avatar" />
+				android:id="@+id/contact_picture"
+				android:src="@drawable/avatar"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="100dp"
+				android:layout_height="100dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
+			<ImageView
+				android:id="@+id/mask"
+				android:src="@drawable/avatar_mask"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="100dp"
+				android:layout_height="100dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
 		</RelativeLayout>
 
-
 		<TextView
-			android:id="@+id/contactName"
+			android:id="@+id/contact_name"
+			style="@style/font5"
+			android:singleLine="true"
+			android:layout_gravity="center"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:paddingTop="10dp"
-			android:textColor="@color/colorC" />
-
-		<TextView
-			android:id="@+id/contactAddress"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="@color/colorA" />
-
+			android:layout_height="wrap_content"/>
 
 	</LinearLayout>
     
