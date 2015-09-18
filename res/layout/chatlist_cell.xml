@@ -43,18 +43,35 @@
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent">
 
-			<ImageView
-				android:id="@+id/contact_picture"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
-				android:src="@drawable/avatar"
-				android:layout_centerHorizontal="true"/>
+			<RelativeLayout
+				android:id="@+id/avatar_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_centerHorizontal="true">
+
+				<ImageView
+					android:id="@+id/contact_picture"
+					android:src="@drawable/avatar"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:adjustViewBounds="true"/>
+
+				<ImageView
+					android:id="@+id/mask"
+					android:src="@drawable/avatar_mask"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:adjustViewBounds="true"/>
+
+			</RelativeLayout>
 
 			<TextView
 				android:id="@+id/date"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_below="@id/contact_picture"
+				android:layout_below="@id/avatar_layout"
 				style="@style/font2"/>
 
 		</RelativeLayout>
@@ -83,7 +100,7 @@
 				android:layout_width="25dp"
 				android:layout_height="25dp"
 				android:background="@drawable/chat_list_indicator"
-				style="@style/font17"
+				style="@style/font18"
 				android:gravity="center"
 				android:layout_above="@+id/lastMessage"
 				android:layout_alignParentRight="true"
