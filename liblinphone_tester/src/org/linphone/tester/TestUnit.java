@@ -80,7 +80,7 @@ public class TestUnit extends AndroidTestCase {
 	protected void runTest() {
 		String path = getContext().getFilesDir().getPath()+"/config_files";
 		Tester tester = new Tester();
-		List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--config", path, "--suite", mSuite, "--test", mTest}));
+		List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", path, "--suite", mSuite, "--test", mTest}));
 		String[] array = list.toArray(new String[list.size()]);
 		Assert.assertTrue(tester.run(array) == 0);
 	}

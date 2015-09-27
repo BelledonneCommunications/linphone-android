@@ -25,7 +25,7 @@ public class LogsActivity extends Activity {
 		public void run() {
 			String path = mLogsActivity.getFilesDir().getAbsolutePath()+"/config_files";
 			tester = new TesterLogger(mLogsActivity);
-			List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--config", path}));
+			List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", path}));
 			list.addAll(Arrays.asList(mArgs));
 			String[] array = list.toArray(new String[list.size()]);
 			tester.run(array);
