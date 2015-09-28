@@ -1,12 +1,12 @@
 [submodule "linphone"]
 	path = submodules/linphone
-	url = git://git.linphone.org/linphone
+	url = git://git.linphone.org/linphone.git
 [submodule "submodules/externals/gsm"]
 	path = submodules/externals/gsm
 	url = git://git.linphone.org/gsm.git
 [submodule "submodules/externals/speex"]
 	path = submodules/externals/speex
-	url = git://git.linphone.org/speex
+	url = git://git.linphone.org/speex.git
 [submodule "submodules/msilbc"]
 	path = submodules/msilbc
 	url = git://git.linphone.org/msilbc.git
@@ -52,13 +52,13 @@
 	url = git://git.linphone.org/bcg729.git
 [submodule "submodules/belle-sip"]
 	path = submodules/belle-sip
-	url = git://git.linphone.org/belle-sip
+	url = git://git.linphone.org/belle-sip.git
 [submodule "submodules/externals/antlr3"]
 	path = submodules/externals/antlr3
 	url = git://git.linphone.org/antlr3.git
 [submodule "submodules/externals/libxml2"]
 	path = submodules/externals/libxml2
-	url = git://git.gnome.org/libxml2
+	url = git://git.gnome.org/libxml2.git
 [submodule "submodules/externals/libupnp"]
 	path = submodules/externals/libupnp
 	url = git://git.linphone.org/libupnp.git
