@@ -30,7 +30,7 @@
 	ignore = dirty
 [submodule "submodules/msamr"]
 	path = submodules/msamr
-	url = git://git.linphone.org/msamr
+	url = git://git.linphone.org/msamr.git
 [submodule "submodules/externals/libvpx"]
 	path = submodules/externals/libvpx
 	url = https://chromium.googlesource.com/webm/libvpx
