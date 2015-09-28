@@ -23,9 +23,10 @@ public class LogsActivity extends Activity {
 
 		@Override
 		public void run() {
-			String path = mLogsActivity.getFilesDir().getAbsolutePath()+"/config_files";
+			String res_path = mLogsActivity.getFilesDir().getAbsolutePath()+"/config_files";
+			String write_path = mLogsActivity.getCacheDir().getPath();
 			tester = new TesterLogger(mLogsActivity);
-			List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", path}));
+			List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", res_path, "--writable-dir", write_path}));
 			list.addAll(Arrays.asList(mArgs));
 			String[] array = list.toArray(new String[list.size()]);
 			tester.run(array);
@@ -37,7 +38,7 @@ public class LogsActivity extends Activity {
     		});
 		}
 	}
-	
+
 	private static String join(String [] array, String separator) {
 		String ret = "";
 		for(int i = 0; i < array.length; ++i) {
@@ -48,7 +49,7 @@ public class LogsActivity extends Activity {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,7 +76,7 @@ public class LogsActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_logs, menu);
 		return true;
 	}
-	
+
 	public void addLog(int level, String message) {
 		mLogs += message;
 		((TextView)findViewById(R.id.textView1)).append(message);
@@ -86,7 +87,7 @@ public class LogsActivity extends Activity {
 			finish();
 		}
 	}
-	
+
 	public void done() {
 	}
 }
