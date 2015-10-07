@@ -170,7 +170,6 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 					LinphoneManager.removeListener(this);
 					imageView.setVisibility(View.VISIBLE);
 					download.setVisibility(View.GONE);
-					spinner.setVisibility(View.GONE);
 					loadBitmap(appData, imageView);
 				}
 			}
