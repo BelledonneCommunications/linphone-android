@@ -134,29 +134,33 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
     	if (externalBodyUrl != null || fileTransferContent != null) {
 			Button download = (Button) view.findViewById(R.id.download);
 	    	ImageView imageView = (ImageView) view.findViewById(R.id.image);
-	    	
+
 	    	String appData = message.getAppData();
-    		if (appData == null || (!LinphoneManager.getInstance().isMessagePending(nativeMessage) &&
-					!nativeMessage.isOutgoing() && appData.contains(context.getString(R.string.temp_photo_name_with_date).split("%s")[0]))) {
+			if(appData != null && !LinphoneManager.getInstance().isMessagePending(nativeMessage) &&
+				!nativeMessage.isOutgoing() && appData.contains(context.getString(R.string.temp_photo_name_with_date).split("%s")[0])){
+				appData = null;
+			}
+
+    		if (appData == null ){
 				LinphoneManager.addListener(this);
-					download.setVisibility(View.VISIBLE);
-					download.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							v.setEnabled(false);
-							spinner.setVisibility(View.VISIBLE);
-							v.setVisibility(View.GONE);
-							String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
-							File file = new File(Environment.getExternalStorageDirectory(), filename);
-							nativeMessage.setListener(LinphoneManager.getInstance());
-							nativeMessage.setFileTransferFilepath(file.getPath());
-							nativeMessage.downloadFile();
-							nativeMessage.setAppData(filename);
-							LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
-						}
-					});
-    		} else {
-				if(LinphoneManager.getInstance().isMessagePending(nativeMessage)){
+				download.setVisibility(View.VISIBLE);
+				download.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						v.setEnabled(false);
+						v.setVisibility(View.GONE);
+						spinner.setVisibility(View.VISIBLE);
+						String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
+						File file = new File(Environment.getExternalStorageDirectory(), filename);
+						nativeMessage.setAppData(filename);
+						LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
+						nativeMessage.setListener(LinphoneManager.getInstance());
+						nativeMessage.setFileTransferFilepath(file.getPath());
+						nativeMessage.downloadFile();
+					}
+				});
+			} else {
+				if (LinphoneManager.getInstance().isMessagePending(nativeMessage)) {
 					LinphoneManager.addListener(this);
 					download.setEnabled(false);
 					ProgressBar spinner = (ProgressBar) view.findViewById(R.id.spinner);
@@ -165,9 +169,11 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 				} else {
 					LinphoneManager.removeListener(this);
 					imageView.setVisibility(View.VISIBLE);
+					download.setVisibility(View.GONE);
+					spinner.setVisibility(View.GONE);
 					loadBitmap(appData, imageView);
 				}
-    		}
+			}
     	} else {
 	    	TextView msgView = (TextView) view.findViewById(R.id.message);
 	    	if (msgView != null) {
