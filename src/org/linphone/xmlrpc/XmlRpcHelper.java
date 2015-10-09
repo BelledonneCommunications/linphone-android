@@ -548,7 +548,7 @@ public class XmlRpcHelper {
 				@Override
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
-					Log.d("changeAccountPasswordAsync: " + result);
+					Log.d("changeAccountHashPasswordAsync: " + result);
 					
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
@@ -576,7 +576,7 @@ public class XmlRpcHelper {
 			try {
 				Object object = mXmlRpcClient.call("change_hash", username, oldPassword, newPassword);
 				String result = (String)object;
-				Log.d("changeAccountPassword: " + result);
+				Log.d("changeAccountHashPassword: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);
@@ -691,6 +691,63 @@ public class XmlRpcHelper {
 				Object object = mXmlRpcClient.call("resend_activation_email", usernameOrEmail);
 				String result = (String)object;
 				Log.d("sendActivateAccountLinkByEmail: " + result);
+				
+				if (result.startsWith("ERROR_")) {
+					Log.e(result);
+					return null;
+				}
+				return result;
+				
+			} catch (XMLRPCException e) {
+				Log.e(e);
+			}
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+		return null;
+	}
+	
+	public void sendUsernameByEmailAsync(final XmlRpcListener listener, String email) {
+		if (mXmlRpcClient != null) {
+			mXmlRpcClient.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+				
+				@Override
+				public void onResponse(long id, Object object) {
+					String result = (String)object;
+					Log.d("sendUsernameByEmailAsync: " + result);
+					
+					if (result.startsWith("ERROR_")) {
+						Log.e(result);
+						listener.onError(result);
+						return;
+					}
+					
+					listener.onUsernameSent(result);
+				}
+				
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+			}, "recover_username_from_email", email);
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+	}
+	
+	public String sendUsernameByEmail(String email) {
+		if (mXmlRpcClient != null) {
+			try {
+				Object object = mXmlRpcClient.call("recover_username_from_email", email);
+				String result = (String)object;
+				Log.d("sendUsernameByEmail: " + result);
 				
 				if (result.startsWith("ERROR_")) {
 					Log.e(result);

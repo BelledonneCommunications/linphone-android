@@ -14,4 +14,5 @@ public interface XmlRpcListener {
 	public void onRecoverPasswordLinkSent(String result);
 	public void onActivateAccountLinkSent(String result);
 	public void onSignatureVerified(boolean success);
+	public void onUsernameSent(String result);
 }

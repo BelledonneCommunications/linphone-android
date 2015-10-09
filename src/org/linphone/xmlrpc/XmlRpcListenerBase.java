@@ -78,4 +78,10 @@ public class XmlRpcListenerBase implements XmlRpcListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onUsernameSent(String result) {
+		// TODO Auto-generated method stub
+		
+	}
 }
