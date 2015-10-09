@@ -536,6 +536,63 @@ public class XmlRpcHelper {
 		return null;
 	}
 	
+	public void changeAccountHashPasswordAsync(final XmlRpcListener listener, String username, String oldPassword, String newPassword) {
+		if (mXmlRpcClient != null) {
+			mXmlRpcClient.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+				
+				@Override
+				public void onResponse(long id, Object object) {
+					String result = (String)object;
+					Log.d("changeAccountPasswordAsync: " + result);
+					
+					if (result.startsWith("ERROR_")) {
+						Log.e(result);
+						listener.onError(result);
+						return;
+					}
+					
+					listener.onAccountPasswordChanged(result);
+				}
+				
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+			}, "change_hash", username, oldPassword, newPassword);
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+	}
+	
+	public String changeAccountHashPassword(String username, String oldPassword, String newPassword) {
+		if (mXmlRpcClient != null) {
+			try {
+				Object object = mXmlRpcClient.call("change_hash", username, oldPassword, newPassword);
+				String result = (String)object;
+				Log.d("changeAccountPassword: " + result);
+				
+				if (result.startsWith("ERROR_")) {
+					Log.e(result);
+					return null;
+				}
+				return result;
+				
+			} catch (XMLRPCException e) {
+				Log.e(e);
+			}
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
+		return null;
+	}
+	
 	public void sendRecoverPasswordLinkByEmailAsync(final XmlRpcListener listener, String usernameOrEmail) {
 		if (mXmlRpcClient != null) {
 			mXmlRpcClient.callAsync(new XMLRPCCallback() {
