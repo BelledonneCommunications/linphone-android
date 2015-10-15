@@ -1,7 +1,7 @@
 package org.linphone;
 /*
-AudioCallFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+CallAudioFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 /**
  * @author Sylvain Berfini
  */
-public class AudioCallFragment extends Fragment {	
+public class CallAudioFragment extends Fragment {
 	private CallActivity incallActvityInstance;
 	
 	@Override

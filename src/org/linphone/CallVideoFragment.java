@@ -1,7 +1,7 @@
 package org.linphone;
 /*
-VideoCallFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+CallVideoFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -44,7 +44,7 @@ import android.view.ViewGroup;
 /**
  * @author Sylvain Berfini
  */
-public class VideoCallFragment extends Fragment implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
+public class CallVideoFragment extends Fragment implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
 	private SurfaceView mVideoView;
 	private SurfaceView mCaptureView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
