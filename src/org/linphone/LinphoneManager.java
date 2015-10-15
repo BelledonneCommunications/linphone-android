@@ -167,6 +167,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/toy_mono.wav";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
+		mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
 		mErrorToneFile = basePath + "/error.wav";
 		mConfigFile = basePath + "/configrc";
 
@@ -190,6 +191,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mRingbackSoundFile;
 	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
+	private final String mCallLogDatabaseFile;
 	private final String mErrorToneFile;
 	private final String mConfigFile;
 	private ByteArrayInputStream mUploadingImageStream;
@@ -413,9 +415,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
-			if (mServiceContext.getResources().getBoolean(R.bool.override_domain_using_default_one)) {
-				lAddress.setDomain(mServiceContext.getString(R.string.default_domain));
-			}
 			LinphoneProxyConfig lpc = mLc.getDefaultProxyConfig();
 
 			if (mR.getBoolean(R.bool.forbid_self_call) && lpc!=null && lAddress.asStringUriOnly().equals(lpc.getIdentity())) {
@@ -856,7 +855,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		try {
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(mServiceContext.getContentResolver(), from);
-			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat__message_notification)) {
+			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				if (LinphoneActivity.isInstanciated() && !LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
 					return;
 				} else {
@@ -920,10 +919,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		try {
 			if (LinphoneActivity.isInstanciated())
 				return LinphoneActivity.instance();
-			else if (InCallActivity.isInstanciated())
-				return InCallActivity.instance();
-			else if (IncomingCallActivity.isInstanciated())
-				return IncomingCallActivity.instance();
+			else if (CallActivity.isInstanciated())
+				return CallActivity.instance();
+			else if (CallIncomingActivity.isInstanciated())
+				return CallIncomingActivity.instance();
 			else if (mServiceContext != null)
 				return mServiceContext;
 			else if (LinphoneService.isReady())

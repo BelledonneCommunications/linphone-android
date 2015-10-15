@@ -231,9 +231,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (state == State.IncomingReceived) {
 					//finish();
-					startActivity(new Intent(LinphoneActivity.instance(), IncomingCallActivity.class));
+					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
-					startActivity(new Intent(LinphoneActivity.instance(), OutgoingCallActivity.class));
+					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
 					if (message != null && call.getReason() == Reason.Declined) {
@@ -935,14 +935,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void startVideoActivity(LinphoneCall currentCall) {
-		Intent intent = new Intent(this, InCallActivity.class);
+		Intent intent = new Intent(this, CallActivity.class);
 		intent.putExtra("VideoEnabled", true);
 		startOrientationSensor();
 		startActivityForResult(intent, CALL_ACTIVITY);
 	}
 
 	public void startIncallActivity(LinphoneCall currentCall) {
-		Intent intent = new Intent(this, InCallActivity.class);
+		Intent intent = new Intent(this, CallActivity.class);
 		intent.putExtra("VideoEnabled", false);
 		startOrientationSensor();
 		startActivityForResult(intent, CALL_ACTIVITY);
@@ -1028,7 +1028,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 			if (call.getState() == LinphoneCall.State.IncomingReceived) {
-				startActivity(new Intent(LinphoneActivity.this, IncomingCallActivity.class));
+				startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
 			} else if (call.getCurrentParamsCopy().getVideoEnabled()) {
 				startVideoActivity(call);
 			} else {
@@ -1124,9 +1124,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				LinphoneCall.State callState = call.getState();
 				if (callState == State.IncomingReceived) {
-					startActivity(new Intent(this, IncomingCallActivity.class));
+					startActivity(new Intent(this, CallIncomingActivity.class));
 				} else if (callState == State.OutgoingInit) {
-					startActivity(new Intent(this, OutgoingCallActivity.class));
+					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
 					if (call.getCurrentParamsCopy().getVideoEnabled()) {
 						startVideoActivity(call);
@@ -1217,10 +1217,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				Collection<LinphoneCall.State> incoming = new ArrayList<LinphoneCall.State>();
 				incoming.add(LinphoneCall.State.IncomingReceived);
 				if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
-					if (InCallActivity.isInstanciated()) {
-						InCallActivity.instance().startIncomingCallActivity();
+					if (CallActivity.isInstanciated()) {
+						CallActivity.instance().startIncomingCallActivity();
 					} else {
-						startActivity(new Intent(this, IncomingCallActivity.class));
+						startActivity(new Intent(this, CallIncomingActivity.class));
 					}
 				}
 			}

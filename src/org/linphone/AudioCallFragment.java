@@ -30,7 +30,7 @@ import android.view.ViewGroup;
  * @author Sylvain Berfini
  */
 public class AudioCallFragment extends Fragment {	
-	private InCallActivity incallActvityInstance;
+	private CallActivity incallActvityInstance;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -42,7 +42,7 @@ public class AudioCallFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		incallActvityInstance = (InCallActivity) activity;
+		incallActvityInstance = (CallActivity) activity;
 		
 		if (incallActvityInstance != null) {
 			incallActvityInstance.bindAudioFragment(this);
@@ -55,7 +55,7 @@ public class AudioCallFragment extends Fragment {
 
 		// Just to be sure we have incall controls
 		if (incallActvityInstance != null) {
-			incallActvityInstance.setCallControlsVisibleAndRemoveCallbacks();
+			incallActvityInstance.removeCallbacks();
 		}
 	}
 	
