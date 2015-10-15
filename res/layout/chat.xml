@@ -74,7 +74,6 @@
 	            android:id="@+id/sendPicture"
 				android:padding="5dp"
 				android:scaleType="center"
-	            android:textColor="@drawable/text_color"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
@@ -132,8 +131,7 @@
         android:id="@+id/remoteComposing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-    	android:textColor="@color/text_contrast"
+		android:textColor="@color/colorB"
         android:text="@string/remote_composing"
         android:layout_above="@id/footer"/>
 

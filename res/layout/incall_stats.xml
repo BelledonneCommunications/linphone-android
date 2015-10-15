@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
 	<TableLayout
 		android:id="@+id/callStats"
@@ -11,8 +11,7 @@
 		android:layout_gravity="center"
 		android:paddingBottom="10dp"
 		android:paddingLeft="5dp"
-		android:paddingRight="5dp"
-		android:background="@android:color/black">
+		android:paddingRight="5dp">
 
 		<TableRow
 			android:layout_width="match_parent"
@@ -24,7 +23,7 @@
 				android:gravity="left|center_vertical"
 				android:id="@+id/call_stats_title"
 				android:textStyle="bold"
-				android:textColor="@color/text_default"
+				android:textColor="@color/colorB"
 				android:textSize="18sp"/>
 
 		</TableRow>
@@ -39,7 +38,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_codec"
 				android:textStyle="bold"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -48,7 +47,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -63,7 +62,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_upload"
 				android:textStyle="bold"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -72,7 +71,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -86,7 +85,7 @@
 				android:layout_height="wrap_content"
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_download"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textStyle="bold"
 				android:textSize="12sp"/>
 
@@ -96,7 +95,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -111,7 +110,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_ice"
 				android:textStyle="bold"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -120,7 +119,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -136,7 +135,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_video_resolution"
 				android:textStyle="bold"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -145,7 +144,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@android:color/white"
+				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
 		</TableRow>

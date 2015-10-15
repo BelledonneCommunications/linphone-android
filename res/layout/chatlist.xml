@@ -50,7 +50,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/no_chat_history"
-        android:textColor="@drawable/text_color"
+        android:textColor="@color/colorB"
         android:textAppearance="@android:style/TextAppearance.Large"/>
 
 </LinearLayout>

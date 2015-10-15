@@ -28,7 +28,7 @@
         android:text="@string/about_text"
         android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/text_contrast"
+        android:textColor="@color/colorB"
         android:id="@+id/AboutText"/>
 
     <TextView
@@ -38,7 +38,7 @@
         android:autoLink="web"
         android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/text_contrast"
+		android:textColor="@color/colorB"
         android:id="@+id/AboutLink"/>
 
 	<LinearLayout
