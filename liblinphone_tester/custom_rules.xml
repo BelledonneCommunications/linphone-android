@@ -43,6 +43,7 @@
 				<resourcecontains resource="${output.file}" substring="longMsg=junit.framework.AssertionFailedError: View with id: '" />
 				<resourcecontains resource="${output.file}" substring="longMsg=java.lang.RuntimeException:" />
 				<resourcecontains resource="${output.file}" substring="longMsg=java.lang.NullPointerException:" />
+				<resourcecontains resource="${output.file}" substring="android.util.AndroidException: INSTRUMENTATION_FAILED:" />
 			</or>
 		</condition>
 		<exec executable="bash" unless:set="has.crashed">
