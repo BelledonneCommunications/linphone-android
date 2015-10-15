@@ -125,16 +125,6 @@
             </intent-filter>-->
         </activity>
 
-        <activity android:name="org.linphone.ChatActivity"
-            android:theme="@style/NoTitle"
-            android:configChanges="orientation|screenSize|keyboardHidden" 
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-         
         <activity android:name=".assistant.AssistantActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
