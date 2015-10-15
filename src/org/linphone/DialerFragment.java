@@ -25,6 +25,7 @@ import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * @author Sylvain Berfini
@@ -41,6 +43,7 @@ public class DialerFragment extends Fragment {
 	private static DialerFragment instance;
 	private static boolean isCallTransferOngoing = false;
 
+	private AddressAware numpad;
 	private AddressText mAddress;
 	private CallButton mCall;
 	private ImageView mAddContact;
@@ -71,7 +74,7 @@ public class DialerFragment extends Fragment {
 			mCall.setImageResource(R.drawable.call_audio_start);
 		}
 		
-		AddressAware numpad = (AddressAware) view.findViewById(R.id.Dialer);
+		numpad = (AddressAware) view.findViewById(R.id.numpad);
 		if (numpad != null) {
 			numpad.setAddressWidget(mAddress);
 		}
@@ -138,8 +141,16 @@ public class DialerFragment extends Fragment {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
 			LinphoneActivity.instance().showStatusBar();
+			LinphoneActivity.instance().hideTabBar(false);
 		}
-		
+
+		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+		if(isOrientationLandscape) {
+			((LinearLayout) numpad).setVisibility(View.GONE);
+		} else {
+			((LinearLayout) numpad).setVisibility(View.VISIBLE);
+		}
+
 		if (shouldEmptyAddressField) {
 			mAddress.setText("");
 		} else {
