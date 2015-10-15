@@ -3,18 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorH"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/topbar"
+        android:background="@color/colorF"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <TextView
+            android:text="@string/about"
+            style="@style/font1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"/>
+
+        <ImageView
+            android:id="@+id/cancel"
+            android:src="@drawable/dialer_back"
+            android:contentDescription="@string/content_description_dialer"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 
     <ImageView
         android:src="@drawable/linphone_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
 		android:padding="10dp" />
 
     <TextView
         android:text="@string/app_name"
         style="@style/font5"
+        android:layout_gravity="center"
 		android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -23,6 +50,7 @@
         android:id="@+id/AboutText"
         android:text="@string/about_text"
         style="@style/font9"
+        android:layout_gravity="center"
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -32,6 +60,7 @@
         android:text="@string/about_link"
         android:autoLink="web"
         style="@style/font9"
+        android:layout_gravity="center"
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -40,7 +69,7 @@
 		android:orientation="horizontal"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:gravity="center">
+        android:layout_gravity="center">
 
 		<Button
        		android:id="@+id/send_log"
