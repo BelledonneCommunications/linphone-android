@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Default" parent="android:Theme.Holo.Light" />
-    <style name="NoTitle" parent="android:Theme.Holo.Light.NoActionBar" />
-    <style name="FullScreen" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen" />
+	<style name="Default" parent="android:Theme.Holo.Light" />
+	<style name="NoTitle" parent="android:Theme.Holo.Light.NoActionBar" />
+	<style name="FullScreen" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen" />
 
 	<style name="font1" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorA</item>

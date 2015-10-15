@@ -22,6 +22,8 @@ import java.util.TimerTask;
 
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -29,6 +31,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -153,17 +156,17 @@ public class StatusFragment extends Fragment {
 		if (activity instanceof LinphoneActivity) {
 			((LinphoneActivity) activity).updateStatusFragment(this);
 			isInCall = false;
-		} else if (activity instanceof InCallActivity) {
-			((InCallActivity) activity).updateStatusFragment(this);
+		} else if (activity instanceof CallActivity) {
+			((CallActivity) activity).updateStatusFragment(this);
 			isInCall = true;
 		} else if (activity instanceof AssistantActivity) {
 			((AssistantActivity) activity).updateStatusFragment(this);
 			isInCall = false;
-		} else if (activity instanceof IncomingCallActivity) {
-			((IncomingCallActivity) activity).updateStatusFragment(this);
+		} else if (activity instanceof CallIncomingActivity) {
+			((CallIncomingActivity) activity).updateStatusFragment(this);
 			isInCall = true;
-		} else if (activity instanceof OutgoingCallActivity) {
-			((OutgoingCallActivity) activity).updateStatusFragment(this);
+		} else if (activity instanceof CallOutgoingActivity) {
+			((CallOutgoingActivity) activity).updateStatusFragment(this);
 			isInCall = true;
 		}
 	}
@@ -180,7 +183,7 @@ public class StatusFragment extends Fragment {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
 			voicemailCount.setVisibility(View.GONE);
 			
-			if (isInCall && isAttached && getResources().getBoolean(R.bool.display_call_stats)) {
+			if (isInCall && isAttached) {
 				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 				//initCallStatsRefresher(call, callStats);
 			} else if (!isInCall) {
@@ -398,12 +401,12 @@ public class StatusFragment extends Fragment {
 	         .show();
 	}
 	
-	private void initCallStatsRefresher(final LinphoneCall call, final View view) {
+	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
 		if (mTimer != null && mTask != null) {
 			return;
 		}
 		
-	  /*  mTimer = new Timer();
+	 	mTimer = new Timer();
 		mTask = new TimerTask() {
 			@Override
 			public void run() {
@@ -467,7 +470,7 @@ public class StatusFragment extends Fragment {
 				});
 			}
 		};
-		mTimer.scheduleAtFixedRate(mTask, 0, 1000);*/
+		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
 	
 

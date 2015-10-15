@@ -52,7 +52,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	private float mZoomFactor = 1.f;
 	private float mZoomCenterX, mZoomCenterY;
 	private CompatibilityScaleGestureDetector mScaleDetector;
-	private InCallActivity inCallActivity;
+	private CallActivity inCallActivity;
 	
 	@SuppressWarnings("deprecation") // Warning useless because value is ignored and automatically set by new APIs.
 	@Override
@@ -274,7 +274,7 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		
-		inCallActivity = (InCallActivity) activity;
+		inCallActivity = (CallActivity) activity;
 		if (inCallActivity != null) {
 			inCallActivity.bindVideoFragment(this);
 		}

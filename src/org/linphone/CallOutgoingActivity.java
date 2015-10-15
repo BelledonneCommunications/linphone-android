@@ -1,6 +1,6 @@
 /*
-IncomingCallActivity.java
-Copyright (C) 2011  Belledonne Communications, Grenoble, France
+CallOutgoingActivity.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -29,35 +29,26 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import de.timroes.axmlrpc.Call;
+public class CallOutgoingActivity extends Activity implements OnClickListener{
 
-/**
- * Activity displayed when a call comes in.
- * It should bypass the screen lock mechanism.
- *
- * @author Guillaume Beraudo
- */
-public class OutgoingCallActivity extends Activity {
+	private static CallOutgoingActivity instance;
 
-	private static OutgoingCallActivity instance;
-
-	private TextView mNameView, mNumberView;
-	private ImageView mPictureView, micro, speaker, decline;
+	private TextView name, number;
+	private ImageView contactPicture, micro, speaker, hangUp;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
 	private boolean isMicMuted, isSpeakerEnabled;
 	private StatusFragment status;
 
-	public static OutgoingCallActivity instance() {
+	public static CallOutgoingActivity instance() {
 		return instance;
 	}
 
@@ -74,63 +65,26 @@ public class OutgoingCallActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		setContentView(R.layout.outgoing_call);
+		setContentView(R.layout.call_outgoing);
 
-		mNameView = (TextView) findViewById(R.id.incoming_caller_name);
-		mNumberView = (TextView) findViewById(R.id.incoming_caller_number);
-		mPictureView = (ImageView) findViewById(R.id.incoming_picture);
-
-		micro = (ImageView) findViewById(R.id.micro);
-		micro.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-			}
-		});
-		speaker = (ImageView) findViewById(R.id.speaker);
+		name = (TextView) findViewById(R.id.contact_name);
+		number = (TextView) findViewById(R.id.contact_number);
+		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 
 		isMicMuted = false;
 		isSpeakerEnabled = false;
 
-		micro.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				isMicMuted = !isMicMuted;
-				if(isMicMuted) {
-					micro.setImageResource(R.drawable.micro_selected);
-				} else {
-					micro.setImageResource(R.drawable.micro_default);
-				}
-				LinphoneManager.getLc().muteMic(isMicMuted);
-			}
-		});
-
-		speaker.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				isSpeakerEnabled = !isSpeakerEnabled;
-				if(isSpeakerEnabled) {
-					speaker.setImageResource(R.drawable.speaker_selected);
-				} else {
-					speaker.setImageResource(R.drawable.speaker_default);
-				}
-				LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
-			}
-		});
+		micro = (ImageView) findViewById(R.id.micro);
+		micro.setOnClickListener(this);
+		speaker = (ImageView) findViewById(R.id.speaker);
+		speaker.setOnClickListener(this);
 
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
 
-		// "Dial-to-answer" widget for incoming calls.
-
-		ImageView decline = (ImageView) findViewById(R.id.hang_up);
-		decline.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				decline();
-			}
-		});
+		hangUp = (ImageView) findViewById(R.id.hang_up);
+		hangUp.setOnClickListener(this);
 
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
@@ -174,27 +128,27 @@ public class OutgoingCallActivity extends Activity {
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
 			for (LinphoneCall call : calls) {
-				if (State.OutgoingInit == call.getState() || State.OutgoingProgress == call.getState()) {
+				if (State.OutgoingInit == call.getState() || State.OutgoingProgress == call.getState() || State.OutgoingRinging == call.getState() || State.OutgoingEarlyMedia == call.getState()) {
 					mCall = call;
 					break;
 				}
 			}
 		}
 		if (mCall == null) {
-			Log.e("Couldn't find incoming call");
+			Log.e("Couldn't find outgoing call");
 			finish();
 			return;
 		}
+
 		LinphoneAddress address = mCall.getRemoteAddress();
-		// May be greatly sped up using a drawable cache
 		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
-		//LinphoneUtils.setImagePictureFromUri(this, mPictureView, contact != null ? contact.getPhotoUri() : null,
-		//		 contact != null ? contact.getThumbnailUri() : null, R.drawable.unknown_small);
-
-		// To be done after findUriPictureOfContactAndSetDisplayName called
-		mNameView.setText(contact != null ? contact.getName() : address.getUserName());
-		mNumberView.setText(address.asStringUriOnly());
-
+		if (contact != null) {
+			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+			name.setText(contact.getName());
+		} else {
+			name.setText(LinphoneUtils.getAddressDisplayName(address));
+		}
+		number.setText(address.asStringUriOnly());
 	}
 
 	@Override
@@ -213,6 +167,33 @@ public class OutgoingCallActivity extends Activity {
 	}
 
 	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+
+		if (id == R.id.micro) {
+			isMicMuted = !isMicMuted;
+			if(isMicMuted) {
+				micro.setImageResource(R.drawable.micro_selected);
+			} else {
+				micro.setImageResource(R.drawable.micro_default);
+			}
+			LinphoneManager.getLc().muteMic(isMicMuted);
+		}
+		if (id == R.id.speaker) {
+			isSpeakerEnabled = !isSpeakerEnabled;
+			if(isSpeakerEnabled) {
+				speaker.setImageResource(R.drawable.speaker_selected);
+			} else {
+				speaker.setImageResource(R.drawable.speaker_default);
+			}
+			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+		}
+		if (id == R.id.hang_up) {
+			decline();
+		}
+	}
+
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (LinphoneManager.isInstanciated() && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
 			LinphoneManager.getLc().terminateCall(mCall);
@@ -224,5 +205,4 @@ public class OutgoingCallActivity extends Activity {
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
 	}
-
 }

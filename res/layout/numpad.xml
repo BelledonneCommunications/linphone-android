@@ -22,7 +22,7 @@
 </TableRow>
 
 <TableRow android:layout_weight="1" android:gravity="center">
-	<org.linphone.ui.Digit android:id="@+id/DigitStar" android:text="*"  style="@style/DialerDigit" android:background="@drawable/numpad_star" android:soundEffectsEnabled="true" />
+	<org.linphone.ui.Digit android:id="@+id/DigitStar" android:text="*"  style="@style/DialerDigit" android:background="@drawable/numpad_star_digit" android:soundEffectsEnabled="true" />
 	<org.linphone.ui.Digit android:id="@+id/Digit00"   android:text="0+" style="@style/DialerDigit" android:background="@drawable/numpad_zero" android:soundEffectsEnabled="true" />
 	<org.linphone.ui.Digit android:id="@+id/DigitHash" android:text="#"  style="@style/DialerDigit" android:background="@drawable/numpad_sharp" android:soundEffectsEnabled="true" />
 </TableRow>

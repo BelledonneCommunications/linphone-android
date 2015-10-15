@@ -89,7 +89,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="org.linphone.IncomingCallActivity"
+        <activity android:name=".CallIncomingActivity"
 		    android:theme="@style/NoTitle"
             android:noHistory="true"
 			android:launchMode="singleTop"
@@ -99,7 +99,7 @@
             </intent-filter>
          </activity>
 
-		<activity android:name="org.linphone.OutgoingCallActivity"
+		<activity android:name=".CallOutgoingActivity"
 			  android:theme="@style/NoTitle"
 			  android:noHistory="true"
 			  android:launchMode="singleTop"
@@ -109,7 +109,7 @@
 			</intent-filter>
 		</activity>
 
-        <activity android:name="org.linphone.InCallActivity"
+        <activity android:name=".CallActivity"
 		   android:theme="@style/FullScreen"
            android:noHistory="true"
            android:launchMode="singleTop">
