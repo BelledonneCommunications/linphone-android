@@ -40,23 +40,22 @@
 
 		<TextView
 			android:id="@+id/contact_name"
+			style="@style/font5"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentTop="true"
-			android:textAlignment="center"
 			android:layout_centerHorizontal="true"
-			android:padding="5dp"
-			style="@style/font5"/>
+			android:paddingTop="5dp"/>
 
 		<TextView
 			android:id="@+id/contact_number"
+			style="@style/font2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			style="@style/font2"
 			android:layout_below="@id/contact_name"
 			android:layout_gravity="center"
 			android:layout_centerHorizontal="true"
-			android:padding="5dp"/>
+			android:paddingBottom="10dp"/>
 
 		<RelativeLayout
 			android:id="@+id/avatar_layout"
