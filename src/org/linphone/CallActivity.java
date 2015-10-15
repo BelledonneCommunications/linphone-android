@@ -118,7 +118,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		instance = this;
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-		setContentView(R.layout.incall);
+		setContentView(R.layout.call);
 
 		isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
 
@@ -320,6 +320,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		dialer.setOnClickListener(this);
 
 		numpad = (Numpad) findViewById(R.id.numpad);
+		numpad.getBackground().setAlpha(240);
 
 		//Others
 

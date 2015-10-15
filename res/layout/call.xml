@@ -11,18 +11,29 @@
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
 		tools:layout="@layout/status" />
+
+
+	<android.support.v4.widget.DrawerLayout
+		android:id="@+id/call_stats"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/status">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/status">
+
+	<LinearLayout
+		android:id="@+id/fragmentContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="horizontal" />
     
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-		android:layout_below="@id/status"
-		android:layout_above="@id/menu">
-
-        <LinearLayout
-            android:id="@+id/fragmentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
+		android:layout_above="@+id/menu">
 
 			<LinearLayout
 				android:id="@+id/conferenceCalls"
@@ -37,48 +48,95 @@
 			<RelativeLayout
 				android:id="@+id/activeCallHeader"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center_vertical"
-				android:layout_gravity="center_vertical"
+				android:layout_height="wrap_content"
 				android:visibility="visible">
 
-				<ImageView
-					android:id="@+id/contactPicture"
-					android:src="@drawable/avatar"
-					android:layout_width="200dp"
-					android:layout_height="200dp"
+				<LinearLayout
+					android:id="@+id/call_header_description"
+					android:layout_width="match_parent"
+					android:layout_height="80dp"
 					android:layout_centerHorizontal="true"
-					android:paddingBottom="10dp"/>
+					android:orientation="vertical"
+					android:background="@color/colorH"
+					android:alpha="0.8">
 
-				<TextView
-					android:id="@+id/contactNameOrNumber"
-					style="@style/font5"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingTop="10dp"
-					android:layout_below="@id/contactPicture"
-					android:layout_centerHorizontal="true"/>
+					<TextView
+						android:id="@+id/contactNameOrNumber"
+						style="@style/font5"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingTop="5dp"
+						android:layout_alignParentTop="true"
+						android:layout_gravity="center"/>
 
-				<Chronometer
-					android:id="@+id/callTimer"
-					style="@style/font2"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/contactNameOrNumber"
-					android:layout_centerHorizontal="true"/>
+					<Chronometer
+						android:id="@+id/callTimer"
+						style="@style/font2"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_below="@id/contactNameOrNumber"
+						android:layout_gravity="center"/>
+					</LinearLayout>
+
 
 				<ImageView
 					android:id="@+id/pause"
 					android:contentDescription="@string/content_description_pause"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:layout_width="80dp"
+					android:layout_height="80dp"
+					android:padding="10dp"
 					android:src="@drawable/pause_big_default"
-					android:layout_marginRight="20dp"
-					android:layout_above="@+id/contactNameOrNumber"
-					android:layout_toRightOf="@+id/contactPicture"
-					android:layout_toEndOf="@+id/contactPicture"/>
+					android:layout_below="@+id/call_header_description"
+					android:layout_alignParentRight="true"/>
 
+				<RelativeLayout
+					android:id="@+id/avatar_layout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/call_header_description"
+					android:gravity="center">
+
+					<ImageView
+						android:id="@+id/contact_picture"
+						android:src="@drawable/avatar"
+						android:contentDescription="@string/content_description_contact_picture"
+						android:layout_width="200dp"
+						android:layout_height="match_parent"
+						android:adjustViewBounds="true"/>
+
+					<ImageView
+						android:id="@+id/mask"
+						android:src="@drawable/avatar_mask_border"
+						android:contentDescription="@string/content_description_contact_picture"
+						android:layout_width="200dp"
+						android:layout_height="match_parent"
+						android:adjustViewBounds="true"/>
+
+				</RelativeLayout>
+
+				<ImageView
+					android:id="@+id/switchCamera"
+					android:layout_width="80dp"
+					android:layout_height="80dp"
+					android:padding="10dp"
+					android:contentDescription="@string/content_description_switch_camera"
+					android:visibility="invisible"
+					android:src="@drawable/switch_camera"
+					android:layout_below="@+id/call_header_description"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentStart="true"/>
 			</RelativeLayout>
+
+		<LinearLayout
+			android:id="@+id/calls"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/activeCallHeader"
+			android:layout_alignParentBottom="true"
+			android:background="@color/colorH"
+			android:layout_gravity="bottom"
+			android:orientation="vertical">
+		</LinearLayout>
 
 		<LinearLayout
 			android:id="@+id/noCurrentCall"
@@ -103,38 +161,17 @@
 				android:layout_gravity="center"/>
 		</LinearLayout>
 
-
-		<LinearLayout
-			android:id="@+id/calls"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/activeCallHeader"
-			android:layout_alignParentBottom="true"
-			android:background="@color/colorH"
-			android:layout_gravity="bottom"
-			android:orientation="vertical">
-		</LinearLayout>
-
 	</FrameLayout>
 
-    <ImageView
-        android:id="@+id/switchCamera"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-		android:padding="10dp"
-        android:contentDescription="@string/content_description_switch_camera"
-        android:layout_marginTop="40dp"
-        android:visibility="invisible"
-        android:src="@drawable/switch_camera" />
-
-    <org.linphone.ui.Numpad
+	<org.linphone.ui.Numpad
         android:contentDescription="@string/content_description_numpad"
         android:id="@+id/numpad"
         android:background="@color/colorF"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+		android:layout_margin="10dp"
+		android:layout_above="@id/menu"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
 
@@ -154,12 +191,13 @@
             <RelativeLayout   
                 android:layout_width="match_parent"
 	            android:layout_height="match_parent"
-				android:padding="25dp"
+				android:background="@drawable/button_background"
 	            android:layout_weight="1">
 	            
            	<ImageView
 	            android:id="@+id/video"
 	           	android:src="@drawable/camera_default"
+				android:padding="25dp"
 				android:background="@drawable/button_background"
 	            android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
@@ -271,12 +309,12 @@
 			android:visibility="invisible"
 			android:layout_weight="0.5"/>
 
-		<TextView
+		<ImageView
 			android:id="@+id/routeBluetooth"
+			android:src="@drawable/route_bluetooth"
+			android:background="@drawable/button_background"
+			android:padding="20dp"
 			android:visibility="invisible"
-			android:text="@string/button_bluetooth"
-			android:gravity="center"
-			android:textColor="@drawable/text_incall_button_color"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="0.5" />
@@ -312,13 +350,15 @@
 			android:visibility="invisible"
 			android:layout_weight="0.5"/>
 
-		<TextView
-			android:id="@+id/routeReceiver"
+		<ImageView
+			android:id="@+id/routeEarpiece"
+			android:src="@drawable/route_earpiece"
+			android:background="@drawable/button_background"
+			android:padding="20dp"
 			android:visibility="invisible"
-			android:gravity="center"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="0.5" />
+			android:layout_weight="0.5"/>
 
 		<ImageView
 			android:id="@+id/transfer"
@@ -350,14 +390,15 @@
 			android:visibility="invisible"
 			android:layout_weight="0.5"/>
 
-		<TextView
+		<ImageView
 			android:id="@+id/routeSpeaker"
+			android:src="@drawable/route_speaker"
+			android:background="@drawable/button_background"
 			android:visibility="invisible"
-			android:gravity="center"
-			android:paddingTop="40dp"
+			android:padding="20dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="0.5" />
+			android:layout_weight="0.5"/>
 
 		<ImageView
 			android:id="@+id/conference"
@@ -371,5 +412,21 @@
 
 	</LinearLayout>
 
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/side_menu_content"
+			android:layout_gravity="left"
+			android:background="@color/colorH">
+
+			<include layout="@layout/incall_stats" android:id="@+id/incall_stats"/>
+
+		</RelativeLayout>
+
+
+
+</android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>
