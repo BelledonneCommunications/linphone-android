@@ -2,44 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-	android:layout_margin="10dp"
     android:background="@color/colorH"
+    android:orientation="vertical"
     android:gravity="center">
 
     <ImageView
-        android:contentDescription="@string/content_description_welcome"
+        android:src="@drawable/linphone_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:padding="10dp"
-        android:src="@drawable/linphone_orange" />
+		android:padding="10dp" />
 
     <TextView
-		android:layout_margin="10dp"
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="30dp" />
+        style="@style/font5"
+		android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/AboutText"
         android:text="@string/about_text"
+        style="@style/font9"
         android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorB"
-        android:id="@+id/AboutText"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/AboutLink"
         android:text="@string/about_link"
         android:autoLink="web"
+        style="@style/font9"
         android:gravity="center"
-        android:textStyle="bold"
-		android:textColor="@color/colorB"
-        android:id="@+id/AboutLink"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 	<LinearLayout
 		android:orientation="horizontal"
