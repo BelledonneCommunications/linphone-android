@@ -458,13 +458,10 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountDisplayName(int n) {
-		try {
-			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(getProxyConfig(n).getIdentity());
+		LinphoneAddress addr = getProxyConfig(n).getAddress();
+		if(addr != null) {
 			return addr.getDisplayName();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 		return null;
 	}
 

@@ -29,8 +29,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -99,6 +101,28 @@ public final class LinphoneUtils {
 		return isSipAddress(numberOrAddress) && numberOrAddress.startsWith("sip:");
 	}
 
+	public static String getAddressDisplayName(String uri){
+		LinphoneAddress lAddress;
+		try {
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(uri);
+			return getAddressDisplayName(lAddress);
+		} catch (LinphoneCoreException e) {
+			return null;
+		}
+	}
+
+	public static String getAddressDisplayName(LinphoneAddress address){
+		if(address.getDisplayName() != null) {
+			return address.getDisplayName();
+		} else {
+			if(address.getUserName() != null){
+				return address.getUserName();
+			} else {
+				return address.asStringUriOnly();
+			}
+		}
+	}
+
 	public static String getUsernameFromAddress(String address) {
 		if (address.contains("sip:"))
 			address = address.replace("sip:", "");
@@ -118,6 +142,38 @@ public final class LinphoneUtils {
 			.setAction(Intent.ACTION_MAIN)
 			.addCategory(Intent.CATEGORY_HOME));
 		return true;
+	}
+
+	public static String timestampToHumanDate(Context context, long timestamp, String format) {
+		try {
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(timestamp);
+
+			SimpleDateFormat dateFormat;
+			if (isToday(cal)) {
+				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format));
+			} else {
+				dateFormat = new SimpleDateFormat(format);
+			}
+
+			return dateFormat.format(cal.getTime());
+		} catch (NumberFormatException nfe) {
+			return String.valueOf(timestamp);
+		}
+	}
+
+	static boolean isToday(Calendar cal) {
+		return isSameDay(cal, Calendar.getInstance());
+	}
+
+	static boolean isSameDay(Calendar cal1, Calendar cal2) {
+		if (cal1 == null || cal2 == null) {
+			return false;
+		}
+
+		return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+				cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
 	}
 
 	public static boolean onKeyVolumeAdjust(int keyCode) {
