@@ -64,12 +64,11 @@
 		<TextView 
 		    android:id="@+id/name"
 		    android:lines="1"
+			style="@style/font6"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_toRightOf="@id/avatar_layout"
 		    android:layout_centerVertical="true"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:textColor="@color/text_contrast"
 		    android:layout_marginLeft="10dp" />
 		
 		<ImageView 
