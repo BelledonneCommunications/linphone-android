@@ -78,7 +78,7 @@
 	</LinearLayout>
 	
     <org.linphone.ui.Numpad
-		android:id="@+id/Dialer"
+		android:id="@+id/numpad"
         android:contentDescription="@string/content_description_numpad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
