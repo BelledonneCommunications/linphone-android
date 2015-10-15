@@ -1,7 +1,7 @@
 package org.linphone;
 /*
-InCallActivity.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+CallActivity.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -87,8 +87,8 @@ public class CallActivity extends Activity implements OnClickListener {
 	private LinearLayout routeLayout, mNoCurrentCall, callInfo;
 	private ProgressBar videoProgress;
 	private StatusFragment status;
-	private AudioCallFragment audioCallFragment;
-	private VideoCallFragment videoCallFragment;
+	private CallAudioFragment audioCallFragment;
+	private CallVideoFragment videoCallFragment;
 	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed, isAnimationDisabled;
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
@@ -245,16 +245,16 @@ public class CallActivity extends Activity implements OnClickListener {
 
 			Fragment callFragment;
 			if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-				callFragment = new VideoCallFragment();
-				videoCallFragment = (VideoCallFragment) callFragment;
+				callFragment = new CallVideoFragment();
+				videoCallFragment = (CallVideoFragment) callFragment;
 				isSpeakerEnabled = true;
 
 				if (cameraNumber > 1) {
 					switchCamera.setVisibility(View.VISIBLE);
 				}
 			} else {
-				callFragment = new AudioCallFragment();
-				audioCallFragment = (AudioCallFragment) callFragment;
+				callFragment = new CallAudioFragment();
+				audioCallFragment = (CallAudioFragment) callFragment;
 				switchCamera.setVisibility(View.INVISIBLE);
 			}
 
@@ -729,7 +729,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	private void replaceFragmentVideoByAudio() {
-		audioCallFragment = new AudioCallFragment();
+		audioCallFragment = new CallAudioFragment();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, audioCallFragment);
 		try {
@@ -740,7 +740,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 	private void replaceFragmentAudioByVideo() {
 //		Hiding controls to let displayVideoCallControlsIfHidden add them plus the callback
-		videoCallFragment = new VideoCallFragment();
+		videoCallFragment = new CallVideoFragment();
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, videoCallFragment);
@@ -1364,11 +1364,11 @@ public class CallActivity extends Activity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	public void bindAudioFragment(AudioCallFragment fragment) {
+	public void bindAudioFragment(CallAudioFragment fragment) {
 		audioCallFragment = fragment;
 	}
 
-	public void bindVideoFragment(VideoCallFragment fragment) {
+	public void bindVideoFragment(CallVideoFragment fragment) {
 		videoCallFragment = fragment;
 	}
 
