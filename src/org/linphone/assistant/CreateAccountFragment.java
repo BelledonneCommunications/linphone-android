@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
-WizardFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+CreateAccountFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -56,14 +56,14 @@ import de.timroes.axmlrpc.XMLRPCServerException;
  */
 public class CreateAccountFragment extends Fragment {
 	private Handler mHandler = new Handler();
-	private EditText username, password, passwordConfirm, email;
+	private EditText usernameEdit, passwordEdit, passwordConfirmEdit, emailEdit;
+	private TextView usernameError, passwordError, passwordConfirmError, emailError;
 	
 	private boolean usernameOk = false;
 	private boolean passwordOk = false;
 	private boolean emailOk = false;
 	private boolean confirmPasswordOk = false;
 	private Button createAccount;
-	private TextView errorMessage;
 	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '_', '-' };
@@ -71,7 +71,7 @@ public class CreateAccountFragment extends Fragment {
 	private String inputFilterCharacters;
 	
 	private String getUsername() {
-		String username = this.username.getText().toString();
+		String username = usernameEdit.getText().toString();
 		if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
 			username = lpc.normalizePhoneNumber(username);
@@ -82,9 +82,20 @@ public class CreateAccountFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
-		
-		username = (EditText) view.findViewById(R.id.assistant_username);
-    	addXMLRPCUsernameHandler(username, null);
+
+		usernameError = (TextView) view.findViewById(R.id.username_error);
+		usernameEdit = (EditText) view.findViewById(R.id.username);
+
+		passwordError = (TextView) view.findViewById(R.id.password_error);
+		passwordEdit = (EditText) view.findViewById(R.id.password);
+
+		passwordConfirmError = (TextView) view.findViewById(R.id.confirm_password_error);
+		passwordConfirmEdit = (EditText) view.findViewById(R.id.confirm_password);
+
+		emailError = (TextView) view.findViewById(R.id.email_error);
+		emailEdit = (EditText) view.findViewById(R.id.email);
+
+    	addXMLRPCUsernameHandler(usernameEdit, null);
     	
     	inputFilterCharacters = new String(acceptedChars);
     	if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
@@ -103,19 +114,12 @@ public class CreateAccountFragment extends Fragment {
                 return null;
             }
         };
-    	username.setFilters(new InputFilter[] { filter });
+		usernameEdit.setFilters(new InputFilter[] { filter });
 
-    	password = (EditText) view.findViewById(R.id.assistant_password);
-    	passwordConfirm = (EditText) view.findViewById(R.id.assistant_password_confirm);
+    	addXMLRPCPasswordHandler(passwordEdit, null);
+    	addXMLRPCConfirmPasswordHandler(passwordEdit, passwordConfirmEdit, null);
+    	addXMLRPCEmailHandler(emailEdit, null);
 
-    	addXMLRPCPasswordHandler(password, null);
-    	addXMLRPCConfirmPasswordHandler(password, passwordConfirm, null);
-
-    	email = (EditText) view.findViewById(R.id.assistant_email);
-    	addXMLRPCEmailHandler(email, null);
-
-    	errorMessage = (TextView) view.findViewById(R.id.assistant_error);
-    	
     	createAccount = (Button) view.findViewById(R.id.assistant_create);
     	createAccount.setEnabled(false);
     	createAccount.setOnClickListener(new OnClickListener() {
@@ -123,7 +127,7 @@ public class CreateAccountFragment extends Fragment {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						createAccount(getUsername(), password.getText().toString(), email.getText().toString(), false);
+						createAccount(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
 					}
 				});
 				builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
@@ -142,13 +146,25 @@ public class CreateAccountFragment extends Fragment {
     	    for (Account account: accounts) {
     	    	if (isEmailCorrect(account.name)) {
     	            String possibleEmail = account.name;
-    	        	email.setText(possibleEmail);
+					emailEdit.setText(possibleEmail);
     	        	break;
     	        }
     	    }
     	}
     	
 		return view;
+	}
+
+	private void displayError(Boolean isOk, TextView error, EditText editText, String errorText){
+		if(isOk){
+			error.setVisibility(View.INVISIBLE);
+			error.setText(errorText);
+			editText.setBackgroundResource(R.drawable.resizable_textfield);
+		} else {
+			error.setVisibility(View.VISIBLE);
+			error.setText(errorText);
+			editText.setBackgroundResource(R.drawable.resizable_textfield_error);
+		}
 	}
 	
 	private boolean isUsernameCorrect(String username) {
@@ -160,11 +176,11 @@ public class CreateAccountFragment extends Fragment {
 		}
 	}
 	
-	private void isUsernameRegistred(String username, final ImageView icon) {
+	private void isUsernameRegistred(final String username, final ImageView icon) {
 		final Runnable runNotReachable = new Runnable() {
 			public void run() {
-				errorMessage.setText(R.string.wizard_server_unavailable);
 				usernameOk = false;
+				displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_server_unavailable));
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
 		};
@@ -175,16 +191,16 @@ public class CreateAccountFragment extends Fragment {
 			XMLRPCCallback listener = new XMLRPCCallback() {
 				Runnable runNotOk = new Runnable() {
     				public void run() {
-    					errorMessage.setText(R.string.wizard_username_unavailable);
     					usernameOk = false;
+						displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_username_unavailable));
 						createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 					}
 	    		};
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					errorMessage.setText("");
 						usernameOk = true;
+						displayError(usernameOk, usernameError, usernameEdit, "");
 						createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 					}
 	    		};
@@ -227,7 +243,7 @@ public class CreateAccountFragment extends Fragment {
 	private void createAccount(final String username, final String password, String email, boolean suscribe) {
 		final Runnable runNotReachable = new Runnable() {
 			public void run() {
-				errorMessage.setText(R.string.wizard_server_unavailable);
+				//TODO errorMessage.setText(R.string.wizard_server_unavailable);
 			}
 		};
 		
@@ -239,7 +255,7 @@ public class CreateAccountFragment extends Fragment {
 			XMLRPCCallback listener = new XMLRPCCallback() {
 				Runnable runNotOk = new Runnable() {
     				public void run() {
-    					errorMessage.setText(R.string.wizard_failed);
+    					//TODO errorMessage.setText(R.string.wizard_failed);
 					}
 	    		};
 	    		
@@ -295,7 +311,7 @@ public class CreateAccountFragment extends Fragment {
 					}
 					isUsernameRegistred(username, icon);
 				} else {
-					errorMessage.setText(R.string.wizard_username_incorrect);
+					displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_username_incorrect));
 				}
 			}
 		});
@@ -316,10 +332,10 @@ public class CreateAccountFragment extends Fragment {
 				emailOk = false;
 				if (isEmailCorrect(field.getText().toString())) {
 					emailOk = true;
-					errorMessage.setText("");
+					displayError(emailOk, emailError, emailEdit, "");
 				}
 				else {
-					errorMessage.setText(R.string.wizard_email_incorrect);
+					displayError(emailOk, emailError, emailEdit, getString(R.string.wizard_email_incorrect));
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
@@ -341,10 +357,10 @@ public class CreateAccountFragment extends Fragment {
 				passwordOk = false;
 				if (isPasswordCorrect(field1.getText().toString())) {
 					passwordOk = true;
-					errorMessage.setText("");
+					displayError(passwordOk, passwordError, passwordEdit, "");
 				}
 				else {
-					errorMessage.setText(R.string.wizard_password_incorrect);
+					displayError(passwordOk, passwordError, passwordEdit, getString(R.string.wizard_password_incorrect));
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
@@ -370,14 +386,14 @@ public class CreateAccountFragment extends Fragment {
 					confirmPasswordOk = true;
 
 					if (!isPasswordCorrect(field1.getText().toString())) {
-						errorMessage.setText(R.string.wizard_password_incorrect);
+						displayError(passwordOk, passwordError, passwordEdit, getString(R.string.wizard_password_incorrect));
 					}
 					else {
-						errorMessage.setText("");
+						displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, "");
 					}
 				}
 				else {
-					errorMessage.setText(R.string.wizard_passwords_unmatched);
+					displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, getString(R.string.wizard_passwords_unmatched));
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}

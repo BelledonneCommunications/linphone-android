@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
-SetupFragments.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+AssistantFragmentsEnum.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,11 +21,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @author Sylvain Berfini
  */
 public enum AssistantFragmentsEnum {
-	MENU,
+	WELCOME,
 	CREATE_ACCOUNT,
-	CREATE_ACCOUNT_CONFIRM,
+	CREATE_ACCOUNT_ACTIVATION,
 	LINPHONE_LOGIN,
-	GENERIC_LOGIN,
+	LOGIN,
 	REMOTE_PROVISIONING,
 	ECHO_CANCELLER_CALIBRATION;
 }

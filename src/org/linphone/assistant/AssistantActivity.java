@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
-SetupActivity.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+AssistantActivity.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,28 +21,39 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphonePreferences.AccountBuilder;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.StatusFragment;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
+import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
@@ -70,7 +81,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		initUI();
 
 		firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ?
-				AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.MENU;
+				AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
         if (findViewById(R.id.fragmentContainer) != null) {
             if (savedInstanceState == null) {
             	display(firstFragment);
@@ -87,10 +98,12 @@ public class AssistantActivity extends Activity implements OnClickListener {
 					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
 						if (state == RegistrationState.RegistrationOk) {
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								launchEchoCancellerCalibration(true);
+								//launchEchoCancellerCalibration(true);
+								success();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
-							Toast.makeText(AssistantActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+							//showDialog(cfg);
+							//Toast.makeText(AssistantActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
 						}
 					}
 				}
@@ -174,15 +187,15 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-		} else if (currentFragment == AssistantFragmentsEnum.GENERIC_LOGIN
+		} else if (currentFragment == AssistantFragmentsEnum.LOGIN
 				|| currentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
 				|| currentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
 				|| currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
 			WelcomeFragment fragment = new WelcomeFragment();
 			changeFragment(fragment);
-			currentFragment = AssistantFragmentsEnum.MENU;
+			currentFragment = AssistantFragmentsEnum.WELCOME;
 			back.setVisibility(View.GONE);
-		} else if (currentFragment == AssistantFragmentsEnum.MENU) {
+		} else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
 			finish();
 		}
 	}
@@ -198,7 +211,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			back.setVisibility(View.VISIBLE);
 			cancel.setEnabled(false);
 		} else {
-			success();
+
 		}		
 	}
 
@@ -211,7 +224,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
         saveCreatedAccount(username, password, displayName, domain);
 
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			launchEchoCancellerCalibration(sendEcCalibrationResult);
+			//launchEchoCancellerCalibration(sendEcCalibrationResult);
 		}
 	}
 	
@@ -233,12 +246,12 @@ public class AssistantActivity extends Activity implements OnClickListener {
 
 	private void display(AssistantFragmentsEnum fragment) {
 		switch (fragment) {
-		case MENU:
-			displayMenu();
-			break;
-		case LINPHONE_LOGIN:
-			displayLoginLinphone();
-			break;
+			case WELCOME:
+				displayMenu();
+				break;
+			case LINPHONE_LOGIN:
+				displayLoginLinphone();
+				break;
 		default:
 			throw new IllegalStateException("Can't handle " + fragment);
 		}
@@ -247,14 +260,14 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	public void displayMenu() {
 		fragment = new WelcomeFragment();
 		changeFragment(fragment);
-		currentFragment = AssistantFragmentsEnum.MENU;
+		currentFragment = AssistantFragmentsEnum.WELCOME;
 		back.setVisibility(View.GONE);
 	}
 
 	public void displayLoginGeneric() {
 		fragment = new LoginFragment();
 		changeFragment(fragment);
-		currentFragment = AssistantFragmentsEnum.GENERIC_LOGIN;
+		currentFragment = AssistantFragmentsEnum.LOGIN;
 		back.setVisibility(View.VISIBLE);
 	}
 	
@@ -264,8 +277,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		//LinphoneManager.getInstance().loadConfig(R.raw.config_linphone_account);
 		//LinphoneManager.getInstance().resetLinphoneCore(this);
 
-
-		//Log.w(LinphoneManager.getLc().getConfig().getString("proxy_default_values","reg_proxy","loool"));
 
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
@@ -284,6 +295,15 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
 		back.setVisibility(View.VISIBLE);
+	}
+
+	public void retryLogin(LinphoneProxyConfig proxy, String password){
+		LinphoneAuthInfo info = LinphoneManager.getLc().findAuthInfo(LinphoneUtils.getUsernameFromAddress(proxy.getIdentity()),proxy.getRealm(),proxy.getDomain());
+		if(info != null) {
+			info.setPassword(password);
+			LinphoneManager.getLc().addAuthInfo(info);
+		}
+		LinphoneManager.getLc().refreshRegisters();
 	}
 	
 	public void saveCreatedAccount(String username, String password, String displayName, String domain) {
@@ -317,6 +337,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 		.setUsername(username)
 		.setDomain(domain)
+		.setDisplayName(displayName)
 		.setPassword(password);
 		
 		if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
@@ -342,7 +363,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
 		} else {
-			String forcedProxy = getResources().getString(R.string.setup_forced_proxy);
+			String forcedProxy = "";
 			if (!TextUtils.isEmpty(forcedProxy)) {
 				builder.setProxy(forcedProxy)
 				.setOutboundProxyEnabled(true)
@@ -375,19 +396,59 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		
-		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CONFIRM;
+		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
 		back.setVisibility(View.GONE);
 	}
 	
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
 		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
-		launchEchoCancellerCalibration(true);
+		//launchEchoCancellerCalibration(true);
 	}
 
 	public void isEchoCalibrationFinished() {
 		mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, true);
 		success();
+	}
+
+	public Dialog displayWrongPasswordDialog(){
+		Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+		d.setAlpha(200);
+		dialog.setContentView(R.layout.input_dialog);
+		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
+		dialog.getWindow().setBackgroundDrawable(d);
+
+		TextView customText = (TextView) dialog.findViewById(R.id.customText);
+		customText.setText(getString(R.string.error_bad_credentials));
+		return dialog;
+	}
+
+	public void showDialog(final LinphoneProxyConfig proxy){
+		final Dialog dialog = displayWrongPasswordDialog();
+
+		Button retry = (Button) dialog.findViewById(R.id.retry);
+		Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+		retry.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String newPassword = ((EditText) dialog.findViewById(R.id.password)).getText().toString();
+				retryLogin(proxy, newPassword);
+				dialog.dismiss();
+			}
+		});
+
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				success();
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
 	}
 	
 	public void success() {
