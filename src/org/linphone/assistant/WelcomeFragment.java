@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
-MenuFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+WelcomeFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
