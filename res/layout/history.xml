@@ -7,10 +7,10 @@
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
-		android:layout_gravity="top"
-		android:background="@color/colorF">
+		android:layout_gravity="top">
 
 		<RelativeLayout
 			android:id="@+id/all_calls_layout"
@@ -80,7 +80,7 @@
 	<include layout="@layout/edit_list"/>
 
 	<ListView
-		android:id="@+id/historyList"
+		android:id="@+id/history_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:divider="@color/colorE"
@@ -88,7 +88,7 @@
 		android:dividerHeight="1dp" />
 
 	<TextView
-		android:id="@+id/noCallHistory"
+		android:id="@+id/no_call_history"
 		android:text="@string/no_call_history"
 		style="@style/font6"
 		android:visibility="gone"
@@ -97,7 +97,7 @@
 		android:gravity="center"/>
 
 	<TextView
-		android:id="@+id/noMissedCallHistory"
+		android:id="@+id/no_missed_call_history"
 		android:text="@string/no_missed_call_history"
 		style="@style/font6"
 		android:visibility="gone"
