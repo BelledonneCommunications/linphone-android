@@ -155,7 +155,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.drawable.logo_linphone_57x57, bm, mNotifContentIntent, true,notifcationsPriority);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 
@@ -200,7 +200,7 @@ public final class LinphoneService extends Service {
 			@Override
 			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
 				if (state == GlobalState.GlobalOn) {
-					sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}
 
@@ -216,11 +216,11 @@ public final class LinphoneService extends Service {
 					}
 			
 					if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
-						sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
+						sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
 					}
 					
 					if (state == RegistrationState.RegistrationNone) {
-						sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 					}
 				}
 			}
@@ -293,7 +293,7 @@ public final class LinphoneService extends Service {
 			notificationTextId = R.string.incall_notif_active;
 			break;
 		case PAUSE:
-			inconId = R.drawable.conf_status_paused;
+			inconId = R.drawable.topbar_call_notification;
 			notificationTextId = R.string.incall_notif_paused;
 			break;
 		case VIDEO:

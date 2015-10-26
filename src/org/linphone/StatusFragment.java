@@ -36,8 +36,11 @@ import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Fragment;
@@ -45,6 +48,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,8 +92,8 @@ public class StatusFragment extends Fragment {
 				}
 
 				if(lc.getProxyConfigList() == null){
-					statusLed.setVisibility(View.INVISIBLE);
-					statusText.setText("");
+					statusLed.setImageResource(R.drawable.led_disconnected);
+					statusText.setText(getString(R.string.no_account));
 				} else {
 					statusLed.setVisibility(View.VISIBLE);
 				}
@@ -191,8 +197,8 @@ public class StatusFragment extends Fragment {
 			}
 
 			if(LinphoneManager.getLc().getProxyConfigList().length == 0){
-				statusLed.setVisibility(View.INVISIBLE);
-				statusText.setText("");
+				statusLed.setImageResource(R.drawable.led_disconnected);
+				statusText.setText(getString(R.string.no_account));
 			}
 		}
 	}
@@ -372,33 +378,52 @@ public class StatusFragment extends Fragment {
 		}
 	}
 	
-	private void showZRTPDialog(final LinphoneCall call) {
+	public void showZRTPDialog(final LinphoneCall call) {
 		if (getActivity() == null) {
 			Log.w("Can't display ZRTP popup, no Activity");
 			return;
 		}
-		new AlertDialog.Builder(getActivity())
-	        .setTitle(call.getAuthenticationToken())
-	        .setMessage(getString(R.string.zrtp_help))
-	        .setPositiveButton(R.string.zrtp_accept, new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int which) { 
-	            	call.setAuthenticationTokenVerified(true);
+
+		final Dialog dialog = new Dialog(getActivity());
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+		d.setAlpha(200);
+		dialog.setContentView(R.layout.dialog);
+		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+		dialog.getWindow().setBackgroundDrawable(d);
+
+		TextView customText = (TextView) dialog.findViewById(R.id.customText);
+		String newText = getString(R.string.zrtp_dialog).replace("%s",call.getAuthenticationToken());
+		customText.setText(newText);
+		Button delete = (Button) dialog.findViewById(R.id.delete);
+		delete.setText(R.string.accept);
+		Button cancel = (Button) dialog.findViewById(R.id.cancel);
+		cancel.setText(R.string.deny);
+
+		delete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				call.setAuthenticationTokenVerified(true);
+				if (encryption != null) {
+					encryption.setImageResource(R.drawable.security_ok);
+				}
+				dialog.dismiss();
+			}
+		});
+
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (call != null) {
+					call.setAuthenticationTokenVerified(false);
 					if (encryption != null) {
-						encryption.setImageResource(R.drawable.security_ok);
+						encryption.setImageResource(R.drawable.security_pending);
 					}
-	            }
-	         })
-	        .setNegativeButton(R.string.zrtp_deny, new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int which) { 
-	            	if (call != null) {
-						call.setAuthenticationTokenVerified(false);
-						if (encryption != null) {
-							encryption.setImageResource(R.drawable.security_pending);
-						}
-					}
-	            }
-	         })
-	         .show();
+				}
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
 	
 	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
