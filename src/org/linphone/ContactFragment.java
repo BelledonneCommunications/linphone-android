@@ -218,10 +218,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT);
-			
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
+			LinphoneActivity.instance().hideTabBar(false);
 		}
 		contact.refresh(getActivity().getContentResolver());
 		if (contact.getName() == null || contact.getName().equals("")) {

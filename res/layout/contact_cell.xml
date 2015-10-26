@@ -69,6 +69,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_toRightOf="@id/avatar_layout"
 		    android:layout_centerVertical="true"
+			android:layout_toLeftOf="@id/delete"
 		    android:layout_marginLeft="10dp" />
 		
 		<ImageView 

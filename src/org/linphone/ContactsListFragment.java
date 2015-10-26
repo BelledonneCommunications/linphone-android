@@ -1,7 +1,7 @@
 package org.linphone;
 /*
-ContactsFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+ContactsListFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,18 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.PresenceActivityType;
 import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentProviderOperation;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 @SuppressLint("DefaultLocale")
-public class ContactsFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView noSipContact, noContact;
@@ -74,13 +75,13 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 	private EditText searchField;
 	private Cursor searchCursor;
 
-	private static ContactsFragment instance;
+	private static ContactsListFragment instance;
 	
 	static final boolean isInstanciated() {
 		return instance != null;
 	}
 
-	public static final ContactsFragment instance() {
+	public static final ContactsListFragment instance() {
 		return instance;
 	}
 
@@ -165,6 +166,29 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		return view;
     }
 
+	public int getNbItemsChecked(){
+		int size = contactsList.getAdapter().getCount();
+		int nb = 0;
+		for(int i=0; i<size; i++) {
+			if(contactsList.isItemChecked(i)) {
+				nb ++;
+			}
+		}
+		return nb;
+	}
+
+	public void enabledDeleteButton(Boolean enabled){
+		if(enabled){
+			delete.setEnabled(true);
+			delete.setAlpha(1f);
+		} else {
+			if (getNbItemsChecked() == 0){
+				delete.setEnabled(false);
+				delete.setAlpha(0.2f);
+			}
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -172,12 +196,14 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		if (id == R.id.select_all) {
 			deselectAll.setVisibility(View.VISIBLE);
 			selectAll.setVisibility(View.GONE);
+			enabledDeleteButton(true);
 			selectAllList(true);
 			return;
 		}
 		if (id == R.id.deselect_all) {
 			deselectAll.setVisibility(View.GONE);
 			selectAll.setVisibility(View.VISIBLE);
+			enabledDeleteButton(false);
 			selectAllList(false);
 			return;
 		}
@@ -215,6 +241,7 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		if (id == R.id.edit) {
 			editList.setVisibility(View.VISIBLE);
 			topbar.setVisibility(View.GONE);
+			enabledDeleteButton(false);
 			isEditMode = true;
 		}
 		
@@ -261,11 +288,31 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		}
 	}
 
+	private void deleteExistingContact(Contact contact) {
+		String select = ContactsContract.Data.CONTACT_ID + " = ?";
+		String[] args = new String[] { contact.getID() };
+
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+						.withSelection(select, args)
+						.build()
+		);
+
+		try {
+			getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+			ContactsManager.getInstance().removeAllFriends(contact);
+		} catch (Exception e) {
+			Log.w(e.getMessage() + ":" + e.getStackTrace());
+		}
+	}
+
 	private void removeContacts(){
 		int size = contactsList.getAdapter().getCount();
 		for(int i=0; i<size; i++) {
 			if(contactsList.isItemChecked(i)){
-				//TODO remove contacts
+				Contact contact = (Contact) contactsList.getAdapter().getItem(i);
+				deleteExistingContact(contact);
+				ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(), contact);
 			}
 		}
 	}
@@ -373,11 +420,8 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
+			LinphoneActivity.instance().hideTabBar(false);
 			onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered();
-			
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
 		}
 		
 		invalidate();
@@ -473,6 +517,21 @@ public class ContactsFragment extends Fragment implements OnClickListener, OnIte
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						contactsList.setItemChecked(position, b);
+						if(getNbItemsChecked() == getCount()){
+							deselectAll.setVisibility(View.VISIBLE);
+							selectAll.setVisibility(View.GONE);
+							enabledDeleteButton(true);
+						} else {
+							if(getNbItemsChecked() == 0){
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(false);
+							} else {
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(true);
+							}
+						}
 					}
 				});
 				if(contactsList.isItemChecked(position)) {
