@@ -73,7 +73,7 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class CallActivity extends Activity implements OnClickListener {
-	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 10000;
+	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 5000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 
 	private static CallActivity instance;
@@ -84,7 +84,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout;
 	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
 	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu;
-	private LinearLayout routeLayout, mNoCurrentCall, callInfo;
+	private LinearLayout mNoCurrentCall, callInfo, mCallPaused;
 	private ProgressBar videoProgress;
 	private StatusFragment status;
 	private CallAudioFragment audioCallFragment;
@@ -143,8 +143,9 @@ public class CallActivity extends Activity implements OnClickListener {
 				}
 
 				if (state == State.Paused || state == State.PausedByRemote ||  state == State.Pausing) {
-					if(LinphoneManager.getLc().getCurrentCall() != null)
+					if(LinphoneManager.getLc().getCurrentCall() != null) {
 						enabledVideoButton(false);
+					}
 					if(isVideoEnabled(call)){
 						showAudioView();
 					}
@@ -157,7 +158,16 @@ public class CallActivity extends Activity implements OnClickListener {
 							showVideoView();
 						}
 					}
-					enabledVideoButton(true);
+					if(LinphoneManager.getLc().getCurrentCall() != null) {
+						enabledVideoButton(true);
+					}
+				}
+
+				if (state == State.Connected) {
+					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
+						//TODO AFFICHER DIALOG ZRTP
+						status.showZRTPDialog(call);
+					}
 				}
 
 				if (state == State.StreamsRunning) {
@@ -165,12 +175,13 @@ public class CallActivity extends Activity implements OnClickListener {
 					//Check media in progress
 					if(LinphonePreferences.instance().isVideoEnabled() && !call.mediaInProgress()){
 						enabledVideoButton(true);
+						enabledPauseButton(true);
 					}
 
-					LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
-
-					isMicMuted = LinphoneManager.getLc().isMicMuted();
 					enableAndRefreshInCallActions();
+
+					LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+					isMicMuted = LinphoneManager.getLc().isMicMuted();
 
 					if (status != null) {
 						videoProgress.setVisibility(View.GONE);
@@ -239,7 +250,7 @@ public class CallActivity extends Activity implements OnClickListener {
 				isSpeakerEnabled = savedInstanceState.getBoolean("Speaker");
 				isMicMuted = savedInstanceState.getBoolean("Mic");
 				isVideoCallPaused = savedInstanceState.getBoolean("VideoCallPaused");
-				//refreshInCallActions();
+				refreshInCallActions();
 				return;
 			}
 
@@ -247,15 +258,11 @@ public class CallActivity extends Activity implements OnClickListener {
 			if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 				callFragment = new CallVideoFragment();
 				videoCallFragment = (CallVideoFragment) callFragment;
+				displayVideoCall(false);
 				isSpeakerEnabled = true;
-
-				if (cameraNumber > 1) {
-					switchCamera.setVisibility(View.VISIBLE);
-				}
 			} else {
 				callFragment = new CallAudioFragment();
 				audioCallFragment = (CallAudioFragment) callFragment;
-				switchCamera.setVisibility(View.INVISIBLE);
 			}
 
 			if(BluetoothManager.getInstance().isBluetoothHeadsetAvailable()){
@@ -291,15 +298,15 @@ public class CallActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		inflater = LayoutInflater.from(this);
 		container = (ViewGroup) findViewById(R.id.topLayout);
-		callsList = (LinearLayout) findViewById(R.id.calls);
-		conferenceList = (LinearLayout) findViewById(R.id.conferenceCalls);
+		callsList = (LinearLayout) findViewById(R.id.calls_list);
+		conferenceList = (LinearLayout) findViewById(R.id.conference_list);
 
 		//TopBar
 		video = (ImageView) findViewById(R.id.video);
 		video.setOnClickListener(this);
 		enabledVideoButton(false);
 
-		videoProgress =  (ProgressBar) findViewById(R.id.videoInProgress);
+		videoProgress =  (ProgressBar) findViewById(R.id.video_in_progress);
 		videoProgress.setVisibility(View.GONE);
 
 		micro = (ImageView) findViewById(R.id.micro);
@@ -313,7 +320,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		options.setEnabled(false);
 
 		//BottonBar
-		hangUp = (ImageView) findViewById(R.id.hangUp);
+		hangUp = (ImageView) findViewById(R.id.hang_up);
 		hangUp.setOnClickListener(this);
 
 		dialer = (ImageView) findViewById(R.id.dialer);
@@ -325,14 +332,15 @@ public class CallActivity extends Activity implements OnClickListener {
 		//Others
 
 		//Active Call
-		callInfo = (LinearLayout) findViewById(R.id.call_header_description);
+		callInfo = (LinearLayout) findViewById(R.id.active_call_info);
 
 		pause = (ImageView) findViewById(R.id.pause);
 		pause.setOnClickListener(this);
-		pause.setEnabled(false);
+		enabledPauseButton(false);
 
-		mActiveCallHeader = (RelativeLayout) findViewById(R.id.activeCallHeader);
-		mNoCurrentCall = (LinearLayout) findViewById(R.id.noCurrentCall);
+		mActiveCallHeader = (RelativeLayout) findViewById(R.id.active_call);
+		mNoCurrentCall = (LinearLayout) findViewById(R.id.no_current_call);
+		mCallPaused = (LinearLayout) findViewById(R.id.remote_pause);
 
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 		avatar_layout = (RelativeLayout) findViewById(R.id.avatar_layout);
@@ -345,7 +353,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 
 		//Options
-		addCall = (ImageView) findViewById(R.id.addCall);
+		addCall = (ImageView) findViewById(R.id.add_call);
 		addCall.setOnClickListener(this);
 		addCall.setEnabled(false);
 
@@ -358,14 +366,13 @@ public class CallActivity extends Activity implements OnClickListener {
 		conference.setOnClickListener(this);
 
 		try {
-			//routeLayout = (LinearLayout) findViewById(R.id.routesLayout);
-			audioRoute = (ImageView) findViewById(R.id.audioRoute);
+			audioRoute = (ImageView) findViewById(R.id.audio_route);
 			audioRoute.setOnClickListener(this);
-			routeSpeaker = (ImageView) findViewById(R.id.routeSpeaker);
+			routeSpeaker = (ImageView) findViewById(R.id.route_speaker);
 			routeSpeaker.setOnClickListener(this);
-			routeEarpiece = (ImageView) findViewById(R.id.routeEarpiece);
+			routeEarpiece = (ImageView) findViewById(R.id.route_earpiece);
 			routeEarpiece.setOnClickListener(this);
-			routeBluetooth = (ImageView) findViewById(R.id.routeBluetooth);
+			routeBluetooth = (ImageView) findViewById(R.id.route_bluetooth);
 			routeBluetooth.setOnClickListener(this);
 		} catch (NullPointerException npe) {
 			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (1)");
@@ -391,15 +398,11 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
 			try {
-				if (routeLayout != null)
-					routeLayout.setVisibility(View.VISIBLE);
 				audioRoute.setVisibility(View.VISIBLE);
 				speaker.setVisibility(View.GONE);
 			} catch (NullPointerException npe) { Log.e("Bluetooth: Audio routes menu disabled on tablets for now (2)"); }
 		} else {
 			try {
-				if (routeLayout != null)
-					routeLayout.setVisibility(View.GONE);
 				audioRoute.setVisibility(View.GONE);
 				speaker.setVisibility(View.VISIBLE);
 			} catch (NullPointerException npe) { Log.e("Bluetooth: Audio routes menu disabled on tablets for now (3)"); }
@@ -410,7 +413,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	public void createInCallStats() {
-		sideMenu = (DrawerLayout) findViewById(R.id.call_stats);
+		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
 		menu = (ImageView) findViewById(R.id.call_quality);
 
 		sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
@@ -418,7 +421,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		menu.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(sideMenu.isDrawerVisible(Gravity.LEFT)){
+				if (sideMenu.isDrawerVisible(Gravity.LEFT)) {
 					sideMenu.closeDrawer(sideMenuContent);
 				} else {
 					sideMenu.openDrawer(sideMenuContent);
@@ -431,8 +434,44 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	private void refreshIncallUi(){
+		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
+		if (pausedCalls.size() == 1) {
+			displayCallPaused(true);
+		} else {
+			displayCallPaused(false);
+		}
+
+		if(LinphoneManager.getLc().getCurrentCall() != null){
+			if(isTransferAllowed)
+				enabledTransferButton(true);
+			if(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()))
+				callInfo.setVisibility(View.VISIBLE);
+		}
+
+		if(LinphoneManager.getLc().getCallsNb() > 1){
+			callsList.setVisibility(View.VISIBLE);
+			enabledConferenceButton(true);
+		} else {
+			if(LinphoneManager.getLc().getCallsNb() == 1 && LinphoneManager.getLc().getCurrentCall() == null){
+				callsList.setVisibility(View.VISIBLE);
+				if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
+					avatar_layout.setVisibility(View.GONE);
+				} else {
+					avatar_layout.setVisibility(View.VISIBLE);
+				}
+				if(isTransferAllowed)
+					enabledTransferButton(false);
+			} else {
+				callsList.setVisibility(View.GONE);
+			}
+			enabledConferenceButton(false);
+
+		}
+
 		refreshInCallActions();
 		refreshCallList(getResources());
+
+
 	}
 
 	private void refreshInCallActions() {
@@ -463,36 +502,21 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		try {
 			if (isSpeakerEnabled) {
-				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_selected);
-				routeEarpiece.setBackgroundResource(R.drawable.route_earpiece);
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth);
+				routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
+				routeEarpiece.setImageResource(R.drawable.route_earpiece);
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			}
 
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker);
+			routeSpeaker.setImageResource(R.drawable.route_speaker);
 			if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
-				routeEarpiece.setBackgroundResource(R.drawable.route_earpiece);
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_selected);
+				routeEarpiece.setImageResource(R.drawable.route_earpiece);
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
 			} else {
-				routeEarpiece.setBackgroundResource(R.drawable.route_earpiece_selected);
-				routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth);
+				routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			}
 		} catch (NullPointerException npe) {
 			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (4)");
-		}
-
-
-
-		if (LinphoneManager.getLc().getCallsNb() > 1) {
-			//pause.setVisibility(View.GONE);
-		} else {
-			//pause.setVisibility(View.VISIBLE);
-
-			List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.Paused));
-			if (pausedCalls.size() == 1) {
-				//pause.setBackgroundResource(R.drawable.pa);
-			} else {
-				//pause.setBackgroundResource(R.drawable.pause_off);
-			}
 		}
 	}
 
@@ -511,8 +535,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		transfer.setEnabled(true);
 		pause.setEnabled(true);
 		dialer.setEnabled(true);
-		conference.setEnabled(true);
-		refreshInCallActions();
+		enabledConferenceButton(true);
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -524,7 +547,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		int id = v.getId();
 
 		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			displayVideoCallControlsIfHidden();
+			//displayVideoCallControlsIfHidden();
 		}
 
 		if (id == R.id.video) {
@@ -536,13 +559,13 @@ public class CallActivity extends Activity implements OnClickListener {
 		else if (id == R.id.speaker) {
 			toggleSpeaker();
 		}
-		else if (id == R.id.addCall) {
+		else if (id == R.id.add_call) {
 			goBackToDialer();
 		}
 		else if (id == R.id.pause) {
 			pauseOrResumeCall(LinphoneManager.getLc().getCurrentCall());
 		}
-		else if (id == R.id.hangUp) {
+		else if (id == R.id.hang_up) {
 			hangUp();
 		}
 		else if (id == R.id.dialer) {
@@ -563,36 +586,36 @@ public class CallActivity extends Activity implements OnClickListener {
 		else if (id == R.id.options) {
 			hideOrDisplayCallOptions();
 		}
-		else if (id == R.id.audioRoute) {
+		else if (id == R.id.audio_route) {
 			hideOrDisplayAudioRoutes();
 		}
-		else if (id == R.id.routeBluetooth) {
+		else if (id == R.id.route_bluetooth) {
 			if (BluetoothManager.getInstance().routeAudioToBluetooth()) {
 				isSpeakerEnabled = false;
-				/*routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_on);
-				routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-				routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);*/
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				routeSpeaker.setImageResource(R.drawable.route_speaker);
+				routeEarpiece.setImageResource(R.drawable.route_earpiece);
 			}
 			hideOrDisplayAudioRoutes();
 		}
-		else if (id == R.id.routeEarpiece) {
+		else if (id == R.id.route_earpiece) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			isSpeakerEnabled = false;
-			/*routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
-			routeReceiver.setBackgroundResource(R.drawable.route_receiver_on);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_off);*/
+			routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+			routeSpeaker.setImageResource(R.drawable.route_speaker);
+			routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
 			hideOrDisplayAudioRoutes();
 		}
-		else if (id == R.id.routeSpeaker) {
+		else if (id == R.id.route_speaker) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			isSpeakerEnabled = true;
-			/*routeBluetooth.setBackgroundResource(R.drawable.route_bluetooth_off);
-			routeReceiver.setBackgroundResource(R.drawable.route_receiver_off);
-			routeSpeaker.setBackgroundResource(R.drawable.route_speaker_on);*/
+			routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+			routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
+			routeEarpiece.setImageResource(R.drawable.route_earpiece);
 			hideOrDisplayAudioRoutes();
 		}
 
-		else if (id == R.id.callStatus) {
+		else if (id == R.id.call_pause) {
 			LinphoneCall call = (LinphoneCall) v.getTag();
 			pauseOrResumeCall(call);
 		}
@@ -604,10 +627,40 @@ public class CallActivity extends Activity implements OnClickListener {
 	private void enabledVideoButton(boolean enabled){
 		if(enabled) {
 			video.setEnabled(true);
-			video.setImageResource(R.drawable.camera_default);
+			video.setAlpha(1f);
 		} else {
 			video.setEnabled(false);
-			video.setImageResource(R.drawable.camera_disabled);
+			video.setAlpha(0.2f);
+		}
+	}
+
+	private void enabledPauseButton(boolean enabled){
+		if(enabled) {
+			pause.setEnabled(true);
+			pause.setImageResource(R.drawable.pause_big_default);
+		} else {
+			pause.setEnabled(false);
+			pause.setImageResource(R.drawable.pause_big_disabled);
+		}
+	}
+
+	private void enabledTransferButton(boolean enabled){
+		if(enabled) {
+			transfer.setEnabled(true);
+			transfer.setImageAlpha(250);
+		} else {
+			transfer.setEnabled(false);
+			transfer.setImageAlpha(50);
+		}
+	}
+
+	private void enabledConferenceButton(boolean enabled){
+		if(enabled) {
+			conference.setEnabled(true);
+			conference.setImageAlpha(250);
+		} else {
+			conference.setEnabled(false);
+			conference.setImageAlpha(50);
 		}
 	}
 
@@ -671,6 +724,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		LinphoneManager.startProximitySensorForActivity(CallActivity.this);
 		replaceFragmentVideoByAudio();
 		displayAudioCall();
+		showStatusBar();
 		removeCallbacks();
 	}
 
@@ -684,8 +738,8 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		LinphoneManager.stopProximitySensorForActivity(CallActivity.this);
 		replaceFragmentAudioByVideo();
+		hideStatusBar();
 		displayVideoCall(false);
-		displayVideoCallControlsIfHidden();
 	}
 
 	private void displayNoCurrentCall(boolean display){
@@ -698,6 +752,14 @@ public class CallActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private void displayCallPaused(boolean display){
+		if(display){
+			mCallPaused.setVisibility(View.VISIBLE);
+		} else {
+			mCallPaused.setVisibility(View.GONE);
+		}
+	}
+
 	private void displayAudioCall(){
 		mActiveCallHeader.setVisibility(View.VISIBLE);
 		callInfo.setVisibility(View.VISIBLE);
@@ -705,28 +767,6 @@ public class CallActivity extends Activity implements OnClickListener {
 		mNoCurrentCall.setVisibility(View.GONE);
 		callsList.setVisibility(View.VISIBLE);
 		switchCamera.setVisibility(View.GONE);
-	}
-
-	private void displayVideoCall(boolean display){
-		if(display) {
-			LinphoneActivity.instance().showStatusBar();
-			mControlsLayout.setVisibility(View.VISIBLE);
-			mActiveCallHeader.setVisibility(View.VISIBLE);
-			callInfo.setVisibility(View.VISIBLE);
-			avatar_layout.setVisibility(View.GONE);
-			mNoCurrentCall.setVisibility(View.GONE);
-			callsList.setVisibility(View.VISIBLE);
-			if (cameraNumber > 1) {
-				switchCamera.setVisibility(View.VISIBLE);
-			}
-		} else {
-			LinphoneActivity.instance().hideStatusBar();
-			mControlsLayout.setVisibility(View.GONE);
-			mActiveCallHeader.setVisibility(View.GONE);
-			switchCamera.setVisibility(View.GONE);
-			mNoCurrentCall.setVisibility(View.GONE);
-			callsList.setVisibility(View.GONE);
-		}
 	}
 
 	private void replaceFragmentVideoByAudio() {
@@ -775,17 +815,9 @@ public class CallActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void pauseOrResumeCall() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null && lc.getCallsNb() >= 1) {
-			LinphoneCall call = lc.getCalls()[0];
-			pauseOrResumeCall(call);
-		}
-	}
-
 	public void pauseOrResumeCall(LinphoneCall call) {
 		LinphoneCore lc = LinphoneManager.getLc();
-		if (call != null && LinphoneUtils.isCallRunning(call)) {
+		if (call != null && LinphoneManager.getLc().getCurrentCall() == call) {
 			lc.pauseCall(call);
 			if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 				isVideoCallPaused = true;
@@ -814,6 +846,30 @@ public class CallActivity extends Activity implements OnClickListener {
 			lc.terminateAllCalls();
 		}
 	}
+
+	public void displayVideoCall(boolean display){
+		if(display) {
+			showStatusBar();
+			mControlsLayout.setVisibility(View.VISIBLE);
+			mActiveCallHeader.setVisibility(View.VISIBLE);
+			callInfo.setVisibility(View.VISIBLE);
+			avatar_layout.setVisibility(View.GONE);
+			mNoCurrentCall.setVisibility(View.GONE);
+			callsList.setVisibility(View.VISIBLE);
+			if (cameraNumber > 1) {
+				switchCamera.setVisibility(View.VISIBLE);
+			}
+		} else {
+			hideStatusBar();
+			mControlsLayout.setVisibility(View.GONE);
+			mActiveCallHeader.setVisibility(View.GONE);
+			switchCamera.setVisibility(View.GONE);
+			mNoCurrentCall.setVisibility(View.GONE);
+			Log.w("Call list gone");
+			callsList.setVisibility(View.GONE);
+		}
+	}
+
 
 	public void displayVideoCallControlsIfHidden() {
 		if (mControlsLayout != null) {
@@ -1155,8 +1211,7 @@ public class CallActivity extends Activity implements OnClickListener {
 					transfer.setVisibility(View.VISIBLE);
 				}
 				addCall.setVisibility(View.VISIBLE);
-				if(LinphoneManager.getLc().getCalls().length > 1)
-					conference.setVisibility(View.VISIBLE);
+				conference.setVisibility(View.VISIBLE);
 				options.setImageResource(R.drawable.options_selected);
 			} else {
 				if (isOrientationLandscape) {
@@ -1210,6 +1265,28 @@ public class CallActivity extends Activity implements OnClickListener {
 		startActivity(new Intent(this, CallIncomingActivity.class));
 	}
 
+	public void hideStatusBar() {
+		if (isTablet()) {
+			return;
+		}
+
+		findViewById(R.id.status).setVisibility(View.GONE);
+		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
+	}
+
+	public void showStatusBar() {
+		if (isTablet()) {
+			return;
+		}
+
+		if (status != null && !status.isVisible()) {
+			// Hack to ensure statusFragment is visible after coming back to
+			// dialer from chat
+			status.getView().setVisibility(View.VISIBLE);
+		}
+		findViewById(R.id.status).setVisibility(View.VISIBLE);
+		//findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
+	}
 
 
 	private void showAcceptCallUpdateDialog() {
@@ -1222,7 +1299,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		dialog.getWindow().setBackgroundDrawable(d);
 
 		TextView customText = (TextView) dialog.findViewById(R.id.customText);
-		customText.setText(getResources().getString(R.string.call_update_video));
+		customText.setText(getResources().getString(R.string.add_video_dialog));
 		Button delete = (Button) dialog.findViewById(R.id.delete);
 		delete.setText(R.string.accept);
 		Button cancel = (Button) dialog.findViewById(R.id.cancel);
@@ -1257,7 +1334,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		instance = this;
 
 		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			displayVideoCallControlsIfHidden();
+			//displayVideoCallControlsIfHidden();
 		} else if(LinphoneManager.getLc().isInConference()) {
 			displayConference();
 		} else {
@@ -1374,9 +1451,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	private void displayActiveCall(LinphoneCall call){
-		if(isVideoEnabled(call)){
-			mActiveCallHeader.setVisibility(View.GONE);
-		} else {
+		if(!isVideoEnabled(call)){
 			mActiveCallHeader.setVisibility(View.VISIBLE);
 			mNoCurrentCall.setVisibility(View.GONE);
 		}
@@ -1391,7 +1466,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			lAddress= LinphoneCoreFactory.instance().createLinphoneAddress("unknown","unknown","unknown");
 		}
 
-		TextView contact = (TextView) findViewById(R.id.contactNameOrNumber);
+		TextView contact = (TextView) findViewById(R.id.contact_name);
 
 		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
 		if (lContact == null) {
@@ -1414,7 +1489,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			return;
 		}
 
-		Chronometer timer = (Chronometer) findViewById(R.id.callTimer);
+		Chronometer timer = (Chronometer) findViewById(R.id.call_timer);
 		if (timer == null) {
 			throw new IllegalArgumentException("no callee_duration view found");
 		}
@@ -1434,10 +1509,10 @@ public class CallActivity extends Activity implements OnClickListener {
 		}
 
 		// Control Row
-		LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.active_call_control_row, container, false);
+		LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.call_inactive_row, container, false);
 		callView.setId(index+1);
 
-		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
+		TextView contact = (TextView) callView.findViewById(R.id.contact_name);
 
 		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
 		if (lContact == null) {
@@ -1483,7 +1558,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
 		boolean isCallPaused, isInConference;
-		ImageView callState = (ImageView) callView.findViewById(R.id.callStatus);
+		ImageView callState = (ImageView) callView.findViewById(R.id.call_pause);
 		callState.setTag(call);
 		callState.setOnClickListener(this);
 
@@ -1523,7 +1598,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			return;
 		}
 
-		Chronometer timer = (Chronometer) v.findViewById(R.id.callTimer);
+		Chronometer timer = (Chronometer) v.findViewById(R.id.call_timer);
 		if (timer == null) {
 			throw new IllegalArgumentException("no callee_duration view found");
 		}
@@ -1541,6 +1616,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			conferenceList.setVisibility(View.GONE);
 		}
 
+		//TODO DON'T SHOW CALLLIST IF THERE IS VIDEO CALL
 		if(callsList != null) {
 			callsList.setVisibility(View.VISIBLE);
 			callsList.removeAllViews();

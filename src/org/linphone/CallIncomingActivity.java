@@ -27,11 +27,22 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.LinphoneSliders;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -44,11 +55,15 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private static CallIncomingActivity instance;
 
 	private TextView name, number;
-	private ImageView contactPicture, acceptArrow, accept, decline;
+	private ImageView contactPicture, acceptArrow, accept, acceptCall, decline;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
+	private LinearLayout declineUnlock;
 	private StatusFragment status;
+	private boolean isActive;
+	private float answerX;
+	private float declineX;
 
 	public static CallIncomingActivity instance() {
 		return instance;
@@ -73,24 +88,113 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
 
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+			isActive = pm.isInteractive();
+		} else {
+			isActive = pm.isScreenOn();
+		}
+
+		acceptUnlock = (LinearLayout) findViewById(R.id.acceptUnlock);
+		declineUnlock = (LinearLayout) findViewById(R.id.declineUnlock);
+		//mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
+
 		accept = (ImageView) findViewById(R.id.accept);
+		acceptArrow = (ImageView) findViewById(R.id.acceptArrow);
+		decline = (ImageView) findViewById(R.id.decline);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				answer();
-			}
-		});
-		decline = (ImageView) findViewById(R.id.decline);
-		decline.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				decline();
+				if(isActive) {
+					answer();
+				} else {
+					decline.setVisibility(View.GONE);
+					acceptUnlock.setVisibility(View.VISIBLE);
+				}
 			}
 		});
 
+		if(!isActive) {
+			accept.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent) {
+					float curX;
+					switch (motionEvent.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							acceptUnlock.setVisibility(View.VISIBLE);
+							decline.setVisibility(View.GONE);
+							answerX = motionEvent.getX();
+							break;
+						case MotionEvent.ACTION_MOVE:
+							curX = motionEvent.getX();
+							view.scrollBy((int) (answerX - curX), view.getScrollY());
+							answerX = curX;
+							if (curX < 50) {
+								answer();
+								return true;
+							}
+							break;
+						case MotionEvent.ACTION_UP:
+							view.scrollTo(0, view.getScrollY());
+							decline.setVisibility(View.VISIBLE);
+							acceptUnlock.setVisibility(View.GONE);
+							break;
+
+					}
+					return true;
+				}
+			});
+
+			decline.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent) {
+					float curX;
+					switch (motionEvent.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							declineUnlock.setVisibility(View.VISIBLE);
+							accept.setVisibility(View.GONE);
+							declineX = motionEvent.getX();
+							break;
+						case MotionEvent.ACTION_MOVE:
+							curX = motionEvent.getX();
+							view.scrollBy((int) (declineX - curX), view.getScrollY());
+							declineX = curX;
+							Log.w(curX);
+							if (curX > 800) {
+								//decline();
+								return true;
+							}
+							break;
+						case MotionEvent.ACTION_UP:
+							view.scrollTo(0, view.getScrollY());
+							accept.setVisibility(View.VISIBLE);
+							declineUnlock.setVisibility(View.GONE);
+							break;
+
+					}
+					return true;
+				}
+			});
+		}
+
+		decline.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(isActive) {
+					decline();
+				} else {
+					accept.setVisibility(View.GONE);
+					acceptUnlock.setVisibility(View.VISIBLE);
+				}
+			}
+		});
+
+
+
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+			public void callState(LinphoneCore lc, LinphoneCall call, State state, String message) {
 				if (call == mCall && State.CallEnd == state) {
 					finish();
 				}
@@ -100,6 +204,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 				}
 			}
 		};
+
 
 		super.onCreate(savedInstanceState);
 		instance = this;
@@ -193,13 +298,11 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 	@Override
 	public void onLeftHandleTriggered() {
-		answer();
-		finish();
+
 	}
 
 	@Override
 	public void onRightHandleTriggered() {
-		decline();
-		finish();
+
 	}
 }

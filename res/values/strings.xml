@@ -7,7 +7,7 @@
 	<string name="username">Username</string>
 	<string name="display_name">Display name</string>
 	<string name="password">Password</string>
-	<string name="confirm_password">Confirm password</string>
+	<string name="confirm_password">Password confirmation</string>
 	<string name="domain">Domain</string>
 	<string name="remote_provisioning_url">Provisioning url</string>
 	<string name="email">Email</string>
@@ -17,6 +17,8 @@
 	<string name="cancel">Cancel</string>
 	<string name="accept">Accept</string>
 	<string name="about">About</string>
+	<string name="deny">Deny</string>
+	<string name="no_account">No account configured</string>
 
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
@@ -44,26 +46,47 @@
 	<string name="address_bar_hint">Enter a number or an address</string>
 
 	<!-- 2. History -->
+	<string name="no_call_history">No call in your history</string>
+	<string name="no_missed_call_history">No missed call in your history</string>
+	<string name="delete_history_log">Do you want to delete selected log?</string>
 
 
 	<!-- 3. Contacts -->
+	<string name="no_contact">No contact in your address book.</string>
+	<string name="no_sip_contact">No SIP contact in your address book.</string>
+	<string name="delete_contacts">Do you want to delete selected contact?</string>
+	<string name="delete_contact">Do you want to delete selected this contact?</string>
+
+	<!-- 4. Chat -->
+	<string name="no_chat_history">No conversations</string>
+	<string name="delete_conversation">Do you want to delete selected conversation?</string>
+	<string name="delete_message">Do you want to delete selected message?</string>
 
 	<!-- Side Menu -->
 	<string-array name="side_menu_item">
-		<item>Settings</item>
 		<item>Assistant</item>
+		<item>Settings</item>
 		<item>About</item>
 	</string-array>
-
 	<string name="quit">Quit</string>
 
 	<!-- Call -->
 	<string name="incoming_call">incoming call</string>
 	<string name="outgoing_call">outgoing call</string>
-	<string name="call_update_video">Call update requested\nYour correspondent would like to add video to the current call.</string>
+	<string name="add_video_dialog">Your correspondent would like to turn on the video</string>
+	<string name="no_current_call">No active call</string>
+	<string name="call_paused_by_remote">Your correspondent paused the call</string>
+	<string name="zrtp_dialog">ZRTP token is %s\nYou should only accept if you have the same token as your correspondent</string>
 
 
 	<!-- Content description -->
+	<string name="content_description_toggle_micro">Toggle micro</string>
+	<string name="content_description_toggle_speaker">Toggle speaker</string>
+	<string name="content_description_decline">Decline</string>
+	<string name="content_description_hang_up">Hang up</string>
+	<string name="content_description_accept">Accept</string>
+
+
 	<string name="content_description_edit">Edit button</string>
 	<string name="content_description_valid">Valid button</string>
 	<string name="content_description_validate">Valid button</string>
@@ -90,11 +113,9 @@
 	<string name="content_description_all_calls">All calls</string>
 	<string name="content_description_missed_calls">Missed calls</string>
 	<string name="content_description_switch_video">Switch video</string>
-	<string name="content_description_toggle_speaker">Toggle speaker</string>
-	<string name="content_description_toggle_micro">Toggle micro</string>
+
 	<string name="content_description_add_call">Add call</string>
 	<string name="content_description_pause">Pause</string>
-	<string name="content_description_hang_up">Hang up</string>
 	<string name="content_description_numpad">Numpad</string>
 	<string name="content_description_settings">Settings button</string>
 	<string name="content_description_dialer">Dialer</string>
@@ -339,11 +360,6 @@
 	<string name="conference">Conference</string>
 	<string name="draft">Draft</string>
 	<string name="new_fast_chat">Enter a SIP address to chat with…</string>
-	<string name="no_call_history">No call in your history.</string>
-	<string name="no_missed_call_history">No missed call in your history.</string>
-	<string name="no_contact">No contact in your address book.</string>
-	<string name="no_sip_contact">No SIP contact in your address book.</string>
-	<string name="no_chat_history">No chat history.</string>
 	<string name="call_stats_audio">Audio</string>
 	<string name="call_stats_video">Video</string>
 	<string name="call_stats_codec">Codec:</string>
@@ -412,8 +428,6 @@
 
 	<string name="pref_image_sharing_server_title">Sharing server</string>
 	<string name="pref_remote_provisioning_title">Remote provisioning</string>
-	<string name="delete_contact">Delete</string>
-	<string name="delete_contact_dialog">This contact will be deleted.</string>
 	<string name="sip_address">SIP address</string>
 	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
@@ -460,9 +474,6 @@
 	<string name="setup_remote_provisioning_login_hint">The configuration you downloaded doesn\'t include your account. Please fill it in.</string>
 	<string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from what you entered to match some requirements.\r\nDo you accept ?</string>
 
-	<string name="zrtp_accept">Accept</string>
-	<string name="zrtp_deny">Deny</string>
-	<string name="zrtp_help">You should only accept if you have the same code (see above) as your correspondent</string>
 	<string name="remote_composing">Remote is writing...</string>
 	<string name="unread_messages">%i unread messages</string>
 	<string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
