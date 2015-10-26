@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/colorH"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@color/colorH"
     android:orientation="vertical" >
 
 	<RelativeLayout
-		android:id="@+id/relativeLayout"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
-		android:layout_gravity="bottom"
-		android:background="@color/colorF">
+		android:layout_gravity="bottom">
 
 		<ImageView
 			android:id="@+id/back"
@@ -134,7 +133,6 @@
 			android:layout_marginRight="10dp"/>
 
 		<TextView
-			android:id="@+id/call_direction"
 			android:text="@string/call"
 			style="@style/font13"
 			android:textAllCaps="true"
@@ -150,6 +148,14 @@
 			android:gravity="center"
 			android:padding="10dp">
 
+			<ImageView
+				android:id="@+id/direction"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
 			<TextView
 				android:id="@+id/date"
 				style="@style/font10"
@@ -161,7 +167,7 @@
 				android:id="@+id/time"
 				style="@style/font10"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
+				android:layout_height="wrap_content"/>
 
 		</LinearLayout>
 	</LinearLayout>

@@ -1,7 +1,7 @@
 package org.linphone;
 /*
-HistoryFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+HistoryListFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -56,7 +56,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class HistoryFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private ListView historyList;
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
@@ -71,10 +71,10 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.history, container, false);
 
-		noCallHistory = (TextView) view.findViewById(R.id.noCallHistory);
-		noMissedCallHistory = (TextView) view.findViewById(R.id.noMissedCallHistory);
+		noCallHistory = (TextView) view.findViewById(R.id.no_call_history);
+		noMissedCallHistory = (TextView) view.findViewById(R.id.no_missed_call_history);
 
-		historyList = (ListView) view.findViewById(R.id.historyList);
+		historyList = (ListView) view.findViewById(R.id.history_list);
 		historyList.setOnItemClickListener(this);
 
 		delete = (ImageView) view.findViewById(R.id.delete);
@@ -134,6 +134,29 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		}
 	}
 
+	public int getNbItemsChecked(){
+		int size = historyList.getAdapter().getCount();
+		int nb = 0;
+		for(int i=0; i<size; i++) {
+			if(historyList.isItemChecked(i)) {
+				nb ++;
+			}
+		}
+		return nb;
+	}
+
+	public void enabledDeleteButton(Boolean enabled){
+		if(enabled){
+			delete.setEnabled(true);
+			delete.setAlpha(1f);
+		} else {
+			if (getNbItemsChecked() == 0){
+				delete.setEnabled(false);
+				delete.setAlpha(0.2f);
+			}
+		}
+	}
+
 	private void removeNotMissedCallsFromLogs() {
 		if (onlyDisplayMissedCalls) {
 			List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
@@ -171,7 +194,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		super.onResume();
 
 		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY);
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_LIST);
+			LinphoneActivity.instance().hideTabBar(false);
+			LinphoneActivity.instance().displayMissedCalls(0);
 		}
 
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
@@ -188,12 +213,14 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		if (id == R.id.select_all) {
 			deselectAll.setVisibility(View.VISIBLE);
 			selectAll.setVisibility(View.GONE);
+			enabledDeleteButton(true);
 			selectAllList(true);
 			return;
 		}
 		if (id == R.id.deselect_all) {
 			deselectAll.setVisibility(View.GONE);
 			selectAll.setVisibility(View.VISIBLE);
+			enabledDeleteButton(false);
 			selectAllList(false);
 			return;
 		}
@@ -252,6 +279,7 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 		if (id == R.id.edit) {
 			topBar.setVisibility(View.GONE);
 			editList.setVisibility(View.VISIBLE);
+			enabledDeleteButton(false);
 			isEditMode = true;
 		}
 
@@ -474,17 +502,9 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 			}
 
 			if (displayName == null) {
-				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
-					holder.contact.setText(address.getUserName());
-				} else {
-					holder.contact.setText(sipUri);
-				}
+				holder.contact.setText(LinphoneUtils.getAddressDisplayName(sipUri));
 			} else {
-				if (getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(address.getDisplayName())) {
-					holder.contact.setText(displayName);
-				} else {
-					holder.contact.setText(sipUri);
-				}
+				holder.contact.setText(displayName);
 			}
 			//view.setTag(sipUri);
 
@@ -494,6 +514,21 @@ public class HistoryFragment extends Fragment implements OnClickListener, OnItem
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						historyList.setItemChecked(position, b);
+						if(getNbItemsChecked() == getCount()){
+							deselectAll.setVisibility(View.VISIBLE);
+							selectAll.setVisibility(View.GONE);
+							enabledDeleteButton(true);
+						} else {
+							if(getNbItemsChecked() == 0){
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(false);
+							} else {
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(true);
+							}
+						}
 					}
 				});
 				holder.detail.setVisibility(View.INVISIBLE);

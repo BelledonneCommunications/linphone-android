@@ -41,8 +41,8 @@ import android.widget.TextView;
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts, back;
 	private View view;
-	private ImageView contactPicture;
-	private TextView contactName, contactAddress, callDirection, time, date;
+	private ImageView contactPicture, callDirection;
+	private TextView contactName, contactAddress, time, date;
 	private String sipUri, displayName, pictureUri;
 	
 	@Override
@@ -74,13 +74,13 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		
 		contactName = (TextView) view.findViewById(R.id.contact_name);
-		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+		if (displayName == null) {
 			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
 		}
 		
 		contactAddress = (TextView) view.findViewById(R.id.contact_address);
 		
-		callDirection = (TextView) view.findViewById(R.id.call_direction);
+		callDirection = (ImageView) view.findViewById(R.id.direction);
 		
 		time = (TextView) view.findViewById(R.id.time);
 		date = (TextView) view.findViewById(R.id.date);
@@ -92,24 +92,23 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	
 	private void displayHistory(String status, String callTime, String callDate) {
 		contactName.setText(displayName == null ? sipUri : displayName);
-		if (getResources().getBoolean(R.bool.never_display_sip_addresses)) {
+		if (displayName == null) {
 			contactAddress.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
 		} else {
 			contactAddress.setText(sipUri);
 		}
 		
 		if (status.equals("Missed")) {
-			callDirection.setText(getString(R.string.call_state_missed) + " call");
+			callDirection.setImageResource(R.drawable.call_missed);
 		} else if (status.equals("Incoming")) {
-			callDirection.setText(getString(R.string.call_state_incoming) + " call");
+			callDirection.setImageResource(R.drawable.call_incoming);
 		} else if (status.equals("Outgoing")) {
-			callDirection.setText(getString(R.string.call_state_outgoing) + " call");
-		} else {
-			callDirection.setText(status);
+			callDirection.setImageResource(R.drawable.call_outgoing);
 		}
 		
 		time.setText(callTime == null ? "" : callTime);
-		date.setText(timestampToHumanDate(callDate));
+		Long longDate = Long.parseLong(callDate);
+		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format)));
 
 		LinphoneAddress lAddress;
 		try {
@@ -128,7 +127,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
-		if (displayName == null && getResources().getBoolean(R.bool.only_display_username_if_unknown) && LinphoneUtils.isSipAddress(sipUri)) {
+		if (displayName == null ) {
 			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
 		}
 
@@ -144,10 +143,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_DETAIL);
-			
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
+			LinphoneActivity.instance().hideTabBar(false);
 		}
 	}
 
@@ -163,20 +159,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().displayChat(sipUri);
 		} else if (id == R.id.add_contact) {
 			String uriToAdd = sipUri;
-			if (getResources().getBoolean(R.bool.never_display_sip_addresses)) {
-				uriToAdd = LinphoneUtils.getUsernameFromAddress(sipUri);
-			}
 			LinphoneActivity.instance().displayContactsForEdition(uriToAdd);
 		}
-	}
-	
-	@SuppressLint("SimpleDateFormat")
-	private String timestampToHumanDate(String timestamp) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(Long.parseLong(timestamp));
-		
-		SimpleDateFormat dateFormat;
-		dateFormat = new SimpleDateFormat(getResources().getString(R.string.history_detail_date_format));
-		return dateFormat.format(cal.getTime());
 	}
 }

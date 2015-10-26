@@ -23,14 +23,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public enum FragmentsAvailable {
 	UNKNOW,
 	DIALER,
-	HISTORY,
+	HISTORY_LIST,
 	HISTORY_DETAIL,
 	CONTACTS,
 	CONTACT,
 	EDIT_CONTACT,
 	ABOUT,
-	ABOUT_INSTEAD_OF_SETTINGS,
-	ABOUT_INSTEAD_OF_CHAT,
 	ACCOUNT_SETTINGS,
 	SETTINGS,
 	CHATLIST,
@@ -42,11 +40,11 @@ public enum FragmentsAvailable {
 
 	public boolean isRightOf(FragmentsAvailable fragment) {
 		switch (this) {
-		case HISTORY:
+		case HISTORY_LIST:
 			return fragment == UNKNOW;
 
 		case HISTORY_DETAIL:
-			return HISTORY.isRightOf(fragment) || fragment == HISTORY;
+			return HISTORY_LIST.isRightOf(fragment) || fragment == HISTORY_LIST;
 			
 		case CONTACTS:
 			return HISTORY_DETAIL.isRightOf(fragment) || fragment == HISTORY_DETAIL;
@@ -59,14 +57,12 @@ public enum FragmentsAvailable {
 			
 		case DIALER:
 			return EDIT_CONTACT.isRightOf(fragment) || fragment == EDIT_CONTACT;
-			
-		case ABOUT_INSTEAD_OF_CHAT:
+
 		case CHATLIST:
 			return DIALER.isRightOf(fragment) || fragment == DIALER;
-			
-		case ABOUT_INSTEAD_OF_SETTINGS:
+
 		case SETTINGS:
-			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
+			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
 		
 		case ABOUT:
 		case ACCOUNT_SETTINGS:
@@ -83,7 +79,7 @@ public enum FragmentsAvailable {
 	public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
 		switch (this) {
 		case HISTORY_DETAIL:
-			return fragment == HISTORY;
+			return fragment == HISTORY_LIST;
 			
 		case CONTACT:
 			return fragment == CONTACTS;
