@@ -56,13 +56,13 @@ public class DialerFragment extends Fragment {
 		instance = this;
         View view = inflater.inflate(R.layout.dialer, container, false);
 		
-		mAddress = (AddressText) view.findViewById(R.id.Address);
+		mAddress = (AddressText) view.findViewById(R.id.address);
 		mAddress.setDialerFragment(this);
 		
-		EraseButton erase = (EraseButton) view.findViewById(R.id.Erase);
+		EraseButton erase = (EraseButton) view.findViewById(R.id.erase);
 		erase.setAddressWidget(mAddress);
 		
-		mCall = (CallButton) view.findViewById(R.id.Call);
+		mCall = (CallButton) view.findViewById(R.id.call);
 		mCall.setAddressWidget(mAddress);
 		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
@@ -79,7 +79,7 @@ public class DialerFragment extends Fragment {
 			numpad.setAddressWidget(mAddress);
 		}
 		
-		mAddContact = (ImageView) view.findViewById(R.id.addContact);
+		mAddContact = (ImageView) view.findViewById(R.id.add_contact);
 		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
 		
 		addContactListener = new OnClickListener() {

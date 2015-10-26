@@ -43,7 +43,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.about, container, false);
 
-		TextView aboutText = (TextView) view.findViewById(R.id.AboutText);
+		TextView aboutText = (TextView) view.findViewById(R.id.about_text);
 		try {
 			aboutText.setText(String.format(getString(R.string.about_text), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
