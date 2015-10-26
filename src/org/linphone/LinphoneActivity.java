@@ -381,11 +381,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			newFragment = new ContactsListFragment();
 			friendStatusListenerFragment = newFragment;
 			break;
-		case CONTACT:
-			newFragment = new ContactFragment();
+		case CONTACT_DETAIL:
+			newFragment = new ContactDetailsFragment();
 			break;
-		case EDIT_CONTACT:
-			newFragment = new EditContactFragment();
+			case CONTACT_EDITOR:
+			newFragment = new ContactEditorFragment();
 			break;
 		case DIALER:
 			newFragment = new DialerFragment();
@@ -581,14 +581,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void displayContact(Contact contact, boolean chatOnly) {
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
-		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT) {
-			ContactFragment contactFragment = (ContactFragment) fragment2;
+		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT_DETAIL) {
+			ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
 			contactFragment.changeDisplayedContact(contact);
 		} else {
 			Bundle extras = new Bundle();
 			extras.putSerializable("Contact", contact);
 			extras.putBoolean("ChatAddressOnly", chatOnly);
-			changeCurrentFragment(FragmentsAvailable.CONTACT, extras);
+			changeCurrentFragment(FragmentsAvailable.CONTACT_DETAIL, extras);
 		}
 	}
 
@@ -747,8 +747,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			history_selected.setVisibility(View.VISIBLE);
 			break;
 		case CONTACTS_LIST:
-		case CONTACT:
-		case EDIT_CONTACT:
+			case CONTACT_DETAIL:
+			case CONTACT_EDITOR:
 			contacts_selected.setVisibility(View.VISIBLE);
 			break;
 		case DIALER:
@@ -1049,14 +1049,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	{
 		Bundle extras = new Bundle();
 		extras.putSerializable("NewSipAdress", sipUri);
-		changeCurrentFragment(FragmentsAvailable.EDIT_CONTACT, extras);
+		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
 	public void editContact(Contact contact)
 	{
 			Bundle extras = new Bundle();
 			extras.putSerializable("Contact", contact);
-			changeCurrentFragment(FragmentsAvailable.EDIT_CONTACT, extras);
+			changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 
 	}
 
@@ -1066,7 +1066,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			Bundle extras = new Bundle();
 			extras.putSerializable("Contact", contact);
 			extras.putSerializable("NewSipAdress", sipAddress);
-			changeCurrentFragment(FragmentsAvailable.EDIT_CONTACT, extras);
+			changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
 	public void quit() {

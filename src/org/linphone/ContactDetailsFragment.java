@@ -1,7 +1,7 @@
 package org.linphone;
 /*
-ContactFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+ContactDetailsFragment.java
+Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -44,7 +44,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class ContactFragment extends Fragment implements OnClickListener {
+public class ContactDetailsFragment extends Fragment implements OnClickListener {
 	private Contact contact;
 	private ImageView editContact, deleteContact, back;
 	private LayoutInflater inflater;
@@ -217,7 +217,7 @@ public class ContactFragment extends Fragment implements OnClickListener {
 		super.onResume();
 
 		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT);
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
 			LinphoneActivity.instance().hideTabBar(false);
 		}
 		contact.refresh(getActivity().getContentResolver());
