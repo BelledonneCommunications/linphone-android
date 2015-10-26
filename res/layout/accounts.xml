@@ -14,7 +14,7 @@
 		android:layout_height="match_parent"/>
 
 	<ImageView
-		android:id="@+id/statusLed"
+		android:id="@+id/status_led"
 		android:src="@drawable/status_available"
 		android:layout_width="25dp"
 		android:layout_height="25dp"
@@ -22,4 +22,8 @@
 		android:layout_centerVertical="true"
 		android:layout_alignParentRight="true"/>
 
+	<ImageView
+		android:background="@color/colorH"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
 </RelativeLayout>
