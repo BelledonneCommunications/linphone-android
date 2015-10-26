@@ -419,7 +419,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		}
 		
 		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS);
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS_LIST);
 			LinphoneActivity.instance().hideTabBar(false);
 			onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered();
 		}

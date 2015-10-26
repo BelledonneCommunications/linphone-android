@@ -25,9 +25,9 @@ public enum FragmentsAvailable {
 	DIALER,
 	HISTORY_LIST,
 	HISTORY_DETAIL,
-	CONTACTS,
-	CONTACT,
-	EDIT_CONTACT,
+	CONTACTS_LIST,
+	CONTACT_DETAIL,
+	CONTACT_EDITOR,
 	ABOUT,
 	ACCOUNT_SETTINGS,
 	SETTINGS,
@@ -46,17 +46,17 @@ public enum FragmentsAvailable {
 		case HISTORY_DETAIL:
 			return HISTORY_LIST.isRightOf(fragment) || fragment == HISTORY_LIST;
 			
-		case CONTACTS:
+		case CONTACTS_LIST:
 			return HISTORY_DETAIL.isRightOf(fragment) || fragment == HISTORY_DETAIL;
 			
-		case CONTACT:
-			return CONTACTS.isRightOf(fragment) || fragment == CONTACTS;
+		case CONTACT_DETAIL:
+			return CONTACTS_LIST.isRightOf(fragment) || fragment == CONTACTS_LIST;
 			
-		case EDIT_CONTACT:
-			return CONTACT.isRightOf(fragment) || fragment == CONTACT;
+		case CONTACT_EDITOR:
+			return CONTACT_DETAIL.isRightOf(fragment) || fragment == CONTACT_DETAIL;
 			
 		case DIALER:
-			return EDIT_CONTACT.isRightOf(fragment) || fragment == EDIT_CONTACT;
+			return CONTACT_EDITOR.isRightOf(fragment) || fragment == CONTACT_EDITOR;
 
 		case CHATLIST:
 			return DIALER.isRightOf(fragment) || fragment == DIALER;
@@ -81,11 +81,11 @@ public enum FragmentsAvailable {
 		case HISTORY_DETAIL:
 			return fragment == HISTORY_LIST;
 			
-		case CONTACT:
-			return fragment == CONTACTS;
+			case CONTACT_DETAIL:
+			return fragment == CONTACTS_LIST;
 			
-		case EDIT_CONTACT:
-			return fragment == CONTACT || fragment == CONTACTS;
+		case CONTACT_EDITOR:
+			return fragment == CONTACT_DETAIL || fragment == CONTACTS_LIST;
 			
 		case CHAT:
 			return fragment == CHATLIST;
