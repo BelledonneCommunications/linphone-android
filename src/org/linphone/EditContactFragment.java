@@ -91,7 +91,6 @@ public class EditContactFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (isNewContact) {
-					if (getResources().getBoolean(R.bool.forbid_empty_new_contact_in_editor)) {
 						boolean areAllFielsEmpty = true;
 						for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
 							if (nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals("")) {
@@ -103,7 +102,6 @@ public class EditContactFragment extends Fragment {
 							getFragmentManager().popBackStackImmediate();
 							return;
 						}
-					}
 					contactsManager.createNewContact(ops, firstName.getText().toString(), lastName.getText().toString());
 				} else {
 					contactsManager.updateExistingContact(ops, contact, firstName.getText().toString(), lastName.getText().toString());
@@ -125,7 +123,7 @@ public class EditContactFragment extends Fragment {
 				getFragmentManager().popBackStackImmediate();
 
 				if(LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet))
-					ContactsFragment.instance().invalidate();
+					ContactsListFragment.instance().invalidate();
 			}
 		});
 		
@@ -235,11 +233,9 @@ public class EditContactFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		if (LinphoneActivity.isInstanciated()) {
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
+
+		if(LinphoneActivity.isInstanciated()){
+			LinphoneActivity.instance().hideTabBar(false);
 		}
 	}
 
