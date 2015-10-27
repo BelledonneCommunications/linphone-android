@@ -52,7 +52,7 @@ public class CallManager {
 	public void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled, boolean lowBandwidth) throws LinphoneCoreException {
 		LinphoneCore lc = LinphoneManager.getLc();
 		
-		LinphoneCallParams params = lc.createDefaultCallParameters();
+		LinphoneCallParams params = lc.createCallParams(null);
 		bm().updateWithProfileSettings(lc, params);
 
 		if (videoEnabled && params.getVideoEnabled()) {
