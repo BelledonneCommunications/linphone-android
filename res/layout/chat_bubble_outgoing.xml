@@ -1,59 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/bubble"
-	android:background="@drawable/resizable_chat_bubble_outgoing"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:orientation="horizontal" >
 
-	<ImageView
-		android:id="@+id/contact_picture"
-		android:src="@drawable/avatar"
-		android:layout_width="50dp"
-		android:layout_height="50dp"
-		android:paddingTop="10dp"
-		android:paddingLeft="10dp"/>
-
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:padding="12dp">
-
-		<TextView
-			android:id="@+id/contact_header"
-			style="@style/font3"
-			android:singleLine="true"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-		<TextView
-			android:id="@+id/message"
-			style="@style/font11"
-			android:autoLink="web"
-			android:linksClickable="true"
-			android:visibility="gone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+		android:background="@drawable/resizable_chat_bubble_outgoing"
+		android:orientation="horizontal" >
 
 		<ImageView
-			android:id="@+id/image"
-			android:visibility="gone"
-			android:layout_width="150dp"
-			android:layout_height="150dp"
-			android:scaleType="center"
-			android:maxWidth="250dp"
-			android:maxHeight="250dp" />
+			android:id="@+id/contact_picture"
+			android:src="@drawable/avatar"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			android:paddingTop="10dp"
+			android:paddingLeft="10dp"/>
 
-		<ProgressBar
-			android:id="@+id/spinner"
-			style="@android:style/Widget.ProgressBar.Horizontal"
-			android:visibility="gone"
-			android:layout_marginTop="20dp"
+		<LinearLayout
 			android:layout_width="wrap_content"
-			android:layout_height="5dp"/>
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="12dp">
 
-	</LinearLayout>
+			<TextView
+				android:id="@+id/contact_header"
+				style="@style/font3"
+				android:singleLine="true"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+			<TextView
+				android:id="@+id/message"
+				style="@style/font11"
+				android:autoLink="web"
+				android:linksClickable="true"
+				android:visibility="gone"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+			<ProgressBar
+				android:id="@+id/inprogress"
+				android:visibility="gone"
+				android:paddingRight="5dp"
+				android:paddingTop="5dp"
+				android:layout_gravity="top|right"
+				android:layout_width="20dp"
+				android:layout_height="20dp"/>
+
+			<ImageView
+				android:id="@+id/image"
+				android:visibility="gone"
+				android:layout_width="150dp"
+				android:layout_height="150dp"
+				android:scaleType="center"
+				android:layout_centerInParent="true"
+				android:maxWidth="250dp"
+				android:maxHeight="250dp" />
+
+			<RelativeLayout
+				android:id="@+id/imageLayout"
+				android:visibility="gone"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<ProgressBar
+					android:id="@+id/progress_bar"
+					android:paddingRight="5dp"
+					style="@android:style/Widget.ProgressBar.Horizontal"
+					android:layout_width="200dp"
+					android:layout_height="5dp"/>
+				<Button
+					android:id="@+id/cancel_upload"
+					android:text="@string/cancel"
+					android:background="@drawable/resizable_confirm_delete_button"
+					style="@style/font15"
+					android:contentDescription="@string/content_description_validate"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="10dp"
+					android:layout_below="@id/progress_bar"/>
+
+			</RelativeLayout>
+
+		</LinearLayout>
 
 	<ImageView
 		android:id="@+id/status"
@@ -66,20 +98,20 @@
 		android:layout_height="20dp"
 		android:adjustViewBounds="true" />
 
-	<ProgressBar
-		android:id="@+id/inprogress"
-		android:visibility="gone"
-		android:paddingRight="5dp"
-		android:paddingTop="5dp"
-		android:layout_gravity="top|right"
-		android:layout_width="20dp"
-		android:layout_height="20dp"/>
+	</LinearLayout>
 
-	<Button
-		android:id="@+id/download"
-		android:text="@string/download_image"
-		android:visibility="gone"
+
+
+	<CheckBox
+		android:id="@+id/delete"
+		android:button="@drawable/checkbox"
+		android:contentDescription="@string/content_description_delete"
+		android:paddingRight="5dp"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+		android:layout_height="wrap_content"
+		android:adjustViewBounds="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:visibility="gone" />
 
 </LinearLayout>
