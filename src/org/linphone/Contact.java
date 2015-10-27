@@ -108,7 +108,7 @@ public class Contact implements Serializable {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if(lc != null && lc.getFriendList() != null) {
 			for (LinphoneFriend friend :lc.getFriendList()){
-				if (friend.getRefKey().equals(id)) {
+				if (id.equals(friend.getRefKey())) {
 					hasFriends = true;
 					this.numbersOrAddresses.add(friend.getAddress().asStringUriOnly());
 				}
