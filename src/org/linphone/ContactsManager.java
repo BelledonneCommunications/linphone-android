@@ -103,8 +103,10 @@ public class ContactsManager {
 				mAccount = null;
 			}
 		} else {
+			Log.w("Get Account");
 			mAccount = accounts[0];
 		}
+		initializeContactManager(context,contentResolver);
 	}
 
 	public String getDisplayName(String firstName, String lastName) {
@@ -154,6 +156,19 @@ public class ContactsManager {
 				.build()
 			);
 		}
+	}
+
+	public void updateExistingContactPicture(ArrayList<ContentProviderOperation> ops, Contact contact, String path){
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE + "'";
+		String[] args =new String[]{String.valueOf(contact.getID())};
+
+		ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+						.withSelection(select, args)
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO_FILE_ID, path)
+								//.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO_FILE_ID, )
+						.build()
+		);
 	}
 
 //Manage Linphone Friend if we cannot use Sip address
@@ -352,6 +367,22 @@ public class ContactsManager {
 		return null;
 	}
 
+	public Contact findContactWithAddress(LinphoneAddress address) {
+		String sipUri = address.asStringUriOnly();
+		if (sipUri.startsWith("sip:"))
+			sipUri = sipUri.substring(4);
+
+		for(Contact c: getAllContacts()){
+			for(String a: c.getNumbersOrAddresses()){
+				Log.w(a);
+				Log.w(address.asStringUriOnly());
+				if(a.equals(sipUri))
+					return c;
+			}
+		}
+		return null;
+	}
+
 	public Contact findContactWithAddress(ContentResolver contentResolver, LinphoneAddress address){
 		String sipUri = address.asStringUriOnly();
 		if (sipUri.startsWith("sip:"))
@@ -531,6 +562,8 @@ public class ContactsManager {
 		if (sipContactCursor != null) {
 			sipContactCursor.close();
 		}
+
+		if(mAccount == null) return;
 
 		contactCursor = Compatibility.getContactsCursor(contentResolver, getContactsId());
 		sipContactCursor = Compatibility.getSIPContactsCursor(contentResolver, getContactsId());

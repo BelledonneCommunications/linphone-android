@@ -5,9 +5,9 @@ import junit.framework.Assert;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
-import org.linphone.setup.SetupActivity;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -26,7 +26,7 @@ public class AccountAssistant extends SampleTest {
 	@LargeTest
 	public void testAWizardDisplayedAfterInstall() {
 		solo.waitForActivity("SetupActivity", 3000);
-		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
+		solo.assertCurrentActivity("Expected Setup Activity", AssistantActivity.class);
 	}
 
 	@SmallTest
@@ -34,7 +34,7 @@ public class AccountAssistant extends SampleTest {
 	@LargeTest
 	public void testBLoginWithLinphoneAccount() {
 		solo.waitForActivity("SetupActivity", 3000);
-		solo.assertCurrentActivity("Expected Setup Activity", SetupActivity.class);
+		solo.assertCurrentActivity("Expected Setup Activity", AssistantActivity.class);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.setup_next));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.setup_login_linphone));

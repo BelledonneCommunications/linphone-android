@@ -29,16 +29,18 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -46,13 +48,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -62,11 +68,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private LayoutInflater mInflater;
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
-	private TextView edit, ok, newDiscussion, noChatHistory;
-	private ImageView clearFastChat;
-	private EditText fastNewChat;
+	private TextView noChatHistory;
+	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, contactPicture, cancel;
+	private RelativeLayout editList, topbar;
 	private boolean isEditMode = false;
-	private boolean useLinphoneStorage;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,32 +84,93 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		registerForContextMenu(chatList);
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
-		
-		edit = (TextView) view.findViewById(R.id.edit);
+
+		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
+		topbar = (RelativeLayout) view.findViewById(R.id.top_bar);
+
+		cancel = (ImageView) view.findViewById(R.id.cancel);
+		cancel.setOnClickListener(this);
+
+		edit = (ImageView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
 		
-		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
+		newDiscussion = (ImageView) view.findViewById(R.id.new_discussion);
 		newDiscussion.setOnClickListener(this);
 		
-		ok = (TextView) view.findViewById(R.id.ok);
-		ok.setOnClickListener(this);
-		
-		clearFastChat = (ImageView) view.findViewById(R.id.clearFastChatField);
-		clearFastChat.setOnClickListener(this);
-		
-		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
-		
+		selectAll = (ImageView) view.findViewById(R.id.select_all);
+		selectAll.setOnClickListener(this);
+
+		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
+		deselectAll.setOnClickListener(this);
+
+		delete = (ImageView) view.findViewById(R.id.delete);
+		delete.setOnClickListener(this);
 		return view;
+	}
+
+	private void selectAllList(boolean isSelectAll){
+		int size = chatList.getAdapter().getCount();
+		for(int i=0; i<size; i++) {
+			chatList.setItemChecked(i,isSelectAll);
+		}
+	}
+
+	private void removeChatsConversation(){
+		int size = chatList.getAdapter().getCount();
+		for(int i=0; i<size; i++) {
+			if(chatList.isItemChecked(i)){
+				View item = chatList.getAdapter().getView(i, null, null);
+				if(item != null) {
+					LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(item.getTag().toString());
+					if (chatroom != null)
+						chatroom.deleteHistory();
+				}
+			}
+		}
+		LinphoneActivity.instance().updateMissedChatCount();
+	}
+
+	public void quitEditMode(){
+		isEditMode = false;
+		editList.setVisibility(View.GONE);
+		topbar.setVisibility(View.VISIBLE);
+		refresh();
+	}
+
+	public int getNbItemsChecked(){
+		int size = chatList.getAdapter().getCount();
+		int nb = 0;
+		for(int i=0; i<size; i++) {
+			if(chatList.isItemChecked(i)) {
+				nb ++;
+			}
+		}
+		return nb;
+	}
+
+	public void enabledDeleteButton(Boolean enabled){
+		if(enabled){
+			delete.setEnabled(true);
+			delete.setAlpha(1f);
+		} else {
+			if (getNbItemsChecked() == 0){
+				delete.setEnabled(false);
+				delete.setAlpha(0.2f);
+			}
+		}
 	}
 	
 	private void hideAndDisplayMessageIfNoChat() {
 		if (mConversations.size() == 0 && mDrafts.size() == 0) {
 			noChatHistory.setVisibility(View.VISIBLE);
 			chatList.setVisibility(View.GONE);
+			edit.setEnabled(false);
 		} else {
 			noChatHistory.setVisibility(View.GONE);
 			chatList.setVisibility(View.VISIBLE);
-			chatList.setAdapter(new ChatListAdapter(useLinphoneStorage));
+			chatList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+			chatList.setAdapter(new ChatListAdapter());
+			edit.setEnabled(true);
 		}
 	}
 	
@@ -114,7 +180,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		mConversations.removeAll(mDrafts);
 		hideAndDisplayMessageIfNoChat();
 	}
-	
+
 	private boolean isVersionUsingNewChatStorage() {
 		try {
 			Context context = LinphoneActivity.instance();
@@ -128,13 +194,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		//Check if the is the first time we show the chat view since we use liblinphone chat storage
-		useLinphoneStorage = getResources().getBoolean(R.bool.use_linphone_chat_storage);
+
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
 		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
 		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
-		if (useLinphoneStorage && updateNeeded) {
+		if (updateNeeded) {
 			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 private ProgressDialog pd;
                 @Override
@@ -169,10 +233,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHATLIST);
 			LinphoneActivity.instance().updateChatListFragment(this);
-			
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
+			LinphoneActivity.instance().hideTabBar(false);
 		}
 		
 		refresh();
@@ -203,24 +264,61 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
-		if (id == R.id.clearFastChatField) {
-			fastNewChat.setText("");
+
+		if (id == R.id.select_all) {
+			deselectAll.setVisibility(View.VISIBLE);
+			selectAll.setVisibility(View.GONE);
+			enabledDeleteButton(true);
+			selectAllList(true);
+			return;
 		}
-		else if (id == R.id.ok) {
-			edit.setVisibility(View.VISIBLE);
-			ok.setVisibility(View.GONE);
-			isEditMode = false;
-			hideAndDisplayMessageIfNoChat();
+		if (id == R.id.deselect_all) {
+			deselectAll.setVisibility(View.GONE);
+			selectAll.setVisibility(View.VISIBLE);
+			enabledDeleteButton(false);
+			selectAllList(false);
+			return;
+		}
+
+		if (id == R.id.cancel) {
+			quitEditMode();
+			return;
+		}
+
+		if (id == R.id.delete) {
+			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+			Button delete = (Button) dialog.findViewById(R.id.delete);
+			Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+			delete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					removeChatsConversation();
+					dialog.dismiss();
+					quitEditMode();
+				}
+			});
+
+			cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					quitEditMode();
+				}
+			});
+			dialog.show();
+			return;
 		}
 		else if (id == R.id.edit) {
-			edit.setVisibility(View.GONE);
-			ok.setVisibility(View.VISIBLE);
+			topbar.setVisibility(View.GONE);
+			editList.setVisibility(View.VISIBLE);
 			isEditMode = true;
 			hideAndDisplayMessageIfNoChat();
+			enabledDeleteButton(false);
 		}
-		else if (id == R.id.newDiscussion) {
-			String sipUri = fastNewChat.getText().toString();
+		else if (id == R.id.new_discussion) {
+			LinphoneActivity.instance().displayChat(null);
+			/*String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);
 			} else {
@@ -233,30 +331,20 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
 					sipUri = "sip:" + sipUri;
 				}
-				LinphoneActivity.instance().displayChat(sipUri);
-			}
+
+			}*/
 		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		String sipUri = (String) view.getTag();
-		
+
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
 			LinphoneActivity.instance().displayChat(sipUri);
-		} else if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().removeFromChatList(sipUri);
-			LinphoneActivity.instance().removeFromDrafts(sipUri);
-			
-			mConversations = LinphoneActivity.instance().getChatList();
-			mDrafts = LinphoneActivity.instance().getDraftChatList();
-			mConversations.removeAll(mDrafts);
-			hideAndDisplayMessageIfNoChat();
-			
-			LinphoneActivity.instance().updateMissedChatCount();
 		}
 	}
-	
+
 	private boolean importAndroidStoredMessagedIntoLibLinphoneStorage() {
 		Log.w("Importing previous messages into new database...");
 		try {
@@ -309,16 +397,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 		return null;
 	}
-	
+
 	class ChatListAdapter extends BaseAdapter {
-		private boolean useNativeAPI;
-		
-		ChatListAdapter(boolean useNativeAPI) {
-			this.useNativeAPI = useNativeAPI;
-		}
+
+		ChatListAdapter() {}
 		
 		public int getCount() {
-			return mConversations.size() + mDrafts.size();
+			return mConversations.size();
 		}
 
 		public Object getItem(int position) {
@@ -329,96 +414,108 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			return position;
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
 			
 			if (convertView != null) {
 				view = convertView;
 			} else {
 				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
-				
 			}
-			String contact;
-			boolean isDraft = false;
-			if (position >= mDrafts.size()) {
-				contact = mConversations.get(position - mDrafts.size());
-			} else {
-				contact = mDrafts.get(position);
-				isDraft = true;
-			}
-			view.setTag(contact);
-			int unreadMessagesCount = LinphoneActivity.instance().getChatStorage().getUnreadMessageCount(contact);
+
+			String sipUri = mConversations.get(position);
+			view.setTag(sipUri);
 			
 			LinphoneAddress address;
 			try {
-				address = LinphoneCoreFactory.instance().createLinphoneAddress(contact);
+				address = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			} catch (LinphoneCoreException e) {
 				Log.e("Chat view cannot parse address",e);
 				return view;
 			}
-			Contact lContact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 			String message = "";
-			if (useNativeAPI) {
-				LinphoneChatRoom chatRoom = LinphoneManager.getLc().getOrCreateChatRoom(contact);
-				LinphoneChatMessage[] history = chatRoom.getHistory(20);
-				if (history != null && history.length > 0) {
-					for (int i = history.length - 1; i >= 0; i--) {
-						LinphoneChatMessage msg = history[i];
-						if (msg.getText() != null && msg.getText().length() > 0 && msg.getFileTransferInformation() == null) {
-							message = msg.getText();
-							break;
-						}
-					}
-				}
-			} else {
-				List<ChatMessage> messages = LinphoneActivity.instance().getChatMessages(contact);
-				if (messages != null && messages.size() > 0) {
-					int iterator = messages.size() - 1;
-					ChatMessage lastMessage = null;
-					
-					while (iterator >= 0) {
-						lastMessage = messages.get(iterator);
-						if (lastMessage.getMessage() == null) {
-							iterator--;
-						} else {
-							iterator = -1;
-						}
-					}
-					message = (lastMessage == null || lastMessage.getMessage() == null) ? "" : lastMessage.getMessage();
-				}
-			}
+			Long time;
+
 			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
-			lastMessageView.setText(message);
-			
-			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
-			sipUri.setSelected(true); // For animation
-
-			if (getResources().getBoolean(R.bool.only_display_username_if_unknown)) {
-				sipUri.setText(lContact == null ? address.getUserName() : lContact.getName());
-			} else {
-				sipUri.setText(lContact == null ? address.asStringUriOnly() : lContact.getName());
-			}
-
-			if (isDraft) {
-				view.findViewById(R.id.draft).setVisibility(View.VISIBLE);
-			}
-			
-			
-			ImageView delete = (ImageView) view.findViewById(R.id.delete);
+			TextView date = (TextView) view.findViewById(R.id.date);
+			TextView displayName = (TextView) view.findViewById(R.id.sipUri);
 			TextView unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
-			
+			CheckBox select = (CheckBox) view.findViewById(R.id.delete);
+			ImageView contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+
+			LinphoneChatRoom chatRoom = LinphoneManager.getLc().getChatRoom(address);
+			int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
+			LinphoneChatMessage[] history = chatRoom.getHistory(1);
+			LinphoneChatMessage msg = history[0];
+
+			if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppData() != null ){
+				lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
+				time = msg.getTime();
+				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+				lastMessageView.setText("");
+			} else if (msg.getText() != null && msg.getText().length() > 0 ){
+				message = msg.getText();
+				lastMessageView.setBackgroundResource(0);
+				time = msg.getTime();
+				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+				lastMessageView.setText(message);
+			}
+
+			displayName.setSelected(true); // For animation
+			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getName());
+
+
+			if(contact != null){
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+			}
+
 			if (unreadMessagesCount > 0) {
 				unreadMessages.setVisibility(View.VISIBLE);
 				unreadMessages.setText(String.valueOf(unreadMessagesCount));
+				if(unreadMessagesCount > 99){
+					unreadMessages.setTextSize(12);
+				}
+				displayName.setTypeface(null, Typeface.BOLD);
 			} else {
 				unreadMessages.setVisibility(View.GONE);
+				displayName.setTypeface(null, Typeface.NORMAL);
 			}
-			
+
 			if (isEditMode) {
-				delete.setVisibility(View.VISIBLE);
+				unreadMessages.setVisibility(View.GONE);
+				select.setVisibility(View.VISIBLE);
+				select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+						chatList.setItemChecked(position, b);
+						if(getNbItemsChecked() == getCount()){
+							deselectAll.setVisibility(View.VISIBLE);
+							selectAll.setVisibility(View.GONE);
+							enabledDeleteButton(true);
+						} else {
+							if(getNbItemsChecked() == 0){
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(false);
+							} else {
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(true);
+							}
+						}
+					}
+				});
+				if(chatList.isItemChecked(position)) {
+					enabledDeleteButton(true);
+				} else {
+					select.setChecked(false);
+				}
 			} else {
-				delete.setVisibility(View.INVISIBLE);
+				if (unreadMessagesCount > 0) {
+					unreadMessages.setVisibility(View.VISIBLE);
+				}
 			}
 			
 			return view;

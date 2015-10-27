@@ -2,93 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@drawable/background"
+  	android:background="@color/colorH"
     android:orientation="vertical" >
-    
-    <LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
-        
-        <TextView 
-            android:contentDescription="@string/content_description_new_discussion"
-            android:id="@+id/newDiscussion"
-            android:background="@drawable/chat_new"
-            android:text="@string/button_new_chat"
-            android:gravity="center"
-            android:paddingTop="25dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:scaleType="centerCrop"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_edit"
-            android:id="@+id/edit"
-            android:background="@drawable/chat_edit"
-            android:text="@string/button_edit"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-        <TextView 
-            android:contentDescription="@string/content_description_validate"
-            android:id="@+id/ok"
-            android:background="@drawable/chat_ok"
-            android:text="@string/button_ok"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
-            android:visibility="gone"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:adjustViewBounds="true"
-		    android:layout_weight="1"/>
-        
-    </LinearLayout>
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-	    
-	    <ImageView 
-	        android:contentDescription="@string/content_description_cancel"
-	        android:id="@+id/clearFastChatField"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:adjustViewBounds="true"
-	        android:src="@drawable/list_delete"
-	        android:layout_centerVertical="true"
-	        android:layout_alignParentRight="true"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="5dp"/>
-        
-	    <EditText
-            android:textCursorDrawable="@null"
-	        android:id="@+id/newFastChat"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:hint="@string/new_fast_chat"
-	        android:textColor="@android:color/black"
-	        android:background="@drawable/chat_fast_address_background"
-	        android:gravity="center"
-	        android:layout_toLeftOf="@id/clearFastChatField"
-	        android:paddingRight="5dp"
-	        android:inputType="textEmailAddress"/>
-	    
-    </RelativeLayout>
+
+	<RelativeLayout
+		android:id="@+id/top_bar"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_gravity="top"
+		android:background="@color/colorF">
+
+		<ImageView
+			android:id="@+id/new_discussion"
+			android:src="@drawable/chat_add"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_new_discussion"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:padding="15dp"/>
+
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:padding="15dp"/>
+	</RelativeLayout>
+
+	<include layout="@layout/edit_list"/>
     
     <ListView 
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/darker_gray"
+        android:divider="@color/colorE"
         android:cacheColorHint="@color/transparent"
         android:dividerHeight="1dp" />
     
@@ -99,7 +50,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/no_chat_history"
-        android:textColor="@drawable/text_color"
+        android:textColor="@color/colorB"
         android:textAppearance="@android:style/TextAppearance.Large"/>
 
 </LinearLayout>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
-      android:versionCode="2510" android:installLocation="auto">
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="22"/>
-    
+      android:versionCode="2599" android:installLocation="auto">
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="22"/>
+   
     <!-- Permissions for Push Notification -->
     <permission android:name="org.linphone.permission.C2D_MESSAGE" android:protectionLevel="signature" /> <!-- Change package ! -->
 	<uses-permission android:name="org.linphone.permission.C2D_MESSAGE" />  <!-- Change package ! -->
@@ -89,7 +89,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="org.linphone.IncomingCallActivity"
+        <activity android:name=".CallIncomingActivity"
 		    android:theme="@style/NoTitle"
             android:noHistory="true"
 			android:launchMode="singleTop"
@@ -99,7 +99,17 @@
             </intent-filter>
          </activity>
 
-        <activity android:name="org.linphone.InCallActivity"
+		<activity android:name=".CallOutgoingActivity"
+			  android:theme="@style/NoTitle"
+			  android:noHistory="true"
+			  android:launchMode="singleTop"
+			  android:screenOrientation="behind">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+
+        <activity android:name=".CallActivity"
 		   android:theme="@style/FullScreen"
            android:noHistory="true"
            android:launchMode="singleTop">
@@ -115,17 +125,7 @@
             </intent-filter>-->
         </activity>
 
-        <activity android:name="org.linphone.ChatActivity"
-            android:theme="@style/NoTitle"
-            android:configChanges="orientation|screenSize|keyboardHidden" 
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-         
-        <activity android:name="org.linphone.setup.SetupActivity"
+        <activity android:name=".assistant.AssistantActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>
@@ -133,7 +133,7 @@
             </intent-filter>
          </activity>
          
-        <activity android:name="org.linphone.setup.RemoteProvisioningLoginActivity"
+        <activity android:name="org.linphone.assistant.RemoteProvisioningLoginActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>
@@ -141,7 +141,7 @@
             </intent-filter>
          </activity>
          
-        <activity android:name="org.linphone.setup.RemoteProvisioningActivity"
+        <activity android:name="org.linphone.assistant.RemoteProvisioningActivity"
             android:theme="@style/NoTitle"
             android:screenOrientation="nosensor">
             <intent-filter>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/list_selector"
+    android:orientation="vertical" >
+
+	<TextView
+		android:id="@+id/Contact_name"
+		android:lines="1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/icon"
+		android:layout_centerVertical="true"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textColor="@color/colorB" />
+
+	<TextView
+		android:id="@+id/contact_address"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:adjustViewBounds="true"
+		android:scaleType="centerInside" />
+</LinearLayout>
