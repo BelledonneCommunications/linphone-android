@@ -168,7 +168,7 @@ public class IncomingCallActivity extends Activity implements LinphoneSliderTrig
 	}
 	
 	private void answer() {
-		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
+		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(mCall);
 		
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(this);
 		if (isLowBandwidthConnection) {
