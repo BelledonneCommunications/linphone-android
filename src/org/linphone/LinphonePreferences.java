@@ -1087,8 +1087,7 @@ public class LinphonePreferences {
 				if(servers.length > 0) {
 					tunnelConfig = servers[0];
 				} else {
-					tunnelConfig = new TunnelConfig();
-					tunnelConfig.setDelay(500);
+					tunnelConfig = LinphoneCoreFactory.instance().createTunnelConfig();
 				}
 			}
 			return tunnelConfig;
