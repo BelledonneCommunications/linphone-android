@@ -550,7 +550,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	public synchronized final void destroyLinphoneCore(Context c) {
+	public synchronized final void destroyLinphoneCore() {
 		sExited = true;
 		BluetoothManager.getInstance().destroy();
 		try {
@@ -566,10 +566,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	public void restartLinphoneCore(Context context){
-		destroyLinphoneCore(context);
-		startLibLinphone(context);
-		sExited = true;
+	public void restartLinphoneCore(){
+		destroyLinphoneCore();
+		startLibLinphone(mServiceContext);
 	}
 
 	private synchronized void startLibLinphone(Context c) {

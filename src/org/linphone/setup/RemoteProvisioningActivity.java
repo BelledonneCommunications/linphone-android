@@ -183,11 +183,7 @@ public class RemoteProvisioningActivity extends Activity {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				LinphoneManager.destroy();
-				stopService(new Intent(ACTION_MAIN).setClass(RemoteProvisioningActivity.this, LinphoneService.class));
-				Intent intent = new Intent();
-				intent.setClass(RemoteProvisioningActivity.this, LinphoneLauncherActivity.class);
-				startActivity(intent);
+				LinphoneManager.getInstance().restartLinphoneCore();
 			}
 		}, 1000);
 	}
