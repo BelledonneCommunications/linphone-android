@@ -26,20 +26,22 @@
 	<!-- 0. Assistant -->
 	<string name="assistant_welcome">Welcome</string>
 	<string name="assistant_title">Assistant</string>
-	<string name="assistant_create_account">Create a linphone account</string>
-	<string name="assistant_login_linphone">I have a linphone account</string>
-	<string name="assistant_login_generic">I have a sip account</string>
-	<string name="assistant_remote_provisioning">Remote provisioning</string>
-	<string name="assistant_create_account_title">Create an account</string>
+	<string name="assistant_create_account">Create account</string>
+	<string name="assistant_login_linphone">Use Linphone account</string>
+	<string name="assistant_login_generic">Use SIP account</string>
+	<string name="assistant_remote_provisioning">Fetch remote configuration</string>
+	<string name="assistant_create_account_title">Create account</string>
 	<string name="assistant_create_account_part_1">1/2</string>
 	<string name="assistant_create_account_part_2">2/2</string>
 	<string name="assistant_display_name">Display name (optional)</string>
-	<string name="assistant_linphone_account_title">Configure linphohe account</string>
-	<string name="assistant_general_account_title">Configure Sip account</string>
-	<string name="assistant_remote_provisioning_title">Remote provisioning</string>
+	<string name="assistant_linphone_account_title">Configure Linphone account</string>
+	<string name="assistant_general_account_title">Configure SIP account</string>
+	<string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
 	<string name="assistant_create">Create account</string>
-	<string name="assistant_apply">Apply</string>
+	<string name="assistant_apply">Fetch and apply</string>
 	<string name="assistant_ec_calibration">Echo canceller calibration in progress</string>
+	<string name="assistant_remote_provisioning_login">Enter your login</string>
+	<string name="assistant_connect">Connection</string>
 
 
 	<!-- 1. Dailer -->
