@@ -550,6 +550,28 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+	public synchronized final void destroyLinphoneCore(Context c) {
+		sExited = true;
+		BluetoothManager.getInstance().destroy();
+		try {
+			mTimer.cancel();
+			mLc.destroy();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		finally {
+			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+			mLc = null;
+		}
+	}
+
+	public void restartLinphoneCore(Context context){
+		destroyLinphoneCore(context);
+		startLibLinphone(context);
+		sExited = true;
+	}
+
 	private synchronized void startLibLinphone(Context c) {
 		try {
 			copyAssetsFromPackage();
