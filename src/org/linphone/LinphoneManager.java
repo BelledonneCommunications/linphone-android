@@ -582,12 +582,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
-			try {
-				initLiblinphone();
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
-
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -872,6 +866,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
 		Log.i("New global state [",state,"]");
+		if (state == GlobalState.GlobalOn){
+			try {
+					initLiblinphone();
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
+			}
+		}
 	}
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {

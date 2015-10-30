@@ -1053,14 +1053,11 @@ public class LinphonePreferences {
 		if (url != null && url.length() == 0) {
 			url = null;
 		}
-
-		LpConfig config = getConfig();
-		config.setString("misc", "config-uri", url);
-		config.sync();
+		getLc().setProvisioningUri(url);
 	}
 
 	public String getRemoteProvisioningUrl() {
-		return getConfig().getString("misc", "config-uri", null);
+		return getLc().getProvisioningUri();
 	}
 
 	public void setDefaultDisplayName(String displayName) {
