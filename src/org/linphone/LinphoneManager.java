@@ -569,6 +569,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void restartLinphoneCore(){
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
+		sExited = false;
 	}
 
 	private synchronized void startLibLinphone(Context c) {
