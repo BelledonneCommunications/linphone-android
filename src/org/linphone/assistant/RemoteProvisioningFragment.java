@@ -19,13 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneLauncherActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,13 +55,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 		if (id == R.id.assistant_apply) {
 			String url = remoteProvisioningUrl.getText().toString();
 			LinphonePreferences.instance().setRemoteProvisioningUrl(url);
-			
-			// Restart Linphone
-			Intent intent = new Intent();
-			intent.setClass(getActivity(), LinphoneLauncherActivity.class);
-			getActivity().finish();
-			LinphoneActivity.instance().quit();
-			startActivity(intent);
+			LinphoneManager.getInstance().restartLinphoneCore();
 		}
 	}
 }
