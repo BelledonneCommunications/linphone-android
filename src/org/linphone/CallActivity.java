@@ -32,6 +32,7 @@ import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
+import org.w3c.dom.Text;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -130,6 +131,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
 
 		mListener = new LinphoneCoreListenerBase(){
+
 			@Override
 			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -160,13 +162,6 @@ public class CallActivity extends Activity implements OnClickListener {
 					}
 					if(LinphoneManager.getLc().getCurrentCall() != null) {
 						enabledVideoButton(true);
-					}
-				}
-
-				if (state == State.Connected) {
-					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
-						//TODO AFFICHER DIALOG ZRTP
-						status.showZRTPDialog(call);
 					}
 				}
 
@@ -228,6 +223,9 @@ public class CallActivity extends Activity implements OnClickListener {
 			@Override
 			public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
 				if (status != null) {
+					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
+						status.showZRTPDialog(call);
+					}
 					status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
 				}
 			}
@@ -1450,109 +1448,54 @@ public class CallActivity extends Activity implements OnClickListener {
 		videoCallFragment = fragment;
 	}
 
-	private void displayActiveCall(LinphoneCall call){
-		if(!isVideoEnabled(call)){
-			mActiveCallHeader.setVisibility(View.VISIBLE);
-			mNoCurrentCall.setVisibility(View.GONE);
-		}
 
-		if(call == null) return;
-		String sipUri = call.getRemoteAddress().asStringUriOnly();
-		LinphoneAddress lAddress;
-		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-		} catch (LinphoneCoreException e) {
-			Log.e("Incall activity cannot parse remote address",e);
-			lAddress= LinphoneCoreFactory.instance().createLinphoneAddress("unknown","unknown","unknown");
-		}
+	//CALL INFORMATION
 
-		TextView contact = (TextView) findViewById(R.id.contact_name);
+	private void displayCurrentCall(LinphoneCall call){
+		//if(!isVideoEnabled(call)){
+		//	mActiveCallHeader.setVisibility(View.VISIBLE);
+		//	mNoCurrentCall.setVisibility(View.GONE);
+		//}
 
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
-		if (lContact == null) {
-			contact.setText(lAddress.getUserName());
-		} else {
-			contact.setText(lContact.getName());
-			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
-		}
+		LinphoneAddress lAddress = call.getRemoteAddress();
+		TextView contactName = (TextView) findViewById(R.id.contact_name);
 
-
-		/*if(contact != null) {
-
-		} else {
-			displayOrHideContactPicture(imageView, null, null, false);
-		}
-    	callsList.addView(imageView);*/
-
-		int callDuration = call.getDuration();
-		if (callDuration == 0 && call.getState() != State.StreamsRunning) {
-			return;
-		}
-
-		Chronometer timer = (Chronometer) findViewById(R.id.call_timer);
-		if (timer == null) {
-			throw new IllegalArgumentException("no callee_duration view found");
-		}
-
-		timer.setBase(SystemClock.elapsedRealtime() - 1000 * callDuration);
-		timer.start();
+		setContactInformation(contactName, contactPicture, lAddress);
+		registerCallDurationTimer(null, call);
 	}
 
-	private void displayOtherCalls(Resources resources, final LinphoneCall call, int index) {
-		String sipUri = call.getRemoteAddress().asStringUriOnly();
-		LinphoneAddress lAddress;
-		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-		} catch (LinphoneCoreException e) {
-			Log.e("Incall activity cannot parse remote address",e);
-			lAddress= LinphoneCoreFactory.instance().createLinphoneAddress("uknown","unknown","unkonown");
-		}
+	private void displayPausedCalls(Resources resources, final LinphoneCall call, int index) {
+		LinphoneAddress lAddress = call.getRemoteAddress();
 
 		// Control Row
 		LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.call_inactive_row, container, false);
 		callView.setId(index+1);
 
-		TextView contact = (TextView) callView.findViewById(R.id.contact_name);
+		TextView contactName = (TextView) callView.findViewById(R.id.contact_name);
+		ImageView contactImage = (ImageView) callView.findViewById(R.id.contact_picture);
 
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
-		if (lContact == null) {
-			contact.setText(lAddress.getUserName());
-		} else {
-			contact.setText(lContact.getName());
-		}
-
-		displayCallStatusIconAndReturnCallPaused(callView, call);
-		registerCallDurationTimer(callView, call);
-		callsList.addView(callView);
-
-		// Image Row
-
-
-
-		//	callView.setTag(imageView);
-    /*	callView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (v.getTag() != null) {
-					View imageView = (View) v.getTag();
-					if (imageView.getVisibility() == View.VISIBLE)
-						imageView.setVisibility(View.GONE);
-					else
-						imageView.setVisibility(View.VISIBLE);
-					callsList.invalidate();
-				}
+		if(call == null) {
+			if(isConferenceRunning){
+				Log.w("conf running");
 			}
-		});*/
+			contactName.setText(resources.getString(R.string.conference));
+			contactImage.setImageResource(R.drawable.conference_start);
+		} else {
+			setContactInformation(contactName, contactImage, lAddress);
+			displayCallStatusIconAndReturnCallPaused(callView, call);
+			registerCallDurationTimer(callView, call);
+			callsList.addView(callView);
+		}
 	}
 
-	private void setContactName(LinearLayout callView, LinphoneAddress lAddress, String sipUri, Resources resources) {
-		TextView contact = (TextView) callView.findViewById(R.id.contactNameOrNumber);
-
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(callView.getContext().getContentResolver(), lAddress);
+	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
+		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(contactName.getContext().getContentResolver(), lAddress);
 		if (lContact == null) {
-			contact.setText(lAddress.getUserName());
+			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+			contactPicture.setImageResource(R.drawable.avatar);
 		} else {
-			contact.setText(lContact.getName());
+			contactName.setText(lContact.getName());
+			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
 		}
 	}
 
@@ -1598,7 +1541,13 @@ public class CallActivity extends Activity implements OnClickListener {
 			return;
 		}
 
-		Chronometer timer = (Chronometer) v.findViewById(R.id.call_timer);
+		Chronometer timer;
+		if(v == null){
+			timer = (Chronometer) findViewById(R.id.call_timer);
+		} else {
+			timer = (Chronometer) v.findViewById(R.id.call_timer);
+		}
+
 		if (timer == null) {
 			throw new IllegalArgumentException("no callee_duration view found");
 		}
@@ -1630,10 +1579,10 @@ public class CallActivity extends Activity implements OnClickListener {
 			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
 				if(call.isInConference()) break;
 				if (call != LinphoneManager.getLc().getCurrentCall()) {
-					displayOtherCalls(resources, call, index);
+					displayPausedCalls(resources, call, index);
 					index++;
 				} else {
-					displayActiveCall(call);
+					displayCurrentCall(call);
 				}
 			}
 
