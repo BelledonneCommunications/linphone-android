@@ -225,21 +225,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		routeAudioToSpeakerHelper(false);
 	}
 
-	public synchronized final void destroyLinphoneCore(Context c) {
-		BluetoothManager.getInstance().destroy();
-		try {
-			mTimer.cancel();
-			mLc.destroy();
-		}
-		catch (RuntimeException e) {
-			e.printStackTrace();
-		}
-		finally {
-			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
-			mLc = null;
-		}
-	}
-
 	public synchronized static final LinphoneManager createAndStart(Context c) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");

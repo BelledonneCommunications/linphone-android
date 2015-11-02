@@ -27,20 +27,13 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.LinphoneSliders;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -278,7 +271,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	}
 
 	private void answer() {
-		LinphoneCallParams params = LinphoneManager.getLc().createDefaultCallParameters();
+		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(mCall);
 
 		if (!LinphoneManager.getInstance().acceptCallWithParams(mCall, params)) {
 			// the above method takes care of Samsung Galaxy S

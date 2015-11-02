@@ -67,6 +67,7 @@ public class StatusFragment extends Fragment {
 	private Timer mTimer;
 	private TimerTask mTask;
 	private LinphoneCoreListenerBase mListener;
+	private Dialog ZRTPdialog = null;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -384,46 +385,48 @@ public class StatusFragment extends Fragment {
 			return;
 		}
 
-		final Dialog dialog = new Dialog(getActivity());
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
-		d.setAlpha(200);
-		dialog.setContentView(R.layout.dialog);
-		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-		dialog.getWindow().setBackgroundDrawable(d);
+		if(ZRTPdialog == null || !ZRTPdialog.isShowing()) {
+			ZRTPdialog = new Dialog(getActivity());
+			ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+			d.setAlpha(200);
+			ZRTPdialog.setContentView(R.layout.dialog);
+			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+			ZRTPdialog.getWindow().setBackgroundDrawable(d);
 
-		TextView customText = (TextView) dialog.findViewById(R.id.customText);
-		String newText = getString(R.string.zrtp_dialog).replace("%s",call.getAuthenticationToken());
-		customText.setText(newText);
-		Button delete = (Button) dialog.findViewById(R.id.delete);
-		delete.setText(R.string.accept);
-		Button cancel = (Button) dialog.findViewById(R.id.cancel);
-		cancel.setText(R.string.deny);
+			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
+			String newText = getString(R.string.zrtp_dialog).replace("%s", call.getAuthenticationToken());
+			customText.setText(newText);
+			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete);
+			delete.setText(R.string.accept);
+			Button cancel = (Button) ZRTPdialog.findViewById(R.id.cancel);
+			cancel.setText(R.string.deny);
 
-		delete.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				call.setAuthenticationTokenVerified(true);
-				if (encryption != null) {
-					encryption.setImageResource(R.drawable.security_ok);
-				}
-				dialog.dismiss();
-			}
-		});
-
-		cancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (call != null) {
-					call.setAuthenticationTokenVerified(false);
+			delete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					call.setAuthenticationTokenVerified(true);
 					if (encryption != null) {
-						encryption.setImageResource(R.drawable.security_pending);
+						encryption.setImageResource(R.drawable.security_ok);
 					}
+					ZRTPdialog.dismiss();
 				}
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
+			});
+
+			cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if (call != null) {
+						call.setAuthenticationTokenVerified(false);
+						if (encryption != null) {
+							encryption.setImageResource(R.drawable.security_ko);
+						}
+					}
+					ZRTPdialog.dismiss();
+				}
+			});
+			ZRTPdialog.show();
+		}
 	}
 	
 	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
