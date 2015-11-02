@@ -1182,11 +1182,15 @@ public class LinphonePreferences {
 	}
 
 	public void contactsMigrationDone(){
-		getConfig().setBool("app", "contacts_migration_done",true);
+		getConfig().setBool("app", "contacts_migration_done", true);
 	}
 
 	public boolean isContactsMigrationDone(){
 		return getConfig().getBool("app", "contacts_migration_done",false);
+	}
+
+	public String getXmlRpcServerUrl() {
+		return getConfig().getString("app", "server_url", null);
 	}
 
 	public String getDebugPopupAddress(){

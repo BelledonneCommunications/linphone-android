@@ -85,7 +85,7 @@
 
 		<Button
 			android:id="@+id/assistant_apply"
-			android:text="@string/assistant_apply"
+			android:text="@string/assistant_login"
 			android:background="@drawable/assistant_button"
 			style="@style/font8"
 			android:contentDescription="@string/content_description_validate"

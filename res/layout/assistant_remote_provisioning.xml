@@ -14,8 +14,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center_horizontal"/>
-    
-    <LinearLayout 
+
+    <LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
         android:paddingLeft="10dp"
@@ -57,5 +57,5 @@
 			android:layout_centerInParent="true"
 			android:layout_centerVertical="true"/>
 	</LinearLayout>
-    
+
 </LinearLayout>
