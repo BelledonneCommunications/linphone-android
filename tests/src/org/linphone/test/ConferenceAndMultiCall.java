@@ -4,24 +4,22 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 
-import org.linphone.InCallActivity;
-import org.linphone.IncomingCallActivity;
+import org.linphone.CallActivity;
+import org.linphone.CallIncomingActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.test.suitebuilder.annotation.SmallTest;
 import android.util.DisplayMetrics;
 import android.view.View;
 
 public class ConferenceAndMultiCall extends SampleTest {
 
-	@SmallTest
+	//@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testAInit() {
@@ -42,7 +40,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		Assert.assertFalse(LinphoneManager.getLc().isVideoEnabled());
 	}
 
-	@SmallTest
+	//@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testBSimpleConference() {
@@ -190,7 +188,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		}
 		
 		solo.waitForActivity("IncomingCallActivity", 5000);
-		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
 		View topLayout = solo.getView(org.linphone.R.id.topLayout);
@@ -224,7 +222,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		}
 		
 		solo.waitForActivity("IncomingCallActivity", 5000);
-		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
 		View topLayout = solo.getView(org.linphone.R.id.topLayout);
@@ -250,8 +248,8 @@ public class ConferenceAndMultiCall extends SampleTest {
 	private void goToSettings() {
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
-		
-		solo.clickOnView(solo.getView(org.linphone.R.id.settings));
+		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
+		solo.clickOnText("Settings");
 	}
 	
 	private void startTwoCalls() {
@@ -280,7 +278,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 	
 	private void assertCallIsCorrectlyRunning(int lcId) {
 		solo.waitForActivity("InCallActivity", 5000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
+		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 
 		solo.sleep(2000);
 		Assert.assertEquals(1, LinphoneTestManager.getLc(lcId).getCallsNb());

@@ -79,7 +79,8 @@ public class AccountManagement extends SampleTest {
 	private void goToSettings() {
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
-		
-		solo.clickOnView(solo.getView(org.linphone.R.id.settings));
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
+		solo.clickOnText("Settings");
 	}
 }
