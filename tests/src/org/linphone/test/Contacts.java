@@ -41,7 +41,7 @@ public class Contacts extends SampleTest {
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 
-	@SmallTest
+	//@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testBCreateContactWithPhoneNumber() {
@@ -102,11 +102,11 @@ public class Contacts extends SampleTest {
 		goToContacts();
 
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnView(solo.getView(org.linphone.R.id.start_chat));
+		solo.clickOnView(solo.getView(org.linphone.R.id.chat));
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.button_send_message)));
 	}
 
-	@SmallTest
+	//@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testGDeleteContact() {
