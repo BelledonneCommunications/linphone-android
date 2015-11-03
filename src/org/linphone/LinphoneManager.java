@@ -606,7 +606,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	private synchronized void initLiblinphone() throws LinphoneCoreException {
+	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
+		mLc = lc;
 		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
 		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 		LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
@@ -880,7 +881,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		Log.i("New global state [",state,"]");
 		if (state == GlobalState.GlobalOn){
 			try {
-					initLiblinphone();
+					initLiblinphone(lc);
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
