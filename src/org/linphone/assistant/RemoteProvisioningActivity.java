@@ -18,12 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import static android.content.Intent.ACTION_MAIN;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -72,7 +70,7 @@ public class RemoteProvisioningActivity extends Activity {
 			}
 		};
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -81,10 +79,10 @@ public class RemoteProvisioningActivity extends Activity {
 			lc.addListener(mListener);
 		}
 		LinphonePreferences.instance().setContext(this);
-		
+
 		checkIntentForConfigUri(getIntent());
 	}
-	
+
 	@Override
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -93,16 +91,21 @@ public class RemoteProvisioningActivity extends Activity {
 		}
 		super.onPause();
 	}
-	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		checkIntentForConfigUri(intent);
 	}
-	
+
 	private void checkIntentForConfigUri(final Intent intent) {
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				Uri openUri = intent.getData();
@@ -116,7 +119,7 @@ public class RemoteProvisioningActivity extends Activity {
 					}
 					Log.d("Using config uri: " + configUriParam);
 				}
-				
+
 				if (configUriParam == null) {
 					if (!LinphonePreferences.instance().isFirstRemoteProvisioning()) {
 						mHandler.post(new Runnable() {
@@ -135,7 +138,7 @@ public class RemoteProvisioningActivity extends Activity {
 						}, 1500);
 					} // else we do nothing if there is no config uri parameter and if user not allowed to leave this screen
 				} else {
-					if (getResources().getBoolean(R.bool.display_confirmation_popup_after_first_configuration) 
+					if (getResources().getBoolean(R.bool.display_confirmation_popup_after_first_configuration)
 							&& !LinphonePreferences.instance().isFirstRemoteProvisioning()) {
 						mHandler.post(new Runnable() {
 							@Override
@@ -155,50 +158,46 @@ public class RemoteProvisioningActivity extends Activity {
 			}
 		}).start();
 	}
-	
+
 	private void displayDialogConfirmation() {
 		new AlertDialog.Builder(RemoteProvisioningActivity.this)
-        .setTitle(getString(R.string.remote_provisioning_again_title))
-        .setMessage(getString(R.string.remote_provisioning_again_message))
-        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) { 
-            	setRemoteProvisioningAddressAndRestart(configUriParam);
-            }
-         })
-        .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) { 
-            	goToLinphoneActivity();
-            }
-         })
-         .show();
+				.setTitle(getString(R.string.remote_provisioning_again_title))
+				.setMessage(getString(R.string.remote_provisioning_again_message))
+				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						setRemoteProvisioningAddressAndRestart(configUriParam);
+					}
+				})
+				.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						goToLinphoneActivity();
+					}
+				})
+				.show();
 	}
-	
-	private void setRemoteProvisioningAddressAndRestart(String configUri) {
+
+	private void setRemoteProvisioningAddressAndRestart(final String configUri) {
 		if (spinner != null) spinner.setVisibility(View.VISIBLE);
-		
+
 		LinphonePreferences.instance().setContext(this); // Needed, else the next call will crash
 		LinphonePreferences.instance().setRemoteProvisioningUrl(configUri);
-		LinphonePreferences.instance().firstRemoteProvisioningSuccessful();
-		
+
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				LinphoneManager.destroy();
-				stopService(new Intent(ACTION_MAIN).setClass(RemoteProvisioningActivity.this, LinphoneService.class));
-				Intent intent = new Intent();
-				intent.setClass(RemoteProvisioningActivity.this, LinphoneLauncherActivity.class);
-				startActivity(intent);
+				LinphoneManager.getInstance().restartLinphoneCore();
 			}
 		}, 1000);
 	}
-	
+
 	private void goToLinphoneActivity() {
 		if (LinphoneService.isReady()) {
-			LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneActivity.class);
+			LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneLauncherActivity.class);
 			//finish(); // To prevent the user to come back to this page using back button
-			startActivity(new Intent().setClass(this, LinphoneActivity.class));
+			startActivity(new Intent().setClass(this, LinphoneLauncherActivity.class));
 		} else {
 			finish();
 		}
 	}
+
 }

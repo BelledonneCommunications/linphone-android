@@ -2,25 +2,21 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.InCallActivity;
-import org.linphone.IncomingCallActivity;
+import org.linphone.CallActivity;
+import org.linphone.CallIncomingActivity;
+import org.linphone.CallOutgoingActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.PayloadType;
-import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.DisplayMetrics;
 import android.view.View;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Sylvain Berfini
@@ -51,14 +47,16 @@ public class CallsAudio extends SampleTest {
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+
+		solo.waitForActivity("CallOutgoingActivity", 400);
+		//assertOutgoingCallIsCorrectlyRunning();
 		
-		assertCallIsCorrectlyRunning();
-		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
-	
+
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testCDTMFRFC2833InPCMUCall() {
@@ -89,7 +87,8 @@ public class CallsAudio extends SampleTest {
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
-	
+
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testDDTMFSIPINFO() {
@@ -116,6 +115,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testEOutgoingCallToAudioClient() {
@@ -123,14 +123,15 @@ public class CallsAudio extends SampleTest {
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+
+		solo.waitForActivity("CallOutgoingActivity", 2000);
 		
-		assertCallIsCorrectlyRunning();
-		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testFOutgoingCallToVideoClient() {
@@ -138,14 +139,15 @@ public class CallsAudio extends SampleTest {
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+
+		solo.waitForActivity("CallOutgoingActivity", 5000);
 		
-		assertCallIsCorrectlyRunning();
-		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testGOutgoingCallCancelled() {
@@ -153,20 +155,21 @@ public class CallsAudio extends SampleTest {
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
 		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
-		
-		solo.waitForActivity("InCallActivity", 5000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
-		
+
+		solo.waitForActivity("CallOutgoingActivity", 200);
+		solo.assertCurrentActivity("Expected InCall Activity", CallOutgoingActivity.class);
+
 		solo.sleep(2000);
 		waitForCallState(LinphoneManager.getLc().getCalls()[0],LinphoneCall.State.OutgoingRinging);
 		
 		LinphoneTestManager.getInstance().autoAnswer = true;
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testHOutgoingCallDeclined() {
@@ -199,21 +202,24 @@ public class CallsAudio extends SampleTest {
 			e.printStackTrace();
 		}
 		
-		solo.waitForActivity("IncomingCallActivity", 5000);
-		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+		solo.waitForActivity("CallIncomingActivity", 2000);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
-		View topLayout = solo.getView(org.linphone.R.id.topLayout);
+		/*View topLayout = solo.getView(org.linphone.R.id.topLayout);
 		int topLayoutHeigh = topLayout.getMeasuredHeight();
 		DisplayMetrics dm = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int topOffset = dm.heightPixels - topLayoutHeigh;
 		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
+		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);*/
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.accept));
 		
 		assertCallIsCorrectlyRunning();
 	}
 
+	@SmallTest
 	@LargeTest
 	public void testJIncomingVideoCall() {
 		LinphoneTestManager.getLc().enableVideo(true, true);
@@ -225,21 +231,24 @@ public class CallsAudio extends SampleTest {
 			e.printStackTrace();
 		}
 		
-		solo.waitForActivity("IncomingCallActivity", 5000);
-		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+		solo.waitForActivity("CallIncomingActivity", 5000);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
-		solo.sleep(1000);
+		/*solo.sleep(1000);
 		View topLayout = solo.getView(org.linphone.R.id.topLayout);
 		int topLayoutHeigh = topLayout.getMeasuredHeight();
 		DisplayMetrics dm = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int topOffset = dm.heightPixels - topLayoutHeigh;
 		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
+		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);*/
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.accept));
 		
 		assertCallIsCorrectlyRunning();
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testKSelfPauseResumeCall() {
@@ -253,7 +262,7 @@ public class CallsAudio extends SampleTest {
 
 		waitForCallPaused(LinphoneManager.getLc().getCalls()[0]);
 
-		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call_pause));
 		solo.sleep(1000);
 
 		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
@@ -263,6 +272,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testLRemotePauseResumeCall() {
@@ -287,6 +297,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@LargeTest
 	public void testMSwitchOnVideoInCallIsNotAllowed() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
@@ -301,6 +312,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@LargeTest
 	public void testNDeclineIncomingCall() {
 		LinphoneTestManager.getInstance().declineCall = false; // Just in case
@@ -313,8 +325,8 @@ public class CallsAudio extends SampleTest {
 			e.printStackTrace();
 		}
 		
-		solo.waitForActivity("IncomingCallActivity", 5000);
-		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+		solo.waitForActivity("CallIncomingActivity", 5000);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 		
 		solo.sleep(1000);
 		View topLayout = solo.getView(org.linphone.R.id.topLayout);
@@ -326,6 +338,7 @@ public class CallsAudio extends SampleTest {
 		solo.drag(topLayout.getMeasuredWidth() - 10, 10, slidersTop, slidersTop, 10);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testOCancelledIncomingCall() {
@@ -339,8 +352,8 @@ public class CallsAudio extends SampleTest {
 			e.printStackTrace();
 		}
 		
-		solo.waitForActivity("IncomingCallActivity", 5000);
-		solo.assertCurrentActivity("Expected Incoming Call Activity", IncomingCallActivity.class);
+		solo.waitForActivity("CallIncomingActivity", 5000);
+		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 		
 		LinphoneTestManager.getLc().terminateAllCalls();
 		
@@ -348,6 +361,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testPDisplayMissedCallsNumber() {
@@ -358,10 +372,20 @@ public class CallsAudio extends SampleTest {
 	}
 	
 	//TODO: Test each audio codec
+
+	private void assertOutgoingCallIsCorrectlyRunning() {
+		solo.waitForActivity("CallOutgoingActivity", 5000);
+		solo.assertCurrentActivity("Expected OutgoingCall Activity", CallOutgoingActivity.class);
+
+		solo.sleep(2000);
+		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+
+		waitForCallState(call, LinphoneCall.State.OutgoingProgress);
+	}
 	
 	private void assertCallIsCorrectlyRunning() {
-		solo.waitForActivity("InCallActivity", 5000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
+		solo.waitForActivity("CallActivity", 5000);
+		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 		
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
@@ -373,7 +397,8 @@ public class CallsAudio extends SampleTest {
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.settings));
+		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
+		solo.clickOnText("Settings");
 	}
 	
 	private void goToAudioCodecsSettings() {

@@ -25,7 +25,6 @@
 			style="@style/font1"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:paddingLeft="10dp"
 			android:gravity="center"/>
 
 	</RelativeLayout>

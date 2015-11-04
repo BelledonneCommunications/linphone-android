@@ -225,21 +225,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		routeAudioToSpeakerHelper(false);
 	}
 
-	public synchronized final void destroyLinphoneCore(Context c) {
-		BluetoothManager.getInstance().destroy();
-		try {
-			mTimer.cancel();
-			mLc.destroy();
-		}
-		catch (RuntimeException e) {
-			e.printStackTrace();
-		}
-		finally {
-			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
-			mLc = null;
-		}
-	}
-
 	public synchronized static final LinphoneManager createAndStart(Context c) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
@@ -566,9 +551,26 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	public void resetLinphoneCore(Context c){
-		destroyLinphoneCore(c);
-		startLibLinphone(c);
+	public synchronized final void destroyLinphoneCore() {
+		sExited = true;
+		BluetoothManager.getInstance().destroy();
+		try {
+			mTimer.cancel();
+			mLc.destroy();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		finally {
+			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+			mLc = null;
+		}
+	}
+
+	public void restartLinphoneCore(){
+		destroyLinphoneCore();
+		startLibLinphone(mServiceContext);
+		sExited = false;
 	}
 
 	private synchronized void startLibLinphone(Context c) {
@@ -580,12 +582,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
-
-			try {
-				initLiblinphone();
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
 
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -610,7 +606,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	private synchronized void initLiblinphone() throws LinphoneCoreException {
+	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
+		mLc = lc;
 		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
 		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 		LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
@@ -882,6 +879,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void globalState(final LinphoneCore lc, final GlobalState state, final String message) {
 		Log.i("New global state [",state,"]");
+		if (state == GlobalState.GlobalOn){
+			try {
+					initLiblinphone(lc);
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
+			}
+		}
 	}
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {

@@ -98,7 +98,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
 						if (state == RegistrationState.RegistrationOk) {
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								//launchEchoCancellerCalibration(true);
+								launchEchoCancellerCalibration(true);
 								success();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
@@ -403,7 +403,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
 		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
-		//launchEchoCancellerCalibration(true);
+		launchEchoCancellerCalibration(true);
 	}
 
 	public void isEchoCalibrationFinished() {

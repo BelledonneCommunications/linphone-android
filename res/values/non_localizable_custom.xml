@@ -3,8 +3,10 @@
 	<!-- New settings -->
 	<!-- TODO Migrate it in linphonerc -->
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool>
+	<bool name="hide_in_call_stats">false</bool>
 	<string name="default_domain">sip.linphone.org</string>
 	<string name="default_stun">stun.linphone.org</string>
+	<bool name="use_linphone_friend">false</bool>
 
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 

@@ -24,6 +24,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
@@ -37,7 +38,9 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ContactsManager {
 	private static ContactsManager instance;
@@ -103,7 +106,6 @@ public class ContactsManager {
 				mAccount = null;
 			}
 		} else {
-			Log.w("Get Account");
 			mAccount = accounts[0];
 		}
 		initializeContactManager(context,contentResolver);
@@ -374,8 +376,6 @@ public class ContactsManager {
 
 		for(Contact c: getAllContacts()){
 			for(String a: c.getNumbersOrAddresses()){
-				Log.w(a);
-				Log.w(address.asStringUriOnly());
 				if(a.equals(sipUri))
 					return c;
 			}
@@ -563,6 +563,18 @@ public class ContactsManager {
 			sipContactCursor.close();
 		}
 
+		if(LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_friend)){
+			contactList = new ArrayList<Contact>();
+			for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()){
+				Contact contact = new Contact(friend.getRefKey(),friend.getAddress());
+				contactList.add(contact);
+			}
+
+			contactCursor = getFriendListCursor(contactList,true);
+			Log.w(contactCursor.getCount());
+			return;
+		}
+
 		if(mAccount == null) return;
 
 		contactCursor = Compatibility.getContactsCursor(contentResolver, getContactsId());
@@ -665,6 +677,31 @@ public class ContactsManager {
 		}
 		cursor.close();
 		return false;
+	}
+
+	public Cursor getFriendListCursor(List<Contact> contacts, boolean shouldGroupBy){
+		String[] columns = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME };
+
+
+		if (!shouldGroupBy) {
+			return null;
+		}
+
+		MatrixCursor result = new MatrixCursor(columns);
+		Set<String> groupBy = new HashSet<String>();
+		for (Contact contact: contacts) {
+			String name = contact.getName();
+			if (!groupBy.contains(name)) {
+				groupBy.add(name);
+				Object[] newRow = new Object[2];
+
+				newRow[0] = contact.getID();
+				newRow[1] = contact.getName();
+
+				result.addRow(newRow);
+			}
+		}
+		return result;
 	}
 
 }
