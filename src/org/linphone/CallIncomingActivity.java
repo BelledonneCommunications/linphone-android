@@ -48,7 +48,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private static CallIncomingActivity instance;
 
 	private TextView name, number;
-	private ImageView contactPicture, acceptArrow, accept, acceptCall, decline;
+	private ImageView contactPicture, accept, decline;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
@@ -88,12 +88,12 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			isActive = pm.isScreenOn();
 		}
 
+		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
+
 		acceptUnlock = (LinearLayout) findViewById(R.id.acceptUnlock);
 		declineUnlock = (LinearLayout) findViewById(R.id.declineUnlock);
-		//mIncomingCallWidget = (LinphoneSliders) findViewById(R.id.sliding_widget);
 
 		accept = (ImageView) findViewById(R.id.accept);
-		acceptArrow = (ImageView) findViewById(R.id.acceptArrow);
 		decline = (ImageView) findViewById(R.id.decline);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -120,9 +120,10 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 							break;
 						case MotionEvent.ACTION_MOVE:
 							curX = motionEvent.getX();
-							view.scrollBy((int) (answerX - curX), view.getScrollY());
+							if((answerX - curX) >= 0)
+								view.scrollBy((int) (answerX - curX), view.getScrollY());
 							answerX = curX;
-							if (curX < 50) {
+							if (curX < screenWidth/4) {
 								answer();
 								return true;
 							}
@@ -132,7 +133,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 							decline.setVisibility(View.VISIBLE);
 							acceptUnlock.setVisibility(View.GONE);
 							break;
-
 					}
 					return true;
 				}
@@ -153,8 +153,8 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 							view.scrollBy((int) (declineX - curX), view.getScrollY());
 							declineX = curX;
 							Log.w(curX);
-							if (curX > 800) {
-								//decline();
+							if (curX > (screenWidth/2)){
+								decline();
 								return true;
 							}
 							break;
@@ -268,6 +268,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
+		finish();
 	}
 
 	private void answer() {
