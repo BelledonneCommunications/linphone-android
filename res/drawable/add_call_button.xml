@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_pressed="true"
+		  android:drawable="@drawable/options_add_call" />
+	<item android:state_enabled="false"
+		android:drawable="@drawable/add_call_disabled" />
+	<item
+		android:drawable="@drawable/add_call_default" />
+</selector>
+
