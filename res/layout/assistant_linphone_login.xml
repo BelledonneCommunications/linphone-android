@@ -25,7 +25,7 @@
 
 		<TextView
 			android:text="@string/username"
-			style="@style/font13"
+			style="@style/font9"
 			android:textAllCaps="true"
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"
@@ -45,7 +45,7 @@
 
 		<TextView
 			android:text="@string/password"
-			style="@style/font13"
+			style="@style/font9"
 			android:textAllCaps="true"
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"
@@ -65,7 +65,7 @@
 
 		<TextView
 			android:text="@string/assistant_display_name"
-			style="@style/font13"
+			style="@style/font9"
 			android:textAllCaps="true"
 			android:paddingTop="10dp"
 			android:layout_width="match_parent"

@@ -44,7 +44,7 @@ import java.util.Set;
 
 public class ContactsManager {
 	private static ContactsManager instance;
-	private List<Contact> contactList, sipContactList;
+	private List<Contact> contactList, sipContactList, searchContactList;
 	private Cursor contactCursor, sipContactCursor;
 	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
@@ -64,6 +64,10 @@ public class ContactsManager {
 
 	public List<Contact> getSIPContacts() {
 		return sipContactList;
+	}
+
+	public List<Contact> getSearchContacts() {
+		return searchContactList;
 	}
 
 	public Cursor getAllContactsCursor() {
@@ -173,7 +177,7 @@ public class ContactsManager {
 		);
 	}
 
-//Manage Linphone Friend if we cannot use Sip address
+	//Manage Linphone Friend if we cannot use Sip address
 	public boolean createNewFriend(Contact contact, String sipUri) {
 		if (!sipUri.startsWith("sip:")) {
 			sipUri = "sip:" + sipUri;
@@ -237,6 +241,32 @@ public class ContactsManager {
 				LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 			}
 		}
+	}
+
+	public Cursor searchFriends(String search) {
+		searchContactList =  new ArrayList<Contact>();
+		for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
+			if (friend.getAddress().getUserName().contains(search)) {
+				searchContactList.add(new Contact(friend.getRefKey(), friend.getAddress()));
+			}
+		}
+
+		if(searchContactList != null){
+			return getFriendListCursor(searchContactList,true);
+		}
+		return null;
+	}
+
+	public LinphoneFriend findLinphoneFriend(LinphoneAddress address) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
+			for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
+				if (friend.getAddress().equals(address)) {
+					return friend;
+				}
+			}
+		}
+		return null;
 	}
 
 	public Contact findContactWithDisplayName(String displayName) {
@@ -389,7 +419,7 @@ public class ContactsManager {
 			sipUri = sipUri.substring(4);
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if(lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
+		if (lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
 			for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 				if (friend.getAddress().equals(address)) {
 					return getContact(friend.getRefKey(), contentResolver);
@@ -399,7 +429,7 @@ public class ContactsManager {
 
 		//Find Sip address
 		Contact contact;
-		String [] projection = new String[]  {ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
+		String[] projection = new String[]{ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
 		String selection = new StringBuilder()
 				.append(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
 				.append(" = ?").toString();
@@ -420,7 +450,7 @@ public class ContactsManager {
 
 		//Find number
 		Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address.getUserName()));
-		projection = new String[] {ContactsContract.PhoneLookup._ID,ContactsContract.PhoneLookup.NUMBER,ContactsContract.PhoneLookup.DISPLAY_NAME };
+		projection = new String[]{ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
 		Cursor c = contentResolver.query(lookupUri, projection, null, null, null);
 		contact = checkPhoneQueryResult(contentResolver, c, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup._ID, address.getUserName());
 
@@ -429,6 +459,7 @@ public class ContactsManager {
 		}
 
 		return null;
+
 	}
 
 	public void removeContactFromLists(ContentResolver contentResolver, Contact contact) {
@@ -571,7 +602,6 @@ public class ContactsManager {
 			}
 
 			contactCursor = getFriendListCursor(contactList,true);
-			Log.w(contactCursor.getCount());
 			return;
 		}
 
@@ -703,5 +733,4 @@ public class ContactsManager {
 		}
 		return result;
 	}
-
 }

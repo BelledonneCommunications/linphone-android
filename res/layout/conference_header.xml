@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:gravity="center_vertical"
-    android:background="@color/colorH">
+    android:background="@color/colorG">
 
 	<LinearLayout
 		android:layout_width="wrap_content"
@@ -13,13 +13,14 @@
 
 		<TextView
 			android:text="@string/conference"
-			style="@style/font5"
+			style="@style/font13"
+			android:gravity="center"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+			android:layout_height="match_parent"/>
 
 		<Chronometer
 			android:id="@+id/callTimer"
-			style="@style/font2"
+			style="@style/font13"
 			android:visibility="gone"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>

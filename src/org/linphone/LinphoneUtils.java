@@ -144,13 +144,13 @@ public final class LinphoneUtils {
 		return true;
 	}
 
-	public static String timestampToHumanDate(Context context, long timestamp, String format) {
+	public static String timestampToHumanDate(Context context, long timestamp, String format, boolean todayFormat) {
 		try {
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(timestamp);
 
 			SimpleDateFormat dateFormat;
-			if (isToday(cal)) {
+			if (isToday(cal) && todayFormat) {
 				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format));
 			} else {
 				dateFormat = new SimpleDateFormat(format);
@@ -217,12 +217,22 @@ public final class LinphoneUtils {
 	
 	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri) {
 		if (uri == null) {
-			view.setImageResource(R.drawable.avatar);
+			if(LinphoneManager.getLc().isIncall()) {
+				view.setImageResource(R.drawable.avatar_big);
+			} else {
+				view.setImageResource(R.drawable.avatar);
+			}
 			return;
 		}
 		if (uri.getScheme().startsWith("http")) {
 			Bitmap bm = downloadBitmap(uri);
-			if (bm == null) view.setImageResource(R.drawable.avatar);
+			if (bm == null) {
+				if(LinphoneManager.getLc().isIncall()) {
+					view.setImageResource(R.drawable.avatar_big);
+				} else {
+					view.setImageResource(R.drawable.avatar);
+				}
+			}
 			view.setImageBitmap(bm);
 		} else {
 			Bitmap bm = null;

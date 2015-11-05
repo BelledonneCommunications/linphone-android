@@ -130,7 +130,7 @@ public class CreateAccountFragment extends Fragment {
 						createAccount(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
 					}
 				});
-				builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 					}
 				});

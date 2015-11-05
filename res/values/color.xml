@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorA">#ff5e00</color>
-    <color name="colorB">#000000</color>
-    <color name="colorC">#444444</color>
-    <color name="colorD">#808080</color>
-    <color name="colorE">#c4c4c4</color>
-    <color name="colorF">#e1e1e1</color>
-    <color name="colorG">#f3f3f3</color>
-    <color name="colorH">#ffffff</color>
-    <color name="colorI">#ff0000</color>
-    <color name="colorJ">#ffa645</color>
-    <color name="colorK">#3eb5c0</color>
+    <color name="colorA">#ff6600</color>
+    <color name="colorB">#ffe8d9</color>
+    <color name="colorC">#000000</color>
+    <color name="colorD">#595959</color>
+    <color name="colorE">#aeaeae</color>
+    <color name="colorF">#f1f1f1</color>
+    <color name="colorG">#ffffff</color>
+    <color name="colorH">#d0021b</color>
+    <color name="colorI">#f5a623</color>
+    <color name="colorJ">#7ed321</color>
+    <color name="colorK">#444444</color>
     <color name="colorL">#96c11f</color>
 
     <color name="transparent">#00000000</color>

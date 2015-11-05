@@ -2,79 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/colorH"
+	android:background="@color/colorG"
 	android:orientation="vertical" >
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
-		android:background="@color/colorF"
+		android:background="@color/colorG"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="top">
 
-		<RelativeLayout
-			android:id="@+id/all_calls_layout"
-			android:layout_width="70dp"
-			android:layout_height="match_parent">
+		<ImageView
+			android:id="@+id/all_calls"
+			android:src="@drawable/history_all_button"
+			android:contentDescription="@string/content_description_all_calls"
+			android:padding="15dp"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"/>
 
-			<ImageView
-				android:id="@+id/all_calls"
-				android:src="@drawable/history_all"
-				android:background="@drawable/toolbar_button"
-				android:contentDescription="@string/content_description_all_calls"
-				android:gravity="center"
-				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-
-			<RelativeLayout
-				android:id="@+id/all_calls_select"
-				android:background="@color/colorA"
-				android:contentDescription="@string/content_description_contacts"
-				android:layout_alignRight="@id/all_calls"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"/>
-
-		</RelativeLayout>
-
-		<RelativeLayout
-			android:layout_toRightOf="@id/all_calls_layout"
-			android:layout_width="70dp"
+		<ImageView
+			android:id="@+id/missed_calls"
+			android:src="@drawable/history_missed_button"
+			android:contentDescription="@string/content_description_missed_calls"
+			android:padding="15dp"
+			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:adjustViewBounds="true">
-
-			<ImageView
-				android:id="@+id/missed_calls"
-				android:src="@drawable/history_missed"
-				android:background="@drawable/toolbar_button"
-				android:contentDescription="@string/content_description_missed_calls"
-				android:gravity="center"
-				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-
-			<RelativeLayout
-				android:id="@+id/missed_calls_select"
-				android:background="@color/colorA"
-				android:contentDescription="@string/content_description_contacts"
-				android:layout_alignRight="@id/missed_calls"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"
-				android:visibility="gone"/>
-
-		</RelativeLayout>
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@+id/all_calls"
+			android:layout_toEndOf="@+id/all_calls"/>
 
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
 			android:padding="15dp"/>
+
+		<View
+			android:background="@color/colorF"
+			android:layout_alignParentBottom="true"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
@@ -83,14 +53,14 @@
 		android:id="@+id/history_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:divider="@color/colorE"
+		android:divider="@color/colorF"
 		android:cacheColorHint="@color/transparent"
 		android:dividerHeight="1dp" />
 
 	<TextView
 		android:id="@+id/no_call_history"
 		android:text="@string/no_call_history"
-		style="@style/font6"
+		style="@style/font14"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -99,7 +69,7 @@
 	<TextView
 		android:id="@+id/no_missed_call_history"
 		android:text="@string/no_missed_call_history"
-		style="@style/font6"
+		style="@style/font14"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

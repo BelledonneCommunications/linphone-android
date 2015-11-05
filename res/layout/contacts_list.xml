@@ -2,124 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/colorH"
+	android:background="@color/colorG"
 	android:orientation="vertical" >
 
-	<RelativeLayout
-		android:id="@+id/top_bar"
-		android:layout_width="match_parent"
-		android:layout_height="60dp"
-		android:layout_gravity="bottom"
-		android:background="@color/colorF">
-
-
-		<RelativeLayout
-			android:id="@+id/all_contacts_layout"
-			android:layout_width="70dp"
-			android:layout_height="wrap_content"
-			android:adjustViewBounds="true">
-
-			<ImageView
-				android:id="@+id/all_contacts"
-				android:contentDescription="@string/content_description_all_contacts"
-				android:layout_alignParentLeft="true"
-				android:src="@drawable/contacts_all"
-				android:gravity="center"
-				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-
-			<RelativeLayout
-				android:id="@+id/all_contacts_select"
-				android:contentDescription="@string/content_description_contacts"
-				android:background="@color/colorA"
-				android:layout_alignRight="@id/all_contacts"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"/>
-
-		</RelativeLayout>
-
-		<RelativeLayout
-			android:layout_toRightOf="@id/all_contacts_layout"
-			android:layout_width="70dp"
-			android:layout_height="wrap_content"
-			android:adjustViewBounds="true">
-
-			<ImageView
-				android:contentDescription="@string/content_description_linphone_contacts"
-				android:id="@+id/linphone_contacts"
-				android:src="@drawable/contacts_sip"
-				android:gravity="center"
-				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-
-			<RelativeLayout
-				android:id="@+id/linphone_contacts_select"
-				android:contentDescription="@string/content_description_contacts"
-				android:background="@color/colorA"
-				android:layout_alignRight="@id/linphone_contacts"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:visibility="invisible"
-				android:layout_alignParentBottom="true"/>
-
-		</RelativeLayout>
-
-		<ImageView
-			android:id="@+id/newContact"
-			android:src="@drawable/contact_add"
-			android:contentDescription="@string/content_description_new_contact"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/edit"
-			android:padding="15dp"
-			android:adjustViewBounds="true"/>
-
-		<ImageView
-			android:id="@+id/edit"
-			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="15dp"
-			android:adjustViewBounds="true"/>
-	</RelativeLayout>
-
-	<include layout="@layout/edit_list"/>
-
-	<RelativeLayout
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:orientation="horizontal"
 		android:layout_margin="10dp">
 
 		<EditText
             android:contentDescription="@string/content_description_search"
 			android:textCursorDrawable="@null"
 			android:id="@+id/searchField"
+			android:layout_weight="0.15"
 			android:layout_width="match_parent"
 			android:layout_height="40dp"
-			android:textColor="@android:color/black"
+			android:paddingLeft="10dp"
+			android:textColorHint="@color/colorE"
+			android:hint="@string/search_contact"
+			android:textColor="@color/colorC"
 			android:background="@drawable/resizable_textfield"
-			android:gravity="center"
-			android:paddingRight="5dp"
 			android:inputType="textPersonName"/>
 
 		<ImageView
 			android:contentDescription="@string/content_description_cancel"
 			android:id="@+id/clearSearchField"
-			android:layout_width="30dp"
+			android:layout_weight="0.9"
+			android:layout_width="match_parent"
 			android:layout_height="30dp"
-			android:src="@drawable/clean_field_default"
-			android:layout_centerVertical="true"
-			android:layout_alignParentRight="true"
-			android:paddingLeft="5dp"
-			android:paddingRight="5dp"/>
+			android:src="@drawable/clean_field_button"
+			android:layout_gravity="center"
+			android:layout_marginLeft="5dp"/>
 
-	</RelativeLayout>
+	</LinearLayout>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -129,7 +45,7 @@
 			android:id="@+id/contactsList"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:divider="@color/colorE"
+			android:divider="@color/colorF"
 			android:fastScrollAlwaysVisible="true"
 			android:fastScrollEnabled="true"
 			android:dividerHeight="1dp" />

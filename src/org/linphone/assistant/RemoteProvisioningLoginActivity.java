@@ -97,14 +97,29 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private boolean storeAccount(String username, String password, String domain) {
 		LinphoneCore lc = LinphoneManager.getLc();
 
-		XmlRpcHelper xmlRpcHelper = new XmlRpcHelper(null);
+		LinphonePreferences.instance().setRemoteProvisioningUrl("http://elviish.ovh/a69c387b85101abacb3580bf4c570bce.xml");
+		LinphoneManager.getInstance().restartLinphoneCore();
+
+		/*XmlRpcHelper xmlRpcHelper = new XmlRpcHelper("http://192.168.0.148:8080/xmlrpc");
+		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
+			@Override
+			public void onRemoteProvisioningFilenameSent(String result) {
+
+				LinphonePreferences.instance().setRemoteProvisioningUrl("http://elviish.ovh/a69c387b85101abacb3580bf4c570bce.xml");
+				LinphoneManager.getInstance().restartLinphoneCore();
+			}
+		}, "sylvain", "sip.linphone.org", "lucifer");*/
+
+		/*XmlRpcHelper xmlRpcHelper = new XmlRpcHelper(null);
 		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
 			@Override
 			public void onRemoteProvisioningFilenameSent(String result) {
 				LinphonePreferences.instance().setRemoteProvisioningUrl(result);
 				LinphoneManager.getInstance().restartLinphoneCore();
 			}
-		}, username.toString(), password.toString(), domain.toString());
+		}, username.toString(), password.toString(), domain.toString());*/
+
+
 
 		LinphonePreferences.instance().firstLaunchSuccessful();
 		setResult(Activity.RESULT_OK);

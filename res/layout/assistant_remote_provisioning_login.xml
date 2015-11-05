@@ -1,49 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/colorG"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical">
-
-
-
-<TextView
-		android:text="@string/assistant_remote_provisioning_title"
-		android:contentDescription="@string/content_description_welcome"
-		style="@style/font6"
-		android:textAllCaps="true"
-		android:paddingTop="20dp"
-		android:layout_gravity="center"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:gravity="center_horizontal"/>
-
-	<TextView
-		android:text="@string/assistant_remote_provisioning_login"
-		style="@style/font11"
-		android:layout_gravity="center"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+	android:layout_height="match_parent">
 
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:gravity="center"
-		android:orientation="vertical">
+		android:padding="20dp"
+	    android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<ImageView
+				android:src="@drawable/logo_secure_phone"
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_gravity="bottom"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="20dp"
+				android:layout_gravity="bottom"
+				android:orientation="vertical">
+
+				<TextView
+					android:text="@string/assistant_welcome"
+					style="@style/font13"
+					android:contentDescription="@string/content_description_welcome"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+				<TextView
+					android:text="@string/assistant_remote_provisioning_login"
+					style="@style/font11"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+			</LinearLayout>
+
+		</LinearLayout>
 
 		<TextView
 			android:text="@string/username"
-			style="@style/font13"
-			android:textAllCaps="true"
-			android:paddingTop="10dp"
+			style="@style/font9"
+			android:layout_marginTop="30dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
 		<EditText
 			android:id="@+id/assistant_username"
 			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
+			android:textColor="@color/colorC"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
+
+		<TextView
+			android:text="@string/domain"
+			style="@style/font9"
+			android:paddingTop="20dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<EditText
+			android:id="@+id/assistant_domain"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorC"
 			android:textCursorDrawable="@null"
 			android:inputType="textEmailAddress"
 			android:layout_width="match_parent"
@@ -54,40 +84,17 @@
 
 		<TextView
 			android:text="@string/password"
-			style="@style/font13"
-			android:textAllCaps="true"
-			android:paddingTop="10dp"
+			style="@style/font9"
+			android:paddingTop="20dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
 		<EditText
 			android:id="@+id/assistant_password"
 			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
+			android:textColor="@color/colorC"
 			android:textCursorDrawable="@null"
 			android:inputType="textPassword"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:singleLine="true"/>
-
-
-		<TextView
-			android:text="@string/domain"
-			style="@style/font13"
-			android:textAllCaps="true"
-			android:paddingTop="10dp"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-
-
-		<EditText
-			android:id="@+id/assistant_domain"
-			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
-			android:textCursorDrawable="@null"
-			android:inputType="textEmailAddress"
 			android:layout_width="match_parent"
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
@@ -98,9 +105,10 @@
 			android:id="@+id/assistant_connect"
 			android:text="@string/assistant_connect"
 			android:background="@drawable/assistant_button"
-			style="@style/font8"
+			style="@style/font5"
+			android:textAllCaps="false"
 			android:contentDescription="@string/content_description_validate"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
@@ -109,5 +117,13 @@
 			android:layout_centerVertical="true"/>
 
 	</LinearLayout>
+
+	<ImageView
+		android:src="@drawable/logo_orange"
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:layout_margin="30dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"/>
  
-</LinearLayout>
+</RelativeLayout>

@@ -76,7 +76,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 
 		micro = (ImageView) findViewById(R.id.micro);
 		micro.setOnClickListener(this);
-		speaker = (ImageView) findViewById(R.id.speaker);
+		speaker = (ImageView) findViewById(R.id.speaker);;
 		speaker.setOnClickListener(this);
 
 		// set this flag so this activity will stay in front of the keyguard
@@ -89,6 +89,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				Log.w("State " + state);
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
 					finish();
 					return;
@@ -141,14 +142,17 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		}
 
 		LinphoneAddress address = mCall.getRemoteAddress();
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		Log.w(mCall.getRemoteAddress().asStringUriOnly());
+		/*Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
 		if (contact != null) {
-			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+			//LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 			name.setText(contact.getName());
 		} else {
-			name.setText(LinphoneUtils.getAddressDisplayName(address));
-		}
+
+		}*/
+		name.setText(LinphoneUtils.getAddressDisplayName(address));
 		number.setText(address.asStringUriOnly());
+		Log.w(address.asStringUriOnly());
 	}
 
 	@Override
@@ -173,7 +177,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		if (id == R.id.micro) {
 			isMicMuted = !isMicMuted;
 			if(isMicMuted) {
-				micro.setImageResource(R.drawable.micro_selected);
+				micro.setImageResource(R.drawable.micro);
 			} else {
 				micro.setImageResource(R.drawable.micro_default);
 			}
@@ -182,7 +186,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		if (id == R.id.speaker) {
 			isSpeakerEnabled = !isSpeakerEnabled;
 			if(isSpeakerEnabled) {
-				speaker.setImageResource(R.drawable.speaker_selected);
+				speaker.setImageResource(R.drawable.speaker);
 			} else {
 				speaker.setImageResource(R.drawable.speaker_default);
 			}

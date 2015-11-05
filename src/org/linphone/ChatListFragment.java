@@ -27,6 +27,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
@@ -434,9 +435,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				return view;
 			}
 
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
+			//Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 			String message = "";
 			Long time;
+
+			//Obiane specification
+			LinphoneFriend friend = ContactsManager.getInstance().findLinphoneFriend(address);
 
 			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
 			TextView date = (TextView) view.findViewById(R.id.date);
@@ -453,23 +457,23 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppData() != null ){
 				lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 				time = msg.getTime();
-				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format),true));
 				lastMessageView.setText("");
 			} else if (msg.getText() != null && msg.getText().length() > 0 ){
 				message = msg.getText();
 				lastMessageView.setBackgroundResource(0);
 				time = msg.getTime();
-				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format),true));
 				lastMessageView.setText(message);
 			}
 
 			displayName.setSelected(true); // For animation
-			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getName());
+			displayName.setText(LinphoneUtils.getAddressDisplayName(address));
 
 
-			if(contact != null){
+			/*if(contact != null){
 				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-			}
+			}*/
 
 			if (unreadMessagesCount > 0) {
 				unreadMessages.setVisibility(View.VISIBLE);
@@ -477,9 +481,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				if(unreadMessagesCount > 99){
 					unreadMessages.setTextSize(12);
 				}
+				displayName.setTextColor(getResources().getColor(R.color.colorA));
 				displayName.setTypeface(null, Typeface.BOLD);
 			} else {
 				unreadMessages.setVisibility(View.GONE);
+				displayName.setTextColor(getResources().getColor(R.color.colorC));
 				displayName.setTypeface(null, Typeface.NORMAL);
 			}
 

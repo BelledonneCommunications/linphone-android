@@ -21,7 +21,6 @@
 
         <ImageView
             android:id="@+id/cancel"
-            android:src="@drawable/dialer_back"
             android:contentDescription="@string/content_description_dialer"
             android:layout_width="70dp"
             android:layout_height="match_parent"
@@ -32,7 +31,6 @@
     </RelativeLayout>
 
     <ImageView
-        android:src="@drawable/linphone_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -73,7 +71,6 @@
 
 		<Button
        		android:id="@+id/send_log"
-			android:background="@drawable/button_background"
 			android:padding="10dp"
 			android:layout_margin="5dp"
         	android:layout_width="match_parent"
@@ -82,7 +79,6 @@
 
 		<Button
             android:id="@+id/reset_log"
-			android:background="@drawable/button_background"
 			android:padding="10dp"
 			android:layout_margin="5dp"
             android:layout_width="wrap_content"

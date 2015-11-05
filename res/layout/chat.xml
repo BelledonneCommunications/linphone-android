@@ -2,19 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@color/colorH" >
+  	android:background="@color/colorG" >
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
-		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_gravity="bottom">
 
 		<ImageView
 			android:id="@+id/back"
-			android:src="@drawable/back"
-			android:background="@drawable/toolbar_button"
+			android:src="@drawable/back_button"
 			android:contentDescription="@string/content_description_back"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
@@ -24,7 +22,6 @@
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
@@ -34,7 +31,6 @@
 		<ImageView
 			android:id="@+id/start_call"
 			android:src="@drawable/call_alt_start"
-			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_call"
 			android:layout_toLeftOf="@id/edit"
 			android:layout_width="70dp"
@@ -43,7 +39,7 @@
 
 		<TextView
 			android:id="@+id/contact_name"
-			style="@style/font6"
+			style="@style/font2"
 			android:ellipsize="end"
 			android:singleLine="true"
 			android:layout_width="match_parent"
@@ -52,6 +48,12 @@
 			android:layout_toLeftOf="@id/start_call"
 			android:paddingLeft="10dp"
 			android:gravity="center"/>
+
+		<View
+			android:background="@color/colorF"
+			android:layout_alignParentBottom="true"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
@@ -63,7 +65,7 @@
 	    android:orientation="vertical"
 	    android:layout_alignParentBottom="true"
 	    android:layout_centerHorizontal="true"
-   		android:background="@color/colorF">
+   		android:background="@color/colorD">
        
 	    <RelativeLayout 
 	        android:id="@+id/messageLayout"
@@ -72,7 +74,7 @@
 	        
 	        <ImageView
 	            android:id="@+id/sendPicture"
-				android:padding="5dp"
+				android:padding="15dp"
 				android:scaleType="center"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -83,7 +85,7 @@
 	        <ImageView
 	            android:id="@+id/sendMessage"
 	            android:gravity="center"
-				android:padding="5dp"
+				android:padding="15dp"
 				android:scaleType="center"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -92,14 +94,15 @@
 				android:layout_alignParentRight="true"/>
 	        
 	        <EditText
+				android:id="@+id/message"
                 android:imeOptions="flagNoExtractUi"
 	            android:textCursorDrawable="@null"
-	            android:id="@+id/message"
             	android:inputType="textMultiLine"
-            	android:maxLines="3"
+            	android:maxLines="2"
 	            android:textColor="@android:color/black"
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
+	            android:layout_height="40dp"
+				android:padding="10dp"
 	            android:layout_toRightOf="@id/sendPicture"
 	            android:layout_toLeftOf="@id/sendMessage"
 	            android:background="@drawable/resizable_textfield"
@@ -121,7 +124,6 @@
 	            android:adjustViewBounds="true"
 	            android:layout_alignParentRight="true"
 	            android:padding="20dp" />
-
 	        
 	    </RelativeLayout>
     
@@ -129,10 +131,10 @@
         
 	<TextView
         android:id="@+id/remoteComposing"
-        android:layout_width="match_parent"
+		android:text="@string/remote_composing"
+		style="@style/font14"
+		android:layout_width="match_parent"
         android:layout_height="wrap_content"
-		android:textColor="@color/colorB"
-        android:text="@string/remote_composing"
         android:layout_above="@id/footer"/>
 
 	<ListView
@@ -147,7 +149,6 @@
 		android:layout_above="@id/remoteComposing"
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
-		android:layout_marginBottom="10dp"
 		android:layout_below="@+id/top_bar"/>
 
 	<AutoCompleteTextView
@@ -158,7 +159,7 @@
 		android:id="@+id/searchContactField"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
-		android:textColor="@android:color/black"
+		android:textColor="@color/colorC"
 		android:background="@drawable/resizable_textfield"
 		android:gravity="center"
 		android:completionThreshold="1"

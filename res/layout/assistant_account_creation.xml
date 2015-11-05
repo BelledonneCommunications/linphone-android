@@ -58,7 +58,6 @@
 			<TextView
 				android:id="@+id/username_error"
 				android:text="@string/error"
-				style="@style/font20"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:visibility="invisible"/>

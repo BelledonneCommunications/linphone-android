@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/status"
-	android:background="@color/colorA"
+	android:background="@color/colorC"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:orientation="horizontal">
@@ -45,7 +45,7 @@
 		<TextView
 			android:id="@+id/status_text"
 			android:text="@string/status_not_connected"
-			style="@style/font16"
+			style="@style/font7"
 			android:paddingLeft="5dp"
 			android:layout_centerVertical="true"
 			android:layout_width="wrap_content"

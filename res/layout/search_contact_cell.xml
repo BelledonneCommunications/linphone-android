@@ -4,21 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:gravity="center_vertical"
-    android:background="@drawable/list_selector"
+    android:background="@color/colorG"
     android:orientation="vertical" >
 
 	<TextView
 		android:id="@+id/Contact_name"
 		android:lines="1"
+		style="@style/font2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/icon"
-		android:layout_centerVertical="true"
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textColor="@color/colorB" />
+		android:layout_centerVertical="true" />
 
 	<TextView
 		android:id="@+id/contact_address"
+		style="@style/font9"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"

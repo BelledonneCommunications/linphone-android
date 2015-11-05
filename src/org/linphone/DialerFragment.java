@@ -46,8 +46,8 @@ public class DialerFragment extends Fragment {
 	private AddressAware numpad;
 	private AddressText mAddress;
 	private CallButton mCall;
-	private ImageView mAddContact;
 	private OnClickListener addContactListener, cancelListener, transferListener;
+	private ImageView mCancel;
 	private boolean shouldEmptyAddressField = true;
 	
 	@Override
@@ -78,9 +78,14 @@ public class DialerFragment extends Fragment {
 		if (numpad != null) {
 			numpad.setAddressWidget(mAddress);
 		}
-		
-		mAddContact = (ImageView) view.findViewById(R.id.add_contact);
-		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
+
+		mCancel = (ImageView) view.findViewById(R.id.back);
+		if(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0)){
+			mCancel.setVisibility(View.VISIBLE);
+		} else {
+			mCancel.setVisibility(View.GONE);
+		}
+
 		
 		addContactListener = new OnClickListener() {
 			@Override
@@ -135,6 +140,7 @@ public class DialerFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
+		Log.w("onResume ");
 		super.onResume();
 		
 		if (LinphoneActivity.isInstanciated()) {
@@ -174,20 +180,22 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_add);
 				mCall.resetClickListener();
 			}
-			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.call_back);
-			mAddContact.setOnClickListener(cancelListener);
+			mCancel.setVisibility(View.VISIBLE);
+			mCancel.setEnabled(true);
+			mCancel.setImageResource(R.drawable.call_alt_back);
+			mCancel.setOnClickListener(cancelListener);
 		} else {
 			mCall.setImageResource(R.drawable.call_audio_start);
-			mAddContact.setEnabled(false);
+			mCancel.setVisibility(View.GONE);
+		/*	mAddContact.setEnabled(false);
 			mAddContact.setImageResource(R.drawable.contact_add_button);
-			mAddContact.setOnClickListener(addContactListener);
-			enableDisableAddContact();
+			mAddContact.setOnClickListener(addContactListener);*/
+			//enableDisableAddContact();
 		}
 	}
 	
 	public void enableDisableAddContact() {
-		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
+		//mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
 	}
 	
 	public void displayTextInAddressBar(String numberOrSipAddress) {

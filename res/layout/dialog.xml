@@ -7,7 +7,8 @@
 
 	<TextView
 		android:id="@+id/customText"
-		style="@style/font14"
+		style="@style/font4"
+		android:layout_margin="20dp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
@@ -18,24 +19,25 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
 		android:gravity="center"
-		android:orientation="horizontal">
-
-		<Button
-			android:id="@+id/cancel"
-			android:text="@string/cancel"
-			android:background="@drawable/resizable_cancel_button"
-			style="@style/font8"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:padding="10dp"/>
+		android:layout_margin="20dp"
+		android:orientation="vertical">
 
 		<Button
 			android:id="@+id/delete"
 			android:text="@string/delete"
 			android:background="@drawable/resizable_confirm_delete_button"
-			style="@style/font15"
-			android:layout_width="wrap_content"
+			style="@style/font5"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:padding="10dp"/>
+
+		<Button
+			android:id="@+id/cancel"
+			android:text="@string/cancel"
+			android:background="@drawable/resizable_cancel_button"
+			style="@style/font5"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="10dp"
 			android:padding="10dp"/>

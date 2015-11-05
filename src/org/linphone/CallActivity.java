@@ -82,7 +82,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	private Handler mControlsHandler = new Handler();
 	private Runnable mControls;
 	private ImageView switchCamera;
-	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout;
+	private RelativeLayout mActiveCallHeader, sideMenuContent;
 	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
 	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu;
 	private LinearLayout mNoCurrentCall, callInfo, mCallPaused;
@@ -168,8 +168,9 @@ public class CallActivity extends Activity implements OnClickListener {
 				if (state == State.StreamsRunning) {
 					switchVideo(isVideoEnabled(call));
 					//Check media in progress
-					if(LinphonePreferences.instance().isVideoEnabled() && !call.mediaInProgress()){
-						enabledVideoButton(true);
+					if(!call.mediaInProgress()){
+						if(LinphonePreferences.instance().isVideoEnabled())
+							enabledVideoButton(true);
 						enabledPauseButton(true);
 					}
 
@@ -341,7 +342,6 @@ public class CallActivity extends Activity implements OnClickListener {
 		mCallPaused = (LinearLayout) findViewById(R.id.remote_pause);
 
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
-		avatar_layout = (RelativeLayout) findViewById(R.id.avatar_layout);
 
 		/*if(isTablet()){
 			speaker.setEnabled(false);
@@ -441,28 +441,28 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		if(LinphoneManager.getLc().getCurrentCall() != null){
 			if(isTransferAllowed)
-				enabledTransferButton(true);
+				transfer.setEnabled(true);
 			if(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()))
 				callInfo.setVisibility(View.VISIBLE);
 		}
 
 		if(LinphoneManager.getLc().getCallsNb() > 1){
 			callsList.setVisibility(View.VISIBLE);
-			enabledConferenceButton(true);
+			conference.setEnabled(true);
 		} else {
 			if(LinphoneManager.getLc().getCallsNb() == 1 && LinphoneManager.getLc().getCurrentCall() == null){
 				callsList.setVisibility(View.VISIBLE);
 				if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-					avatar_layout.setVisibility(View.GONE);
+					contactPicture.setVisibility(View.GONE);
 				} else {
-					avatar_layout.setVisibility(View.VISIBLE);
+					contactPicture.setVisibility(View.VISIBLE);
 				}
 				if(isTransferAllowed)
-					enabledTransferButton(false);
+					transfer.setEnabled(false);
 			} else {
 				callsList.setVisibility(View.GONE);
 			}
-			enabledConferenceButton(false);
+			conference.setEnabled(false);
 
 		}
 
@@ -478,7 +478,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		} else {
 			if(video.isEnabled()) {
 				if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-					video.setImageResource(R.drawable.camera_selected);
+					video.setImageResource(R.drawable.camera);
 					videoProgress.setVisibility(View.INVISIBLE);
 				} else {
 					video.setImageResource(R.drawable.camera_default);
@@ -487,20 +487,20 @@ public class CallActivity extends Activity implements OnClickListener {
 		}
 
 		if (isSpeakerEnabled) {
-			speaker.setImageResource(R.drawable.speaker_selected);
+			speaker.setImageResource(R.drawable.speaker);
 		} else {
 			speaker.setImageResource(R.drawable.speaker_default);
 		}
 
 		if (isMicMuted) {
-			micro.setImageResource(R.drawable.micro_selected);
+			micro.setImageResource(R.drawable.micro);
 		} else {
 			micro.setImageResource(R.drawable.micro_default);
 		}
 
 		try {
 			if (isSpeakerEnabled) {
-				routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
+				routeSpeaker.setImageResource(R.drawable.route_speaker);
 				routeEarpiece.setImageResource(R.drawable.route_earpiece);
 				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			}
@@ -508,9 +508,9 @@ public class CallActivity extends Activity implements OnClickListener {
 			routeSpeaker.setImageResource(R.drawable.route_speaker);
 			if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
 				routeEarpiece.setImageResource(R.drawable.route_earpiece);
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			} else {
-				routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
+				routeEarpiece.setImageResource(R.drawable.route_earpiece);
 				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			}
 		} catch (NullPointerException npe) {
@@ -533,7 +533,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		transfer.setEnabled(true);
 		pause.setEnabled(true);
 		dialer.setEnabled(true);
-		enabledConferenceButton(true);
+		conference.setEnabled(true);
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -590,7 +590,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		else if (id == R.id.route_bluetooth) {
 			if (BluetoothManager.getInstance().routeAudioToBluetooth()) {
 				isSpeakerEnabled = false;
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 				routeSpeaker.setImageResource(R.drawable.route_speaker);
 				routeEarpiece.setImageResource(R.drawable.route_earpiece);
 			}
@@ -601,14 +601,14 @@ public class CallActivity extends Activity implements OnClickListener {
 			isSpeakerEnabled = false;
 			routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			routeSpeaker.setImageResource(R.drawable.route_speaker);
-			routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
+			routeEarpiece.setImageResource(R.drawable.route_earpiece);
 			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.route_speaker) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			isSpeakerEnabled = true;
 			routeBluetooth.setImageResource(R.drawable.route_bluetooth);
-			routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
+			routeSpeaker.setImageResource(R.drawable.route_speaker);
 			routeEarpiece.setImageResource(R.drawable.route_earpiece);
 			hideOrDisplayAudioRoutes();
 		}
@@ -639,26 +639,6 @@ public class CallActivity extends Activity implements OnClickListener {
 		} else {
 			pause.setEnabled(false);
 			pause.setImageResource(R.drawable.pause_big_disabled);
-		}
-	}
-
-	private void enabledTransferButton(boolean enabled){
-		if(enabled) {
-			transfer.setEnabled(true);
-			transfer.setImageAlpha(250);
-		} else {
-			transfer.setEnabled(false);
-			transfer.setImageAlpha(50);
-		}
-	}
-
-	private void enabledConferenceButton(boolean enabled){
-		if(enabled) {
-			conference.setEnabled(true);
-			conference.setImageAlpha(250);
-		} else {
-			conference.setEnabled(false);
-			conference.setImageAlpha(50);
 		}
 	}
 
@@ -761,7 +741,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	private void displayAudioCall(){
 		mActiveCallHeader.setVisibility(View.VISIBLE);
 		callInfo.setVisibility(View.VISIBLE);
-		avatar_layout.setVisibility(View.VISIBLE);
+		contactPicture.setVisibility(View.VISIBLE);
 		mNoCurrentCall.setVisibility(View.GONE);
 		callsList.setVisibility(View.VISIBLE);
 		switchCamera.setVisibility(View.GONE);
@@ -794,7 +774,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		isMicMuted = !isMicMuted;
 		lc.muteMic(isMicMuted);
 		if (isMicMuted) {
-			micro.setImageResource(R.drawable.micro_selected);
+			micro.setImageResource(R.drawable.micro);
 		} else {
 			micro.setImageResource(R.drawable.micro_default);
 		}
@@ -804,7 +784,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		isSpeakerEnabled = !isSpeakerEnabled;
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
-			speaker.setImageResource(R.drawable.speaker_selected);
+			speaker.setImageResource(R.drawable.speaker);
 			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 		} else {
 			Log.d("Toggle speaker off, routing back to earpiece");
@@ -820,7 +800,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 				isVideoCallPaused = true;
 			}
-			pause.setImageResource(R.drawable.pause_big_over_selected);
+			pause.setImageResource(R.drawable.pause_big_over);
 		} else if (call != null) {
 			if (call.getState() == State.Paused) {
 				lc.resumeCall(call);
@@ -851,7 +831,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			mControlsLayout.setVisibility(View.VISIBLE);
 			mActiveCallHeader.setVisibility(View.VISIBLE);
 			callInfo.setVisibility(View.VISIBLE);
-			avatar_layout.setVisibility(View.GONE);
+			contactPicture.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
 			callsList.setVisibility(View.VISIBLE);
 			if (cameraNumber > 1) {
@@ -863,7 +843,6 @@ public class CallActivity extends Activity implements OnClickListener {
 			mActiveCallHeader.setVisibility(View.GONE);
 			switchCamera.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
-			Log.w("Call list gone");
 			callsList.setVisibility(View.GONE);
 		}
 	}
@@ -918,7 +897,7 @@ public class CallActivity extends Activity implements OnClickListener {
 						addCall.setVisibility(View.INVISIBLE);
 						displayVideoCall(false);
 						numpad.setVisibility(View.GONE);
-						options.setImageResource(R.drawable.options_default);
+						options.setImageResource(R.drawable.options);
 					} else {
 						Animation animation = slideOutTopToBottom;
 						animation.setAnimationListener(new AnimationListener() {
@@ -938,7 +917,7 @@ public class CallActivity extends Activity implements OnClickListener {
 								addCall.setVisibility(View.INVISIBLE);
 								displayVideoCall(false);
 								numpad.setVisibility(View.GONE);
-								options.setImageResource(R.drawable.options_default);
+								options.setImageResource(R.drawable.options);
 								animation.setAnimationListener(null);
 							}
 						});
@@ -1118,7 +1097,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				options.setBackgroundResource(R.drawable.options_default);
+				options.setBackgroundResource(R.drawable.options);
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.VISIBLE);
 				}
@@ -1146,7 +1125,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				addCall.setAnimation(null);
-				options.setBackgroundResource(R.drawable.options_default);
+				options.setBackgroundResource(R.drawable.options);
 				addCall.setVisibility(View.VISIBLE);
 				if (isTransferAllowed) {
 					animation.setAnimationListener(new AnimationListener() {
@@ -1210,7 +1189,7 @@ public class CallActivity extends Activity implements OnClickListener {
 				}
 				addCall.setVisibility(View.VISIBLE);
 				conference.setVisibility(View.VISIBLE);
-				options.setImageResource(R.drawable.options_selected);
+				options.setImageResource(R.drawable.options);
 			} else {
 				if (isOrientationLandscape) {
 					showAnimatedLandscapeCallOptions();
@@ -1460,6 +1439,14 @@ public class CallActivity extends Activity implements OnClickListener {
 		LinphoneAddress lAddress = call.getRemoteAddress();
 		TextView contactName = (TextView) findViewById(R.id.contact_name);
 
+		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
+		if (lContact == null) {
+			contactName.setText(lAddress.getUserName());
+		} else {
+			contactName.setText(lContact.getName());
+			//LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
+		}
+
 		setContactInformation(contactName, contactPicture, lAddress);
 		registerCallDurationTimer(null, call);
 	}
@@ -1489,14 +1476,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(contactName.getContext().getContentResolver(), lAddress);
-		if (lContact == null) {
-			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
-			contactPicture.setImageResource(R.drawable.avatar);
-		} else {
-			contactName.setText(lContact.getName());
-			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
-		}
+		contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 	}
 
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
@@ -1621,7 +1601,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	public void pauseOrResumeConference() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (lc.isInConference()) {
-			conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
+			conferenceStatus.setImageResource(R.drawable.pause_big_over);
 			lc.leaveConference();
 		} else {
 			conferenceStatus.setImageResource(R.drawable.pause_big_default);

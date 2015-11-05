@@ -152,10 +152,10 @@ public final class LinphoneService extends Service {
 
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_secure_phone);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.drawable.logo_linphone_57x57, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.drawable.logo_secure_phone, bm, mNotifContentIntent, true,notifcationsPriority);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 
@@ -164,6 +164,7 @@ public final class LinphoneService extends Service {
 
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				Log.w("Linphone Service callState");
 				if (instance == null) {
 					Log.i("Service not ready, discarding call state change to ",state.toString());
 					return;
@@ -278,6 +279,7 @@ public final class LinphoneService extends Service {
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
 	private IncallIconState mCurrentIncallIconState = IncallIconState.IDLE;
 	private synchronized void setIncallIcon(IncallIconState state) {
+		Log.w("Linphone Service setIncallIcon");
 		if (state == mCurrentIncallIconState) return;
 		mCurrentIncallIconState = state;
 
@@ -357,7 +359,7 @@ public final class LinphoneService extends Service {
 		
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_secure_phone);
 		} catch (Exception e) {
 		}
 		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent,notifcationsPriority);

@@ -195,23 +195,12 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 
 		TextView contact = (TextView) view.findViewById(R.id.contact_header);
 
-
-
-		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-
-		String displayName = nativeMessage.getFrom().getUserName();
+		String displayName = LinphoneUtils.getAddressDisplayName(nativeMessage.getFrom());
 		final String sipUri = nativeMessage.getFrom().asStringUriOnly();
-		if(!nativeMessage.isOutgoing()) {
-			if (c != null) {
-				displayName = c.getName();
-				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, c.getPhotoUri(), c.getThumbnailUri());
-			} else {
-				contactPicture.setImageResource(R.drawable.avatar);
-			}
-		}
-
+		//if (c != null) {
+		//	displayName = c.getName();
+		//}
 		contact.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
-
 	}
 
 	public View getView() {

@@ -3,6 +3,7 @@ mtu=1300
 
 [app]
 animations=0
+show_login_view=1
 
 [sip]
 guess_hostname=1

@@ -46,7 +46,7 @@ import android.widget.TextView;
  */
 public class ContactDetailsFragment extends Fragment implements OnClickListener {
 	private Contact contact;
-	private ImageView editContact, deleteContact, back;
+	private ImageView back;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -56,6 +56,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		public void onClick(View v) {
 			if (LinphoneActivity.isInstanciated()) {
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				Log.w("Dial");
 				if (lc != null) {
 					LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 					String to;
@@ -69,7 +70,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					} else {
 						to = v.getTag().toString();
 					}
-					LinphoneActivity.instance().setAddresGoToDialerAndCall(to, contact.getName(), contact.getPhotoUri());
+					LinphoneActivity.instance().setAddresGoToDialerAndCall(to, null, null);
 				}
 			}
 		}
@@ -85,6 +86,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.w("onCreateView");
 		contact = (Contact) getArguments().getSerializable("Contact");
 		
 		this.inflater = inflater;
@@ -93,12 +95,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		if (getArguments() != null) {
 			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
 		}
-		
-		editContact = (ImageView) view.findViewById(R.id.editContact);
-		editContact.setOnClickListener(this);
-		
-		deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
-		deleteContact.setOnClickListener(this);
 
 		ImageView back = (ImageView) view.findViewById(R.id.back);
 		back.setOnClickListener(new OnClickListener() {
@@ -120,95 +116,111 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
 		ImageView contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-		if (contact.getPhotoUri() != null) {
+		/*if (contact.getPhotoUri() != null) {
 			InputStream input = Compatibility.getContactPictureInputStream(LinphoneActivity.instance().getContentResolver(), contact.getID());
 			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
         	contactPicture.setImageResource(R.drawable.avatar);
-        }
-		
+        }*/
+
 		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getName());
 		
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
-		for (String numberOrAddress : contact.getNumbersOrAddresses()) {
-			View v = inflater.inflate(R.layout.contact_control_row, null);
-			
-			String displayednumberOrAddress = numberOrAddress;
-			if (numberOrAddress.startsWith("sip:")) {
-				displayednumberOrAddress = displayednumberOrAddress.replace("sip:", "");
-			}
 
-			TextView label = (TextView) v.findViewById(R.id.address_label);
-			if(LinphoneUtils.isSipAddress(numberOrAddress)) {
-				label.setText(R.string.sip_address);
-			} else {
-				label.setText(R.string.phone_number);
-			}
-			
+		if(contact.getLinphoneAddress() != null){
+			View v = inflater.inflate(R.layout.contact_control_row, null);
+
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
-			tv.setText(displayednumberOrAddress);
-			tv.setSelected(true);
-			
+			tv.setText(contact.getLinphoneAddress().asStringUriOnly());
+
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.call).setOnClickListener(dialListener);
-				v.findViewById(R.id.call).setTag(displayednumberOrAddress);
+				v.findViewById(R.id.call).setTag(contact.getLinphoneAddress().asStringUriOnly());
 			} else {
 				v.findViewById(R.id.call).setVisibility(View.GONE);
 			}
 
 			v.findViewById(R.id.chat).setOnClickListener(chatListener);
-			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-			if (lpc != null) {
-				displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
-				if (!displayednumberOrAddress.startsWith("sip:")) {
-					numberOrAddress = "sip:" + displayednumberOrAddress;
-				}
-				
-				String tag = numberOrAddress;
-				if (!numberOrAddress.contains("@")) {
-					tag = numberOrAddress + "@" + lpc.getDomain();
-				}
-				v.findViewById(R.id.chat).setTag(tag);
-			} else {
-				v.findViewById(R.id.chat).setTag(numberOrAddress);
-			}
-			
-			final String finalNumberOrAddress = numberOrAddress;
-			/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
-			if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {
-				friend.setVisibility(View.VISIBLE);
-				
-				boolean isAlreadyAFriend = LinphoneManager.getLc().findFriendByAddress(finalNumberOrAddress) != null;
-				if (!isAlreadyAFriend) {
-					friend.setImageResource(R.drawable.contact_add);
-					friend.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							if (ContactsManager.getInstance().createNewFriend(contact, finalNumberOrAddress)) {
-								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
-							}
-						}
-					});
-				} else {
-					friend.setImageResource(R.drawable.delete);
-					friend.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							if (ContactsManager.getInstance().removeFriend(finalNumberOrAddress)) {
-								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
-							}
-						}
-					});
-				}
-			}*/
-			
+			v.findViewById(R.id.chat).setTag(contact.getLinphoneAddress().asStringUriOnly());
+
 			if (getResources().getBoolean(R.bool.disable_chat)) {
 				v.findViewById(R.id.chat).setVisibility(View.GONE);
 			}
-			
+
 			controls.addView(v);
+		} else {
+			for (String numberOrAddress : contact.getNumbersOrAddresses()) {
+				View v = inflater.inflate(R.layout.contact_control_row, null);
+
+				String displayednumberOrAddress = numberOrAddress;
+				if (numberOrAddress.startsWith("sip:")) {
+					displayednumberOrAddress = displayednumberOrAddress.replace("sip:", "");
+				}
+
+				TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
+				tv.setText(displayednumberOrAddress);
+				tv.setSelected(true);
+
+				if (!displayChatAddressOnly) {
+					v.findViewById(R.id.call).setOnClickListener(dialListener);
+					v.findViewById(R.id.call).setTag(displayednumberOrAddress);
+				} else {
+					v.findViewById(R.id.call).setVisibility(View.GONE);
+				}
+
+				v.findViewById(R.id.chat).setOnClickListener(chatListener);
+				LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+				if (lpc != null) {
+					displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
+					if (!displayednumberOrAddress.startsWith("sip:")) {
+						numberOrAddress = "sip:" + displayednumberOrAddress;
+					}
+
+					String tag = numberOrAddress;
+					if (!numberOrAddress.contains("@")) {
+						tag = numberOrAddress + "@" + lpc.getDomain();
+					}
+					v.findViewById(R.id.chat).setTag(tag);
+				} else {
+					v.findViewById(R.id.chat).setTag(numberOrAddress);
+				}
+
+				final String finalNumberOrAddress = numberOrAddress;
+				/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
+				if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {
+					friend.setVisibility(View.VISIBLE);
+
+					boolean isAlreadyAFriend = LinphoneManager.getLc().findFriendByAddress(finalNumberOrAddress) != null;
+					if (!isAlreadyAFriend) {
+						friend.setImageResource(R.drawable.contact_add);
+						friend.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (ContactsManager.getInstance().createNewFriend(contact, finalNumberOrAddress)) {
+									displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
+								}
+							}
+						});
+					} else {
+						friend.setImageResource(R.drawable.delete);
+						friend.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (ContactsManager.getInstance().removeFriend(finalNumberOrAddress)) {
+									displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
+								}
+							}
+						});
+					}
+				}*/
+				if (getResources().getBoolean(R.bool.disable_chat)) {
+					v.findViewById(R.id.chat).setVisibility(View.GONE);
+				}
+
+				controls.addView(v);
+			}
 		}
 	}
 	
@@ -220,7 +232,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
 			LinphoneActivity.instance().hideTabBar(false);
 		}
-		contact.refresh(getActivity().getContentResolver());
+		//contact.refresh(getActivity().getContentResolver());
 		if (contact.getName() == null || contact.getName().equals("")) {
 			//Contact has been deleted, return
 			LinphoneActivity.instance().displayContacts(false);
@@ -232,22 +244,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-			
-		if (id == R.id.editContact) {
-			LinphoneActivity.instance().editContact(contact);
-		} else if (id == R.id.deleteContact) {
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-			alertDialog.setMessage(getString(R.string.delete_contact_dialog));
-			alertDialog.setPositiveButton(getString(R.string.button_ok),new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-				deleteExistingContact();
-				ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(),contact);
-				LinphoneActivity.instance().displayContacts(false);
-				}
-			});
-			alertDialog.setNegativeButton(getString(R.string.button_cancel),null);
-			alertDialog.show();
-		}
+
 	}
 	
 	private void deleteExistingContact() {

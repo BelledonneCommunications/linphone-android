@@ -14,7 +14,6 @@
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
-			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_back"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
@@ -63,34 +62,15 @@
 				android:gravity="center"
 				android:orientation="vertical">
 
-				<RelativeLayout
-					android:id="@+id/avatar_layout"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:gravity="center">
-
-					<ImageView
-						android:id="@+id/contact_picture"
-						android:src="@drawable/avatar"
-						android:contentDescription="@string/content_description_contact_picture"
-						android:layout_width="100dp"
-						android:layout_height="100dp"
-						android:adjustViewBounds="true"
-						android:layout_alignParentLeft="true"
-						android:layout_marginLeft="5dp"/>
-
-					<ImageView
-						android:id="@+id/mask"
-						android:src="@drawable/avatar_mask"
-						android:contentDescription="@string/content_description_contact_picture"
-						android:layout_width="100dp"
-						android:layout_height="100dp"
-						android:adjustViewBounds="true"
-						android:layout_alignParentLeft="true"
-						android:layout_marginLeft="5dp"/>
-
-				</RelativeLayout>
-
+				<ImageView
+					android:id="@+id/contact_picture"
+					android:src="@drawable/avatar"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="100dp"
+					android:layout_height="100dp"
+					android:adjustViewBounds="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="5dp"/>
 
 				<TextView
 					android:text="@string/contact_last_name"
@@ -152,7 +132,6 @@
 
 					<ImageView
 						android:id="@+id/add_address_field"
-						android:src="@drawable/add_field_default"
 						android:contentDescription="@string/content_description_add"
 						android:layout_alignParentRight="true"
 						android:layout_width="30dp"
@@ -191,7 +170,6 @@
 
 					<ImageView
 						android:id="@+id/add_number_field"
-						android:src="@drawable/add_field_default"
 						android:contentDescription="@string/content_description_add"
 						android:layout_alignParentRight="true"
 						android:layout_width="30dp"

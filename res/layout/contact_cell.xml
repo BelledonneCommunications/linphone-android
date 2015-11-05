@@ -4,28 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-	android:background="@color/colorH"
+	android:background="@color/colorG"
     android:orientation="vertical">
 
-	<LinearLayout
+	<TextView
 		android:id="@+id/separator"
+		style="@style/font8"
+		android:textStyle="bold"
+		android:background="@color/colorA"
+		android:textAllCaps="true"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
-
-		<TextView
-			android:id="@+id/separator_text"
-			style="@style/font1"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:gravity="center" />
-
-		<ImageView
-			android:background="@color/colorE"
-			android:layout_width="match_parent"
-			android:layout_height="1dp"/>
-
-	</LinearLayout>
+		android:layout_height="35dp"
+		android:gravity="center"/>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -33,41 +23,23 @@
 		android:layout_margin="5dp"
 		android:gravity="center_vertical">
 
-		<RelativeLayout
-			android:id="@+id/avatar_layout"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:gravity="center">
+		<ImageView
+			android:id="@+id/contact_picture"
+			android:src="@drawable/avatar"
+			android:contentDescription="@string/content_description_contact_picture"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:adjustViewBounds="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="5dp"/>
 
-			<ImageView
-				android:id="@+id/contact_picture"
-				android:src="@drawable/avatar"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="35dp"
-				android:layout_height="35dp"
-				android:adjustViewBounds="true"
-				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"/>
-
-			<ImageView
-				android:id="@+id/mask"
-				android:src="@drawable/avatar_mask"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="35dp"
-				android:layout_height="35dp"
-				android:adjustViewBounds="true"
-				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"/>
-
-		</RelativeLayout>
-		    
 		<TextView 
 		    android:id="@+id/name"
 		    android:lines="1"
-			style="@style/font6"
+			style="@style/font2"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/avatar_layout"
+		    android:layout_toRightOf="@id/contact_picture"
 		    android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/delete"
 		    android:layout_marginLeft="10dp" />

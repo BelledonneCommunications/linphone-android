@@ -99,8 +99,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
-	private RelativeLayout contacts, history, dialer, chat;
-	private RelativeLayout contacts_selected, history_selected, dialer_selected, chat_selected;
+	private ImageView contacts, dialer, historyImage, chatImage;
+	private RelativeLayout history, chat;
 	private FragmentsAvailable currentFragment, nextFragment;
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment dialerFragment, messageListFragment, friendStatusListenerFragment;
@@ -136,7 +136,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (isTablet() && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if (!isTablet() && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-        	//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
 		if (!LinphoneManager.isInstanciated()) {
@@ -229,10 +229,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				Log.w("Call state" + state);
 				if (state == State.IncomingReceived) {
 					//finish();
 					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+					Log.w("Call outgoing" + state);
 					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
@@ -304,17 +306,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		history = (RelativeLayout) findViewById(R.id.history);
 		history.setOnClickListener(this);
-		contacts = (RelativeLayout) findViewById(R.id.contacts);
+		historyImage = (ImageView) findViewById(R.id.history_image);
+		contacts = (ImageView) findViewById(R.id.contacts);
 		contacts.setOnClickListener(this);
-		dialer = (RelativeLayout) findViewById(R.id.dialer);
+		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
 		chat = (RelativeLayout) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
-
-		history_selected = (RelativeLayout) findViewById(R.id.history_select);
-		contacts_selected = (RelativeLayout) findViewById(R.id.contacts_select);
-		dialer_selected = (RelativeLayout) findViewById(R.id.dialer_select);
-		chat_selected = (RelativeLayout) findViewById(R.id.chat_select);
+		chatImage = (ImageView) findViewById(R.id.chat_image);
 
 		missedCalls = (TextView) findViewById(R.id.missedCalls);
 		missedChats = (TextView) findViewById(R.id.missedChats);
@@ -702,30 +701,18 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		resetSelection();
 
 		if (id == R.id.history) {
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
-			history_selected.setVisibility(View.VISIBLE);
 			LinphoneManager.getLc().resetMissedCallsCount();
 			displayMissedCalls(0);
 		} else if (id == R.id.contacts) {
 			changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, null);
-			contacts_selected.setVisibility(View.VISIBLE);
 		} else if (id == R.id.dialer) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, null);
-			dialer_selected.setVisibility(View.VISIBLE);
 		} else if (id == R.id.chat) {
 			changeCurrentFragment(FragmentsAvailable.CHATLIST, null);
-			chat_selected.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void resetSelection() {
-		history_selected.setVisibility(View.GONE);
-		contacts_selected.setVisibility(View.GONE);
-		dialer_selected.setVisibility(View.GONE);
-		chat_selected.setVisibility(View.GONE);
 	}
 
 	public void hideTabBar(Boolean hide) {
@@ -739,20 +726,24 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@SuppressWarnings("incomplete-switch")
 	public void selectMenu(FragmentsAvailable menuToSelect) {
 		currentFragment = menuToSelect;
-		resetSelection();
+
+		contacts.setImageResource(R.drawable.footer_contacts);
+		historyImage.setImageResource(R.drawable.footer_history);
+		dialer.setImageResource(R.drawable.footer_dialer);
+		chatImage.setImageResource(R.drawable.footer_chat);
 
 		switch (menuToSelect) {
 		case HISTORY_LIST:
 		case HISTORY_DETAIL:
-			history_selected.setVisibility(View.VISIBLE);
+			historyImage.setImageResource(R.drawable.footer_history_selected);
 			break;
 		case CONTACTS_LIST:
 			case CONTACT_DETAIL:
 			case CONTACT_EDITOR:
-			contacts_selected.setVisibility(View.VISIBLE);
+				contacts.setImageResource(R.drawable.footer_contacts_selected);
 			break;
 		case DIALER:
-			dialer_selected.setVisibility(View.VISIBLE);
+			dialer.setImageResource(R.drawable.footer_dialer_selected);
 			break;
 		case SETTINGS:
 		case ACCOUNT_SETTINGS:
@@ -760,7 +751,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			break;
 		case CHATLIST:
 		case CHAT:
-			chat_selected.setVisibility(View.VISIBLE);
+			chatImage.setImageResource(R.drawable.footer_chat_selected);
 			break;
 		}
 	}
@@ -1021,6 +1012,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
+		Log.w("resetClassicMenuLayoutAndGoBackToCallIfStillRunning");
 		if (dialerFragment != null) {
 			((DialerFragment) dialerFragment).resetLayout(false);
 		}
@@ -1076,6 +1068,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.w("Linphone Activity onActivityResult");
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				quit();
@@ -1099,6 +1092,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onPause() {
+		Log.w("onPause ");
 		getIntent().putExtra("PreviousActivity", 0);
 		super.onPause();
 	}
@@ -1172,6 +1166,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+
+		Log.w("Linphone Activity on new intent");
 
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {

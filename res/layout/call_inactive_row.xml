@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@color/colorA"
-	android:alpha="0.5"
+	android:background="@color/colorG"
 	android:layout_height="60dp"
 	android:layout_width="match_parent"
 	android:layout_margin="2dp"
@@ -17,7 +16,7 @@
 
    	<TextView
         android:id="@+id/contact_name"
-		style="@style/font14"
+		style="@style/font9"
 		android:singleLine="true"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
@@ -28,7 +27,7 @@
 
 	<Chronometer
 		android:id="@+id/call_timer"
-		style="@style/font16"
+		style="@style/font12"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:paddingLeft="10dp"
@@ -37,7 +36,7 @@
     
     <ImageView
 		android:id="@+id/call_pause"
-		android:src="@drawable/pause_small_over_selected"
+		android:src="@drawable/pause_small_default"
 		android:contentDescription="@string/content_description_pause"
         android:layout_width="40dp"
         android:layout_height="40dp"

@@ -5,15 +5,15 @@
 	<string name="messages_date_format">dd/MM, HH:mm </string>
 	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">HH:mm</string>
-	<string name="picture_name_format">linphone-mms-%s.jpg</string>
+	<string name="picture_name_format">orange-secure-phone-mms-%s.jpg</string>
 
-	<string name="app_name">Linphone</string>
-	<string name="service_name">Linphone Service</string>
+	<string name="app_name">Orange Secure Phone</string>
+	<string name="service_name">Orange Secure Phone Service</string>
 	<string name="addressbook_label">Linphone</string>
 	<string name="sync_account_type">org.linphone</string>
 	<string name="sync_account_name">linphone contacts</string>
 	<string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
-	<string name="notification_title">Linphone</string>
+	<string name="notification_title">Orange Secure Phone</string>
 	<string name="wait_dialog_text">Starting up</string>
 	<string name="notification_registered">Registered to %s </string>
 	<string name="notification_register_failure">Fails to register to %s</string>
