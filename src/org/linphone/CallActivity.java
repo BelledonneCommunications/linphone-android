@@ -1470,7 +1470,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		//}
 
 		LinphoneAddress lAddress = call.getRemoteAddress();
-		TextView contactName = (TextView) findViewById(R.id.contact_name);
+		TextView contactName = (TextView) findViewById(R.id.current_contact_name);
 
 		setContactInformation(contactName, contactPicture, lAddress);
 		registerCallDurationTimer(null, call);
@@ -1547,7 +1547,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		Chronometer timer;
 		if(v == null){
-			timer = (Chronometer) findViewById(R.id.call_timer);
+			timer = (Chronometer) findViewById(R.id.current_call_timer);
 		} else {
 			timer = (Chronometer) v.findViewById(R.id.call_timer);
 		}
