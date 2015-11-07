@@ -32,7 +32,7 @@ public class WrapperTester extends AndroidTestCase {
 		mCore.enableVideoMulticast(false);
 		Assert.assertEquals(false, mCore.videoMulticastEnabled());
 		
-		LinphoneCallParams params = mCore.createDefaultCallParameters();
+		LinphoneCallParams params = mCore.createCallParams(null);
 		params.enableAudioMulticast(true);
 		Assert.assertEquals(true, params.audioMulticastEnabled());
 		params.enableAudioMulticast(false);
