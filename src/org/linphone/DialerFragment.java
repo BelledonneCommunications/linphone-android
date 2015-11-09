@@ -140,7 +140,6 @@ public class DialerFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-		Log.w("onResume ");
 		super.onResume();
 		
 		if (LinphoneActivity.isInstanciated()) {

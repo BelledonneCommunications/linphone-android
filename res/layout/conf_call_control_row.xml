@@ -30,7 +30,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_vertical|left"
-			android:paddingLeft="20dp"
+			android:paddingLeft="10dp"
 			android:paddingRight="10dp"/>
 
 
@@ -40,7 +40,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingLeft="10dp"
-			android:paddingRight="20dp"
+			android:paddingRight="10dp"
 			android:gravity="center_vertical|right"/>
 
 	</LinearLayout>
@@ -49,8 +49,9 @@
 	<ImageView
 		android:id="@+id/quitConference"
 		android:src="@drawable/conference_exit_default"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:padding="20dp"
         android:gravity="center_vertical"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true" />

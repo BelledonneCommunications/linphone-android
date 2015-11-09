@@ -89,7 +89,6 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-				Log.w("State " + state);
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
 					finish();
 					return;

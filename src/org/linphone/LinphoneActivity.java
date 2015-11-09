@@ -229,12 +229,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-				Log.w("Call state" + state);
 				if (state == State.IncomingReceived) {
 					//finish();
 					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
-					Log.w("Call outgoing" + state);
 					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
@@ -477,6 +475,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		/*if (statusFragment != null) {
 			statusFragment.closeStatusBar();
 		}*/
+
 
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
@@ -1019,7 +1018,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
-		Log.w("resetClassicMenuLayoutAndGoBackToCallIfStillRunning");
 		if (dialerFragment != null) {
 			((DialerFragment) dialerFragment).resetLayout(false);
 		}
@@ -1075,7 +1073,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.w("Linphone Activity onActivityResult");
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				quit();
@@ -1103,7 +1100,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onPause() {
-		Log.w("onPause ");
 		getIntent().putExtra("PreviousActivity", 0);
 		super.onPause();
 	}
@@ -1111,7 +1107,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		if (!LinphoneService.isReady())  {
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
@@ -1177,8 +1172,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-
-		Log.w("Linphone Activity on new intent");
 
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {

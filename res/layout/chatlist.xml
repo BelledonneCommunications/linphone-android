@@ -22,8 +22,7 @@
 
 		<ImageView
 			android:id="@+id/back_in_call"
-			android:src="@drawable/call_back"
-			android:background="@drawable/toolbar_button"
+			android:src="@drawable/call_back_button"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:padding="15dp"
@@ -58,12 +57,11 @@
     
     <TextView 
         android:id="@+id/noChatHistory"
+		android:text="@string/no_chat_history"
+		style="@style/font2"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/no_chat_history"
-        android:textColor="@color/colorB"
-        android:textAppearance="@android:style/TextAppearance.Large"/>
+        android:gravity="center"/>
 
 </LinearLayout>

@@ -634,7 +634,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			video.setAlpha(1f);
 		} else {
 			video.setEnabled(false);
-			video.setAlpha(0.2f);
+			video.setAlpha(0.3f);
 		}
 	}
 
@@ -746,6 +746,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 	private void displayAudioCall(){
 		mActiveCallHeader.setVisibility(View.VISIBLE);
+		mActiveCallHeader.setAlpha(1f);
 		callInfo.setVisibility(View.VISIBLE);
 		contactPicture.setVisibility(View.VISIBLE);
 		mNoCurrentCall.setVisibility(View.GONE);
@@ -836,6 +837,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			showStatusBar();
 			mControlsLayout.setVisibility(View.VISIBLE);
 			mActiveCallHeader.setVisibility(View.VISIBLE);
+			mActiveCallHeader.setAlpha(0.7f);
 			callInfo.setVisibility(View.VISIBLE);
 			contactPicture.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
@@ -847,6 +849,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			hideStatusBar();
 			mControlsLayout.setVisibility(View.GONE);
 			mActiveCallHeader.setVisibility(View.GONE);
+			mActiveCallHeader.setAlpha(1f);
 			switchCamera.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
 			callsList.setVisibility(View.GONE);
@@ -903,7 +906,7 @@ public class CallActivity extends Activity implements OnClickListener {
 						addCall.setVisibility(View.INVISIBLE);
 						displayVideoCall(false);
 						numpad.setVisibility(View.GONE);
-						options.setImageResource(R.drawable.options);
+						options.setImageResource(R.drawable.options_default);
 					} else {
 						Animation animation = slideOutTopToBottom;
 						animation.setAnimationListener(new AnimationListener() {
@@ -923,7 +926,7 @@ public class CallActivity extends Activity implements OnClickListener {
 								addCall.setVisibility(View.INVISIBLE);
 								displayVideoCall(false);
 								numpad.setVisibility(View.GONE);
-								options.setImageResource(R.drawable.options);
+								options.setImageResource(R.drawable.options_default);
 								animation.setAnimationListener(null);
 							}
 						});
@@ -983,7 +986,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		if (numpad.getVisibility() == View.VISIBLE) {
 			hideNumpad();
 		} else {
-			dialer.setImageResource(R.drawable.dialer_alt_back);
+			dialer.setImageResource(R.drawable.dialer_back_button);
 			if (isAnimationDisabled) {
 				numpad.setVisibility(View.VISIBLE);
 			} else {
@@ -1443,23 +1446,9 @@ public class CallActivity extends Activity implements OnClickListener {
 
 	//CALL INFORMATION
 	private void displayCurrentCall(LinphoneCall call){
-		//if(!isVideoEnabled(call)){
-		//	mActiveCallHeader.setVisibility(View.VISIBLE);
-		//	mNoCurrentCall.setVisibility(View.GONE);
-		//}
-
 		LinphoneAddress lAddress = call.getRemoteAddress();
-		TextView contactName = (TextView) findViewById(R.id.contact_name);
-
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
-		if (lContact == null) {
-			contactName.setText(lAddress.getUserName());
-		} else {
-			contactName.setText(lContact.getName());
-			//LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
-		}
-
-		setContactInformation(contactName, contactPicture, lAddress);
+		TextView currentContactName = (TextView) findViewById(R.id.current_contact_name);
+		currentContactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 		registerCallDurationTimer(null, call);
 	}
 
@@ -1480,15 +1469,11 @@ public class CallActivity extends Activity implements OnClickListener {
 			contactName.setText(resources.getString(R.string.conference));
 			contactImage.setImageResource(R.drawable.conference_start);
 		} else {
-			setContactInformation(contactName, contactImage, lAddress);
+			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 			displayCallStatusIconAndReturnCallPaused(callView, call);
 			registerCallDurationTimer(callView, call);
 			callsList.addView(callView);
 		}
-	}
-
-	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
-		contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 	}
 
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
@@ -1527,7 +1512,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		Chronometer timer;
 		if(v == null){
-			timer = (Chronometer) findViewById(R.id.call_timer);
+			timer = (Chronometer) findViewById(R.id.current_call_timer);
 		} else {
 			timer = (Chronometer) v.findViewById(R.id.call_timer);
 		}
@@ -1549,7 +1534,6 @@ public class CallActivity extends Activity implements OnClickListener {
 			conferenceList.setVisibility(View.GONE);
 		}
 
-		//TODO DON'T SHOW CALLLIST IF THERE IS VIDEO CALL
 		if(callsList != null) {
 			callsList.setVisibility(View.VISIBLE);
 			callsList.removeAllViews();
@@ -1617,13 +1601,13 @@ public class CallActivity extends Activity implements OnClickListener {
 		LinearLayout confView = (LinearLayout) inflater.inflate(R.layout.conf_call_control_row, container, false);
 		conferenceList.setId(index+1);
 		TextView contact = (TextView) confView.findViewById(R.id.contactNameOrNumber);
-
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(),call.getRemoteAddress());
+		contact.setText(call.getRemoteAddress().getUserName());
+		/*Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(),call.getRemoteAddress());
 		if (lContact == null) {
-			contact.setText(call.getRemoteAddress().getUserName());
+
 		} else {
 			contact.setText(lContact.getName());
-		}
+		}*/
 
 		registerCallDurationTimer(confView, call);
 
