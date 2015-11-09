@@ -2,4 +2,4 @@
 <bitmap
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:src="@drawable/options_add_call"
-	android:alpha="0.5" />
+	android:alpha="0.3" />
