@@ -113,7 +113,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private EditText message;
 	private ImageView cancelUpload, edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage, cancel;
 	private TextView contactName, remoteComposing;
-	private ImageView back;
+	private ImageView back, backToCall;
 	private AutoCompleteTextView searchContactField;
 	private RelativeLayout uploadLayout, textLayout, topBar, editList;
 	private ListView messagesList;
@@ -181,6 +181,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		startCall = (ImageView) view.findViewById(R.id.start_call);
 		startCall.setOnClickListener(this);
+
+		backToCall = (ImageView) view.findViewById(R.id.back_to_call);
+		backToCall.setOnClickListener(this);
 
 		selectAll = (ImageView) view.findViewById(R.id.select_all);
 		selectAll.setOnClickListener(this);
@@ -585,6 +588,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneActivity.instance().hideTabBar(false);
 		}
 
+		if(LinphoneManager.getLc().isIncall()){
+			backToCall.setVisibility(View.VISIBLE);
+			startCall.setVisibility(View.INVISIBLE);
+		} else {
+			backToCall.setVisibility(View.INVISIBLE);
+			startCall.setVisibility(View.VISIBLE);
+		}
+
 		LinphoneAddress lAddress;
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
@@ -641,6 +652,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
+
+		if (id == R.id.back_to_call) {
+			LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+			return;
+		}
 
 		if (id == R.id.select_all) {
 			deselectAll.setVisibility(View.VISIBLE);
