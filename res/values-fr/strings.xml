@@ -76,8 +76,8 @@
   <!-- Call -->
   <string name="incoming_call">Appel entrant</string>
   <string name="outgoing_call">Appel sortant</string>
-  <string name="add_video_dialog">Votre corespondant(e) souhaiterais ajouter la vidéo</string>
+  <string name="add_video_dialog">Votre correspondant(e) souhaiterais ajouter la vidéo</string>
   <string name="no_current_call">Toutes vos conversations sont en pause</string>
-  <string name="call_paused_by_remote">%s a mis la conversation en pause.</string>
+  <string name="call_paused_by_remote">Votre correspondant(e) a mis la conversation en pause.</string>
   <string name="zrtp_dialog">Veuillez vérifier par oral avec votre interlocuteur qu\'il a le code suivant :\n%s</string>
 </resources>

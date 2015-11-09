@@ -60,7 +60,7 @@
 	<TextView
 		android:id="@+id/no_call_history"
 		android:text="@string/no_call_history"
-		style="@style/font14"
+		style="@style/font2"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -69,7 +69,7 @@
 	<TextView
 		android:id="@+id/no_missed_call_history"
 		android:text="@string/no_missed_call_history"
-		style="@style/font14"
+		style="@style/font2"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
