@@ -1464,14 +1464,8 @@ public class CallActivity extends Activity implements OnClickListener {
 
 	//CALL INFORMATION
 	private void displayCurrentCall(LinphoneCall call){
-		//if(!isVideoEnabled(call)){
-		//	mActiveCallHeader.setVisibility(View.VISIBLE);
-		//	mNoCurrentCall.setVisibility(View.GONE);
-		//}
-
 		LinphoneAddress lAddress = call.getRemoteAddress();
 		TextView contactName = (TextView) findViewById(R.id.current_contact_name);
-
 		setContactInformation(contactName, contactPicture, lAddress);
 		registerCallDurationTimer(null, call);
 	}

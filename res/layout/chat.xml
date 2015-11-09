@@ -41,6 +41,17 @@
 			android:layout_height="match_parent"
 			android:padding="15dp"/>
 
+		<ImageView
+			android:id="@+id/back_to_call"
+			android:src="@drawable/call_back"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_call"
+			android:layout_toLeftOf="@id/edit"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:visibility="gone"
+			android:padding="15dp"/>
+
 		<TextView
 			android:id="@+id/contact_name"
 			style="@style/font6"
