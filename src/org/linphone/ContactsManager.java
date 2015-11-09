@@ -246,8 +246,8 @@ public class ContactsManager {
 	public Cursor searchFriends(String search) {
 		searchContactList =  new ArrayList<Contact>();
 		for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
-			if (friend.getAddress().getUserName().contains(search)) {
-				searchContactList.add(new Contact(friend.getRefKey(), friend.getAddress()));
+			if (LinphoneUtils.getAddressDisplayName(friend.getAddress()).toLowerCase().contains(search.toLowerCase()) || friend.getAddress().getUserName().toLowerCase().contains(search.toLowerCase())) {
+				searchContactList.add(new Contact(friend.getRefKey(),friend.getAddress().asStringUriOnly(),LinphoneUtils.getAddressDisplayName(friend.getAddress())));
 			}
 		}
 
@@ -597,7 +597,7 @@ public class ContactsManager {
 		if(LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_friend)){
 			contactList = new ArrayList<Contact>();
 			for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()){
-				Contact contact = new Contact(friend.getRefKey(),friend.getAddress());
+				Contact contact = new Contact(friend.getRefKey(),friend.getAddress().asStringUriOnly(),LinphoneUtils.getAddressDisplayName(friend.getAddress()));
 				contactList.add(contact);
 			}
 

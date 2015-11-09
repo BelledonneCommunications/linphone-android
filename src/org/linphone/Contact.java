@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
 
@@ -43,7 +42,7 @@ public class Contact implements Serializable {
 	private transient Bitmap photo;
 	private List<String> numbersOrAddresses;
 	private boolean hasFriends;
-	private LinphoneAddress address;
+	private String address;
 	
 	public Contact(String id, String name) {
 		super();
@@ -55,10 +54,10 @@ public class Contact implements Serializable {
 		this.address = null;
 	}
 
-	public Contact(String id, LinphoneAddress address) {
+	public Contact(String id, String address, String name) {
 		super();
 		this.id = id;
-		this.name = LinphoneUtils.getAddressDisplayName(address);
+		this.name = name;
 		this.photoUri = null;
 		this.thumbnailUri = null;
 		this.address = address;
@@ -100,7 +99,7 @@ public class Contact implements Serializable {
 		return name;
 	}
 
-	public LinphoneAddress getLinphoneAddress() {
+	public String getLinphoneAddress() {
 		return address;
 	}
 

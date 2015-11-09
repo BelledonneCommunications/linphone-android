@@ -56,7 +56,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		public void onClick(View v) {
 			if (LinphoneActivity.isInstanciated()) {
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				Log.w("Dial");
 				if (lc != null) {
 					LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 					String to;
@@ -86,7 +85,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.w("onCreateView");
 		contact = (Contact) getArguments().getSerializable("Contact");
 		
 		this.inflater = inflater;
@@ -133,17 +131,17 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
-			tv.setText(contact.getLinphoneAddress().asStringUriOnly());
+			tv.setText(contact.getLinphoneAddress());
 
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.call).setOnClickListener(dialListener);
-				v.findViewById(R.id.call).setTag(contact.getLinphoneAddress().asStringUriOnly());
+				v.findViewById(R.id.call).setTag(contact.getLinphoneAddress());
 			} else {
 				v.findViewById(R.id.call).setVisibility(View.GONE);
 			}
 
 			v.findViewById(R.id.chat).setOnClickListener(chatListener);
-			v.findViewById(R.id.chat).setTag(contact.getLinphoneAddress().asStringUriOnly());
+			v.findViewById(R.id.chat).setTag(contact.getLinphoneAddress());
 
 			if (getResources().getBoolean(R.bool.disable_chat)) {
 				v.findViewById(R.id.chat).setVisibility(View.GONE);

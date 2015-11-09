@@ -300,7 +300,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	
 	@Override
 	public void onPause() {
-		Log.w("onPause ");
 		instance = null;
 		if (searchCursor != null) {
 			searchCursor.close();
