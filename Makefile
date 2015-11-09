@@ -187,7 +187,7 @@ $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so: $(FFMPEG_BUILD_DI
 $(FFMPEG_BUILD_DIR)/arm/libffmpeg-linphone-arm.so: $(FFMPEG_BUILD_DIR)/arm/libavcodec/libavcodec-linphone-arm.so
 	cd $(FFMPEG_BUILD_DIR)/arm && \
 	rm libavcodec/log2_tab.o && \
-	$(ARM_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(ARM_SYSROOT) -Wl,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/arm/*.o libavcodec/*.o libavcodec/arm/*.o libswscale/*.o -o libffmpeg-linphone-arm.so
+	$(ARM_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(ARM_SYSROOT) -Wl,-soname,libffmpeg-linphone-arm.so,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/arm/*.o libavcodec/*.o libavcodec/arm/*.o libswscale/*.o -o libffmpeg-linphone-arm.so
 
 $(FFMPEG_BUILD_DIR)/x86/config.h:
 	mkdir -p $(FFMPEG_BUILD_DIR)/x86 && \
@@ -204,7 +204,7 @@ $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so: $(FFMPEG_BUILD_DI
 $(FFMPEG_BUILD_DIR)/x86/libffmpeg-linphone-x86.so: $(FFMPEG_BUILD_DIR)/x86/libavcodec/libavcodec-linphone-x86.so
 	cd $(FFMPEG_BUILD_DIR)/x86 && \
 	rm libavcodec/log2_tab.o && \
-	$(X86_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(X86_SYSROOT) -Wl,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/x86/*.o libavcodec/*.o libavcodec/x86/*.o libswscale/*.o -o  libffmpeg-linphone-x86.so
+	$(X86_TOOLCHAIN_PATH)gcc -lm -lz --sysroot=$(X86_SYSROOT) -Wl,-soname,libffmpeg-linphone-x86.so,--no-undefined -Wl,-z,noexecstack -shared libavutil/*.o libavutil/x86/*.o libavcodec/*.o libavcodec/x86/*.o libswscale/*.o -o  libffmpeg-linphone-x86.so
 
 build-ffmpeg: $(BUILD_FFMPEG_DEPS)
 
@@ -457,7 +457,6 @@ MEDIASTREAMER2_OPTIONS = $(GENERATE_OPTIONS) BUILD_MEDIASTREAMER2_SDK=1
 
 generate-libs: prepare-sources javah
 	$(NDK_PATH)/ndk-build $(LIBLINPHONE_OPTIONS) -j$(NUMCPUS) TARGET_PLATFORM=$(NDKBUILD_TARGET)
-	./bsed.sh # Fix path to libffmpeg library in linphone.so because of Android M Preview issue: https://code.google.com/p/android-developer-preview/issues/detail?id=2239
 
 generate-mediastreamer2-libs: prepare-sources
 	@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \
