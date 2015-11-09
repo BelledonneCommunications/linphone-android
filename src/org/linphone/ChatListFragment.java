@@ -70,7 +70,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
 	private TextView noChatHistory;
-	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, contactPicture, cancel;
+	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, contactPicture, cancel, backInCall;
 	private RelativeLayout editList, topbar;
 	private boolean isEditMode = false;
 	
@@ -103,6 +103,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
 		deselectAll.setOnClickListener(this);
+
+		backInCall = (ImageView) view.findViewById(R.id.back_in_call);
+		backInCall.setOnClickListener(this);
 
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
@@ -196,6 +199,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onResume() {
 		super.onResume();
 
+		if (LinphoneManager.getLc().getCallsNb() > 0) {
+			backInCall.setVisibility(View.VISIBLE);
+		} else {
+			backInCall.setVisibility(View.GONE);
+		}
+
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
 		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
 		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
@@ -265,6 +274,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
+
+		if (id == R.id.back_in_call) {
+			LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+			return;
+		}
 
 		if (id == R.id.select_all) {
 			deselectAll.setVisibility(View.VISIBLE);

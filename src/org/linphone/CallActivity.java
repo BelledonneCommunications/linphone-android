@@ -84,7 +84,7 @@ public class CallActivity extends Activity implements OnClickListener {
 	private ImageView switchCamera;
 	private RelativeLayout mActiveCallHeader, sideMenuContent;
 	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
-	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu;
+	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu, chat;
 	private LinearLayout mNoCurrentCall, callInfo, mCallPaused;
 	private ProgressBar videoProgress;
 	private StatusFragment status;
@@ -328,6 +328,9 @@ public class CallActivity extends Activity implements OnClickListener {
 		numpad = (Numpad) findViewById(R.id.numpad);
 		numpad.getBackground().setAlpha(240);
 
+		chat = (ImageView) findViewById(R.id.chat);
+		chat.setOnClickListener(this);
+
 		//Others
 
 		//Active Call
@@ -568,6 +571,9 @@ public class CallActivity extends Activity implements OnClickListener {
 		}
 		else if (id == R.id.dialer) {
 			hideOrDisplayNumpad();
+		}
+		else if (id == R.id.chat) {
+			goToChatList();
 		}
 		else if (id == R.id.conference) {
 			enterConference();
@@ -1215,6 +1221,13 @@ public class CallActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	private void goToChatList() {
+		Intent intent = new Intent();
+		intent.putExtra("chat", true);
+		setResult(Activity.RESULT_FIRST_USER, intent);
+		finish();
+	}
+
 	public void acceptCallUpdate(boolean accept) {
 		if (timer != null) {
 			timer.cancel();
@@ -1429,7 +1442,6 @@ public class CallActivity extends Activity implements OnClickListener {
 
 
 	//CALL INFORMATION
-
 	private void displayCurrentCall(LinphoneCall call){
 		//if(!isVideoEnabled(call)){
 		//	mActiveCallHeader.setVisibility(View.VISIBLE);
@@ -1505,14 +1517,6 @@ public class CallActivity extends Activity implements OnClickListener {
 		}
 
 		return isCallPaused || isInConference;
-	}
-
-	private void displayOrHideContactPicture(LinearLayout callView, Uri pictureUri, Uri thumbnailUri, boolean hide) {
-		/*ImageView contactPicture = (ImageView) callView.findViewById(R.id.contactPicture);
-		if (pictureUri != null) {
-
-        }
-		callView.setVisibility(hide ? View.GONE : View.VISIBLE);*/
 	}
 
 	private void registerCallDurationTimer(View v, LinphoneCall call) {

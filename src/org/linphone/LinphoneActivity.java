@@ -602,6 +602,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		preferLinphoneContacts = false;
 	}
 
+	public void displayChatList() {
+		Bundle extras = new Bundle();
+		changeCurrentFragment(FragmentsAvailable.CHATLIST, extras);
+	}
+
 	public void displayContactsForEdition(String sipAddress) {
 		Bundle extras = new Bundle();
 		extras.putBoolean("EditOnClick", true);
@@ -872,6 +877,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
+
+
 	public void displayCustomToast(final String message, final int duration) {
 		LayoutInflater inflater = getLayoutInflater();
 		View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
@@ -1080,6 +1087,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
 			getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
 			boolean callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
+			boolean chat = data == null ? false : data.getBooleanExtra("chat", false);
+			if(chat){
+				displayChatList();
+			}
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				initInCallMenuLayout(callTransfer);
 			} else {
