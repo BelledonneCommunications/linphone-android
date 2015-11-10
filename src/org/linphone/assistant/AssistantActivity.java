@@ -351,7 +351,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			}
 			
 			builder.setExpires("604800")
-			.setOutboundProxyEnabled(true)
 			.setAvpfEnabled(true)
 			.setAvpfRRInterval(3)
 			.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
