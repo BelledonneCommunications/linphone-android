@@ -43,14 +43,14 @@ BUILD_NON_FREE_CODECS=1
 ENABLE_OPENH264_DECODER=1
 BUILD_UPNP=1
 BUILD_AMRNB=full # 0, light or full
-BUILD_AMRWB=1
+BUILD_AMRWB=0 # Has text relocation issue, don't use when targetting API 23 for now
 BUILD_ZRTP=1
 BUILD_SILK=1
 BUILD_TUNNEL=0
 BUILD_WEBRTC_AECM=1
 BUILD_OPUS=1
 BUILD_MATROSKA=1
-BUILD_WEBRTC_ISAC=1
+BUILD_WEBRTC_ISAC=0
 BUILD_FOR_X86=1
 BUILD_FOR_ARM=1
 USE_JAVAH=1
@@ -365,9 +365,6 @@ clean-vpx:
 	cd $(LIBVPX_SRC_DIR) && git clean -dfx && git reset --hard
 	rm -rf submodules/externals/build/libvpx/arm && \
 	rm -rf submodules/externals/build/libvpx/x86
-
-
-
 
 #srtp
 $(TOPDIR)/submodules/externals/srtp/config.h : $(TOPDIR)/submodules/externals/build/srtp/config.h
