@@ -62,89 +62,71 @@
 			android:layout_toRightOf="@id/back"
 			android:layout_toLeftOf="@id/start_call"
 			android:paddingLeft="10dp"
-			android:gravity="center"/>
+			android:gravity="center_vertical"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
 
 	<LinearLayout
-        android:id="@+id/footer"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:layout_alignParentBottom="true"
-	    android:layout_centerHorizontal="true"
-   		android:background="@color/colorF">
-       
-	    <RelativeLayout 
-	        android:id="@+id/messageLayout"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content">
-	        
-	        <ImageView
-	            android:id="@+id/sendPicture"
+		android:id="@+id/footer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:background="@color/colorF">
+
+		<RelativeLayout
+			android:id="@+id/messageLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<ImageView
+				android:id="@+id/sendPicture"
 				android:padding="5dp"
 				android:scaleType="center"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_centerVertical="true"
-	            android:src="@drawable/chat_send_file" />
-	        
-	        <ImageView
-	            android:id="@+id/sendMessage"
-	            android:gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true"
+				android:src="@drawable/chat_send_file" />
+
+			<ImageView
+				android:id="@+id/sendMessage"
+				android:gravity="center"
 				android:padding="5dp"
 				android:scaleType="center"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:src="@drawable/chat_send_message"
 				android:layout_alignTop="@+id/message"
 				android:layout_alignParentRight="true"/>
-	        
-	        <EditText
-                android:imeOptions="flagNoExtractUi"
-	            android:textCursorDrawable="@null"
-	            android:id="@+id/message"
-            	android:inputType="textMultiLine"
-            	android:maxLines="3"
-	            android:textColor="@android:color/black"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@id/sendPicture"
-	            android:layout_toLeftOf="@id/sendMessage"
-	            android:background="@drawable/resizable_textfield"
-	            android:layout_centerVertical="true"/>
-	        
-	    </RelativeLayout>
-	    
-	    <RelativeLayout 
-	        android:id="@+id/uploadLayout"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content">
-	        
-	        <ImageView 
-	            android:contentDescription="@string/content_description_cancel"
-	            android:id="@+id/cancelUpload"
-	            android:src="@drawable/clean_field_default"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:adjustViewBounds="true"
-	            android:layout_alignParentRight="true"
-	            android:padding="20dp" />
 
-	        
-	    </RelativeLayout>
-    
+			<EditText
+				android:imeOptions="flagNoExtractUi"
+				android:textCursorDrawable="@null"
+				android:id="@+id/message"
+				android:inputType="textMultiLine"
+				android:maxLines="3"
+				android:textColor="@android:color/black"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_toRightOf="@id/sendPicture"
+				android:layout_toLeftOf="@id/sendMessage"
+				android:background="@drawable/resizable_textfield"
+				android:layout_centerVertical="true"/>
+
+		</RelativeLayout>
+
 	</LinearLayout>
-        
+
 	<TextView
-        android:id="@+id/remoteComposing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+		android:id="@+id/remoteComposing"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 		android:textColor="@color/colorB"
-        android:text="@string/remote_composing"
-        android:layout_above="@id/footer"/>
+		android:text="@string/remote_composing"
+		android:layout_above="@id/footer"/>
 
 	<ListView
 		android:id="@+id/chatMessageList"
@@ -154,8 +136,8 @@
 		android:stackFromBottom="true"
 		android:transcriptMode="alwaysScroll"
 		android:cacheColorHint="@color/transparent"
-		android:dividerHeight="10dp"
 		android:layout_above="@id/remoteComposing"
+		android:dividerHeight="10dp"
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
 		android:layout_marginBottom="10dp"
@@ -166,6 +148,7 @@
 		android:textCursorDrawable="@null"
 		android:visibility="gone"
 		android:layout_margin="10dp"
+		android:layout_below="@id/top_bar"
 		android:id="@+id/searchContactField"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
@@ -173,9 +156,7 @@
 		android:background="@drawable/resizable_textfield"
 		android:gravity="center"
 		android:completionThreshold="1"
-		android:layout_below="@+id/top_bar"
 		android:paddingRight="5dp"
 		android:inputType="textPersonName"/>
-
 
 </RelativeLayout>

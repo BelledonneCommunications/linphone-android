@@ -74,10 +74,11 @@ import android.widget.TextView;
 public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListener {
 	private static final HashMap<String, Integer> emoticons = new HashMap<String, Integer>();
 
-	private LinearLayout view;
+	private View view;
 	private ImageView statusView, contactPicture;
 	private LinphoneChatMessage nativeMessage;
 	private Context mContext;
+	private Button cancelUpload, acceptDownload;
 	private static final int SIZE_MAX = 512;
 	private ProgressBar progressBar, inprogress;
 	private Bitmap defaultBitmap;
@@ -91,9 +92,9 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 		mContext = context;
 
 		if (message.isOutgoing()) {
-			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
+			view = LayoutInflater.from(context).inflate(R.layout.chat_bubble_outgoing, null);
 		} else {
-			view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
+			view = LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
 		}
 
 		defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_picture_over);
@@ -119,12 +120,29 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			}
 		}
 
+		if(nativeMessage.isOutgoing()){
+			cancelUpload = (Button) view.findViewById(R.id.cancel_upload);
+			cancelUpload.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (LinphoneManager.getInstance().getMessageUploadPending() != null) {
+						progressBar.setVisibility(View.GONE);
+						//tex.setVisibility(View.VISIBLE);
+
+						progressBar.setProgress(0);
+						nativeMessage.cancelFileTransfer();
+						LinphoneManager.getInstance().setUploadPendingFileMessage(null);
+					}
+				}
+			});
+		}
+
 		String externalBodyUrl = message.getExternalBodyUrl();
 		LinphoneContent fileTransferContent = message.getFileTransferInformation();
 
 		if(LinphoneManager.getInstance().getMessageUploadPending() != null){
 			progressBar.setVisibility(View.VISIBLE);
-			nativeMessage.setListener(LinphoneManager.getInstance());
+			LinphoneManager.addListener(this);
 		}
 
 		if (externalBodyUrl != null || fileTransferContent != null ) {
