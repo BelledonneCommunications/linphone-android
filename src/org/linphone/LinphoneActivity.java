@@ -148,7 +148,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_wizard_at_first_start);
-		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
+		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled() && LinphonePreferences.instance().isFirstLaunch() && LinphoneManager.getLc().getDefaultProxyConfig() == null) {
 			Intent wizard = new Intent();
 			wizard.setClass(this, RemoteProvisioningLoginActivity.class);
 			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);

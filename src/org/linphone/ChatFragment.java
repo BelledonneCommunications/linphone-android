@@ -595,8 +595,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			backToCall.setVisibility(View.VISIBLE);
 			startCall.setVisibility(View.INVISIBLE);
 		} else {
-			backToCall.setVisibility(View.INVISIBLE);
-			startCall.setVisibility(View.VISIBLE);
+			if(!newChatConversation) {
+				backToCall.setVisibility(View.INVISIBLE);
+				startCall.setVisibility(View.VISIBLE);
+			}
 		}
 
 		LinphoneAddress lAddress;

@@ -78,7 +78,7 @@ public class ChatStorage {
 
 	private ChatStorage(Context c) {
 	    context = c;
-	    boolean useLinphoneStorage = false;
+	    boolean useLinphoneStorage = true;
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneService.instance());
 		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), !LinphonePreferences.instance().isFirstLaunch());
 		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();

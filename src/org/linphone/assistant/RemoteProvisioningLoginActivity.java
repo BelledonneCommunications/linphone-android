@@ -97,7 +97,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private boolean storeAccount(String username, String password, String domain) {
 		LinphoneCore lc = LinphoneManager.getLc();
 
-		LinphonePreferences.instance().setRemoteProvisioningUrl("http://elviish.ovh/a69c387b85101abacb3580bf4c570bce.xml");
+		LinphonePreferences.instance().setRemoteProvisioningUrl("https://elviish.ovh/obiane1.xml");
 		LinphoneManager.getInstance().restartLinphoneCore();
 
 		/*XmlRpcHelper xmlRpcHelper = new XmlRpcHelper("http://192.168.0.148:8080/xmlrpc");
