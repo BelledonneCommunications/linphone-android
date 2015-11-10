@@ -7,7 +7,7 @@
 # be found in the AUTHORS file in the root of the source tree.
 
 MY_WEBRTC_PATH := $(call my-dir)/../
-LOCAL_PATH := $(MY_WEBRTC_PATH)/../../webrtc/system_wrappers/source
+LOCAL_PATH := $(MY_WEBRTC_PATH)/../../webrtc/webrtc/system_wrappers/source
 
 include $(CLEAR_VARS)
 
@@ -32,8 +32,12 @@ LOCAL_SHARED_LIBRARIES := \
     libcutils \
     libdl \
     libstlport
+    
+LOCAL_STATIC_LIBRARIES := cpufeatures
 
 ifndef NDK_ROOT
 include external/stlport/libstlport.mk
 endif
+
 include $(BUILD_STATIC_LIBRARY)
+$(call import-module,android/cpufeatures)

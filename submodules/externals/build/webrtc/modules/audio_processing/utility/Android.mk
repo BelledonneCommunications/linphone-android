@@ -7,7 +7,7 @@
 # be found in the AUTHORS file in the root of the source tree.
 
 MY_WEBRTC_PATH := $(call my-dir)/../../../
-LOCAL_PATH := $(MY_WEBRTC_PATH)/../../webrtc/modules/audio_processing/utility
+LOCAL_PATH := $(MY_WEBRTC_PATH)/../../webrtc/webrtc/modules/audio_processing/utility
 
 include $(CLEAR_VARS)
 
@@ -18,7 +18,7 @@ LOCAL_MODULE_CLASS := STATIC_LIBRARIES
 LOCAL_MODULE := libwebrtc_apm_utility
 LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := \
-    ring_buffer.c \
+	../../../common_audio/ring_buffer.c \
     delay_estimator.c \
     delay_estimator_wrapper.c
 
@@ -30,7 +30,8 @@ LOCAL_CFLAGS := \
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH) \
     $(LOCAL_PATH)/../../.. \
-    $(LOCAL_PATH)/../../../common_audio/signal_processing/include
+    $(LOCAL_PATH)/../../../common_audio/signal_processing/include \
+    $(LOCAL_PATH)/../../../.. \
 
 LOCAL_SHARED_LIBRARIES := \
     libcutils \

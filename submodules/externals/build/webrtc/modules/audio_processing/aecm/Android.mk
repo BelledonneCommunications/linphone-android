@@ -2,7 +2,7 @@
 # Build the non-neon library.
 
 MY_WEBRTC_PATH := $(call my-dir)/../../../
-LOCAL_PATH := $(MY_WEBRTC_PATH)/../../webrtc/modules/audio_processing/aecm
+LOCAL_PATH := $(MY_WEBRTC_PATH)/../../webrtc/webrtc/modules/audio_processing/aecm
 
 include $(CLEAR_VARS)
 
@@ -14,7 +14,8 @@ LOCAL_MODULE := libwebrtc_aecm
 LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := \
     echo_control_mobile.c \
-    aecm_core.c
+    aecm_core.c \
+    aecm_core_c.c
 
 # Flags passed to both C and C++ files.
 LOCAL_CFLAGS := $(MY_WEBRTC_COMMON_DEFS)
@@ -25,6 +26,7 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/../../.. \
     $(LOCAL_PATH)/../../../common_audio/signal_processing/include \
     $(LOCAL_PATH)/../../../system_wrappers/interface \
+    $(LOCAL_PATH)/../../../.. \
 
 LOCAL_STATIC_LIBRARIES += libwebrtc_system_wrappers
 
@@ -62,7 +64,7 @@ LOCAL_MODULE_TAGS := optional
 #
 #$(LOCAL_PATH)/aecm_core_neon.S: $(LOCAL_PATH)/aecm_core_neon_offsets.h
 
-LOCAL_SRC_FILES := aecm_core_neon.S
+LOCAL_SRC_FILES := aecm_core_neon.c
 
 # Flags passed to both C and C++ files.
 LOCAL_CFLAGS := \
@@ -75,7 +77,8 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/include \
     $(LOCAL_PATH)/../../.. \
     $(LOCAL_PATH)/../../../common_audio/signal_processing/include \
-    $(MY_WEBRTC_PATH)/modules/audio_processing/aecm
+    $(MY_WEBRTC_PATH)/modules/audio_processing/aecm \
+    $(LOCAL_PATH)/../../../.. \
 
 LOCAL_INCLUDES := $(LOCAL_C_INCLUDES)
 
