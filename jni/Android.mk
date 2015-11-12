@@ -166,9 +166,9 @@ WEBRTC_BUILD_NEON_LIBS=true
 endif
 
 $(info $(TARGET_ARCH_ABI): Build AECM from WebRTC)
-include $(linphone-root-dir)/submodules/externals/build/webrtc/system_wrappers/Android.mk
-include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_processing/utility/Android.mk
-include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_processing/aecm/Android.mk
+include $(linphone-root-dir)/submodules/mswebrtc/build/android/system_wrappers/Android.mk
+include $(linphone-root-dir)/submodules/mswebrtc/build/android/modules/audio_processing/utility/Android.mk
+include $(linphone-root-dir)/submodules/mswebrtc/build/android/modules/audio_processing/aecm/Android.mk
 endif
 
 # iSAC
@@ -180,12 +180,12 @@ WEBRTC_BUILD_NEON_LIBS=true
 endif
 
 $(info $(TARGET_ARCH_ABI): Build iSAC plugin for mediastreamer2)
-include $(linphone-root-dir)/submodules/externals/build/webrtc/modules/audio_coding/codecs/isac/fix/source/Android.mk
+include $(linphone-root-dir)/submodules/mswebrtc/build/android/modules/audio_coding/codecs/isac/fix/source/Android.mk
 endif
 
 # common modules for ISAC and AECM
 ifneq ($(BUILD_WEBRTC_AECM)$(BUILD_WEBRTC_ISAC),00)
 $(info $(TARGET_ARCH_ABI): Build common modules for iSAC and AECM ($(BUILD_WEBRTC_AECM)$(BUILD_WEBRTC_ISAC)))
-include $(linphone-root-dir)/submodules/externals/build/webrtc/common_audio/signal_processing/Android.mk
+include $(linphone-root-dir)/submodules/mswebrtc/build/android/common_audio/signal_processing/Android.mk
 include $(linphone-root-dir)/submodules/mswebrtc/Android.mk
 endif
