@@ -46,17 +46,15 @@ public class CallsAudio extends SampleTest {
 		LinphoneTestManager.getInstance().declineCall = false; // Just in case
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 
-		solo.waitForActivity("CallOutgoingActivity", 400);
-		//assertOutgoingCallIsCorrectlyRunning();
+		assertOutgoingCallIsCorrectlyRunning();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testCDTMFRFC2833InPCMUCall() {
@@ -69,7 +67,7 @@ public class CallsAudio extends SampleTest {
 		LinphoneManager.getLc().setUseSipInfoForDtmfs(false);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 		
@@ -78,7 +76,7 @@ public class CallsAudio extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.dialer));
 		
 		solo.sleep(1000);
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		
 		//To enable when issue http://git.linphone.org/mantis/view.php?id=750 will be fixed
 		//Assert.assertTrue(LinphoneTestManager.getInstance().isDTMFReceived);
@@ -88,7 +86,6 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testDDTMFSIPINFO() {
@@ -96,7 +93,7 @@ public class CallsAudio extends SampleTest {
 		LinphoneManager.getLc().setUseSipInfoForDtmfs(true);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 		
@@ -105,7 +102,7 @@ public class CallsAudio extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.dialer));
 		
 		solo.sleep(1000);
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		
 		//To enable when issue http://git.linphone.org/mantis/view.php?id=751 will be fixed
 		//Assert.assertTrue(LinphoneTestManager.getInstance().isDTMFReceived);
@@ -115,14 +112,13 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testEOutgoingCallToAudioClient() {
 		LinphoneTestManager.getLc().enableVideo(false, false);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 
 		solo.waitForActivity("CallOutgoingActivity", 2000);
 		
@@ -131,14 +127,13 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testFOutgoingCallToVideoClient() {
 		LinphoneTestManager.getLc().enableVideo(true, true);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 
 		solo.waitForActivity("CallOutgoingActivity", 5000);
 		
@@ -147,14 +142,13 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testGOutgoingCallCancelled() {
 		LinphoneTestManager.getInstance().autoAnswer = false;
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 
 		solo.waitForActivity("CallOutgoingActivity", 200);
 		solo.assertCurrentActivity("Expected InCall Activity", CallOutgoingActivity.class);
@@ -169,7 +163,6 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testHOutgoingCallDeclined() {
@@ -177,7 +170,7 @@ public class CallsAudio extends SampleTest {
 		LinphoneTestManager.getInstance().declineCall = true;
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		solo.sleep(1500);
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.error_call_declined)));
@@ -219,7 +212,6 @@ public class CallsAudio extends SampleTest {
 		assertCallIsCorrectlyRunning();
 	}
 
-	@SmallTest
 	@LargeTest
 	public void testJIncomingVideoCall() {
 		LinphoneTestManager.getLc().enableVideo(true, true);
@@ -248,12 +240,11 @@ public class CallsAudio extends SampleTest {
 		assertCallIsCorrectlyRunning();
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testKSelfPauseResumeCall() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 		
@@ -267,17 +258,16 @@ public class CallsAudio extends SampleTest {
 
 		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testLRemotePauseResumeCall() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 		
@@ -292,27 +282,25 @@ public class CallsAudio extends SampleTest {
 		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
 		
 		solo.clickLongOnScreen(200, 200); //To ensure controls are shown
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@LargeTest
 	public void testMSwitchOnVideoInCallIsNotAllowed() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 		
 		Assert.assertFalse(solo.getView(org.linphone.R.id.video).isEnabled());
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@LargeTest
 	public void testNDeclineIncomingCall() {
 		LinphoneTestManager.getInstance().declineCall = false; // Just in case
@@ -338,7 +326,6 @@ public class CallsAudio extends SampleTest {
 		solo.drag(topLayout.getMeasuredWidth() - 10, 10, slidersTop, slidersTop, 10);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testOCancelledIncomingCall() {
@@ -361,7 +348,6 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
 
-	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testPDisplayMissedCallsNumber() {
@@ -374,10 +360,9 @@ public class CallsAudio extends SampleTest {
 	//TODO: Test each audio codec
 
 	private void assertOutgoingCallIsCorrectlyRunning() {
-		solo.waitForActivity("CallOutgoingActivity", 5000);
+		solo.waitForActivity("CallOutgoingActivity", 2000);
 		solo.assertCurrentActivity("Expected OutgoingCall Activity", CallOutgoingActivity.class);
 
-		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 
 		waitForCallState(call, LinphoneCall.State.OutgoingProgress);
