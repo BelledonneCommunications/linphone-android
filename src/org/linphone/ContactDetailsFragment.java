@@ -27,6 +27,7 @@ import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentProviderOperation;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -152,13 +154,13 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			tv.setSelected(true);
 			
 			if (!displayChatAddressOnly) {
-				v.findViewById(R.id.call).setOnClickListener(dialListener);
-				v.findViewById(R.id.call).setTag(displayednumberOrAddress);
+				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
+				v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
 			} else {
-				v.findViewById(R.id.call).setVisibility(View.GONE);
+				v.findViewById(R.id.contact_call).setVisibility(View.GONE);
 			}
 
-			v.findViewById(R.id.chat).setOnClickListener(chatListener);
+			v.findViewById(R.id.contact_chat).setOnClickListener(chatListener);
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
 				displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
@@ -170,9 +172,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				if (!numberOrAddress.contains("@")) {
 					tag = numberOrAddress + "@" + lpc.getDomain();
 				}
-				v.findViewById(R.id.chat).setTag(tag);
+				v.findViewById(R.id.contact_chat).setTag(tag);
 			} else {
-				v.findViewById(R.id.chat).setTag(numberOrAddress);
+				v.findViewById(R.id.contact_chat).setTag(numberOrAddress);
 			}
 			
 			final String finalNumberOrAddress = numberOrAddress;
@@ -205,7 +207,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			}*/
 			
 			if (getResources().getBoolean(R.bool.disable_chat)) {
-				v.findViewById(R.id.chat).setVisibility(View.GONE);
+				v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
 			}
 			
 			controls.addView(v);
@@ -236,17 +238,28 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
 		} else if (id == R.id.deleteContact) {
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-			alertDialog.setMessage(getString(R.string.delete_contact_dialog));
-			alertDialog.setPositiveButton(getString(R.string.button_ok),new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-				deleteExistingContact();
-				ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(),contact);
-				LinphoneActivity.instance().displayContacts(false);
+			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+			Button delete = (Button) dialog.findViewById(R.id.delete);
+			Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+			delete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					deleteExistingContact();
+					ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(), contact);
+					LinphoneActivity.instance().displayContacts(false);
+					dialog.dismiss();
 				}
 			});
-			alertDialog.setNegativeButton(getString(R.string.button_cancel),null);
-			alertDialog.show();
+
+			cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+
+				}
+			});
+			dialog.show();
 		}
 	}
 	
