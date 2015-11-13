@@ -19,6 +19,7 @@
 	<string name="about">About</string>
 	<string name="deny">Deny</string>
 	<string name="no_account">No account configured</string>
+	<string name="search">Search</string>
 
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
@@ -43,7 +44,6 @@
 	<string name="assistant_ec_calibration">Echo canceller calibration in progress</string>
 	<string name="assistant_remote_provisioning_login">Enter your login</string>
 	<string name="assistant_connect">Connection</string>
-
 
 	<!-- 1. Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>

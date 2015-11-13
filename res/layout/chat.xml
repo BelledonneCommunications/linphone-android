@@ -143,20 +143,18 @@
 		android:layout_marginBottom="10dp"
 		android:layout_below="@+id/top_bar"/>
 
-	<AutoCompleteTextView
-		android:contentDescription="@string/content_description_search"
-		android:textCursorDrawable="@null"
-		android:visibility="gone"
-		android:layout_margin="10dp"
-		android:layout_below="@id/top_bar"
-		android:id="@+id/searchContactField"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		android:textColor="@android:color/black"
-		android:background="@drawable/resizable_textfield"
-		android:gravity="center"
-		android:completionThreshold="1"
-		android:paddingRight="5dp"
-		android:inputType="textPersonName"/>
+		<AutoCompleteTextView
+			android:id="@+id/searchContactField"
+			android:background="@drawable/resizable_textfield"
+			android:hint="@string/search"
+			android:inputType="textPersonName"
+			android:completionThreshold="1"
+			android:textCursorDrawable="@null"
+			android:visibility="gone"
+			android:layout_margin="10dp"
+			android:layout_below="@id/top_bar"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingRight="5dp"/>
 
 </RelativeLayout>
