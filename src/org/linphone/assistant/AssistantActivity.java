@@ -33,7 +33,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -99,11 +98,10 @@ public class AssistantActivity extends Activity implements OnClickListener {
 						if (state == RegistrationState.RegistrationOk) {
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 								launchEchoCancellerCalibration(true);
-								success();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							//showDialog(cfg);
-							//Toast.makeText(AssistantActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
+							Toast.makeText(AssistantActivity.this, getString(R.string.first_launch_bad_login_password), Toast.LENGTH_LONG).show();
 						}
 					}
 				}
@@ -211,7 +209,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			back.setVisibility(View.VISIBLE);
 			cancel.setEnabled(false);
 		} else {
-
+			success();
 		}		
 	}
 
@@ -224,7 +222,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
         saveCreatedAccount(username, password, displayName, domain);
 
 		if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			//launchEchoCancellerCalibration(sendEcCalibrationResult);
+			launchEchoCancellerCalibration(sendEcCalibrationResult);
 		}
 	}
 	
