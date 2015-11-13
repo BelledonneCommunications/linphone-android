@@ -194,6 +194,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			messagesList.setVisibility(View.GONE);
 			searchContactField.setVisibility(View.VISIBLE);
 			searchContactField.setAdapter(new SearchContactsListAdapter(ContactsManager.getInstance().getAllContacts(), null, inflater));
+			searchContactField.showDropDown();
+			searchContactField.requestFocus();
 			edit.setVisibility(View.INVISIBLE);
 			startCall.setVisibility(View.INVISIBLE);
 			contactName.setVisibility(View.INVISIBLE);
@@ -506,10 +508,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneAddress lAddress = null;
 		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+			lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
+			if(contact == null)
+				contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 		} catch (Exception e){
 			Log.w("error");
+		}
+
+		if(lAddress == null){
+			//TODO SHOW POPUP
+			LinphoneActivity.instance().displayChatList();
 		}
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -959,7 +967,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (message.getText() != null && message.getText().length() > 0) {
 			sendTextMessage(message.getText());
 		} else {
-			sendImageMessage(message.getAppData(),0);
+			sendImageMessage(message.getAppData(), 0);
 		}
 	}
 
@@ -1017,10 +1025,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		newChatConversation = false;
 		chatRoom = LinphoneManager.getLc().getOrCreateChatRoom(address);
 
-		if(c != null)
+		if(c != null) {
+			contact = c;
 			changeDisplayedChat(address,c.getName(),null);
-		else
+		} else {
 			changeDisplayedChat(address,username,null);
+		}
 		dispayMessageList();
 	}
 
@@ -1119,7 +1129,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					if(constraint != null) {
 						for (ContactAddress c : contacts) {
 							String address = c.address;
-							if(address.startsWith("sip")) address.substring(4);
+							if(address.startsWith("sip:")) address = address.substring(4);
 							if (c.contact.getName().toLowerCase().startsWith(constraint.toString()) || address.toLowerCase().startsWith(constraint.toString())) {
 								result.add(c);
 							}

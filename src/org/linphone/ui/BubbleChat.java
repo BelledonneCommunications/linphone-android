@@ -382,7 +382,6 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 				final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 				if (this == bitmapWorkerTask && imageView != null) {
 					imageView.setImageBitmap(bitmap);
-					imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 					imageView.setTag(path);
 					imageView.setOnClickListener(new OnClickListener() {
 						@Override
