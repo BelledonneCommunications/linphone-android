@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
 
@@ -42,6 +43,7 @@ public class Contact implements Serializable {
 	private transient Bitmap photo;
 	private List<String> numbersOrAddresses;
 	private boolean hasFriends;
+	private LinphoneAddress address;
 	
 	public Contact(String id, String name) {
 		super();
@@ -50,8 +52,19 @@ public class Contact implements Serializable {
 		this.photoUri = null;
 		this.thumbnailUri = null;
 		this.hasFriends = false;
+		this.address = null;
 	}
-	
+
+	public Contact(String id, LinphoneAddress address) {
+		super();
+		this.id = id;
+		this.name = LinphoneUtils.getAddressDisplayName(address);
+		this.photoUri = null;
+		this.thumbnailUri = null;
+		this.address = address;
+
+	}
+
 	public Contact(String id, String name, Uri photo, Uri thumbnail) {
 		super();
 		this.id = id;
@@ -60,6 +73,7 @@ public class Contact implements Serializable {
 		this.thumbnailUri = thumbnail;
 		this.photo = null;
 		this.hasFriends = false;
+		this.address = null;
 	}
 	
 	public Contact(String id, String name, Uri photo, Uri thumbnail, Bitmap picture) {
@@ -70,6 +84,7 @@ public class Contact implements Serializable {
 		this.thumbnailUri = thumbnail;
 		this.photo = picture;
 		this.hasFriends = false;
+		this.address = null;
 	}
 
 
@@ -83,6 +98,10 @@ public class Contact implements Serializable {
 	
 	public String getName() {
 		return name;
+	}
+
+	public LinphoneAddress getLinphoneAddress() {
+		return address;
 	}
 
 	public Uri getPhotoUri() {

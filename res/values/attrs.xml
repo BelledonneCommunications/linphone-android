@@ -13,9 +13,5 @@
         <attr name="content" format="reference" />
         <attr name="direction" />
     </declare-styleable>
-    
-    <declare-styleable name="AvatarWithShadow">
-        <attr name="picture" format="reference" />
-    </declare-styleable>
-    
+
 </resources>

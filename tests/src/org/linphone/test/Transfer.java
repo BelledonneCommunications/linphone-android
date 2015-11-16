@@ -2,7 +2,7 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.InCallActivity;
+import org.linphone.CallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
@@ -10,10 +10,9 @@ import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.test.suitebuilder.annotation.SmallTest;
 
 public class Transfer extends SampleTest {
-	@SmallTest
+	//@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testACallTransfer() {
@@ -41,7 +40,7 @@ public class Transfer extends SampleTest {
 	
 	private void assertCallIsCorrectlyRunning() {
 		solo.waitForActivity("InCallActivity", 5000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
+		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 		
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];

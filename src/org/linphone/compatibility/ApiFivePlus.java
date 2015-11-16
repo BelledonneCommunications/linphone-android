@@ -292,13 +292,12 @@ public class ApiFivePlus {
 	}
 	
 	public static Notification createMessageNotification(Context context, String title, String msg, PendingIntent intent) {
-		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
-		.setSmallIcon(R.drawable.chat_icon_over)
-		.setContentTitle(title)
-		.setContentText(msg)
-		.setContentIntent(intent);
-	
-		Notification notif = notifBuilder.build();
+		Notification notif = new Notification();
+		notif.icon = R.drawable.topbar_chat_notification;
+		notif.iconLevel = 0;
+		notif.when = System.currentTimeMillis();
+		notif.flags &= Notification.FLAG_ONGOING_EVENT;
+		
 		notif.defaults |= Notification.DEFAULT_VIBRATE;
 		notif.defaults |= Notification.DEFAULT_SOUND;
 		notif.defaults |= Notification.DEFAULT_LIGHTS;
@@ -398,7 +397,7 @@ public class ApiFivePlus {
 
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
 		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
-		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setSmallIcon(R.drawable.linphone_logo)
 		.setContentTitle(title)
 		.setContentText(text)
 		.setContentIntent(intent);

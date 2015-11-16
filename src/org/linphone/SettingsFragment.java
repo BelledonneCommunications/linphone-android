@@ -35,11 +35,9 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.setup.SetupActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -50,13 +48,11 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
  */
 public class SettingsFragment extends PreferencesListFragment {
-	private static final int WIZARD_INTENT = 1;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
@@ -111,25 +107,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		initNetworkSettings();
 		initAdvancedSettings();
 
-		// Add action on About button
-		findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().displayAbout();
-					return true;
-				}
-				return false;
-			}
-		});
-		findPreference(getString(R.string.setup_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(LinphoneService.instance(), SetupActivity.class);
-				startActivityForResult(intent, WIZARD_INTENT);
-				return true;
-			}
-		});
 		findPreference(getString(R.string.pref_add_account_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -152,16 +129,8 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	// Read the values set in resources and hides the settings accordingly
 	private void hideSettings() {
-		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
-			hidePreference(R.string.menu_about_key);
-		}
-
 		if (getResources().getBoolean(R.bool.hide_accounts)) {
 			emptyAndHidePreference(R.string.pref_sipaccounts_key);
-		}
-
-		if (getResources().getBoolean(R.bool.hide_wizard)){
-			hidePreference(R.string.setup_key);
 		}
 
 		if(!getResources().getBoolean(R.bool.replace_wizard_with_old_interface)){
@@ -1059,9 +1028,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
 		}
 	}
 }

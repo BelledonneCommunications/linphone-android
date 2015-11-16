@@ -24,6 +24,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
@@ -37,7 +38,9 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ContactsManager {
 	private static ContactsManager instance;
@@ -105,6 +108,7 @@ public class ContactsManager {
 		} else {
 			mAccount = accounts[0];
 		}
+		initializeContactManager(context,contentResolver);
 	}
 
 	public String getDisplayName(String firstName, String lastName) {
@@ -154,6 +158,19 @@ public class ContactsManager {
 				.build()
 			);
 		}
+	}
+
+	public void updateExistingContactPicture(ArrayList<ContentProviderOperation> ops, Contact contact, String path){
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE + "'";
+		String[] args =new String[]{String.valueOf(contact.getID())};
+
+		ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+						.withSelection(select, args)
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO_FILE_ID, path)
+								//.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO_FILE_ID, )
+						.build()
+		);
 	}
 
 //Manage Linphone Friend if we cannot use Sip address
@@ -352,6 +369,20 @@ public class ContactsManager {
 		return null;
 	}
 
+	public Contact findContactWithAddress(LinphoneAddress address) {
+		String sipUri = address.asStringUriOnly();
+		if (sipUri.startsWith("sip:"))
+			sipUri = sipUri.substring(4);
+
+		for(Contact c: getAllContacts()){
+			for(String a: c.getNumbersOrAddresses()){
+				if(a.equals(sipUri))
+					return c;
+			}
+		}
+		return null;
+	}
+
 	public Contact findContactWithAddress(ContentResolver contentResolver, LinphoneAddress address){
 		String sipUri = address.asStringUriOnly();
 		if (sipUri.startsWith("sip:"))
@@ -532,6 +563,20 @@ public class ContactsManager {
 			sipContactCursor.close();
 		}
 
+		if(LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_friend)){
+			contactList = new ArrayList<Contact>();
+			for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()){
+				Contact contact = new Contact(friend.getRefKey(),friend.getAddress());
+				contactList.add(contact);
+			}
+
+			contactCursor = getFriendListCursor(contactList,true);
+			Log.w(contactCursor.getCount());
+			return;
+		}
+
+		if(mAccount == null) return;
+
 		contactCursor = Compatibility.getContactsCursor(contentResolver, getContactsId());
 		sipContactCursor = Compatibility.getSIPContactsCursor(contentResolver, getContactsId());
 
@@ -632,6 +677,31 @@ public class ContactsManager {
 		}
 		cursor.close();
 		return false;
+	}
+
+	public Cursor getFriendListCursor(List<Contact> contacts, boolean shouldGroupBy){
+		String[] columns = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME };
+
+
+		if (!shouldGroupBy) {
+			return null;
+		}
+
+		MatrixCursor result = new MatrixCursor(columns);
+		Set<String> groupBy = new HashSet<String>();
+		for (Contact contact: contacts) {
+			String name = contact.getName();
+			if (!groupBy.contains(name)) {
+				groupBy.add(name);
+				Object[] newRow = new Object[2];
+
+				newRow[0] = contact.getID();
+				newRow[1] = contact.getName();
+
+				result.addRow(newRow);
+			}
+		}
+		return result;
 	}
 
 }

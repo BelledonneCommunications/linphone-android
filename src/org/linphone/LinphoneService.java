@@ -152,10 +152,10 @@ public final class LinphoneService extends Service {
 
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, IC_LEVEL_OFFLINE, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.drawable.logo_linphone_57x57, bm, mNotifContentIntent, true,notifcationsPriority);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 
@@ -200,7 +200,7 @@ public final class LinphoneService extends Service {
 			@Override
 			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
 				if (state == GlobalState.GlobalOn) {
-					sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}
 
@@ -216,11 +216,11 @@ public final class LinphoneService extends Service {
 					}
 			
 					if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
-						sendNotification(IC_LEVEL_OFFLINE, R.string.notification_register_failure);
+						sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
 					}
 					
 					if (state == RegistrationState.RegistrationNone) {
-						sendNotification(IC_LEVEL_OFFLINE, R.string.notification_started);
+						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 					}
 				}
 			}
@@ -289,15 +289,15 @@ public final class LinphoneService extends Service {
 			mNM.cancel(INCALL_NOTIF_ID);
 			return;
 		case INCALL:
-			inconId = R.drawable.conf_unhook;
+			inconId = R.drawable.topbar_call_notification;
 			notificationTextId = R.string.incall_notif_active;
 			break;
 		case PAUSE:
-			inconId = R.drawable.conf_status_paused;
+			inconId = R.drawable.topbar_call_notification;
 			notificationTextId = R.string.incall_notif_paused;
 			break;
 		case VIDEO:
-			inconId = R.drawable.conf_video;
+			inconId = R.drawable.topbar_videocall_notification;
 			notificationTextId = R.string.incall_notif_video;
 			break;	
 		default:
@@ -321,7 +321,7 @@ public final class LinphoneService extends Service {
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 		} catch (Exception e) {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 		}
 		String name = address.getDisplayName() == null ? address.getUserName() : address.getDisplayName();
 		mIncallNotif = Compatibility.createInCallNotification(getApplicationContext(), mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
@@ -357,7 +357,7 @@ public final class LinphoneService extends Service {
 		
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
 		} catch (Exception e) {
 		}
 		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent,notifcationsPriority);
@@ -405,10 +405,10 @@ public final class LinphoneService extends Service {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 			}
 		} else {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.unknown_small);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 		}
 		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
 		
@@ -529,7 +529,7 @@ public final class LinphoneService extends Service {
 
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.logo_linphone_57x57);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
 		} catch (Exception e) {
 		}
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent, true,notifcationsPriority);
