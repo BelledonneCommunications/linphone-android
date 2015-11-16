@@ -61,22 +61,6 @@
                         android:orientation="vertical">
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/active_call"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@id/calls_list"
-                        android:visibility="visible">
-
-                        <ImageView
-                            android:id="@+id/contact_picture"
-                            android:src="@drawable/avatar_big"
-                            android:contentDescription="@string/content_description_contact_picture"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
-                            android:layout_centerInParent="true"
-                            android:adjustViewBounds="true"/>
-
                         <LinearLayout
                             android:id="@+id/active_call_info"
                             android:background="@color/colorG"

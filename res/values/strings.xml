@@ -16,6 +16,7 @@
 	<string name="about">About</string>
 	<string name="deny">Deny</string>
 	<string name="no_account">No account configured</string>
+	<string name="search">Search</string>
 	<string name="address_sip">Address Sip</string>
 
 	<!-- splashscreen -->

@@ -1450,27 +1450,29 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	private void displayPausedCalls(Resources resources, final LinphoneCall call, int index) {
-		LinphoneAddress lAddress = call.getRemoteAddress();
-
 		// Control Row
-		LinearLayout callView = (LinearLayout) inflater.inflate(R.layout.call_inactive_row, container, false);
-		callView.setId(index+1);
-
-		TextView contactName = (TextView) callView.findViewById(R.id.contact_name);
-		ImageView contactImage = (ImageView) callView.findViewById(R.id.contact_picture);
+		LinearLayout callView;
 
 		if(call == null) {
-			if(isConferenceRunning){
-				Log.w("conf running");
-			}
-			contactName.setText(resources.getString(R.string.conference));
-			contactImage.setImageResource(R.drawable.conference_start);
+			callView = (LinearLayout) inflater.inflate(R.layout.conference_paused_row, container, false);
+			callView.setId(index + 1);
+			callView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					pauseOrResumeConference();
+				}
+			});
 		} else {
+			callView = (LinearLayout) inflater.inflate(R.layout.call_inactive_row, container, false);
+			callView.setId(index+1);
+
+			TextView contactName = (TextView) callView.findViewById(R.id.contact_name);
+
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 			displayCallStatusIconAndReturnCallPaused(callView, call);
 			registerCallDurationTimer(callView, call);
-			callsList.addView(callView);
 		}
+		callsList.addView(callView);
 	}
 
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
@@ -1541,24 +1543,31 @@ public class CallActivity extends Activity implements OnClickListener {
 				return;
 			}
 
+			boolean isConfPaused = false;
 			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
-				if(call.isInConference()) break;
-				if (call != LinphoneManager.getLc().getCurrentCall()) {
-					displayPausedCalls(resources, call, index);
+				if(call.isInConference() && !isConferenceRunning) {
+					isConfPaused = true;
 					index++;
 				} else {
-					displayCurrentCall(call);
+					if (call != LinphoneManager.getLc().getCurrentCall()) {
+						displayPausedCalls(resources, call, index);
+						index++;
+					} else {
+						displayCurrentCall(call);
+					}
 				}
 			}
 
-			if (LinphoneManager.getLc().getCurrentCall() == null && !isConferenceRunning ) {
+			if(isConfPaused && !isConferenceRunning){
+				displayPausedCalls(resources, null, index);
+			}
+
+			if (LinphoneManager.getLc().getCurrentCall() == null && !isConferenceRunning) {
 				showAudioView();
 				mActiveCallHeader.setVisibility(View.GONE);
 				mNoCurrentCall.setVisibility(View.VISIBLE);
 				video.setEnabled(false);
 			}
-
-			//callsList.invalidate();
 		}
 
 	}
@@ -1592,6 +1601,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			conferenceStatus.setImageResource(R.drawable.pause_big_default);
 			lc.enterConference();
 		}
+		refreshCallList(getResources());
 	}
 
 	private void displayConferenceParticipant(int index, final LinphoneCall call){
@@ -1647,7 +1657,6 @@ public class CallActivity extends Activity implements OnClickListener {
 				index++;
 			}
 		}
-
 		conferenceList.setVisibility(View.VISIBLE);
 	}
 }

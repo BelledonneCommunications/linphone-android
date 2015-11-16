@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/bubble"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:orientation="horizontal" >
 
+	<CheckBox
+		android:id="@+id/delete"
+		android:button="@drawable/checkbox"
+		android:contentDescription="@string/content_description_delete"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:adjustViewBounds="true"
+		android:layout_alignParentRight="true"
+		android:visibility="gone" />
+
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/delete"
 		android:background="@drawable/resizable_chat_bubble_outgoing"
 		android:orientation="horizontal" >
 
@@ -39,10 +52,8 @@
 				android:visibility="gone"
 				android:layout_width="150dp"
 				android:layout_height="150dp"
-				android:scaleType="center"
-				android:layout_centerInParent="true"
-				android:maxWidth="250dp"
-				android:maxHeight="250dp" />
+				android:scaleType="centerInside"
+				android:layout_centerInParent="true" />
 
 			<RelativeLayout
 				android:id="@+id/imageLayout"
@@ -53,8 +64,10 @@
 				<ProgressBar
 					android:id="@+id/progress_bar"
 					android:paddingRight="5dp"
+					android:layout_marginTop="10dp"
+					android:layout_marginBottom="10dp"
 					style="@android:style/Widget.ProgressBar.Horizontal"
-					android:layout_width="200dp"
+					android:layout_width="150dp"
 					android:layout_height="5dp"/>
 
 				<Button
@@ -65,7 +78,6 @@
 					android:contentDescription="@string/content_description_validate"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="10dp"
 					android:layout_below="@id/progress_bar"/>
 
 			</RelativeLayout>
@@ -77,6 +89,7 @@
 			android:contentDescription="@string/content_description_message_status"
 			android:visibility="invisible"
 			android:paddingRight="5dp"
+			android:paddingTop="5dp"
 			android:layout_gravity="top|right"
 			android:layout_width="20dp"
 			android:layout_height="20dp"
@@ -92,16 +105,4 @@
 
 	</LinearLayout>
 
-	<CheckBox
-		android:id="@+id/delete"
-		android:button="@drawable/checkbox"
-		android:contentDescription="@string/content_description_delete"
-		android:paddingRight="5dp"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:adjustViewBounds="true"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:visibility="gone" />
-
-</LinearLayout>
+</RelativeLayout>

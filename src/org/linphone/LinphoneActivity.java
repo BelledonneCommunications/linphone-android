@@ -207,11 +207,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					}
 				}
 
-				if(proxy == lc.getDefaultProxyConfig()){
-					displayMainAccount();
-				} else {
-					refreshAccounts();
-				}
+				refreshAccounts();
 
 				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
 					newProxyConfig = false;
@@ -1341,6 +1337,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if(proxy == null) {
 			displayName.setText(getString(R.string.no_account));
 			status.setVisibility(View.GONE);
+			address.setText("");
+			statusFragment.resetAccountStatus();
 
 			defaultAccount.setOnClickListener(new OnClickListener() {
 				@Override
@@ -1365,7 +1363,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
-	private void refreshAccounts(){
+	public void refreshAccounts(){
 		if(LinphoneManager.getLc().getProxyConfigList().length > 1) {
 			accountsList.setVisibility(View.VISIBLE);
 			accountsList.setAdapter(new AccountsListAdapter());
@@ -1380,6 +1378,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else {
 			accountsList.setVisibility(View.GONE);
 		}
+		displayMainAccount();
 	}
 
 	private void initAccounts() {

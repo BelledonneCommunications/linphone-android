@@ -15,6 +15,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 
 
 /**
@@ -22,7 +23,7 @@ import android.widget.EditText;
  */
 public class Chat extends SampleTest {
 
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testAEmptyChatHistory() {
@@ -43,31 +44,31 @@ public class Chat extends SampleTest {
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));
 	}
 	
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testCSendTextMessage() {
 		goToChat();
-		
-	/*	solo.enterText(0, "sip:" + iContext.getString(R.string.account_test_calls_login) + "@" + iContext.getString(R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.newDiscussion));
-		
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.new_discussion));
+		solo.enterText((AutoCompleteTextView)solo.getView(org.linphone.R.id.searchContactField), "sip:" + iContext.getString(R.string.account_test_calls_login) + "@" + iContext.getString(R.string.account_test_calls_domain));
+
 		solo.enterText((EditText)solo.getView(org.linphone.R.id.message), iContext.getString(R.string.chat_test_text_sent));
 		solo.clickOnView(solo.getView(org.linphone.R.id.sendMessage));
 		
 		solo.sleep(1000);
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.chat_test_text_sent)));
-		Assert.assertEquals(iContext.getString(R.string.chat_test_text_sent), LinphoneTestManager.getInstance().lastMessageReceived);*/
+		Assert.assertEquals(iContext.getString(R.string.chat_test_text_sent), LinphoneTestManager.getInstance().lastMessageReceived);
 	}
-	
+
+
 	@LargeTest
 	public void testDIsNotEmptyChatHistory() {
 		goToChat();
-		
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.account_test_calls_login)));
 	}
 	
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testEReceiveTextMessage() {
@@ -87,7 +88,7 @@ public class Chat extends SampleTest {
 		solo.sleep(1000);
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.chat_test_text_received)));
 	}
-	
+
 	@MediumTest
 	@LargeTest
 	public void testFDeleteMessage() {
@@ -119,7 +120,7 @@ public class Chat extends SampleTest {
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.chat_test_text_sent)));
 		Assert.assertEquals(iContext.getString(R.string.chat_test_text_sent), LinphoneTestManager.getInstance().lastMessageReceived);
 
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_back));
+		solo.clickOnView(solo.getView(org.linphone.R.id.back));
 
 		solo.sleep(1000);
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.account_test_calls_login)));
@@ -130,13 +131,13 @@ public class Chat extends SampleTest {
 	public void testHDeleteConversation() {
 		goToChat();
 		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
+		/*solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
 
 		solo.sleep(1000);
-		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_chat_history)));*/
 	}
 	
 	private void goToChat() {

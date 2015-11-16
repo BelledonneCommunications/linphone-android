@@ -378,7 +378,6 @@ public class ChatStorage {
 
 		for (LinphoneChatRoom chatroom : chats) {
 			if (chatroom.getHistory(1).length > 0) {
-				Log.w("History non nul " + chatroom.getPeerAddress().asString());
 				rooms.add(chatroom);
 			}
 		}

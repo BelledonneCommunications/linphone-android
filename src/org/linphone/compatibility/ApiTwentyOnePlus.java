@@ -114,7 +114,7 @@ public class ApiTwentyOnePlus {
 		Notification notif = new Notification.Builder(context)
 		.setContentTitle(title)
 		.setContentText(text)
-		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setSmallIcon(R.drawable.linphone_logo)
 		.setAutoCancel(true)
 		.setContentIntent(intent)
 		.setDefaults(Notification.DEFAULT_ALL)

@@ -27,6 +27,7 @@ import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentProviderOperation;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -134,13 +136,13 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			tv.setText(contact.getLinphoneAddress());
 
 			if (!displayChatAddressOnly) {
-				v.findViewById(R.id.call).setOnClickListener(dialListener);
-				v.findViewById(R.id.call).setTag(contact.getLinphoneAddress());
+				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
+				v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
 			} else {
-				v.findViewById(R.id.call).setVisibility(View.GONE);
+				v.findViewById(R.id.contact_call).setVisibility(View.GONE);
 			}
 
-			v.findViewById(R.id.chat).setOnClickListener(chatListener);
+			v.findViewById(R.id.contact_chat).setOnClickListener(chatListener);
 			v.findViewById(R.id.chat).setTag(contact.getLinphoneAddress());
 
 			if (getResources().getBoolean(R.bool.disable_chat)) {
@@ -184,21 +186,24 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				} else {
 					v.findViewById(R.id.chat).setTag(numberOrAddress);
 				}
-
-				final String finalNumberOrAddress = numberOrAddress;
-				/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
-				if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {
-					friend.setVisibility(View.VISIBLE);
-
-					boolean isAlreadyAFriend = LinphoneManager.getLc().findFriendByAddress(finalNumberOrAddress) != null;
-					if (!isAlreadyAFriend) {
-						friend.setImageResource(R.drawable.contact_add);
-						friend.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								if (ContactsManager.getInstance().createNewFriend(contact, finalNumberOrAddress)) {
-									displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
-								}
+				v.findViewById(R.id.contact_chat).setTag(tag);
+			} else {
+				v.findViewById(R.id.contact_chat).setTag(numberOrAddress);
+			}
+			
+			final String finalNumberOrAddress = numberOrAddress;
+			/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
+			if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {
+				friend.setVisibility(View.VISIBLE);
+				
+				boolean isAlreadyAFriend = LinphoneManager.getLc().findFriendByAddress(finalNumberOrAddress) != null;
+				if (!isAlreadyAFriend) {
+					friend.setImageResource(R.drawable.contact_add);
+					friend.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (ContactsManager.getInstance().createNewFriend(contact, finalNumberOrAddress)) {
+								displayContact(ContactFragment.this.inflater, ContactFragment.this.view);
 							}
 						});
 					} else {
@@ -214,7 +219,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					}
 				}*/
 				if (getResources().getBoolean(R.bool.disable_chat)) {
-					v.findViewById(R.id.chat).setVisibility(View.GONE);
+					v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
 				}
 
 				controls.addView(v);
@@ -242,7 +247,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-
+			
 	}
 	
 	private void deleteExistingContact() {

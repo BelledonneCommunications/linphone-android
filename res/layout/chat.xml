@@ -86,24 +86,26 @@
 	            android:id="@+id/sendPicture"
 				android:padding="15dp"
 				android:scaleType="center"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_centerVertical="true"
-	            android:src="@drawable/chat_send_file" />
-	        
-	        <ImageView
-	            android:id="@+id/sendMessage"
-	            android:gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true"
+				android:src="@drawable/chat_send_file" />
+
+			<ImageView
+				android:id="@+id/sendMessage"
+				android:gravity="center"
 				android:padding="15dp"
 				android:scaleType="center"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:src="@drawable/chat_send_message"
 				android:layout_alignTop="@+id/message"
 				android:layout_alignParentRight="true"/>
-	        
-	        <EditText
+
+			<EditText
+				android:imeOptions="flagNoExtractUi"
+				android:textCursorDrawable="@null"
 				android:id="@+id/message"
                 android:imeOptions="flagNoExtractUi"
 	            android:textCursorDrawable="@null"
@@ -138,7 +140,7 @@
 	    </RelativeLayout>
     
 	</LinearLayout>
-        
+
 	<TextView
         android:id="@+id/remoteComposing"
 		android:text="@string/remote_composing"
@@ -155,27 +157,24 @@
 		android:stackFromBottom="true"
 		android:transcriptMode="alwaysScroll"
 		android:cacheColorHint="@color/transparent"
-		android:dividerHeight="10dp"
 		android:layout_above="@id/remoteComposing"
+		android:dividerHeight="10dp"
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
 		android:layout_below="@+id/top_bar"/>
 
-	<AutoCompleteTextView
-		android:contentDescription="@string/content_description_search"
-		android:textCursorDrawable="@null"
-		android:visibility="gone"
-		android:layout_margin="10dp"
-		android:id="@+id/searchContactField"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		android:textColor="@color/colorC"
-		android:background="@drawable/resizable_textfield"
-		android:gravity="center"
-		android:completionThreshold="1"
-		android:layout_below="@+id/top_bar"
-		android:paddingRight="5dp"
-		android:inputType="textPersonName"/>
-
+		<AutoCompleteTextView
+			android:id="@+id/searchContactField"
+			android:background="@drawable/resizable_textfield"
+			android:hint="@string/search"
+			android:inputType="textPersonName"
+			android:completionThreshold="1"
+			android:textCursorDrawable="@null"
+			android:visibility="gone"
+			android:layout_margin="10dp"
+			android:layout_below="@id/top_bar"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingRight="5dp"/>
 
 </RelativeLayout>

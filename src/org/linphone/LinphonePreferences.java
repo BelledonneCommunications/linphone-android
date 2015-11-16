@@ -700,13 +700,14 @@ public class LinphonePreferences {
 
 	public void deleteAccount(int n) {
 		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
 		if (getLc().getProxyConfigList().length != 0) {
 			resetDefaultProxyConfig();
-			getLc().refreshRegisters();
+		} else {
+			getLc().setDefaultProxyConfig(null);
 		}
+		getLc().refreshRegisters();
 	}
 	// End of accounts settings
 

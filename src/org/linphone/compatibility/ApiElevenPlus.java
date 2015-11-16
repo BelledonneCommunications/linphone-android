@@ -173,7 +173,7 @@ public class ApiElevenPlus {
 		.setContentTitle(title)
 		.setContentText(text)
 		.setContentIntent(intent)
-		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setSmallIcon(R.drawable.linphone_logo)
 		.setAutoCancel(true)
 		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
 		.setWhen(System.currentTimeMillis()).getNotification();

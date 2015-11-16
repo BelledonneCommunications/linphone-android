@@ -18,24 +18,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.mediastream.Log;
 import org.linphone.R;
-import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
