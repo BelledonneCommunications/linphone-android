@@ -25,14 +25,16 @@ import org.linphone.ui.CallButton;
 import org.linphone.ui.EraseButton;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * @author Sylvain Berfini
@@ -40,8 +42,8 @@ import android.widget.ImageView;
 public class DialerFragment extends Fragment {
 	private static DialerFragment instance;
 	private static boolean isCallTransferOngoing = false;
-	
-	public boolean mVisible;
+
+	private AddressAware numpad;
 	private AddressText mAddress;
 	private CallButton mCall;
 	private ImageView mAddContact;
@@ -54,30 +56,31 @@ public class DialerFragment extends Fragment {
 		instance = this;
         View view = inflater.inflate(R.layout.dialer, container, false);
 		
-		mAddress = (AddressText) view.findViewById(R.id.Adress); 
+		mAddress = (AddressText) view.findViewById(R.id.address);
 		mAddress.setDialerFragment(this);
 		
-		EraseButton erase = (EraseButton) view.findViewById(R.id.Erase);
+		EraseButton erase = (EraseButton) view.findViewById(R.id.erase);
 		erase.setAddressWidget(mAddress);
 		
-		mCall = (CallButton) view.findViewById(R.id.Call);
+		mCall = (CallButton) view.findViewById(R.id.call);
 		mCall.setAddressWidget(mAddress);
 		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
-				mCall.setImageResource(R.drawable.transfer_call);
+				mCall.setImageResource(R.drawable.call_transfer);
 			} else {
-				mCall.setImageResource(R.drawable.add_call);
+				mCall.setImageResource(R.drawable.call_add);
 			}
 		} else {
-			mCall.setImageResource(R.drawable.call);
+			mCall.setImageResource(R.drawable.call_audio_start);
 		}
 		
-		AddressAware numpad = (AddressAware) view.findViewById(R.id.Dialer);
+		numpad = (AddressAware) view.findViewById(R.id.numpad);
 		if (numpad != null) {
 			numpad.setAddressWidget(mAddress);
 		}
 		
-		mAddContact = (ImageView) view.findViewById(R.id.addContact);
+		mAddContact = (ImageView) view.findViewById(R.id.add_contact);
+		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
 		
 		addContactListener = new OnClickListener() {
 			@Override
@@ -103,8 +106,7 @@ public class DialerFragment extends Fragment {
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		};
-		
-		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
+
 		resetLayout(isCallTransferOngoing);
 		
 		if (getArguments() != null) {
@@ -139,8 +141,16 @@ public class DialerFragment extends Fragment {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
 			LinphoneActivity.instance().updateDialerFragment(this);
 			LinphoneActivity.instance().showStatusBar();
+			LinphoneActivity.instance().hideTabBar(false);
 		}
-		
+
+		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+		if(isOrientationLandscape) {
+			((LinearLayout) numpad).setVisibility(View.GONE);
+		} else {
+			((LinearLayout) numpad).setVisibility(View.VISIBLE);
+		}
+
 		if (shouldEmptyAddressField) {
 			mAddress.setText("");
 		} else {
@@ -158,26 +168,26 @@ public class DialerFragment extends Fragment {
 		
 		if (lc.getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
-				mCall.setImageResource(R.drawable.transfer_call);
+				mCall.setImageResource(R.drawable.call_transfer);
 				mCall.setExternalClickListener(transferListener);
 			} else {
-				mCall.setImageResource(R.drawable.add_call);
+				mCall.setImageResource(R.drawable.call_add);
 				mCall.resetClickListener();
 			}
 			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.cancel);
+			mAddContact.setImageResource(R.drawable.call_back);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			mCall.setImageResource(R.drawable.call);
-			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.add_contact);
+			mCall.setImageResource(R.drawable.call_audio_start);
+			mAddContact.setEnabled(false);
+			mAddContact.setImageResource(R.drawable.contact_add_button);
 			mAddContact.setOnClickListener(addContactListener);
 			enableDisableAddContact();
 		}
 	}
 	
 	public void enableDisableAddContact() {
-		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));	
+		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
 	}
 	
 	public void displayTextInAddressBar(String numberOrSipAddress) {

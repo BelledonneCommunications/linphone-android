@@ -47,7 +47,7 @@ public class ApiSixteenPlus {
 		Notification notif = new Notification.Builder(context)
 						.setContentTitle(title)
 						.setContentText(msg)
-						.setSmallIcon(R.drawable.chat_icon_over)
+						.setSmallIcon(R.drawable.topbar_chat_notification)
 						.setAutoCancel(true)
 						.setContentIntent(intent)
 						.setDefaults(
@@ -114,7 +114,7 @@ public class ApiSixteenPlus {
 		Notification notif = new Notification.Builder(context)
 		.setContentTitle(title)
 		.setContentText(text)
-		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setSmallIcon(R.drawable.linphone_logo)
 		.setAutoCancel(true)
 		.setContentIntent(intent)
 		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)

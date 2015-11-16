@@ -458,13 +458,10 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountDisplayName(int n) {
-		try {
-			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(getProxyConfig(n).getIdentity());
+		LinphoneAddress addr = getProxyConfig(n).getAddress();
+		if(addr != null) {
 			return addr.getDisplayName();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 		return null;
 	}
 
@@ -703,13 +700,14 @@ public class LinphonePreferences {
 
 	public void deleteAccount(int n) {
 		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
 		if (getLc().getProxyConfigList().length != 0) {
 			resetDefaultProxyConfig();
-			getLc().refreshRegisters();
+		} else {
+			getLc().setDefaultProxyConfig(null);
 		}
+		getLc().refreshRegisters();
 	}
 	// End of accounts settings
 
@@ -1185,11 +1183,15 @@ public class LinphonePreferences {
 	}
 
 	public void contactsMigrationDone(){
-		getConfig().setBool("app", "contacts_migration_done",true);
+		getConfig().setBool("app", "contacts_migration_done", true);
 	}
 
 	public boolean isContactsMigrationDone(){
 		return getConfig().getBool("app", "contacts_migration_done",false);
+	}
+
+	public String getXmlRpcServerUrl() {
+		return getConfig().getString("app", "server_url", null);
 	}
 
 	public String getDebugPopupAddress(){

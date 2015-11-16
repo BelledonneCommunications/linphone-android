@@ -343,6 +343,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	mPrefs.deleteAccount(n);
+				LinphoneActivity.instance().refreshAccounts();
 	        	LinphoneActivity.instance().displaySettings();
 	        	return true;
 	        }
@@ -447,6 +448,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	mPrefs.deleteAccount(n);
+				LinphoneActivity.instance().refreshAccounts();
 	        	LinphoneActivity.instance().displaySettings();
 	        	return true;
 	        }

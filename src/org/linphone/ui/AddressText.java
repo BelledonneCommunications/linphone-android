@@ -73,7 +73,7 @@ public class AddressText extends EditText implements AddressType {
 	}
 	
 	private String getHintText() {
-		String resizedText = getContext().getString(R.string.addressHint);
+		String resizedText = getContext().getString(R.string.address_bar_hint);
 		if (getHint() != null) {
 			resizedText = getHint().toString();
 		}

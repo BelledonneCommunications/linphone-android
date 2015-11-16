@@ -45,8 +45,8 @@ public class LinphoneSliders extends View implements OnGestureListener {
 	public LinphoneSliders(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mGestures = new GestureDetector(getContext(), this);
-		leftSliderImg = getResources().getDrawable(R.drawable.slider_left);
-		rightSliderImg = getResources().getDrawable(R.drawable.slider_right);
+		//leftSliderImg = getResources().getDrawable(R.drawable.slider_left);
+		//rightSliderImg = getResources().getDrawable(R.drawable.slider_right);
 		
 		slidersHeight = leftSliderImg.getIntrinsicHeight();
 		slidersWidth = leftSliderImg.getIntrinsicWidth();
