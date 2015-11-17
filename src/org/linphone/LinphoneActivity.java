@@ -99,7 +99,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
 	private RelativeLayout contacts, history, dialer, chat;
-	private RelativeLayout contacts_selected, history_selected, dialer_selected, chat_selected;
+	private View contacts_selected, history_selected, dialer_selected, chat_selected;
 	private RelativeLayout mTopBar;
 	private ImageView cancel;
 	private FragmentsAvailable currentFragment, nextFragment;
@@ -294,13 +294,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		chat = (RelativeLayout) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 
-		history_selected = (RelativeLayout) findViewById(R.id.history_select);
-		contacts_selected = (RelativeLayout) findViewById(R.id.contacts_select);
-		dialer_selected = (RelativeLayout) findViewById(R.id.dialer_select);
-		chat_selected = (RelativeLayout) findViewById(R.id.chat_select);
+		history_selected = findViewById(R.id.history_select);
+		contacts_selected = findViewById(R.id.contacts_select);
+		dialer_selected = findViewById(R.id.dialer_select);
+		chat_selected = findViewById(R.id.chat_select);
 
-		missedCalls = (TextView) findViewById(R.id.missedCalls);
-		missedChats = (TextView) findViewById(R.id.missedChats);
+		missedCalls = (TextView) findViewById(R.id.missed_calls);
+		missedChats = (TextView) findViewById(R.id.missed_chats);
 	}
 
 	private boolean isTablet() {
@@ -694,9 +694,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else if (id == R.id.chat) {
 			changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
 			chat_selected.setVisibility(View.VISIBLE);
-		} else if (id == R.id.cancel) {
-			displayTopBar(false,"");
+		} else if (id == R.id.cancel){
 			getFragmentManager().popBackStackImmediate();
+			mTopBar.setVisibility(View.GONE);
 		}
 	}
 
@@ -712,17 +712,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			mTabBar.setVisibility(View.GONE);
 		} else {
 			mTabBar.setVisibility(View.VISIBLE);
-		}
-	}
-
-	public void displayTopBar(Boolean display, String name) {
-		TextView menuName = (TextView) findViewById(R.id.menu_name);
-		if(display){
-			menuName.setText(name);
-			mTopBar.setVisibility(View.VISIBLE);
-		} else {
-			menuName.setText("");
-			mTopBar.setVisibility(View.GONE);
 		}
 	}
 
@@ -746,7 +735,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			break;
 		case SETTINGS:
 		case ACCOUNT_SETTINGS:
-			displayTopBar(true,"settings");
+			hideTabBar(true);
+			mTopBar.setVisibility(View.VISIBLE);
 			break;
 		case CHAT_LIST:
 		case CHAT:
@@ -1264,7 +1254,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		sideMenuItemList = (ListView)findViewById(R.id.item_list);
 		menu = (ImageView) findViewById(R.id.side_menu_button);
 
-		sideMenuItemList.setAdapter(new ArrayAdapter<String>(this, R.layout.side_menu_item, sideMenuItems));
+		sideMenuItemList.setAdapter(new ArrayAdapter<String>(this, R.layout.side_menu_item_cell, sideMenuItems));
 		sideMenuItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -1323,9 +1313,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	private void displayMainAccount(){
 		defaultAccount.setVisibility(View.VISIBLE);
-		ImageView status = (ImageView) defaultAccount.findViewById(R.id.status_led);
-		TextView address = (TextView) defaultAccount.findViewById(R.id.address);
-		TextView displayName = (TextView) defaultAccount.findViewById(R.id.display_name);
+		ImageView status = (ImageView) defaultAccount.findViewById(R.id.main_account_status);
+		TextView address = (TextView) defaultAccount.findViewById(R.id.main_account_address);
+		TextView displayName = (TextView) defaultAccount.findViewById(R.id.main_account_display_name);
 
 
 		LinphoneProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
@@ -1422,11 +1412,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (convertView != null) {
 				view = convertView;
 			} else {
-				view = getLayoutInflater().inflate(R.layout.accounts, parent, false);
+				view = getLayoutInflater().inflate(R.layout.side_menu_account_cell, parent, false);
 			}
 
-			ImageView status = (ImageView) view.findViewById(R.id.status_led);
-			TextView address = (TextView) view.findViewById(R.id.address);
+			ImageView status = (ImageView) view.findViewById(R.id.account_status);
+			TextView address = (TextView) view.findViewById(R.id.account_address);
 			String sipAddress = lpc.getAddress().asStringUriOnly();
 
 			address.setText(sipAddress);

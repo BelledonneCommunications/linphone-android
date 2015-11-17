@@ -6,7 +6,7 @@
 	android:layout_height="80dp">
 
 	<ImageView
-		android:id="@+id/icon"
+		android:id="@+id/main_account_avatar"
 		android:src="@drawable/avatar"
 		android:layout_width="30dp"
 		android:layout_height="30dp"
@@ -19,30 +19,28 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
-		android:layout_toRightOf="@+id/icon"
+		android:layout_toRightOf="@+id/main_account_avatar"
 		android:gravity="center_vertical">
 
 		<TextView
-			android:id="@+id/display_name"
+			android:id="@+id/main_account_display_name"
 			style="@style/font7"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:editable="false"/>
+			android:layout_height="wrap_content"/>
 
 		<TextView
-			android:id="@+id/address"
+			android:id="@+id/main_account_address"
 			style="@style/font3"
-			android:editable="false"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
 	</LinearLayout>
 
 	<ImageView
-		android:id="@+id/status_led"
+		android:id="@+id/main_account_status"
+		android:src="@drawable/status_available"
 		android:layout_width="25dp"
 		android:layout_height="25dp"
-		android:src="@drawable/status_available"
 		android:padding="5dp"
 		android:layout_marginBottom="10dp"
 		android:layout_alignParentRight="true"

@@ -23,6 +23,7 @@
 	<string name="outgoing">outgoing</string>
 	<string name="incoming">incoming</string>
 	<string name="missed">missed</string>
+	<string name="settings">Settings</string>
 
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
@@ -293,7 +294,6 @@
 	<string name="pref_audio">Audio</string>
 	<string name="pref_prefix">Prefix</string>
 	<string name="pref_advanced">Advanced</string>
-	<string name="menu_settings">Settings</string>
 	<string name="pref_proxy">Proxy</string>
 	<string name="pref_domain">Domain*</string>
 	<string name="pref_passwd">Password*</string>

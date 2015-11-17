@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:background="@color/colorG"
+	android:layout_width="match_parent"
 	android:layout_height="40dp"
 	android:gravity="center">
 
 	<TextView
-		android:id="@+id/address"
+		android:id="@+id/account_address"
 		style="@style/font13"
 		android:paddingLeft="10dp"
 		android:gravity="center_vertical"
@@ -14,7 +15,7 @@
 		android:layout_height="match_parent"/>
 
 	<ImageView
-		android:id="@+id/status_led"
+		android:id="@+id/account_status"
 		android:src="@drawable/status_available"
 		android:layout_width="25dp"
 		android:layout_height="25dp"
