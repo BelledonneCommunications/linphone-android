@@ -736,7 +736,7 @@ public class ContactEditorFragment extends Fragment {
 			newNumberOrAddress = newN;
 		}
 		
-		public void save() {;
+		public void save() {
 			if (newNumberOrAddress == null || newNumberOrAddress.equals(oldNumberOrAddress))
 				return;
 
