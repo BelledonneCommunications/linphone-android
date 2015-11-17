@@ -695,7 +695,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
 			chat_selected.setVisibility(View.VISIBLE);
 		} else if (id == R.id.cancel){
-			getFragmentManager().popBackStackImmediate();
+			displayDialer();
 			mTopBar.setVisibility(View.GONE);
 		}
 	}
@@ -771,6 +771,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (nextFragment != FragmentsAvailable.SETTINGS && nextFragment != FragmentsAvailable.ACCOUNT_SETTINGS) {
 			updateAnimationsState();
 		}
+	}
+
+	public void displayDialer() {
+		changeCurrentFragment(FragmentsAvailable.DIALER, null);
 	}
 
 	public void displayAccountSettings(int accountNumber) {

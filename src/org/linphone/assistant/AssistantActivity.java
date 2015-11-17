@@ -108,8 +108,8 @@ public class AssistantActivity extends Activity implements OnClickListener {
         	}
         };
         instance = this;
-	};
-	
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();

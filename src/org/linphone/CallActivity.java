@@ -1524,13 +1524,9 @@ public class CallActivity extends Activity implements OnClickListener {
 			isCallPaused = false;
 			isInConference = false;
 		} else {
-			if (isConferenceRunning && call.isInConference()) {
-				//callState.setImageResource(R.drawable.remove);
-				isInConference = true;
-			} else {
-				//callState.setImageResource(R.drawable.play);
-				isInConference = false;
-			}
+			//callState.setImageResource(R.drawable.remove);
+//callState.setImageResource(R.drawable.play);
+			isInConference = isConferenceRunning && call.isInConference();
 			isCallPaused = false;
 		}
 

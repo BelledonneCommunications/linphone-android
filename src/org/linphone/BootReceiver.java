@@ -35,7 +35,7 @@ public class BootReceiver extends BroadcastReceiver {
 		if (lpConfig.getBool("app", "auto_start", false)) {
 			Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-			context.startService(lLinphoneServiceIntent);;
+			context.startService(lLinphoneServiceIntent);
 		}
 	}
 }

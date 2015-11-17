@@ -1040,7 +1040,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			sendImage.showContextMenu();
 		} catch (Exception e) {
 			e.printStackTrace();
-		};
+		}
 	}
 
 	@Override
@@ -1116,7 +1116,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						contacts.clear();
 						contacts = (List<ContactAddress>) results.values;
 						notifyDataSetChanged();
-					} else {;
+					} else {
 						contacts.clear();
 						contacts = getContactsList();
 						notifyDataSetInvalidated();

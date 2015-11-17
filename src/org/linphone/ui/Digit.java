@@ -215,7 +215,7 @@ public class Digit extends Button implements AddressAware {
 			}
 			return true;
 		}
-	};
-	
+	}
+
 
 }
