@@ -695,8 +695,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
 			chat_selected.setVisibility(View.VISIBLE);
 		} else if (id == R.id.cancel){
+			hideTopBar();
 			displayDialer();
-			mTopBar.setVisibility(View.GONE);
 		}
 	}
 
@@ -713,6 +713,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else {
 			mTabBar.setVisibility(View.VISIBLE);
 		}
+	}
+
+	public void hideTopBar() {
+		mTopBar.setVisibility(View.GONE);
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -781,6 +785,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Bundle bundle = new Bundle();
 		bundle.putInt("Account", accountNumber);
 		changeCurrentFragment(FragmentsAvailable.ACCOUNT_SETTINGS, bundle);
+		mTabBar.setVisibility(View.VISIBLE);
 		//settings.setSelected(true);
 	}
 

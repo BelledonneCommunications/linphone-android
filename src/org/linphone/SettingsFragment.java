@@ -885,7 +885,8 @@ public class SettingsFragment extends PreferencesListFragment {
 				int port = -1;
 				try {
 					port = Integer.parseInt(newValue.toString());
-				} catch (NumberFormatException nfe) { }
+				} catch (NumberFormatException nfe) {
+				}
 
 				mPrefs.setSipPort(port);
 				preference.setSummary(newValue.toString());
@@ -1010,7 +1011,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String value = (String) newValue;
-				if(value.equals("")) return false;
+				if (value.equals("")) return false;
 
 				mPrefs.setDefaultUsername(value);
 				preference.setSummary(value);
@@ -1029,5 +1030,11 @@ public class SettingsFragment extends PreferencesListFragment {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 
 		}
+	}
+
+	@Override
+	public void onPause() {
+		LinphoneActivity.instance().hideTopBar();
+		super.onPause();
 	}
 }
