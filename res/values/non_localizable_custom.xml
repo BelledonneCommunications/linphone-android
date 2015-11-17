@@ -6,6 +6,9 @@
 	<string name="default_domain">sip.linphone.org</string>
 	<string name="default_stun">stun.linphone.org</string>
 	<bool name="use_linphone_friend">false</bool>
+	<bool name="orientation_portrait_only">false</bool>
+	<bool name="show_statusbar_only_on_dialer">false</bool>
+
 
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 

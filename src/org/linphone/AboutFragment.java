@@ -37,7 +37,6 @@ import android.widget.TextView;
 public class AboutFragment extends Fragment implements OnClickListener {
 	View sendLogButton = null;
 	View resetLogButton = null;
-	private ImageView cancel;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,9 +48,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-
-		cancel = (ImageView) view.findViewById(R.id.cancel);
-		cancel.setOnClickListener(this);
 
 		sendLogButton = view.findViewById(R.id.send_log);
 		sendLogButton.setOnClickListener(this);
@@ -70,9 +66,9 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 		if (org.linphone.LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().hideTabBar(true);
+			LinphoneActivity.instance().displayTopBar(true,"About");
 		}
 	}
-	
 
 	@Override
 	public void onClick(View v) {
@@ -86,8 +82,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 				if (lc != null) {
 					lc.resetLogCollection();
 				}
-			} else if (v == cancel) {
-				getFragmentManager().popBackStackImmediate();
 			}
 		}
 	}

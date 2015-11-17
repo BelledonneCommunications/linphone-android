@@ -20,6 +20,9 @@
 	<string name="deny">Deny</string>
 	<string name="no_account">No account configured</string>
 	<string name="search">Search</string>
+	<string name="outgoing">outgoing</string>
+	<string name="incoming">incoming</string>
+	<string name="missed">missed</string>
 
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
