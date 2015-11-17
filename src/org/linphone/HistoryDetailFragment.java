@@ -98,11 +98,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			contactAddress.setText(sipUri);
 		}
 		
-		if (status.equals("Missed")) {
+		if (status.equals(getResources().getString(R.string.missed))) {
 			callDirection.setImageResource(R.drawable.call_missed);
-		} else if (status.equals("Incoming")) {
+		} else if (status.equals(getResources().getString(R.string.incoming))) {
 			callDirection.setImageResource(R.drawable.call_incoming);
-		} else if (status.equals("Outgoing")) {
+		} else if (status.equals(getResources().getString(R.string.outgoing))) {
 			callDirection.setImageResource(R.drawable.call_outgoing);
 		}
 		
