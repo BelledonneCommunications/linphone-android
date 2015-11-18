@@ -23,7 +23,7 @@ public class Contacts extends SampleTest {
 		goToHistory();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.detail));
-		solo.clickOnView(solo.getView(org.linphone.R.id.contact_add));
+		solo.clickOnView(solo.getView(org.linphone.R.id.add_contact));
 		solo.clickOnView(solo.getView(org.linphone.R.id.newContact));
 		
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain)));
