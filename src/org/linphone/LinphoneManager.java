@@ -649,6 +649,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
+		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 
 		int availableCores = Runtime.getRuntime().availableProcessors();
@@ -657,6 +658,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		int migrationResult = getLc().migrateToMultiTransport();
 		Log.d("Migration to multi transport result = " + migrationResult);
+
+		mLc.migrateCallLogs();
 
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 			Compatibility.initPushNotificationService(mServiceContext);
