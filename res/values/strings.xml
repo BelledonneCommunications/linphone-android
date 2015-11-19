@@ -85,6 +85,13 @@
 	<string name="call_paused_by_remote">Your correspondent paused the call</string>
 	<string name="zrtp_dialog">ZRTP token is %s\nYou should only accept if you have the same token as your correspondent</string>
 
+	<!-- Settings -->
+	<string-array name="video_preset_entries">
+		<item>default</item>
+		<item>high-fps</item>
+		<item>custom</item>
+	</string-array>
+
 
 	<!-- Content description -->
 	<string name="content_description_toggle_micro">Toggle micro</string>
