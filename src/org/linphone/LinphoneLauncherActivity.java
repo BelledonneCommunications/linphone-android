@@ -52,9 +52,9 @@ public class LinphoneLauncherActivity extends Activity {
 		// Hack to avoid to draw twice LinphoneActivity on tablets
         if (getResources().getBoolean(R.bool.isTablet)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        } else  if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		setContentView(R.layout.launch_screen);
         
 		mHandler = new Handler();

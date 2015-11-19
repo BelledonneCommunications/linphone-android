@@ -104,7 +104,9 @@
 
 			<ListPreference
 				android:title="Video preset"
-				android:key="@string/pref_video_preset_key"/>
+				android:key="@string/pref_video_preset_key"
+				android:entries="@array/video_preset_entries"
+				android:entryValues="@array/video_preset_entries" />
 
 			<ListPreference
 			    android:title="@string/pref_preferred_video_size"
@@ -264,17 +266,6 @@
 			</PreferenceScreen>
 
 		</PreferenceScreen>
-
-	</PreferenceCategory>
-
-	<PreferenceCategory
-    	android:title="@string/pref_linphone_friend_title"
-	    android:key="@string/pref_linphone_friend_key">
-
-	    <CheckBoxPreference
-			android:title="@string/pref_auto_accept_friends_title"
-		    android:key="@string/pref_auto_accept_friends_key"
-			android:summary="@string/pref_auto_accept_friends_desc"/>
 
 	</PreferenceCategory>
 

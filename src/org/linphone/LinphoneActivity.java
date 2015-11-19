@@ -135,7 +135,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		if (isTablet() && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else if (!isTablet() && getResources().getBoolean(R.bool.orientation_portrait_only)) {
+        } else if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
