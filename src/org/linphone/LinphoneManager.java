@@ -280,10 +280,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		this.mUploadingImageStream = array;
 	}
 
-
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
-		if (state == LinphoneChatMessage.State.FileTransferDone || state == LinphoneChatMessage.State.FileTransferError) {
+		if (state == LinphoneChatMessage.State.FileTransferDone) {
 			if(msg.isOutgoing() && mUploadingImageStream != null){
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
@@ -298,6 +297,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				}
 				removePendingMessage(msg);
 			}
+		}
+
+		if(state == LinphoneChatMessage.State.FileTransferError) {
+			//TODO
 		}
 
 		for (LinphoneChatMessage.LinphoneChatMessageListener l: simpleListeners) {
