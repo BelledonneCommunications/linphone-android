@@ -42,61 +42,61 @@
 
 	</RelativeLayout>
 
-	<LinearLayout
+	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingTop="20dp"
-		android:gravity="center"
-		android:orientation="vertical">
+		android:layout_height="match_parent">
 
-		<RelativeLayout
-			android:id="@+id/avatar_layout"
+		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:gravity="center">
+			android:paddingTop="20dp"
+			android:gravity="center"
+			android:orientation="vertical">
 
-			<ImageView
-				android:id="@+id/contact_picture"
-				android:src="@drawable/avatar"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="100dp"
-				android:layout_height="100dp"
-				android:adjustViewBounds="true"
-				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"/>
+			<RelativeLayout
+				android:id="@+id/avatar_layout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center">
 
-			<ImageView
-				android:id="@+id/mask"
-				android:src="@drawable/avatar_mask"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="100dp"
-				android:layout_height="100dp"
-				android:adjustViewBounds="true"
-				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"/>
+				<ImageView
+					android:id="@+id/contact_picture"
+					android:src="@drawable/avatar"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="100dp"
+					android:layout_height="100dp"
+					android:adjustViewBounds="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="5dp"/>
 
-		</RelativeLayout>
+				<ImageView
+					android:id="@+id/mask"
+					android:src="@drawable/avatar_mask"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="100dp"
+					android:layout_height="100dp"
+					android:adjustViewBounds="true"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="5dp"/>
 
-		<TextView
-			android:id="@+id/contact_name"
-			style="@style/font5"
-			android:singleLine="true"
-			android:layout_gravity="center"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+			</RelativeLayout>
 
-	</LinearLayout>
-    
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-	    <TableLayout
-	        android:id="@+id/controls"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:stretchColumns="*"
-	        android:paddingTop="20dp"/>
+			<TextView
+				android:id="@+id/contact_name"
+				style="@style/font5"
+				android:singleLine="true"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+			<TableLayout
+				android:id="@+id/controls"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:stretchColumns="*"
+				android:paddingTop="20dp"/>
+
+		</LinearLayout>
     
     </ScrollView>
 
