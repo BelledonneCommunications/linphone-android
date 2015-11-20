@@ -8,15 +8,13 @@
 		android:id="@+id/top_bar"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
-		android:layout_gravity="bottom">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
 			android:padding="20dp"/>
@@ -26,7 +24,7 @@
 			android:src="@drawable/edit_list_button"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
 			android:padding="15dp"/>
@@ -37,7 +35,7 @@
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_call"
 			android:layout_toLeftOf="@id/edit"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:padding="15dp"/>
 
@@ -45,9 +43,8 @@
 			android:id="@+id/back_to_call"
 			android:src="@drawable/call_back"
 			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_call"
 			android:layout_toLeftOf="@id/edit"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:visibility="gone"
 			android:padding="15dp"/>
@@ -61,100 +58,92 @@
 			android:layout_height="match_parent"
 			android:layout_toRightOf="@id/back"
 			android:layout_toLeftOf="@id/start_call"
-			android:paddingLeft="10dp"
-			android:gravity="center_vertical"/>
+			android:gravity="center_vertical"
+			android:paddingLeft="5dp"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
 
 	<LinearLayout
 		android:id="@+id/footer"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="60dp"
 		android:orientation="vertical"
-		android:layout_alignParentBottom="true"
-		android:layout_centerHorizontal="true"
-		android:background="@color/colorF">
+		android:layout_alignParentBottom="true">
 
-		<RelativeLayout
-			android:id="@+id/messageLayout"
+		<LinearLayout
+			android:id="@+id/message_layout"
+			android:orientation="horizontal"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
 			<ImageView
-				android:id="@+id/sendPicture"
+				android:id="@+id/send_picture"
+				android:src="@drawable/chat_send_file"
 				android:padding="5dp"
-				android:scaleType="center"
+				android:layout_weight="0.1"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentLeft="true"
-				android:layout_centerVertical="true"
-				android:src="@drawable/chat_send_file" />
-
-			<ImageView
-				android:id="@+id/sendMessage"
-				android:gravity="center"
-				android:padding="5dp"
-				android:scaleType="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/chat_send_message"
-				android:layout_alignTop="@+id/message"
-				android:layout_alignParentRight="true"/>
+				android:layout_height="wrap_content" />
 
 			<EditText
+				android:id="@+id/message"
+				android:textColor="@color/colorB"
 				android:imeOptions="flagNoExtractUi"
 				android:textCursorDrawable="@null"
-				android:id="@+id/message"
 				android:inputType="textMultiLine"
 				android:maxLines="3"
-				android:textColor="@android:color/black"
+				android:padding="5dp"
+				android:layout_weight="1"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_toRightOf="@id/sendPicture"
-				android:layout_toLeftOf="@id/sendMessage"
 				android:background="@drawable/resizable_textfield"
-				android:layout_centerVertical="true"/>
+				android:layout_gravity="center_vertical"/>
 
-		</RelativeLayout>
+			<ImageView
+				android:id="@+id/send_message"
+				android:src="@drawable/chat_send_message"
+				android:padding="5dp"
+				android:layout_weight="0.1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
 
+		</LinearLayout>
 	</LinearLayout>
 
 	<TextView
-		android:id="@+id/remoteComposing"
+		android:id="@+id/remote_composing"
+		android:text="@string/remote_composing"
+		style="@style/font11"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:textColor="@color/colorB"
-		android:text="@string/remote_composing"
 		android:layout_above="@id/footer"/>
 
 	<ListView
-		android:id="@+id/chatMessageList"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:id="@+id/chat_message_list"
 		android:divider="@android:color/transparent"
 		android:stackFromBottom="true"
 		android:transcriptMode="alwaysScroll"
-		android:cacheColorHint="@color/transparent"
-		android:layout_above="@id/remoteComposing"
 		android:dividerHeight="10dp"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
-		android:layout_marginBottom="10dp"
+		android:cacheColorHint="@color/transparent"
+		android:layout_above="@id/remote_composing"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="10dp"
 		android:layout_below="@+id/top_bar"/>
 
-		<AutoCompleteTextView
-			android:id="@+id/searchContactField"
-			android:background="@drawable/resizable_textfield"
-			android:hint="@string/search"
-			android:inputType="textPersonName"
-			android:completionThreshold="1"
-			android:textCursorDrawable="@null"
-			android:visibility="gone"
-			android:layout_margin="10dp"
-			android:layout_below="@id/top_bar"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:paddingRight="5dp"/>
+	<AutoCompleteTextView
+		android:id="@+id/search_contact_field"
+		android:background="@drawable/resizable_textfield"
+		android:hint="@string/search"
+		android:inputType="textPersonName"
+		android:completionThreshold="1"
+		android:textCursorDrawable="@null"
+		android:visibility="gone"
+		android:layout_margin="10dp"
+		android:layout_below="@id/top_bar"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:paddingRight="5dp"/>
 
 </RelativeLayout>
