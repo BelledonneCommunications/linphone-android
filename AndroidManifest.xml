@@ -128,7 +128,7 @@
 
         <activity android:name=".assistant.AssistantActivity"
 		    android:theme="@style/NoTitle"
-            android:screenOrientation="nosensor">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

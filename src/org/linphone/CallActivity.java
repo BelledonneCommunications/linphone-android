@@ -74,7 +74,7 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class CallActivity extends Activity implements OnClickListener {
-	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 5000;
+	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 
 	private static CallActivity instance;
@@ -468,11 +468,8 @@ public class CallActivity extends Activity implements OnClickListener {
 			enabledConferenceButton(false);
 
 		}
-
 		refreshInCallActions();
 		refreshCallList(getResources());
-
-
 	}
 
 	private void refreshInCallActions() {
@@ -869,7 +866,6 @@ public class CallActivity extends Activity implements OnClickListener {
 			mActiveCallHeader.setVisibility(View.GONE);
 			switchCamera.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
-			Log.w("Call list gone");
 			callsList.setVisibility(View.GONE);
 		}
 	}
@@ -1343,16 +1339,6 @@ public class CallActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		instance = this;
-
-		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			//displayVideoCallControlsIfHidden();
-		} else if(LinphoneManager.getLc().isInConference()) {
-			displayConference();
-		} else {
-			LinphoneManager.startProximitySensorForActivity(this);
-			removeCallbacks();
-		}
-
 		super.onResume();
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -1362,6 +1348,15 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		refreshIncallUi();
 		handleViewIntent();
+
+		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
+			displayVideoCall(false);
+		} else if(LinphoneManager.getLc().isInConference()) {
+			displayConference();
+		} else {
+			LinphoneManager.startProximitySensorForActivity(this);
+			removeCallbacks();
+		}
 	}
 
 	private void handleViewIntent() {

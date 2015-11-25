@@ -9,7 +9,7 @@
 		<item name="android:textColor">@color/colorA</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:textStyle">bold</item>
-		<item name="android:textSize">28sp</item>
+		<item name="android:textSize">24sp</item>
 	</style>
 
 	<style name="font2" parent="@android:style/TextAppearance.Medium">
@@ -31,7 +31,7 @@
 
 	<style name="font5" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorC</item>
-		<item name="android:textSize">32sp</item>
+		<item name="android:textSize">28sp</item>
 	</style>
 
 	<style name="font6" parent="@android:style/TextAppearance.Medium">
@@ -89,7 +89,7 @@
 
 	<style name="font16" parent="@android:style/TextAppearance.Small">
 		<item name="android:textColor">@color/colorH</item>
-		<item name="android:textSize">20sp</item>
+		<item name="android:textSize">18sp</item>
 	</style>
 
 	<style name="font17" parent="@android:style/TextAppearance.Small">

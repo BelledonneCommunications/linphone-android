@@ -9,7 +9,7 @@
 		android:id="@+id/status"
 		android:name="org.linphone.StatusFragment"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
+		android:layout_height="35dp"
 		tools:layout="@layout/status" />
 
 
@@ -215,22 +215,22 @@
 				<LinearLayout
 					android:background="@color/colorF"
 					android:layout_width="match_parent"
-					android:layout_height="70dp"
+					android:layout_height="60dp"
 					android:orientation="horizontal">
 
 					<RelativeLayout
 						android:background="@drawable/button_background"
 						android:layout_width="match_parent"
-						android:layout_height="match_parent"
+						android:layout_height="wrap_content"
 						android:layout_weight="1">
 
 					<ImageView
 						android:id="@+id/video"
 						android:src="@drawable/camera_default"
 						android:background="@drawable/button_background"
-						android:padding="25dp"
+						android:padding="22dp"
 						android:layout_width="match_parent"
-						android:layout_height="match_parent"/>
+						android:layout_height="wrap_content"/>
 
 					<ProgressBar
 						android:id="@+id/video_in_progress"
@@ -256,7 +256,7 @@
 						android:id="@+id/speaker"
 						android:src="@drawable/speaker_default"
 						android:background="@drawable/button_background"
-						android:padding="20dp"
+						android:padding="18dp"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_weight="1" />
@@ -275,7 +275,7 @@
 						android:id="@+id/options"
 						android:src="@drawable/options_default"
 						android:background="@drawable/button_background"
-						android:padding="20dp"
+						android:padding="18dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1" />
@@ -284,7 +284,7 @@
 				<LinearLayout
 					android:id="@+id/main_bar"
 					android:layout_width="match_parent"
-					android:layout_height="70dp"
+					android:layout_height="60dp"
 					android:layout_alignParentBottom="true"
 					android:layout_gravity="center"
 					android:orientation="horizontal" >
@@ -296,7 +296,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:padding="20dp" />
+						android:padding="18dp" />
 
 					<ImageView
 						android:id="@+id/hang_up"
@@ -315,7 +315,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:padding="20dp"/>
+						android:padding="18dp"/>
 				</LinearLayout>
 
 			</LinearLayout>
@@ -323,7 +323,7 @@
 			<LinearLayout
 				android:id="@+id/menu_bottom"
 				android:layout_width="match_parent"
-				android:layout_height="70dp"
+				android:layout_height="60dp"
 				android:layout_above="@id/menu"
 				android:orientation="horizontal" >
 
@@ -364,7 +364,7 @@
 			<LinearLayout
 				android:id="@+id/menu_middle"
 				android:layout_width="match_parent"
-				android:layout_height="70dp"
+				android:layout_height="60dp"
 				android:layout_above="@id/menu_bottom"
 				android:orientation="horizontal" >
 
@@ -405,7 +405,7 @@
 			<LinearLayout
 				android:layout_above="@id/menu_middle"
 				android:layout_width="match_parent"
-				android:layout_height="70dp"
+				android:layout_height="60dp"
 				android:orientation="horizontal" >
 
 				<TextView

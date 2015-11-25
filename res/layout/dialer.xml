@@ -8,7 +8,7 @@
 		android:id="@+id/address_bar"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_marginBottom="10dp"
 		android:layout_alignParentTop="true">
 
@@ -52,7 +52,7 @@
         android:id="@+id/controls"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="60dp">
 
 		<RelativeLayout
 			android:focusable="true"
@@ -67,7 +67,7 @@
 				android:background="@drawable/toolbar_button"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:padding="20dp"
+				android:padding="15dp"
 				android:layout_alignParentBottom="true"/>
 
 		</RelativeLayout>
@@ -78,7 +78,7 @@
 			android:background="@drawable/call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-			android:padding="15dp"
+			android:padding="12dp"
             android:layout_weight="0.5"/>
 
 	</LinearLayout>
