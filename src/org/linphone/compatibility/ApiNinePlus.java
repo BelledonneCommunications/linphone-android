@@ -99,16 +99,6 @@ public class ApiNinePlus {
 		Uri uri = Data.CONTENT_URI;
 		String[] projection;
 
-		// Phone Numbers
-		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
-		if (c != null) {
-	        while (c.moveToNext()) {
-	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
-	            list.add(number); 
-	        }
-	        c.close();
-		}
-
 		// SIP addresses
 		String selection2 = new StringBuilder()
 			.append(Data.CONTACT_ID)
@@ -119,11 +109,21 @@ public class ApiNinePlus {
 			.append("'")
 			.toString();
 		projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
-		c = cr.query(uri, projection, selection2, new String[]{id}, null);
+		Cursor c = cr.query(uri, projection, selection2, new String[]{id}, null);
 		if (c != null) {
 			int nbid = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
 			while (c.moveToNext()) {
 				list.add("sip:" + c.getString(nbid)); 
+			}
+			c.close();
+		}
+
+		// Phone Numbers
+		c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
+		if (c != null) {
+			while (c.moveToNext()) {
+				String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+				list.add(number);
 			}
 			c.close();
 		}
