@@ -3,7 +3,7 @@
 	android:id="@+id/edit_list"
 	android:background="@color/colorF"
 	android:layout_width="match_parent"
-	android:layout_height="60dp"
+	android:layout_height="50dp"
 	android:visibility="gone">
 
 	<ImageView
@@ -13,7 +13,7 @@
 		android:contentDescription="@string/content_description_valid"
 		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:padding="15dp"
+		android:padding="12dp"
 		android:layout_alignParentLeft="true"/>
 
 	<ImageView
@@ -23,7 +23,7 @@
 		android:contentDescription="@string/content_description_valid"
 		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:padding="15dp"
+		android:padding="12dp"
 		android:layout_alignParentRight="true"/>
 
 	<ImageView
@@ -33,7 +33,7 @@
 		android:contentDescription="@string/content_description_valid"
 		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:padding="15dp"
+		android:padding="12dp"
 		android:layout_toLeftOf="@id/delete"/>
 
 	<ImageView
@@ -43,7 +43,7 @@
 		android:contentDescription="@string/content_description_valid"
 		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:padding="15dp"
+		android:padding="12dp"
 		android:layout_toLeftOf="@id/delete"
 		android:visibility="gone"/>
 

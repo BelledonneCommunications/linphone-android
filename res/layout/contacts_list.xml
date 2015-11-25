@@ -8,7 +8,7 @@
 	<RelativeLayout
 		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_gravity="bottom"
 		android:background="@color/colorF">
 
@@ -24,8 +24,9 @@
 				android:contentDescription="@string/content_description_all_contacts"
 				android:layout_alignParentLeft="true"
 				android:src="@drawable/contacts_all"
+				android:background="@drawable/toolbar_button"
 				android:gravity="center"
-				android:padding="15dp"
+				android:padding="12dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
@@ -50,8 +51,9 @@
 				android:contentDescription="@string/content_description_linphone_contacts"
 				android:id="@+id/linphone_contacts"
 				android:src="@drawable/contacts_sip"
+				android:background="@drawable/toolbar_button"
 				android:gravity="center"
-				android:padding="15dp"
+				android:padding="12dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
@@ -70,12 +72,12 @@
 		<ImageView
 			android:id="@+id/newContact"
 			android:src="@drawable/contact_add"
+			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_new_contact"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_toLeftOf="@id/edit"
-			android:padding="15dp"
-			android:adjustViewBounds="true"/>
+			android:padding="12dp"/>
 
 		<ImageView
 			android:id="@+id/edit"
@@ -85,8 +87,7 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="15dp"
-			android:adjustViewBounds="true"/>
+			android:padding="12dp"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>

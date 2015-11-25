@@ -9,7 +9,7 @@
 		android:id="@+id/status"
 		android:name="org.linphone.StatusFragment"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
+		android:layout_height="35dp"
 		tools:layout="@layout/status" />
 
 	<android.support.v4.widget.DrawerLayout
@@ -74,7 +74,7 @@
 			<LinearLayout
 				android:id="@+id/footer"
 				android:layout_width="match_parent"
-				android:layout_height="70dp"
+				android:layout_height="60dp"
 				android:layout_alignParentBottom="true"
 				android:orientation="horizontal">
 
@@ -88,7 +88,8 @@
 					<ImageView
 						android:src="@drawable/footer_history"
 						android:layout_width="match_parent"
-						android:layout_height="35dp"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
 						android:layout_centerInParent="true"/>
 
 					<View
@@ -121,7 +122,8 @@
 					<ImageView
 						android:src="@drawable/footer_contacts"
 						android:layout_width="match_parent"
-						android:layout_height="35dp"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
 						android:layout_centerInParent="true"/>
 
 					<View
@@ -143,7 +145,8 @@
 					<ImageView
 						android:src="@drawable/footer_dialer"
 						android:layout_width="match_parent"
-						android:layout_height="35dp"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
 						android:layout_centerInParent="true"/>
 
 					<View
@@ -165,7 +168,8 @@
 					<ImageView
 						android:src="@drawable/footer_chat"
 						android:layout_width="match_parent"
-						android:layout_height="35dp"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
 						android:layout_centerInParent="true" />
 
 					<View

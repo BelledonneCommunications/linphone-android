@@ -9,7 +9,7 @@
 		android:id="@+id/top_bar"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_gravity="top">
 
 		<RelativeLayout
@@ -23,7 +23,7 @@
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_all_calls"
 				android:gravity="center"
-				android:padding="15dp"
+				android:padding="12dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
@@ -50,7 +50,7 @@
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_missed_calls"
 				android:gravity="center"
-				android:padding="15dp"
+				android:padding="12dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 
@@ -74,7 +74,7 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
