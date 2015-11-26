@@ -8,11 +8,11 @@
   	<ImageView 
         android:contentDescription="@string/content_description_welcome"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" 
+	    android:layout_height="match_parent"
 	    android:adjustViewBounds="true"
-	    android:scaleType="centerCrop"
+	    android:scaleType="center"
 	    android:layout_centerInParent="true"
-	    android:src="@drawable/logo"/>
+	    android:src="@drawable/linphone_logo_orange"/>
   	
     <ProgressBar 
         android:id="@+id/spinner"

@@ -175,7 +175,7 @@ public class DialerFragment extends Fragment {
 				mCall.resetClickListener();
 			}
 			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.call_back);
+			mAddContact.setImageResource(R.drawable.call_alt_back);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
 			mCall.setImageResource(R.drawable.call_audio_start);
