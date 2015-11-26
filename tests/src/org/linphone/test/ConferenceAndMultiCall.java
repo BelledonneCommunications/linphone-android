@@ -19,7 +19,7 @@ import android.view.View;
 
 public class ConferenceAndMultiCall extends SampleTest {
 
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testAInit() {
@@ -40,7 +40,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		Assert.assertFalse(LinphoneManager.getLc().isVideoEnabled());
 	}
 
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testBSimpleConference() {
