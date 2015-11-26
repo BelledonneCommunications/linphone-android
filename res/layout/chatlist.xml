@@ -8,7 +8,7 @@
 	<RelativeLayout
 		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_gravity="top"
 		android:background="@color/colorF">
 
@@ -20,7 +20,7 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 		<ImageView
 			android:id="@+id/back_in_call"
@@ -28,7 +28,7 @@
 			android:background="@drawable/toolbar_button"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
-			android:padding="15dp"
+			android:padding="12dp"
 			android:visibility="gone"
 			android:layout_toRightOf="@+id/new_discussion"/>
 
@@ -40,7 +40,7 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
@@ -55,12 +55,11 @@
     
     <TextView 
         android:id="@+id/noChatHistory"
+		android:text="@string/no_chat_history"
+		style="@style/font6"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/no_chat_history"
-        android:textColor="@color/colorB"
-        android:textAppearance="@android:style/TextAppearance.Large"/>
+        android:gravity="center"/>
 
 </LinearLayout>
