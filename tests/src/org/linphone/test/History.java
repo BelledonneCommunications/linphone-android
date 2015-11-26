@@ -14,7 +14,7 @@ import android.test.suitebuilder.annotation.MediumTest;
  */
 public class History extends SampleTest {
 	
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testACheckForTestCallInHistory() {		
@@ -61,16 +61,18 @@ public class History extends SampleTest {
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
 	}
 
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testEDeleteAll() {		
 		goToHistory();
 
-		/*solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
-		solo.clickOnView(solo.getView(org.linphone.R.id.deleteAll));
+		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
+		solo.clickOnView(solo.getView(org.linphone.R.id.select_all));
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
-		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_call_history)));*/
+
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_call_history)));
 	}
 	
 	private void goToHistory() {

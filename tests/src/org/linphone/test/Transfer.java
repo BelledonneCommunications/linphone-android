@@ -12,7 +12,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 
 public class Transfer extends SampleTest {
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testACallTransfer() {
