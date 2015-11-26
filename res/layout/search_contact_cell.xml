@@ -3,7 +3,7 @@
     android:id="@+id/layout"
 	android:background="@drawable/list_selector"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="60dp"
 	android:padding="5dp"
     android:gravity="center_vertical"
     android:orientation="vertical" >
