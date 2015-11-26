@@ -5,7 +5,7 @@
 
     <ContactsDataKind
         android:mimeType="vnd.android.cursor.item/org.linphone.profile"
-        android:icon="@drawable/logo_linphone_57x57"
+        android:icon="@drawable/linphone_logo"
         android:summaryColumn="data2"
         android:detailColumn="data3"
         android:detailSocialSummary="true"/>

@@ -9,7 +9,7 @@
         android:id="@+id/top_bar"
         android:background="@color/colorF"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:visibility="visible"
         android:layout_alignParentTop="true">
 
@@ -25,16 +25,17 @@
         <ImageView
             android:id="@+id/cancel"
             android:src="@drawable/dialer_back"
-            android:layout_width="wrap_content"
+            android:background="@drawable/toolbar_button"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:padding="15dp"
+            android:padding="12dp"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
     <ImageView
-        android:src="@drawable/linphone_orange"
+        android:src="@drawable/linphone_logo_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
