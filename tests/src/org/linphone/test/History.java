@@ -8,6 +8,7 @@ import org.linphone.core.LinphoneCall;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Sylvain Berfini
