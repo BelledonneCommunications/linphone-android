@@ -27,7 +27,6 @@
 			android:layout_alignParentRight="true"
 			android:padding="15dp"
 			android:src="@drawable/valid"
-			android:background="@drawable/toolbar_button"
 			android:gravity="center"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"/>
@@ -37,7 +36,6 @@
 			android:contentDescription="@string/content_description_delete"
 			android:padding="12dp"
 			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
 			android:gravity="center"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"

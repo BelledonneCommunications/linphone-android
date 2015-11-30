@@ -6,7 +6,7 @@
 				android:gravity="center">
 
 	<TextView
-		android:id="@+id/address"
+		android:id="@+id/account_address"
 		style="@style/font13"
 		android:paddingLeft="10dp"
 		android:gravity="center_vertical"
@@ -14,7 +14,7 @@
 		android:layout_height="match_parent"/>
 
 	<ImageView
-		android:id="@+id/status_led"
+		android:id="@+id/account_status"
 		android:src="@drawable/led_connected"
 		android:layout_width="25dp"
 		android:layout_height="25dp"

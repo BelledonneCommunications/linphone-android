@@ -94,7 +94,7 @@
 						android:src="@drawable/footer_history"/>
 
 					<TextView
-						android:id="@+id/missedCalls"
+						android:id="@+id/missed_calls"
 						style="@style/font7"
 						android:layout_width="25dp"
 						android:layout_height="25dp"
@@ -145,7 +145,7 @@
 						android:layout_centerInParent="true" />
 
 					<TextView
-						android:id="@+id/missedChats"
+						android:id="@+id/missed_chats"
 						style="@style/font7"
 						android:layout_width="25dp"
 						android:layout_height="25dp"

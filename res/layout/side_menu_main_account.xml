@@ -23,13 +23,13 @@
 		android:gravity="center_vertical">
 
 		<TextView
-			android:id="@+id/display_name"
+			android:id="@+id/main_account_display_name"
 			style="@style/font3"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
 		<TextView
-			android:id="@+id/address"
+			android:id="@+id/main_account_address"
 			style="@style/font12"
 			android:editable="false"
 			android:layout_width="wrap_content"

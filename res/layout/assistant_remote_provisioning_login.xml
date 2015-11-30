@@ -16,7 +16,7 @@
 			android:orientation="horizontal">
 
 			<ImageView
-				android:src="@drawable/logo_secure_phone"
+				android:src="@drawable/linphone_logo"
 				android:layout_width="60dp"
 				android:layout_height="60dp"
 				android:layout_gravity="bottom"/>

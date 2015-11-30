@@ -31,10 +31,10 @@
 			android:id="@+id/start_call"
 			android:src="@drawable/call_alt_start"
 			android:contentDescription="@string/content_description_call"
-			android:layout_toLeftOf="@id/edit"
 			android:layout_width="60dp"
 			android:layout_height="match_parent"
-			android:padding="15dp"/>
+			android:padding="15dp"
+			android:layout_toLeftOf="@+id/edit"/>
 
 		<ImageView
 			android:id="@+id/back_to_call"
@@ -53,10 +53,10 @@
 			android:singleLine="true"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/back"
 			android:layout_toLeftOf="@id/start_call"
 			android:paddingLeft="10dp"
-			android:gravity="center"/>
+			android:gravity="center" android:layout_toRightOf="@+id/back"
+			android:layout_toEndOf="@+id/back"/>
 
 		<View
 			android:background="@color/colorF"
@@ -78,12 +78,12 @@
    		android:background="@color/colorD">
        
 	    <RelativeLayout 
-	        android:id="@+id/messageLayout"
+	        android:id="@+id/message_layout"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content">
 	        
 	        <ImageView
-	            android:id="@+id/sendPicture"
+	            android:id="@+id/send_picture"
 				android:padding="15dp"
 				android:scaleType="center"
 				android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
 				android:src="@drawable/chat_send_file" />
 
 			<ImageView
-				android:id="@+id/sendMessage"
+				android:id="@+id/send_message"
 				android:gravity="center"
 				android:padding="15dp"
 				android:scaleType="center"
@@ -114,39 +114,22 @@
 	            android:layout_width="match_parent"
 	            android:layout_height="40dp"
 				android:padding="10dp"
-	            android:layout_toRightOf="@id/sendPicture"
-	            android:layout_toLeftOf="@id/sendMessage"
+	            android:layout_toRightOf="@id/send_picture"
+	            android:layout_toLeftOf="@id/send_message"
 	            android:background="@drawable/resizable_textfield"
 	            android:layout_centerVertical="true"/>
 	        
 	    </RelativeLayout>
-	    
-	    <RelativeLayout 
-	        android:id="@+id/uploadLayout"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content">
-	        
-	        <ImageView 
-	            android:contentDescription="@string/content_description_cancel"
-	            android:id="@+id/cancelUpload"
-	            android:src="@drawable/clean_field_default"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:adjustViewBounds="true"
-	            android:layout_alignParentRight="true"
-	            android:padding="20dp" />
-	        
-	    </RelativeLayout>
-    
 	</LinearLayout>
 
 	<TextView
-        android:id="@+id/remoteComposing"
+        android:id="@+id/remote_composing"
 		android:text="@string/remote_composing"
 		style="@style/font14"
 		android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/footer"/>
+		android:layout_above="@+id/footer" android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"/>
 
 	<ListView
 		android:id="@+id/chat_message_list"

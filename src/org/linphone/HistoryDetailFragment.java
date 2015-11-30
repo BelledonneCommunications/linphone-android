@@ -98,7 +98,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else {
 			contactAddress.setText(sipUri);
 		}
-		
+
 		time.setText(callTime == null ? "" : callTime);
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format),false));

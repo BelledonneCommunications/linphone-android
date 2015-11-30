@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bitmap
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:src="@drawable/conf_status_paused"
+	android:src="@drawable/contact_add_button"
 	android:alpha="0.2" />

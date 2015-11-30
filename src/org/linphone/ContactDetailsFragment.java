@@ -137,16 +137,16 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
-				v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
+				v.findViewById(R.id.contact_call).setTag(contact.getLinphoneAddress());
 			} else {
 				v.findViewById(R.id.contact_call).setVisibility(View.GONE);
 			}
 
 			v.findViewById(R.id.contact_chat).setOnClickListener(chatListener);
-			v.findViewById(R.id.chat).setTag(contact.getLinphoneAddress());
+			v.findViewById(R.id.contact_chat).setTag(contact.getLinphoneAddress());
 
 			if (getResources().getBoolean(R.bool.disable_chat)) {
-				v.findViewById(R.id.chat).setVisibility(View.GONE);
+				v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
 			}
 
 			controls.addView(v);
@@ -164,13 +164,13 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				tv.setSelected(true);
 
 				if (!displayChatAddressOnly) {
-					v.findViewById(R.id.call).setOnClickListener(dialListener);
-					v.findViewById(R.id.call).setTag(displayednumberOrAddress);
+					v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
+					v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
 				} else {
-					v.findViewById(R.id.call).setVisibility(View.GONE);
+					v.findViewById(R.id.contact_call).setVisibility(View.GONE);
 				}
 
-				v.findViewById(R.id.chat).setOnClickListener(chatListener);
+				v.findViewById(R.id.contact_chat).setOnClickListener(chatListener);
 				LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 				if (lpc != null) {
 					displayednumberOrAddress = lpc.normalizePhoneNumber(displayednumberOrAddress);
@@ -182,14 +182,10 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					if (!numberOrAddress.contains("@")) {
 						tag = numberOrAddress + "@" + lpc.getDomain();
 					}
-					v.findViewById(R.id.chat).setTag(tag);
+					v.findViewById(R.id.contact_chat).setTag(tag);
 				} else {
-					v.findViewById(R.id.chat).setTag(numberOrAddress);
+					v.findViewById(R.id.contact_chat).setTag(numberOrAddress);
 				}
-				v.findViewById(R.id.contact_chat).setTag(tag);
-			} else {
-				v.findViewById(R.id.contact_chat).setTag(numberOrAddress);
-			}
 			
 			final String finalNumberOrAddress = numberOrAddress;
 			/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);

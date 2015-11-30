@@ -337,7 +337,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		pause.setOnClickListener(this);
 		enabledPauseButton(false);
 
-		mActiveCallHeader = (RelativeLayout) findViewById(R.id.active_call);
+		//mActiveCallHeader = (RelativeLayout) findViewById(R.id.active_call);
 		mNoCurrentCall = (LinearLayout) findViewById(R.id.no_current_call);
 		mCallPaused = (LinearLayout) findViewById(R.id.remote_pause);
 
@@ -1464,7 +1464,7 @@ public class CallActivity extends Activity implements OnClickListener {
 
 			TextView contactName = (TextView) callView.findViewById(R.id.contact_name);
 
-			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+			contactName.setText(LinphoneUtils.getAddressDisplayName(call.getRemoteAddress()));
 			displayCallStatusIconAndReturnCallPaused(callView, call);
 			registerCallDurationTimer(callView, call);
 		}

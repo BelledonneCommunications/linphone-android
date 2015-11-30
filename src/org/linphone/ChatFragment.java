@@ -1063,7 +1063,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
 			}
 
-			TextView name = (TextView) view.findViewById(R.id.Contact_name);
+			TextView name = (TextView) view.findViewById(R.id.contact_name);
 			name.setText(LinphoneUtils.getAddressDisplayName(f.getAddress()));
 
 			final TextView address = (TextView) view.findViewById(R.id.contact_address);
