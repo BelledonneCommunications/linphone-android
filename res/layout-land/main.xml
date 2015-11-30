@@ -54,8 +54,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:orientation="vertical"
-				android:layout_above="@id/footer"
-				android:layout_below="@id/top_bar">
+				android:layout_below="@id/top_bar" android:layout_alignBottom="@+id/top_bar"
+				android:layout_toRightOf="@+id/footer" android:layout_toEndOf="@+id/footer">
 
 				<FrameLayout
 					android:layout_width="match_parent"
@@ -73,88 +73,122 @@
 
 			<LinearLayout
 				android:id="@+id/footer"
-				android:layout_width="match_parent"
-				android:layout_height="60dp"
+				android:layout_width="60dp"
+				android:layout_height="match_parent"
 				android:layout_alignParentBottom="true"
-				android:orientation="horizontal">
+				android:orientation="vertical">
 
 				<RelativeLayout
 					android:id="@+id/history"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
-					android:layout_width="0dp"
-					android:layout_height="match_parent">
+					android:layout_width="60dp"
+					android:layout_height="0dp">
 
 					<ImageView
-						android:id="@+id/history_image"
-						android:layout_width="match_parent"
-						android:layout_height="35dp"
-						android:layout_centerInParent="true"
-						android:contentDescription="@string/content_description_history"
-						android:src="@drawable/footer_history"/>
+						android:src="@drawable/footer_history"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
+						android:layout_centerInParent="true"/>
+
+					<View
+						android:id="@+id/history_select"
+						android:background="@color/colorA"
+						android:layout_width="5dp"
+						android:layout_height="match_parent"
+						android:layout_alignParentLeft="true"
+						android:visibility="gone"/>
 
 					<TextView
-						android:id="@+id/missedCalls"
-						style="@style/font7"
+						android:id="@+id/missed_calls"
+						android:background="@drawable/history_chat_indicator"
+						style="@style/font18"
 						android:layout_width="25dp"
 						android:layout_height="25dp"
 						android:layout_margin="12dp"
-						android:background="@drawable/history_chat_indicator"
-						android:visibility="gone"
 						android:gravity="center"
-						android:layout_alignParentBottom="true"
-						android:layout_alignParentRight="true"/>
+						android:visibility="gone"/>
 
 				</RelativeLayout>
 
-				<ImageView
+				<RelativeLayout
 					android:id="@+id/contacts"
-					android:src="@drawable/footer_contacts"
 					android:background="@drawable/footer_button"
-					android:contentDescription="@string/content_description_contacts"
 					android:layout_weight="1"
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:padding="18dp"
-					android:layout_centerInParent="true" />
+					android:layout_width="60dp"
+					android:layout_height="0dp">
 
-				<ImageView
+					<ImageView
+						android:src="@drawable/footer_contacts"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
+						android:layout_centerInParent="true"/>
+
+					<View
+						android:id="@+id/contacts_select"
+						android:background="@color/colorA"
+						android:layout_width="5dp"
+						android:layout_height="match_parent"
+						android:layout_alignParentLeft="true"
+						android:visibility="gone"/>
+				</RelativeLayout>
+
+				<RelativeLayout
 					android:id="@+id/dialer"
-					android:src="@drawable/footer_dialer"
 					android:background="@drawable/footer_button"
-					android:contentDescription="@string/content_description_dialer"
 					android:layout_weight="1"
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:padding="18dp"
-					android:layout_centerInParent="true"/>
+					android:layout_width="60dp"
+					android:layout_height="0dp">
+
+					<ImageView
+						android:src="@drawable/footer_dialer"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:padding="15dp"
+						android:layout_centerInParent="true"/>
+
+					<View
+						android:id="@+id/dialer_select"
+						android:background="@color/colorA"
+						android:layout_width="5dp"
+						android:layout_height="match_parent"
+						android:layout_alignParentLeft="true"/>
+
+				</RelativeLayout>
 
 				<RelativeLayout
 					android:id="@+id/chat"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
-					android:layout_width="0dp"
-					android:layout_height="match_parent">
+					android:layout_width="60dp"
+					android:layout_height="0dp">
 
 					<ImageView
-						android:id="@+id/chat_image"
 						android:src="@drawable/footer_chat"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:padding="15dp"
 						android:layout_centerInParent="true" />
 
+					<View
+						android:id="@+id/chat_select"
+						android:background="@color/colorA"
+						android:visibility="gone"
+						android:layout_width="5dp"
+						android:layout_height="match_parent"
+						android:layout_alignParentLeft="true"/>
+
 					<TextView
-						android:id="@+id/missedChats"
-						style="@style/font7"
+						android:id="@+id/missed_chats"
+						android:background="@drawable/history_chat_indicator"
+						style="@style/font18"
 						android:layout_width="25dp"
 						android:layout_height="25dp"
 						android:layout_margin="12dp"
-						android:background="@drawable/history_chat_indicator"
-						android:visibility="gone"
 						android:gravity="center"
-						android:layout_alignParentBottom="true"
-						android:layout_alignParentRight="true"/>
+						android:visibility="gone" />
 
 				</RelativeLayout>
 			</LinearLayout>
@@ -195,12 +229,12 @@
 
 			<ListView
 				android:id="@+id/item_list"
-				android:background="@color/colorG"
+				android:background="@color/colorH"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:choiceMode="singleChoice"
 				android:divider="@color/colorE"
-				android:listSelector="@color/colorG"
+				android:listSelector="@color/colorH"
 				android:dividerHeight="1dp"/>
 		</LinearLayout>
 
@@ -210,8 +244,7 @@
 			android:gravity="bottom"
 			android:layout_alignParentBottom="true"
 			android:layout_width="match_parent"
-			android:layout_height="60dp">
-
+			android:layout_height="50dp">
 
 			<ImageView
 				android:id="@+id/quit_button"
@@ -225,7 +258,7 @@
 			<TextView
 				android:id="@+id/quit"
 				android:text="@string/quit"
-				style="@style/font8"
+				style="@style/font14"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_toRightOf="@id/quit_button"

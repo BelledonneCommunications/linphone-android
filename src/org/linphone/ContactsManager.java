@@ -97,7 +97,7 @@ public class ContactsManager {
 
 	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
 		initializeContactManager(context,contentResolver);
-		AccountManager accountManager = (AccountManager) context.getSystemService(context.ACCOUNT_SERVICE);
+		AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
 		Account[] accounts = accountManager.getAccountsByType(context.getPackageName());
 
@@ -483,11 +483,7 @@ public class ContactsManager {
 	public boolean isContactHasAddress(Contact contact, String address){
 		if(contact != null) {
 			contact.refresh(contentResolver);
-			if (contact.getNumbersOrAddresses().contains(address) || contact.getNumbersOrAddresses().contains("sip:"+ address))  {
-				return true;
-			} else {
-				return false;
-			}
+			return contact.getNumbersOrAddresses().contains(address) || contact.getNumbersOrAddresses().contains("sip:" + address);
 		}
 		return false;
 	}

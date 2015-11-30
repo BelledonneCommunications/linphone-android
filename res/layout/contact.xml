@@ -17,7 +17,7 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
-			android:padding="20dp"/>
+			android:padding="15dp"/>
 
 		<View
 			android:background="@color/colorF"
@@ -26,59 +26,64 @@
 			android:layout_height="1dp"/>
 	</RelativeLayout>
 
-	<LinearLayout
+	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="20dp"
-		android:orientation="horizontal">
-
-		<ImageView
-			android:id="@+id/contact_picture"
-			android:src="@drawable/avatar"
-			android:contentDescription="@string/content_description_contact_picture"
-			android:layout_width="80dp"
-			android:layout_height="80dp"
-			android:adjustViewBounds="true"
-			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="5dp"/>
+		android:layout_height="wrap_content">
 
 		<LinearLayout
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingLeft="10dp"
 			android:orientation="vertical">
 
-			<TextView
-				android:id="@+id/contact_name"
-				style="@style/font13"
-				android:lines="2"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="10dp"
+			android:orientation="horizontal">
 
-			<TextView
-				android:id="@+id/contact_function"
-				style="@style/font2"
-				android:singleLine="true"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+			<ImageView
+				android:id="@+id/contact_picture"
+				android:src="@drawable/avatar"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="80dp"
+				android:layout_height="80dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
 
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="10dp"
+				android:orientation="vertical">
+
+				<TextView
+					android:id="@+id/contact_name"
+					style="@style/font13"
+					android:lines="2"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+				<TextView
+					android:id="@+id/contact_function"
+					style="@style/font2"
+					android:singleLine="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+			</LinearLayout>
 		</LinearLayout>
 
-	</LinearLayout>
+		<TextView
+			android:text="@string/address_sip"
+			style="@style/font8"
+			android:textStyle="bold"
+			android:background="@color/colorA"
+			android:textAllCaps="true"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:gravity="center"/>
 
-	<TextView
-		android:text="@string/address_sip"
-		style="@style/font8"
-		android:textStyle="bold"
-		android:background="@color/colorA"
-		android:textAllCaps="true"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		android:gravity="center"/>
-
-	<ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         
 	    <TableLayout
 	        android:id="@+id/controls"
@@ -86,7 +91,9 @@
 	        android:layout_height="wrap_content"
 	        android:stretchColumns="*"
 	        android:paddingTop="10dp"/>
-    
+
+		</LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

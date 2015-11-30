@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -109,7 +108,7 @@ public class ContactEditorFragment extends Fragment {
 
 		contactsManager = ContactsManager.getInstance();
 		
-		view = inflater.inflate(R.layout.edit_contact, container, false);
+		view = inflater.inflate(R.layout.contact_edit, container, false);
 
 		ImageView back = (ImageView) view.findViewById(R.id.back);
 		back.setOnClickListener(new OnClickListener() {
@@ -736,7 +735,7 @@ public class ContactEditorFragment extends Fragment {
 			newNumberOrAddress = newN;
 		}
 		
-		public void save() {;
+		public void save() {
 			if (newNumberOrAddress == null || newNumberOrAddress.equals(oldNumberOrAddress))
 				return;
 

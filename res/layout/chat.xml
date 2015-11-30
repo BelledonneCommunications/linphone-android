@@ -7,14 +7,13 @@
 	<RelativeLayout
 		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
-		android:layout_gravity="bottom">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
 			android:padding="20dp"/>
@@ -23,7 +22,7 @@
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
 			android:padding="15dp"/>
@@ -33,7 +32,7 @@
 			android:src="@drawable/call_alt_start"
 			android:contentDescription="@string/content_description_call"
 			android:layout_toLeftOf="@id/edit"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:padding="15dp"/>
 
@@ -42,7 +41,7 @@
 			android:src="@drawable/call_back_button"
 			android:contentDescription="@string/content_description_call"
 			android:layout_toLeftOf="@id/edit"
-			android:layout_width="70dp"
+			android:layout_width="60dp"
 			android:layout_height="match_parent"
 			android:visibility="gone"
 			android:padding="15dp"/>
@@ -64,6 +63,7 @@
 			android:layout_alignParentBottom="true"
 			android:layout_width="match_parent"
 			android:layout_height="1dp"/>
+
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
@@ -103,9 +103,8 @@
 				android:layout_alignTop="@+id/message"
 				android:layout_alignParentRight="true"/>
 
+
 			<EditText
-				android:imeOptions="flagNoExtractUi"
-				android:textCursorDrawable="@null"
 				android:id="@+id/message"
                 android:imeOptions="flagNoExtractUi"
 	            android:textCursorDrawable="@null"
@@ -150,31 +149,32 @@
         android:layout_above="@id/footer"/>
 
 	<ListView
-		android:id="@+id/chatMessageList"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:id="@+id/chat_message_list"
 		android:divider="@android:color/transparent"
 		android:stackFromBottom="true"
 		android:transcriptMode="alwaysScroll"
-		android:cacheColorHint="@color/transparent"
-		android:layout_above="@id/remoteComposing"
 		android:dividerHeight="10dp"
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
+		android:cacheColorHint="@color/transparent"
+		android:layout_above="@id/remote_composing"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="10dp"
 		android:layout_below="@+id/top_bar"/>
 
-		<AutoCompleteTextView
-			android:id="@+id/searchContactField"
-			android:background="@drawable/resizable_textfield"
-			android:hint="@string/search"
-			android:inputType="textPersonName"
-			android:completionThreshold="1"
-			android:textCursorDrawable="@null"
-			android:visibility="gone"
-			android:layout_margin="10dp"
-			android:layout_below="@id/top_bar"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:paddingRight="5dp"/>
+	<AutoCompleteTextView
+		android:id="@+id/search_contact_field"
+		android:background="@drawable/resizable_textfield"
+		android:hint="@string/search"
+		android:inputType="textPersonName"
+		android:completionThreshold="1"
+		android:textCursorDrawable="@null"
+		android:visibility="gone"
+		android:layout_margin="10dp"
+		android:layout_below="@id/top_bar"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:paddingRight="5dp"/>
 
 </RelativeLayout>

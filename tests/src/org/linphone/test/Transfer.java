@@ -10,14 +10,15 @@ import org.linphone.mediastream.Log;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 public class Transfer extends SampleTest {
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testACallTransfer() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 
@@ -27,7 +28,7 @@ public class Transfer extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.conference_account_login) + "@" + iContext.getString(org.linphone.test.R.string.conference_account_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call)); // Transfer button as the same id, only the image changes
+		solo.clickOnView(solo.getView(org.linphone.R.id.call)); // Transfer button as the same id, only the image changes
 		
 		solo.sleep(2000);
 		Assert.assertTrue(LinphoneTestManager.getLc(1).getCallsNb() > 0);

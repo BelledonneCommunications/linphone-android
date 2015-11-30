@@ -79,7 +79,7 @@ public final class LinphoneService extends Service {
 	public static final int IC_LEVEL_ORANGE=0;
 	/*private static final int IC_LEVEL_GREEN=1;
 	private static final int IC_LEVEL_RED=2;*/
-	public static final int IC_LEVEL_OFFLINE=3;
+	//public static final int IC_LEVEL_OFFLINE=3;
 	
 	private static LinphoneService instance;
 	
@@ -155,7 +155,9 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
 		} catch (Exception e) {
 		}
+
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.drawable.logo_secure_phone, bm, mNotifContentIntent, true,notifcationsPriority);
+
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 
@@ -534,7 +536,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, level, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, 0, bm, mNotifContentIntent, true,notifcationsPriority);
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
 

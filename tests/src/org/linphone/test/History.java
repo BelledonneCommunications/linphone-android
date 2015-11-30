@@ -8,13 +8,14 @@ import org.linphone.core.LinphoneCall;
 
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Sylvain Berfini
  */
 public class History extends SampleTest {
 	
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testACheckForTestCallInHistory() {		
@@ -45,7 +46,7 @@ public class History extends SampleTest {
 		Assert.assertEquals(1, LinphoneTestManager.getLc().getCallsNb());
 		waitForCallState(LinphoneTestManager.getLc().getCalls()[0],LinphoneCall.State.StreamsRunning);
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
@@ -61,16 +62,18 @@ public class History extends SampleTest {
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
 	}
 
-	//@SmallTest
+	@SmallTest
 	@MediumTest
 	@LargeTest
 	public void testEDeleteAll() {		
 		goToHistory();
 
-		/*solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
-		solo.clickOnView(solo.getView(org.linphone.R.id.deleteAll));
+		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
+		solo.clickOnView(solo.getView(org.linphone.R.id.select_all));
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
-		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_call_history)));*/
+
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_call_history)));
 	}
 	
 	private void goToHistory() {

@@ -37,7 +37,7 @@ import android.widget.TextView;
 public class AboutFragment extends Fragment implements OnClickListener {
 	View sendLogButton = null;
 	View resetLogButton = null;
-	private ImageView cancel;
+	ImageView cancel;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,7 +72,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().hideTabBar(true);
 		}
 	}
-	
 
 	@Override
 	public void onClick(View v) {
@@ -87,7 +86,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 					lc.resetLogCollection();
 				}
 			} else if (v == cancel) {
-				getFragmentManager().popBackStackImmediate();
+				LinphoneActivity.instance().displayDialer();
 			}
 		}
 	}

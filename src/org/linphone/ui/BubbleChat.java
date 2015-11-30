@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.linphone.Contact;
-import org.linphone.ContactsManager;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
@@ -45,7 +44,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -62,7 +60,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -96,12 +93,10 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 		} else {
 			view = LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
 		}
+		view.setId(message.getStorageId());
 
 		defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_picture_over);
 		inprogress = (ProgressBar) view.findViewById(R.id.inprogress);
-
-		view.setId(message.getStorageId());
-
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
 		LinphoneChatMessage.State status = message.getStatus();
@@ -120,6 +115,9 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			}
 		}
 
+		String externalBodyUrl = message.getExternalBodyUrl();
+		LinphoneContent fileTransferContent = message.getFileTransferInformation();
+
 		if(nativeMessage.isOutgoing()){
 			cancelUpload = (Button) view.findViewById(R.id.cancel_upload);
 			cancelUpload.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +125,6 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 				public void onClick(View v) {
 					if (LinphoneManager.getInstance().getMessageUploadPending() != null) {
 						progressBar.setVisibility(View.GONE);
-						//tex.setVisibility(View.VISIBLE);
-
 						progressBar.setProgress(0);
 						nativeMessage.cancelFileTransfer();
 						LinphoneManager.getInstance().setUploadPendingFileMessage(null);
@@ -136,9 +132,6 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 				}
 			});
 		}
-
-		String externalBodyUrl = message.getExternalBodyUrl();
-		LinphoneContent fileTransferContent = message.getFileTransferInformation();
 
 		if(LinphoneManager.getInstance().getMessageUploadPending() != null){
 			progressBar.setVisibility(View.VISIBLE);
@@ -153,7 +146,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 				imageView.setVisibility(View.VISIBLE);
 				loadBitmap(appData, imageView);
 
-				RelativeLayout imageLayout = (RelativeLayout) view.findViewById(R.id.imageLayout);
+				RelativeLayout imageLayout = (RelativeLayout) view.findViewById(R.id.file_transfer_layout);
 				if(LinphoneManager.getInstance().getMessageUploadPending() != null  && LinphoneManager.getInstance().getMessageUploadPending().getStorageId() == nativeMessage.getStorageId()){
 					inprogress.setVisibility(View.INVISIBLE);
 					imageLayout.setVisibility(View.VISIBLE);
@@ -165,8 +158,8 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 					appData = null;
 				}
 
-				RelativeLayout imageLayout = (RelativeLayout) view.findViewById(R.id.imageLayout);
-				Button acceptDownload  = (Button) view.findViewById(R.id.accept_download);
+				RelativeLayout imageLayout = (RelativeLayout) view.findViewById(R.id.file_transfer_layout);
+				acceptDownload  = (Button) view.findViewById(R.id.accept_download);
 
 				if (appData == null) {
 					LinphoneManager.addListener(this);

@@ -280,10 +280,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		this.mUploadingImageStream = array;
 	}
 
-
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
-		if (state == LinphoneChatMessage.State.FileTransferDone || state == LinphoneChatMessage.State.FileTransferError) {
+		if (state == LinphoneChatMessage.State.FileTransferDone) {
 			if(msg.isOutgoing() && mUploadingImageStream != null){
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
@@ -298,6 +297,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				}
 				removePendingMessage(msg);
 			}
+		}
+
+		if(state == LinphoneChatMessage.State.FileTransferError) {
+			//TODO
 		}
 
 		for (LinphoneChatMessage.LinphoneChatMessageListener l: simpleListeners) {
@@ -649,6 +652,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
+		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 
 		int availableCores = Runtime.getRuntime().availableProcessors();
@@ -657,6 +661,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		int migrationResult = getLc().migrateToMultiTransport();
 		Log.d("Migration to multi transport result = " + migrationResult);
+
+		mLc.migrateCallLogs();
 
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 			Compatibility.initPushNotificationService(mServiceContext);

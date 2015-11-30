@@ -306,66 +306,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		}
 	}
 
-	private void hideDeleteAllButton() {
-		if (delete == null || delete.getVisibility() != View.VISIBLE) {
-			return;
-		}
-
-		if (LinphoneActivity.instance().isAnimationDisabled()) {
-			delete.setVisibility(View.INVISIBLE);
-		} else {
-			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_right_to_left);
-			animation.setAnimationListener(new AnimationListener() {
-				@Override
-				public void onAnimationStart(Animation animation) {
-
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					delete.setVisibility(View.INVISIBLE);
-					animation.setAnimationListener(null);
-				}
-			});
-			delete.startAnimation(animation);
-		}
-	}
-
-	private void showDeleteAllButton() {
-		if (delete == null || delete.getVisibility() == View.VISIBLE) {
-			return;
-		}
-
-		if (LinphoneActivity.instance().isAnimationDisabled()) {
-			delete.setVisibility(View.VISIBLE);
-		} else {
-			Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_left_to_right);
-			animation.setAnimationListener(new AnimationListener() {
-				@Override
-				public void onAnimationStart(Animation animation) {
-
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					delete.setVisibility(View.VISIBLE);
-					animation.setAnimationListener(null);
-				}
-			});
-			delete.startAnimation(animation);
-		}
-	}
-
 	public void quitEditMode(){
 		isEditMode = false;
 		editList.setVisibility(View.GONE);

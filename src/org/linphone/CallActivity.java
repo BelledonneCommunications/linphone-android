@@ -71,7 +71,7 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class CallActivity extends Activity implements OnClickListener {
-	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 5000;
+	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 
 	private static CallActivity instance;
@@ -465,11 +465,8 @@ public class CallActivity extends Activity implements OnClickListener {
 			conference.setEnabled(false);
 
 		}
-
 		refreshInCallActions();
 		refreshCallList(getResources());
-
-
 	}
 
 	private void refreshInCallActions() {
@@ -1322,16 +1319,6 @@ public class CallActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		instance = this;
-
-		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			//displayVideoCallControlsIfHidden();
-		} else if(LinphoneManager.getLc().isInConference()) {
-			displayConference();
-		} else {
-			LinphoneManager.startProximitySensorForActivity(this);
-			removeCallbacks();
-		}
-
 		super.onResume();
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -1341,6 +1328,15 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		refreshIncallUi();
 		handleViewIntent();
+
+		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
+			displayVideoCall(false);
+		} else if(LinphoneManager.getLc().isInConference()) {
+			displayConference();
+		} else {
+			LinphoneManager.startProximitySensorForActivity(this);
+			removeCallbacks();
+		}
 	}
 
 	private void handleViewIntent() {
@@ -1490,13 +1486,9 @@ public class CallActivity extends Activity implements OnClickListener {
 			isCallPaused = false;
 			isInConference = false;
 		} else {
-			if (isConferenceRunning && call.isInConference()) {
-				//callState.setImageResource(R.drawable.remove);
-				isInConference = true;
-			} else {
-				//callState.setImageResource(R.drawable.play);
-				isInConference = false;
-			}
+			//callState.setImageResource(R.drawable.remove);
+//callState.setImageResource(R.drawable.play);
+			isInConference = isConferenceRunning && call.isInConference();
 			isCallPaused = false;
 		}
 

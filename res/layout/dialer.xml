@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/colorC"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-  	android:background="@color/colorC">
+    android:layout_height="match_parent">
+
 
 	<RelativeLayout
 		android:id="@+id/address_bar"
 		android:background="@color/colorG"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_marginBottom="10dp"
 		android:layout_alignParentTop="true">
 
@@ -39,12 +40,20 @@
 
 	</RelativeLayout>
 
+	<org.linphone.ui.Numpad
+		android:id="@+id/numpad"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="10dp"
+		android:layout_above="@id/controls"
+		android:layout_below="@id/address_bar"
+		android:layout_centerInParent="true"/>
     
     <LinearLayout
         android:id="@+id/controls"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
@@ -61,20 +70,10 @@
 			android:background="@drawable/call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-			android:padding="15dp"
+			android:padding="12dp"
             android:layout_weight="0.5"/>
 
 	</LinearLayout>
-	
-    <org.linphone.ui.Numpad
-		android:id="@+id/numpad"
-        android:contentDescription="@string/content_description_numpad"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-		android:padding="10dp"
-        android:layout_above="@id/controls"
-        android:layout_below="@id/address_bar"
-		android:layout_centerInParent="true"/>
 
 	<ScrollView
 		android:layout_width="wrap_content"

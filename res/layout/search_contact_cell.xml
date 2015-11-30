@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
+	android:background="@color/colorG"
     android:layout_width="match_parent"
     android:layout_height="60dp"
 	android:padding="5dp"
     android:gravity="center_vertical"
-    android:background="@color/colorG"
     android:orientation="vertical" >
 
 	<TextView
-		android:id="@+id/Contact_name"
+		android:id="@+id/contact_name"
+		style="@style/font6"
 		android:lines="1"
-		style="@style/font2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/icon"
@@ -22,8 +22,5 @@
 		style="@style/font9"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:adjustViewBounds="true"
-		android:scaleType="centerInside" />
+		android:layout_centerVertical="true"/>
 </LinearLayout>

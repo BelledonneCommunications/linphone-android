@@ -9,9 +9,12 @@
         android:id="@+id/top_bar"
         android:background="@color/colorF"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="50dp"
+        android:visibility="visible"
+        android:layout_alignParentTop="true">
 
         <TextView
+            android:id="@+id/menu_name"
             android:text="@string/about"
             style="@style/font1"
             android:layout_width="wrap_content"
@@ -21,16 +24,18 @@
 
         <ImageView
             android:id="@+id/cancel"
-            android:contentDescription="@string/content_description_dialer"
-            android:layout_width="70dp"
+            android:src="@drawable/dialer_back"
+            android:background="@drawable/toolbar_button"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:padding="20dp"
+            android:padding="12dp"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
     <ImageView
+        android:src="@drawable/linphone_logo_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

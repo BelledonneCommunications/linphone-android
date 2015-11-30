@@ -283,18 +283,17 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	public void onResume() {
 		instance = this;
 		super.onResume();
-		
+
 		if (editConsumed) {
 			editOnClick = false;
 			sipAddressToAdd = null;
 		}
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS_LIST);
 			LinphoneActivity.instance().hideTabBar(false);
 			onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered();
 		}
-		
 		invalidate();
 	}
 	

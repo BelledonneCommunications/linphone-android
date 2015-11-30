@@ -34,7 +34,7 @@ LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/amrnb
 
 #in this mode we try to dynamically link against the opencore-amr provided by android
-LOCAL_CFLAGS += -include ../build/opencore-amr/stubs.h
+LOCAL_CFLAGS += -include ../build/opencore-amr/stubs.h -fPIC
 endif
 
 ifeq ($(BUILD_AMRNB),full)
@@ -278,7 +278,7 @@ LOCAL_C_INCLUDES += \
 endif
 
 #turn off warnings since we cannot fix them
-LOCAL_CFLAGS += -w
+LOCAL_CFLAGS += -w -fPIC
 
 include $(BUILD_STATIC_LIBRARY)
 

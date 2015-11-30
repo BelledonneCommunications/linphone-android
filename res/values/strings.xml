@@ -18,6 +18,10 @@
 	<string name="no_account">No account configured</string>
 	<string name="search">Search</string>
 	<string name="address_sip">Address Sip</string>
+	<string name="outgoing">outgoing</string>
+	<string name="incoming">incoming</string>
+	<string name="missed">missed</string>
+	<string name="settings">Settings</string>
 
 	<!-- splashscreen -->
 	<string name="app_description">free SIP VOIP client</string>
@@ -78,6 +82,13 @@
 	<string name="no_current_call">No active call</string>
 	<string name="call_paused_by_remote">Your correspondent paused the call</string>
 	<string name="zrtp_dialog">ZRTP token is %s\nYou should only accept if you have the same token as your correspondent</string>
+
+	<!-- Settings -->
+	<string-array name="video_preset_entries">
+		<item>default</item>
+		<item>high-fps</item>
+		<item>custom</item>
+	</string-array>
 
 
 	<!-- Content description -->
@@ -288,7 +299,6 @@
 	<string name="pref_audio">Audio</string>
 	<string name="pref_prefix">Prefix</string>
 	<string name="pref_advanced">Advanced</string>
-	<string name="menu_settings">Settings</string>
 	<string name="pref_proxy">Proxy</string>
 	<string name="pref_domain">Domain*</string>
 	<string name="pref_passwd">Password*</string>

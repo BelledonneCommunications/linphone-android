@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/status"
-        android:name="org.linphone.StatusFragment"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        tools:layout="@layout/status" />
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="35dp"
+		tools:layout="@layout/status" />
 
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/side_menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/status">
+	<android.support.v4.widget.DrawerLayout
+		android:id="@+id/side_menu"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/status">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,402 +35,408 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/menu">
 
-                <RelativeLayout
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/conference_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/conference_list"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/calls_list"
+                    android:background="@color/colorG"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:divider="@color/colorF"
+                    android:dividerHeight="1dp"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/contact_picture"
+                    android:src="@drawable/avatar_big"
+                    android:contentDescription="@string/content_description_contact_picture"
+                    android:layout_centerInParent="true"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:paddingBottom="20dp"/>
+
+                <LinearLayout
+                    android:id="@+id/active_call_info"
+                    android:background="@color/colorG"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/current_contact_name"
+                        style="@style/font13"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top"
+                        android:paddingTop="5dp"
                         android:layout_alignParentTop="true"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-                    </LinearLayout>
+                        android:layout_gravity="center"/>
 
-                    <LinearLayout
-                        android:id="@+id/calls_list"
-                        android:background="@color/colorG"
-                        android:layout_width="match_parent"
+                    <Chronometer
+                        android:id="@+id/current_call_timer"
+                        style="@style/font11"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="bottom"
-                        android:divider="@color/colorF"
-                        android:dividerHeight="1dp"
-                        android:orientation="vertical">
-                    </LinearLayout>
+                        android:layout_below="@id/current_contact_name"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/active_call_info"
-                            android:background="@color/colorG"
-                            android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_alignParentBottom="true"
-                            android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/remote_pause"
+                    android:background="@color/colorA"
+                    android:alpha="0.9"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                            <TextView
-                                android:id="@+id/current_contact_name"
-                                style="@style/font13"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingTop="5dp"
-                                android:layout_alignParentTop="true"
-                                android:layout_gravity="center"/>
+                    <ImageView
+                        android:src="@drawable/waiting_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
 
-                            <Chronometer
-                                android:id="@+id/current_call_timer"
-                                style="@style/font11"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/current_contact_name"
-                                android:layout_gravity="center"/>
-                        </LinearLayout>
+                    <TextView
+                        android:text="@string/call_paused_by_remote"
+                        style="@style/font4"
+                        android:gravity="center"
+                        android:layout_margin="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
 
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/remote_pause"
-                            android:background="@color/colorA"
-                            android:alpha="0.9"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:visibility="gone">
+                <ImageView
+                    android:id="@+id/pause"
+                    android:src="@drawable/pause_big_default"
+                    android:contentDescription="@string/content_description_pause"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:padding="15dp"
+                    android:layout_below="@+id/active_call_info"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"/>
 
-                            <ImageView
-                                android:src="@drawable/waiting_time"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"/>
+                <ImageView
+                    android:id="@+id/switchCamera"
+                    android:src="@drawable/switch_camera"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:padding="15dp"
+                    android:contentDescription="@string/content_description_switch_camera"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_below="@+id/active_call_info"
+                    android:layout_alignParentLeft="true"/>
+            </RelativeLayout>
 
-                            <TextView
-                                android:text="@string/call_paused_by_remote"
-                                style="@style/font4"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"/>
+            <LinearLayout
+                android:id="@+id/no_current_call"
+                android:background="@color/colorA"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_above="@id/calls_list"
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
-                        </LinearLayout>
+                <ImageView
+                    android:src="@drawable/waiting_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
 
-                        <ImageView
-                            android:id="@+id/pause"
-                            android:src="@drawable/pause_big_default"
-                            android:contentDescription="@string/content_description_pause"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:padding="15dp"
-                            android:layout_below="@+id/active_call_info"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"/>
+                <TextView
+                    android:text="@string/no_current_call"
+                    style="@style/font4"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </FrameLayout>
 
-                        <ImageView
-                            android:id="@+id/switchCamera"
-                            android:src="@drawable/switch_camera"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:padding="15dp"
-                            android:contentDescription="@string/content_description_switch_camera"
-                            android:visibility="invisible"
-                            android:layout_alignParentTop="true"
-                            android:layout_below="@+id/active_call_info"
-                            android:layout_alignParentLeft="true"/>
-                    </RelativeLayout>
+        <org.linphone.ui.Numpad
+            android:id="@+id/numpad"
+            android:background="@color/colorC"
+            android:contentDescription="@string/content_description_numpad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            android:layout_above="@id/menu"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
 
-                    <LinearLayout
-                        android:id="@+id/no_current_call"
-                        android:background="@color/colorA"
+        <LinearLayout
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:background="@color/colorF"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:background="@drawable/button_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/video"
+                        android:src="@drawable/camera_default"
+                        android:background="@drawable/button_background"
+                        android:padding="25dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_above="@id/calls_list"
-                        android:gravity="center_vertical"
-                        android:visibility="gone">
+                        android:layout_height="match_parent"/>
 
-                        <ImageView
-                            android:src="@drawable/waiting_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"/>
-
-                        <TextView
-                            android:text="@string/no_current_call"
-                            style="@style/font4"
-                            android:gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/video_in_progress"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                 </RelativeLayout>
-            </FrameLayout>
 
-            <org.linphone.ui.Numpad
-                android:id="@+id/numpad"
-                android:background="@color/colorC"
-                android:contentDescription="@string/content_description_numpad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_margin="10dp"
-                android:layout_above="@id/menu"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
+                <ImageView
+                    android:id="@+id/micro"
+                    android:src="@drawable/micro_default"
+                    android:background="@drawable/button_background"
+                    android:padding="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/speaker"
+                    android:src="@drawable/speaker_default"
+                    android:background="@drawable/button_background"
+                    android:padding="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/audio_route"
+                    android:src="@drawable/routes"
+                    android:background="@drawable/button_background"
+                    android:visibility="gone"
+                    android:padding="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/options"
+                    android:src="@drawable/options_default"
+                    android:background="@drawable/button_background"
+                    android:padding="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/main_bar"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:layout_alignParentBottom="true"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:orientation="horizontal" >
 
-                <LinearLayout
-                    android:background="@color/colorF"
+                <ImageView
+                    android:id="@+id/dialer"
+                    android:src="@drawable/dialer"
+                    android:background="@color/colorC"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp" />
 
-                    <RelativeLayout
-                        android:background="@drawable/button_background"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/video"
-                            android:src="@drawable/camera_default"
-                            android:background="@drawable/button_background"
-                            android:padding="25dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
-
-                        <ProgressBar
-                            android:id="@+id/video_in_progress"
-                            style="?android:attr/progressBarStyle"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:visibility="gone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                    </RelativeLayout>
-
-                    <ImageView
-                        android:id="@+id/micro"
-                        android:src="@drawable/micro_default"
-                        android:background="@drawable/button_background"
-                        android:padding="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/speaker"
-                        android:src="@drawable/speaker_default"
-                        android:background="@drawable/button_background"
-                        android:padding="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/audio_route"
-                        android:src="@drawable/routes"
-                        android:background="@drawable/button_background"
-                        android:visibility="gone"
-                        android:padding="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/options"
-                        android:src="@drawable/options_default"
-                        android:background="@drawable/button_background"
-                        android:padding="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/main_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_alignParentBottom="true"
+                <ImageView
+                    android:id="@+id/hang_up"
+                    android:src="@drawable/call_hangup"
+                    android:background="@drawable/hangup"
                     android:layout_gravity="center"
-                    android:orientation="horizontal" >
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:padding="15dp"/>
 
-                    <ImageView
-                        android:id="@+id/dialer"
-                        android:src="@drawable/dialer"
-                        android:background="@color/colorC"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="20dp" />
-
-                    <ImageView
-                        android:id="@+id/hang_up"
-                        android:src="@drawable/call_hangup"
-                        android:background="@drawable/hangup"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:padding="15dp"/>
-
-                    <ImageView
-                        android:id="@+id/chat"
-                        android:src="@drawable/chat"
-                        android:background="@color/colorC"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="20dp"/>
-                </LinearLayout>
-
+                <ImageView
+                    android:id="@+id/chat"
+                    android:src="@drawable/chat"
+                    android:background="@color/colorC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/menu_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_above="@id/menu"
-                android:orientation="horizontal" >
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="0.5"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="0.5"/>
-
-                <ImageView
-                    android:id="@+id/route_bluetooth"
-                    android:src="@drawable/route_bluetooth"
-                    android:background="@drawable/button_call_background"
-                    android:padding="20dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
-
-                <ImageView
-                    android:id="@+id/add_call"
-                    android:src="@drawable/add_call_button"
-                    android:background="@drawable/button_call_background"
-                    android:padding="20dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/menu_middle"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_above="@id/menu_bottom"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="0.5"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="0.5"/>
-
-                <ImageView
-                    android:id="@+id/route_earpiece"
-                    android:src="@drawable/route_earpiece"
-                    android:background="@drawable/button_call_background"
-                    android:padding="20dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"/>
-
-                <ImageView
-                    android:id="@+id/transfer"
-                    android:src="@drawable/transfer_button"
-                    android:background="@drawable/button_call_background"
-                    android:padding="20dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_above="@id/menu_middle"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="0.5"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="0.5"/>
-
-                <ImageView
-                    android:id="@+id/route_speaker"
-                    android:src="@drawable/route_speaker"
-                    android:background="@drawable/button_call_background"
-                    android:visibility="invisible"
-                    android:padding="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"/>
-
-                <ImageView
-                    android:id="@+id/conference"
-                    android:src="@drawable/conference_button"
-                    android:background="@drawable/button_call_background"
-                    android:visibility="invisible"
-                    android:padding="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/side_menu_content"
-            android:background="@color/colorH"
+        <LinearLayout
+            android:id="@+id/menu_bottom"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="left">
+            android:layout_height="70dp"
+            android:layout_above="@id/menu"
+            android:orientation="horizontal" >
 
-            <include layout="@layout/incall_stats" android:id="@+id/incall_stats"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="0.5"/>
 
-        </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="0.5"/>
 
-    </android.support.v4.widget.DrawerLayout>
+            <ImageView
+                android:id="@+id/route_bluetooth"
+                android:src="@drawable/route_bluetooth"
+                android:background="@drawable/button_call_background"
+                android:padding="20dp"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5" />
+
+            <ImageView
+                android:id="@+id/add_call"
+                android:src="@drawable/add_call_button"
+                android:background="@drawable/button_call_background"
+                android:padding="20dp"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_middle"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_above="@id/menu_bottom"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="0.5"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="0.5"/>
+
+            <ImageView
+                android:id="@+id/route_earpiece"
+                android:src="@drawable/route_earpiece"
+                android:background="@drawable/button_call_background"
+                android:padding="20dp"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+            <ImageView
+                android:id="@+id/transfer"
+                android:src="@drawable/transfer_button"
+                android:background="@drawable/button_call_background"
+                android:padding="20dp"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_above="@id/menu_middle"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="0.5"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="0.5"/>
+
+            <ImageView
+                android:id="@+id/route_speaker"
+                android:src="@drawable/route_speaker"
+                android:background="@drawable/button_call_background"
+                android:visibility="invisible"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+            <ImageView
+                android:id="@+id/conference"
+                android:src="@drawable/conference_button"
+                android:background="@drawable/button_call_background"
+                android:visibility="invisible"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+		<RelativeLayout
+			android:id="@+id/side_menu_content"
+			android:background="@color/colorH"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="left">
+
+			<include layout="@layout/incall_stats" android:id="@+id/incall_stats"/>
+
+		</RelativeLayout>
+
+	</android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>

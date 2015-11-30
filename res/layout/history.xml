@@ -9,7 +9,7 @@
 		android:id="@+id/top_bar"
 		android:background="@color/colorG"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_gravity="top">
 
 		<ImageView
@@ -29,7 +29,7 @@
 			android:layout_height="match_parent"
 			android:layout_alignParentTop="true"
 			android:layout_toRightOf="@+id/all_calls"
-			android:layout_toEndOf="@+id/all_calls"/>
+			android:layout_toEndOf="@+id/all_calls"/>r
 
 		<ImageView
 			android:id="@+id/edit"
@@ -38,13 +38,14 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 		<View
 			android:background="@color/colorF"
 			android:layout_alignParentBottom="true"
 			android:layout_width="match_parent"
 			android:layout_height="1dp"/>
+
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>

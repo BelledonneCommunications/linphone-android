@@ -81,7 +81,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 		} catch (LinphoneCoreException e) {
 			LinphoneManager.getInstance().terminateCall();
 			onWrongDestinationAddress();
-		};
+		}
 	}
 	
 	protected void onWrongDestinationAddress() {

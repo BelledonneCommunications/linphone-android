@@ -8,8 +8,14 @@
 	<RelativeLayout
 		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
+<<<<<<< HEAD
 		android:layout_height="60dp"
 		android:layout_gravity="top">
+=======
+		android:layout_height="50dp"
+		android:layout_gravity="top"
+		android:background="@color/colorF">
+>>>>>>> linphone-android/master
 
 		<ImageView
 			android:id="@+id/new_discussion"
@@ -18,14 +24,14 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 		<ImageView
 			android:id="@+id/back_in_call"
 			android:src="@drawable/call_back_button"
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
-			android:padding="15dp"
+			android:padding="12dp"
 			android:visibility="gone"
 			android:layout_toRightOf="@+id/new_discussion"/>
 
@@ -36,6 +42,7 @@
 			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
+<<<<<<< HEAD
 			android:padding="15dp"/>
 
 		<View
@@ -43,6 +50,9 @@
 			android:layout_alignParentBottom="true"
 			android:layout_width="match_parent"
 			android:layout_height="1dp"/>
+=======
+			android:padding="12dp"/>
+>>>>>>> linphone-android/master
 	</RelativeLayout>
 
 	<include layout="@layout/edit_list"/>
@@ -58,7 +68,11 @@
     <TextView 
         android:id="@+id/noChatHistory"
 		android:text="@string/no_chat_history"
+<<<<<<< HEAD
 		style="@style/font2"
+=======
+		style="@style/font6"
+>>>>>>> linphone-android/master
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

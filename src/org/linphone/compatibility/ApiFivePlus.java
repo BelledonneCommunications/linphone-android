@@ -102,16 +102,6 @@ public class ApiFivePlus {
 
 		Uri uri = Data.CONTENT_URI;
 		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
-
-		// Phone Numbers
-		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
-		if (c != null) {
-	        while (c.moveToNext()) {
-	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
-	            list.add(number); 
-	        }
-	        c.close();
-		}
 		
 		// IM addresses
 		String selection = new StringBuilder()
@@ -122,11 +112,21 @@ public class ApiFivePlus {
 			.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
 			.append(") = 'sip'")
 			.toString();
-		c = cr.query(uri, projection, selection, new String[]{id}, null);
+		Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
 		if (c != null) {
 			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
 			while (c.moveToNext()) {
 				list.add("sip:" + c.getString(nbId)); 
+			}
+			c.close();
+		}
+
+		// Phone Numbers
+		c = cr.query(Phone.CONTENT_URI, new String[]{Phone.NUMBER}, Phone.CONTACT_ID + " = " + id, null, null);
+		if (c != null) {
+			while (c.moveToNext()) {
+				String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+				list.add(number);
 			}
 			c.close();
 		}

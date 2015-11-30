@@ -183,6 +183,7 @@ public class DialerFragment extends Fragment {
 			mCancel.setEnabled(true);
 			mCancel.setImageResource(R.drawable.call_alt_back);
 			mCancel.setOnClickListener(cancelListener);
+
 		} else {
 			mCall.setImageResource(R.drawable.call_audio_start);
 			mCancel.setVisibility(View.GONE);

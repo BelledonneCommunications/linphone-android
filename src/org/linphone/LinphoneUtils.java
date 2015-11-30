@@ -91,10 +91,7 @@ public final class LinphoneUtils {
 	
 	public static boolean isNumberAddress(String numberOrAddress) {
 		LinphoneProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
-		if(proxy.normalizePhoneNumber(numberOrAddress) != null){
-			return true;
-		}
-		return false;
+		return proxy.normalizePhoneNumber(numberOrAddress) != null;
 	}
 	
 	public static boolean isStrictSipAddress(String numberOrAddress) {
