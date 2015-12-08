@@ -31,7 +31,7 @@
 		<TextView
 			android:id="@+id/main_account_address"
 			style="@style/font12"
-			android:editable="false"
+			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
@@ -42,9 +42,8 @@
 		android:src="@drawable/led_connected"
 		android:layout_width="25dp"
 		android:layout_height="25dp"
-		android:padding="5dp"
-		android:layout_marginBottom="10dp"
 		android:layout_alignParentRight="true"
-		android:layout_alignBottom="@id/layout"/>
+		android:padding="7dp"
+		android:layout_marginTop="10dp"/>
 
 </RelativeLayout>

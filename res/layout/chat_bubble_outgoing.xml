@@ -29,8 +29,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp">
+			android:paddingLeft="10dp">
 
 			<TextView
 				android:id="@+id/contact_header"
@@ -64,10 +63,10 @@
 
 				<ProgressBar
 					android:id="@+id/progress_bar"
-					style="@android:style/Widget.ProgressBar.Horizontal"
 					android:paddingRight="5dp"
 					android:layout_marginTop="10dp"
 					android:layout_marginBottom="10dp"
+					style="@android:style/Widget.ProgressBar.Horizontal"
 					android:layout_width="150dp"
 					android:layout_height="5dp"/>
 
@@ -75,9 +74,14 @@
 					android:id="@+id/cancel_upload"
 					android:text="@string/cancel"
 					android:background="@drawable/resizable_confirm_delete_button"
-					style="@style/font15"
+					style="@style/font7"
+					android:textAllCaps="true"
+					android:contentDescription="@string/content_description_validate"
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:layout_marginTop="10dp"
 					android:layout_below="@id/progress_bar"/>
 
 			</RelativeLayout>
@@ -88,7 +92,7 @@
 			android:id="@+id/status"
 			android:contentDescription="@string/content_description_message_status"
 			android:visibility="invisible"
-			android:padding="5dp"
+			android:paddingRight="5dp"
 			android:layout_gravity="top|right"
 			android:layout_width="20dp"
 			android:layout_height="20dp"

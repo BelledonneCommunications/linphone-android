@@ -145,10 +145,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_wizard_at_first_start);
-		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled() && LinphonePreferences.instance().isFirstLaunch() && LinphoneManager.getLc().getDefaultProxyConfig() == null) {
+		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() == null) {
 			Intent wizard = new Intent();
 			wizard.setClass(this, RemoteProvisioningLoginActivity.class);
 			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
+			finish();
 			startActivityForResult(wizard, REMOTE_PROVISIONING_LOGIN_ACTIVITY);
 		} else if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
@@ -274,6 +275,82 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		mAlwaysChangingPhoneAngle = rotation;
 
 		updateAnimationsState();
+	}
+
+	public void resetListener(){
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
+		}
+
+		mListener = new LinphoneCoreListenerBase(){
+			@Override
+			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+				if(!displayChatMessageNotification(message.getFrom().asStringUriOnly())) {
+					cr.markAsRead();
+				}
+				displayMissedChats(getUnreadMessageCount());
+				if (messageListFragment != null && messageListFragment.isVisible()) {
+					((ChatListFragment) messageListFragment).refresh();
+				}
+			}
+
+			@Override
+			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
+				if (state.equals(RegistrationState.RegistrationCleared)) {
+					if (lc != null) {
+						LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
+						if (authInfo != null)
+							lc.removeAuthInfo(authInfo);
+					}
+				}
+
+				refreshAccounts();
+
+				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
+					newProxyConfig = false;
+					if (proxy.getError() == Reason.BadCredentials) {
+						displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
+					}
+					if (proxy.getError() == Reason.Unauthorized) {
+						displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
+					}
+					if (proxy.getError() == Reason.IOError) {
+						displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
+					}
+				}
+			}
+
+			@Override
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+				if (state == State.IncomingReceived) {
+					//finish();
+					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
+				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
+				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
+					// Convert LinphoneCore message for internalization
+					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
+						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
+					} else if (message != null && call.getReason() == Reason.NotFound) {
+						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
+					} else if (message != null && call.getReason() == Reason.Media) {
+						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
+					} else if (message != null && state == State.Error) {
+						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
+					}
+					resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+				}
+
+				int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
+				displayMissedCalls(missedCalls);
+			}
+		};
+
+		lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
 	}
 
 	private void initButtons() {
@@ -1054,6 +1131,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode == Activity.RESULT_OK && requestCode == REMOTE_PROVISIONING_LOGIN_ACTIVITY){
+			resetListener();
+		}
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				quit();
@@ -1082,6 +1162,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
+
 		super.onPause();
 	}
 
@@ -1095,7 +1176,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		ContactsManager.getInstance().prepareContactsInBackground();
 
 		updateMissedChatCount();
-
+		refreshAccounts();
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
 		LinphoneManager.getInstance().changeStatusToOnline();
@@ -1244,7 +1325,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void initSideMenu() {
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
-		sideMenuItems = getResources().getStringArray(R.array.side_menu_item);
+		//sideMenuItems = getResources().getStringArray(R.array.side_menu_item);
+		sideMenuItems = new String[]{getString(R.string.about)};
 		sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
 		sideMenuItemList = (ListView)findViewById(R.id.item_list);
 		menu = (ImageView) findViewById(R.id.side_menu_button);
@@ -1256,7 +1338,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("Settings")){
 					LinphoneActivity.instance().displaySettings();
 				}
-				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("About")){
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.about))){
 					LinphoneActivity.instance().displayAbout();
 				}
 				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("Assistant")){
@@ -1312,9 +1394,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		TextView address = (TextView) defaultAccount.findViewById(R.id.main_account_address);
 		TextView displayName = (TextView) defaultAccount.findViewById(R.id.main_account_display_name);
 
-
 		LinphoneProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
-		if(proxy == null) {
+		if(proxy == null && LinphoneManager.getLc().getProxyConfigList().length == 0) {
 			displayName.setText(getString(R.string.no_account));
 			status.setVisibility(View.GONE);
 			address.setText("");
@@ -1323,11 +1404,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			defaultAccount.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					LinphoneActivity.instance().displayAccountSettings(0);
-					openOrCloseSideMenu(false);
+					//LinphoneActivity.instance().displayAccountSettings(0);
+					//openOrCloseSideMenu(false);
 				}
 			});
 		} else {
+			if(proxy == null) proxy = LinphoneManager.getLc().getProxyConfigList()[0];
 			address.setText(proxy.getAddress().asStringUriOnly());
 			displayName.setText(LinphoneUtils.getAddressDisplayName(proxy.getAddress()));
 			status.setImageResource(getStatusIconResource(proxy.getState()));
@@ -1336,8 +1418,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			defaultAccount.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					LinphoneActivity.instance().displayAccountSettings(LinphonePreferences.instance().getDefaultAccountIndex());
-					openOrCloseSideMenu(false);
+					//LinphoneActivity.instance().displayAccountSettings(LinphonePreferences.instance().getDefaultAccountIndex());
+					//openOrCloseSideMenu(false);
 				}
 			});
 		}
@@ -1358,6 +1440,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else {
 			accountsList.setVisibility(View.GONE);
 		}
+		statusFragment.resetAccountStatus();
 		displayMainAccount();
 	}
 

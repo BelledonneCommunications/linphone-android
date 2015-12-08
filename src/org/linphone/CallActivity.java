@@ -27,6 +27,7 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphonePlayer;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -36,6 +37,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -122,6 +124,12 @@ public class CallActivity extends Activity implements OnClickListener {
 
 		if(!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
 			BluetoothManager.getInstance().initBluetooth();
+		}
+
+		if (getResources().getBoolean(R.bool.isTablet) && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 
 		isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
@@ -337,7 +345,7 @@ public class CallActivity extends Activity implements OnClickListener {
 		pause.setOnClickListener(this);
 		enabledPauseButton(false);
 
-		//mActiveCallHeader = (RelativeLayout) findViewById(R.id.active_call);
+		mActiveCallHeader = (RelativeLayout) findViewById(R.id.active_call);
 		mNoCurrentCall = (LinearLayout) findViewById(R.id.no_current_call);
 		mCallPaused = (LinearLayout) findViewById(R.id.remote_pause);
 
@@ -432,6 +440,16 @@ public class CallActivity extends Activity implements OnClickListener {
 	}
 
 	private void refreshIncallUi(){
+		if(LinphoneManager.getLc().getCurrentCall() != null){
+			if(isTransferAllowed)
+				transfer.setEnabled(true);
+			if(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
+				callInfo.setVisibility(View.VISIBLE);
+				mActiveCallHeader.setVisibility(View.VISIBLE);
+			}
+
+		}
+
 		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 		if (pausedCalls.size() == 1) {
 			displayCallPaused(true);
@@ -439,12 +457,6 @@ public class CallActivity extends Activity implements OnClickListener {
 			displayCallPaused(false);
 		}
 
-		if(LinphoneManager.getLc().getCurrentCall() != null){
-			if(isTransferAllowed)
-				transfer.setEnabled(true);
-			if(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()))
-				callInfo.setVisibility(View.VISIBLE);
-		}
 
 		if(LinphoneManager.getLc().getCallsNb() > 1){
 			callsList.setVisibility(View.VISIBLE);
@@ -1441,7 +1453,13 @@ public class CallActivity extends Activity implements OnClickListener {
 	private void displayCurrentCall(LinphoneCall call){
 		LinphoneAddress lAddress = call.getRemoteAddress();
 		TextView currentContactName = (TextView) findViewById(R.id.current_contact_name);
-		currentContactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(lAddress.asStringUriOnly());
+		if(friend != null){
+			currentContactName.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+		} else {
+			currentContactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+		}
+
 		registerCallDurationTimer(null, call);
 	}
 
@@ -1541,7 +1559,7 @@ public class CallActivity extends Activity implements OnClickListener {
 					isConfPaused = true;
 					index++;
 				} else {
-					if (call != LinphoneManager.getLc().getCurrentCall()) {
+					if (call != LinphoneManager.getLc().getCurrentCall() && !call.isInConference()) {
 						displayPausedCalls(resources, call, index);
 						index++;
 					} else {
@@ -1550,15 +1568,19 @@ public class CallActivity extends Activity implements OnClickListener {
 				}
 			}
 
-			if(isConfPaused && !isConferenceRunning){
-				displayPausedCalls(resources, null, index);
-			}
-
-			if (LinphoneManager.getLc().getCurrentCall() == null && !isConferenceRunning) {
-				showAudioView();
-				mActiveCallHeader.setVisibility(View.GONE);
-				mNoCurrentCall.setVisibility(View.VISIBLE);
-				video.setEnabled(false);
+			if(!isConferenceRunning) {
+				if (isConfPaused) {
+					displayPausedCalls(resources, null, index);
+				}
+				if (LinphoneManager.getLc().getCurrentCall() == null) {
+					showAudioView();
+					mActiveCallHeader.setVisibility(View.GONE);
+					mNoCurrentCall.setVisibility(View.VISIBLE);
+					video.setEnabled(false);
+				} else {
+					mActiveCallHeader.setVisibility(View.VISIBLE);
+					mNoCurrentCall.setVisibility(View.GONE);
+				}
 			}
 		}
 
@@ -1587,10 +1609,10 @@ public class CallActivity extends Activity implements OnClickListener {
 	public void pauseOrResumeConference() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (lc.isInConference()) {
-			conferenceStatus.setImageResource(R.drawable.pause_big_over);
+			//conferenceStatus.setImageResource(R.drawable.pause_big_over);
 			lc.leaveConference();
 		} else {
-			conferenceStatus.setImageResource(R.drawable.pause_big_default);
+			//conferenceStatus.setImageResource(R.drawable.pause_big_default);
 			lc.enterConference();
 		}
 		refreshCallList(getResources());

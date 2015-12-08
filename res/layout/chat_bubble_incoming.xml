@@ -46,7 +46,7 @@
 				android:maxHeight="250dp" />
 
 			<RelativeLayout
-				android:id="@+id/imageLayout"
+				android:id="@+id/file_transfer_layout"
 				android:visibility="gone"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
@@ -62,10 +62,13 @@
 
 				<Button
 					android:id="@+id/accept_download"
-					android:text="@string/accept"
-					android:background="@drawable/resizable_assistant_button"
-					style="@style/font8"
+					android:text="@string/download"
+					android:background="@drawable/resizable_confirm_delete_button"
+					style="@style/font7"
+					android:textAllCaps="true"
 					android:contentDescription="@string/content_description_validate"
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="10dp"

@@ -125,7 +125,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getName());
-		
+
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
 
@@ -134,6 +134,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
 			tv.setText(contact.getLinphoneAddress());
+
+			String displayednumberOrAddress = contact.getLinphoneAddress();
 
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
@@ -186,7 +188,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				} else {
 					v.findViewById(R.id.contact_chat).setTag(numberOrAddress);
 				}
-			
+
 			final String finalNumberOrAddress = numberOrAddress;
 			/*ImageView friend = (ImageView) v.findViewById(R.id.addFriend);
 			if (getResources().getBoolean(R.bool.enable_linphone_friends) && !displayChatAddressOnly) {

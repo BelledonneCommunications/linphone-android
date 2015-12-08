@@ -7,33 +7,33 @@
 	<RelativeLayout
 		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
-		android:layout_height="60dp">
+		android:layout_height="50dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="60dp"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
-			android:padding="20dp"/>
+			android:padding="15dp"/>
 
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="60dp"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 		<ImageView
 			android:id="@+id/start_call"
 			android:src="@drawable/call_alt_start"
 			android:contentDescription="@string/content_description_call"
-			android:layout_width="60dp"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
-			android:padding="15dp"
+			android:padding="12dp"
 			android:layout_toLeftOf="@+id/edit"/>
 
 		<ImageView
@@ -41,10 +41,10 @@
 			android:src="@drawable/call_back_button"
 			android:contentDescription="@string/content_description_call"
 			android:layout_toLeftOf="@id/edit"
-			android:layout_width="60dp"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:visibility="gone"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 		<TextView
 			android:id="@+id/contact_name"
@@ -158,6 +158,6 @@
 		android:layout_below="@id/top_bar"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
-		android:paddingRight="5dp"/>
+		android:paddingLeft="10dp"/>
 
 </RelativeLayout>

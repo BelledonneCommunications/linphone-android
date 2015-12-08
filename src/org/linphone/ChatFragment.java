@@ -162,7 +162,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		searchContactField = (AutoCompleteTextView) view.findViewById(R.id.search_contact_field);
 
 		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
-		textLayout = (LinearLayout) view.findViewById(R.id.message_layout);
+		//textLayout = (LinearLayout) view.findViewById(R.id.message_layout);
 		topBar = (RelativeLayout) view.findViewById(R.id.top_bar);
 
 		sendMessage = (ImageView) view.findViewById(R.id.send_message);
@@ -499,11 +499,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void displayChatHeader(LinphoneAddress address) {
-		//if(contact != null) {
-		//	contactName.setText(contact.getName());
-		//} else if(address != null){
+		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
+
+		if(friend != null) {
+			contactName.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+		} else {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(address));
-		//}
+		}
 	}
 
 	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri) {
@@ -1064,7 +1066,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			TextView name = (TextView) view.findViewById(R.id.contact_name);
-			name.setText(LinphoneUtils.getAddressDisplayName(f.getAddress()));
+
+			if(f != null) {
+				name.setText(LinphoneUtils.getAddressDisplayName(f.getAddress()));
+			}
 
 			final TextView address = (TextView) view.findViewById(R.id.contact_address);
 			address.setText(f.getAddress().asStringUriOnly());
