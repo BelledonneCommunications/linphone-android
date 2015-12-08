@@ -30,6 +30,8 @@ import android.provider.ContactsContract;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -38,6 +40,8 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -595,6 +599,14 @@ public class ContactsManager {
 			for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()){
 				Contact contact = new Contact(friend.getRefKey(),friend.getAddress().asStringUriOnly(),LinphoneUtils.getAddressDisplayName(friend.getAddress()));
 				contactList.add(contact);
+
+				Collections.sort(contactList, new Comparator<Contact>() {
+					@Override
+					public int compare(Contact a, Contact b) {
+						return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
+					}
+				});
+
 			}
 
 			contactCursor = getFriendListCursor(contactList,true);
@@ -707,7 +719,6 @@ public class ContactsManager {
 
 	public Cursor getFriendListCursor(List<Contact> contacts, boolean shouldGroupBy){
 		String[] columns = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME };
-
 
 		if (!shouldGroupBy) {
 			return null;

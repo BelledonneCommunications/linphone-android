@@ -30,7 +30,7 @@
 		android:contentDescription="@string/content_description_valid"
 		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:padding="12dp"
+		android:padding="10dp"
 		android:layout_toLeftOf="@id/delete"/>
 
 	<ImageView
@@ -39,7 +39,7 @@
 		android:contentDescription="@string/content_description_valid"
 		android:layout_width="70dp"
 		android:layout_height="match_parent"
-		android:padding="12dp"
+		android:padding="10dp"
 		android:layout_toLeftOf="@id/delete"
 		android:visibility="gone"/>
 

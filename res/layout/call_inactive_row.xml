@@ -3,43 +3,56 @@
 	android:background="@color/colorG"
 	android:layout_height="60dp"
 	android:layout_width="match_parent"
-	android:layout_margin="2dp"
-	android:gravity="center_vertical"
-	android:orientation="horizontal"
-	android:padding="5dp">
+	android:orientation="vertical">
 
-	<ImageView
-		android:id="@+id/contact_picture"
-		android:src="@drawable/avatar"
-		android:layout_width="40dp"
-		android:layout_height="40dp"/>
+	<View
+		android:background="@color/colorF"
+		android:layout_alignParentBottom="true"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
 
-   	<TextView
-        android:id="@+id/contact_name"
-		style="@style/font9"
-		android:singleLine="true"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical|left"
-        android:paddingLeft="20dp"
-       	android:paddingRight="10dp"/>
+	<LinearLayout
+		android:padding="5dp"
+		android:gravity="center_vertical"
+		android:layout_margin="2dp"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-	<Chronometer
-		android:id="@+id/call_timer"
-		style="@style/font12"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingLeft="10dp"
-		android:paddingRight="20dp"
-		android:gravity="center_vertical|right"/>
-    
-    <ImageView
-		android:id="@+id/call_pause"
-		android:src="@drawable/pause_small_default"
-		android:contentDescription="@string/content_description_pause"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:gravity="center_vertical"/>
+		<ImageView
+			android:id="@+id/contact_picture"
+			android:src="@drawable/avatar"
+			android:layout_width="40dp"
+			android:layout_height="40dp"/>
+
+		<TextView
+			android:id="@+id/contact_name"
+			style="@style/font9"
+			android:singleLine="true"
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:gravity="center_vertical|left"
+			android:paddingLeft="20dp"
+			android:paddingRight="10dp"/>
+
+		<Chronometer
+			android:id="@+id/call_timer"
+			style="@style/font12"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="20dp"
+			android:gravity="center_vertical|right"/>
+
+		<ImageView
+			android:id="@+id/call_pause"
+			android:src="@drawable/pause_small_default"
+			android:contentDescription="@string/content_description_pause"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:gravity="center_vertical"/>
+
+	</LinearLayout>
 
 </LinearLayout>

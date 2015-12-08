@@ -652,6 +652,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
 		mLc.setChatDatabasePath(mChatDatabaseFile);
+		mLc.setRingback(mRingbackSoundFile);
 		//mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 

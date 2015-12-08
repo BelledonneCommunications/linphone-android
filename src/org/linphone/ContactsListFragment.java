@@ -211,6 +211,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		if(LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_friend)) {
 			searchCursor = ContactsManager.getInstance().searchFriends(search);
 			indexer = new AlphabetIndexer(searchCursor, Compatibility.getCursorDisplayNameColumnIndex(searchCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			Log.w("Search indexer" + indexer.getSections().length);
 			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSearchContacts(), searchCursor));
 		} else{
 			if (onlyDisplayLinphoneContacts) {
@@ -241,6 +242,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		if(LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_friend)) {
 			indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			Log.w("Contact indexer" + indexer.getSections().length);
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
 		} else {
@@ -407,7 +409,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			
 			return view;
 		}
-
 		@Override
 		public int getPositionForSection(int section) {
 			return indexer.getPositionForSection(section);

@@ -421,8 +421,14 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.callDirection.setImageResource(R.drawable.call_status_outgoing);
 			}
 
+			LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
 			holder.contactPicture.setImageResource(R.drawable.avatar);
-			holder.contact.setText(LinphoneUtils.getAddressDisplayName(address));
+
+			if(friend != null) {
+				holder.contact.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+			} else {
+				holder.contact.setText(LinphoneUtils.getAddressDisplayName(address));
+			}
 
 			if (isEditMode) {
 				holder.select.setVisibility(View.VISIBLE);

@@ -17,15 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -73,12 +71,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		//addToContacts.setOnClickListener(this);
 		
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-		
 		contactName = (TextView) view.findViewById(R.id.contact_name);
-		if (displayName == null) {
-			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
-		}
-		
 		contactAddress = (TextView) view.findViewById(R.id.contact_address);
 		
 		callDirection = (TextView) view.findViewById(R.id.direction);
@@ -92,13 +85,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void displayHistory(String status, String callTime, String callDate) {
-		contactName.setText(displayName == null ? sipUri : displayName);
-		if (displayName == null) {
-			contactAddress.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
-		} else {
-			contactAddress.setText(sipUri);
-		}
-
 		time.setText(callTime == null ? "" : callTime);
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format),false));
@@ -107,10 +93,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			//Obiane specification
-			LinphoneFriend friend = ContactsManager.getInstance().findLinphoneFriend(lAddress);
+			LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
 
-			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+			if(friend != null) {
+				contactName.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+			} else {
+				contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+			}
+
 			contactPicture.setImageResource(R.drawable.avatar);
+			contactAddress.setText(lAddress.asStringUriOnly());
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}

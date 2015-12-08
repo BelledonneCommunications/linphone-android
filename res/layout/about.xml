@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/colorG"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/top_bar"
-        android:background="@color/colorF"
+        android:background="@color/colorC"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:visibility="visible"
         android:layout_alignParentTop="true">
 
         <TextView
-            android:id="@+id/menu_name"
             android:text="@string/about"
-            style="@style/font1"
+            style="@style/font6"
+            android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -24,70 +23,88 @@
 
         <ImageView
             android:id="@+id/cancel"
-            android:src="@drawable/dialer_back"
-            android:layout_width="60dp"
+            android:src="@drawable/footer_dialer"
+            android:contentDescription="@string/content_description_dialer"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
-            android:padding="12dp"
+            android:padding="15dp"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
-    <ImageView
-        android:src="@drawable/linphone_logo_orange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-		android:padding="10dp" />
+    <LinearLayout
+        android:layout_below="@id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:text="@string/app_name"
-        style="@style/font5"
-        android:layout_gravity="center"
-		android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <ImageView
+            android:src="@drawable/linphone_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:paddingTop="20dp" />
 
-    <TextView
-        android:id="@+id/about_text"
-        android:text="@string/about_text"
-        style="@style/font9"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:text="@string/app_name"
+            style="@style/font2"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/about_link"
-        android:text="@string/about_link"
-        android:autoLink="web"
-        style="@style/font9"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/about_text"
+            android:text="@string/about_text"
+            style="@style/font9"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/about_link"
+            android:text="@string/about_link"
+            android:autoLink="web"
+            style="@style/font9"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-		<Button
-       		android:id="@+id/send_log"
-			android:padding="10dp"
-			android:layout_margin="5dp"
-        	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-       		android:text="@string/menu_send_log"/>
-
-		<Button
-            android:id="@+id/reset_log"
-			android:padding="10dp"
-			android:layout_margin="5dp"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/menu_reset_log"/>
-	</LinearLayout>
+            android:visibility="gone"
+            android:layout_gravity="center">
 
-</LinearLayout>
+            <Button
+                android:id="@+id/send_log"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_send_log"/>
+
+            <Button
+                android:id="@+id/reset_log"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_reset_log"/>
+        </LinearLayout>
+     </LinearLayout>
+
+    <ImageView
+        android:src="@drawable/logo_orange"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" android:layout_gravity="right"/>
+
+</RelativeLayout>

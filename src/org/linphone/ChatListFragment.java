@@ -454,7 +454,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			Long time;
 
 			//Obiane specification
-			LinphoneFriend friend = ContactsManager.getInstance().findLinphoneFriend(address);
+			LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
 
 			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
 			TextView date = (TextView) view.findViewById(R.id.date);
@@ -482,7 +482,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 
 			displayName.setSelected(true); // For animation
-			displayName.setText(LinphoneUtils.getAddressDisplayName(address));
+			if(friend != null) {
+				displayName.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+			} else {
+				displayName.setText(LinphoneUtils.getAddressDisplayName(address));
+			}
+
 
 
 			/*if(contact != null){
@@ -510,12 +515,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						chatList.setItemChecked(position, b);
-						if(getNbItemsChecked() == getCount()){
+						if (getNbItemsChecked() == getCount()) {
 							deselectAll.setVisibility(View.VISIBLE);
 							selectAll.setVisibility(View.GONE);
 							enabledDeleteButton(true);
 						} else {
-							if(getNbItemsChecked() == 0){
+							if (getNbItemsChecked() == 0) {
 								deselectAll.setVisibility(View.GONE);
 								selectAll.setVisibility(View.VISIBLE);
 								enabledDeleteButton(false);

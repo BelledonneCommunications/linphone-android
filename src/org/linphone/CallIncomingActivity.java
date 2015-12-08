@@ -26,11 +26,13 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -72,6 +74,12 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_incoming);
+
+		if (getResources().getBoolean(R.bool.isTablet) && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		name = (TextView) findViewById(R.id.contact_name);
 		number = (TextView) findViewById(R.id.contact_number);
@@ -225,13 +233,18 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			return;
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
+		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
 		//Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
 		//if (contact != null) {
 			//LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 		//	name.setText(contact.getName());
 		//} else {
+
+		if(friend == null){
 			name.setText(LinphoneUtils.getAddressDisplayName(address));
-		//}
+		} else {
+			name.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+		}
 		number.setText(address.asStringUriOnly());
 	}
 

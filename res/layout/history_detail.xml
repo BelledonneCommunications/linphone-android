@@ -7,17 +7,17 @@
 
 	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_gravity="bottom">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="wrap_content"
+			android:layout_width="70dp"
 			android:layout_height="match_parent"
 			android:layout_alignParentLeft="true"
-			android:padding="20dp"
+			android:padding="15dp"
 			android:adjustViewBounds="true"/>
 
 		<View

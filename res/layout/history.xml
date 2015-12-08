@@ -16,7 +16,7 @@
 			android:id="@+id/all_calls"
 			android:src="@drawable/history_all_button"
 			android:contentDescription="@string/content_description_all_calls"
-			android:padding="15dp"
+			android:padding="12dp"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"/>
 
@@ -24,7 +24,7 @@
 			android:id="@+id/missed_calls"
 			android:src="@drawable/history_missed_button"
 			android:contentDescription="@string/content_description_missed_calls"
-			android:padding="15dp"
+			android:padding="12dp"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_alignParentTop="true"

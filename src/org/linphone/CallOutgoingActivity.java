@@ -26,9 +26,11 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +68,12 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_outgoing);
+
+		if (getResources().getBoolean(R.bool.isTablet) && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		name = (TextView) findViewById(R.id.contact_name);
 		number = (TextView) findViewById(R.id.contact_number);
@@ -141,15 +149,18 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		}
 
 		LinphoneAddress address = mCall.getRemoteAddress();
-		Log.w(mCall.getRemoteAddress().asStringUriOnly());
-		/*Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
-		if (contact != null) {
-			//LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-			name.setText(contact.getName());
-		} else {
+		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
+		//Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		//if (contact != null) {
+		//LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+		//	name.setText(contact.getName());
+		//} else {
 
-		}*/
-		name.setText(LinphoneUtils.getAddressDisplayName(address));
+		if(friend == null){
+			name.setText(LinphoneUtils.getAddressDisplayName(address));
+		} else {
+			name.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+		}
 		number.setText(address.asStringUriOnly());
 		Log.w(address.asStringUriOnly());
 	}
