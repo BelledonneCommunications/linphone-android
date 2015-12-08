@@ -17,6 +17,7 @@
 	<string name="deny">Deny</string>
 	<string name="no_account">No account configured</string>
 	<string name="search">Search</string>
+	<string name="download">Download</string>
 	<string name="address_sip">Address Sip</string>
 	<string name="outgoing">outgoing</string>
 	<string name="incoming">incoming</string>
@@ -61,6 +62,7 @@
 	<string name="no_sip_contact">No SIP contact in your address book.</string>
 	<string name="delete_contacts">Do you want to delete selected contact?</string>
 	<string name="delete_contact">Do you want to delete selected this contact?</string>
+	<string name="search_contact">Search</string>
 
 	<!-- 4. Chat -->
 	<string name="no_chat_history">No conversations</string>

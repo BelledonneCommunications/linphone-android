@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="custom_rules">
-	<property name="linphone.package.name" value="org.linphone" />
+	<property name="linphone.package.name" value="com.orangecyberdefense.securephone" />
 
 	<target name="-pre-build" description="Move file that is not to be compiled.">
 		<copy file="submodules/linphone/share/xml/lpconfig.xsd"

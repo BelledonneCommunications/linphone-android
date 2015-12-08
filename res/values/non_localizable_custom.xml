@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- New settings -->
-	<string name="default_domain">sip.linphone.org</string>
+	<string name="default_domain">sip.orangecyberdefense.com</string>
 	<string name="default_stun">stun.linphone.org</string>
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool>
 	<bool name="hide_in_call_stats">false</bool>
@@ -22,7 +22,7 @@
 	<bool name="hide_linphone_accounts_wizard">false</bool>
 	<bool name="hide_generic_accounts_wizard">false</bool>
 	<bool name="hide_remote_provisioning_in_wizard">false</bool>
-	<bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
+	<bool name="allow_cancel_remote_provisioning_login_activity">false</bool>
 	<bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
 	<bool name="use_linphone_server_ports">true</bool>

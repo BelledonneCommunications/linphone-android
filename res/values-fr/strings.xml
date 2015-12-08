@@ -12,10 +12,11 @@
   <string name="delete">supprimer</string>
   <string name="retry">Retry</string>
   <string name="cancel">annuler</string>
-  <string name="accept">confirmer</string>
-  <string name="about">About</string>
+  <string name="accept">accepter</string>
+  <string name="about">À propos</string>
+  <string name="download">Télécharger</string>
   <string name="deny">refuser</string>
-  <string name="no_account">No account configured</string>
+  <string name="no_account">Aucun compte configuré</string>
   <string name="address_sip">Adresse Sip</string>
 
   <!-- splashscreen -->
@@ -42,11 +43,11 @@
   <string name="assistant_connect">connexion</string>
 
   <!-- 1. Dailer -->
-  <string name="address_bar_hint">Enter a number or an address</string>
+  <string name="address_bar_hint">Entrez une adresse SIP ou un numéro</string>
 
   <!-- 2. History -->
-  <string name="no_call_history">No call in your history</string>
-  <string name="no_missed_call_history">No missed call in your history</string>
+  <string name="no_call_history">Aucun appel dans votre historique.</string>
+  <string name="no_missed_call_history">Aucun appel manqué dans votre historique.</string>
   <string name="delete_history_log">Do you want to delete selected log?</string>
   <string name="history_log_label">appel reçu</string>
   <string name="today">Aujourd\'hui</string>
@@ -54,22 +55,23 @@
 
 
   <!-- 3. Contacts -->
-  <string name="no_contact">No contact in your address book.</string>
-  <string name="no_sip_contact">No SIP contact in your address book.</string>
+  <string name="no_contact">Aucun contact dans votre carnet d\'adresse.</string>
+  <string name="no_sip_contact">Aucun contact SIP dans votre carnet d\'adresse.</string>
   <string name="delete_contacts">Do you want to delete selected contact?</string>
   <string name="delete_contact">Do you want to delete selected this contact?</string>
   <string name="search_contact">Rechercher un contact</string>
 
   <!-- 4. Chat -->
-  <string name="no_chat_history">No conversations</string>
+  <string name="no_chat_history">Aucun historique de chat.</string>
   <string name="delete_conversation">Do you want to delete selected conversation?</string>
   <string name="delete_message">Do you want to delete selected message?</string>
+  <string name="search">Chercher un contact</string>
 
   <!-- Side Menu -->
   <string-array name="side_menu_item">
     <item>Assistant</item>
     <item>Settings</item>
-    <item>About</item>
+    <item>A propos</item>
   </string-array>
   <string name="quit">Quitter</string>
 
@@ -80,4 +82,11 @@
   <string name="no_current_call">Toutes vos conversations sont en pause</string>
   <string name="call_paused_by_remote">Votre correspondant(e) a mis la conversation en pause.</string>
   <string name="zrtp_dialog">Veuillez vérifier par oral avec votre interlocuteur qu\'il a le code suivant :\n%s</string>
+
+  <!-- Status Bar -->
+  <string name="status_connected">Enregistré</string>
+  <string name="status_not_connected">Non enregistré</string>
+  <string name="status_in_progress">Enregistrement en cours</string>
+  <string name="status_error">Enregistrement échoué</string>
+
 </resources>
