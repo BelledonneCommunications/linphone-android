@@ -18,15 +18,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Reason;
+import org.linphone.mediastream.Log;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,13 +55,12 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.assistant_remote_provisioning_login);
-		
+
 		login = (EditText) findViewById(R.id.assistant_username);
 		password = (EditText) findViewById(R.id.assistant_password);
 		domain = (EditText) findViewById(R.id.assistant_domain);
 
-		//cancel = (ImageView) findViewById(R.id.cancel);
-		//cancel.setOnClickListener(this);
+		domain.setText(getString(R.string.default_domain));
 
 		connect = (Button) findViewById(R.id.assistant_connect);
 		connect.setOnClickListener(this);
@@ -65,13 +71,23 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			domain.setEnabled(false);
 		}
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void configuringStatus(LinphoneCore lc, final LinphoneCore.RemoteProvisioningState state, String message) {
 				if (state == LinphoneCore.RemoteProvisioningState.ConfiguringSuccessful) {
+
 					//TODO
 				} else if (state == LinphoneCore.RemoteProvisioningState.ConfiguringFailed) {
 					Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
+				}
+			}
+
+			@Override
+			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
+				if (state.equals(LinphoneCore.RegistrationState.RegistrationOk)) {
+					LinphonePreferences.instance().firstLaunchSuccessful();
+					startActivity(new Intent().setClass(RemoteProvisioningLoginActivity.this, LinphoneActivity.class).setData(getIntent().getData()));
+					finish();
 				}
 			}
 		};
@@ -88,49 +104,10 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private boolean storeAccount(String username, String password, String domain) {
 		LinphoneCore lc = LinphoneManager.getLc();
 
-		LinphonePreferences.instance().setRemoteProvisioningUrl("https://elviish.ovh/obiane1.xml");
+		LinphonePreferences.instance().setRemoteProvisioningUrl("http://85.233.205.218/xmlrpc?username=" + username + "&password=" + password + "&domain=" + domain);
 		LinphoneManager.getInstance().restartLinphoneCore();
+		LinphoneManager.getLc().addListener(mListener);
 
-		/*XmlRpcHelper xmlRpcHelper = new XmlRpcHelper("http://192.168.0.148:8080/xmlrpc");
-		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
-			@Override
-			public void onRemoteProvisioningFilenameSent(String result) {
-
-				LinphonePreferences.instance().setRemoteProvisioningUrl("http://elviish.ovh/a69c387b85101abacb3580bf4c570bce.xml");
-				LinphoneManager.getInstance().restartLinphoneCore();
-			}
-		}, "sylvain", "sip.linphone.org", "lucifer");*/
-
-		/*XmlRpcHelper xmlRpcHelper = new XmlRpcHelper(null);
-		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
-			@Override
-			public void onRemoteProvisioningFilenameSent(String result) {
-				LinphonePreferences.instance().setRemoteProvisioningUrl(result);
-				LinphoneManager.getInstance().restartLinphoneCore();
-			}
-		}, username.toString(), password.toString(), domain.toString());*/
-
-
-
-		LinphonePreferences.instance().firstLaunchSuccessful();
-		setResult(Activity.RESULT_OK);
-		finish();
-		/*String identity = "sip:" + username + "@" + domain;
-		LinphoneProxyConfig prxCfg = lc.createProxyConfig();
-		try {
-			prxCfg.setIdentity(identity);
-			lc.addProxyConfig(prxCfg);
-		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, null, password, null, null, domain);
-		lc.addAuthInfo(authInfo);
-		
-		if (LinphonePreferences.instance().getAccountCount() == 1)
-			lc.setDefaultProxyConfig(prxCfg);
-		*/
 		return true;
 	}
 
@@ -160,7 +137,8 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			cancelWizard(false);
 		}
 		if (id == R.id.assistant_connect){
-			storeAccount(login.getText().toString(), password.getText().toString(), domain.getText().toString());
+			if(!login.getText().equals("") && !password.getText().equals("") && !domain.getText().equals(""))
+				storeAccount(login.getText().toString(), password.getText().toString(), domain.getText().toString());
 		}
 	}
 
