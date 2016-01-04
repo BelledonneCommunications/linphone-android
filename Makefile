@@ -303,13 +303,13 @@ openh264-install-headers:
 	mkdir -p $(OPENH264_SRC_DIR)/include/wels
 	rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/codec/api/svc/* $(OPENH264_SRC_DIR)/include/wels/.
 
-copy-openh264-x86: openh264-patch openh264-install-headers
+copy-openh264-x86:  openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
 	mkdir -p $(OPENH264_BUILD_DIR_X86)
 	cd $(OPENH264_BUILD_DIR_X86) \
 	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
-copy-openh264-arm: openh264-patch openh264-install-headers
+copy-openh264-arm:  openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
 	mkdir -p $(OPENH264_BUILD_DIR_ARM)
 	cd $(OPENH264_BUILD_DIR_ARM) \

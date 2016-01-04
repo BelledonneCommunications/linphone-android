@@ -1,10 +1,10 @@
 diff --git a/build/make/configure.sh b/build/make/configure.sh
-index 25c9f80..336b006 100644
+index c592b63..e4998d7 100644
 --- a/build/make/configure.sh
 +++ b/build/make/configure.sh
-@@ -1082,6 +1082,33 @@ EOF
-         os2)
+@@ -1132,6 +1132,32 @@ EOF
            AS=${AS:-nasm}
+           add_ldflags -Zhigh-mem
            ;;
 +		android*)
 +			SDK_PATH=${sdk_path}
@@ -32,7 +32,6 @@ index 25c9f80..336b006 100644
 +
 +			soft_enable realtime_only
 +         ;;
-+
        esac
  
        AS="${alt_as:-${AS:-auto}}"
