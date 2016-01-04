@@ -339,7 +339,7 @@ endif
 endif
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
 LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
-LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-debug
+LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-pic
 
 $(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt:
 	cd $(LIBVPX_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
