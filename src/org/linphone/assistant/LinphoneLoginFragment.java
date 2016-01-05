@@ -21,6 +21,8 @@ import org.linphone.R;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +33,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneLoginFragment extends Fragment implements OnClickListener {
+public class LinphoneLoginFragment extends Fragment implements OnClickListener, TextWatcher {
 	private EditText login, password, displayName;
 	private Button apply;
 	
@@ -41,9 +43,12 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 		View view = inflater.inflate(R.layout.assistant_linphone_login, container, false);
 		
 		login = (EditText) view.findViewById(R.id.assistant_username);
+		login.addTextChangedListener(this);
 		password = (EditText) view.findViewById(R.id.assistant_password);
+		password.addTextChangedListener(this);
 		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
 		apply = (Button) view.findViewById(R.id.assistant_apply);
+		apply.setEnabled(false);
 		apply.setOnClickListener(this);
 		
 		if (getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment)) {
@@ -70,4 +75,15 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener {
 			linphoneLogIn();
 		}
 	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		apply.setEnabled(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty());
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {}
 }

@@ -337,7 +337,7 @@ public class LinphonePreferences {
 			lc.addProxyConfig(prxCfg);
 			lc.addAuthInfo(authInfo);
 
-			if (!tempNoDefault && LinphonePreferences.instance().getAccountCount() == 1)
+			if (!tempNoDefault)
 				lc.setDefaultProxyConfig(prxCfg);
 		}
 	}

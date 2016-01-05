@@ -2,6 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:state_pressed="true"
 		  android:drawable="@drawable/resizable_assistant_button_over" />
+	<item android:state_enabled="false"
+		  android:drawable="@drawable/resizable_cancel_button" />
 	<item
 		android:drawable="@drawable/resizable_assistant_button" />
 </selector>
