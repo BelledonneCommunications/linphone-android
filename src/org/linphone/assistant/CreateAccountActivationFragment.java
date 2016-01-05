@@ -72,7 +72,7 @@ public class CreateAccountActivationFragment extends Fragment {
 			XMLRPCCallback listener = new XMLRPCCallback() {
 				Runnable runNotOk = new Runnable() {
     				public void run() {
-    					Toast.makeText(getActivity(), getString(R.string.setup_account_not_validated), Toast.LENGTH_LONG).show();
+    					Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
 					}
 	    		};
 	    		

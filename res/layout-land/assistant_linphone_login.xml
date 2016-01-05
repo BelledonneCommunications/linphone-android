@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 	<TextView
-		android:text="@string/assistant_linphone_account_title"
+		android:text="@string/assistant_linphone_account"
 		android:contentDescription="@string/content_description_welcome"
 		style="@style/font6"
 		android:textAllCaps="true"
@@ -78,7 +78,7 @@
 			android:gravity="center">
 
 			<TextView
-				android:text="@string/assistant_display_name"
+				android:text="@string/assistant_display_name_optional"
 				style="@style/font13"
 				android:textAllCaps="true"
 				android:layout_marginLeft="5dp"
