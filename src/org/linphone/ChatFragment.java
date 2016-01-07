@@ -114,7 +114,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private TextView contactName, remoteComposing;
 	private ImageView back, backToCall;
 	private AutoCompleteTextView searchContactField;
-	private RelativeLayout topBar, editList;
+	private LinearLayout topBar, editList;
 	private LinearLayout textLayout;
 	private ListView messagesList;
 
@@ -158,9 +158,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		messagesList = (ListView) view.findViewById(R.id.chat_message_list);
 		searchContactField = (AutoCompleteTextView) view.findViewById(R.id.search_contact_field);
 
-		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
+		editList = (LinearLayout) view.findViewById(R.id.edit_list);
 		textLayout = (LinearLayout) view.findViewById(R.id.message_layout);
-		topBar = (RelativeLayout) view.findViewById(R.id.top_bar);
+		topBar = (LinearLayout) view.findViewById(R.id.top_bar);
 
 		sendMessage = (ImageView) view.findViewById(R.id.send_message);
 		sendMessage.setOnClickListener(this);
@@ -593,10 +593,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		if(LinphoneManager.getLc().isIncall()){
 			backToCall.setVisibility(View.VISIBLE);
-			startCall.setVisibility(View.INVISIBLE);
+			startCall.setVisibility(View.GONE);
 		} else {
 			if(!newChatConversation) {
-				backToCall.setVisibility(View.INVISIBLE);
+				backToCall.setVisibility(View.GONE);
 				startCall.setVisibility(View.VISIBLE);
 			}
 		}

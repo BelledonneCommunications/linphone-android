@@ -5,44 +5,48 @@
   	android:background="@color/colorH"
     android:orientation="vertical" >
 
-	<RelativeLayout
+	<LinearLayout
+		android:orientation="horizontal"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="bottom"
-		android:background="@color/colorF">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
+
+		<ImageView
+			android:id="@+id/deleteContact"
+			android:src="@drawable/delete"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_delete"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
 			android:padding="15dp"/>
 
 		<ImageView
-			android:contentDescription="@string/content_description_edit"
 			android:id="@+id/editContact"
-			android:layout_alignParentRight="true"
-			android:padding="12dp"
 			android:src="@drawable/edit"
 			android:background="@drawable/toolbar_button"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"/>
-
-		<ImageView
-			android:contentDescription="@string/content_description_delete"
-			android:id="@+id/deleteContact"
-			android:padding="12dp"
-			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
-			android:gravity="center"
-			android:layout_width="70dp"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_toLeftOf="@+id/editContact"/>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
 
-	</RelativeLayout>
+	</LinearLayout>
 
 	<ScrollView
 		android:layout_width="match_parent"

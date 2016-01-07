@@ -4,8 +4,9 @@
     android:layout_height="match_parent"
   	android:background="@color/colorH" >
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/top_bar"
+		android:orientation="horizontal"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp">
@@ -14,19 +15,20 @@
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
-			android:layout_width="60dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
-			android:padding="20dp"/>
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
 
-		<ImageView
-			android:id="@+id/edit"
-			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit"
-			android:layout_width="60dp"
+		<TextView
+			android:id="@+id/contact_name"
+			style="@style/font6"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
+			android:layout_weight="0.4"
+			android:layout_gravity="center"
 			android:padding="15dp"/>
 
 		<ImageView
@@ -34,33 +36,31 @@
 			android:src="@drawable/call_alt_start"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_call"
-			android:layout_toLeftOf="@id/edit"
-			android:layout_width="60dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
+			android:layout_weight="0.2"
 			android:padding="15dp"/>
 
 		<ImageView
 			android:id="@+id/back_to_call"
 			android:src="@drawable/call_back"
 			android:background="@drawable/toolbar_button"
-			android:layout_toLeftOf="@id/edit"
-			android:layout_width="60dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
+			android:layout_weight="0.2"
 			android:visibility="gone"
 			android:padding="15dp"/>
 
-		<TextView
-			android:id="@+id/contact_name"
-			style="@style/font6"
-			android:ellipsize="end"
-			android:singleLine="true"
-			android:layout_width="match_parent"
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/back"
-			android:layout_toLeftOf="@id/start_call"
-			android:gravity="center_vertical"
-			android:paddingLeft="5dp"/>
-	</RelativeLayout>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
 
@@ -131,6 +131,8 @@
 		android:layout_height="match_parent"
 		android:layout_margin="10dp"
 		android:layout_below="@+id/top_bar"/>
+
+
 
 	<AutoCompleteTextView
 		android:id="@+id/search_contact_field"

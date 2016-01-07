@@ -5,46 +5,48 @@
   	android:background="@color/colorH"
   	android:orientation="vertical">
 
-	<RelativeLayout
+	<LinearLayout
+		android:orientation="horizontal"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="bottom"
-		android:background="@color/colorF">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
-			android:padding="15dp"/>
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
 
-
-		<ImageView
-			android:id="@+id/ok"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_alignParentRight="true"
-			android:padding="15dp"
-			android:src="@drawable/valid"
-			android:background="@drawable/toolbar_button"
-			android:gravity="center"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"/>
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
 
 		<ImageView
 			android:id="@+id/deleteContact"
-			android:contentDescription="@string/content_description_delete"
-			android:padding="12dp"
 			android:src="@drawable/delete"
 			android:background="@drawable/toolbar_button"
-			android:gravity="center"
-			android:layout_width="70dp"
+			android:contentDescription="@string/content_description_delete"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_toLeftOf="@+id/ok"/>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
 
-	</RelativeLayout>
+		<ImageView
+			android:id="@+id/ok"
+			android:src="@drawable/valid"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
+
+	</LinearLayout>
 
     <ScrollView
         android:id="@+id/controlsScrollView"

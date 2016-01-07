@@ -66,7 +66,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	private TextView noSipContact, noContact;
 	private ImageView allContacts, linphoneContacts, newContact, edit, selectAll, deselectAll, delete, cancel;
 	private boolean onlyDisplayLinphoneContacts, isEditMode;
-	private RelativeLayout allContactsSelected, linphoneContactsSelected, editList, topbar;
+	private View allContactsSelected, linphoneContactsSelected;
+	private LinearLayout editList, topbar;
 	private int lastKnownPosition;
 	private AlphabetIndexer indexer;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
@@ -110,11 +111,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
         linphoneContacts = (ImageView) view.findViewById(R.id.linphone_contacts);
         linphoneContacts.setOnClickListener(this);
 
-		allContactsSelected = (RelativeLayout) view.findViewById(R.id.all_contacts_select);
-		allContactsSelected.setOnClickListener(this);
-
-		linphoneContactsSelected = (RelativeLayout) view.findViewById(R.id.linphone_contacts_select);
-		linphoneContactsSelected.setOnClickListener(this);
+		allContactsSelected = view.findViewById(R.id.all_contacts_select);
+		linphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
         
         newContact = (ImageView) view.findViewById(R.id.newContact);
         newContact.setOnClickListener(this);
@@ -132,8 +130,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
-		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
-		topbar = (RelativeLayout) view.findViewById(R.id.top_bar);
+		editList = (LinearLayout) view.findViewById(R.id.edit_list);
+		topbar = (LinearLayout) view.findViewById(R.id.top_bar);
 
 		cancel = (ImageView) view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);

@@ -307,8 +307,8 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	public void loadLinphoneConfig(){
-		LinphoneManager.getInstance().loadConfig();
-		LinphoneManager.getInstance().restartLinphoneCore();
+		//LinphoneManager.getInstance().loadConfig();
+		//LinphoneManager.getInstance().restartLinphoneCore();
 	}
 
 	public void saveCreatedAccount(String username, String password, String displayName, String domain, TransportType transport) {
