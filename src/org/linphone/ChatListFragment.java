@@ -483,6 +483,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 			if(contact != null){
 				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+			} else {
+				contactPicture.setImageResource(R.drawable.avatar);
 			}
 
 			if (unreadMessagesCount > 0) {
@@ -504,12 +506,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						chatList.setItemChecked(position, b);
-						if(getNbItemsChecked() == getCount()){
+						if (getNbItemsChecked() == getCount()) {
 							deselectAll.setVisibility(View.VISIBLE);
 							selectAll.setVisibility(View.GONE);
 							enabledDeleteButton(true);
 						} else {
-							if(getNbItemsChecked() == 0){
+							if (getNbItemsChecked() == 0) {
 								deselectAll.setVisibility(View.GONE);
 								selectAll.setVisibility(View.VISIBLE);
 								enabledDeleteButton(false);
