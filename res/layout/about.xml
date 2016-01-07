@@ -5,34 +5,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/top_bar"
+        android:orientation="horizontal"
         android:background="@color/colorF"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="visible"
-        android:layout_alignParentTop="true">
+        android:layout_height="60dp">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"/>
 
         <TextView
             android:id="@+id/menu_name"
             android:text="@string/about"
             style="@style/font1"
-            android:layout_width="wrap_content"
+            android:singleLine="true"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"/>
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:padding="15dp"/>
 
         <ImageView
             android:id="@+id/cancel"
             android:src="@drawable/dialer_back"
             android:background="@drawable/toolbar_button"
-            android:layout_width="60dp"
+            android:contentDescription="@string/content_description_edit"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="12dp"
-            android:layout_centerInParent="true"
-            android:layout_alignParentRight="true"/>
-
-    </RelativeLayout>
+            android:layout_weight="0.2"
+            android:padding="15dp"/>
+    </LinearLayout>
 
     <ImageView
         android:src="@drawable/linphone_logo_orange"

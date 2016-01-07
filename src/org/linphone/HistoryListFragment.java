@@ -61,7 +61,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
 	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel;
-	private RelativeLayout allCallsSelected, missedCallsSelected, editList, topBar;
+	private View allCallsSelected, missedCallsSelected;
+	private LinearLayout editList, topBar;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs;
 
@@ -80,8 +81,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
-		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
-		topBar = (RelativeLayout) view.findViewById(R.id.top_bar);
+		editList = (LinearLayout) view.findViewById(R.id.edit_list);
+		topBar = (LinearLayout) view.findViewById(R.id.top_bar);
 
 		cancel = (ImageView) view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
@@ -89,14 +90,12 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		allCalls = (ImageView) view.findViewById(R.id.all_calls);
 		allCalls.setOnClickListener(this);
 
-		allCallsSelected = (RelativeLayout) view.findViewById(R.id.all_calls_select);
-		allCallsSelected.setOnClickListener(this);
+		allCallsSelected = view.findViewById(R.id.all_calls_select);
 
 		missedCalls = (ImageView) view.findViewById(R.id.missed_calls);
 		missedCalls.setOnClickListener(this);
 
-		missedCallsSelected = (RelativeLayout) view.findViewById(R.id.missed_calls_select);
-		missedCallsSelected.setOnClickListener(this);
+		missedCallsSelected = view.findViewById(R.id.missed_calls_select);
 
 		selectAll = (ImageView) view.findViewById(R.id.select_all);
 		selectAll.setOnClickListener(this);

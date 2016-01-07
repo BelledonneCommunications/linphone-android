@@ -5,34 +5,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<RelativeLayout
+
+	<LinearLayout
+		android:id="@+id/top_bar"
+		android:orientation="horizontal"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="bottom">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_back"
-			android:padding="15dp"
-			android:layout_width="70dp"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"/>
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.6"/>
 
 		<ImageView
 			android:id="@+id/add_contact"
 			android:src="@drawable/contact_add"
 			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_add_contact"
-			android:padding="12dp"
-			android:layout_width="70dp"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"/>
-
-	</RelativeLayout>
-
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
 
 	<ScrollView
 		android:layout_width="match_parent"

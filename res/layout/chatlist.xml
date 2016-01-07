@@ -5,43 +5,49 @@
   	android:background="@color/colorH"
     android:orientation="vertical" >
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/top_bar"
+		android:orientation="horizontal"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="top"
-		android:background="@color/colorF">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/new_discussion"
 			android:src="@drawable/chat_add"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_new_discussion"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
-			android:padding="12dp"/>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
 
 		<ImageView
 			android:id="@+id/back_in_call"
 			android:src="@drawable/call_back"
 			android:background="@drawable/toolbar_button"
-			android:layout_width="70dp"
+			android:contentDescription="@string/content_description_call"
+			android:visibility="invisible"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:padding="12dp"
-			android:visibility="gone"
-			android:layout_toRightOf="@+id/new_discussion"/>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
 
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="12dp"/>
-	</RelativeLayout>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
     

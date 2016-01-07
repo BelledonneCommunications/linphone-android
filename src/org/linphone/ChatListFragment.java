@@ -57,6 +57,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -70,7 +71,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private ListView chatList;
 	private TextView noChatHistory;
 	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, contactPicture, cancel, backInCall;
-	private RelativeLayout editList, topbar;
+	private LinearLayout editList, topbar;
 	private boolean isEditMode = false;
 	
 	@Override
@@ -85,8 +86,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
 
-		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
-		topbar = (RelativeLayout) view.findViewById(R.id.top_bar);
+		editList = (LinearLayout) view.findViewById(R.id.edit_list);
+		topbar = (LinearLayout) view.findViewById(R.id.top_bar);
 
 		cancel = (ImageView) view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
@@ -201,7 +202,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (LinphoneManager.getLc().getCallsNb() > 0) {
 			backInCall.setVisibility(View.VISIBLE);
 		} else {
-			backInCall.setVisibility(View.GONE);
+			backInCall.setVisibility(View.INVISIBLE);
 		}
 
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
