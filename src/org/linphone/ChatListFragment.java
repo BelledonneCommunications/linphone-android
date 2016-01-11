@@ -457,7 +457,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			TextView date = (TextView) view.findViewById(R.id.date);
 			TextView displayName = (TextView) view.findViewById(R.id.sipUri);
 			TextView unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
-			CheckBox select = (CheckBox) view.findViewById(R.id.delete);
+			CheckBox select = (CheckBox) view.findViewById(R.id.delete_chatroom);
 			ImageView contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 
 			LinphoneChatRoom chatRoom = LinphoneManager.getLc().getChatRoom(address);
@@ -525,7 +525,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					}
 				});
 				if(chatList.isItemChecked(position)) {
-					enabledDeleteButton(true);
+					select.setChecked(true);
 				} else {
 					select.setChecked(false);
 				}
@@ -534,7 +534,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					unreadMessages.setVisibility(View.VISIBLE);
 				}
 			}
-			
 			return view;
 		}
 	}
