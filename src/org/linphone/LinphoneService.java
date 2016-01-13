@@ -152,10 +152,10 @@ public final class LinphoneService extends Service {
 
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
+			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.drawable.linphone_notification_icon, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.status_level, R.mipmap.ic_launcher, bm, mNotifContentIntent, true,notifcationsPriority);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 
@@ -357,7 +357,7 @@ public final class LinphoneService extends Service {
 		
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
+			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 		} catch (Exception e) {
 		}
 		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent,notifcationsPriority);
@@ -395,7 +395,7 @@ public final class LinphoneService extends Service {
 		try {
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
 			if (contact != null)
-				pictureUri = contact.getPhotoUri();
+				pictureUri = contact.getThumbnailUri();
 		} catch (LinphoneCoreException e1) {
 			Log.e("Cannot parse from address ", e1);
 		}
@@ -405,10 +405,10 @@ public final class LinphoneService extends Service {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 			}
 		} else {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
 		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
 		
@@ -529,7 +529,7 @@ public final class LinphoneService extends Service {
 
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.linphone_logo);
+			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 		} catch (Exception e) {
 		}
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, 0, bm, mNotifContentIntent, true,notifcationsPriority);
