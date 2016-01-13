@@ -99,8 +99,8 @@
 
 			<TextView
 				android:id="@+id/unreadMessages"
-				android:layout_width="25dp"
-				android:layout_height="25dp"
+				android:layout_width="20dp"
+				android:layout_height="20dp"
 				android:background="@drawable/chat_list_indicator"
 				style="@style/font18"
 				android:gravity="center"
