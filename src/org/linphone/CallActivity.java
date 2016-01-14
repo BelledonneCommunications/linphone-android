@@ -46,6 +46,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -97,6 +98,8 @@ public class CallActivity extends Activity implements OnClickListener {
 	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
 	private CountDownTimer timer;
 	private boolean isVideoCallPaused = false;
+
+
 
 	private LinearLayout callsList, conferenceList;
 	private LayoutInflater inflater;
@@ -175,9 +178,6 @@ public class CallActivity extends Activity implements OnClickListener {
 
 					enableAndRefreshInCallActions();
 
-					LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
-					isMicMuted = LinphoneManager.getLc().isMicMuted();
-
 					if (status != null) {
 						videoProgress.setVisibility(View.GONE);
 						status.refreshStatusItems(call, isVideoEnabled(call));
@@ -250,6 +250,9 @@ public class CallActivity extends Activity implements OnClickListener {
 				isVideoCallPaused = savedInstanceState.getBoolean("VideoCallPaused");
 				refreshInCallActions();
 				return;
+			} else {
+				isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
+				isMicMuted = LinphoneManager.getLc().isMicMuted();
 			}
 
 			Fragment callFragment;
