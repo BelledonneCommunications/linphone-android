@@ -217,7 +217,7 @@
 	<string name="pref_audio_hacks_use_routing_api_title">Use routing API hack</string>
 	<string name="pref_audio_hacks_use_galaxys_hack_title">Use Galaxy S audio hack</string>
 	<string name="pref_audio_soft_volume_title">Use software volume</string>
-	<string name="pref_ipv6_title">Use ipv6 instead of ipv4</string>
+	<string name="pref_ipv6_title">Allow IPv6</string>
 	<string name="error_while_accepting_pending_call">Error while accepting pending call</string>
 	<string name="incoming_call_dialog_title">%s is calling you</string>
 	<string name="decline">Decline</string>
