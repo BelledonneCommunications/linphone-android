@@ -120,7 +120,7 @@
 			android:padding="20dp"/>
 
 		<ImageView
-			android:id="@+id/hang_up"
+			android:id="@+id/outgoing_hang_up"
 			android:src="@drawable/call_hangup"
 			android:background="@drawable/hangup"
 			android:contentDescription="@string/content_description_hang_up"
