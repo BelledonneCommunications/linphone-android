@@ -728,7 +728,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		//Check if the call is not terminated
 		if(call.getState() == State.CallEnd || call.getState() == State.CallReleased) return;
-
+		
 		if (!displayVideo) {
 			showAudioView();
 		} else {
@@ -783,11 +783,12 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void displayAudioCall(){
+		mControlsLayout.setVisibility(View.VISIBLE);
 		mActiveCallHeader.setVisibility(View.VISIBLE);
 		callInfo.setVisibility(View.VISIBLE);
+		callsList.setVisibility(View.VISIBLE);
 		avatar_layout.setVisibility(View.VISIBLE);
 		mNoCurrentCall.setVisibility(View.GONE);
-		callsList.setVisibility(View.VISIBLE);
 		switchCamera.setVisibility(View.GONE);
 	}
 
