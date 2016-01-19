@@ -533,7 +533,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					}
 				});
 				if(chatList.isItemChecked(position)) {
-					enabledDeleteButton(true);
+					select.setChecked(true);
 				} else {
 					select.setChecked(false);
 				}

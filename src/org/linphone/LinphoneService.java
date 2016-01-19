@@ -320,12 +320,12 @@ public final class LinphoneService extends Service {
 		address.setDisplayName(displayName);
 
 		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
-		Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
+		Uri pictureUri = contact != null ? contact.getThumbnailUri() : null;
 		Bitmap bm = null;
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 		} catch (Exception e) {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
 		String name = address.getDisplayName() == null ? address.getUserName() : address.getDisplayName();
 		mIncallNotif = Compatibility.createInCallNotification(getApplicationContext(), mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
@@ -399,7 +399,7 @@ public final class LinphoneService extends Service {
 		try {
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
 			if (contact != null)
-				pictureUri = contact.getPhotoUri();
+				pictureUri = contact.getThumbnailUri();
 		} catch (LinphoneCoreException e1) {
 			Log.e("Cannot parse from address ", e1);
 		}
@@ -409,10 +409,10 @@ public final class LinphoneService extends Service {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 			}
 		} else {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
 		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
 		
