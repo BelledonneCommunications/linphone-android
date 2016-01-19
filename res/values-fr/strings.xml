@@ -89,4 +89,15 @@
   <string name="status_in_progress">Enregistrement en cours</string>
   <string name="status_error">Enregistrement échoué</string>
 
+  <!-- Errors -->
+  <string name="error_unknown">Erreur inconnue</string>
+  <string name="error_call_declined">Appel rejeté</string>
+  <string name="error_user_not_found">Utilisateur non trouvé</string>
+  <string name="error_incompatible_media">Paramètres média incompatibles</string>
+  <string name="error_low_bandwidth">Votre correspondant à un débit faible, la vidéo ne peut démarrer</string>
+  <string name="error_network_unreachable">Le réseau n\'est pas joignable</string>
+  <string name="error_bad_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
+  <string name="error_unauthorized">Non autorisé</string>
+  <string name="error_io_error">Erreur réseau</string>
+
 </resources>
