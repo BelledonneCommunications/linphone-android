@@ -50,7 +50,7 @@
 	<string name="decline">Decline</string>
 
 	<!-- Launch screen -->
-	<string name="app_description">free SIP VOIP client</string>
+	<string name="app_description">The libre SIP client</string>
 
 	<!-- Assistant -->
 	<string name="welcome">Welcome</string>
