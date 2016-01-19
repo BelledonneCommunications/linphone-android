@@ -50,7 +50,7 @@
 	<string name="decline">Decline</string>
 
 	<!-- Launch screen -->
-	<string name="app_description">The libre SIP client</string>
+	<string name="app_description">the libre SIP client</string>
 
 	<!-- Assistant -->
 	<string name="welcome">Welcome</string>
@@ -77,7 +77,7 @@
 	<string name="assistant_remote_provisioning_login">Enter your login</string>
 	<string name="assistant_account_not_validated">Your account has not been validated yet.</string>
 	<string name="assistant_account_validated">Your account has been validated.</string>
-	<string name="assistant_error_bad_credentials">Incorrect username or passowrd</string>
+	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>
@@ -100,8 +100,8 @@
 	<!-- Contacts -->
 	<string name="no_contact">No contact in your address book.</string>
 	<string name="no_sip_contact">No SIP contact in your address book.</string>
-	<string name="delete_contacts">Do you want to delete selected contact?</string>
-	<string name="delete_contact">Do you want to delete selected this contact?</string>
+	<string name="delete_contacts">Do you want to delete selected contacts?</string>
+	<string name="delete_contact">Do you want to delete selected contact?</string>
 	<string name="sip_address">SIP address</string>
 	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
@@ -245,10 +245,6 @@
 	<string name="failed">failed</string>
 	<string name="pref_adaptive_rate_control">Adaptive rate control</string>
 	<string name="pref_adaptive_rate_algorithm">Adaptive rate algorithm</string>
-	<string-array name="adaptive_rate_algorithm_entries">
-		<item>Simple</item>
-		<item>Stateful</item>
-	</string-array>
 	<string name="pref_codec_bitrate_limit">Codec bitrate limit</string>
 	<string name="pref_codecs">Codecs</string>
 
@@ -260,11 +256,6 @@
 	<string name="pref_video_automatically_accept_video_title">Accept incoming video requests</string>
 	<string name="pref_video_automatically_accept_video">Always accept video requests</string>
 	<string name="pref_video_preset">Video preset</string>
-	<string-array name="video_preset_entries">
-		<item>default</item>
-		<item>high-fps</item>
-		<item>custom</item>
-	</string-array>
 	<string name="pref_preferred_video_size">Preferred video size</string>
 	<string name="pref_preferred_fps">Preferred FPS</string>
 
