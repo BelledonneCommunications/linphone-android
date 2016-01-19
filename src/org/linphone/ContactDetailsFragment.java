@@ -102,14 +102,13 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
 		deleteContact.setOnClickListener(this);
 
-		ImageView back = (ImageView) view.findViewById(R.id.back);
-		back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getFragmentManager().popBackStackImmediate();
-			}
-		});
-		
+		back = (ImageView) view.findViewById(R.id.back);
+		if(getResources().getBoolean(R.bool.isTablet)){
+			back.setVisibility(View.INVISIBLE);
+		} else {
+			back.setOnClickListener(this);
+		}
+
 		return view;
 	}
 	
@@ -237,7 +236,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
-		} else if (id == R.id.deleteContact) {
+		}
+		if (id == R.id.deleteContact) {
 			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
 			Button delete = (Button) dialog.findViewById(R.id.delete);
 			Button cancel = (Button) dialog.findViewById(R.id.cancel);
@@ -260,6 +260,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				}
 			});
 			dialog.show();
+		}
+		if (id == R.id.back) {
+			getFragmentManager().popBackStackImmediate();
 		}
 	}
 	

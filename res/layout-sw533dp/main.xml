@@ -54,8 +54,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:orientation="vertical"
-				android:layout_below="@id/top_bar" android:layout_toRightOf="@+id/footer"
-				android:layout_toEndOf="@+id/footer">
+				android:layout_below="@id/top_bar"
+				android:layout_above="@id/footer">
 
 				<FrameLayout
 					android:layout_width="match_parent"
@@ -89,21 +89,21 @@
 
 			<LinearLayout
 				android:id="@+id/footer"
-				android:layout_width="60dp"
-				android:layout_height="match_parent"
+				android:layout_width="match_parent"
+				android:layout_height="60dp"
 				android:layout_alignParentBottom="true"
-				android:orientation="vertical">
+				android:orientation="horizontal">
 
 				<RelativeLayout
 					android:id="@+id/history"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
-					android:layout_width="60dp"
-					android:layout_height="0dp">
+					android:layout_width="0dp"
+					android:layout_height="match_parent">
 
 					<ImageView
 						android:src="@drawable/footer_history"
-						android:layout_width="wrap_content"
+						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:padding="15dp"
 						android:layout_centerInParent="true"/>
@@ -111,18 +111,18 @@
 					<View
 						android:id="@+id/history_select"
 						android:background="@color/colorA"
-						android:layout_width="5dp"
-						android:layout_height="match_parent"
-						android:layout_alignParentLeft="true"
+						android:layout_width="match_parent"
+						android:layout_height="5dp"
+						android:layout_alignParentBottom="true"
 						android:visibility="gone"/>
 
 					<TextView
 						android:id="@+id/missed_calls"
 						android:background="@drawable/history_chat_indicator"
 						style="@style/font18"
-						android:layout_width="25dp"
-						android:layout_height="25dp"
-						android:layout_margin="12dp"
+						android:layout_width="20dp"
+						android:layout_height="20dp"
+						android:layout_margin="15dp"
 						android:gravity="center"
 						android:visibility="gone"/>
 
@@ -132,8 +132,8 @@
 					android:id="@+id/contacts"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
-					android:layout_width="60dp"
-					android:layout_height="0dp">
+					android:layout_width="0dp"
+					android:layout_height="match_parent">
 
 					<ImageView
 						android:src="@drawable/footer_contacts"
@@ -145,9 +145,9 @@
 					<View
 						android:id="@+id/contacts_select"
 						android:background="@color/colorA"
-						android:layout_width="5dp"
-						android:layout_height="match_parent"
-						android:layout_alignParentLeft="true"
+						android:layout_width="match_parent"
+						android:layout_height="5dp"
+						android:layout_alignParentBottom="true"
 						android:visibility="gone"/>
 				</RelativeLayout>
 
@@ -155,8 +155,8 @@
 					android:id="@+id/dialer"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
-					android:layout_width="60dp"
-					android:layout_height="0dp">
+					android:layout_width="0dp"
+					android:layout_height="match_parent">
 
 					<ImageView
 						android:src="@drawable/footer_dialer"
@@ -168,9 +168,9 @@
 					<View
 						android:id="@+id/dialer_select"
 						android:background="@color/colorA"
-						android:layout_width="5dp"
-						android:layout_height="match_parent"
-						android:layout_alignParentLeft="true"/>
+						android:layout_width="match_parent"
+						android:layout_height="5dp"
+						android:layout_alignParentBottom="true"/>
 
 				</RelativeLayout>
 
@@ -178,8 +178,8 @@
 					android:id="@+id/chat"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
-					android:layout_width="60dp"
-					android:layout_height="0dp">
+					android:layout_width="0dp"
+					android:layout_height="match_parent">
 
 					<ImageView
 						android:src="@drawable/footer_chat"
@@ -191,20 +191,20 @@
 					<View
 						android:id="@+id/chat_select"
 						android:background="@color/colorA"
-						android:visibility="gone"
-						android:layout_width="5dp"
-						android:layout_height="match_parent"
-						android:layout_alignParentLeft="true"/>
+						android:layout_width="match_parent"
+						android:layout_height="5dp"
+						android:layout_alignParentBottom="true"
+						android:visibility="gone"/>
 
 					<TextView
 						android:id="@+id/missed_chats"
 						android:background="@drawable/history_chat_indicator"
 						style="@style/font18"
-						android:layout_width="25dp"
-						android:layout_height="25dp"
-						android:layout_margin="12dp"
+						android:layout_width="20dp"
+						android:layout_height="20dp"
+						android:layout_margin="15dp"
 						android:gravity="center"
-						android:visibility="gone" />
+						android:visibility="gone"/>
 
 				</RelativeLayout>
 			</LinearLayout>
