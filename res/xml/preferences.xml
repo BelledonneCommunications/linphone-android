@@ -31,14 +31,14 @@
     </PreferenceCategory>
 
 	<PreferenceCategory
-	    android:title="@string/pref_preferences">
+	    android:title="@string/pref_preferences_title">
 
 		<CheckBoxPreference
 			android:title="@string/pref_video_enable_title"
 			android:key="@string/pref_video_enable_key"/>
 
 		<PreferenceScreen
-		    android:title="@string/pref_audio">
+		    android:title="@string/pref_audio_title">
 
 		    <CheckBoxPreference
 				android:title="@string/pref_echo_cancellation"
@@ -72,7 +72,7 @@
 		</PreferenceScreen>
 
 		<PreferenceScreen
-		    android:title="@string/pref_video"
+		    android:title="@string/pref_video_title"
 		    android:key="@string/pref_video_key"
 		    android:dependency="@string/pref_video_enable_key"
 		    android:shouldDisableView="true">
@@ -89,13 +89,6 @@
 				android:summary="@string/pref_video_initiate_call_with_video"
 				android:dependency="@string/pref_video_enable_key"/>
 
-			<CheckBoxPreference
-				android:title="@string/pref_video_automatically_share_my_video_title"
-				android:key="@string/pref_video_automatically_share_my_video_key"
-				android:summary="@string/pref_video_automatically_share_my_video"
-				android:dependency="@string/pref_video_enable_key"
-				android:layout="@layout/hidden"/>
-
 		    <CheckBoxPreference
 				android:title="@string/pref_video_automatically_accept_video_title"
 				android:key="@string/pref_video_automatically_accept_video_key"
@@ -103,7 +96,7 @@
 				android:dependency="@string/pref_video_enable_key"/>
 
 			<ListPreference
-				android:title="Video preset"
+				android:title="@string/pref_video_preset"
 				android:key="@string/pref_video_preset_key"
 				android:entries="@array/video_preset_entries"
 				android:entryValues="@array/video_preset_entries" />
@@ -113,7 +106,7 @@
 				android:key="@string/pref_preferred_video_size_key"/>
 
 			<ListPreference
-				android:title="Preferred FPS"
+				android:title="@string/pref_preferred_fps"
 				android:key="@string/pref_preferred_video_fps_key"/>
 
 			<EditTextPreference
@@ -130,7 +123,7 @@
 		</PreferenceScreen>
 
 		<PreferenceScreen
-		    android:title="@string/call">
+		    android:title="@string/pref_call_title">
 
 			<CheckBoxPreference
 				android:title="@string/pref_sipinfo_dtmf"
@@ -201,7 +194,7 @@
 		</PreferenceScreen>
 
 		<PreferenceScreen
-		    android:title="@string/pref_advanced">
+		    android:title="@string/pref_advanced_title">
 
 			<CheckBoxPreference
 				android:title="@string/pref_debug"

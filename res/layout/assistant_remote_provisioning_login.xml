@@ -99,7 +99,7 @@
 			android:text="@string/connect"
 			android:background="@drawable/assistant_button"
 			style="@style/font8"
-			android:contentDescription="@string/content_description_validate"
+			android:contentDescription="@string/content_description_valid"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingLeft="10dp"
