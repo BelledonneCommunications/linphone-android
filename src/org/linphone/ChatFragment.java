@@ -217,15 +217,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		back = (ImageView) view.findViewById(R.id.back);
-		if (back != null) {
-			back.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getFragmentManager().popBackStackImmediate();
-				}
-			});
+		if(getResources().getBoolean(R.bool.isTablet)){
+			back.setVisibility(View.INVISIBLE);
+		} else {
+			back.setOnClickListener(this);
 		}
-		
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
@@ -703,6 +700,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		if(id == R.id.start_call){
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, LinphoneUtils.getUsernameFromAddress(sipUri), null);
+		}
+		if (id == R.id.back) {
+			getFragmentManager().popBackStackImmediate();
 		}
 	}
 
