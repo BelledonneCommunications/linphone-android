@@ -28,7 +28,7 @@
 	<bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
 	<bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
-	<bool name="use_linphone_server_ports">true</bool>
+	<bool name="use_linphone_server_ports">false</bool>
 	<bool name="allow_only_phone_numbers_in_wizard">false</bool>
 
 	<bool name="enable_linphone_friends">false</bool>
