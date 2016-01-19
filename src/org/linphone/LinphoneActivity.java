@@ -232,9 +232,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					// Convert LinphoneCore message for internalization
 					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getReason() == Reason.NotFound) {
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getReason() == Reason.Media) {
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.Media) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
 					} else if (message != null && state == State.Error) {
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
