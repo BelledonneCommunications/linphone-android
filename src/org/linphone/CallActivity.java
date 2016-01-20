@@ -229,7 +229,7 @@ public class CallActivity extends Activity implements OnClickListener {
 			@Override
 			public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
 				if (status != null) {
-					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
+					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP)/* && !call.isAuthenticationTokenVerified()*/){
 						status.showZRTPDialog(call);
 					}
 					status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
