@@ -40,18 +40,13 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
@@ -63,7 +58,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
-	private boolean accountCreated = false;
+	private boolean accountCreated = false, newAccount = false;
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
 	private StatusFragment status;
@@ -72,17 +67,14 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getResources().getBoolean(R.bool.isTablet) && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		} else if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 
 		setContentView(R.layout.assistant);
 		initUI();
 
-		firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ?
-				AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
+		firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState == null) {
             	display(firstFragment);
@@ -91,19 +83,24 @@ public class AssistantActivity extends Activity implements OnClickListener {
             }
         }
         mPrefs = LinphonePreferences.instance();
+		if(mPrefs.isFirstLaunch()) {
+			status.enableSideMenu(false);
+		}
         
         mListener = new LinphoneCoreListenerBase(){
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
-				if(accountCreated){
+				if(accountCreated && !newAccount){
 					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
 						if (state == RegistrationState.RegistrationOk) {
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 								launchEchoCancellerCalibration(true);
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
-							dialog = createErrorDialog(cfg, smessage);
-							dialog.show();
+							if(dialog == null || !dialog.isShowing()) {
+								dialog = createErrorDialog(cfg, smessage);
+								dialog.show();
+							}
 						}
 					}
 				}
@@ -128,7 +125,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
-		
+
 		super.onPause();
 	}
 	
@@ -151,7 +148,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		back.setOnClickListener(this);
 		cancel = (ImageView) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
-		status.enableSideMenu(false);
 	}
 	
 	private void changeFragment(Fragment newFragment) {
@@ -203,7 +199,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
 		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
 		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
-			mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, false); //We'll enable it after the echo calibration
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
@@ -222,9 +217,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		}
 
         saveCreatedAccount(username, password, displayName, domain, transport);
-		/*if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			//launchEchoCancellerCalibration(sendEcCalibrationResult);
-		}*/
 	}
 	
 	public void checkAccount(String username, String password, String displayName, String domain) {
@@ -279,9 +271,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 	
 	public void displayLoginLinphone() {
-		//loadConfig();
 		fragment = new LinphoneLoginFragment();
-
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
 		back.setVisibility(View.VISIBLE);
@@ -338,23 +328,22 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		}
 
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
-		boolean useLinphoneDotOrgCustomPorts = getResources().getBoolean(R.bool.use_linphone_server_ports);
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 		.setUsername(username)
 		.setDomain(domain)
 		.setDisplayName(displayName)
 		.setPassword(password);
 		
-		if (isMainAccountLinphoneDotOrg && useLinphoneDotOrgCustomPorts) {
+		if (isMainAccountLinphoneDotOrg) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-				builder.setProxy(domain + ":5228")
+				builder.setProxy(domain)
 				.setTransport(TransportType.LinphoneTransportTcp);
 			}
 			else {
-				builder.setProxy(domain + ":5223")
+				builder.setProxy(domain)
 				.setTransport(TransportType.LinphoneTransportTls);
 			}
-			
+
 			builder.setExpires("604800")
 			.setAvpfEnabled(true)
 			.setAvpfRRInterval(3)
@@ -399,7 +388,8 @@ public class AssistantActivity extends Activity implements OnClickListener {
 
 	public void displayWizardConfirm(String username) {
 		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
-		
+
+		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
 		fragment.setArguments(extras);
@@ -410,28 +400,13 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 	
 	public void isAccountVerified(String username) {
-		Toast.makeText(this, getString(R.string.setup_account_validated), Toast.LENGTH_LONG).show();
+		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
 		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
 		launchEchoCancellerCalibration(true);
 	}
 
 	public void isEchoCalibrationFinished() {
-		mPrefs.setAccountEnabled(mPrefs.getAccountCount() - 1, true);
 		success();
-	}
-
-	public Dialog displayWrongPasswordDialog(){
-		Dialog dialog = new Dialog(this);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
-		d.setAlpha(200);
-		dialog.setContentView(R.layout.input_dialog);
-		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
-		dialog.getWindow().setBackgroundDrawable(d);
-
-		TextView customText = (TextView) dialog.findViewById(R.id.customText);
-		customText.setText(getString(R.string.error_bad_credentials));
-		return dialog;
 	}
 
 	public Dialog createErrorDialog(LinphoneProxyConfig proxy, String message){
@@ -451,10 +426,10 @@ public class AssistantActivity extends Activity implements OnClickListener {
 						LinphoneManager.getLc().removeProxyConfig(LinphoneManager.getLc().getDefaultProxyConfig());
 						LinphonePreferences.instance().resetDefaultProxyConfig();
 						LinphoneManager.getLc().refreshRegisters();
-						dialog.cancel();
+						dialog.dismiss();
 					}
 				});
-		return builder.create();
+		return builder.show();
 	}
 	
 	public void success() {

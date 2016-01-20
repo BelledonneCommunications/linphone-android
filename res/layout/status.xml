@@ -34,7 +34,6 @@
 		<ImageView
 			android:id="@+id/status_led"
 			android:src="@drawable/led_disconnected"
-			android:contentDescription="@string/content_description_led"
 			android:paddingLeft="5dp"
 			android:adjustViewBounds="true"
 			android:layout_width="20dp"

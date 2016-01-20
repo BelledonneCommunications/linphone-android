@@ -24,6 +24,7 @@
 		android:text="@string/assistant_validate_account"
 		style="@style/font11"
 		android:paddingTop="10dp"
+		android:gravity="center"
 		android:layout_gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"/>

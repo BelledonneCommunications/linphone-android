@@ -25,8 +25,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import org.linphone.core.LinphoneAddress.TransportType;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.mediastream.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,7 +82,7 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 				}
 			}
 
-			AssistantActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), displayName.getText().toString(), domain.getText().toString(),transport);
+			AssistantActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), displayName.getText().toString(), domain.getText().toString(), transport);
 		}
 	}
 
