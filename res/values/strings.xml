@@ -48,6 +48,7 @@
 	<string name="settings">Settings</string>
 	<string name="connect">Connection</string>
 	<string name="decline">Decline</string>
+	<string name="conference">Conference</string>
 
 	<!-- Launch screen -->
 	<string name="app_description">the libre SIP client</string>

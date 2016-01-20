@@ -5,19 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<fragment
-		android:id="@+id/status"
-		android:name="org.linphone.StatusFragment"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		tools:layout="@layout/status" />
-
-
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/side_menu"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/status">
+		android:layout_height="match_parent">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
@@ -28,7 +19,7 @@
 				android:id="@+id/fragmentContainer"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:orientation="horizontal" />
+				android:orientation="horizontal"/>
 
 			<FrameLayout
 				android:layout_width="match_parent"
@@ -37,7 +28,8 @@
 
 				<RelativeLayout
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
+					android:layout_height="wrap_content"
+					android:layout_marginTop="40dp">
 
 					<LinearLayout
 						android:id="@+id/conference_list"
@@ -193,18 +185,6 @@
 				</RelativeLayout>
 			</FrameLayout>
 
-			<org.linphone.ui.Numpad
-				android:id="@+id/numpad"
-				android:background="@color/colorF"
-				android:contentDescription="@string/content_description_numpad"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				android:layout_margin="10dp"
-				android:layout_above="@id/menu"
-				android:layout_centerHorizontal="true"
-				android:layout_centerVertical="true"/>
-
 			<LinearLayout
 				android:id="@+id/menu"
 				android:layout_width="wrap_content"
@@ -295,7 +275,7 @@
 						android:background="@color/colorC"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_weight="1"
+						android:layout_weight="0.8"
 						android:padding="18dp" />
 
 					<ImageView
@@ -305,7 +285,7 @@
 						android:layout_gravity="center"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_weight="0.5"
+						android:layout_weight="0.4"
 						android:padding="15dp"/>
 
 					<ImageView
@@ -314,7 +294,7 @@
 						android:background="@color/colorC"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_weight="1"
+						android:layout_weight="0.8"
 						android:padding="18dp"/>
 				</LinearLayout>
 
@@ -343,7 +323,7 @@
 					android:id="@+id/route_bluetooth"
 					android:src="@drawable/route_bluetooth"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -353,7 +333,7 @@
 					android:id="@+id/add_call"
 					android:src="@drawable/options_add_call"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -384,7 +364,7 @@
 					android:id="@+id/route_earpiece"
 					android:src="@drawable/route_earpiece"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -394,7 +374,7 @@
 					android:id="@+id/transfer"
 					android:src="@drawable/options_transfer_call"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -425,7 +405,7 @@
 					android:src="@drawable/route_speaker"
 					android:background="@drawable/button_background"
 					android:visibility="invisible"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_weight="0.5"/>
@@ -435,7 +415,7 @@
 					android:src="@drawable/options_start_conference"
 					android:background="@drawable/button_background"
 					android:visibility="invisible"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_weight="0.5"/>
@@ -444,9 +424,22 @@
 
 		</RelativeLayout>
 
+		<org.linphone.ui.Numpad
+			android:id="@+id/numpad"
+			android:background="@color/colorF"
+			android:contentDescription="@string/content_description_numpad"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:layout_margin="10dp"
+			android:layout_above="@id/menu"
+			android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true"/>
+
 		<RelativeLayout
 			android:id="@+id/side_menu_content"
 			android:background="@color/colorH"
+			android:layout_marginTop="40dp"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_gravity="left">
@@ -456,5 +449,12 @@
 		</RelativeLayout>
 
 	</android.support.v4.widget.DrawerLayout>
+
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		tools:layout="@layout/status" />
 
 </RelativeLayout>
