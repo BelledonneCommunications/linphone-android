@@ -125,12 +125,12 @@ public class CreateAccountFragment extends Fragment {
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						createAccount(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
 					}
 				});
-				builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 					}
 				});
