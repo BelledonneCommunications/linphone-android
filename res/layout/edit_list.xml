@@ -43,4 +43,10 @@
 		android:layout_toLeftOf="@id/delete"
 		android:visibility="gone"/>
 
+	<View
+		android:background="@color/colorF"
+		android:layout_alignParentBottom="true"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
+
 </RelativeLayout>
