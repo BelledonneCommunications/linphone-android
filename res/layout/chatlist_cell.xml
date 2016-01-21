@@ -28,7 +28,6 @@
 	    android:layout_height="wrap_content"
 	    android:textAppearance="?android:attr/textAppearanceSmall"
 	    android:textColor="@color/colorB"
-	    android:text="@string/draft"
 	    android:layout_marginLeft="5dp"
 	    android:layout_marginRight="5dp" />
 	

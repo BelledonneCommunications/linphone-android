@@ -73,14 +73,11 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -113,10 +110,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ImageView edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage, cancel;
 	private TextView contactName, remoteComposing;
 	private ImageView back, backToCall;
-	private AutoCompleteTextView searchContactField;
+	private EditText searchContactField;
 	private LinearLayout topBar, editList;
 	private LinearLayout textLayout;
-	private ListView messagesList;
+	private SearchContactsListAdapter searchAdapter;
+	private ListView messagesList, resultContactsSearch;
+	private LayoutInflater inflater;
 
 	private boolean isEditMode = false;
 	private Contact contact;
@@ -144,6 +143,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		// Retain the fragment across configuration changes
 		setRetainInstance(true);
 
+		this.inflater = inflater;
+
 		if(getArguments() == null || getArguments().getString("SipUri") == null) {
 			newChatConversation = true;
 		} else {
@@ -156,7 +157,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		//Initialize UI
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		messagesList = (ListView) view.findViewById(R.id.chat_message_list);
-		searchContactField = (AutoCompleteTextView) view.findViewById(R.id.search_contact_field);
+		searchContactField = (EditText) view.findViewById(R.id.search_contact_field);
+		resultContactsSearch = (ListView) view.findViewById(R.id.result_contacts);
 
 		editList = (LinearLayout) view.findViewById(R.id.edit_list);
 		textLayout = (LinearLayout) view.findViewById(R.id.message_layout);
@@ -190,14 +192,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		delete.setOnClickListener(this);
 
 		if (newChatConversation) {
-			messagesList.setVisibility(View.GONE);
-			searchContactField.setVisibility(View.VISIBLE);
-			searchContactField.setAdapter(new SearchContactsListAdapter(inflater));
-			searchContactField.showDropDown();
-			searchContactField.requestFocus();
-			edit.setVisibility(View.INVISIBLE);
-			startCall.setVisibility(View.INVISIBLE);
-			contactName.setVisibility(View.INVISIBLE);
+			initNewChatConversation();
 		}
 
 		//Manage multiline
@@ -608,6 +603,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		if(!newChatConversation) {
 			initChatRoom(sipUri);
+			searchContactField.setVisibility(View.GONE);
+			resultContactsSearch.setVisibility(View.GONE);
 			remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 		}
 		super.onResume();
@@ -955,6 +952,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void exitNewConversationMode(Contact c, String address, String username){
 		sipUri = address;
 		searchContactField.setVisibility(View.GONE);
+		resultContactsSearch.setVisibility(View.GONE);
 		messagesList.setVisibility(View.VISIBLE);
 		contactName.setVisibility(View.VISIBLE);
 		edit.setVisibility(View.VISIBLE);
@@ -962,6 +960,31 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		startCall.setVisibility(View.VISIBLE);
 		newChatConversation = false;
 		initChatRoom(sipUri);
+	}
+
+	private void initNewChatConversation(){
+		messagesList.setVisibility(View.GONE);
+		edit.setVisibility(View.INVISIBLE);
+		startCall.setVisibility(View.INVISIBLE);
+		contactName.setVisibility(View.INVISIBLE);
+
+		resultContactsSearch.setVisibility(View.VISIBLE);
+		searchAdapter = new SearchContactsListAdapter(null);
+		resultContactsSearch.setAdapter(searchAdapter);
+		searchContactField.setVisibility(View.VISIBLE);
+		searchContactField.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+										  int after) {}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				searchContacts(searchContactField.getText().toString());
+			}
+		});
 	}
 
 	private class ContactAddress {
@@ -974,49 +997,38 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	class SearchContactsListAdapter extends BaseAdapter implements Filterable {
+	private void searchContacts(String search) {
+		if (search == null || search.length() == 0) {
+			resultContactsSearch.setAdapter(new SearchContactsListAdapter(null));
+			return;
+		}
+
+		List<ContactAddress> result = new ArrayList<ContactAddress>();
+		if(search != null) {
+			for (ContactAddress c : searchAdapter.contacts) {
+				String address = c.address;
+				if(address.startsWith("sip:")) address = address.substring(4);
+				if (c.contact.getName().toLowerCase().startsWith(search) || address.toLowerCase().startsWith(search)) {
+					result.add(c);
+				}
+			}
+		}
+
+		resultContactsSearch.setAdapter(new SearchContactsListAdapter(result));
+		searchAdapter.notifyDataSetChanged();
+	}
+
+	class SearchContactsListAdapter extends BaseAdapter {
 		private List<ContactAddress> contacts;
 		private LayoutInflater mInflater;
 
-		SearchContactsListAdapter(LayoutInflater inflater) {
+		SearchContactsListAdapter(List<ContactAddress> contactsList) {
 			mInflater = inflater;
-			contacts = getContactsList();
-		}
-
-		@Override
-		public Filter getFilter() {
-			return new Filter() {
-				@Override
-				protected void publishResults(CharSequence constraint, FilterResults results) {
-					if (results.count > 0) {
-						contacts.clear();
-						contacts = (List<ContactAddress>) results.values;
-						notifyDataSetChanged();
-					} else {
-						contacts.clear();
-						contacts = getContactsList();
-						notifyDataSetInvalidated();
-					}
-				}
-
-				@Override
-				protected FilterResults performFiltering(CharSequence constraint) {
-					List<ContactAddress> result = new ArrayList<ContactAddress>();
-					if(constraint != null) {
-						for (ContactAddress c : contacts) {
-							String address = c.address;
-							if(address.startsWith("sip:")) address = address.substring(4);
-							if (c.contact.getName().toLowerCase().startsWith(constraint.toString()) || address.toLowerCase().startsWith(constraint.toString())) {
-								result.add(c);
-							}
-						}
-					}
-					FilterResults r = new FilterResults();
-					r.values = result;
-					r.count = result.size();
-					return r;
-				}
-			};
+			if(contactsList == null){
+				contacts = getContactsList();
+			} else {
+				contacts = contactsList;
+			}
 		}
 
 		public List<ContactAddress>getContactsList(){
