@@ -102,9 +102,6 @@
 	<string name="pref_background_mode_key">pref_background_mode_key</string>
 	<string name="pref_codec_bitrate_limit_key">pref_codec_bitrate_limit_key</string>
 	<string name="pref_adaptive_rate_control_key">pref_adaptive_rate_control_key</string>
-	<string name="pref_adaptive_rate_algorithm_key">pref_adaptive_rate_algorithm</string>
-	<string name="pref_adaptive_rate_algorithm_simple_key">pref_adaptive_rate_algorithm_simple_key</string>
-	<string name="pref_adaptive_rate_algorithm_stateful_key">pref_adaptive_rate_algorithm_stateful_key</string>
 
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
