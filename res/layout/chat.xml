@@ -132,20 +132,31 @@
 		android:layout_margin="10dp"
 		android:layout_below="@+id/top_bar"/>
 
-
-
-	<AutoCompleteTextView
+	<EditText
 		android:id="@+id/search_contact_field"
-		android:background="@drawable/resizable_textfield"
-		android:hint="@string/search"
-		android:inputType="textPersonName"
-		android:completionThreshold="1"
+		android:contentDescription="@string/content_description_search"
 		android:textCursorDrawable="@null"
-		android:visibility="gone"
-		android:layout_margin="10dp"
-		android:layout_below="@id/top_bar"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
-		android:paddingRight="5dp"/>
+		android:visibility="gone"
+		android:textColor="@android:color/black"
+		android:background="@drawable/resizable_textfield"
+		android:gravity="center"
+		android:layout_margin="5dp"
+		android:layout_below="@id/top_bar"
+		android:inputType="textPersonName"/>
+
+	<ListView
+		android:id="@+id/result_contacts"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:divider="@color/colorE"
+		android:visibility="gone"
+		android:layout_below="@id/search_contact_field"
+		android:fastScrollAlwaysVisible="true"
+		android:fastScrollEnabled="true"
+		android:dividerHeight="1dp"
+		android:layout_above="@+id/footer"/>
+
 
 </RelativeLayout>
