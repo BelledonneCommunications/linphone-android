@@ -713,9 +713,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		lInputStream.close();
 	}
 
-	public void loadConfig(int config_rc){
+	public void loadConfig(){
 		try {
-			copyIfNotExist(config_rc, mConfigFile);
+			copyIfNotExist(R.raw.configrc, mConfigFile);
 		} catch (Exception e){
 			Log.w(e);
 		}
@@ -824,7 +824,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private Vibrator mVibrator;
 
 	public void displayWarning(LinphoneCore lc, String message) {}
-	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {}
+
+	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
+		//Dialog authInfoPassword = LinphoneActivity.instance().displayPasswordDialog(username, realm, domain);
+		//authInfoPassword.show();
+	}
 	public void byeReceived(LinphoneCore lc, String from) {}
 	public void displayMessage(LinphoneCore lc, String message) {}
 	public void show(LinphoneCore lc) {}
@@ -1288,7 +1292,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.i("proximity sensor already active for " + activity.getLocalClassName());
 			return;
 		}
-
 		if (sProximityDependentActivities.isEmpty()) {
 			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
 			Sensor s = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);

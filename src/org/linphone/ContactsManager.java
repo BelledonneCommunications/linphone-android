@@ -567,7 +567,6 @@ public class ContactsManager {
 			}
 
 			contactCursor = getFriendListCursor(contactList,true);
-			Log.w(contactCursor.getCount());
 			return;
 		}
 

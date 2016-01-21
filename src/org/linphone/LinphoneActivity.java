@@ -77,6 +77,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -133,9 +135,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (isTablet() && getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
@@ -233,9 +233,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					// Convert LinphoneCore message for internalization
 					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getReason() == Reason.NotFound) {
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getReason() == Reason.Media) {
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.Media) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
 					} else if (message != null && state == State.Error) {
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
@@ -313,7 +313,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		findViewById(R.id.status).setVisibility(View.GONE);
-		findViewById(R.id.fragmentContainer).setPadding(0, 0, 0, 0);
 	}
 
 	public void showStatusBar() {
@@ -849,6 +848,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
 			}
 		} else {
+			LinphoneManager.getLc().resetMissedCallsCount();
 			missedCalls.clearAnimation();
 			missedCalls.setVisibility(View.GONE);
 		}
@@ -892,11 +892,47 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
 		d.setAlpha(200);
 		dialog.setContentView(R.layout.dialog);
-		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
+		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 		dialog.getWindow().setBackgroundDrawable(d);
 
 		TextView customText = (TextView) dialog.findViewById(R.id.customText);
 		customText.setText(text);
+		return dialog;
+	}
+
+	public Dialog displayWrongPasswordDialog(final String username, final String realm, final String domain){
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+		d.setAlpha(200);
+		dialog.setContentView(R.layout.input_dialog);
+		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+		dialog.getWindow().setBackgroundDrawable(d);
+
+		TextView customText = (TextView) dialog.findViewById(R.id.customText);
+		customText.setText(getString(R.string.error_bad_credentials));
+
+		Button retry = (Button) dialog.findViewById(R.id.retry);
+		Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+		retry.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String newPassword = ((EditText) dialog.findViewById(R.id.password)).getText().toString();
+				LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, null, newPassword, null, realm, domain);
+				LinphoneManager.getLc().addAuthInfo(authInfo);
+				LinphoneManager.getLc().refreshRegisters();
+				dialog.dismiss();
+			}
+		});
+
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+
 		return dialog;
 	}
 
