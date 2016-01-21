@@ -7,10 +7,10 @@
 	<string name="addressbook_label">Linphone</string>
 	<string name="notification_title">Linphone</string>
 	<string name="wait_dialog_text">Starting up</string>
-	<string name="notification_registered">Registered to %s </string>
-	<string name="notification_register_failure">Fails to register to %s</string>
-	<string name="about_text">Linphone %s SIP (rfc 3261) compatible phone under GNU Public License V2</string>
-	<string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2015 Belledonne Communications</string>
+	<string name="notification_registered">%s registered</string>
+	<string name="notification_register_failure">%s failed to register</string>
+	<string name="about_text">Linphone %s SIP (RFC 3261) compatible phone under GNU Public License V2</string>
+	<string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2016 Belledonne Communications</string>
 
 	<string name="sync_account_type">org.linphone</string>
 	<string name="sync_account_name">linphone contacts</string>
@@ -18,7 +18,7 @@
 
 	<string name="history_date_format">EEE, d MMM</string>
 	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
-	<string name="messages_date_format">dd/MM, HH:mm </string>
+	<string name="messages_date_format">dd/MM, HH:mm</string>
 	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">HH:mm</string>
 	<string name="picture_name_format">linphone-mms-%s.jpg</string>
@@ -30,9 +30,9 @@
 	<string name="password">Password</string>
 	<string name="confirm_password">Password confirmation</string>
 	<string name="domain">Domain</string>
-	<string name="remote_provisioning_url">Url</string>
+	<string name="remote_provisioning_url">URL</string>
 	<string name="email">Email</string>
-	<string name="delete_text">Are you sure you want to delete your selection ?</string>
+	<string name="delete_text">Are you sure you want to delete your selection?</string>
 	<string name="delete">Delete</string>
 	<string name="retry">Retry</string>
 	<string name="cancel">Cancel</string>
@@ -57,11 +57,11 @@
 	<string name="welcome">Welcome</string>
 	<string name="assistant">Assistant</string>
 	<string name="assistant_create_account">Create account</string>
+	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
 	<string name="assistant_welcome_desc">This assistant will help you to use a SIP account for your calls.</string>
-	<string name="assistant_linphone_login_desc">Enter your username and password of your linphone.org account</string>
-	<string name="assistant_remote_provisioning_desc">Please provide your provisioning url</string>
+	<string name="assistant_linphone_login_desc">Enter your username and password of Linphone account</string>
 	<string name="assistant_login_desc">Enter your username and password with your SIP domain</string>
-	<string name="assistant_validate_account">An email has been sent to the address you gave. In order to activate your account, you need to click on the link inside it. Once it is done, come back here and click on the button.</string>
+	<string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
 	<string name="transport">Transport</string>
 	<string name="assistant_login_linphone">Use Linphone account</string>
 	<string name="assistant_login_generic">Use SIP account</string>
@@ -74,19 +74,19 @@
 	<string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
 	<string name="assistant_fetch_apply">Fetch and apply</string>
 	<string name="assistant_login">Login</string>
-	<string name="assistant_ec_calibration">Echo canceller calibration in progress</string>
+	<string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
 	<string name="assistant_remote_provisioning_login">Enter your login</string>
 	<string name="assistant_account_not_validated">Your account has not been validated yet.</string>
 	<string name="assistant_account_validated">Your account has been validated.</string>
 	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
 	<string name="wizard_failed">An error occurred, try again later.</string>
-	<string name="wizard_server_unavailable">Server unreachable, verify your internet connection.</string>
+	<string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>
-	<string name="wizard_username_incorrect">Your username is not valid.</string>
-	<string name="wizard_email_incorrect">Your email is not valid.</string>
-	<string name="wizard_password_incorrect">Your password is not valid (6 characters min).</string>
-	<string name="wizard_passwords_unmatched">Passwords entered are different.</string>
-	<string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from what you entered to match some requirements.\r\nDo you accept ?</string>
+	<string name="wizard_username_incorrect">Your username is invalid.</string>
+	<string name="wizard_email_incorrect">Your email is invalid.</string>
+	<string name="wizard_password_incorrect">Your password is invalid (6 characters min).</string>
+	<string name="wizard_passwords_unmatched">Passwords do not match.</string>
+	<string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from your input to match requirements.\r\nDo you accept?</string>
 
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>
@@ -94,7 +94,7 @@
 	<!-- History -->
 	<string name="no_call_history">No call in your history</string>
 	<string name="no_missed_call_history">No missed call in your history</string>
-	<string name="delete_history_log">Do you want to delete selected log?</string>
+	<string name="delete_history_log">Do you want to delete selected call log?</string>
 	<string name="today">Today</string>
 	<string name="yesterday">Yesterday</string>
 
@@ -127,7 +127,7 @@
 
 	<!-- Status Bar -->
 	<string name="status_connected">Registered</string>
-	<string name="status_not_connected">Not Registered</string>
+	<string name="status_not_connected">Not registered</string>
 	<string name="status_in_progress">Registration in progress</string>
 	<string name="status_error">Registration failed</string>
 	<string name="voicemail_unread"> unread messages</string>
@@ -143,10 +143,10 @@
 	<!-- Call -->
 	<string name="incoming_call">incoming call</string>
 	<string name="outgoing_call">outgoing call</string>
-	<string name="add_video_dialog">Your correspondent would like to turn on the video</string>
+	<string name="add_video_dialog">Your correspondent would like to turn on video</string>
 	<string name="no_current_call">No active call</string>
 	<string name="call_paused_by_remote">Your correspondent paused the call</string>
-	<string name="couldnt_accept_call">An error occurred while accepting call</string>
+	<string name="couldnt_accept_call">An error occurred while accepting the call</string>
 	<string name="zrtp_dialog">ZRTP token is %s\nYou should only accept if you have the same token as your correspondent</string>
 	<string name="unknown_incoming_call_name">Unknown</string>
 	<string name="call_stats_audio">Audio</string>
@@ -171,20 +171,20 @@
 	<!-- Errors -->
 	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>
 	<string name="error">Error</string>
-	<string name="warning_wrong_destination_address">Cannot build destination address from [%s]</string>
+	<string name="warning_wrong_destination_address">Cannot build destination address from %s</string>
 	<string name="error_unknown">Unknown error</string>
 	<string name="error_call_declined">Call declined</string>
 	<string name="error_user_not_found">User not found</string>
 	<string name="error_incompatible_media">Incompatible media parameters</string>
-	<string name="error_low_bandwidth">Your correspondent has low bandwidth, video can\'t be started</string>
+	<string name="error_low_bandwidth">Your correspondent has low bandwidth, video cannot be started</string>
 	<string name="error_network_unreachable">Network is unreachable</string>
 	<string name="error_bad_credentials">Bad credentials</string>
 	<string name="error_unauthorized">Unauthorized</string>
 	<string name="error_io_error">Network error</string>
-	<string name="download_image_failed">Download failed. Please check your internet access or try again later.</string>
+	<string name="download_image_failed">Download failed. Please check your network connection or try again later.</string>
 	<string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
 	<string name="remote_provisioning_again_title">Remote provisioning</string>
-	<string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string>
+	<string name="remote_provisioning_again_message">Do you want to change the provisioning URI?</string>
 
 	<!-- Account Settings -->
 	<string name="pref_sipaccount">SIP Account</string>
@@ -205,9 +205,9 @@
 	<string name="pref_avpf_rr_interval"> AVPF regular RTCP interval in seconds (between 1 and 5)</string>
 	<string name="pref_escape_plus">Replace + by 00</string>
 	<string name="pref_auth_userid">Auth userid</string>
-	<string name="pref_help_auth_userid">Enter authentication userid (optionnal)</string>
+	<string name="pref_help_auth_userid">Enter authentication userid (optional)</string>
 	<string name="pref_display_name">Display name</string>
-	<string name="pref_help_display_name">Enter display name (optionnal)</string>
+	<string name="pref_help_display_name">Enter display name (optional)</string>
 	<string name="pref_prefix">Prefix</string>
 	<string name="pref_transport">Transport</string>
 	<string name="pref_transport_udp">UDP</string>
@@ -239,13 +239,12 @@
 	<string name="pref_audio_title">Audio</string>
 	<string name="pref_echo_cancellation">Echo cancellation</string>
 	<string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
-	<string name="pref_echo_canceller_calibration">Echo canceller calibration</string>
+	<string name="pref_echo_canceller_calibration">Echo canceler calibration</string>
 	<string name="ec_calibrating">Calibrating…</string>
-	<string name="ec_calibrated">Calibrated [%s ms]</string>
+	<string name="ec_calibrated">Calibrated in %s ms</string>
 	<string name="no_echo">No echo</string>
 	<string name="failed">failed</string>
 	<string name="pref_adaptive_rate_control">Adaptive rate control</string>
-	<string name="pref_adaptive_rate_algorithm">Adaptive rate algorithm</string>
 	<string name="pref_codec_bitrate_limit">Codec bitrate limit</string>
 	<string name="pref_codecs">Codecs</string>
 
@@ -267,11 +266,11 @@
 	<string name="pref_call_title">Call</string>
 	<string name="pref_rfc2833_dtmf">Send RFC2833 DTMFs</string>
 	<string name="pref_sipinfo_dtmf">Send SIP INFO DTMFs</string>
-	<string name="pref_voice_mail">Voice mail uri</string>
+	<string name="pref_voice_mail">Voice mail URI</string>
 
 	<!-- Network settings -->
 	<string name="pref_network_title">Network</string>
-	<string name="pref_wifi_only">Use wifi only</string>
+	<string name="pref_wifi_only">Use WiFi only</string>
 	<string name="pref_stun_server">Stun server</string>
 	<string name="pref_ice_enable">Enable ICE</string>
 	<string name="pref_upnp_enable">Enable UPNP</string>
@@ -291,7 +290,7 @@
 	<string name="pref_background_mode">Background mode</string>
 	<string name="pref_animation_enable_title">Enable Animations</string>
 	<string name="pref_autostart">Start at boot time</string>
-	<string name="pref_incoming_call_timeout_title">Incoming call timeout (in seconds)</string>
+	<string name="pref_incoming_call_timeout_title">Incoming call hangup (in seconds)</string>
 	<string name="pref_image_sharing_server_title">Sharing server</string>
 	<string name="pref_remote_provisioning_title">Remote provisioning</string>
 	<string name="pref_primary_account_title">Primary account</string>
@@ -323,7 +322,7 @@
 	<string name="content_description_dial_back">Dial back</string>
 	<string name="content_description_contact_picture">Contact picture</string>
 	<string name="content_description_send_message">Send message</string>
-	<string name="content_description_detail">Detail</string>
+	<string name="content_description_detail">Details</string>
 	<string name="content_description_delete">Delete button</string>
 	<string name="content_description_add">Add button</string>
 	<string name="content_description_new_discussion">New discussion</string>
