@@ -713,15 +713,15 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		lInputStream.close();
 	}
 
-	public void loadConfig(){
-		try {
-			copyIfNotExist(R.raw.configrc, mConfigFile);
-		} catch (Exception e){
-			Log.w(e);
-		}
-		LinphonePreferences.instance().setRemoteProvisioningUrl("file://" + mConfigFile);
-		getLc().getConfig().setInt("misc","transient_provisioning",1);
-	}
+	//public void loadConfig(){
+	//	try {
+	//		copyIfNotExist(R.raw.configrc, mConfigFile);
+	//	} catch (Exception e){
+	//		Log.w(e);
+	//	}
+	//	LinphonePreferences.instance().setRemoteProvisioningUrl("file://" + mConfigFile);
+	//	getLc().getConfig().setInt("misc","transient_provisioning",1);
+	//}
 
 
 	public boolean detectVideoCodec(String mime) {
