@@ -7,12 +7,12 @@
 		android:paddingBottom="5dp">
 
 		<EditText
-			android:textCursorDrawable="@null"
 			android:id="@+id/numoraddr"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:textColor="@android:color/black"
 			android:background="@drawable/resizable_textfield"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			style="@style/font6"
+			android:textCursorDrawable="@null"
 			android:inputType="textEmailAddress"
 			android:layout_weight="0.09"/>
 
@@ -22,7 +22,7 @@
 			android:contentDescription="@string/content_description_add"
 			android:layout_alignParentRight="true"
 			android:layout_width="match_parent"
-			android:layout_height="30dp"
+			android:layout_height="40dp"
 			android:layout_weight="0.91"
 			android:layout_gravity="center"
 			android:paddingLeft="5dp"/>
