@@ -975,7 +975,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		AddressType address = new AddressText(this, null);
 		address.setDisplayedName(name);
 		address.setText(number);
-		LinphoneManager.getInstance().newOutgoingCall(address);
+		
+		LinphoneCore lc = LinphoneManager.getLc();
+		if (DialerFragment.isCallTransfer() && lc != null && lc.getCurrentCall() != null) {
+			lc.transferCall(lc.getCurrentCall(), number);
+			DialerFragment.instance().resetLayout(false);
+		} else {
+			LinphoneManager.getInstance().newOutgoingCall(address);
+		}
 	}
 
 	public void setAddressAndGoToDialer(String number) {

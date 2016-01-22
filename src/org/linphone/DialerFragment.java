@@ -138,6 +138,10 @@ public class DialerFragment extends Fragment {
 		return instance;
 	}
 	
+	public static boolean isCallTransfer() {
+		return isCallTransferOngoing;
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
