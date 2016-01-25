@@ -68,6 +68,7 @@ public class StatusFragment extends Fragment {
 	private TimerTask mTask;
 	private LinphoneCoreListenerBase mListener;
 	private Dialog ZRTPdialog = null;
+	private int mDisplayedQuality = -1;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -271,12 +272,8 @@ public class StatusFragment extends Fragment {
 					mCallQualityUpdater = null;
 					return;
 				}
-				
-				int oldQuality = 0;
 				float newQuality = mCurrentCall.getCurrentQuality();
-				if ((int) newQuality != oldQuality) {
-					updateQualityOfSignalIcon(newQuality);
-				}
+				updateQualityOfSignalIcon(newQuality);
 				
 				if (isInCall) {
 					refreshHandler.postDelayed(this, 1000);
@@ -287,6 +284,9 @@ public class StatusFragment extends Fragment {
 	}
 	
 	void updateQualityOfSignalIcon(float quality) {
+		int iQuality = (int) quality;
+		
+		if (iQuality == mDisplayedQuality) return;
 		if (quality >= 4) // Good Quality
 		{
 			callQuality.setImageResource(
@@ -308,6 +308,7 @@ public class StatusFragment extends Fragment {
 			callQuality.setImageResource(
 					R.drawable.call_quality_indicator_0);
 		}
+		mDisplayedQuality = iQuality;
 	}
 	
 	@Override
