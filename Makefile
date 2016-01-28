@@ -418,8 +418,8 @@ prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(
 
 
 #Matroska2
-MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska
-MATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska
+MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska-c
+MATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska-c
 ifeq ($(BUILD_MATROSKA), 1)
 prepare-matroska2: $(MATROSKA_SRC_DIR)/patch_applied.txt
 else

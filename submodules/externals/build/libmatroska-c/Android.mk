@@ -1,4 +1,4 @@
-LOCAL_PATH:=$(call my-dir)/../../libmatroska
+LOCAL_PATH:=$(call my-dir)/../../libmatroska-c
 
 include $(CLEAR_VARS)
 

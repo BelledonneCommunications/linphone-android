@@ -54,7 +54,7 @@ include $(linphone-root-dir)/submodules/externals/build/gsm/Android.mk
 
 # Matroska
 ifeq ($(BUILD_MATROSKA), 1)
-include $(linphone-root-dir)/submodules/externals/build/libmatroska/Android.mk
+include $(linphone-root-dir)/submodules/externals/build/libmatroska-c/Android.mk
 endif
 
 include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
