@@ -43,6 +43,7 @@ You need to edit the custom_rules.xml file:
 1) look for the property named "linphone.package.name" and change it value accordingly
 2) also update the values in the AndroidManifest file where the comment <!-- Change package ! --> appears
 3) update the path to the sounds in the linphonerc-factory files in the res folders and optionally change default sip account on linphonerc-default
+4) change the package name also in the files: res/xml/syncadapter.xml, res/xml/contacts.xml and res/xml/non_localizable_custom where <!-- Change package ! --> appears
 4) run again the Makefile script by calling "make"
 
 To run the liblinphone test suite on android

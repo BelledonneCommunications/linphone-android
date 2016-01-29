@@ -73,7 +73,7 @@
 			 </intent-filter>
 			 
             <intent-filter>
-                <data android:mimeType="vnd.android.cursor.item/org.linphone.profile" />
+                <data android:mimeType="vnd.android.cursor.item/org.linphone.profile" /> <!-- Change package ! -->
 		        <action android:name="android.intent.action.VIEW" />
 		        <category android:name="android.intent.category.BROWSABLE" />
 		        <category android:name="android.intent.category.DEFAULT" />
