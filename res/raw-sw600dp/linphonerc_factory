@@ -7,7 +7,6 @@ inc_timeout=15
 register_only_when_network_is_up=1
 auto_net_state_mon=0
 auto_answer_replacing_calls=1
-media_encryption_mandatory=0
 ping_with_options=0
 root_ca=/data/data/org.linphone/files/rootca.pem
 
@@ -30,3 +29,4 @@ dtmf_player_amp=0.1
 [misc]
 max_calls=10
 log_collection_upload_server_url=https://www.linphone.org:444/lft.php
+user_certificates_path=/data/data/org.linphone/files
