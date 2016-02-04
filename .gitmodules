@@ -91,3 +91,9 @@
 [submodule "submodules/mscodec2"]
 	path = submodules/mscodec2
 	url = git://git.linphone.org/mscodec2.git
+[submodule "submodules/bctoolbox"]
+	path = submodules/bctoolbox
+	url = git://git.linphone.org/bctoolbox.git
+[submodule "submodules/externals/mbedtls"]
+	path = submodules/externals/mbedtls
+	url = https://github.com/ARMmbed/mbedtls.git

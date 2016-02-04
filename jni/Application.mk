@@ -55,8 +55,13 @@ ifeq ($(BUILD_UPNP),1)
 APP_MODULES += libupnp
 endif
 
+APP_MODULES +=bctoolbox
 ifeq ($(BUILD_TLS),1)
+ifeq ($(BUILD_BCTOOLBOX_MBEDTLS),1)
+APP_MODULES +=mbedtls
+else
 APP_MODULES +=polarssl
+endif
 endif
 endif
 
