@@ -130,25 +130,6 @@ endif
 
 install: install-apk run-linphone
 
-#libilbc
-LIBILBC_SRC_DIR=$(TOPDIR)/submodules/libilbc-rfc3951
-LIBILBC_BUILD_DIR=$(LIBILBC_SRC_DIR)
-$(LIBILBC_SRC_DIR)/configure:
-	cd $(LIBILBC_SRC_DIR) && ./autogen.sh
-
-$(LIBILBC_BUILD_DIR)/Makefile: $(LIBILBC_SRC_DIR)/configure
-	cd $(LIBILBC_BUILD_DIR) && \
-	./configure \
-
-$(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
-	cd $(LIBILBC_BUILD_DIR)/downloads && make \
-	|| ( echo "iLBC prepare stage failed" ; exit 1 )
-
-ifeq ($(BUILD_ILBC),1)
-prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
-else
-prepare-ilbc:
-endif
 
 #ffmpeg
 ifeq ($(BUILD_VIDEO),1)
@@ -430,7 +411,7 @@ $(MATROSKA_SRC_DIR)/patch_applied.txt: $(MATROSKA_BUILD_DIR)/fix_libmatroska2.pa
 	cd $(MATROSKA_SRC_DIR);	patch -p1 < $<; touch $@
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2 prepare-codec2
+prepare-sources: build-ffmpeg build-x264 build-openh264 build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2 prepare-codec2
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) BUILD_CODEC2=$(BUILD_CODEC2)\
