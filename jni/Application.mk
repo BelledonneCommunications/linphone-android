@@ -103,6 +103,13 @@ ifneq ($(BUILD_OPUS), 0)
 APP_MODULES += libopus
 endif
 
+ifeq ($(BUILD_ILBC), 1)
+APP_MODULES += libwebrtc_spl libwebrtc_ilbc libmswebrtc
+ifneq (,$(findstring armeabi,$(TARGET_ARCH_ABI)))
+APP_MODULES += libwebrtc_spl_neon
+endif
+endif
+
 ifneq ($(BUILD_WEBRTC_AECM), 0)
 APP_MODULES += libwebrtc_system_wrappers libwebrtc_spl libwebrtc_apm_utility libwebrtc_aecm libmswebrtc
 ifneq (,$(findstring armeabi,$(TARGET_ARCH_ABI)))
@@ -133,10 +140,6 @@ endif
 
 ifeq ($(BUILD_CODEC2), 1)
 APP_MODULES      +=libcodec2 libmscodec2
-endif
-
-ifeq ($(BUILD_ILBC), 1)
-APP_MODULES      +=libmsilbc
 endif
 
 ifeq ($(BUILD_SRTP), 1)
