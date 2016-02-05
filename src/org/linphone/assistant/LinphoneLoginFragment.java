@@ -50,10 +50,6 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener, 
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
-		
-		if (getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment)) {
-			view.findViewById(R.id.assistant_apply).setVisibility(View.GONE);
-		}
 
 		return view;
 	}
