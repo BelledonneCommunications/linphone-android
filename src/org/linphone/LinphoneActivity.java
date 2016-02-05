@@ -18,7 +18,6 @@ package org.linphone;
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import static android.content.Intent.ACTION_MAIN;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1098,7 +1097,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void quit() {
 		finish();
-		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+		stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 	}
 
 	@Override
@@ -1139,7 +1138,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		super.onResume();
 
 		if (!LinphoneService.isReady())  {
-			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
 		ContactsManager.getInstance().prepareContactsInBackground();
