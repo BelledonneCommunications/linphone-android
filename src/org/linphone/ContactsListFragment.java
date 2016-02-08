@@ -380,19 +380,23 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				if (sipContactsCursor != null && sipContactsCursor.getCount() == 0) {
 					noSipContact.setVisibility(View.VISIBLE);
 					contactsList.setVisibility(View.GONE);
+					edit.setEnabled(false);
 				} else if (sipContactsCursor != null) {
 					indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 					contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 					contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts(), sipContactsCursor));
+					edit.setEnabled(true);
 				}
 			} else {
 				if (allContactsCursor != null && allContactsCursor.getCount() == 0) {
 					noContact.setVisibility(View.VISIBLE);
 					contactsList.setVisibility(View.GONE);
+					edit.setEnabled(false);
 				} else if (allContactsCursor != null) {
 					indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 					contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 					contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
+					edit.setEnabled(true);
 				}
 			}
 		}
