@@ -369,10 +369,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		/*if(isTablet()){
 			speaker.setEnabled(false);
-		}*/
-
-//		speaker.setEnabled(false);
-
+		}
+		speaker.setEnabled(false);*/
 
 		//Options
 		addCall = (ImageView) findViewById(R.id.add_call);
@@ -456,39 +454,23 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void refreshIncallUi(){
-		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
-		if (pausedCalls.size() == 1) {
-			displayCallPaused(true);
-		} else {
-			displayCallPaused(false);
+		int confsize = 0;
+
+		if(LinphoneManager.getLc().isInConference()) {
+			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().isInConference() ? 1 : 0);
 		}
 
-		if(LinphoneManager.getLc().getCurrentCall() != null){
-			if(isTransferAllowed)
-				enabledTransferButton(true);
-			if(!isVideoEnabled(LinphoneManager.getLc().getCurrentCall()))
-				callInfo.setVisibility(View.VISIBLE);
-		}
+		//Enabled transfer button
+		if(isTransferAllowed)
+			enabledTransferButton(true);
 
-		if(LinphoneManager.getLc().getCallsNb() > 1){
-			callsList.setVisibility(View.VISIBLE);
+		//Enable conference button
+		if(LinphoneManager.getLc().getCallsNb() > 1 && LinphoneManager.getLc().getCallsNb() > confsize) {
 			enabledConferenceButton(true);
 		} else {
-			if(LinphoneManager.getLc().getCallsNb() == 1 && LinphoneManager.getLc().getCurrentCall() == null){
-				callsList.setVisibility(View.VISIBLE);
-				if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-					avatar_layout.setVisibility(View.GONE);
-				} else {
-					avatar_layout.setVisibility(View.VISIBLE);
-				}
-				if(isTransferAllowed)
-					enabledTransferButton(false);
-			} else {
-				callsList.setVisibility(View.GONE);
-			}
 			enabledConferenceButton(false);
-
 		}
+
 		refreshInCallActions();
 		refreshCallList(getResources());
 	}
@@ -761,7 +743,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mSensorManager.unregisterListener(this);
 		replaceFragmentAudioByVideo();
 		hideStatusBar();
-		displayVideoCall(false);
 	}
 
 	private void displayNoCurrentCall(boolean display){
@@ -786,9 +767,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mControlsLayout.setVisibility(View.VISIBLE);
 		mActiveCallHeader.setVisibility(View.VISIBLE);
 		callInfo.setVisibility(View.VISIBLE);
-		callsList.setVisibility(View.VISIBLE);
 		avatar_layout.setVisibility(View.VISIBLE);
-		mNoCurrentCall.setVisibility(View.GONE);
 		switchCamera.setVisibility(View.GONE);
 	}
 
@@ -877,7 +856,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			mActiveCallHeader.setVisibility(View.VISIBLE);
 			callInfo.setVisibility(View.VISIBLE);
 			avatar_layout.setVisibility(View.GONE);
-			mNoCurrentCall.setVisibility(View.GONE);
 			callsList.setVisibility(View.VISIBLE);
 			if (cameraNumber > 1) {
 				switchCamera.setVisibility(View.VISIBLE);
@@ -887,7 +865,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			mControlsLayout.setVisibility(View.GONE);
 			mActiveCallHeader.setVisibility(View.GONE);
 			switchCamera.setVisibility(View.GONE);
-			mNoCurrentCall.setVisibility(View.GONE);
 			callsList.setVisibility(View.GONE);
 		}
 	}
@@ -1371,11 +1348,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		refreshIncallUi();
 		handleViewIntent();
 
-		if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			displayVideoCall(false);
-		} else if(LinphoneManager.getLc().isInConference()) {
-			displayConference();
-		} else {
+		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
 			removeCallbacks();
 		}
@@ -1537,12 +1510,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			isCallPaused = true;
 			isInConference = false;
 		} else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {
-			//callState.setImageResource(R.drawable.call_state_ringing_default);
 			isCallPaused = false;
 			isInConference = false;
 		} else {
-			//callState.setImageResource(R.drawable.remove);
-//callState.setImageResource(R.drawable.play);
 			isInConference = isConferenceRunning && call.isInConference();
 			isCallPaused = false;
 		}
@@ -1573,15 +1543,36 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	public void refreshCallList(Resources resources) {
 		isConferenceRunning = LinphoneManager.getLc().isInConference();
-		if (isConferenceRunning) {
-			displayConference();
-			mNoCurrentCall.setVisibility(View.GONE);
+
+		//MultiCalls
+		if(LinphoneManager.getLc().getCallsNb() > 1){
+			callsList.setVisibility(View.VISIBLE);
+		}
+
+		//Active call
+		if(LinphoneManager.getLc().getCurrentCall() != null) {
+			displayNoCurrentCall(false);
+			if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()) && !isConferenceRunning) {
+				displayVideoCall(false);
+			} else {
+				displayAudioCall();
+			}
 		} else {
-			conferenceList.setVisibility(View.GONE);
+			showAudioView();
+			displayNoCurrentCall(true);
+			if(LinphoneManager.getLc().getCallsNb() == 1) {
+				callsList.setVisibility(View.VISIBLE);
+			}
+		}
+
+		//Conference
+		if (isConferenceRunning) {
+			displayConference(true);
+		} else {
+			displayConference(false);
 		}
 
 		if(callsList != null) {
-			callsList.setVisibility(View.VISIBLE);
 			callsList.removeAllViews();
 			int index = 0;
 
@@ -1592,11 +1583,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 			boolean isConfPaused = false;
 			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
-				if(call.isInConference() && !isConferenceRunning) {
+				if (call.isInConference() && !isConferenceRunning) {
 					isConfPaused = true;
 					index++;
 				} else {
-					if (call != LinphoneManager.getLc().getCurrentCall()) {
+					if (call != LinphoneManager.getLc().getCurrentCall() && !call.isInConference()) {
 						displayPausedCalls(resources, call, index);
 						index++;
 					} else {
@@ -1605,17 +1596,24 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				}
 			}
 
-			if(isConfPaused && !isConferenceRunning){
-				displayPausedCalls(resources, null, index);
+			if (!isConferenceRunning) {
+				if (isConfPaused) {
+					callsList.setVisibility(View.VISIBLE);
+					displayPausedCalls(resources, null, index);
+				}
+
 			}
 
-			if (LinphoneManager.getLc().getCurrentCall() == null && !isConferenceRunning) {
-				showAudioView();
-				mActiveCallHeader.setVisibility(View.GONE);
-				mNoCurrentCall.setVisibility(View.VISIBLE);
-				video.setEnabled(false);
-			}
 		}
+
+		//Paused by remote
+		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
+		if (pausedCalls.size() == 1) {
+			displayCallPaused(true);
+		} else {
+			displayCallPaused(false);
+		}
+
 
 	}
 
@@ -1634,9 +1632,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	private void enterConference() {
 		LinphoneManager.getLc().addAllToConference();
-		displayConferenceHeader();
-		mNoCurrentCall.setVisibility(View.GONE);
-		mActiveCallHeader.setVisibility(View.GONE);
 	}
 
 	public void pauseOrResumeConference() {
@@ -1653,7 +1648,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	private void displayConferenceParticipant(int index, final LinphoneCall call){
 		LinearLayout confView = (LinearLayout) inflater.inflate(R.layout.conf_call_control_row, container, false);
-		conferenceList.setId(index+1);
+		conferenceList.setId(index + 1);
 		TextView contact = (TextView) confView.findViewById(R.id.contactNameOrNumber);
 
 		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(),call.getRemoteAddress());
@@ -1685,26 +1680,29 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	}
 
-	private void displayConference(){
-		mControlsLayout.setVisibility(View.VISIBLE);
-		mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
-		mActiveCallHeader.setVisibility(View.GONE);
-		mNoCurrentCall.setVisibility(View.GONE);
-		callsList.setVisibility(View.VISIBLE);
-		conferenceList.removeAllViews();
+	private void displayConference(boolean isInConf){
+		if(isInConf) {
+			mControlsLayout.setVisibility(View.VISIBLE);
+			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+			mActiveCallHeader.setVisibility(View.GONE);
+			mNoCurrentCall.setVisibility(View.GONE);
+			conferenceList.removeAllViews();
 
-		//Conference Header
-		displayConferenceHeader();
+			//Conference Header
+			displayConferenceHeader();
 
-		//Conference participant
-		int index = 1;
-		for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
-			if(call.isInConference()) {
-				displayConferenceParticipant(index,call);
-				index++;
+			//Conference participant
+			int index = 1;
+			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
+				if (call.isInConference()) {
+					displayConferenceParticipant(index, call);
+					index++;
+				}
 			}
+			conferenceList.setVisibility(View.VISIBLE);
+		} else {
+			conferenceList.setVisibility(View.GONE);
 		}
-		conferenceList.setVisibility(View.VISIBLE);
 	}
 
 	public static Boolean isProximitySensorNearby(final SensorEvent event) {
