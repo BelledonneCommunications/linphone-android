@@ -5,8 +5,7 @@
 	android:background="@color/colorH"
 	android:orientation="vertical" >
 	
-  	<ImageView 
-        android:contentDescription="@string/content_description_welcome"
+  	<ImageView
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:adjustViewBounds="true"

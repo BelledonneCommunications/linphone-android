@@ -204,41 +204,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		} else {
 			backInCall.setVisibility(View.INVISIBLE);
 		}
-
-		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneActivity.instance());
-		boolean updateNeeded = prefs.getBoolean(getString(R.string.pref_first_time_linphone_chat_storage), true);
-		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
-		if (updateNeeded) {
-			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                private ProgressDialog pd;
-                @Override
-                protected void onPreExecute() {
-                         pd = new ProgressDialog(LinphoneActivity.instance());
-                         pd.setTitle(getString(R.string.wait));
-                         pd.setMessage(getString(R.string.importing_messages));
-                         pd.setCancelable(false);
-                         pd.setIndeterminate(true);
-                         pd.show();
-                }
-                @Override
-                protected Void doInBackground(Void... arg0) {
-                        try {
-                        	if (importAndroidStoredMessagedIntoLibLinphoneStorage()) {
-                				prefs.edit().putBoolean(getString(R.string.pref_first_time_linphone_chat_storage), false).commit();
-                				LinphoneActivity.instance().getChatStorage().restartChatStorage();
-                			}
-                        } catch (Exception e) {
-                               e.printStackTrace();
-                        }
-                        return null;
-                 }
-                 @Override
-                 protected void onPostExecute(Void result) {
-                         pd.dismiss();
-                 }
-			};
-        	task.execute((Void[])null);
-		}
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT_LIST);
