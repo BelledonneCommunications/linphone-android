@@ -104,7 +104,6 @@
 			android:inputType="textPersonName"/>
 
 		<ImageView
-			android:contentDescription="@string/content_description_cancel"
 			android:id="@+id/clearSearchField"
 			android:layout_width="30dp"
 			android:layout_height="30dp"
