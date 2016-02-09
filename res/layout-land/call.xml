@@ -228,7 +228,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:padding="20dp" />
+						android:padding="15dp" />
 
 					<ImageView
 						android:id="@+id/hang_up"
@@ -237,7 +237,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="0.5"
-						android:padding="15dp"/>
+						android:padding="12dp"/>
 
 					<ImageView
 						android:id="@+id/chat"
@@ -246,7 +246,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:padding="18dp"/>
+						android:padding="15dp"/>
 				</LinearLayout>
 
 
@@ -294,7 +294,7 @@
 						android:id="@+id/speaker"
 						android:src="@drawable/speaker_default"
 						android:background="@drawable/button_background"
-						android:padding="18dp"
+						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_weight="1" />
@@ -313,7 +313,7 @@
 						android:id="@+id/options"
 						android:src="@drawable/options_default"
 						android:background="@drawable/button_background"
-						android:padding="18dp"
+						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1" />
