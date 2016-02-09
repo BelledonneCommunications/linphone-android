@@ -4,11 +4,8 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-
-
-<TextView
+	<TextView
 		android:text="@string/assistant_remote_provisioning_title"
-		android:contentDescription="@string/content_description_welcome"
 		style="@style/font6"
 		android:textAllCaps="true"
 		android:paddingTop="20dp"

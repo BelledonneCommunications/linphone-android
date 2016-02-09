@@ -163,12 +163,12 @@ public class RemoteProvisioningActivity extends Activity {
 		new AlertDialog.Builder(RemoteProvisioningActivity.this)
 				.setTitle(getString(R.string.remote_provisioning_again_title))
 				.setMessage(getString(R.string.remote_provisioning_again_message))
-				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+				.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						setRemoteProvisioningAddressAndRestart(configUriParam);
 					}
 				})
-				.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						goToLinphoneActivity();
 					}

@@ -85,6 +85,7 @@
 	<string name="wizard_password_incorrect">Your password is invalid (6 characters min).</string>
 	<string name="wizard_passwords_unmatched">Passwords do not match.</string>
 	<string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from your input to match requirements.\r\nDo you accept?</string>
+	<string name="first_launch_no_login_password">Please enter your login and password</string>
 
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>
