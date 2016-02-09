@@ -155,6 +155,7 @@
 	<string name="call_stats_download">Download bandwidth:</string>
 	<string name="call_stats_ice">ICE connectivity:</string>
 	<string name="call_stats_video_resolution">Video size:</string>
+	<string name="call">Call</string>
 
 	<!-- About -->
 	<string name="menu_send_log">Send log</string>
