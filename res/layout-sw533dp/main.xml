@@ -9,7 +9,7 @@
 		android:id="@+id/status"
 		android:name="org.linphone.StatusFragment"
 		android:layout_width="match_parent"
-		android:layout_height="35dp"
+		android:layout_height="40dp"
 		tools:layout="@layout/status" />
 
 	<android.support.v4.widget.DrawerLayout
@@ -71,7 +71,7 @@
 							android:id="@+id/fragmentContainer"
 							android:layout_width="match_parent"
 							android:layout_height="match_parent"
-							android:layout_weight="0.63"
+							android:layout_weight="1"
 							android:orientation="horizontal" />
 
 						<LinearLayout
@@ -79,8 +79,15 @@
 							android:visibility="gone"
 							android:layout_width="match_parent"
 							android:layout_height="match_parent"
-							android:layout_weight="0.37"
-							android:orientation="horizontal"/>
+							android:layout_weight="1"
+							android:orientation="horizontal">
+
+							<View
+								android:background="@color/colorE"
+								android:layout_width="1dp"
+								android:layout_height="match_parent"/>
+
+						</LinearLayout>
 
 					</LinearLayout>
 				</FrameLayout>
