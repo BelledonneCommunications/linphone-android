@@ -1,3 +1,7 @@
+#
+#This file shall not contain path referencing package name, in order to be portable when app is renamed.
+#Paths to resources must be set from LinphoneManager, after creating LinphoneCore.
+
 [net]
 mtu=1300
 
@@ -8,7 +12,6 @@ register_only_when_network_is_up=1
 auto_net_state_mon=0
 auto_answer_replacing_calls=1
 ping_with_options=0
-root_ca=/data/data/org.linphone/files/rootca.pem
 
 [rtp]
 audio_rtp_port=7076
@@ -22,11 +25,11 @@ disable_upnp=1
 playback_dev_id=
 ringer_dev_id=
 capture_dev_id=
-remote_ring=/data/data/org.linphone/files/ringback.wav
-local_ring=/data/data/org.linphone/files/oldphone_mono.wav
 dtmf_player_amp=0.1
+
+#remove this property for any application that is not Linphone public version itself
+ec_calibrator_cool_tones=1
 
 [misc]
 max_calls=10
 log_collection_upload_server_url=https://www.linphone.org:444/lft.php
-user_certificates_path=/data/data/org.linphone/files
