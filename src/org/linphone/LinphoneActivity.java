@@ -454,7 +454,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
 			ll.setVisibility(View.VISIBLE);
 
-			transaction.addToBackStack(newFragmentType.toString());
+			if(newFragmentType == FragmentsAvailable.CONTACT_EDITOR){
+				transaction.addToBackStack(newFragmentType.toString());
+			}
 			transaction.replace(R.id.fragmentContainer2, newFragment);
 		} else {
 			if (newFragmentType == FragmentsAvailable.DIALER
