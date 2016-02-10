@@ -956,8 +956,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		messagesList.setVisibility(View.VISIBLE);
 		contactName.setVisibility(View.VISIBLE);
 		edit.setVisibility(View.VISIBLE);
-		back.setVisibility(View.VISIBLE);
 		startCall.setVisibility(View.VISIBLE);
+
+		if(getResources().getBoolean(R.bool.isTablet)){
+			back.setVisibility(View.INVISIBLE);
+		} else {
+			back.setOnClickListener(this);
+		}
+
 		newChatConversation = false;
 		initChatRoom(sipUri);
 	}

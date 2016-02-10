@@ -12,14 +12,14 @@
 		android:layout_height="60dp">
 
 		<ImageView
-			android:id="@+id/back"
-			android:src="@drawable/back"
+			android:id="@+id/cancel"
+			android:src="@drawable/cancel_edit"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_back"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
-			android:padding="18dp"/>
+			android:padding="15dp"/>
 
 		<View
 			android:layout_width="0dp"
@@ -27,7 +27,7 @@
 			android:layout_weight="0.4"/>
 
 		<ImageView
-			android:id="@+id/deleteContact"
+			android:id="@+id/delete_contact"
 			android:src="@drawable/delete"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_delete"
