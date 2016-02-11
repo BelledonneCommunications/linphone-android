@@ -123,6 +123,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				view.findViewById(R.id.add_contact).setVisibility(View.GONE);
 			} else {
 				contactPicture.setImageResource(R.drawable.avatar);
+				view.findViewById(R.id.add_contact).setVisibility(View.VISIBLE);
 			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
