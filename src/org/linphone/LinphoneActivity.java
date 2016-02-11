@@ -655,14 +655,19 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 				}
 			} else {
-				Bundle extras = new Bundle();
-				extras.putString("SipUri", sipUri);
-				if (lAddress.getDisplayName() != null) {
-					extras.putString("DisplayName", displayName);
-					extras.putString("PictureUri", pictureUri);
-					extras.putString("ThumbnailUri", thumbnailUri);
+				if(isTablet()){
+					changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
+					displayChat(sipUri);
+				} else {
+					Bundle extras = new Bundle();
+					extras.putString("SipUri", sipUri);
+					if (lAddress.getDisplayName() != null) {
+						extras.putString("DisplayName", displayName);
+						extras.putString("PictureUri", pictureUri);
+						extras.putString("ThumbnailUri", thumbnailUri);
+					}
+					changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 				}
-				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 			}
 
 			if (messageListFragment != null && messageListFragment.isVisible()) {
@@ -1295,7 +1300,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void initSideMenu() {
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
-		sideMenuItems = getResources().getStringArray(R.array.side_menu_item);
+		sideMenuItems = new String[]{getResources().getString(R.string.menu_assistant),getResources().getString(R.string.menu_settings),getResources().getString(R.string.menu_about)};
 		sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
 		sideMenuItemList = (ListView)findViewById(R.id.item_list);
 		menu = (ImageView) findViewById(R.id.side_menu_button);
@@ -1304,13 +1309,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		sideMenuItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("Settings")){
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.menu_settings))){
 					LinphoneActivity.instance().displaySettings();
 				}
-				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("About")){
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.menu_about))){
 					LinphoneActivity.instance().displayAbout();
 				}
-				if(sideMenuItemList.getAdapter().getItem(i).toString().equals("Assistant")){
+				if(sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.menu_assistant))){
 					LinphoneActivity.instance().displayAssistant();
 				}
 				openOrCloseSideMenu(false);

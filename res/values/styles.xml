@@ -121,4 +121,17 @@
 		<item name="android:textSize">50sp</item>
 	</style>
 
+	<style name="font22" parent="@android:style/TextAppearance.Large">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">25sp</item>
+	</style>
+
+	<style name="font23" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:textStyle">italic</item>
+	</style>
+
 </resources>
