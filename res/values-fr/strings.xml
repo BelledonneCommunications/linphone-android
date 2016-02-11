@@ -8,8 +8,11 @@
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s enregistré</string>
   <string name="notification_register_failure">%s n\'a pas pu s\'enregistrer</string>
-  <string name="about_text">Linphone %s SIP (RFC 3261) sous licence GNU Public License V2</string>
-  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2016 Belledonne Communications</string>
+  <string name="about_version">Linphone Android %s</string>
+  <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
+  <string name="about_link">www.linphone.org</string>
+
   <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">contacts linphone</string>
   <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
@@ -122,11 +125,9 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="status_error">Enregistrement échoué</string>
   <string name="voicemail_unread">messages non lus</string>
   <!--Side Menu-->
-  <string-array name="side_menu_item">
-    <item>Assistant</item>
-    <item>Paramètres</item>
-    <item>À Propos</item>
-  </string-array>
+  <string name="menu_assistant">Assistant</string>
+  <string name="menu_settings">Paramètres</string>
+  <string name="menu_about">À Propos</string>
   <string name="quit">Quitter</string>
   <!--Call-->
   <string name="incoming_call">appel entrant</string>
