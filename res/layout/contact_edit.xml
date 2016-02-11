@@ -151,8 +151,9 @@
 						android:text="@string/sip_address"
 						style="@style/font13"
 						android:textAllCaps="true"
+						android:layout_centerVertical="true"
 						android:layout_width="wrap_content"
-						android:layout_height="match_parent"/>
+						android:layout_height="wrap_content"/>
 
 					<ImageView
 						android:id="@+id/add_address_field"
@@ -190,8 +191,9 @@
 						android:text="@string/phone_number"
 						style="@style/font13"
 						android:textAllCaps="true"
+						android:layout_centerVertical="true"
 						android:layout_width="wrap_content"
-						android:layout_height="match_parent"/>
+						android:layout_height="wrap_content"/>
 
 					<ImageView
 						android:id="@+id/add_number_field"

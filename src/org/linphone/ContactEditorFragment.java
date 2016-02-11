@@ -58,6 +58,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -275,6 +276,9 @@ public class ContactEditorFragment extends Fragment {
 		if(LinphoneActivity.isInstanciated()){
 			LinphoneActivity.instance().hideTabBar(false);
 		}
+
+		// Force hide keyboard
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 	}
 
 	private void pickImage() {

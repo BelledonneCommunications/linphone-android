@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<LinearLayout
+	<RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="40dp"
 		android:orientation="horizontal"
 		android:paddingBottom="5dp">
 
@@ -14,17 +14,18 @@
 			style="@style/font6"
 			android:textCursorDrawable="@null"
 			android:inputType="textEmailAddress"
-			android:layout_weight="0.09"/>
+			android:layout_toLeftOf="@+id/delete"
+			android:layout_toStartOf="@+id/delete"/>
 
 		<ImageView
 			android:id="@+id/delete"
 			android:src="@drawable/delete_field_default"
 			android:contentDescription="@string/content_description_add"
-			android:layout_alignParentRight="true"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:layout_weight="0.91"
 			android:layout_gravity="center"
-			android:paddingLeft="5dp"/>
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:paddingLeft="5dp"
+			android:layout_centerInParent="true"
+			android:layout_alignParentRight="true"/>
 
-	</LinearLayout>
+	</RelativeLayout>
