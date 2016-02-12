@@ -6,16 +6,15 @@
 
 	<ImageView
 		android:src="@drawable/dialer_background"
-		android:layout_width="wrap_content"
-		android:layout_height="300dp"
-		android:layout_centerVertical="true"/>
+		android:layout_centerHorizontal="true"
+		android:layout_width="400dp"
+		android:layout_height="wrap_content"/>
 
 	<RelativeLayout
-		android:id="@+id/dialer"
 		android:background="@color/colorH"
-		android:layout_marginRight="50dp"
-		android:layout_centerVertical="true"
-		android:layout_alignParentRight="true"
+		android:layout_marginBottom="50dp"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
 		android:layout_width="300dp"
 		android:layout_height="460dp">
 
