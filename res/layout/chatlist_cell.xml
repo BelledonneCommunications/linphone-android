@@ -20,22 +20,10 @@
 		android:layout_centerVertical="true"
 		android:visibility="invisible" />
 	
-	<TextView 
-	    android:id="@+id/draft"
-	    android:visibility="gone"
-	    android:layout_centerVertical="true"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textAppearance="?android:attr/textAppearanceSmall"
-	    android:textColor="@color/colorB"
-	    android:layout_marginLeft="5dp"
-	    android:layout_marginRight="5dp" />
-	
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_centerVertical="true"
-	    android:layout_toLeftOf="@id/draft"
 	    android:orientation="horizontal">
 
 		<RelativeLayout

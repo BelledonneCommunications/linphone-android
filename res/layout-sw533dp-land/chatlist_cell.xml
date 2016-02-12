@@ -9,7 +9,7 @@
     android:background="@drawable/list_selector">
 
 	<CheckBox
-		android:id="@+id/delete"
+		android:id="@+id/delete_chatroom"
 		android:button="@drawable/checkbox"
 		android:contentDescription="@string/content_description_delete"
 		android:paddingRight="5dp"
@@ -24,7 +24,6 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_centerVertical="true"
-	    android:layout_toLeftOf="@id/draft"
 	    android:orientation="horizontal">
 
 		<RelativeLayout
