@@ -278,7 +278,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 	}
 	
 	private void assertCallIsCorrectlyRunning(int lcId) {
-		solo.waitForActivity("InCallActivity", 5000);
+		solo.waitForActivity("CallActivity", 5000);
 		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 
 		solo.sleep(2000);

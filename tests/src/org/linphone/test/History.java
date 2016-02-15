@@ -59,7 +59,8 @@ public class History extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
 		solo.sleep(500);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
-		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
+		solo.sleep(500);
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
 	}
 
 	@SmallTest
@@ -71,7 +72,8 @@ public class History extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
 		solo.clickOnView(solo.getView(org.linphone.R.id.select_all));
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
-		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
+		solo.sleep(500);
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
 
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_call_history)));
 	}

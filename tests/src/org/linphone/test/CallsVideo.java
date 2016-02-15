@@ -348,7 +348,7 @@ public class CallsVideo extends SampleTest {
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
-		solo.clickOnText("Settings");
+		solo.clickOnText(aContext.getString(org.linphone.R.string.menu_settings));
 	}
 	
 	private void goToAudioCodecsSettings() {
@@ -360,8 +360,8 @@ public class CallsVideo extends SampleTest {
 	}
 		
 	private void goToVideoCodecsSettings() {
-		goToSettings();
-		
+		//goToSettings();
+
 		selectItemInListOnUIThread(6);
 		if (solo.searchText(aContext.getString(org.linphone.R.string.pref_video_title), 2)) // Needed in case pref_video_enable_title contains pref_video
 			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_title), 2);

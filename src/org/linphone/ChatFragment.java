@@ -664,7 +664,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		if (id == R.id.delete) {
 			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-			Button delete = (Button) dialog.findViewById(R.id.delete);
+			Button delete = (Button) dialog.findViewById(R.id.delete_button);
 			Button cancel = (Button) dialog.findViewById(R.id.cancel);
 
 			delete.setOnClickListener(new OnClickListener() {
