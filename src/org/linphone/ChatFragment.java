@@ -721,7 +721,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		//Start new conversation in fast chat
 		if(newChatConversation && chatRoom == null) {
-			String address = searchContactField.getText().toString();
+			String address = searchContactField.getText().toString().toLowerCase();
 			if (address != null && !address.equals("")) {
 				initChatRoom(address);
 			}
@@ -974,11 +974,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		edit.setVisibility(View.INVISIBLE);
 		startCall.setVisibility(View.INVISIBLE);
 		contactName.setVisibility(View.INVISIBLE);
-
 		resultContactsSearch.setVisibility(View.VISIBLE);
 		searchAdapter = new SearchContactsListAdapter(null);
 		resultContactsSearch.setAdapter(searchAdapter);
 		searchContactField.setVisibility(View.VISIBLE);
+		searchContactField.requestFocus();
 		searchContactField.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -1015,7 +1015,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			for (ContactAddress c : searchAdapter.contacts) {
 				String address = c.address;
 				if(address.startsWith("sip:")) address = address.substring(4);
-				if (c.contact.getName().toLowerCase().startsWith(search) || address.toLowerCase().startsWith(search)) {
+				if (c.contact.getName().toLowerCase().startsWith(search.toLowerCase()) || address.toLowerCase().startsWith(search.toLowerCase())) {
 					result.add(c);
 				}
 			}
