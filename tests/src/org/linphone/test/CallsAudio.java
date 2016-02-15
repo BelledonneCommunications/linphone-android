@@ -390,7 +390,7 @@ public class CallsAudio extends SampleTest {
 		goToSettings();
 		
 		selectItemInListOnUIThread(4);
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_audio));
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_audio_title));
 		solo.sleep(500);
 	}
 	
