@@ -141,7 +141,6 @@
 		android:visibility="gone"
 		android:textColor="@android:color/black"
 		android:background="@drawable/resizable_textfield"
-		android:gravity="center"
 		android:layout_margin="5dp"
 		android:layout_below="@id/top_bar"
 		android:inputType="textPersonName"/>
