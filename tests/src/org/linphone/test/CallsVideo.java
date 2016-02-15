@@ -355,7 +355,7 @@ public class CallsVideo extends SampleTest {
 		goToSettings();
 		
 		selectItemInListOnUIThread(4);
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_audio));
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_audio_title));
 		solo.sleep(500);
 	}
 		
@@ -363,10 +363,10 @@ public class CallsVideo extends SampleTest {
 		goToSettings();
 		
 		selectItemInListOnUIThread(6);
-		if (solo.searchText(aContext.getString(org.linphone.R.string.pref_video), 2)) // Needed in case pref_video_enable_title contains pref_video
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video), 2);
+		if (solo.searchText(aContext.getString(org.linphone.R.string.pref_video_title), 2)) // Needed in case pref_video_enable_title contains pref_video
+			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_title), 2);
 		else
-			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video));
+			solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_title));
 		solo.sleep(500);
 	}
 	
