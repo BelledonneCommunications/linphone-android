@@ -163,7 +163,7 @@ public class AccountAssistant extends SampleTest {
 	@LargeTest
 	public void testFCancelWizard() {
 		startAssistant();
-		solo.clickOnView(solo.getView(org.linphone.R.id.cancel));
+		solo.clickOnView(solo.getView(org.linphone.R.id.assistant_cancel));
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);

@@ -189,11 +189,14 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				if (state == State.StreamsRunning) {
 					switchVideo(isVideoEnabled(call));
 					//Check media in progress
-					if(LinphonePreferences.instance().isVideoEnabled() && !call.mediaInProgress()){
-						enabledVideoButton(true);
+					if(!call.mediaInProgress()){
+						if(LinphonePreferences.instance().isVideoEnabled()) {
+							enabledVideoButton(true);
+						}
 						enabledPauseButton(true);
+					} else {
+						enabledPauseButton(false);
 					}
-
 					enableAndRefreshInCallActions();
 
 					if (status != null) {
@@ -623,7 +626,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			LinphoneCall call = (LinphoneCall) v.getTag();
 			pauseOrResumeCall(call);
 		}
-		else if (id == R.id.conferenceStatus) {
+		else if (id == R.id.conference_pause) {
 			pauseOrResumeConference();
 		}
 	}
@@ -1352,6 +1355,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
 			removeCallbacks();
 		}
+
+		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()){
+			enabledPauseButton(true);
+		}
 	}
 
 	private void handleViewIntent() {
@@ -1674,7 +1681,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void displayConferenceHeader(){
 		conferenceList.setVisibility(View.VISIBLE);
 		RelativeLayout headerConference = (RelativeLayout) inflater.inflate(R.layout.conference_header, container, false);
-		conferenceStatus = (ImageView) headerConference.findViewById(R.id.conferenceStatus);
+		conferenceStatus = (ImageView) headerConference.findViewById(R.id.conference_pause);
 		conferenceStatus.setOnClickListener(this);
 		conferenceList.addView(headerConference);
 

@@ -28,7 +28,7 @@
        	android:paddingRight="10dp"/>
     
     <ImageView
-		android:id="@+id/call_pause"
+		android:id="@+id/conference_pause"
 		android:src="@drawable/pause_small_over_selected"
 		android:contentDescription="@string/content_description_pause"
         android:layout_width="40dp"

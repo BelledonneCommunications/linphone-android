@@ -26,7 +26,7 @@
 		android:gravity="center"/>
 
 	<ImageView
-		android:id="@+id/cancel"
+		android:id="@+id/assistant_cancel"
 		android:src="@drawable/dialer_back"
 		android:background="@drawable/toolbar_button"
 		android:contentDescription="@string/content_description_dialer"

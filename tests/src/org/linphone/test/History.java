@@ -58,6 +58,7 @@ public class History extends SampleTest {
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
 		solo.sleep(500);
+		solo.clickOnCheckBox(1);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
 		solo.sleep(500);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));

@@ -30,7 +30,7 @@
     
     <ImageView
         android:contentDescription="@string/content_description_pause"
-        android:id="@+id/conferenceStatus"
+        android:id="@+id/conference_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
