@@ -383,7 +383,7 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
-		solo.clickOnText("Settings");
+		solo.clickOnText(aContext.getString(org.linphone.R.string.menu_settings));
 	}
 	
 	private void goToAudioCodecsSettings() {
