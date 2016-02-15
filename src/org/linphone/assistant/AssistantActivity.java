@@ -146,7 +146,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		back = (ImageView) findViewById(R.id.back);
 		back.setOnClickListener(this);
-		cancel = (ImageView) findViewById(R.id.cancel);
+		cancel = (ImageView) findViewById(R.id.assistant_cancel);
 		cancel.setOnClickListener(this);
 	}
 	
@@ -160,7 +160,8 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.cancel) {
+		if (id == R.id.assistant_cancel) {
+			hideKeyboard();
 			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
@@ -169,6 +170,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				finish();
 			}
 		} else if (id == R.id.back) {
+			hideKeyboard();
 			onBackPressed();
 		}
 	}
@@ -194,6 +196,12 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		} else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
 			finish();
 		}
+	}
+
+	public void hideKeyboard(){
+		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		View view = getCurrentFocus();
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {

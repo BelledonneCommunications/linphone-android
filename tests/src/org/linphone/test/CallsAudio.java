@@ -158,7 +158,7 @@ public class CallsAudio extends SampleTest {
 		
 		LinphoneTestManager.getInstance().autoAnswer = true;
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
+		solo.clickOnView(solo.getView(org.linphone.R.id.outgoing_hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
