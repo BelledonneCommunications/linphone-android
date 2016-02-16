@@ -199,9 +199,11 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	public void hideKeyboard(){
-		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-		View view = getCurrentFocus();
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		View view = this.getCurrentFocus();
+		if (imm != null && view != null) {
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
 	}
 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
@@ -219,14 +221,9 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (imm != null && getCurrentFocus() != null) {
-			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-		}
-
         saveCreatedAccount(username, password, displayName, domain, transport);
 	}
-	
+
 	public void checkAccount(String username, String password, String displayName, String domain) {
 		saveCreatedAccount(username, password, displayName, domain, null);
 	}

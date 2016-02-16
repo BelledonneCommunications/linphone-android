@@ -489,6 +489,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				} else {
 					video.setImageResource(R.drawable.camera_default);
 				}
+			} else {
+				video.setImageResource(R.drawable.camera_default);
 			}
 		}
 
