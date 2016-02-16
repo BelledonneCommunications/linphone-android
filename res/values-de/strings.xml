@@ -6,9 +6,7 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startvorgang</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">Linphone-Kontakte</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="today_date_format">HH:mm</string>
   <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
@@ -38,6 +36,7 @@
   <string name="assistant_account_validated">Ihr Konto wurde überprüft.</string>
   <string name="wizard_failed">Es ist ein Fehler aufgetreten, versuchen Sie es später nochmal</string>
   <string name="wizard_username_unavailable">Der Benutzername wird bereits verwendet.</string>
+  <string name="first_launch_no_login_password">Bitte geben Sie Ihren Benutzername und Ihr Passwort ein</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">Heute</string>
@@ -68,6 +67,8 @@
   <string name="status_error">Registierung fehlgeschlagen</string>
   <string name="voicemail_unread">ungelesene Nachrichten</string>
   <!--Side Menu-->
+  <string name="menu_settings">Einstellungen</string>
+  <string name="menu_about">Über</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Unbekannt</string>
   <string name="call_stats_audio">Audio</string>
@@ -77,6 +78,7 @@
   <string name="call_stats_download">Download-Bandbreite:</string>
   <string name="call_stats_ice">ICE-Konnektivität:</string>
   <string name="call_stats_video_resolution">Videogröße:</string>
+  <string name="call">Anruf</string>
   <!--About-->
   <string name="menu_send_log">Protokoll senden</string>
   <string name="menu_reset_log">Protokoll zurücksetzen</string>

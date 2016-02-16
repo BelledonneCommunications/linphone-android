@@ -6,9 +6,7 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Başlatılıyor</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">Linphone bağlantıları</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="today_date_format">SS:dd</string>
   <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
@@ -38,6 +36,7 @@
   <string name="assistant_account_validated">Hesabınız onaylandı.</string>
   <string name="wizard_failed">Bir hata oluştu,daha sonra tekrar deneyin.</string>
   <string name="wizard_username_unavailable">Bu kullanıcı adı zaten kullanılıyor.</string>
+  <string name="first_launch_no_login_password">Lütfen giriş adınızı ve parolanızı girin</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">Bugün</string>
@@ -67,6 +66,8 @@
   <string name="status_error">Kayıt başarısız</string>
   <string name="voicemail_unread">okunmamış iletiler</string>
   <!--Side Menu-->
+  <string name="menu_settings">Ayarlar</string>
+  <string name="menu_about">Hakkında</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Bilinmeyen</string>
   <string name="call_stats_audio">Ses</string>
@@ -76,6 +77,7 @@
   <string name="call_stats_download">İndirme hızı:</string>
   <string name="call_stats_ice">İCE bağlanılabilirliği:</string>
   <string name="call_stats_video_resolution">Görüntü boyutu:</string>
+  <string name="call">Çağrı</string>
   <!--About-->
   <string name="menu_send_log">Günlük gönder</string>
   <string name="menu_reset_log">Günlüğü sıfırla</string>

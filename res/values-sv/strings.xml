@@ -6,9 +6,7 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startar upp</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">linphone-kontakter</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Användarnamn</string>
@@ -31,6 +29,7 @@
   <!--Launch screen-->
   <!--Assistant-->
   <string name="wizard_username_unavailable">Detta användarnamn används redan.</string>
+  <string name="first_launch_no_login_password">Ange din inloggning och lösenord</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">Idag</string>
@@ -58,6 +57,8 @@
   <string name="status_error">Registrering misslyckades</string>
   <string name="voicemail_unread">olästa meddelanden</string>
   <!--Side Menu-->
+  <string name="menu_settings">Inställningar</string>
+  <string name="menu_about">Om</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Okänd</string>
   <string name="call_stats_audio">Ljud</string>
@@ -66,6 +67,7 @@
   <string name="call_stats_download">Nerladdningsbandbredd:</string>
   <string name="call_stats_ice">ICE-anslutning:</string>
   <string name="call_stats_video_resolution">Video-storlek:</string>
+  <string name="call">Ring</string>
   <!--About-->
   <string name="menu_send_log">Skicka logg</string>
   <string name="menu_reset_log">Nollställ logg</string>

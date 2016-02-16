@@ -43,6 +43,8 @@
   <!--Status Bar-->
   <string name="status_connected">Geregistreerd</string>
   <!--Side Menu-->
+  <string name="menu_settings">Instellingen</string>
+  <string name="menu_about">Over</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Onbekend</string>
   <string name="call_stats_audio">Audio</string>
@@ -51,6 +53,7 @@
   <string name="call_stats_upload">Uploadbandbreedte:</string>
   <string name="call_stats_download">Downloadbandbreedte:</string>
   <string name="call_stats_video_resolution">Videogrootte:</string>
+  <string name="call">Oproep</string>
   <!--About-->
   <string name="menu_send_log">Log versturen</string>
   <!--Service-->
