@@ -8,14 +8,7 @@
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s enregistré</string>
   <string name="notification_register_failure">%s n\'a pas pu s\'enregistrer</string>
-  <string name="about_version">Linphone Android %s</string>
-  <string name="about_liblinphone_version">Linphone Core %s</string>
-  <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
-  <string name="about_link">www.linphone.org</string>
-
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">contacts linphone</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="history_date_format">EEE, d MMM</string>
   <string name="history_detail_date_format">dd/MM/yyy - HH:mm -</string>
   <string name="messages_date_format">dd/MM, HH:mm</string>
@@ -85,6 +78,7 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="wizard_password_incorrect">Votre mot de passe est invalide (6 caractères minimum).</string>
   <string name="wizard_passwords_unmatched">Les mots de passes ne correspondent pas.</string>
   <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de votre saisie.\r\nContinuer ?</string>
+  <string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
   <!--Dailer-->
   <string name="address_bar_hint">Entrez un numéro ou une adresse</string>
   <!--History-->
@@ -126,8 +120,8 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="voicemail_unread">messages non lus</string>
   <!--Side Menu-->
   <string name="menu_assistant">Assistant</string>
-  <string name="menu_settings">Paramètres</string>
-  <string name="menu_about">À Propos</string>
+  <string name="menu_settings">Options</string>
+  <string name="menu_about">A propos</string>
   <string name="quit">Quitter</string>
   <!--Call-->
   <string name="incoming_call">appel entrant</string>
@@ -145,6 +139,7 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="call_stats_download">Bande passante réception :</string>
   <string name="call_stats_ice">Connexion ICE :</string>
   <string name="call_stats_video_resolution">Taille vidéo:</string>
+  <string name="call">Appel</string>
   <!--About-->
   <string name="menu_send_log">Envoyer les logs</string>
   <string name="menu_reset_log">Vider les logs</string>

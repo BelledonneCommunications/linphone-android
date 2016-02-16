@@ -8,11 +8,7 @@
   <string name="wait_dialog_text">Käynnistetään</string>
   <string name="notification_registered">Rekisteröity kohteeseen %s</string>
   <string name="notification_register_failure">Epäonnistui rekisteröidä kohteeseen %s</string>
-  <string name="about_text">Linphone %s SIP (rfc 3261) yhteensopiva puhelimissa, joissa on GNU Public License V2</string>
-  <string name="about_link">http://www.linphone.org\n\nInstructions\nhttp://www.linphone.org/user-guide.html\n\n© 2015 Belledonne Communications</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">linphone yhteystiedot</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="history_date_format">VVV, p KKK esim. Maanantai, 1 Tam</string>
   <string name="history_detail_date_format">vvvv/KK/dd - TT:mm - esim 2012/11/22 - 12:34</string>
   <string name="messages_date_format">pp/KK, TT:mm esim 22/11, 12:34</string>
@@ -81,6 +77,7 @@
   <string name="wizard_password_incorrect">Salasanasi ei ole kelvollinen (6 merkkiä vähintään).</string>
   <string name="wizard_passwords_unmatched">Antamasi salasanat ovat erillaiset.</string>
   <string name="setup_confirm_username">Sinun käyttäjätunnus tulee olemaan %s.\r\n\r\nIt voiden muuttua, jotta vaatiukset täyttyisivät .\r\nHyväksytkö?</string>
+  <string name="first_launch_no_login_password">Anna käyttäjätunnus ja salasana</string>
   <!--Dailer-->
   <string name="address_bar_hint">Anna numero tai osoite</string>
   <!--History-->
@@ -121,11 +118,9 @@
   <string name="status_error">Rekisterityminen epäonnistui</string>
   <string name="voicemail_unread">lukemattomia viestejä</string>
   <!--Side Menu-->
-  <string-array name="side_menu_item">
-    <item>Avustaja</item>
-    <item>Asetukset</item>
-    <item>Tietoja</item>
-  </string-array>
+  <string name="menu_assistant">Avustaja</string>
+  <string name="menu_settings">Asetukset</string>
+  <string name="menu_about">Tietoja</string>
   <string name="quit">Lopeta</string>
   <!--Call-->
   <string name="incoming_call">tuleva puhelu</string>
@@ -143,6 +138,7 @@
   <string name="call_stats_download">Latauskaistanleveys:</string>
   <string name="call_stats_ice">ICE yhdistettävyys:</string>
   <string name="call_stats_video_resolution">Videon koko:</string>
+  <string name="call">Puhelu</string>
   <!--About-->
   <string name="menu_send_log">Lähetä loki</string>
   <string name="menu_reset_log">Tyhjennä loki</string>
