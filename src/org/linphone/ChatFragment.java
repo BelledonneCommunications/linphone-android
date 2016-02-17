@@ -449,23 +449,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 
 		LinphoneAddress lAddress = null;
-		try {
-			lAddress = lc.interpretUrl(sipUri);
-		} catch (Exception e){
-			//TODO Error popup and quit chat
-		}
+		if(sipUri == null){
+			initNewChatConversation();
+		} else {
+			try {
+				lAddress = lc.interpretUrl(sipUri);
+			} catch (Exception e) {
+				//TODO Error popup and quit chat
+			}
 
-		if (lAddress != null) {
-			chatRoom = lc.getChatRoom(lAddress);
-			chatRoom.markAsRead();
-			LinphoneActivity.instance().updateMissedChatCount();
-			contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
-			if(chatRoom != null) {
-				displayChatHeader(lAddress);
-				dispayMessageList();
+			if (lAddress != null) {
+				chatRoom = lc.getChatRoom(lAddress);
+				chatRoom.markAsRead();
+				LinphoneActivity.instance().updateMissedChatCount();
+				contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+				if (chatRoom != null) {
+					displayChatHeader(lAddress);
+					dispayMessageList();
+				}
 			}
 		}
-
 	}
 
 	public void dispayMessageList() {
