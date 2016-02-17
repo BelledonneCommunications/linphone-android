@@ -57,7 +57,14 @@ ifeq ($(BUILD_MATROSKA), 1)
 include $(linphone-root-dir)/submodules/externals/build/libmatroska-c/Android.mk
 endif
 
+ifeq ($(BUILD_BCTOOLBOX_MBEDTLS),1)
+include $(linphone-root-dir)/submodules/externals/build/mbedtls/Android.mk
+include $(linphone-root-dir)/submodules/bctoolbox/build/android/Android-mbedtls.mk
+else
 include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
+include $(linphone-root-dir)/submodules/bctoolbox/build/android/Android-polarssl.mk
+endif
+
 ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
 include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk
