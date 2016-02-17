@@ -34,7 +34,7 @@ public class Contacts extends SampleTest {
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnView(solo.getView(org.linphone.R.id.delete_contact));
+		solo.clickOnView(solo.getView(org.linphone.R.id.deleteContact));
 		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
 

@@ -31,6 +31,7 @@
   <string name="assistant_account_validated">Ваша учётная запись подтверждена.</string>
   <string name="wizard_failed">Произошла ошибка, попробуйте повторить позже.</string>
   <string name="wizard_username_unavailable">Это имя пользователя уже использовано.</string>
+  <string name="first_launch_no_login_password">Пожалуйста введите имя пользователя и пароль</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">Сегодня</string>
@@ -59,6 +60,8 @@
   <string name="status_in_progress">В процессе регистрации</string>
   <string name="status_error">Ошибка регистрации</string>
   <!--Side Menu-->
+  <string name="menu_settings">Настройки</string>
+  <string name="menu_about">О программе</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Неизвестнвй</string>
   <string name="call_stats_audio">Аудио</string>
@@ -68,6 +71,7 @@
   <string name="call_stats_download">Полоса пропускания скачивания:</string>
   <string name="call_stats_ice">Подключение ICE:</string>
   <string name="call_stats_video_resolution">Video size:</string>
+  <string name="call">Звонок</string>
   <!--About-->
   <!--Service-->
   <string name="incall_notif_active">Идёт Аудио звонок</string>

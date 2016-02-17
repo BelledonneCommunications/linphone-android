@@ -6,9 +6,7 @@
   <string name="addressbook_label">لِنْفُونْ</string>
   <string name="notification_title">لِنْفُونْ</string>
   <string name="wait_dialog_text">يجري التشغيل</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">جهات اتصال Linphone</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="today_date_format">HH:mm</string>
   <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
@@ -38,6 +36,7 @@
   <string name="assistant_account_validated">تم تأكيد حسابك.</string>
   <string name="wizard_failed">حدث خطأ، حاول لاحقا.</string>
   <string name="wizard_username_unavailable">إن إسم المستخدم هذا مُستعمَل.</string>
+  <string name="first_launch_no_login_password">يُرجى إدخال إسم المستخدم وكلمة السر</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">اليوم</string>
@@ -68,6 +67,8 @@
   <string name="status_error">فشِل التسجيل</string>
   <string name="voicemail_unread">الرسائل غير المقروءة</string>
   <!--Side Menu-->
+  <string name="menu_settings">اﻹعدادات</string>
+  <string name="menu_about">حول</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">مجهول</string>
   <string name="call_stats_audio">الصوت</string>
@@ -77,6 +78,7 @@
   <string name="call_stats_download">صبيب التنزيل :</string>
   <string name="call_stats_ice">توصيل ICE :</string>
   <string name="call_stats_video_resolution">مقاس الفيديو :</string>
+  <string name="call">مكالمة</string>
   <!--About-->
   <string name="menu_send_log">إرسال السجل</string>
   <string name="menu_reset_log">إعادة تعيين السجل</string>

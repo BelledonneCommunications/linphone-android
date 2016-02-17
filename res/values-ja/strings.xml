@@ -6,9 +6,7 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">はじめる</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">linphoneに問い合わせる</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="today_date_format">HH:mm</string>
   <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
@@ -38,6 +36,7 @@
   <string name="assistant_account_validated">確認済みのアカウントです。</string>
   <string name="wizard_failed">エラーが発生しました。のちほど再試行してください。</string>
   <string name="wizard_username_unavailable">このユーザー名はすでに使われています。</string>
+  <string name="first_launch_no_login_password">ユーザー名とパスワードを入力してください</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">今日</string>
@@ -68,6 +67,8 @@
   <string name="status_error">登録できませんでした</string>
   <string name="voicemail_unread">未読メッセージ</string>
   <!--Side Menu-->
+  <string name="menu_settings">設定</string>
+  <string name="menu_about">概要</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">不明</string>
   <string name="call_stats_audio">オーディオ</string>
@@ -77,6 +78,7 @@
   <string name="call_stats_download">ダウンロード幅:</string>
   <string name="call_stats_ice">ICE 接続:</string>
   <string name="call_stats_video_resolution">ビデオ解像度:</string>
+  <string name="call">発信</string>
   <!--About-->
   <string name="menu_send_log">ログを送信する</string>
   <string name="menu_reset_log">ログをリセットする</string>

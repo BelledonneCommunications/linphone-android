@@ -52,6 +52,8 @@
   <string name="status_error">註冊失敗</string>
   <string name="voicemail_unread">未讀訊息</string>
   <!--Side Menu-->
+  <string name="menu_settings">設定</string>
+  <string name="menu_about">關於</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">未知</string>
   <string name="call_stats_audio">音訊</string>
@@ -60,6 +62,7 @@
   <string name="call_stats_upload">上傳頻寬：</string>
   <string name="call_stats_download">下載頻寬：</string>
   <string name="call_stats_video_resolution">視訊大小：</string>
+  <string name="call">通話</string>
   <!--About-->
   <!--Service-->
   <string name="unread_messages">%i 未讀訊息</string>

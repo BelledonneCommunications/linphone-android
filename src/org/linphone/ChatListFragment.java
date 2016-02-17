@@ -185,14 +185,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		hideAndDisplayMessageIfNoChat();
 	}
 
-	private boolean isVersionUsingNewChatStorage() {
-		try {
-			Context context = LinphoneActivity.instance();
-			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+	public void displayFirstChat(){
+		if(mConversations.size() > 0) {
+			LinphoneActivity.instance().displayChat(mConversations.get(0));
 		}
-		return true;
 	}
 
 	@Override
@@ -323,33 +319,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
 			LinphoneActivity.instance().displayChat(sipUri);
 		}
-	}
-
-	private boolean importAndroidStoredMessagedIntoLibLinphoneStorage() {
-		Log.w("Importing previous messages into new database...");
-		try {
-			ChatStorage db = LinphoneActivity.instance().getChatStorage();
-			List<String> conversations = db.getChatList();
-			for (int j = conversations.size() - 1; j >= 0; j--) {
-				String correspondent = conversations.get(j);
-				LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
-				for (ChatMessage message : db.getMessages(correspondent)) {
-					LinphoneChatMessage msg = room.createLinphoneChatMessage(message.getMessage(), message.getUrl(), message.getStatus(), Long.parseLong(message.getTimestamp()), true, message.isIncoming());
-					if (message.getImage() != null) {
-						String path = saveImageAsFile(message.getId(), message.getImage());
-						if (path != null)
-							msg.setExternalBodyUrl(path);
-					}
-					msg.store();
-				}
-				db.removeDiscussion(correspondent);
-			}
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return false;
 	}
 	
 	private String saveImageAsFile(int id, Bitmap bm) {

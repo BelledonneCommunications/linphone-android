@@ -6,9 +6,7 @@
   <string name="addressbook_label">Линфон</string>
   <string name="notification_title">Линфон</string>
   <string name="wait_dialog_text">Покрећем се</string>
-  <string name="sync_account_type">org.linphone</string>
   <string name="sync_account_name">контакти линфона</string>
-  <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string>
   <string name="today_date_format">ЧЧ:мм</string>
   <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
@@ -38,6 +36,7 @@
   <string name="assistant_account_validated">Ваш налог је потврђен.</string>
   <string name="wizard_failed">Дошло је до грепке, пробајте опет касније.</string>
   <string name="wizard_username_unavailable">Ово корисничко име је већ у употреби.</string>
+  <string name="first_launch_no_login_password">Упишите вашу пријаву и лозинку</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">Данас</string>
@@ -68,6 +67,8 @@
   <string name="status_error">Упис није успео</string>
   <string name="voicemail_unread"> непрочитане поруке</string>
   <!--Side Menu-->
+  <string name="menu_settings">Подешавања</string>
+  <string name="menu_about">Инфо</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Непознато</string>
   <string name="call_stats_audio">Звук</string>
@@ -77,6 +78,7 @@
   <string name="call_stats_download">Пропусни опсег преузимања:</string>
   <string name="call_stats_ice">ИЦЕ повезивост:</string>
   <string name="call_stats_video_resolution">Величина видеа:</string>
+  <string name="call">Позови</string>
   <!--About-->
   <string name="menu_send_log">Пошаљи дневник</string>
   <string name="menu_reset_log">Поврати дневник</string>
