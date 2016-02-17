@@ -26,11 +26,14 @@
   <string name="wait">אנא המתן...</string>
   <!--Status Bar-->
   <!--Side Menu-->
+  <string name="menu_settings">הגדרות</string>
+  <string name="menu_about">אודות</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">לא מוכר</string>
   <string name="call_stats_audio">שמע</string>
   <string name="call_stats_video">וידאו</string>
   <string name="call_stats_codec">קודק:</string>
+  <string name="call">קריאה</string>
   <!--About-->
   <!--Service-->
   <!--Errors-->

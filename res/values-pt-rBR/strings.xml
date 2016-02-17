@@ -27,6 +27,7 @@
   <string name="assistant_account_validated">Sua conta foi validada.</string>
   <string name="wizard_failed">Ocorreu um erro, tente novamente mais tarde.</string>
   <string name="wizard_username_unavailable">Este nome de usuário já está em uso.</string>
+  <string name="first_launch_no_login_password">Por favor, digite seu usuário e senha</string>
   <!--Dailer-->
   <!--History-->
   <string name="today">Hoje</string>
@@ -57,6 +58,8 @@
   <string name="status_error">Registro falhou</string>
   <string name="voicemail_unread"> mensagens não lidas</string>
   <!--Side Menu-->
+  <string name="menu_settings">Configurações</string>
+  <string name="menu_about">Sobre</string>
   <!--Call-->
   <string name="unknown_incoming_call_name">Unknown</string>
   <string name="call_stats_audio">Audio</string>
@@ -66,6 +69,7 @@
   <string name="call_stats_download">Velocidade de Download:</string>
   <string name="call_stats_ice">Conectividade ICE:</string>
   <string name="call_stats_video_resolution">Tamanho de video:</string>
+  <string name="call">Ligar</string>
   <!--About-->
   <string name="menu_send_log">Enviar log</string>
   <string name="menu_reset_log">Limpar log</string>
