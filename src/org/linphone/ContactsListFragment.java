@@ -322,6 +322,12 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		invalidate();
 	}
 
+	public void displayFirstContact(){
+		if(contactsList.getAdapter().getCount() > 0){
+			LinphoneActivity.instance().displayContact((Contact) contactsList.getAdapter().getItem(0),false);
+		}
+	}
+
 	private void searchContacts() {
 		searchContacts(searchField.getText().toString());
 	}

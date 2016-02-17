@@ -123,6 +123,17 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		}
 	}
 
+	public void displayFirstLog(){
+		if(mLogs.size() > 0){
+			LinphoneCallLog log = mLogs.get(0);
+			if (log.getDirection() == CallDirection.Incoming) {
+				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getFrom().toString(), mLogs.get(0));
+			} else {
+				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getTo().toString(), mLogs.get(0));
+			}
+		}
+	}
+
 	private void removeCallLogs(){
 		int size = historyList.getAdapter().getCount();
 		for(int i=0; i<size; i++) {

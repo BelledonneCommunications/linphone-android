@@ -267,7 +267,8 @@ public class ConferenceAndMultiCall extends SampleTest {
 	
 	private void startConference() {
 		startTwoCalls();
-		
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.options));
 		solo.clickOnView(solo.getView(org.linphone.R.id.conference));
 		solo.sleep(1000);
 		
