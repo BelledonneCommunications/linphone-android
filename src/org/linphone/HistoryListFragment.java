@@ -37,9 +37,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -50,7 +47,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -131,6 +127,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			} else {
 				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getTo().toString(), mLogs.get(0));
 			}
+		} else {
+			LinphoneActivity.instance().displayEmptyFragment();
 		}
 	}
 
@@ -334,6 +332,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		if (!hideHistoryListAndDisplayMessageIfEmpty()){
 			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
+		if(getResources().getBoolean(R.bool.isTablet)){
+			displayFirstLog();
 		}
 	}
 
