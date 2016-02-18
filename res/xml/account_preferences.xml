@@ -33,7 +33,7 @@
     </PreferenceCategory>
     
     <PreferenceCategory
-    	android:title="@string/pref_advanced"
+    	android:title="@string/pref_advanced_title"
 		android:key="@string/pref_advanced_key">
         
 		<ListPreference 
@@ -76,7 +76,7 @@
     </PreferenceCategory>
     
 	<PreferenceCategory
-       	android:title="@string/pref_manage"
+       	android:title="@string/pref_manage_title"
 		android:key="@string/pref_manage_key">
        
         <CheckBoxPreference

@@ -66,7 +66,7 @@ public class AccountAssistant extends SampleTest {
 		Assert.assertEquals(aContext.getString(org.linphone.R.string.pref_transport_tls_key), transport);
 				
 		String proxy = prefs.getAccountProxy(0);
-		Assert.assertEquals("<sip:" + aContext.getString(org.linphone.R.string.default_domain) + ":5223;transport=tls>", proxy);
+		Assert.assertEquals("<sip:" + aContext.getString(org.linphone.R.string.default_domain) + ";transport=tls>", proxy);
 
 		String display_name = prefs.getAccountDisplayName(0);
 		Assert.assertEquals(iContext.getString(R.string.account_linphone_display_name), display_name);
@@ -163,7 +163,7 @@ public class AccountAssistant extends SampleTest {
 	@LargeTest
 	public void testFCancelWizard() {
 		startAssistant();
-		solo.clickOnView(solo.getView(org.linphone.R.id.cancel));
+		solo.clickOnView(solo.getView(org.linphone.R.id.assistant_cancel));
 		
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
@@ -174,6 +174,6 @@ public class AccountAssistant extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
-		solo.clickOnText("Assistant");
+		solo.clickOnText(aContext.getString(org.linphone.R.string.menu_assistant));
 	}
 }

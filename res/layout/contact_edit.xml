@@ -5,43 +5,45 @@
   	android:background="@color/colorH"
   	android:orientation="vertical">
 
-	<RelativeLayout
+	<LinearLayout
+		android:orientation="horizontal"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="bottom"
-		android:background="@color/colorF">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
+			android:layout_weight="0.2"
 			android:padding="15dp"/>
 
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
+
+		<ImageView
+			android:id="@+id/delete_contact"
+			android:src="@drawable/delete"
+			android:contentDescription="@string/content_description_delete"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
 
 		<ImageView
 			android:id="@+id/ok"
-			android:contentDescription="@string/content_description_valid"
-			android:layout_alignParentRight="true"
-			android:padding="15dp"
 			android:src="@drawable/valid"
-			android:gravity="center"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"/>
-
-		<ImageView
-			android:id="@+id/deleteContact"
-			android:contentDescription="@string/content_description_delete"
-			android:padding="12dp"
-			android:src="@drawable/delete"
-			android:gravity="center"
-			android:layout_width="70dp"
+			android:contentDescription="@string/content_description_edit"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_toLeftOf="@+id/ok"/>
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
 
-	</RelativeLayout>
+	</LinearLayout>
 
     <ScrollView
         android:id="@+id/controlsScrollView"
@@ -83,10 +85,10 @@
 				<EditText
 					android:id="@+id/contactLastName"
 					android:background="@drawable/resizable_textfield"
-					style="@style/font9"
+					style="@style/font6"
 					android:textCursorDrawable="@null"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
+					android:layout_height="40dp"
 					android:gravity="left"
 					android:paddingRight="5dp"
 					android:inputType="textPersonName|textCapWords"/>
@@ -103,9 +105,9 @@
 					android:id="@+id/contactFirstName"
 					android:textCursorDrawable="@null"
 					android:background="@drawable/resizable_textfield"
-					style="@style/font9"
+					style="@style/font6"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
+					android:layout_height="40dp"
 					android:gravity="left"
 					android:paddingRight="5dp"
 					android:inputType="textPersonName|textCapWords"/>
@@ -120,15 +122,16 @@
 
 				<RelativeLayout
 					android:layout_width="match_parent"
-					android:layout_height="30dp"
+					android:layout_height="40dp"
 					android:layout_gravity="center">
 
 					<TextView
 						android:text="@string/sip_address"
 						style="@style/font13"
 						android:textAllCaps="true"
+						android:layout_centerVertical="true"
 						android:layout_width="wrap_content"
-						android:layout_height="match_parent"/>
+						android:layout_height="wrap_content"/>
 
 					<ImageView
 						android:id="@+id/add_address_field"
@@ -158,15 +161,16 @@
 
 				<RelativeLayout
 					android:layout_width="match_parent"
-					android:layout_height="30dp"
+					android:layout_height="40dp"
 					android:layout_gravity="center">
 
 					<TextView
 						android:text="@string/phone_number"
 						style="@style/font13"
 						android:textAllCaps="true"
+						android:layout_centerVertical="true"
 						android:layout_width="wrap_content"
-						android:layout_height="match_parent"/>
+						android:layout_height="wrap_content"/>
 
 					<ImageView
 						android:id="@+id/add_number_field"

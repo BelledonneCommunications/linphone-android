@@ -158,7 +158,7 @@ public class CallsAudio extends SampleTest {
 		
 		LinphoneTestManager.getInstance().autoAnswer = true;
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
+		solo.clickOnView(solo.getView(org.linphone.R.id.outgoing_hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
@@ -383,14 +383,14 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.side_menu_button));
-		solo.clickOnText("Settings");
+		solo.clickOnText(aContext.getString(org.linphone.R.string.menu_settings));
 	}
 	
 	private void goToAudioCodecsSettings() {
 		goToSettings();
 		
 		selectItemInListOnUIThread(4);
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_audio));
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_audio_title));
 		solo.sleep(500);
 	}
 	

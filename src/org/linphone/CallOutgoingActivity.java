@@ -91,7 +91,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
 
-		hangUp = (ImageView) findViewById(R.id.hang_up);
+		hangUp = (ImageView) findViewById(R.id.outgoing_hang_up);
 		hangUp.setOnClickListener(this);
 
 		mListener = new LinphoneCoreListenerBase(){
@@ -105,7 +105,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					finish();
 				}
 
-				if (call == mCall && State.Connected == state || State.StreamsRunning == state){
+				if (call == mCall && State.StreamsRunning == state){
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
@@ -115,6 +115,8 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					} else {
 						LinphoneActivity.instance().startIncallActivity(mCall);
 					}
+					finish();
+
 				}
 			}
 		};
@@ -202,7 +204,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 			}
 			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
 		}
-		if (id == R.id.hang_up) {
+		if (id == R.id.outgoing_hang_up) {
 			decline();
 		}
 	}

@@ -62,7 +62,6 @@
     <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
     <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
     <string name="pref_video_codec_h264_key">pref_video_codec_h264_key</string>
-    <string name="pref_video_automatically_share_my_video_key">pref_video_automatically_share_my_video_key</string>
     <string name="pref_video_automatically_accept_video_key">pref_video_automatically_accept_video_key</string>
     <string name="pref_video_initiate_call_with_video_key">pref_video_initiate_call_with_video_key</string>
     <string name="pref_video_enable_key">pref_video_enable_key</string>
@@ -103,9 +102,6 @@
 	<string name="pref_background_mode_key">pref_background_mode_key</string>
 	<string name="pref_codec_bitrate_limit_key">pref_codec_bitrate_limit_key</string>
 	<string name="pref_adaptive_rate_control_key">pref_adaptive_rate_control_key</string>
-	<string name="pref_adaptive_rate_algorithm_key">pref_adaptive_rate_algorithm</string>
-	<string name="pref_adaptive_rate_algorithm_simple_key">pref_adaptive_rate_algorithm_simple_key</string>
-	<string name="pref_adaptive_rate_algorithm_stateful_key">pref_adaptive_rate_algorithm_stateful_key</string>
 
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
@@ -155,6 +151,12 @@
 	<string name="pref_codec_silk16">silk 16 Khz</string>
 	<string name="pref_codec_silk24">silk 24 Khz</string>
 	<string name="pref_codec_g729">g729</string>
+
+	<string-array name="adaptive_rate_algorithm_entries">
+		<item>Simple</item>
+		<item>Stateful</item>
+	</string-array>
+
 	<string-array name="limit_bitrate_entry_values">
 		<item>10</item>
 		<item>15</item>
@@ -163,10 +165,21 @@
 		<item>64</item>
 		<item>128</item>
 	</string-array>
-	<string-array name="adaptive_rate_algorithm_entries">
-		<item>Simple</item>
-		<item>Stateful</item>
+	<string-array name="limit_bitrate_entries">
+		<item>10 kbits/s</item>
+		<item>15 kbits/s</item>
+		<item>20 kbits/s</item>
+		<item>36 kbits/s</item>
+		<item>64 kbits/s</item>
+		<item>128 kbits/s</item>
 	</string-array>
+
+	<string-array name="video_preset_entries">
+		<item>default</item>
+		<item>high-fps</item>
+		<item>custom</item>
+	</string-array>
+
 	<string name="pref_video_codec_vp8_title">VP8</string>
 	<string name="media_encryption_srtp">SRTP</string>
 	<string name="media_encryption_zrtp">ZRTP</string>

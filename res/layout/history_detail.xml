@@ -5,27 +5,33 @@
 			  android:layout_height="match_parent"
 			  android:orientation="vertical" >
 
-	<RelativeLayout
+	<LinearLayout
+		android:id="@+id/top_bar"
+		android:orientation="horizontal"
+		android:background="@color/colorG"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="bottom">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
-			android:padding="15dp"
-			android:adjustViewBounds="true"/>
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
 
 		<View
-			android:background="@color/colorF"
-			android:layout_alignParentBottom="true"
-			android:layout_width="match_parent"
-			android:layout_height="1dp"/>
-	</RelativeLayout>
+			android:layout_weight="0.8"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+	<View
+		android:background="@color/colorF"
+		android:layout_alignParentBottom="true"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
 
 	<LinearLayout
 		android:layout_width="match_parent"

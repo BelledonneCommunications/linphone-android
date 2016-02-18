@@ -111,6 +111,7 @@ public class ContactsManager {
 				accountManager.addAccountExplicitly(newAccount, null, null);
 				mAccount = newAccount;
 			} catch (Exception e) {
+				Log.e(e);
 				mAccount = null;
 			}
 		} else {

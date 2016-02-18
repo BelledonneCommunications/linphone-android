@@ -66,7 +66,6 @@
 					android:background="@drawable/resizable_confirm_delete_button"
 					style="@style/font7"
 					android:textAllCaps="true"
-					android:contentDescription="@string/content_description_validate"
 					android:paddingLeft="10dp"
 					android:paddingRight="10dp"
 					android:layout_width="wrap_content"

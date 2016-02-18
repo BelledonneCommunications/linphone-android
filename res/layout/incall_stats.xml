@@ -23,7 +23,7 @@
 				android:gravity="left|center_vertical"
 				android:id="@+id/call_stats_title"
 				android:textStyle="bold"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="18sp"/>
 
 		</TableRow>
@@ -38,7 +38,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_codec"
 				android:textStyle="bold"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -47,7 +47,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -62,7 +62,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_upload"
 				android:textStyle="bold"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -71,7 +71,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -85,7 +85,7 @@
 				android:layout_height="wrap_content"
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_download"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textStyle="bold"
 				android:textSize="12sp"/>
 
@@ -95,7 +95,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -110,7 +110,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_ice"
 				android:textStyle="bold"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -119,7 +119,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 		</TableRow>
@@ -135,7 +135,7 @@
 				android:gravity="left|center_vertical"
 				android:text="@string/call_stats_video_resolution"
 				android:textStyle="bold"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 			<TextView
@@ -144,7 +144,7 @@
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:gravity="right|center_vertical"
-				android:textColor="@color/colorB"
+				android:textColor="@color/colorC"
 				android:textSize="12sp"/>
 
 		</TableRow>

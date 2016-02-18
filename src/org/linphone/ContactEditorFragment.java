@@ -58,6 +58,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,7 +66,7 @@ import android.widget.LinearLayout;
 
 public class ContactEditorFragment extends Fragment {
 	private View view;
-	private ImageView back, edit, ok;
+	private ImageView cancel, deleteContact, ok;
 	private ImageView addNumber, addSipAddress, contactPicture;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
@@ -110,14 +111,16 @@ public class ContactEditorFragment extends Fragment {
 		
 		view = inflater.inflate(R.layout.contact_edit, container, false);
 
-		ImageView back = (ImageView) view.findViewById(R.id.back);
-		back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getFragmentManager().popBackStackImmediate();
-			}
-		});
-		
+		deleteContact = (ImageView) view.findViewById(R.id.delete_contact);
+
+		cancel = (ImageView) view.findViewById(R.id.cancel);
+		cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getFragmentManager().popBackStackImmediate();
+				}
+			});
+
 		ok = (ImageView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
@@ -221,8 +224,10 @@ public class ContactEditorFragment extends Fragment {
 				lastName.setText(contact.getName());
 				firstName.setText("");
 			}
+		} else {
+			deleteContact.setVisibility(View.INVISIBLE);
 		}
-		
+
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		if (contact != null && contact.getPhotoUri() != null) {
 			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
@@ -271,6 +276,9 @@ public class ContactEditorFragment extends Fragment {
 		if(LinphoneActivity.isInstanciated()){
 			LinphoneActivity.instance().hideTabBar(false);
 		}
+
+		// Force hide keyboard
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 	}
 
 	private void pickImage() {

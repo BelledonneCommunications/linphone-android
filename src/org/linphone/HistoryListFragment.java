@@ -38,9 +38,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -51,7 +48,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -62,7 +58,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
 	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel;
-	private RelativeLayout editList, topBar;
+	private LinearLayout editList, topBar;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<LinphoneCallLog> mLogs;
 
@@ -81,8 +77,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
-		editList = (RelativeLayout) view.findViewById(R.id.edit_list);
-		topBar = (RelativeLayout) view.findViewById(R.id.top_bar);
+		editList = (LinearLayout) view.findViewById(R.id.edit_list);
+		topBar = (LinearLayout) view.findViewById(R.id.top_bar);
 
 		cancel = (ImageView) view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
@@ -116,6 +112,19 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		int size = historyList.getAdapter().getCount();
 		for(int i=0; i<size; i++) {
 			historyList.setItemChecked(i,isSelectAll);
+		}
+	}
+
+	public void displayFirstLog(){
+		if(mLogs.size() > 0){
+			LinphoneCallLog log = mLogs.get(0);
+			if (log.getDirection() == CallDirection.Incoming) {
+				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getFrom().toString(), mLogs.get(0));
+			} else {
+				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getTo().toString(), mLogs.get(0));
+			}
+		} else {
+			LinphoneActivity.instance().displayEmptyFragment();
 		}
 	}
 
@@ -232,7 +241,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			}
 
 			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-			Button delete = (Button) dialog.findViewById(R.id.delete);
+			Button delete = (Button) dialog.findViewById(R.id.delete_button);
 			Button cancel = (Button) dialog.findViewById(R.id.cancel);
 
 			delete.setOnClickListener(new OnClickListener() {
@@ -315,6 +324,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		if (!hideHistoryListAndDisplayMessageIfEmpty()){
 			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		}
+		if(getResources().getBoolean(R.bool.isTablet)){
+			displayFirstLog();
 		}
 	}
 

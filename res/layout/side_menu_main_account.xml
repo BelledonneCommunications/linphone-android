@@ -3,7 +3,7 @@
 	android:id="@+id/default_account"
 	android:background="@color/colorF"
 	android:layout_width="match_parent"
-	android:layout_height="80dp">
+	android:layout_height="70dp">
 
 	<ImageView
 		android:id="@+id/main_account_avatar"

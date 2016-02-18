@@ -31,7 +31,6 @@
 				<TextView
 					android:text="@string/assistant_welcome"
 					style="@style/font13"
-					android:contentDescription="@string/content_description_welcome"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"/>
 
@@ -103,11 +102,10 @@
 
 		<Button
 			android:id="@+id/assistant_connect"
-			android:text="@string/assistant_connect"
+			android:text="@string/connect"
 			android:background="@drawable/assistant_button"
 			style="@style/font5"
 			android:textAllCaps="false"
-			android:contentDescription="@string/content_description_validate"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingLeft="10dp"

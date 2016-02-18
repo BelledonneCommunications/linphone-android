@@ -69,12 +69,12 @@ public class SettingsFragment extends PreferencesListFragment {
 		initSettings();
 		setListeners();
 		hideSettings();
-		
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
-				
+
 				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
 				Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 
@@ -339,7 +339,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initMediaEncryptionPreference(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
-		entries.add(getString(R.string.media_encryption_none));
+		entries.add(getString(R.string.pref_none));
 		values.add(getString(R.string.pref_media_encryption_key_none));
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -402,7 +402,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initializePreferredVideoFpsPreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
-		entries.add("none");
+		entries.add(getString(R.string.pref_none));
 		values.add("0");
 		for (int i = 5; i <= 30; i += 5) {
 			String str = Integer.toString(i);
@@ -412,7 +412,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		setListPreferenceValues(pref, entries, values);
 		String value = Integer.toString(mPrefs.getPreferredVideoFps());
 		if (value.equals("0")) {
-			value = "none";
+			value = getString(R.string.pref_none);
 		}
 		pref.setSummary(value);
 		pref.setValue(value);
@@ -480,10 +480,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		CheckBoxPreference adaptiveRateControl = (CheckBoxPreference) findPreference(getString(R.string.pref_adaptive_rate_control_key));
 		adaptiveRateControl.setChecked(mPrefs.isAdaptiveRateControlEnabled());
 
-		ListPreference adaptiveRateAlgorithm = (ListPreference) findPreference(getString(R.string.pref_adaptive_rate_algorithm_key));
-		adaptiveRateAlgorithm.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
-		adaptiveRateAlgorithm.setValue(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
-
 		ListPreference bitrateLimit = (ListPreference) findPreference(getString(R.string.pref_codec_bitrate_limit_key));
 		bitrateLimit.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
 		bitrateLimit.setValue(String.valueOf(mPrefs.getCodecBitrateLimit()));
@@ -507,16 +503,6 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-
-		findPreference(getString(R.string.pref_adaptive_rate_algorithm_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromString((String) newValue));
-				preference.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
-				return true;
-			}
-		});
-
 
 		findPreference(getString(R.string.pref_codec_bitrate_limit_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -620,7 +606,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		int fps = mPrefs.getPreferredVideoFps();
 		String fpsStr = Integer.toString(fps);
 		if (fpsStr.equals("0")) {
-			fpsStr = "none";
+			fpsStr = getString(R.string.pref_none);
 		}
 		findPreference(getString(R.string.pref_preferred_video_fps_key)).setSummary(fpsStr);
 		findPreference(getString(R.string.pref_bandwidth_limit_key)).setSummary(Integer.toString(mPrefs.getBandwidthLimit()));
@@ -982,7 +968,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();

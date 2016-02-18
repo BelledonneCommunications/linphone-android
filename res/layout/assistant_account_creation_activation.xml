@@ -2,39 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+	android:padding="30dp"
+	android:gravity="center_horizontal"
     android:orientation="vertical" >
 
 	<TextView
 		android:text="@string/assistant_create_account"
-		android:contentDescription="@string/content_description_welcome"
 		style="@style/font6"
 		android:textAllCaps="true"
-		android:paddingTop="20dp"
-		android:layout_gravity="center"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:gravity="center_horizontal"/>
+		android:layout_height="wrap_content"/>
 
 	<TextView
 		android:text="@string/assistant_create_account_part_2"
 		style="@style/font11"
+		android:paddingTop="10dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
+	<TextView
+		android:text="@string/assistant_validate_account"
+		style="@style/font11"
+		android:paddingTop="10dp"
+		android:gravity="center"
 		android:layout_gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"/>
 
-
 	<Button
 		android:id="@+id/assistant_check"
-		android:text="@string/assistant_create"
+		android:text="@string/assistant_create_account"
 		android:background="@drawable/assistant_button"
 		style="@style/font8"
-		android:contentDescription="@string/content_description_validate"
+		android:contentDescription="@string/content_description_valid"
 		android:layout_width="wrap_content"
+		android:layout_height="40dp"
+		android:layout_margin="10dp"
 		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:layout_marginTop="20dp"
-		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"/>
+		android:paddingRight="10dp"/>
 
 </LinearLayout>

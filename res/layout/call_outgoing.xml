@@ -93,7 +93,7 @@
 	<LinearLayout
 		android:id="@+id/menu"
 		android:layout_width="match_parent"
-		android:layout_height="70dp"
+		android:layout_height="60dp"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentLeft="true"
 		android:orientation="horizontal" >
@@ -106,7 +106,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 		<ImageView
 			android:id="@+id/speaker"
@@ -116,17 +116,17 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="20dp"/>
+			android:padding="15dp"/>
 
 		<ImageView
-			android:id="@+id/hang_up"
+			android:id="@+id/outgoing_hang_up"
 			android:src="@drawable/call_hangup"
 			android:background="@drawable/hangup"
 			android:contentDescription="@string/content_description_hang_up"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="0.7"
-			android:padding="15dp"/>
+			android:padding="12dp"/>
 
 	</LinearLayout>
 

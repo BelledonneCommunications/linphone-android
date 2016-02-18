@@ -5,50 +5,52 @@
 	android:background="@color/colorG"
 	android:orientation="vertical" >
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/top_bar"
 		android:background="@color/colorG"
+		android:orientation="horizontal"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
-		android:layout_gravity="top">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/all_calls"
 			android:src="@drawable/history_all_button"
 			android:contentDescription="@string/content_description_all_calls"
-			android:padding="12dp"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"/>
+			android:padding="15dp"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"/>
 
 		<ImageView
 			android:id="@+id/missed_calls"
 			android:src="@drawable/history_missed_button"
 			android:contentDescription="@string/content_description_missed_calls"
-			android:padding="12dp"
-			android:layout_width="wrap_content"
+			android:padding="15dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentTop="true"
-			android:layout_toRightOf="@+id/all_calls"
-			android:layout_toEndOf="@+id/all_calls"/>r
+			android:layout_weight="0.2"/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
 
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
 			android:contentDescription="@string/content_description_edit"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="12dp"/>
-
-		<View
-			android:background="@color/colorF"
-			android:layout_alignParentBottom="true"
-			android:layout_width="match_parent"
-			android:layout_height="1dp"/>
-
-	</RelativeLayout>
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
+
+	<View
+		android:background="@color/colorF"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
 
 	<ListView
 		android:id="@+id/history_list"

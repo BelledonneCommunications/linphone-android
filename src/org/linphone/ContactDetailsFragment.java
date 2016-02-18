@@ -17,20 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentProviderOperation;
-import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.app.Fragment;
@@ -96,14 +91,13 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
 		}
 
-		ImageView back = (ImageView) view.findViewById(R.id.back);
-		back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getFragmentManager().popBackStackImmediate();
-			}
-		});
-		
+		back = (ImageView) view.findViewById(R.id.back);
+		if(getResources().getBoolean(R.bool.isTablet)){
+			back.setVisibility(View.INVISIBLE);
+		} else {
+			back.setOnClickListener(this);
+		}
+
 		return view;
 	}
 	
@@ -245,7 +239,10 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-			
+
+		if (id == R.id.back) {
+			getFragmentManager().popBackStackImmediate();
+		}
 	}
 	
 	private void deleteExistingContact() {

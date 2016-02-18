@@ -43,9 +43,11 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.about, container, false);
 
-		TextView aboutText = (TextView) view.findViewById(R.id.about_text);
+		TextView aboutVersion = (TextView) view.findViewById(R.id.about_android_version);
+		TextView aboutLiblinphoneVersion = (TextView) view.findViewById(R.id.about_liblinphone_version);
+		aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
 		try {
-			aboutText.setText(String.format(getString(R.string.about_text), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
+			aboutVersion.setText(String.format(getString(R.string.about_version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}

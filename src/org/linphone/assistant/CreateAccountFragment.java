@@ -107,7 +107,7 @@ public class CreateAccountFragment extends Fragment {
                 if (end > start) {
                     for (int index = start; index < end; index++) {                                         
                         if (!inputFilterCharacters.contains(String.valueOf(source.charAt(index)))) { 
-                            return ""; 
+                            return "";
                         }               
                     }
                 }
@@ -125,7 +125,7 @@ public class CreateAccountFragment extends Fragment {
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						createAccount(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
 					}
@@ -156,7 +156,7 @@ public class CreateAccountFragment extends Fragment {
 	}
 
 	private void displayError(Boolean isOk, TextView error, EditText editText, String errorText){
-		if(isOk){
+		if(isOk || editText.getText().toString().equals("")){
 			error.setVisibility(View.INVISIBLE);
 			error.setText(errorText);
 			editText.setBackgroundResource(R.drawable.resizable_textfield);
@@ -261,7 +261,7 @@ public class CreateAccountFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					AssistantActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain));
+    					AssistantActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain), null);
     					AssistantActivity.instance().displayWizardConfirm(username);
 					}
 	    		};

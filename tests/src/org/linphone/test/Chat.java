@@ -51,7 +51,7 @@ public class Chat extends SampleTest {
 		goToChat();
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.new_discussion));
-		solo.enterText((AutoCompleteTextView)solo.getView(org.linphone.R.id.search_contact_field), "sip:" + iContext.getString(R.string.account_test_calls_login) + "@" + iContext.getString(R.string.account_test_calls_domain));
+		solo.enterText((EditText)solo.getView(org.linphone.R.id.search_contact_field), "sip:" + iContext.getString(R.string.account_test_calls_login) + "@" + iContext.getString(R.string.account_test_calls_domain));
 
 		solo.enterText((EditText)solo.getView(org.linphone.R.id.message), iContext.getString(R.string.chat_test_text_sent));
 		solo.clickOnView(solo.getView(org.linphone.R.id.send_message));

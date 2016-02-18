@@ -61,6 +61,7 @@ BUILD_RTP_MAP=0
 BUILD_DONT_CHECK_HEADERS_IN_MESSAGE=0
 BUILD_ILBC=1
 BUILD_CODEC2=0
+BUILD_BCTOOLBOX_MBEDTLS=0
 LIBLINPHONE_EXTENDED_SRC_FILES=
 LIBLINPHONE_EXTENDED_C_INCLUDES=
 LIBLINPHONE_EXTENDED_CFLAGS=
@@ -130,25 +131,6 @@ endif
 
 install: install-apk run-linphone
 
-#libilbc
-LIBILBC_SRC_DIR=$(TOPDIR)/submodules/libilbc-rfc3951
-LIBILBC_BUILD_DIR=$(LIBILBC_SRC_DIR)
-$(LIBILBC_SRC_DIR)/configure:
-	cd $(LIBILBC_SRC_DIR) && ./autogen.sh
-
-$(LIBILBC_BUILD_DIR)/Makefile: $(LIBILBC_SRC_DIR)/configure
-	cd $(LIBILBC_BUILD_DIR) && \
-	./configure \
-
-$(LIBILBC_BUILD_DIR)/src/iLBC_decode.c: $(LIBILBC_BUILD_DIR)/Makefile
-	cd $(LIBILBC_BUILD_DIR)/downloads && make \
-	|| ( echo "iLBC prepare stage failed" ; exit 1 )
-
-ifeq ($(BUILD_ILBC),1)
-prepare-ilbc: $(LIBILBC_BUILD_DIR)/src/iLBC_decode.c
-else
-prepare-ilbc:
-endif
 
 #ffmpeg
 ifeq ($(BUILD_VIDEO),1)
@@ -303,13 +285,13 @@ openh264-install-headers:
 	mkdir -p $(OPENH264_SRC_DIR)/include/wels
 	rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/codec/api/svc/* $(OPENH264_SRC_DIR)/include/wels/.
 
-copy-openh264-x86: openh264-patch openh264-install-headers
+copy-openh264-x86:  openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
 	mkdir -p $(OPENH264_BUILD_DIR_X86)
 	cd $(OPENH264_BUILD_DIR_X86) \
 	&& rsync -rvLpgoc --exclude ".git"  $(OPENH264_SRC_DIR)/* .
 
-copy-openh264-arm: openh264-patch openh264-install-headers
+copy-openh264-arm:  openh264-install-headers
 	mkdir -p $(OPENH264_BUILD_DIR)
 	mkdir -p $(OPENH264_BUILD_DIR_ARM)
 	cd $(OPENH264_BUILD_DIR_ARM) \
@@ -339,7 +321,7 @@ endif
 endif
 LIBVPX_SRC_DIR=$(TOPDIR)/submodules/externals/libvpx
 LIBVPX_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libvpx
-LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-debug
+LIBVPX_CONFIGURE_OPTIONS=--disable-vp9 --disable-examples --disable-unit-tests --disable-postproc --enable-error-concealment --enable-pic
 
 $(LIBVPX_SRC_DIR)/configure_android_x86_patch_applied.txt:
 	cd $(LIBVPX_SRC_DIR) && patch -p1 < $(TOPDIR)/patches/libvpx_configure_android_x86.patch
@@ -418,8 +400,8 @@ prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(
 
 
 #Matroska2
-MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska
-MATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska
+MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska-c
+MATROSKA_BUILD_DIR=$(TOPDIR)/submodules/externals/build/libmatroska-c
 ifeq ($(BUILD_MATROSKA), 1)
 prepare-matroska2: $(MATROSKA_SRC_DIR)/patch_applied.txt
 else
@@ -430,7 +412,7 @@ $(MATROSKA_SRC_DIR)/patch_applied.txt: $(MATROSKA_BUILD_DIR)/fix_libmatroska2.pa
 	cd $(MATROSKA_SRC_DIR);	patch -p1 < $<; touch $@
 
 #Build targets
-prepare-sources: build-ffmpeg build-x264 build-openh264 prepare-ilbc build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2 prepare-codec2
+prepare-sources: build-ffmpeg build-x264 build-openh264 build-vpx prepare-srtp prepare-mediastreamer2 prepare-antlr3 prepare-belle-sip $(TOPDIR)/res/raw/rootca.pem prepare-matroska2 prepare-codec2
 
 GENERATE_OPTIONS = NDK_DEBUG=$(NDK_DEBUG) BUILD_FOR_X86=$(BUILD_FOR_X86) \
 	BUILD_AMRNB=$(BUILD_AMRNB) BUILD_AMRWB=$(BUILD_AMRWB) BUILD_SILK=$(BUILD_SILK) BUILD_G729=$(BUILD_G729) BUILD_OPUS=$(BUILD_OPUS) BUILD_CODEC2=$(BUILD_CODEC2)\

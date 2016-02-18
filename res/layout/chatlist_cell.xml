@@ -8,7 +8,7 @@
 	android:paddingTop="5dp">
 
 	<CheckBox
-		android:id="@+id/delete"
+		android:id="@+id/delete_chatroom"
 		android:button="@drawable/checkbox"
 		android:contentDescription="@string/content_description_delete"
 		android:paddingRight="5dp"
@@ -19,23 +19,10 @@
 		android:layout_centerVertical="true"
 		android:visibility="gone" />
 	
-	<TextView 
-	    android:id="@+id/draft"
-	    android:visibility="gone"
-	    android:layout_centerVertical="true"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textAppearance="?android:attr/textAppearanceSmall"
-	    android:textColor="@color/colorB"
-	    android:text="@string/draft"
-	    android:layout_marginLeft="5dp"
-	    android:layout_marginRight="5dp" />
-	
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_centerVertical="true"
-	    android:layout_toLeftOf="@id/delete"
 	    android:orientation="horizontal">
 
 		<RelativeLayout
@@ -90,8 +77,8 @@
 
 			<TextView
 				android:id="@+id/unreadMessages"
-				android:layout_width="25dp"
-				android:layout_height="25dp"
+				android:layout_width="20dp"
+				android:layout_height="20dp"
 				android:background="@drawable/chat_list_indicator"
 				style="@style/font7"
 				android:gravity="center"

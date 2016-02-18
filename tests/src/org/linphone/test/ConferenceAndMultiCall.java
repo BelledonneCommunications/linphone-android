@@ -57,7 +57,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 	public void testCRemoveOneFromConference() {
 		startConference();
 
-		solo.clickOnView(solo.getView(org.linphone.R.id.conferenceStatus));
+		solo.clickOnView(solo.getView(org.linphone.R.id.conference_pause));
 
 		Assert.assertEquals(1, LinphoneTestManager.getLc(1).getCallsNb());
 		Assert.assertEquals(1, LinphoneTestManager.getLc(2).getCallsNb());
@@ -102,9 +102,8 @@ public class ConferenceAndMultiCall extends SampleTest {
 		LinphoneCall call2 = LinphoneTestManager.getLc(2).getCalls()[0];
 		waitForCallState(call2,LinphoneCall.State.StreamsRunning);
 		waitForCallState(call1,LinphoneCall.State.PausedByRemote);
-		
-		ArrayList<View> views = solo.getViews(solo.getView(2));
-		solo.clickOnView(views.get(2)); // Second call pause button
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
 		solo.sleep(2000);
 		waitForCallState(call2,LinphoneCall.State.PausedByRemote);
 		waitForCallState(call1,LinphoneCall.State.PausedByRemote);
@@ -130,7 +129,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		solo.sleep(2000);
-		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
+		solo.clickOnView(solo.getView(org.linphone.R.id.outgoing_hang_up));
 
 		waitForCallState(LinphoneTestManager.getLc(1).getCalls()[0],LinphoneCall.State.PausedByRemote);
 		solo.clickOnView(solo.getView(org.linphone.R.id.pause));
@@ -268,7 +267,8 @@ public class ConferenceAndMultiCall extends SampleTest {
 	
 	private void startConference() {
 		startTwoCalls();
-		
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.options));
 		solo.clickOnView(solo.getView(org.linphone.R.id.conference));
 		solo.sleep(1000);
 		
@@ -278,7 +278,7 @@ public class ConferenceAndMultiCall extends SampleTest {
 	}
 	
 	private void assertCallIsCorrectlyRunning(int lcId) {
-		solo.waitForActivity("InCallActivity", 5000);
+		solo.waitForActivity("CallActivity", 5000);
 		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 
 		solo.sleep(2000);

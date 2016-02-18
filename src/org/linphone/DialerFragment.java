@@ -127,7 +127,7 @@ public class DialerFragment extends Fragment {
 				mAddress.setPictureUri(Uri.parse(photo));
 			}
 		}
-		
+
 		return view;
     }
 
@@ -154,7 +154,7 @@ public class DialerFragment extends Fragment {
 		}
 
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-		if(isOrientationLandscape) {
+		if(isOrientationLandscape && !getResources().getBoolean(R.bool.isTablet)) {
 			((LinearLayout) numpad).setVisibility(View.GONE);
 		} else {
 			((LinearLayout) numpad).setVisibility(View.VISIBLE);

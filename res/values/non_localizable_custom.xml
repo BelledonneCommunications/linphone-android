@@ -3,6 +3,10 @@
 	<!-- New settings -->
 	<string name="default_domain">sip.orangecyberdefense.com</string>
 	<string name="default_stun">stun.linphone.org</string>
+
+	<string name="sync_account_type">org.linphone</string> <!-- Change package ! -->
+	<string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string> <!-- Change package, leave .profile at the end ! -->
+
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool>
 	<bool name="hide_in_call_stats">false</bool>
 	<bool name="use_linphone_friend">true</bool>
@@ -25,7 +29,7 @@
 	<bool name="allow_cancel_remote_provisioning_login_activity">false</bool>
 	<bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
-	<bool name="use_linphone_server_ports">true</bool>
+	<bool name="use_linphone_server_ports">false</bool>
 	<bool name="allow_only_phone_numbers_in_wizard">false</bool>
 
 	<bool name="enable_linphone_friends">false</bool>

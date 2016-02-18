@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public enum FragmentsAvailable {
 	UNKNOW,
 	DIALER,
+	EMPTY,
 	HISTORY_LIST,
 	HISTORY_DETAIL,
 	CONTACTS_LIST,

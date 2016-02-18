@@ -7,12 +7,6 @@
 [submodule "submodules/externals/speex"]
 	path = submodules/externals/speex
 	url = git://git.linphone.org/speex.git
-[submodule "submodules/msilbc"]
-	path = submodules/msilbc
-	url = git://git.linphone.org/msilbc.git
-[submodule "submodules/libilbc-rfc3951"]
-	path = submodules/libilbc-rfc3951
-	url = git://git.linphone.org/libilbc-rfc3951.git
 [submodule "submodules/externals/ffmpeg"]
 	path = submodules/externals/ffmpeg
 	url = git://git.linphone.org/ffmpeg.git
@@ -84,10 +78,12 @@
 	path = submodules/externals/openh264
 	url = https://github.com/cisco/openh264
 	ignore = dirty
-[submodule "submodules/externals/libmatroska"]
-	path = submodules/externals/libmatroska
-	url = https://github.com/Matroska-Org/foundation-source.git
-	ignore = dirty
 [submodule "submodules/mscodec2"]
 	path = submodules/mscodec2
 	url = git://git.linphone.org/mscodec2.git
+[submodule "submodules/bctoolbox"]
+	path = submodules/bctoolbox
+	url = git://git.linphone.org/bctoolbox.git
+[submodule "submodules/externals/mbedtls"]
+	path = submodules/externals/mbedtls
+	url = https://github.com/ARMmbed/mbedtls.git

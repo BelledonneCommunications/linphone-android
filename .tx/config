@@ -8,8 +8,3 @@ type = ANDROID
 file_filter = res/values-<lang>/strings.xml
 source_file = res/values/strings.xml
 source_lang = en
-
-[linphone-android.customxml]
-file_filter = res/values-<lang>/custom.xml
-source_file = res/values/custom.xml
-source_lang = en

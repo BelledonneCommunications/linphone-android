@@ -4,67 +4,58 @@
     android:layout_height="match_parent"
   	android:background="@color/colorG" >
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/top_bar"
+		android:orientation="horizontal"
+		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="50dp">
+		android:layout_height="60dp">
 
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back_button"
 			android:contentDescription="@string/content_description_back"
-			android:layout_width="70dp"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
+			android:layout_weight="0.2"
 			android:padding="15dp"/>
-
-		<ImageView
-			android:id="@+id/edit"
-			android:src="@drawable/edit_list_button"
-			android:contentDescription="@string/content_description_edit"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:padding="12dp"/>
-
-		<ImageView
-			android:id="@+id/start_call"
-			android:src="@drawable/call_alt_start"
-			android:contentDescription="@string/content_description_call"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"
-			android:padding="12dp"
-			android:layout_toLeftOf="@+id/edit"/>
-
-		<ImageView
-			android:id="@+id/back_to_call"
-			android:src="@drawable/call_back_button"
-			android:contentDescription="@string/content_description_call"
-			android:layout_toLeftOf="@id/edit"
-			android:layout_width="70dp"
-			android:layout_height="match_parent"
-			android:visibility="gone"
-			android:padding="12dp"/>
 
 		<TextView
 			android:id="@+id/contact_name"
 			style="@style/font2"
 			android:ellipsize="end"
 			android:singleLine="true"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_toLeftOf="@id/start_call"
-			android:paddingLeft="10dp"
-			android:gravity="center" android:layout_toRightOf="@+id/back"
-			android:layout_toEndOf="@+id/back"/>
+			android:layout_weight="0.4"
+			android:layout_gravity="center"
+			android:padding="15dp"/>
 
-		<View
-			android:background="@color/colorF"
-			android:layout_alignParentBottom="true"
-			android:layout_width="match_parent"
-			android:layout_height="1dp"/>
+		<ImageView
+			android:id="@+id/start_call"
+			android:src="@drawable/call_alt_start_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
 
-	</RelativeLayout>
+		<ImageView
+			android:id="@+id/back_to_call"
+			android:src="@drawable/call_back_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:visibility="gone"
+			android:padding="12dp"/>
+
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
 
@@ -146,18 +137,29 @@
 		android:layout_margin="10dp"
 		android:layout_below="@+id/top_bar"/>
 
-	<AutoCompleteTextView
+	<EditText
 		android:id="@+id/search_contact_field"
-		android:background="@drawable/resizable_textfield"
-		android:hint="@string/search"
-		android:inputType="textPersonName"
-		android:completionThreshold="1"
+		android:contentDescription="@string/content_description_search"
 		android:textCursorDrawable="@null"
-		android:visibility="gone"
-		android:layout_margin="10dp"
-		android:layout_below="@id/top_bar"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
-		android:paddingLeft="10dp"/>
+		android:visibility="gone"
+		android:textColor="@android:color/black"
+		android:background="@drawable/resizable_textfield"
+		android:layout_margin="5dp"
+		android:layout_below="@id/top_bar"
+		android:inputType="textPersonName"/>
+
+	<ListView
+		android:id="@+id/result_contacts"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:divider="@color/colorE"
+		android:visibility="gone"
+		android:layout_below="@id/search_contact_field"
+		android:fastScrollAlwaysVisible="true"
+		android:fastScrollEnabled="true"
+		android:dividerHeight="1dp"
+		android:layout_above="@+id/footer"/>
 
 </RelativeLayout>
