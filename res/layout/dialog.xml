@@ -23,7 +23,7 @@
 		android:orientation="vertical">
 
 		<Button
-			android:id="@+id/delete"
+			android:id="@+id/delete_button"
 			android:text="@string/delete"
 			android:background="@drawable/resizable_confirm_delete_button"
 			style="@style/font5"
