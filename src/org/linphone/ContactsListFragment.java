@@ -320,11 +320,16 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		editList.setVisibility(View.GONE);
 		topbar.setVisibility(View.VISIBLE);
 		invalidate();
+		if(getResources().getBoolean(R.bool.isTablet)){
+			displayFirstContact();
+		}
 	}
 
 	public void displayFirstContact(){
-		if(contactsList.getAdapter().getCount() > 0){
-			LinphoneActivity.instance().displayContact((Contact) contactsList.getAdapter().getItem(0),false);
+		if(contactsList.getAdapter().getCount() > 0) {
+			LinphoneActivity.instance().displayContact((Contact) contactsList.getAdapter().getItem(0), false);
+		} else {
+			LinphoneActivity.instance().displayEmptyFragment();
 		}
 	}
 

@@ -461,13 +461,19 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 			transaction.replace(R.id.fragmentContainer2, newFragment);
 		} else {
+			if(newFragmentType == FragmentsAvailable.EMPTY) {
+				ll.setVisibility(View.VISIBLE);
+				transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
+			}
+
 			if (newFragmentType == FragmentsAvailable.DIALER
 					|| newFragmentType == FragmentsAvailable.ABOUT
 					|| newFragmentType == FragmentsAvailable.SETTINGS
 					|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
 				ll.setVisibility(View.GONE);
 			} else {
-				ll.setVisibility(View.INVISIBLE);
+				ll.setVisibility(View.VISIBLE);
+				transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
 			}
 
 			if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
@@ -542,6 +548,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 			changeCurrentFragment(FragmentsAvailable.HISTORY_DETAIL, extras);
 		}
+	}
+
+	public void displayEmptyFragment(){
+		changeCurrentFragment(FragmentsAvailable.HISTORY_LIST,new Bundle());
 	}
 
 	@SuppressLint("SimpleDateFormat")

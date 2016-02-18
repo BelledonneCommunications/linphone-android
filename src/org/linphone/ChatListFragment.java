@@ -139,6 +139,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		editList.setVisibility(View.GONE);
 		topbar.setVisibility(View.VISIBLE);
 		refresh();
+		if(getResources().getBoolean(R.bool.isTablet)){
+			displayFirstChat();
+		}
 	}
 
 	public int getNbItemsChecked(){
@@ -188,6 +191,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void displayFirstChat(){
 		if(mConversations.size() > 0) {
 			LinphoneActivity.instance().displayChat(mConversations.get(0));
+		} else {
+			LinphoneActivity.instance().displayEmptyFragment();
 		}
 	}
 
