@@ -103,7 +103,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	
 	public void changeDisplayedContact(Contact newContact) {
 		contact = newContact;
-		contact.refresh(getActivity().getContentResolver());
+		//contact.refresh(getActivity().getContentResolver());
 		displayContact(inflater, view);
 	}
 	

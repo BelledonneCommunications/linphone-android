@@ -31,16 +31,10 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -60,7 +54,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -322,6 +315,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		String sipUri = (String) view.getTag();
 
+		view.setSelected(true);
+
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
 			LinphoneActivity.instance().displayChat(sipUri);
 		}
@@ -432,13 +427,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 			/*if(contact != null){
 				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-<<<<<<< HEAD
 			}*/
-=======
-			} else {
-				contactPicture.setImageResource(R.drawable.avatar);
-			}
->>>>>>> linphone-android/master
 
 			if (unreadMessagesCount > 0) {
 				unreadMessages.setVisibility(View.VISIBLE);

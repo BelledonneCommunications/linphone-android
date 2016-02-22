@@ -41,11 +41,24 @@
 						android:visibility="gone">
 					</LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/calls_list"
+                        android:background="@color/colorG"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="bottom"
+                        android:divider="@color/colorF"
+                        android:dividerHeight="1dp"
+                        android:orientation="vertical">
+                    </LinearLayout>
+
 					<RelativeLayout
 						android:id="@+id/active_call"
 						android:background="@color/colorA"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+                        android:layout_above="@id/calls_list"
 						android:visibility="visible">
 
 						<LinearLayout
@@ -134,18 +147,6 @@
 							android:layout_alignParentTop="true"/>
 
 					</RelativeLayout>
-
-					<LinearLayout
-						android:id="@+id/calls_list"
-                        android:background="@color/colorG"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_alignParentBottom="true"
-						android:layout_gravity="bottom"
-                        android:divider="@color/colorF"
-                        android:dividerHeight="1dp"
-						android:orientation="vertical">
-					</LinearLayout>
 
 					<LinearLayout
 						android:id="@+id/no_current_call"

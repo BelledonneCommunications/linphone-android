@@ -252,7 +252,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			@Override
 			public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
 				if (status != null) {
-					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP)/* && !call.isAuthenticationTokenVerified()*/){
+					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
 						status.showZRTPDialog(call);
 					}
 					status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
@@ -757,10 +757,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	private void displayAudioCall(){
 		mControlsLayout.setVisibility(View.VISIBLE);
-		mActiveCallHeader.setVisibility(View.VISIBLE);
 		mActiveCallHeader.setAlpha(1f);
-		callInfo.setVisibility(View.VISIBLE);
-		contactPicture.setVisibility(View.VISIBLE);
+		mActiveCallHeader.setVisibility(View.VISIBLE);
 		mNoCurrentCall.setVisibility(View.GONE);
 		callsList.setVisibility(View.VISIBLE);
 		switchCamera.setVisibility(View.GONE);
@@ -848,8 +846,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		if(display) {
 			showStatusBar();
 			mControlsLayout.setVisibility(View.VISIBLE);
-			mActiveCallHeader.setVisibility(View.VISIBLE);
 			mActiveCallHeader.setAlpha(0.7f);
+			mActiveCallHeader.setVisibility(View.VISIBLE);
 			callInfo.setVisibility(View.VISIBLE);
 			contactPicture.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
@@ -862,6 +860,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			mControlsLayout.setVisibility(View.GONE);
 			mActiveCallHeader.setVisibility(View.GONE);
 			mActiveCallHeader.setAlpha(1f);
+			contactPicture.setVisibility(View.GONE);
 			switchCamera.setVisibility(View.GONE);
 			callsList.setVisibility(View.GONE);
 		}

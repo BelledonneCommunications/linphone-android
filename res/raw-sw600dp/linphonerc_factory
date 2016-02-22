@@ -5,6 +5,13 @@
 [net]
 mtu=1300
 
+[app]
+animations=0
+show_login_view=1
+debug_popup_magic=#1234
+debug=1
+server_url=http://85.233.205.218:443/xmlrpc
+
 [sip]
 guess_hostname=1
 inc_timeout=15

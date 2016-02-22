@@ -28,8 +28,7 @@
 	</LinearLayout>
 
 	<View
-		android:background="@color/colorF"
-		android:layout_alignParentBottom="true"
+		android:background="@color/colorE"
 		android:layout_width="match_parent"
 		android:layout_height="1dp"/>
 
@@ -72,6 +71,15 @@
 		</LinearLayout>
 
 	</LinearLayout>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
 
 	<TextView
 		android:text="@string/address_sip"
@@ -156,4 +164,6 @@
 
 		</LinearLayout>
 	</LinearLayout>
+			</LinearLayout>
+	</ScrollView>
 </LinearLayout>

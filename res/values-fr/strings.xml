@@ -15,8 +15,6 @@
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s enregistré</string>
   <string name="notification_register_failure">%s n\'a pas pu s\'enregistrer</string>
-  <string name="about_version">OrangeSecurePhone Version %s</string>
-  <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
 

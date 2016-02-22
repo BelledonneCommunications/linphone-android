@@ -122,7 +122,7 @@ public class Contact implements Serializable {
 	}
 	
 	public void refresh(ContentResolver cr) {
-		this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
+		//this.numbersOrAddresses = Compatibility.extractContactNumbersAndAddresses(id, cr);
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if(lc != null && lc.getFriendList() != null) {
 			for (LinphoneFriend friend :lc.getFriendList()){

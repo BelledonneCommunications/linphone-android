@@ -21,12 +21,12 @@
             android:id="@+id/menu_name"
             android:text="@string/about"
             style="@style/font6"
+            android:textAllCaps="true"
             android:singleLine="true"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:gravity="center"
-            android:padding="15dp"/>
+            android:gravity="center"/>
 
         <ImageView
             android:id="@+id/cancel"
@@ -39,7 +39,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorG"
+        android:background="@color/colorE"
         android:orientation="vertical"
         android:padding="10dp"
         android:gravity="center"
@@ -56,7 +56,7 @@
 
         <TextView
             android:text="@string/app_name"
-            style="@style/font22"
+            style="@style/font6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -65,6 +65,7 @@
         <TextView
             android:text="@string/app_description"
             style="@style/font2"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
@@ -72,7 +73,7 @@
         <TextView
             android:id="@+id/about_android_version"
             android:text="@string/about_version"
-            style="@style/font12"
+            style="@style/font7"
             android:paddingTop="20dp"
             android:layout_gravity="center"
             android:gravity="center"
@@ -82,7 +83,7 @@
         <TextView
             android:id="@+id/about_liblinphone_version"
             android:text="@string/about_liblinphone_version"
-            style="@style/font12"
+            style="@style/font7"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="wrap_content"
@@ -91,12 +92,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorH"
+        android:background="@color/colorG"
         android:orientation="vertical"
         android:padding="10dp"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.48"
         android:layout_gravity="center">
 
         <TextView
@@ -153,5 +155,13 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:src="@drawable/logo_orange"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" android:layout_gravity="right"/>
 
 </LinearLayout>

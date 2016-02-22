@@ -8,7 +8,7 @@
 	<LinearLayout
 		android:id="@+id/top_bar"
 		android:orientation="horizontal"
-		android:background="@color/colorF"
+		android:background="@color/colorG"
 		android:layout_width="match_parent"
 		android:layout_height="60dp">
 
@@ -50,7 +50,7 @@
 	<include layout="@layout/edit_list"/>
 
 	<View
-		android:background="@color/colorF"
+		android:background="@color/colorE"
 		android:layout_width="match_parent"
 		android:layout_height="1dp"/>
     

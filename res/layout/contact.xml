@@ -7,7 +7,7 @@
 
 	<LinearLayout
 		android:orientation="horizontal"
-		android:background="@color/colorF"
+		android:background="@color/colorG"
 		android:layout_width="match_parent"
 		android:layout_height="60dp">
 
@@ -27,8 +27,7 @@
 	</LinearLayout>
 
 	<View
-		android:background="@color/colorF"
-		android:layout_alignParentBottom="true"
+		android:background="@color/colorE"
 		android:layout_width="match_parent"
 		android:layout_height="1dp"/>
 

@@ -10,7 +10,7 @@
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool>
 	<bool name="hide_in_call_stats">false</bool>
 	<bool name="use_linphone_friend">true</bool>
-	<bool name="orientation_portrait_only">true</bool>
+	<bool name="orientation_portrait_only">false</bool>
 	<bool name="show_statusbar_only_on_dialer">false</bool>
 	<bool name="replace_assistant_with_old_interface">false</bool>
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>

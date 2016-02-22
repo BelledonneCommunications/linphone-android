@@ -69,7 +69,7 @@
 	<style name="font13" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorK</item>
 		<item name="android:textStyle">bold</item>
-		<item name="android:textSize">30sp</item>
+		<item name="android:textSize">28sp</item>
 	</style>
 
 	<style name="font14" parent="@android:style/TextAppearance.Small">

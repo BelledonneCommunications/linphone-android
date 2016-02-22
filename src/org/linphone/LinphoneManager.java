@@ -634,7 +634,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		mLc.setContext(mServiceContext);
-		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
+		mLc.setZrtpSecretsCache(null);
 
 		try {
 			String versionName = mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionName;

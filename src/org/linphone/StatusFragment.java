@@ -405,7 +405,7 @@ public class StatusFragment extends Fragment {
 			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
 			String newText = getString(R.string.zrtp_dialog).replace("%s", call.getAuthenticationToken());
 			customText.setText(newText);
-			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete);
+			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete_button);
 			delete.setText(R.string.accept);
 			Button cancel = (Button) ZRTPdialog.findViewById(R.id.cancel);
 			cancel.setText(R.string.deny);

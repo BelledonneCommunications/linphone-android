@@ -104,7 +104,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private boolean storeAccount(String username, String password, String domain) {
 		LinphoneCore lc = LinphoneManager.getLc();
 
-		LinphonePreferences.instance().setRemoteProvisioningUrl("http://85.233.205.218/xmlrpc?username=" + username + "&password=" + password + "&domain=" + domain);
+		LinphonePreferences.instance().setRemoteProvisioningUrl("https://85.233.205.218/xmlrpc?username=" + username + "&password=" + password + "&domain=" + domain);
 		LinphoneManager.getInstance().restartLinphoneCore();
 		LinphoneManager.getLc().addListener(mListener);
 
