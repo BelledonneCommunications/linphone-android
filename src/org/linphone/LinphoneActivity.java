@@ -136,6 +136,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
+		//Obiane specifics
+		//HTTP to HTTPS migration
+		if(LinphonePreferences.instance().getRemoteProvisioningUrl() != null) {
+			if(LinphonePreferences.instance().getRemoteProvisioningUrl().startsWith("http://")) {
+				LinphonePreferences.instance().setRemoteProvisioningUrl(LinphonePreferences.instance().getRemoteProvisioningUrl().replace("http://", "https://"));
+			}
+		}
+
 		if (!LinphoneManager.isInstanciated()) {
 			Log.e("No service running: avoid crash by starting the launch", this.getClass().getName());
 			finish();

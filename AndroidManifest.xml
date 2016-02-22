@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
    
-      android:versionCode="1000" android:installLocation="auto">
+      android:versionCode="1002" android:installLocation="auto">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23"/>
     
     <!-- Permissions for Push Notification -->
