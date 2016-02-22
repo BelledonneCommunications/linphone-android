@@ -109,7 +109,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ChatFragment chatFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
+	private boolean isAnimationDisabled = true, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -382,6 +382,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		case ABOUT:
 			newFragment = new AboutFragment();
 			break;
+		case EMPTY:
+			newFragment = new EmptyFragment();
+			break;
 		case CHAT_LIST:
 			newFragment = new ChatListFragment();
 			chatListFragment = newFragment;
@@ -453,54 +456,62 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
+
+		if(newFragmentType == FragmentsAvailable.EMPTY){
 			ll.setVisibility(View.VISIBLE);
-
-			if(newFragmentType == FragmentsAvailable.CONTACT_EDITOR){
-				transaction.addToBackStack(newFragmentType.toString());
-			}
 			transaction.replace(R.id.fragmentContainer2, newFragment);
+			transaction.commitAllowingStateLoss();
+			getFragmentManager().executePendingTransactions();
 		} else {
-			if(newFragmentType == FragmentsAvailable.EMPTY) {
+			if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
 				ll.setVisibility(View.VISIBLE);
-				transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
-			}
 
-			if (newFragmentType == FragmentsAvailable.DIALER
-					|| newFragmentType == FragmentsAvailable.ABOUT
-					|| newFragmentType == FragmentsAvailable.SETTINGS
-					|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
-				ll.setVisibility(View.GONE);
+				if (newFragmentType == FragmentsAvailable.CONTACT_EDITOR) {
+					transaction.addToBackStack(newFragmentType.toString());
+				}
+				transaction.replace(R.id.fragmentContainer2, newFragment);
 			} else {
-				ll.setVisibility(View.VISIBLE);
-				transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
-			}
+				if (newFragmentType == FragmentsAvailable.EMPTY) {
+					ll.setVisibility(View.VISIBLE);
+					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
+				}
 
-			if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
-				if (newFragmentType.isRightOf(currentFragment)) {
-					transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+				if (newFragmentType == FragmentsAvailable.DIALER
+						|| newFragmentType == FragmentsAvailable.ABOUT
+						|| newFragmentType == FragmentsAvailable.SETTINGS
+						|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
+					ll.setVisibility(View.GONE);
 				} else {
-					transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+					ll.setVisibility(View.VISIBLE);
+					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
+				}
+
+				if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
+					if (newFragmentType.isRightOf(currentFragment)) {
+						transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+					} else {
+						transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+					}
+				}
+				transaction.replace(R.id.fragmentContainer, newFragment);
+			}
+			transaction.commitAllowingStateLoss();
+			getFragmentManager().executePendingTransactions();
+
+			currentFragment = newFragmentType;
+			if (newFragmentType == FragmentsAvailable.DIALER
+					|| newFragmentType == FragmentsAvailable.SETTINGS
+					|| newFragmentType == FragmentsAvailable.CONTACTS_LIST
+					|| newFragmentType == FragmentsAvailable.CHAT_LIST
+					|| newFragmentType == FragmentsAvailable.HISTORY_LIST) {
+				try {
+					getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				} catch (java.lang.IllegalStateException e) {
+
 				}
 			}
-			transaction.replace(R.id.fragmentContainer, newFragment);
+			fragmentsHistory.add(currentFragment);
 		}
-		transaction.commitAllowingStateLoss();
-		getFragmentManager().executePendingTransactions();
-
-		currentFragment = newFragmentType;
-		if (newFragmentType == FragmentsAvailable.DIALER
-				|| newFragmentType == FragmentsAvailable.SETTINGS
-				|| newFragmentType == FragmentsAvailable.CONTACTS_LIST
-				|| newFragmentType == FragmentsAvailable.CHAT_LIST
-				|| newFragmentType == FragmentsAvailable.HISTORY_LIST) {
-			try {
-				getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			} catch (java.lang.IllegalStateException e) {
-
-			}
-		}
-		fragmentsHistory.add(currentFragment);
 	}
 
 	public void displayHistoryDetail(String sipUri, LinphoneCallLog log) {
@@ -551,7 +562,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayEmptyFragment(){
-		changeCurrentFragment(FragmentsAvailable.HISTORY_LIST,new Bundle());
+		changeCurrentFragment(FragmentsAvailable.EMPTY, new Bundle());
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -1271,7 +1282,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						if (call.getCurrentParamsCopy().getVideoEnabled()) {
 							//startVideoActivity(call);
 						} else {
-							Log.w("outgoing call");
 							//startIncallActivity(call);
 						}
 					}
