@@ -109,77 +109,49 @@
 					android:layout_height="match_parent">
 
 					<ImageView
-						android:src="@drawable/footer_history"
+						android:id="@+id/history_image"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/history_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"
-						android:visibility="gone"/>
+						android:layout_height="match_parent"
+						android:padding="18dp"
+						android:layout_centerInParent="true"
+						android:contentDescription="@string/content_description_history"
+						android:src="@drawable/footer_history"/>
 
 					<TextView
 						android:id="@+id/missed_calls"
+						style="@style/font7"
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_margin="12dp"
 						android:background="@drawable/history_chat_indicator"
-						style="@style/font18"
-						android:layout_width="20dp"
-						android:layout_height="20dp"
-						android:layout_margin="15dp"
+						android:visibility="gone"
 						android:gravity="center"
-						android:visibility="gone"/>
-
-				</RelativeLayout>
-
-				<RelativeLayout
-					android:id="@+id/contacts"
-					android:background="@drawable/footer_button"
-					android:layout_weight="1"
-					android:layout_width="0dp"
-					android:layout_height="match_parent">
-
-					<ImageView
-						android:src="@drawable/footer_contacts"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/contacts_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
 						android:layout_alignParentBottom="true"
-						android:visibility="gone"/>
+						android:layout_alignParentRight="true"/>
+
 				</RelativeLayout>
 
-				<RelativeLayout
-					android:id="@+id/dialer"
+				<ImageView
+					android:id="@+id/contacts"
+					android:src="@drawable/footer_contacts"
 					android:background="@drawable/footer_button"
+					android:contentDescription="@string/content_description_contacts"
 					android:layout_weight="1"
 					android:layout_width="0dp"
-					android:layout_height="match_parent">
+					android:layout_height="match_parent"
+					android:padding="18dp"
+					android:layout_centerInParent="true" />
 
-					<ImageView
-						android:src="@drawable/footer_dialer"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/dialer_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"/>
-
-				</RelativeLayout>
+				<ImageView
+					android:id="@+id/dialer"
+					android:src="@drawable/footer_dialer"
+					android:background="@drawable/footer_button"
+					android:contentDescription="@string/content_description_dialer"
+					android:layout_weight="1"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:padding="18dp"
+					android:layout_centerInParent="true"/>
 
 				<RelativeLayout
 					android:id="@+id/chat"
@@ -189,29 +161,24 @@
 					android:layout_height="match_parent">
 
 					<ImageView
+						android:id="@+id/chat_image"
 						android:src="@drawable/footer_chat"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:padding="15dp"
+						android:padding="18dp"
 						android:layout_centerInParent="true" />
-
-					<View
-						android:id="@+id/chat_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"
-						android:visibility="gone"/>
 
 					<TextView
 						android:id="@+id/missed_chats"
+						style="@style/font7"
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_margin="12dp"
 						android:background="@drawable/history_chat_indicator"
-						style="@style/font18"
-						android:layout_width="20dp"
-						android:layout_height="20dp"
-						android:layout_margin="15dp"
+						android:visibility="gone"
 						android:gravity="center"
-						android:visibility="gone"/>
+						android:layout_alignParentBottom="true"
+						android:layout_alignParentRight="true"/>
 
 				</RelativeLayout>
 			</LinearLayout>
@@ -243,12 +210,12 @@
 
 			<ListView
 				android:id="@+id/item_list"
-				android:background="@color/colorH"
+				android:background="@color/colorG"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:choiceMode="singleChoice"
 				android:divider="@color/colorE"
-				android:listSelector="@color/colorH"
+				android:listSelector="@color/colorG"
 				android:dividerHeight="1dp"/>
 		</LinearLayout>
 

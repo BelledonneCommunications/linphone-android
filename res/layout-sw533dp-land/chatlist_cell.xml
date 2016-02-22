@@ -31,12 +31,6 @@
 			android:layout_height="match_parent"
 			android:gravity="center">
 
-			<RelativeLayout
-				android:id="@+id/avatar_layout"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true">
-
 				<ImageView
 					android:id="@+id/contact_picture"
 					android:src="@drawable/avatar"
@@ -44,17 +38,6 @@
 					android:layout_width="35dp"
 					android:layout_height="35dp"
 					android:adjustViewBounds="true"/>
-
-				<ImageView
-					android:id="@+id/mask"
-					android:src="@drawable/avatar_mask"
-					android:contentDescription="@string/content_description_contact_picture"
-					android:layout_width="35dp"
-					android:layout_height="35dp"
-					android:adjustViewBounds="true"/>
-
-			</RelativeLayout>
-
 		</RelativeLayout>
 
 		<RelativeLayout
@@ -78,7 +61,7 @@
 				android:scrollHorizontally="true"
 				android:fadingEdge="horizontal"
 				android:singleLine="true"
-				style="@style/font6"
+				style="@style/font2"
 				android:paddingLeft="10dp"
 				android:layout_marginTop="5dp"
 				android:layout_width="wrap_content"
@@ -88,15 +71,15 @@
 
 			<TextView
 				android:id="@+id/unreadMessages"
-				android:layout_width="25dp"
-				android:layout_height="25dp"
+				android:layout_width="20dp"
+				android:layout_height="20dp"
 				android:background="@drawable/chat_list_indicator"
-				style="@style/font18"
+				style="@style/font7"
 				android:gravity="center"
 				android:singleLine="true"
-				android:layout_above="@+id/lastMessage"
 				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"/>
+				android:layout_alignParentEnd="true"
+				android:layout_alignBottom="@+id/sipUri"/>
 
 			<TextView
 				android:id="@+id/lastMessage"

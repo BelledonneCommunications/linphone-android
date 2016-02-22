@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@color/colorD"
+	android:background="@color/colorE"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<ImageView
-		android:src="@drawable/dialer_background"
-		android:layout_width="wrap_content"
-		android:layout_height="300dp"
-		android:layout_centerVertical="true"/>
-
 	<RelativeLayout
 		android:id="@+id/dialer"
-		android:background="@color/colorH"
-		android:layout_marginRight="50dp"
+		android:background="@color/colorC"
+		android:layout_marginLeft="50dp"
 		android:layout_centerVertical="true"
-		android:layout_alignParentRight="true"
+		android:layout_alignParentLeft="true"
 		android:layout_width="300dp"
 		android:layout_height="460dp">
 
 		<RelativeLayout
 			android:id="@+id/address_bar"
-			android:background="@color/colorF"
+			android:background="@color/colorG"
 			android:layout_width="match_parent"
 			android:layout_height="60dp"
 			android:layout_marginBottom="10dp"
@@ -39,9 +33,9 @@
 
 			<org.linphone.ui.AddressText
 				android:id="@+id/address"
-				android:background="@color/colorF"
+				android:background="@color/colorG"
 				android:textColorHint="@color/colorE"
-				style="@style/font5"
+				style="@style/font1"
 				android:ellipsize="start"
 				android:inputType="textEmailAddress"
 				android:hint="@string/address_bar_hint"
@@ -69,23 +63,14 @@
 			android:layout_width="match_parent"
 			android:layout_height="60dp">
 
-			<RelativeLayout
-				android:focusable="true"
-				android:layout_width="match_parent"
+			<ImageView
+				android:id="@+id/back"
+				android:src="@drawable/dialer_alt_back"
+				android:background="@drawable/button_back_background"
+				android:layout_width="102dp"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:adjustViewBounds="true">
-
-				<ImageView
-					android:id="@+id/add_contact"
-					android:src="@drawable/contact_add_button"
-					android:background="@drawable/toolbar_button"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:padding="15dp"
-					android:layout_alignParentBottom="true"/>
-
-			</RelativeLayout>
+				android:padding="20dp"
+				android:visibility="gone"/>
 
 			<org.linphone.ui.CallButton
 				android:id="@+id/call"
@@ -95,6 +80,7 @@
 				android:layout_height="wrap_content"
 				android:padding="12dp"
 				android:layout_weight="0.5"/>
+
 		</LinearLayout>
 	</RelativeLayout>
 

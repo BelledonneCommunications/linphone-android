@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@color/colorF" >
+
+	<LinearLayout
+		android:id="@+id/top_bar"
+		android:orientation="horizontal"
+		android:background="@color/colorF"
+		android:layout_width="match_parent"
+		android:layout_height="60dp">
+
+		<ImageView
+			android:id="@+id/back"
+			android:src="@drawable/back_button"
+			android:contentDescription="@string/content_description_back"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:visibility="gone"
+			android:padding="15dp"/>
+
+		<TextView
+			android:id="@+id/contact_name"
+			style="@style/font2"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.6"
+			android:layout_gravity="left"
+			android:padding="15dp"/>
+
+		<ImageView
+			android:id="@+id/start_call"
+			android:src="@drawable/call_alt_start_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<ImageView
+			android:id="@+id/back_to_call"
+			android:src="@drawable/call_back_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:visibility="gone"
+			android:padding="12dp"/>
+
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
+
+	<include layout="@layout/edit_list"/>
+
+	<View
+		android:background="@color/colorE"
+		android:layout_below="@id/top_bar"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
+
+	<LinearLayout
+        android:id="@+id/footer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_alignParentBottom="true"
+	    android:layout_centerHorizontal="true"
+   		android:background="@color/colorD">
+       
+	    <RelativeLayout 
+	        android:id="@+id/message_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+	        
+	        <ImageView
+	            android:id="@+id/send_picture"
+				android:padding="15dp"
+				android:scaleType="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true"
+				android:src="@drawable/chat_send_file" />
+
+			<ImageView
+				android:id="@+id/send_message"
+				android:gravity="center"
+				android:padding="15dp"
+				android:scaleType="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/chat_send_message"
+				android:layout_alignTop="@+id/message"
+				android:layout_alignParentRight="true"/>
+
+
+			<EditText
+				android:id="@+id/message"
+                android:imeOptions="flagNoExtractUi"
+	            android:textCursorDrawable="@null"
+            	android:inputType="textMultiLine"
+            	android:maxLines="2"
+	            android:textColor="@android:color/black"
+	            android:layout_width="match_parent"
+	            android:layout_height="40dp"
+				android:padding="10dp"
+	            android:layout_toRightOf="@id/send_picture"
+	            android:layout_toLeftOf="@id/send_message"
+	            android:background="@drawable/resizable_textfield"
+	            android:layout_centerVertical="true"/>
+	        
+	    </RelativeLayout>
+	</LinearLayout>
+
+	<TextView
+        android:id="@+id/remote_composing"
+		android:text="@string/remote_composing"
+		style="@style/font14"
+		android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+		android:layout_above="@+id/footer" android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"/>
+
+	<ListView
+		android:id="@+id/chat_message_list"
+		android:divider="@android:color/transparent"
+		android:stackFromBottom="true"
+		android:transcriptMode="alwaysScroll"
+		android:dividerHeight="10dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:cacheColorHint="@color/transparent"
+		android:layout_above="@id/remote_composing"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="10dp"
+		android:layout_below="@+id/top_bar"/>
+
+	<EditText
+		android:id="@+id/search_contact_field"
+		android:contentDescription="@string/content_description_search"
+		android:textCursorDrawable="@null"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:visibility="gone"
+		android:textColor="@android:color/black"
+		android:background="@drawable/resizable_textfield"
+		android:layout_margin="5dp"
+		android:layout_below="@id/top_bar"
+		android:inputType="textPersonName"/>
+
+	<ListView
+		android:id="@+id/result_contacts"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:divider="@color/colorE"
+		android:visibility="gone"
+		android:layout_below="@id/search_contact_field"
+		android:fastScrollAlwaysVisible="true"
+		android:fastScrollEnabled="true"
+		android:dividerHeight="1dp"
+		android:layout_above="@+id/footer"/>
+
+</RelativeLayout>
