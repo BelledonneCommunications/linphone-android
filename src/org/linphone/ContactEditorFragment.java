@@ -588,7 +588,7 @@ public class ContactEditorFragment extends Fragment {
 			nounoa.setNewNumberOrAddress(noa.getText().toString());
 		}
 		
-		ImageView delete = (ImageView) view.findViewById(R.id.delete);
+		ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -626,7 +626,7 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 		
-		final ImageView delete = (ImageView) view.findViewById(R.id.delete);
+		final ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

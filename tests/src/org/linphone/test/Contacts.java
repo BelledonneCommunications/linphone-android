@@ -77,7 +77,7 @@ public class Contacts extends SampleTest {
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
 		solo.clickOnView(solo.getView(org.linphone.R.id.editContact));
-		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_field));
 		solo.enterText(2, iContext.getString(org.linphone.test.R.string.contact_sip));
 		solo.clickOnView(solo.getView(org.linphone.R.id.ok));
 		
