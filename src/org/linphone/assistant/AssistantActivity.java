@@ -37,14 +37,19 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -62,6 +67,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
 	private StatusFragment status;
+	private ProgressDialog progress;
 	private Dialog dialog;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +99,18 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				if(accountCreated && !newAccount){
 					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
 						if (state == RegistrationState.RegistrationOk) {
+							progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 								launchEchoCancellerCalibration(true);
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
+							progress.dismiss();
 							if(dialog == null || !dialog.isShowing()) {
 								dialog = createErrorDialog(cfg, smessage);
 								dialog.show();
 							}
+						} else if(!(state == RegistrationState.RegistrationProgress)) {
+							progress.dismiss();
 						}
 					}
 				}
@@ -385,9 +395,22 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		
 		try {
 			builder.saveNewAccount();
+			displayRegistrationInProgressDialog();
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
+		}
+	}
+
+ 	public void displayRegistrationInProgressDialog(){
+		if(LinphoneManager.getLc().isNetworkReachable()) {
+			progress = ProgressDialog.show(this,null,null);
+			Drawable d = new ColorDrawable(getResources().getColor(R.color.colorE));
+			d.setAlpha(200);
+			progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+			progress.getWindow().setBackgroundDrawable(d);
+			progress.setContentView(R.layout.progress_dialog);
+			progress.show();
 		}
 	}
 
