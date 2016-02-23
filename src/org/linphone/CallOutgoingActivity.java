@@ -97,7 +97,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					finish();
 				}
 
-				if (call == mCall && State.StreamsRunning == state){
+				if (call == mCall && (State.StreamsRunning == state || State.Connected == state)){
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
