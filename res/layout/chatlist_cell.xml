@@ -12,13 +12,12 @@
 		android:id="@+id/delete_chatroom"
 		android:button="@drawable/checkbox"
 		android:contentDescription="@string/content_description_delete"
-		android:paddingRight="5dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
-		android:visibility="invisible" />
+		android:visibility="invisible" android:layout_alignParentTop="true"/>
 	
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -103,6 +102,7 @@
 				android:layout_below="@id/sipUri"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginRight="30dp"
 				style="@style/font11"/>
 
 		</RelativeLayout>
