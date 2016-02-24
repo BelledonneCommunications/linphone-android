@@ -24,6 +24,7 @@ import java.io.File;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -390,14 +392,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			registerForContextMenu(v);
 			RelativeLayout rlayout = new RelativeLayout(context);
 
-			CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete);
+			CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
 
 			if(isEditMode) {
 				deleteChatBubble.setVisibility(View.VISIBLE);
-				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				layoutParams.setMargins(0, 10, 0, 10);
-				v.setLayoutParams(layoutParams);
+				if(message.isOutgoing()){
+					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+					layoutParams.setMargins(100, 10, 10, 10);
+					v.setLayoutParams(layoutParams);
+				} else {
+					LinearLayout message_layout = (LinearLayout) v.findViewById(R.id.message_content);
+					message_layout.setGravity(Gravity.RIGHT);
+				}
+
 				deleteChatBubble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
