@@ -414,9 +414,9 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void displayWizardConfirm(String username) {
+	public void displayAssistantConfirm(String username) {
 		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
-
+		progress.dismiss();
 		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);

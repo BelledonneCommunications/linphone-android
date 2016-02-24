@@ -262,7 +262,7 @@ public class CreateAccountFragment extends Fragment {
 	    		Runnable runOk = new Runnable() {
     				public void run() {
     					AssistantActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain), null);
-    					AssistantActivity.instance().displayWizardConfirm(username);
+    					AssistantActivity.instance().displayAssistantConfirm(username);
 					}
 	    		};
 	    		
