@@ -1311,7 +1311,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		TextView customText = (TextView) dialog.findViewById(R.id.customText);
 		customText.setText(getResources().getString(R.string.add_video_dialog));
-		Button delete = (Button) dialog.findViewById(R.id.delete);
+		Button delete = (Button) dialog.findViewById(R.id.delete_button);
 		delete.setText(R.string.accept);
 		Button cancel = (Button) dialog.findViewById(R.id.cancel);
 		cancel.setText(R.string.decline);
