@@ -51,7 +51,7 @@
 	<string name="conference">Conference</string>
 
 	<!-- Launch screen -->
-	<string name="app_description">the libre SIP client</string>
+	<string name="app_description">the <i>libre</i> SIP client</string>
 
 	<!-- Assistant -->
 	<string name="welcome">Welcome</string>
