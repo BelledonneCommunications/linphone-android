@@ -119,6 +119,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
+	private Dialog authInfoPassword;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -197,6 +198,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 
 			@Override
+			public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
+				//authInfoPassword = displayWrongPasswordDialog(username, realm, domain);
+				//authInfoPassword.show();
+			}
+
+			@Override
 			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
 				if (state.equals(RegistrationState.RegistrationCleared)) {
 					if (lc != null) {
@@ -211,7 +218,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
 					newProxyConfig = false;
 					if (proxy.getError() == Reason.BadCredentials) {
-						displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
+						//displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
 					}
 					if (proxy.getError() == Reason.Unauthorized) {
 						displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
@@ -827,7 +834,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Bundle bundle = new Bundle();
 		bundle.putInt("Account", accountNumber);
 		changeCurrentFragment(FragmentsAvailable.ACCOUNT_SETTINGS, bundle);
-		mTabBar.setVisibility(View.VISIBLE);
 		//settings.setSelected(true);
 	}
 
@@ -1199,7 +1205,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				LinphoneCall.State callState = call.getState();
 				if (callState == State.IncomingReceived) {
 					startActivity(new Intent(this, CallIncomingActivity.class));
-				} else if (callState == State.OutgoingInit) {
+				} else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
 					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
 					if (call.getCurrentParamsCopy().getVideoEnabled()) {

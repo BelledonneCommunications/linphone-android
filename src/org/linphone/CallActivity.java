@@ -1416,6 +1416,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mControls = null;
 		mControlsHandler = null;
 
+		mSensorManager.unregisterListener(this);
+
 		unbindDrawables(findViewById(R.id.topLayout));
 		instance = null;
 		super.onDestroy();
