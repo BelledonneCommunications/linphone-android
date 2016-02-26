@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -60,6 +62,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -224,6 +227,33 @@ public class ContactEditorFragment extends Fragment {
 				lastName.setText(contact.getName());
 				firstName.setText("");
 			}
+			deleteContact.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+					Button delete = (Button) dialog.findViewById(R.id.delete_button);
+					Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+					delete.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							deleteExistingContact();
+							ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(), contact);
+							LinphoneActivity.instance().displayContacts(false);
+							dialog.dismiss();
+						}
+					});
+
+					cancel.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							dialog.dismiss();
+
+						}
+					});
+					dialog.show();
+				}
+			});
 		} else {
 			deleteContact.setVisibility(View.INVISIBLE);
 		}
@@ -349,6 +379,24 @@ public class ContactEditorFragment extends Fragment {
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	private void deleteExistingContact() {
+		String select = ContactsContract.Data.CONTACT_ID + " = ?";
+		String[] args = new String[] { contact.getID() };
+
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+						.withSelection(select, args)
+						.build()
+		);
+
+		try {
+			getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+			ContactsManager.getInstance().removeAllFriends(contact);
+		} catch (Exception e) {
+			Log.w(e.getMessage() + ":" + e.getStackTrace());
 		}
 	}
 
