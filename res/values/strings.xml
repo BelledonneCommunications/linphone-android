@@ -57,6 +57,7 @@
 	<string name="welcome">Welcome</string>
 	<string name="assistant">Assistant</string>
 	<string name="assistant_create_account">Create account</string>
+	<string name="assistant_finish">Finish configuration</string>
 	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
 	<string name="assistant_welcome_desc">This assistant will help you to use a SIP account for your calls.</string>
 	<string name="assistant_linphone_login_desc">Enter your username and password of Linphone account</string>
