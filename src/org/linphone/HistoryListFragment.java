@@ -156,11 +156,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	public void enabledDeleteButton(Boolean enabled){
 		if(enabled){
 			delete.setEnabled(true);
-			delete.setAlpha(1f);
 		} else {
 			if (getNbItemsChecked() == 0){
 				delete.setEnabled(false);
-				delete.setAlpha(0.2f);
 			}
 		}
 	}
