@@ -62,6 +62,7 @@
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:paddingTop="5dp"
+								android:gravity="center"
 								android:layout_alignParentTop="true"
 								android:layout_gravity="center"/>
 
@@ -206,7 +207,7 @@
 
 					<ImageView
 						android:id="@+id/video"
-						android:src="@drawable/camera_default"
+						android:src="@drawable/camera_button"
 						android:background="@drawable/button_background"
 						android:padding="20dp"
 						android:layout_width="match_parent"
@@ -331,7 +332,7 @@
 
 				<ImageView
 					android:id="@+id/add_call"
-					android:src="@drawable/options_add_call"
+					android:src="@drawable/options_add_call_button"
 					android:background="@drawable/button_background"
 					android:padding="15dp"
 					android:visibility="invisible"
@@ -372,7 +373,7 @@
 
 				<ImageView
 					android:id="@+id/transfer"
-					android:src="@drawable/options_transfer_call"
+					android:src="@drawable/options_transfer_call_button"
 					android:background="@drawable/button_background"
 					android:padding="15dp"
 					android:visibility="invisible"
@@ -412,7 +413,7 @@
 
 				<ImageView
 					android:id="@+id/conference"
-					android:src="@drawable/options_start_conference"
+					android:src="@drawable/options_start_conference_button"
 					android:background="@drawable/button_background"
 					android:visibility="invisible"
 					android:padding="15dp"

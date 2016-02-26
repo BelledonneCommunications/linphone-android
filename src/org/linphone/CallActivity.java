@@ -457,25 +457,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void refreshIncallUi(){
-		int confsize = 0;
-
-		if(LinphoneManager.getLc().isInConference()) {
-			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().isInConference() ? 1 : 0);
-		}
-
-		//Enabled transfer button
-		if(isTransferAllowed)
-			enabledTransferButton(true);
-
-		//Enable conference button
-		if(LinphoneManager.getLc().getCallsNb() > 1 && LinphoneManager.getLc().getCallsNb() > confsize) {
-			enabledConferenceButton(true);
-		} else {
-			enabledConferenceButton(false);
-		}
-
 		refreshInCallActions();
 		refreshCallList(getResources());
+		enableAndRefreshInCallActions();
 	}
 
 	private void refreshInCallActions() {
@@ -527,12 +511,31 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void enableAndRefreshInCallActions() {
-		addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls());
-		transfer.setEnabled(getResources().getBoolean(R.bool.allow_transfers));
+		int confsize = 0;
+
+		if(LinphoneManager.getLc().isInConference()) {
+			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().isInConference() ? 1 : 0);
+		}
+
+		//Enabled transfer button
+		if(isTransferAllowed  && !LinphoneManager.getLc().soundResourcesLocked())
+			enabledTransferButton(true);
+
+		//Enable conference button
+		if(LinphoneManager.getLc().getCallsNb() > 1 && LinphoneManager.getLc().getCallsNb() > confsize && !LinphoneManager.getLc().soundResourcesLocked()) {
+			enabledConferenceButton(true);
+		} else {
+			enabledConferenceButton(false);
+		}
+
+		addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls() && !LinphoneManager.getLc().soundResourcesLocked());
 		options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
 
-		if(LinphoneManager.getLc().getCurrentCall() != null && LinphonePreferences.instance().isVideoEnabled() && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()) {
+		if(LinphoneManager.getLc().getCurrentCall() != null && LinphonePreferences.instance().isVideoEnabled() && !LinphoneManager.getLc().soundResourcesLocked()) {
 			enabledVideoButton(true);
+		}
+		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().soundResourcesLocked()){
+			enabledPauseButton(true);
 		}
 		micro.setEnabled(true);
 		if(!isTablet()){
@@ -541,7 +544,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		transfer.setEnabled(true);
 		pause.setEnabled(true);
 		dialer.setEnabled(true);
-		enabledConferenceButton(true);
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -636,10 +638,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void enabledVideoButton(boolean enabled){
 		if(enabled) {
 			video.setEnabled(true);
-			video.setAlpha(1f);
 		} else {
 			video.setEnabled(false);
-			video.setAlpha(0.2f);
 		}
 	}
 
@@ -656,20 +656,16 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void enabledTransferButton(boolean enabled){
 		if(enabled) {
 			transfer.setEnabled(true);
-			transfer.setImageAlpha(250);
 		} else {
 			transfer.setEnabled(false);
-			transfer.setImageAlpha(50);
 		}
 	}
 
 	private void enabledConferenceButton(boolean enabled){
 		if (enabled) {
 			conference.setEnabled(true);
-			conference.setImageAlpha(250);
 		} else {
 			conference.setEnabled(false);
-			conference.setImageAlpha(50);
 		}
 	}
 
@@ -1356,10 +1352,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
 			removeCallbacks();
-		}
-
-		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()){
-			enabledPauseButton(true);
 		}
 	}
 
