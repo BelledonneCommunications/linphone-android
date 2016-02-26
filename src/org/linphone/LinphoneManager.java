@@ -829,10 +829,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void displayWarning(LinphoneCore lc, String message) {}
 
-	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
-		//Dialog authInfoPassword = LinphoneActivity.instance().displayPasswordDialog(username, realm, domain);
-		//authInfoPassword.show();
-	}
+	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {}
 	public void byeReceived(LinphoneCore lc, String from) {}
 	public void displayMessage(LinphoneCore lc, String message) {}
 	public void show(LinphoneCore lc) {}
