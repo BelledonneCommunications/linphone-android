@@ -42,7 +42,7 @@
   <string name="decline">Refuser</string>
   <string name="conference">Conférence</string>
   <!--Launch screen-->
-  <string name="app_description">le client SIP libre</string>
+  <string name="app_description">Le client SIP <i>libre</i></string>
   <!--Assistant-->
   <string name="welcome">Bienvenue</string>
   <string name="assistant">Assistant</string>
