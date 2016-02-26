@@ -436,7 +436,16 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		values.toArray(contents);
 		pref.setEntryValues(contents);
 	}
-	
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
+		}
+	}
+
 	@Override
 	public void onPause() {
 		super.onPause();		
