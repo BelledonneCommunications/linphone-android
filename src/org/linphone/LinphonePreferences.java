@@ -479,10 +479,9 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountPassword(int n, String password) {
-		LinphoneAuthInfo info = getClonedAuthInfo(n);
-		if(info != null) {
-			info.setPassword(password);
-			saveAuthInfo(info);
+		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, null, null, getAccountDomain(n));
+			LinphoneManager.getLc().addAuthInfo(authInfo);
 		}
 	}
 
