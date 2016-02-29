@@ -392,10 +392,12 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				builder.setContactParameters(contactInfos);
 			}
 		}
-		
+
 		try {
 			builder.saveNewAccount();
-			displayRegistrationInProgressDialog();
+			if(!newAccount) {
+				displayRegistrationInProgressDialog();
+			}
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
@@ -414,12 +416,12 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void displayAssistantConfirm(String username) {
+	public void displayAssistantConfirm(String username, String password) {
 		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
-		progress.dismiss();
 		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
+		extras.putString("Password", password);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		

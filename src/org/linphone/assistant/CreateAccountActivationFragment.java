@@ -38,7 +38,7 @@ import de.timroes.axmlrpc.XMLRPCServerException;
  * @author Sylvain Berfini
  */
 public class CreateAccountActivationFragment extends Fragment {
-	private String username;
+	private String username, password, domain;
 	private Handler mHandler = new Handler();
 	
 	@Override
@@ -47,7 +47,8 @@ public class CreateAccountActivationFragment extends Fragment {
 		View view = inflater.inflate(R.layout.assistant_account_creation_activation, container, false);
 		
 		username = getArguments().getString("Username");
-		
+		password = getArguments().getString("Password");
+
 		Button checkAccount = (Button) view.findViewById(R.id.assistant_check);
 		checkAccount.setOnClickListener(new OnClickListener() {
 			@Override
@@ -78,6 +79,7 @@ public class CreateAccountActivationFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
+						AssistantActivity.instance().saveCreatedAccount(username,password,null, getString(R.string.default_domain),null);
     					AssistantActivity.instance().isAccountVerified(username);
 					}
 	    		};
