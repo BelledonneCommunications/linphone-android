@@ -210,34 +210,6 @@
 		android:layout_height="match_parent"
 		android:layout_gravity="left">
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical">
-
-			<include layout="@layout/side_menu_main_account"/>
-
-			<ListView
-				android:id="@+id/accounts_list"
-				android:background="@color/colorB"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:choiceMode="singleChoice"
-				android:cacheColorHint="@color/transparent"
-				android:divider="@android:color/transparent"
-				android:dividerHeight="0dp"/>
-
-			<ListView
-				android:id="@+id/item_list"
-				android:background="@color/colorH"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:choiceMode="singleChoice"
-				android:divider="@color/colorE"
-				android:listSelector="@color/colorH"
-				android:dividerHeight="1dp"/>
-		</LinearLayout>
-
 		<RelativeLayout
 			android:id="@+id/side_menu_quit"
 			android:background="@color/colorA"
@@ -264,9 +236,44 @@
 				android:layout_toRightOf="@id/quit_button"
 				android:gravity="center_vertical"
 				android:layout_centerInParent="true"/>
-
 		</RelativeLayout>
 
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/colorH"
+			android:layout_above="@id/side_menu_quit"
+			android:orientation="vertical">
+
+			<include layout="@layout/side_menu_main_account"/>
+
+			<ListView
+				android:id="@+id/accounts_list"
+				android:background="@color/colorH"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:choiceMode="singleChoice"
+				android:cacheColorHint="@color/transparent"
+				android:divider="@android:color/transparent"
+				android:dividerHeight="0dp"/>
+
+			<ListView
+				android:id="@+id/item_list"
+				android:background="@color/colorH"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:choiceMode="singleChoice"
+				android:divider="@color/colorE"
+				android:listSelector="@color/colorH"
+				android:footerDividersEnabled="true"
+				android:dividerHeight="1dp"/>
+			
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:background="@color/colorE"/>
+
+		</LinearLayout>
 	</RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
