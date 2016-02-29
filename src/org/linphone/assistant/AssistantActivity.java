@@ -89,9 +89,9 @@ public class AssistantActivity extends Activity implements OnClickListener {
             }
         }
         mPrefs = LinphonePreferences.instance();
-		if(mPrefs.isFirstLaunch()) {
+		//if(mPrefs.isFirstLaunch()) {
 			status.enableSideMenu(false);
-		}
+		//}
         
         mListener = new LinphoneCoreListenerBase(){
         	@Override
