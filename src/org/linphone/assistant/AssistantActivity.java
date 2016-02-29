@@ -99,18 +99,21 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				if(accountCreated && !newAccount){
 					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
 						if (state == RegistrationState.RegistrationOk) {
-							progress.dismiss();
+							if(progress != null)
+								progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 								launchEchoCancellerCalibration(true);
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
-							progress.dismiss();
+							if(progress != null)
+								progress.dismiss();
 							if(dialog == null || !dialog.isShowing()) {
 								dialog = createErrorDialog(cfg, smessage);
 								dialog.show();
 							}
 						} else if(!(state == RegistrationState.RegistrationProgress)) {
-							progress.dismiss();
+							if(progress != null)
+								progress.dismiss();
 						}
 					}
 				}
@@ -379,7 +382,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				.setAvpfRRInterval(5);
 			}
 
-			if(transport != null){
+			if(transport != null) {
 				builder.setTransport(transport);
 			}
 		}
@@ -431,7 +434,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
 		launchEchoCancellerCalibration(true);
 	}
 
