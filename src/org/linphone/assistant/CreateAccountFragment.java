@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.net.URL;
 import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.linphone.LinphoneManager;
@@ -35,8 +36,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -64,7 +64,8 @@ public class CreateAccountFragment extends Fragment {
 	private boolean emailOk = false;
 	private boolean confirmPasswordOk = false;
 	private Button createAccount;
-	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+	private final Pattern UPPER_CASE_REGEX = Pattern.compile("[A-Z]");
+	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '_', '-' };
 	private char[] acceptedCharsForPhoneNumbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+' };
@@ -96,25 +97,12 @@ public class CreateAccountFragment extends Fragment {
 		emailEdit = (EditText) view.findViewById(R.id.email);
 
     	addXMLRPCUsernameHandler(usernameEdit, null);
-    	
+
     	inputFilterCharacters = new String(acceptedChars);
     	if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
     		inputFilterCharacters = new String(acceptedCharsForPhoneNumbers);
+			usernameEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
     	}
-    	InputFilter filter = new InputFilter(){
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (end > start) {
-                    for (int index = start; index < end; index++) {                                         
-                        if (!inputFilterCharacters.contains(String.valueOf(source.charAt(index)))) { 
-                            return "";
-                        }               
-                    }
-                }
-                return null;
-            }
-        };
-		usernameEdit.setFilters(new InputFilter[] { filter });
 
     	addXMLRPCPasswordHandler(passwordEdit, null);
     	addXMLRPCConfirmPasswordHandler(passwordEdit, passwordConfirmEdit, null);
@@ -124,19 +112,7 @@ public class CreateAccountFragment extends Fragment {
     	createAccount.setEnabled(false);
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						createAccount(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
-					}
-				});
-				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-					}
-				});
-				builder.setMessage(getString(R.string.setup_confirm_username).replace("%s", getUsername()));
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				createAccount(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
 			}
     	});
     	
@@ -147,6 +123,7 @@ public class CreateAccountFragment extends Fragment {
     	    	if (isEmailCorrect(account.name)) {
     	            String possibleEmail = account.name;
 					emailEdit.setText(possibleEmail);
+					emailOk = true;
     	        	break;
     	        }
     	    }
@@ -172,7 +149,7 @@ public class CreateAccountFragment extends Fragment {
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
 			return lpc.isPhoneNumber(username);
 		} else {
-			return username.matches("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{2,}$");
+			return username.matches("^[a-z]+[a-z0-9.\\-_]{2,}$");
 		}
 	}
 	
@@ -237,7 +214,7 @@ public class CreateAccountFragment extends Fragment {
 	}
 	
 	private boolean isPasswordCorrect(String password) {
-		return password.length() >= 6;
+		return password.length() >= 1;
 	}
 	
 	private void createAccount(final String username, final String password, String email, boolean suscribe) {
@@ -261,8 +238,7 @@ public class CreateAccountFragment extends Fragment {
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
-    					AssistantActivity.instance().saveCreatedAccount(username, password, null, context.getString(R.string.default_domain), null);
-    					AssistantActivity.instance().displayAssistantConfirm(username);
+						AssistantActivity.instance().displayAssistantConfirm(username, password);
 					}
 	    		};
 	    		
@@ -294,7 +270,11 @@ public class CreateAccountFragment extends Fragment {
 	private void addXMLRPCUsernameHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
-				
+				Matcher matcher = UPPER_CASE_REGEX.matcher(s);
+				while (matcher.find()) {
+					CharSequence upperCaseRegion = s.subSequence(matcher.start(), matcher.end());
+					s.replace(matcher.start(), matcher.end(), upperCaseRegion.toString().toLowerCase());
+				}
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -302,17 +282,26 @@ public class CreateAccountFragment extends Fragment {
 			}
 
 			public void onTextChanged(CharSequence s, int start, int count, int after) {
-				usernameOk = false;
-				String username = field.getText().toString().toLowerCase(Locale.getDefault());
-				if (isUsernameCorrect(username)) {
-					if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
-						LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
-						username = lpc.normalizePhoneNumber(username);
+				field.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if(!hasFocus){
+							usernameOk = false;
+							String username = field.getText().toString();
+							if (isUsernameCorrect(username)) {
+								if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
+									LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+									username = lpc.normalizePhoneNumber(username);
+								}
+								isUsernameRegistred(username, icon);
+							} else {
+								displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_username_incorrect));
+							}
+						} else {
+							displayError(true, usernameError, usernameEdit, "");
+						}
 					}
-					isUsernameRegistred(username, icon);
-				} else {
-					displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_username_incorrect));
-				}
+				});
 			}
 		});
 	}
@@ -381,21 +370,29 @@ public class CreateAccountFragment extends Fragment {
 
 			public void onTextChanged(CharSequence s, int start, int count, int after) 
 			{
-				confirmPasswordOk = false;
-				if (field1.getText().toString().equals(field2.getText().toString())) {
-					confirmPasswordOk = true;
+				field2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (!hasFocus) {
+							confirmPasswordOk = false;
+							if (field1.getText().toString().equals(field2.getText().toString())) {
+								confirmPasswordOk = true;
 
-					if (!isPasswordCorrect(field1.getText().toString())) {
-						displayError(passwordOk, passwordError, passwordEdit, getString(R.string.wizard_password_incorrect));
+								if (!isPasswordCorrect(field1.getText().toString())) {
+									displayError(passwordOk, passwordError, passwordEdit, getString(R.string.wizard_password_incorrect));
+								} else {
+									displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, "");
+								}
+							} else {
+								displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, getString(R.string.wizard_passwords_unmatched));
+							}
+							createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
+						} else {
+							displayError(true, passwordConfirmError, passwordConfirmEdit, "");
+						}
 					}
-					else {
-						displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, "");
-					}
-				}
-				else {
-					displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, getString(R.string.wizard_passwords_unmatched));
-				}
-				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
+				});
+
 			}
 		};
 		
