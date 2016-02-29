@@ -47,6 +47,7 @@
   <string name="welcome">Bienvenue</string>
   <string name="assistant">Assistant</string>
   <string name="assistant_create_account">Créer un compte</string>
+  <string name="assistant_finish">Terminer la configuration</string>
   <string name="assistant_validate_account">Votre compte a été créé. Vérifiez vos emails pour valider votre compte.
 Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="assistant_welcome_desc">Cet assistant va vous guider pour réaliser des appels à l\'aide d\'un compte SIP.</string>
