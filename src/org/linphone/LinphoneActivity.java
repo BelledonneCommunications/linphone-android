@@ -791,6 +791,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			hideTabBar(true);
 			mTopBar.setVisibility(View.VISIBLE);
 			break;
+		case ABOUT:
+			hideTabBar(true);
+			break;
 		case CHAT_LIST:
 		case CHAT:
 			chat_selected.setVisibility(View.VISIBLE);
