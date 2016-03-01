@@ -73,9 +73,7 @@
 			<TextView
 				android:id="@+id/sipUri"
 				android:lines="1"
-				android:ellipsize="marquee"
-				android:marqueeRepeatLimit="marquee_forever"
-				android:scrollHorizontally="true"
+				android:ellipsize="end"
 				android:fadingEdge="horizontal"
 				android:singleLine="true"
 				style="@style/font6"
