@@ -67,11 +67,16 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
+	public void onPause() {
+		super.onPause();
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 
 		if (org.linphone.LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().hideTabBar(true);
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.ABOUT);
 		}
 	}
 
