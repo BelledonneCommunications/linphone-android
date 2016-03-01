@@ -27,7 +27,7 @@ import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
+//import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.GestureDetector;
@@ -68,15 +68,12 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mCaptureView, new AndroidVideoWindowImpl.VideoWindowListener() {
 			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				LinphoneManager.getLc().setVideoWindow(vw);
 				mVideoView = surface;
+				LinphoneManager.getLc().setVideoWindow(vw);
 			}
 
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				LinphoneCore lc = LinphoneManager.getLc(); 
-				if (lc != null) {
-					lc.setVideoWindow(null);
-				}
+				
 			}
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
@@ -85,8 +82,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				// Remove references kept in jni code and restart camera
-				LinphoneManager.getLc().setPreviewWindow(null);
+				
 			}
 		});
 		
@@ -134,10 +130,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 	public void onResume() {		
 		super.onResume();
 		
-		if (mVideoView != null) {
-			((GLSurfaceView) mVideoView).onResume();
-		}
-		
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
 				LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
@@ -158,10 +150,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				 */
 				LinphoneManager.getLc().setVideoWindow(null);
 			}
-		}
-		
-		if (mVideoView != null) {
-			((GLSurfaceView) mVideoView).onPause();
 		}
 		
 		super.onPause();
