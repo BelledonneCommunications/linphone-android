@@ -913,6 +913,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 						video.setEnabled(true);
 						transfer.setVisibility(View.INVISIBLE);
 						addCall.setVisibility(View.INVISIBLE);
+						conference.setVisibility(View.INVISIBLE);
 						displayVideoCall(false);
 						numpad.setVisibility(View.GONE);
 						options.setImageResource(R.drawable.options_default);
@@ -933,6 +934,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 								video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
 								transfer.setVisibility(View.INVISIBLE);
 								addCall.setVisibility(View.INVISIBLE);
+								conference.setVisibility(View.INVISIBLE);
 								displayVideoCall(false);
 								numpad.setVisibility(View.GONE);
 								options.setImageResource(R.drawable.options_default);
