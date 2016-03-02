@@ -120,10 +120,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 			if (contact != null) {
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
-				view.findViewById(R.id.add_contact).setVisibility(View.GONE);
+				addToContacts.setVisibility(View.INVISIBLE);
 			} else {
 				contactPicture.setImageResource(R.drawable.avatar);
-				view.findViewById(R.id.add_contact).setVisibility(View.VISIBLE);
+				addToContacts.setVisibility(View.VISIBLE);
 			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
