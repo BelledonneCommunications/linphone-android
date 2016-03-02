@@ -188,15 +188,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 				if (state == State.StreamsRunning) {
 					switchVideo(isVideoEnabled(call));
-					//Check media in progress
-					if(!call.mediaInProgress()){
-						if(LinphonePreferences.instance().isVideoEnabled()) {
-							enabledVideoButton(true);
-						}
-						enabledPauseButton(true);
-					} else {
-						enabledPauseButton(false);
-					}
 					enableAndRefreshInCallActions();
 
 					if (status != null) {
@@ -471,10 +462,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					video.setImageResource(R.drawable.camera_selected);
 					videoProgress.setVisibility(View.INVISIBLE);
 				} else {
-					video.setImageResource(R.drawable.camera_default);
+					video.setImageResource(R.drawable.camera_button);
 				}
 			} else {
-				video.setImageResource(R.drawable.camera_default);
+				video.setImageResource(R.drawable.camera_button);
 			}
 		}
 
@@ -531,11 +522,15 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls() && !LinphoneManager.getLc().soundResourcesLocked());
 		options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
 
-		if(LinphoneManager.getLc().getCurrentCall() != null && LinphonePreferences.instance().isVideoEnabled() && !LinphoneManager.getLc().soundResourcesLocked()) {
+		if(LinphoneManager.getLc().getCurrentCall() != null && LinphonePreferences.instance().isVideoEnabled() && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()) {
 			enabledVideoButton(true);
+		} else {
+			enabledVideoButton(false);
 		}
-		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().soundResourcesLocked()){
+		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()){
 			enabledPauseButton(true);
+		} else {
+			enabledPauseButton(false);
 		}
 		micro.setEnabled(true);
 		if(!isTablet()){
