@@ -160,7 +160,12 @@ public class ContactEditorFragment extends Fragment {
 		        	e.printStackTrace();
 		        }
 
-				getFragmentManager().popBackStackImmediate();
+				Contact updatedContact = contactsManager.findContactWithDisplayName(contactsManager.getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
+				if(updatedContact != null) {
+					LinphoneActivity.instance().displayContact(updatedContact, false);
+				} else {
+					LinphoneActivity.instance().displayContacts(false);
+				}
 
 				if(LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet))
 					ContactsListFragment.instance().invalidate();
