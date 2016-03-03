@@ -892,6 +892,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					if (cameraNumber > 1) {
 						switchCamera.startAnimation(slideInTopToBottom);
 					}
+					pause.startAnimation(slideInTopToBottom);
 				}
 			}
 			resetControlsHidingCallBack();
@@ -945,6 +946,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 						if (cameraNumber > 1) {
 							switchCamera.startAnimation(slideOutBottomToTop);
 						}
+						pause.startAnimation(slideOutBottomToTop);
 					}
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);
@@ -1041,6 +1043,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					transfer.setVisibility(View.INVISIBLE);
 				}
 				addCall.setVisibility(View.INVISIBLE);
+				conference.setVisibility(View.INVISIBLE);
 				animation.setAnimationListener(null);
 			}
 		});
@@ -1048,6 +1051,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			transfer.startAnimation(animation);
 		}
 		addCall.startAnimation(animation);
+		conference.startAnimation(animation);
 	}
 
 	private void hideAnimatedLandscapeCallOptions() {
@@ -1066,6 +1070,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				public void onAnimationEnd(Animation animation) {
 					transfer.setAnimation(null);
 					transfer.setVisibility(View.INVISIBLE);
+
 					animation = AnimationUtils.loadAnimation(CallActivity.this, R.anim.slide_out_top_to_bottom); // Reload animation to prevent transfer button to blink
 					animation.setAnimationListener(new AnimationListener() {
 						@Override
@@ -1085,6 +1090,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				}
 			});
 			transfer.startAnimation(animation);
+			conference.startAnimation(animation);
 		} else {
 			animation.setAnimationListener(new AnimationListener() {
 				@Override
@@ -1098,9 +1104,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					addCall.setVisibility(View.INVISIBLE);
+					conference.setVisibility(View.INVISIBLE);
 				}
 			});
 			addCall.startAnimation(animation);
+			conference.startAnimation(animation);
 		}
 	}
 
@@ -1117,17 +1125,19 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				options.setBackgroundResource(R.drawable.options_default);
+				options.setImageResource(R.drawable.options_default);
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.VISIBLE);
 				}
 				addCall.setVisibility(View.VISIBLE);
+				conference.setVisibility(View.VISIBLE);
 				animation.setAnimationListener(null);
 			}
 		});
 		if (isTransferAllowed) {
 			transfer.startAnimation(animation);
 		}
+		conference.startAnimation(animation);
 		addCall.startAnimation(animation);
 	}
 
@@ -1145,8 +1155,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				addCall.setAnimation(null);
-				options.setBackgroundResource(R.drawable.options_default);
+				options.setImageResource(R.drawable.options_default);
 				addCall.setVisibility(View.VISIBLE);
+				conference.setVisibility(View.VISIBLE);
 				if (isTransferAllowed) {
 					animation.setAnimationListener(new AnimationListener() {
 						@Override
@@ -1164,6 +1175,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					});
 					transfer.startAnimation(animation);
 				}
+				conference.startAnimation(animation);
 			}
 		});
 		addCall.startAnimation(animation);
@@ -1543,6 +1555,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	public void refreshCallList(Resources resources) {
 		isConferenceRunning = LinphoneManager.getLc().isInConference();
+		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 
 		//MultiCalls
 		if(LinphoneManager.getLc().getCallsNb() > 1){
@@ -1552,7 +1565,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		//Active call
 		if(LinphoneManager.getLc().getCurrentCall() != null) {
 			displayNoCurrentCall(false);
-			if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()) && !isConferenceRunning) {
+			if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()) && !isConferenceRunning && pausedCalls.size() == 0) {
 				displayVideoCall(false);
 			} else {
 				displayAudioCall();
@@ -1607,14 +1620,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		//Paused by remote
-		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 		if (pausedCalls.size() == 1) {
 			displayCallPaused(true);
 		} else {
 			displayCallPaused(false);
 		}
-
-
 	}
 
 	//Conference
@@ -1636,12 +1646,15 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	public void pauseOrResumeConference() {
 		LinphoneCore lc = LinphoneManager.getLc();
-		if (lc.isInConference()) {
-			conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
-			lc.leaveConference();
-		} else {
-			conferenceStatus.setImageResource(R.drawable.pause_big_default);
-			lc.enterConference();
+		conferenceStatus = (ImageView) findViewById(R.id.conference_pause);
+		if(conferenceStatus != null) {
+			if (lc.isInConference()) {
+				conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
+				lc.leaveConference();
+			} else {
+				conferenceStatus.setImageResource(R.drawable.pause_big_default);
+				lc.enterConference();
+			}
 		}
 		refreshCallList(getResources());
 	}
