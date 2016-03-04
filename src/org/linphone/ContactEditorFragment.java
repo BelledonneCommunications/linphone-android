@@ -160,15 +160,23 @@ public class ContactEditorFragment extends Fragment {
 		        	e.printStackTrace();
 		        }
 
-				Contact updatedContact = contactsManager.findContactWithDisplayName(contactsManager.getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
-				if(updatedContact != null) {
-					LinphoneActivity.instance().displayContact(updatedContact, false);
+				if(isNewContact) {
+					getFragmentManager().popBackStackImmediate();
 				} else {
-					LinphoneActivity.instance().displayContacts(false);
+					if (LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet)) {
+						if(ContactsListFragment.isInstanciated()) {
+							ContactsListFragment.instance().invalidate();
+						}
+						getFragmentManager().popBackStackImmediate();
+					} else {
+						Contact updatedContact = contactsManager.findContactWithDisplayName(contactsManager.getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
+						if (updatedContact != null) {
+							LinphoneActivity.instance().displayContact(updatedContact, false);
+						} else {
+							LinphoneActivity.instance().displayContacts(false);
+						}
+					}
 				}
-
-				if(LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet))
-					ContactsListFragment.instance().invalidate();
 			}
 		});
 		

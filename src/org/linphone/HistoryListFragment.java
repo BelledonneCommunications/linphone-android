@@ -442,7 +442,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 			Contact c = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 			String displayName = null;
-			final String sipUri = address.asStringUriOnly();
+			final String sipUri = address.asString();
 			if(c != null){
 				displayName = c.getName();
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),holder.contactPicture,c.getPhotoUri(),c.getThumbnailUri());

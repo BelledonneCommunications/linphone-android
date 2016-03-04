@@ -78,10 +78,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		
 		contactName = (TextView) view.findViewById(R.id.contact_name);
-		if (displayName == null) {
-			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
-		}
-		
 		contactAddress = (TextView) view.findViewById(R.id.contact_address);
 		
 		callDirection = (ImageView) view.findViewById(R.id.direction);
@@ -95,13 +91,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void displayHistory(String status, String callTime, String callDate) {
-		contactName.setText(displayName == null ? sipUri : displayName);
-		if (displayName == null) {
-			contactAddress.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
-		} else {
-			contactAddress.setText(sipUri);
-		}
-		
 		if (status.equals(getResources().getString(R.string.missed))) {
 			callDirection.setImageResource(R.drawable.call_missed);
 		} else if (status.equals(getResources().getString(R.string.incoming))) {
@@ -114,21 +103,29 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format)));
 
-		LinphoneAddress lAddress;
+		LinphoneAddress lAddress = null;
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
-			if (contact != null) {
-				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
-				addToContacts.setVisibility(View.INVISIBLE);
-			} else {
-				contactPicture.setImageResource(R.drawable.avatar);
-				addToContacts.setVisibility(View.VISIBLE);
-			}
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
-	
+
+		if(lAddress != null) {
+			contactAddress.setText(lAddress.asStringUriOnly());
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+			if (contact != null) {
+				contactName.setText(contact.getName());
+				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
+				addToContacts.setVisibility(View.INVISIBLE);
+			} else {
+				contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
+				contactPicture.setImageResource(R.drawable.avatar);
+				addToContacts.setVisibility(View.VISIBLE);
+			}
+		} else {
+			contactAddress.setText(sipUri);
+			contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
+		}
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		

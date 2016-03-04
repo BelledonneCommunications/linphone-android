@@ -109,6 +109,7 @@
 					android:layout_height="match_parent">
 
 					<ImageView
+						android:id="@+id/footer_history"
 						android:src="@drawable/footer_history"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -129,9 +130,11 @@
 						style="@style/font18"
 						android:layout_width="20dp"
 						android:layout_height="20dp"
-						android:layout_margin="15dp"
 						android:gravity="center"
-						android:visibility="gone"/>
+						android:layout_margin="20dp"
+						android:layout_alignParentTop="true"
+						android:layout_alignParentRight="true"
+						android:visibility="visible"/>
 
 				</RelativeLayout>
 
@@ -209,8 +212,10 @@
 						style="@style/font18"
 						android:layout_width="20dp"
 						android:layout_height="20dp"
-						android:layout_margin="15dp"
+						android:layout_margin="20dp"
 						android:gravity="center"
+						android:layout_alignParentTop="true"
+						android:layout_alignParentRight="true"
 						android:visibility="gone"/>
 
 				</RelativeLayout>

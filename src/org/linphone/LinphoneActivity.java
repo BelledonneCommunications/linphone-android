@@ -109,7 +109,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ChatFragment chatFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = true, preferLinphoneContacts = false;
+	private boolean isAnimationDisabled = true, preferLinphoneContacts = false, emptyFragment = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -459,13 +459,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				hideStatusBar();
 			}
 		}
-
+		emptyFragment = false;
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
 		if(newFragmentType == FragmentsAvailable.EMPTY){
 			ll.setVisibility(View.VISIBLE);
+			emptyFragment = true;
 			transaction.replace(R.id.fragmentContainer2, newFragment);
 			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
@@ -481,6 +482,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if (newFragmentType == FragmentsAvailable.EMPTY) {
 					ll.setVisibility(View.VISIBLE);
 					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
+					emptyFragment = true;
 				}
 
 				if (newFragmentType == FragmentsAvailable.DIALER
@@ -532,7 +534,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 		Contact c = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
 
-		String displayName = c != null ? c.getName() : null;
+		String displayName = c != null ? c.getName() : LinphoneUtils.getAddressDisplayName(sipUri);
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
 
 		String status;
@@ -552,10 +554,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
 			HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
-			historyDetailFragment.changeDisplayedHistory(sipUri, displayName, pictureUri, status, callTime, callDate);
+			historyDetailFragment.changeDisplayedHistory(lAddress.asStringUriOnly(), displayName, pictureUri, status, callTime, callDate);
 		} else {
 			Bundle extras = new Bundle();
-			extras.putString("SipUri", sipUri);
+			extras.putString("SipUri", lAddress.asString());
 			if (displayName != null) {
 				extras.putString("DisplayName", displayName);
 				extras.putString("PictureUri", pictureUri);
@@ -671,7 +673,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.CHAT) {
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
-			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
 				ChatFragment chatFragment = (ChatFragment) fragment2;
 				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
 			} else {
