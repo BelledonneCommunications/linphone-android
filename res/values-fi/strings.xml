@@ -42,7 +42,6 @@
   <string name="decline">Hylkää</string>
   <string name="conference">Kokous</string>
   <!--Launch screen-->
-  <string name="app_description">ilmainen SIP VOIP pääteohjelma</string>
   <!--Assistant-->
   <string name="welcome">Tervetuloa</string>
   <string name="assistant">Avustaja</string>
@@ -74,7 +73,6 @@
   <string name="wizard_username_unavailable">Tämä käyttäjätunnus on jo käytössä.</string>
   <string name="wizard_username_incorrect">Sinun käyttäjätunnus ei ole kelvollinen.</string>
   <string name="wizard_email_incorrect">Sähkpostisi ei ole kelvollinen.</string>
-  <string name="wizard_password_incorrect">Salasanasi ei ole kelvollinen.</string>
   <string name="wizard_passwords_unmatched">Antamasi salasanat ovat erillaiset.</string>
   <string name="setup_confirm_username">Sinun käyttäjätunnus tulee olemaan %s.\r\n\r\nIt voiden muuttua, jotta vaatiukset täyttyisivät .\r\nHyväksytkö?</string>
   <string name="first_launch_no_login_password">Anna käyttäjätunnus ja salasana</string>
