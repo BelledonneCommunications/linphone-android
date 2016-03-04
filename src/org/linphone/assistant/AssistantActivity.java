@@ -48,7 +48,6 @@ import android.text.TextUtils;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -164,6 +163,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 	
 	private void changeFragment(Fragment newFragment) {
+		hideKeyboard();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment_container, newFragment);
 		transaction.commitAllowingStateLoss();

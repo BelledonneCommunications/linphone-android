@@ -70,6 +70,7 @@ public class EchoCancellerCalibrationFragment extends Fragment {
 			LinphoneManager.getInstance().startEcCalibration(mListener);
 		} catch (LinphoneCoreException e) {
 			Log.e(e, "Unable to calibrate EC");
+			AssistantActivity.instance().isEchoCalibrationFinished();
 		}
 		return view;
 	}
