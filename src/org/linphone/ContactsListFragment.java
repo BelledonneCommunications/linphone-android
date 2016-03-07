@@ -324,7 +324,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	}
 
 	public void displayFirstContact(){
-		if(contactsList.getAdapter().getCount() > 0) {
+		if(contactsList.getAdapter() != null && contactsList.getAdapter().getCount() > 0) {
 			LinphoneActivity.instance().displayContact((Contact) contactsList.getAdapter().getItem(0), false);
 		} else {
 			LinphoneActivity.instance().displayEmptyFragment();
