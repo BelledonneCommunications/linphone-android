@@ -316,19 +316,21 @@ public class StatusFragment extends Fragment {
 		super.onResume();
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		LinphoneCall call = lc.getCurrentCall();
-		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
-			if (call != null) {
-				startCallQuality();
-				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+		if(lc != null) {
+			LinphoneCall call = lc.getCurrentCall();
+			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
+				if (call != null) {
+					startCallQuality();
+					refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+				}
+				menu.setVisibility(View.INVISIBLE);
+				encryption.setVisibility(View.VISIBLE);
+				callQuality.setVisibility(View.VISIBLE);
+
+				// We are obviously connected
+				statusLed.setImageResource(R.drawable.led_connected);
+				statusText.setText(getString(R.string.status_connected));
 			}
-			menu.setVisibility(View.INVISIBLE);
-			encryption.setVisibility(View.VISIBLE);
-			callQuality.setVisibility(View.VISIBLE);
-			
-			// We are obviously connected
-			statusLed.setImageResource(R.drawable.led_connected);
-			statusText.setText(getString(R.string.status_connected));
 		} else {
 			statusText.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);

@@ -479,8 +479,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	public void dispayMessageList() {
 		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-		adapter = new ChatMessageAdapter(getActivity(), chatRoom.getHistory());
-		messagesList.setAdapter(adapter);
+		if(chatRoom != null) {
+			adapter = new ChatMessageAdapter(getActivity(), chatRoom.getHistory());
+			messagesList.setAdapter(adapter);
+		}
 	}
 
 	private void displayChatHeader(LinphoneAddress address) {
@@ -1049,9 +1051,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		public List<ContactAddress>getContactsList(){
 			List<ContactAddress> list = new ArrayList<ContactAddress>();
-			for(Contact con: ContactsManager.getInstance().getAllContacts()){
-				for(String numberOrAddress : con.getNumbersOrAddresses()){
-					list.add(new ContactAddress(con, numberOrAddress));
+			if(ContactsManager.getInstance().getAllContacts() != null) {
+				for (Contact con : ContactsManager.getInstance().getAllContacts()) {
+					for (String numberOrAddress : con.getNumbersOrAddresses()) {
+						list.add(new ContactAddress(con, numberOrAddress));
+					}
 				}
 			}
 			return list;
