@@ -47,7 +47,7 @@ public class ContactsManager {
 	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
 	private Account mAccount;
-	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
+	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
 	private Context context;
 
@@ -72,6 +72,10 @@ public class ContactsManager {
 
 	public Cursor getSIPContactsCursor() {
 		return sipContactCursor;
+	}
+	
+	public void enabledContactsAccess(){
+		hasContactAccess = true;
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
@@ -399,34 +403,36 @@ public class ContactsManager {
 		}
 
 		//Find Sip address
-		Contact contact;
-		String [] projection = new String[]  {ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
-		String selection = new StringBuilder()
-				.append(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
-				.append(" = ?").toString();
+		if(hasContactAccess) {
+			Contact contact;
+			String[] projection = new String[]{ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
+			String selection = new StringBuilder()
+					.append(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
+					.append(" = ?").toString();
 
-		Cursor cur = contentResolver.query(ContactsContract.Data.CONTENT_URI, projection, selection,
-				new String[]{sipUri}, null);
-		if (cur != null) {
-			if (cur.moveToFirst()) {
-				contact = Compatibility.getContact(contentResolver, cur, cur.getPosition());
-				cur.close();
+			Cursor cur = contentResolver.query(ContactsContract.Data.CONTENT_URI, projection, selection,
+					new String[]{sipUri}, null);
+			if (cur != null) {
+				if (cur.moveToFirst()) {
+					contact = Compatibility.getContact(contentResolver, cur, cur.getPosition());
+					cur.close();
 
-				if (contact != null) {
-					return contact;
+					if (contact != null) {
+						return contact;
+					}
 				}
+				cur.close();
 			}
-			cur.close();
-		}
 
-		//Find number
-		Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address.getUserName()));
-		projection = new String[] {ContactsContract.PhoneLookup._ID,ContactsContract.PhoneLookup.NUMBER,ContactsContract.PhoneLookup.DISPLAY_NAME };
-		Cursor c = contentResolver.query(lookupUri, projection, null, null, null);
-		contact = checkPhoneQueryResult(contentResolver, c, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup._ID, address.getUserName());
+			//Find number
+			Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address.getUserName()));
+			projection = new String[]{ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+			Cursor c = contentResolver.query(lookupUri, projection, null, null, null);
+			contact = checkPhoneQueryResult(contentResolver, c, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup._ID, address.getUserName());
 
-		if (contact != null) {
-			return contact;
+			if (contact != null) {
+				return contact;
+			}
 		}
 
 		return null;

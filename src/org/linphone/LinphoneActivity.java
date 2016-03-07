@@ -47,6 +47,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.ui.AddressText;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -56,6 +57,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -161,7 +163,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		//TODO rework
-		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+		if (getResources().getBoolean(R.bool.use_linphone_tag) && getPackageManager().checkPermission(Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 			ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
 		} else {
 			ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
@@ -1196,7 +1198,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
-		ContactsManager.getInstance().prepareContactsInBackground();
+		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED){
+			ContactsManager.getInstance().enabledContactsAccess();
+			ContactsManager.getInstance().prepareContactsInBackground();
+		}
 
 		updateMissedChatCount();
 
@@ -1453,8 +1458,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-					int position = Integer.parseInt(view.getTag().toString());
-					LinphoneActivity.instance().displayAccountSettings(position);
+					if(view != null) {
+						int position = Integer.parseInt(view.getTag().toString());
+						LinphoneActivity.instance().displayAccountSettings(position);
+					}
 					openOrCloseSideMenu(false);
 				}
 			});
