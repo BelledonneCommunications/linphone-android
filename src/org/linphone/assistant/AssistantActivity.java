@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -41,6 +42,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -220,17 +222,21 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
-		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
-		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
-			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
-			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
-			changeFragment(fragment);
-			currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
-			back.setVisibility(View.VISIBLE);
-			cancel.setEnabled(false);
+		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
+			if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
+				fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
+				changeFragment(fragment);
+				currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
+				back.setVisibility(View.VISIBLE);
+				cancel.setEnabled(false);
+			} else {
+				success();
+			}
 		} else {
 			success();
-		}		
+		}
 	}
 
 	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
