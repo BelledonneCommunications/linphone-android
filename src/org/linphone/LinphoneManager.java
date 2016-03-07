@@ -165,7 +165,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
 		mRingSoundFile = basePath + "/oldphone_mono.wav";
 		mRingbackSoundFile = basePath + "/ringback.wav";
-		mPauseSoundFile = basePath + "/dont_wait_too_long.wav";
+		mPauseSoundFile = basePath + "/hold.mkv";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 		mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
 		mErrorToneFile = basePath + "/error.wav";
@@ -689,7 +689,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private void copyAssetsFromPackage() throws IOException {
 		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
 		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
-		copyIfNotExist(R.raw.dont_wait_too_long, mPauseSoundFile);
+		copyIfNotExist(R.raw.hold, mPauseSoundFile);
 		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
