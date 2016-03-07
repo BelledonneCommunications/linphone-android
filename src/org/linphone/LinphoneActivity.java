@@ -424,7 +424,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-		if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
+		/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 			if (newFragmentType.isRightOf(currentFragment)) {
 				transaction.setCustomAnimations(R.anim.slide_in_right_to_left,
 						R.anim.slide_out_right_to_left,
@@ -436,7 +436,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						R.anim.slide_in_right_to_left,
 						R.anim.slide_out_right_to_left);
 			}
-		}
+		}*/
 
 		if (newFragmentType != FragmentsAvailable.DIALER
 				|| newFragmentType != FragmentsAvailable.CONTACTS_LIST
@@ -495,13 +495,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
 				}
 
-				if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
+				/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 					if (newFragmentType.isRightOf(currentFragment)) {
 						transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
 					} else {
 						transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
 					}
-				}
+				}*/
 				transaction.replace(R.id.fragmentContainer, newFragment);
 			}
 			transaction.commitAllowingStateLoss();
