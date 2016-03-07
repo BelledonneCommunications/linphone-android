@@ -96,7 +96,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
 				if(accountCreated && !newAccount){
-					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
+					if(address != null && address.asString().equals(cfg.getAddress().asString()) ) {
 						if (state == RegistrationState.RegistrationOk) {
 							if(progress != null)
 								progress.dismiss();
@@ -341,7 +341,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 
-		if(displayName != null && !displayName.equals("")){
+		if(address != null && displayName != null && !displayName.equals("")){
 			address.setDisplayName(displayName);
 		}
 
