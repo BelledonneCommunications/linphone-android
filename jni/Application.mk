@@ -55,7 +55,7 @@ ifeq ($(BUILD_UPNP),1)
 APP_MODULES += libupnp
 endif
 
-APP_MODULES +=bctoolbox
+APP_MODULES +=bctoolbox bctoolbox_tester
 ifeq ($(BUILD_TLS),1)
 ifeq ($(BUILD_BCTOOLBOX_MBEDTLS),1)
 APP_MODULES +=mbedtls
