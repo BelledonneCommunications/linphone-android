@@ -16,6 +16,7 @@
 			android:id="@+id/back"
 			android:src="@drawable/back"
 			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_back"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
@@ -30,7 +31,7 @@
 			android:id="@+id/add_contact"
 			android:src="@drawable/contact_add"
 			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit"
+			android:contentDescription="@string/content_description_add_contact"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
@@ -94,6 +95,7 @@
 				<ImageView
 					android:id="@+id/call"
 					android:src="@drawable/call_start_body_default"
+					android:contentDescription="@string/content_description_call"
 					android:layout_width="60dp"
 					android:layout_height="60dp"
 					android:layout_margin="10dp"/>
@@ -101,6 +103,7 @@
 				<ImageView
 					android:id="@+id/chat"
 					android:src="@drawable/chat_start_body_default"
+					android:contentDescription="@string/content_description_chat"
 					android:layout_width="60dp"
 					android:layout_height="60dp"
 					android:layout_margin="10dp"/>

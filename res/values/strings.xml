@@ -9,19 +9,6 @@
 	<string name="wait_dialog_text">Starting up</string>
 	<string name="notification_registered">%s registered</string>
 	<string name="notification_register_failure">%s failed to register</string>
-	<string name="about_version">Linphone Android %s</string>
-	<string name="about_liblinphone_version">Linphone Core %s</string>
-	<string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
-	<string name="about_link">www.linphone.org</string>
-
-	<string name="sync_account_name">linphone contacts</string>
-
-	<string name="history_date_format">EEE, d MMM</string>
-	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
-	<string name="messages_date_format">dd/MM, HH:mm</string>
-	<string name="messages_list_date_format">dd/MM</string>
-	<string name="today_date_format">HH:mm</string>
-	<string name="picture_name_format">linphone-mms-%s.jpg</string>
 	<string name="tunnel_host"></string>
 
 	<!-- Common -->
@@ -308,26 +295,30 @@
 	<!-- Content description -->
 	<string name="content_description_back">Back</string>
 	<string name="content_description_dialer">Dialer</string>
+	<string name="content_description_menu">Menu</string>
 	<string name="content_description_toggle_micro">Toggle micro</string>
 	<string name="content_description_toggle_speaker">Toggle speaker</string>
 	<string name="content_description_decline">Decline</string>
 	<string name="content_description_hang_up">Hang up</string>
 	<string name="content_description_accept">Accept</string>
-	<string name="content_description_edit">Edit button</string>
-	<string name="content_description_valid">Valid button</string>
+	<string name="content_description_edit">Edit</string>
+	<string name="content_description_edit_list">Edit List</string>
+	<string name="content_description_valid">Valid</string>
 	<string name="content_description_add_contact">Add to contacts</string>
 	<string name="content_description_new_contact">New contact</string>
 	<string name="content_description_call">Call</string>
 	<string name="content_description_backspace">Backspace</string>
 	<string name="content_description_chat">Chat</string>
 	<string name="content_description_dial_back">Dial back</string>
+	<string name="content_description_dialer_back">Return to dialer</string>
 	<string name="content_description_contact_picture">Contact picture</string>
 	<string name="content_description_send_message">Send message</string>
 	<string name="content_description_detail">Details</string>
-	<string name="content_description_delete">Delete button</string>
-	<string name="content_description_add">Add button</string>
+	<string name="content_description_delete">Delete</string>
+	<string name="content_description_add">Add call</string>
 	<string name="content_description_new_discussion">New discussion</string>
 	<string name="content_description_search">Search</string>
+	<string name="content_description_search_contact">Search contact</string>
 	<string name="content_description_all_contacts">All contacts</string>
 	<string name="content_description_linphone_contacts">Linphone contacts</string>
 	<string name="content_description_call_direction">Call direction</string>
@@ -346,4 +337,26 @@
 	<string name="content_description_cancel_button">Cancel button</string>
 	<string name="content_description_message_status">Message status</string>
 	<string name="content_description_conference">Conference</string>
+	<string name="content_description_username_field">Username field</string>
+	<string name="content_description_display_field">Display name field</string>
+	<string name="content_description_domain_field">Domain field</string>
+	<string name="content_description_url_field">Remote provisioning field</string>
+	<string name="content_description_confirm_password_field">Confirm password field</string>
+	<string name="content_description_email_field">Email field</string>
+	<string name="content_description_default_account">Default account</string>
+	<string name="content_description_deselect_all">Deselect all</string>
+	<string name="content_description_select_all">Select all</string>
+	<string name="content_description_delete_selection">Select all</string>
+	<string name="content_description_contact_first_name">First name</string>
+	<string name="content_description_contact_last_name">Last name</string>
+	<string name="content_description_back_call">Back to call</string>
+	<string name="content_description_send_file">Send a file</string>
+	<string name="content_description_message">Message</string>
+	<string name="content_description_unread_chat_message">Unread chat message</string>
+	<string name="content_description_transfer">Transfer</string>
+	<string name="content_description_earpiece">Earpiece</string>
+	<string name="content_description_bluetooth">Bluetooth</string>
+	<string name="content_description_call_options">Call options</string>
+	<string name="content_description_audio_route">Audio route</string>
+	<string name="content_description_exit_conference">Exit conference</string>
 </resources>

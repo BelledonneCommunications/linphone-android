@@ -228,7 +228,8 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:padding="20dp" />
+						android:padding="15dp"
+						android:contentDescription="@string/content_description_numpad"/>
 
 					<ImageView
 						android:id="@+id/hang_up"
@@ -237,7 +238,8 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="0.5"
-						android:padding="15dp"/>
+						android:padding="12dp"
+						android:contentDescription="@string/content_description_hang_up"/>
 
 					<ImageView
 						android:id="@+id/chat"
@@ -246,7 +248,8 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:padding="18dp"/>
+						android:padding="15dp"
+						android:contentDescription="@string/content_description_chat_button"/>
 				</LinearLayout>
 
 
@@ -266,9 +269,10 @@
 							android:id="@+id/video"
 							android:src="@drawable/camera_default"
 							android:background="@drawable/button_background"
-							android:padding="22dp"
+							android:padding="20dp"
 							android:layout_width="match_parent"
-							android:layout_height="match_parent"/>
+							android:layout_height="match_parent"
+							android:contentDescription="@string/content_description_switch_video"/>
 
 						<ProgressBar
 							android:id="@+id/video_in_progress"
@@ -285,38 +289,42 @@
 						android:id="@+id/micro"
 						android:src="@drawable/micro_default"
 						android:background="@drawable/button_background"
-						android:padding="15dp"
+						android:padding="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_weight="1" />
+						android:layout_weight="1"
+						android:contentDescription="@string/content_description_toggle_micro"/>
 
 					<ImageView
 						android:id="@+id/speaker"
 						android:src="@drawable/speaker_default"
 						android:background="@drawable/button_background"
-						android:padding="18dp"
+						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:layout_weight="1" />
+						android:layout_weight="1"
+						android:contentDescription="@string/content_description_toggle_speaker"/>
 
 					<ImageView
 						android:id="@+id/audio_route"
 						android:src="@drawable/routes_default"
 						android:background="@drawable/button_background"
 						android:visibility="gone"
-						android:padding="20dp"
+						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:layout_weight="1" />
+						android:layout_weight="1"
+						android:contentDescription="@string/content_description_audio_route"/>
 
 					<ImageView
 						android:id="@+id/options"
 						android:src="@drawable/options_default"
 						android:background="@drawable/button_background"
-						android:padding="18dp"
+						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_weight="1" />
+						android:layout_weight="1"
+						android:contentDescription="@string/content_description_call_options"/>
 
 				</LinearLayout>
 
@@ -327,7 +335,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="60dp"
 				android:layout_above="@id/menu"
-				android:orientation="horizontal" android:layout_alignParentLeft="true"
+				android:orientation="horizontal"
+				android:layout_alignParentLeft="true"
 				android:layout_alignParentStart="true">
 
 				<TextView
@@ -346,21 +355,23 @@
 					android:id="@+id/route_bluetooth"
 					android:src="@drawable/route_bluetooth"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1.4" />
+					android:layout_weight="1.4"
+					android:contentDescription="@string/content_description_bluetooth"/>
 
 				<ImageView
 					android:id="@+id/add_call"
 					android:src="@drawable/options_add_call"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1.4" />
+					android:layout_weight="1.4"
+					android:contentDescription="@string/content_description_add_call"/>
 
 			</LinearLayout>
 
@@ -387,21 +398,23 @@
 					android:id="@+id/route_earpiece"
 					android:src="@drawable/route_earpiece"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1.4"/>
+					android:layout_weight="1.4"
+					android:contentDescription="@string/content_description_earpiece"/>
 
 				<ImageView
 					android:id="@+id/transfer"
 					android:src="@drawable/options_transfer_call"
 					android:background="@drawable/button_background"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:visibility="invisible"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1.4"/>
+					android:layout_weight="1.4"
+					android:contentDescription="@string/content_description_transfer"/>
 
 			</LinearLayout>
 
@@ -428,20 +441,22 @@
 					android:src="@drawable/route_speaker"
 					android:background="@drawable/button_background"
 					android:visibility="invisible"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1.4"/>
+					android:layout_weight="1.4"
+					android:contentDescription="@string/content_description_toggle_speaker"/>
 
 				<ImageView
 					android:id="@+id/conference"
 					android:src="@drawable/options_start_conference"
 					android:background="@drawable/button_background"
 					android:visibility="invisible"
-					android:padding="20dp"
+					android:padding="15dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1.4"/>
+					android:layout_weight="1.4"
+					android:contentDescription="@string/content_description_conference"/>
 
 			</LinearLayout>
 

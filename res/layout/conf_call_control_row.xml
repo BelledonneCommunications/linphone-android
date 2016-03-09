@@ -49,6 +49,7 @@
 	<ImageView
 		android:id="@+id/quitConference"
 		android:src="@drawable/conference_exit_default"
+		android:contentDescription="@string/content_description_exit_conference"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:gravity="center_vertical"

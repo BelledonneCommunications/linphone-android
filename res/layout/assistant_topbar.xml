@@ -29,7 +29,7 @@
 		android:id="@+id/assistant_cancel"
 		android:src="@drawable/dialer_back"
 		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_dialer"
+		android:contentDescription="@string/content_description_dialer_back"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="0.2"
