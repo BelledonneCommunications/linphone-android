@@ -89,11 +89,13 @@
 				android:layout_width="20dp"
 				android:layout_height="20dp"
 				android:background="@drawable/chat_list_indicator"
+				android:contentDescription="@string/content_description_unread_chat_message"
 				style="@style/font18"
 				android:gravity="center"
 				android:singleLine="true"
 				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true" android:layout_alignParentTop="true"/>
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"/>
 
 			<TextView
 				android:id="@+id/lastMessage"

@@ -15,6 +15,7 @@
 		<org.linphone.ui.EraseButton
 			android:id="@+id/erase"
 			android:src="@drawable/backspace"
+			android:contentDescription="@string/content_description_backspace"
 			android:layout_width="40dp"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
@@ -65,6 +66,7 @@
 				android:id="@+id/add_contact"
 				android:src="@drawable/contact_add_button"
 				android:background="@drawable/toolbar_button"
+				android:contentDescription="@string/content_description_add_contact"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="15dp"
@@ -76,6 +78,7 @@
 			android:id="@+id/call"
 			android:src="@drawable/call_audio_start"
 			android:background="@drawable/call"
+			android:contentDescription="@string/content_description_call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 			android:padding="12dp"

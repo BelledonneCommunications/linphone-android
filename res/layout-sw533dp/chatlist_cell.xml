@@ -17,7 +17,8 @@
 		android:adjustViewBounds="true"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
-		android:visibility="invisible" android:layout_alignParentTop="true"/>
+		android:visibility="invisible"
+		android:layout_alignParentTop="true"/>
 	
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -47,7 +48,6 @@
 				<ImageView
 					android:id="@+id/mask"
 					android:src="@drawable/avatar_mask"
-					android:contentDescription="@string/content_description_contact_picture"
 					android:layout_width="35dp"
 					android:layout_height="35dp"
 					android:adjustViewBounds="true"/>
@@ -86,6 +86,7 @@
 				android:layout_width="20dp"
 				android:layout_height="20dp"
 				android:background="@drawable/chat_list_indicator"
+				android:contentDescription="@string/content_description_unread_chat_message"
 				style="@style/font18"
 				android:gravity="center"
 				android:singleLine="true"
