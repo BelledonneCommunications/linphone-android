@@ -328,8 +328,13 @@ public class StatusFragment extends Fragment {
 				callQuality.setVisibility(View.VISIBLE);
 
 				// We are obviously connected
-				statusLed.setImageResource(R.drawable.led_connected);
-				statusText.setText(getString(R.string.status_connected));
+				if(lc.getDefaultProxyConfig() == null){
+					statusLed.setImageResource(R.drawable.led_disconnected);
+					statusText.setText(getString(R.string.no_account));
+				} else {
+					statusLed.setImageResource(getStatusIconResource(lc.getDefaultProxyConfig().getState(),true));
+					statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+				}
 			}
 		} else {
 			statusText.setVisibility(View.VISIBLE);
