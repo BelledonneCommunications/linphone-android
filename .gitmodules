@@ -90,4 +90,4 @@
 	url = git://git.linphone.org/bctoolbox.git
 [submodule "submodules/externals/mbedtls"]
 	path = submodules/externals/mbedtls
-	url = https://github.com/ARMmbed/mbedtls.git
+	url = git://git.linphone.org/mbedtls.git
