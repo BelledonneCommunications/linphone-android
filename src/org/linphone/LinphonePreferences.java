@@ -1204,4 +1204,20 @@ public class LinphonePreferences {
 	public Boolean isDebugLogsEnabled(){
 		return getConfig().getBool("app", "debug_logs_enabled", false);
 	}
+
+	public Boolean audioPermAsked(){
+		return getConfig().getBool("app", "audio_perm", false);
+	}
+
+	public void neverAskAudioPerm(){
+		 getConfig().setBool("app", "audio_perm", true);
+	}
+
+	public Boolean cameraPermAsked(){
+		return getConfig().getBool("app", "camera_perm", false);
+	}
+
+	public void neverAskCameraPerm(){
+		getConfig().setBool("app", "camera_perm", true);
+	}
 }

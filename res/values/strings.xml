@@ -346,7 +346,7 @@
 	<string name="content_description_default_account">Default account</string>
 	<string name="content_description_deselect_all">Deselect all</string>
 	<string name="content_description_select_all">Select all</string>
-	<string name="content_description_delete_selection">Select all</string>
+	<string name="content_description_delete_selection">Delete selection</string>
 	<string name="content_description_contact_first_name">First name</string>
 	<string name="content_description_contact_last_name">Last name</string>
 	<string name="content_description_back_call">Back to call</string>

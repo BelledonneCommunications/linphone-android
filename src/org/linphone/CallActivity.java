@@ -32,11 +32,13 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -51,6 +53,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -76,9 +79,11 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class CallActivity extends Activity implements OnClickListener, SensorEventListener {
+public class CallActivity extends Activity implements OnClickListener, SensorEventListener, ActivityCompat.OnRequestPermissionsResultCallback {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
+	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
+	private static final int PERMISSIONS_ENABLED_CAMERA = 203;
 
 	private static CallActivity instance;
 
@@ -152,7 +157,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
 		mListener = new LinphoneCoreListenerBase(){
-
 			@Override
 			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -201,22 +205,31 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
 					if (!videoEnabled) {
 						acceptCallUpdate(false);
-						return;
 					}
 
 					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
 					boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
 					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
 					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-						showAcceptCallUpdateDialog();
+							showAcceptCallUpdateDialog();
+							timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
+								public void onTick(long millisUntilFinished) { }
+								public void onFinish() {
+									//TODO dismiss dialog
+									acceptCallUpdate(false);
+								}
+							}.start();
 
-						timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
-							public void onTick(long millisUntilFinished) { }
-							public void onFinish() {
-								//TODO dismiss dialog
-								acceptCallUpdate(false);
-							}
-						}.start();
+							/*showAcceptCallUpdateDialog();
+
+							timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
+								public void onTick(long millisUntilFinished) { }
+								public void onFinish() {
+									//TODO dismiss dialog
+
+								}
+							}.start();*/
+
 					}
 //        			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
 //        				mHandler.post(new Runnable() {
@@ -426,6 +439,37 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		LinphoneManager.getInstance().changeStatusToOnThePhone();
 	}
 
+	public void checkAndRequestPermission(String permission, int result) {
+		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			if (!ActivityCompat.shouldShowRequestPermissionRationale(this,permission)){
+				ActivityCompat.requestPermissions(this, new String[]{permission}, result);
+			}
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_CAMERA:
+				UIThreadDispatcher.dispatch(new Runnable() {
+					@Override
+					public void run() {
+						acceptCallUpdate(true);
+					}
+				});
+				break;
+			case PERMISSIONS_ENABLED_CAMERA:
+				UIThreadDispatcher.dispatch(new Runnable() {
+					@Override
+					public void run() {
+						enabledOrDisabledVideo(false);
+					}
+				});
+				break;
+		}
+		LinphonePreferences.instance().neverAskCameraPerm();
+	}
+
 	public void createInCallStats() {
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
 		menu = (ImageView) findViewById(R.id.call_quality);
@@ -554,7 +598,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		if (id == R.id.video) {
-			enabledOrDisabledVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
+			if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+				enabledOrDisabledVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
+			} else {
+				checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
+			}
 		}
 		else if (id == R.id.micro) {
 			toggleMicro();
@@ -1324,19 +1372,22 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (CallActivity.isInstanciated()) {
-					Log.d("Call Update Accepted");
+				if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().cameraPermAsked()) {
 					CallActivity.instance().acceptCallUpdate(true);
+				} else {
+					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
 				}
+
 				dialog.dismiss();
 			}
 		});
 
-		cancel.setOnClickListener(new OnClickListener() {
+		cancel.setOnClickListener(new
+
+		OnClickListener() {
 			@Override
-			public void onClick(View view) {
+			public void onClick (View view){
 				if (CallActivity.isInstanciated()) {
-					Log.d("Call Update Denied");
 					CallActivity.instance().acceptCallUpdate(false);
 				}
 				dialog.dismiss();

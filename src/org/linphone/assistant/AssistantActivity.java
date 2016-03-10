@@ -46,6 +46,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
 import android.view.View;
@@ -57,8 +58,8 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class AssistantActivity extends Activity implements OnClickListener {
-	private static AssistantActivity instance;
+public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+private static AssistantActivity instance;
 	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
 	private AssistantFragmentsEnum firstFragment;
@@ -70,6 +71,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private StatusFragment status;
 	private ProgressDialog progress;
 	private Dialog dialog;
+	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -221,6 +223,27 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	public void checkAndRequestAudioPermission() {
+		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
+			}
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
+			if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+				launchEchoCancellerCalibration(true);
+			} else {
+				success();
+			}
+		} else {
+			success();
+		}
+	}
+
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
 		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
@@ -235,7 +258,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				success();
 			}
 		} else {
-			success();
+			checkAndRequestAudioPermission();
 		}
 	}
 
@@ -472,8 +495,10 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	
 	public void success() {
 		mPrefs.firstLaunchSuccessful();
-		LinphoneActivity.instance().isNewProxyConfig();
-		setResult(Activity.RESULT_OK);
+		if(LinphoneActivity.instance() != null) {
+			LinphoneActivity.instance().isNewProxyConfig();
+			setResult(Activity.RESULT_OK);
+		}
 		finish();
 	}
 }
