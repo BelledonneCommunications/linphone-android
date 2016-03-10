@@ -324,6 +324,18 @@ public class ContactEditorFragment extends Fragment {
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 	}
 
+	@Override
+	public void onPause() {
+		// Force hide keyboard
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		View view = getActivity().getCurrentFocus();
+		if (imm != null && view != null) {
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
+
+		super.onPause();
+	}
+
 	private void pickImage() {
 		imageToUploadUri = null;
 		final List<Intent> cameraIntents = new ArrayList<Intent>();

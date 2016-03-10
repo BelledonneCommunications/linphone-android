@@ -386,26 +386,26 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
 		} else {
 			if (onlyDisplayLinphoneContacts) {
-				if (sipContactsCursor != null && sipContactsCursor.getCount() == 0) {
-					noSipContact.setVisibility(View.VISIBLE);
-					contactsList.setVisibility(View.GONE);
-					edit.setEnabled(false);
-				} else if (sipContactsCursor != null) {
+				if (sipContactsCursor != null) {
 					indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 					contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 					contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts(), sipContactsCursor));
 					edit.setEnabled(true);
-				}
-			} else {
-				if (allContactsCursor != null && allContactsCursor.getCount() == 0) {
-					noContact.setVisibility(View.VISIBLE);
+				} else {
+					noSipContact.setVisibility(View.VISIBLE);
 					contactsList.setVisibility(View.GONE);
 					edit.setEnabled(false);
-				} else if (allContactsCursor != null) {
+				}
+			} else {
+				if (allContactsCursor != null) {
 					indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 					contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 					contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
 					edit.setEnabled(true);
+				} else {
+					noContact.setVisibility(View.VISIBLE);
+					contactsList.setVisibility(View.GONE);
+					edit.setEnabled(false);
 				}
 			}
 		}
@@ -454,7 +454,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered();
 		}
 		changeContactsToggle();
-
 		invalidate();
 	}
 	
