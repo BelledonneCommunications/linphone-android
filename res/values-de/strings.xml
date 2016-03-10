@@ -6,9 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startvorgang</string>
-  <string name="sync_account_name">Linphone-Kontakte</string>
-  <string name="today_date_format">HH:mm</string>
-  <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Benutzername</string>
@@ -207,7 +204,7 @@
   <string name="content_description_decline">Ablehnen</string>
   <string name="content_description_hang_up">Auflegen</string>
   <string name="content_description_accept">Annehmen</string>
-  <string name="content_description_edit">Schaltfläche bearbeiten</string>
+  <string name="content_description_edit">Ändern</string>
   <string name="content_description_add_contact">Zu Kontakten hinzufügen</string>
   <string name="content_description_new_contact">Neuer Kontakt</string>
   <string name="content_description_call">Call</string>
@@ -216,8 +213,8 @@
   <string name="content_description_dial_back">Zurückrufen</string>
   <string name="content_description_contact_picture">Kontaktbild</string>
   <string name="content_description_send_message">Nachricht senden</string>
-  <string name="content_description_delete">Schaltfläche löschen</string>
-  <string name="content_description_add">Schaltfläche hinzufügen</string>
+  <string name="content_description_delete">Löschen</string>
+  <string name="content_description_add">Anruf hinzufügen</string>
   <string name="content_description_new_discussion">Neue Diskussion</string>
   <string name="content_description_search">Suchen</string>
   <string name="content_description_all_contacts">Alle Kontakte</string>
@@ -238,4 +235,9 @@
   <string name="content_description_cancel_button">Schaltfläche Abbrechen</string>
   <string name="content_description_message_status">Nachrichtenstatus</string>
   <string name="content_description_conference">Konferenz</string>
+  <string name="content_description_default_account">Standardkonto</string>
+  <string name="content_description_contact_first_name">Vorname</string>
+  <string name="content_description_contact_last_name">Nachname</string>
+  <string name="content_description_transfer">Weiterleiten</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

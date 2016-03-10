@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Bezig met opstarten</string>
-  <string name="today_date_format">HH:mm</string>
-  <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Gebruikersnaam</string>
@@ -123,5 +121,11 @@
   <string name="content_description_new_contact">Nieuw contact</string>
   <string name="content_description_call">Oproep</string>
   <string name="content_description_chat">Chat</string>
+  <string name="content_description_delete">Verwijderen</string>
+  <string name="content_description_add">Oproep toevoegen</string>
   <string name="content_description_add_call">Oproep toevoegen</string>
+  <string name="content_description_default_account">Standaard account</string>
+  <string name="content_description_contact_first_name">Voornaam</string>
+  <string name="content_description_contact_last_name">Achternaam</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

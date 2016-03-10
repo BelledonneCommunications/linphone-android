@@ -6,9 +6,6 @@
   <string name="addressbook_label">Линфон</string>
   <string name="notification_title">Линфон</string>
   <string name="wait_dialog_text">Покрећем се</string>
-  <string name="sync_account_name">контакти линфона</string>
-  <string name="today_date_format">ЧЧ:мм</string>
-  <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Корисничко име</string>
@@ -208,7 +205,7 @@
   <string name="content_description_decline">Одбиј</string>
   <string name="content_description_hang_up">Прекини</string>
   <string name="content_description_accept">Прихватам</string>
-  <string name="content_description_edit">Дугме уређивања</string>
+  <string name="content_description_edit">Уреди</string>
   <string name="content_description_add_contact">Додај у контакте</string>
   <string name="content_description_new_contact">Нови контакт</string>
   <string name="content_description_call">Позови</string>
@@ -217,8 +214,8 @@
   <string name="content_description_dial_back">Откуцај број</string>
   <string name="content_description_contact_picture">Слика контакта</string>
   <string name="content_description_send_message">Пошаљи поруку</string>
-  <string name="content_description_delete">Дугме брисања</string>
-  <string name="content_description_add">Дугме додавања</string>
+  <string name="content_description_delete">Обриши</string>
+  <string name="content_description_add">Додај позив</string>
   <string name="content_description_new_discussion">Нова расправа</string>
   <string name="content_description_search">Претрага</string>
   <string name="content_description_all_contacts">Сви контакти</string>
@@ -239,4 +236,9 @@
   <string name="content_description_cancel_button">Дугме отказивања</string>
   <string name="content_description_message_status">Стање поруке</string>
   <string name="content_description_conference">Конференција</string>
+  <string name="content_description_default_account">Основни налог</string>
+  <string name="content_description_contact_first_name">Име</string>
+  <string name="content_description_contact_last_name">Презиме</string>
+  <string name="content_description_transfer">Пребаци</string>
+  <string name="content_description_bluetooth">Блутут</string>
 </resources>

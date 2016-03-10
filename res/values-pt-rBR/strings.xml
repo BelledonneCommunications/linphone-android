@@ -199,7 +199,7 @@
   <string name="content_description_decline">Rejeitar</string>
   <string name="content_description_hang_up">Terminar</string>
   <string name="content_description_accept">Aceitar</string>
-  <string name="content_description_edit">Botão editar</string>
+  <string name="content_description_edit">Editar</string>
   <string name="content_description_add_contact">Adicionar aos Contatos</string>
   <string name="content_description_new_contact">Novo Contato</string>
   <string name="content_description_call">Ligar</string>
@@ -208,8 +208,8 @@
   <string name="content_description_dial_back">Discar de volta</string>
   <string name="content_description_contact_picture">Foto do Contato</string>
   <string name="content_description_send_message">Enviar Mensagem</string>
-  <string name="content_description_delete">Botão Apagar</string>
-  <string name="content_description_add">Botão Adicionar</string>
+  <string name="content_description_delete">Excluir esse contato selecionado?</string>
+  <string name="content_description_add">Adicionar chamada</string>
   <string name="content_description_new_discussion">Nova Discussão</string>
   <string name="content_description_search">Pesquisar</string>
   <string name="content_description_all_contacts">Todos os Contatos</string>
@@ -230,4 +230,9 @@
   <string name="content_description_cancel_button">Botão Cancelar</string>
   <string name="content_description_message_status">Status da Mensagem</string>
   <string name="content_description_conference">Conferência</string>
+  <string name="content_description_default_account">Conta padrão</string>
+  <string name="content_description_contact_first_name">Nome</string>
+  <string name="content_description_contact_last_name">Sobrenome</string>
+  <string name="content_description_transfer">Transferir</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

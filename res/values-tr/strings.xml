@@ -6,9 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Başlatılıyor</string>
-  <string name="sync_account_name">Linphone bağlantıları</string>
-  <string name="today_date_format">SS:dd</string>
-  <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Kullanıcı adı</string>
@@ -201,7 +198,7 @@
   <string name="content_description_decline">Reddet</string>
   <string name="content_description_hang_up">Telefonu kapat</string>
   <string name="content_description_accept">Kabul et</string>
-  <string name="content_description_edit">Düzenleme düğmesi</string>
+  <string name="content_description_edit">Düzenle</string>
   <string name="content_description_add_contact">Bağlantılara ekle</string>
   <string name="content_description_new_contact">Yeni bağlantı</string>
   <string name="content_description_call">Çağrı</string>
@@ -210,8 +207,8 @@
   <string name="content_description_dial_back">Geri aramalı</string>
   <string name="content_description_contact_picture">Kayıtlı kişinin resmi</string>
   <string name="content_description_send_message">İleti gönder</string>
-  <string name="content_description_delete">Düğmeyi sil</string>
-  <string name="content_description_add">Düğme ekle</string>
+  <string name="content_description_delete">Sil</string>
+  <string name="content_description_add">Arama ekle</string>
   <string name="content_description_new_discussion">Yeni tartışma</string>
   <string name="content_description_search">Arama</string>
   <string name="content_description_all_contacts">Tüm bağlantılar</string>
@@ -232,4 +229,9 @@
   <string name="content_description_cancel_button">İptal düğmesi</string>
   <string name="content_description_message_status">İleti durumu</string>
   <string name="content_description_conference">Çoklu görüşme</string>
+  <string name="content_description_default_account">Öntanımlı hesap</string>
+  <string name="content_description_contact_first_name">Ad</string>
+  <string name="content_description_contact_last_name">Soyadı</string>
+  <string name="content_description_transfer">Aktarma</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

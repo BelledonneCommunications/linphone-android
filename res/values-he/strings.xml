@@ -83,9 +83,14 @@
   <string name="content_description_decline">דחה</string>
   <string name="content_description_hang_up">סיים</string>
   <string name="content_description_accept">קבל</string>
+  <string name="content_description_edit">ערוך</string>
   <string name="content_description_new_contact">איש קשר חדש</string>
   <string name="content_description_call">קריאה</string>
   <string name="content_description_chat">שיחה</string>
+  <string name="content_description_delete">מחק</string>
+  <string name="content_description_add">הוסף שיחה</string>
   <string name="content_description_add_call">הוסף שיחה</string>
   <string name="content_description_conference">ועידה</string>
+  <string name="content_description_default_account">חשבון שגרתי</string>
+  <string name="content_description_transfer">העבר</string>
 </resources>

@@ -8,13 +8,6 @@
   <string name="wait_dialog_text">يجري التشغيل</string>
   <string name="notification_registered">‫%s مُسجَّل‬</string>
   <string name="notification_register_failure">‫فشل %s في التسجيل‬</string>
-  <string name="about_version">لِنْفُونْ أندرويد %s</string>
-  <string name="about_liblinphone_version">Linphone Core %s</string>
-  <string name="about_text">رخصة جْنُو العمومية الإصدار 2\n © 2010-2016 Belledonne Communications</string>
-  <string name="about_link">www.linphone.org</string>
-  <string name="sync_account_name">جهات اتصال Linphone</string>
-  <string name="today_date_format">HH:mm</string>
-  <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">إسم المستخدم</string>
@@ -281,7 +274,7 @@
   <string name="content_description_decline">رفض</string>
   <string name="content_description_hang_up">ضع السماعة</string>
   <string name="content_description_accept">قبول</string>
-  <string name="content_description_edit">زر التحرير</string>
+  <string name="content_description_edit">تحرير</string>
   <string name="content_description_add_contact">إضافة إلى جهات الاتصال</string>
   <string name="content_description_new_contact">جهة اتصال جديدة</string>
   <string name="content_description_call">مكالمة</string>
@@ -291,8 +284,8 @@
   <string name="content_description_contact_picture">صورة جهة الاتصال</string>
   <string name="content_description_send_message">إرسال رسالة</string>
   <string name="content_description_detail">التفاصيل</string>
-  <string name="content_description_delete">زر الحذف</string>
-  <string name="content_description_add">زر اﻹضافة </string>
+  <string name="content_description_delete">حذف</string>
+  <string name="content_description_add">إضافة مكالمة</string>
   <string name="content_description_new_discussion">محادثة جديدة</string>
   <string name="content_description_search">بحث</string>
   <string name="content_description_all_contacts">كل جهات الاتصال</string>
@@ -313,4 +306,9 @@
   <string name="content_description_cancel_button">زر الإلغاء</string>
   <string name="content_description_message_status">حالة الرسالة</string>
   <string name="content_description_conference">اجتماع</string>
+  <string name="content_description_default_account">الحساب الافتراضي</string>
+  <string name="content_description_contact_first_name">اﻹسم</string>
+  <string name="content_description_contact_last_name">اللقب</string>
+  <string name="content_description_transfer">تحويل</string>
+  <string name="content_description_bluetooth">بلوتوث</string>
 </resources>
