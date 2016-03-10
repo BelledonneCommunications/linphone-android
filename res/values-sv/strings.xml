@@ -6,7 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startar upp</string>
-  <string name="sync_account_name">linphone-kontakter</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Användarnamn</string>
@@ -160,7 +159,7 @@
   <string name="content_description_decline">Avvisa</string>
   <string name="content_description_hang_up">Lägg på</string>
   <string name="content_description_accept">Acceptera</string>
-  <string name="content_description_edit">Redigera-knapp</string>
+  <string name="content_description_edit">Redigera</string>
   <string name="content_description_add_contact">Lägg till kontakter</string>
   <string name="content_description_new_contact">Ny kontakt</string>
   <string name="content_description_call">Ring</string>
@@ -168,8 +167,8 @@
   <string name="content_description_dial_back">Ring tillbaka</string>
   <string name="content_description_contact_picture">Kontakt-bild</string>
   <string name="content_description_send_message">Skicka meddelande</string>
-  <string name="content_description_delete">Ta bort-knapp</string>
-  <string name="content_description_add">Lägg till-knapp</string>
+  <string name="content_description_delete">Ta bort</string>
+  <string name="content_description_add">Lägg till samtal</string>
   <string name="content_description_new_discussion">Ny diskussion</string>
   <string name="content_description_search">Sök</string>
   <string name="content_description_all_contacts">Alla kontakter</string>
@@ -188,4 +187,9 @@
   <string name="content_description_cancel_button">Avbryt-knapp</string>
   <string name="content_description_message_status">Meddelandestatus</string>
   <string name="content_description_conference">Konferens</string>
+  <string name="content_description_default_account">Standardkonto</string>
+  <string name="content_description_contact_first_name">Förnamn</string>
+  <string name="content_description_contact_last_name">Efternamn</string>
+  <string name="content_description_transfer">Överför</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

@@ -151,7 +151,7 @@
   <string name="content_description_decline">拒絕</string>
   <string name="content_description_hang_up">掛斷</string>
   <string name="content_description_accept">接受</string>
-  <string name="content_description_edit">編輯按鈕</string>
+  <string name="content_description_edit">編輯</string>
   <string name="content_description_add_contact">加入到連絡人</string>
   <string name="content_description_new_contact">新增聯絡人</string>
   <string name="content_description_call">通話</string>
@@ -160,8 +160,7 @@
   <string name="content_description_dial_back">回播</string>
   <string name="content_description_contact_picture">連絡人圖片</string>
   <string name="content_description_send_message">傳送訊息</string>
-  <string name="content_description_delete">刪除按鈕</string>
-  <string name="content_description_add">加入按鈕</string>
+  <string name="content_description_delete">刪除</string>
   <string name="content_description_search">搜尋</string>
   <string name="content_description_all_contacts">所有聯絡人</string>
   <string name="content_description_linphone_contacts">Linphone 聯絡人</string>
@@ -179,4 +178,9 @@
   <string name="content_description_cancel_button">取消按鈕</string>
   <string name="content_description_message_status">訊息狀態</string>
   <string name="content_description_conference">會議</string>
+  <string name="content_description_default_account">預設帳號</string>
+  <string name="content_description_contact_first_name">名字</string>
+  <string name="content_description_contact_last_name">姓氏</string>
+  <string name="content_description_transfer">轉接</string>
+  <string name="content_description_bluetooth">藍牙</string>
 </resources>

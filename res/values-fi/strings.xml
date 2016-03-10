@@ -8,8 +8,6 @@
   <string name="wait_dialog_text">Käynnistetään</string>
   <string name="notification_registered">Rekisteröity kohteeseen %s</string>
   <string name="notification_register_failure">Epäonnistui rekisteröidä kohteeseen %s</string>
-  <string name="sync_account_name">linphone yhteystiedot</string>
-  <string name="picture_name_format">linphone-mms-%s.jpg</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Käyttäjätunnus</string>
@@ -275,8 +273,7 @@
   <string name="content_description_decline">Hylkää</string>
   <string name="content_description_hang_up">Katkaise puhelu</string>
   <string name="content_description_accept">Hyväksy</string>
-  <string name="content_description_edit">Muokkaa painike</string>
-  <string name="content_description_valid">Sopiva painike</string>
+  <string name="content_description_edit">Muokkaa</string>
   <string name="content_description_add_contact">Lisää kontrastia</string>
   <string name="content_description_new_contact">Uusi yhteystieto</string>
   <string name="content_description_call">Puhelu</string>
@@ -286,8 +283,8 @@
   <string name="content_description_contact_picture">Yhteys kuva</string>
   <string name="content_description_send_message">Lähetä viesti</string>
   <string name="content_description_detail">Yksityiskohdat</string>
-  <string name="content_description_delete">Poista painike</string>
-  <string name="content_description_add">Lisää painike</string>
+  <string name="content_description_delete">Poista</string>
+  <string name="content_description_add">Lisää puhelu</string>
   <string name="content_description_new_discussion">Uusi keskustelu</string>
   <string name="content_description_search">Hae</string>
   <string name="content_description_all_contacts">Kaikki yhteystiedot</string>
@@ -308,4 +305,9 @@
   <string name="content_description_cancel_button">Peruuta painike</string>
   <string name="content_description_message_status">Viestin tila</string>
   <string name="content_description_conference">Kokous</string>
+  <string name="content_description_default_account">Vakio tili</string>
+  <string name="content_description_contact_first_name">Etunimi</string>
+  <string name="content_description_contact_last_name">Sukunimi</string>
+  <string name="content_description_transfer">Siirrä</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

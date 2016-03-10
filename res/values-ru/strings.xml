@@ -188,10 +188,18 @@
   <string name="content_description_decline">Отклонить</string>
   <string name="content_description_hang_up">Положить трубку</string>
   <string name="content_description_accept">Accept</string>
+  <string name="content_description_edit">Редактировать</string>
   <string name="content_description_add_contact">Кнопка добавить к контактам</string>
   <string name="content_description_new_contact">Новый контакт</string>
   <string name="content_description_call">Звонок</string>
   <string name="content_description_chat">Чат</string>
+  <string name="content_description_delete">Удалить</string>
+  <string name="content_description_add">Добавить звонок</string>
   <string name="content_description_add_call">Добавить звонок</string>
   <string name="content_description_conference">Конференция</string>
+  <string name="content_description_default_account">Default account</string>
+  <string name="content_description_contact_first_name">Имя</string>
+  <string name="content_description_contact_last_name">Фамилия</string>
+  <string name="content_description_transfer">Перевести</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>

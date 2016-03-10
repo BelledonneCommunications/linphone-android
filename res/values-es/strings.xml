@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Iniciando</string>
-  <string name="sync_account_name">contactos linphone</string>
-  <string name="today_date_format">HH:mm</string>
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Nombre de usuario</string>
@@ -174,6 +172,7 @@
   <string name="content_description_decline">Declinar</string>
   <string name="content_description_hang_up">Colgar</string>
   <string name="content_description_accept">Aceptar</string>
+  <string name="content_description_edit">Editar</string>
   <string name="content_description_add_contact">Añadir a contactos</string>
   <string name="content_description_new_contact">Contacto nuevo</string>
   <string name="content_description_call">Llamar</string>
@@ -181,7 +180,8 @@
   <string name="content_description_dial_back">Devolver llamada</string>
   <string name="content_description_contact_picture">Imagen de contacto</string>
   <string name="content_description_send_message">Enviar mensaje</string>
-  <string name="content_description_delete">Botón de borrado</string>
+  <string name="content_description_delete">Borrar</string>
+  <string name="content_description_add">Añadir llamada</string>
   <string name="content_description_search">Buscar</string>
   <string name="content_description_all_contacts">Todos los contactos</string>
   <string name="content_description_linphone_contacts">Contactos de Linphone</string>
@@ -193,4 +193,9 @@
   <string name="content_description_numpad">Teclado numerico</string>
   <string name="content_description_call_quality">Calidad de la llamada</string>
   <string name="content_description_conference">Conferencia</string>
+  <string name="content_description_default_account">Cuenta por defecto</string>
+  <string name="content_description_contact_first_name">Nombre</string>
+  <string name="content_description_contact_last_name">Apellido</string>
+  <string name="content_description_transfer">Transferir</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
 </resources>
