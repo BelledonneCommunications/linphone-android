@@ -397,7 +397,7 @@ prepare-liblinphone_tester: $(TOPDIR)/submodules/linphone/tester/tester_hosts $(
 	cp -rf $(TOPDIR)/submodules/linphone/tester/sounds $(TOPDIR)/liblinphone_tester/assets/config_files
 	cp -rf $(TOPDIR)/submodules/linphone/tester/images $(TOPDIR)/liblinphone_tester/assets/config_files
 	cp -rf $(TOPDIR)/submodules/linphone/tester/rcfiles $(TOPDIR)/liblinphone_tester/assets/config_files
-	cp -rf $(TOPDIR)/submodules/linphone/tester/common $(TOPDIR)/liblinphone_tester/assets/config_files
+	cp -rf $(TOPDIR)/submodules/linphone/tester/vcards $(TOPDIR)/liblinphone_tester/assets/config_files
 
 #Matroska2
 MATROSKA_SRC_DIR=$(TOPDIR)/submodules/externals/libmatroska-c
