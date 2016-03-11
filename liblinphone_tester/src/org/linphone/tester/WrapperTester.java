@@ -99,7 +99,8 @@ public class WrapperTester extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
-		mCore = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase(),null);
+		LinphoneCoreFactory.instance().setDebugMode(true, "WrapperTester");
+		mCore = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase(),getContext());
 	}
 
 	@Override
