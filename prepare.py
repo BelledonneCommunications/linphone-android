@@ -238,7 +238,7 @@ install-apk:
 uninstall:
 \tadb uninstall $(PACKAGE_NAME)
 
-release: java-clean build copy-libs supdate-project
+release: java-clean build copy-libs update-project
 \tpatch -p1 < release.patch
 \tcat ant.properties | grep version.name > default.properties
 \tant release
