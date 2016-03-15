@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,6 +64,10 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_outgoing);

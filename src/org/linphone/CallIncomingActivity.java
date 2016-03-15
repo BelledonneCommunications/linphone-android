@@ -31,6 +31,7 @@ import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -69,6 +70,10 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_incoming);
