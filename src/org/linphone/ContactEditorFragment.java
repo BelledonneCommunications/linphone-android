@@ -71,6 +71,7 @@ public class ContactEditorFragment extends Fragment {
 	private View view;
 	private ImageView cancel, deleteContact, ok;
 	private ImageView addNumber, addSipAddress, contactPicture;
+	private LinearLayout phoneNumbersSection, sipAddressesSection;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
 	private static final int ADD_PHOTO = 1337;
@@ -113,6 +114,17 @@ public class ContactEditorFragment extends Fragment {
 		contactsManager = ContactsManager.getInstance();
 		
 		view = inflater.inflate(R.layout.contact_edit, container, false);
+		
+		phoneNumbersSection = (LinearLayout) view.findViewById(R.id.phone_numbers);
+		if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)) {
+			phoneNumbersSection.setVisibility(View.GONE);
+		}
+		
+		sipAddressesSection = (LinearLayout) view.findViewById(R.id.sip_addresses);
+		if (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
+			sipAddressesSection.setVisibility(View.GONE);
+		}
+		
 
 		deleteContact = (ImageView) view.findViewById(R.id.delete_contact);
 
