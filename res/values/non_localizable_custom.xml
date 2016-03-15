@@ -74,6 +74,10 @@
 
 	<bool name="hide_phone_numbers_in_editor">false</bool>
 	<bool name="hide_sip_addresses_in_editor">false</bool>
+	
+	<bool name="hide_contact_phone_numbers">false</bool>
+	<bool name="hide_contact_sip_addresses">false</bool>
+	
 	<bool name="setup_cancel_move_to_back">false</bool>
 
 
