@@ -134,6 +134,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
 		for (String numberOrAddress : contact.getNumbersOrAddresses()) {
+			boolean skip = false;
 			View v = inflater.inflate(R.layout.contact_control_row, null);
 			
 			String displayednumberOrAddress = numberOrAddress;
@@ -144,8 +145,10 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			TextView label = (TextView) v.findViewById(R.id.address_label);
 			if(LinphoneUtils.isSipAddress(numberOrAddress)) {
 				label.setText(R.string.sip_address);
+				skip |= getResources().getBoolean(R.bool.hide_contact_sip_addresses);
 			} else {
 				label.setText(R.string.phone_number);
+				skip |= getResources().getBoolean(R.bool.hide_contact_phone_numbers);
 			}
 			
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
@@ -209,7 +212,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
 			}
 			
-			controls.addView(v);
+			if (!skip) {
+				controls.addView(v);
+			}
 		}
 	}
 	
