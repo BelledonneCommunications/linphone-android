@@ -138,6 +138,7 @@
 		    </LinearLayout>
 
 			<LinearLayout
+				android:id="@+id/sip_addresses"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="10dp"
@@ -176,8 +177,8 @@
 
 			</LinearLayout>
 
-
 			<LinearLayout
+				android:id="@+id/phone_numbers"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="10dp"
