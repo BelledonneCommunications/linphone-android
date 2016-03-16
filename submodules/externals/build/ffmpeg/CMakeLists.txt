@@ -31,7 +31,7 @@ find_library(AVUTIL_LIBRARY avutil)
 find_library(SWRESAMPLE_LIBRARY swresample)
 find_library(SWSCALE_LIBRARY swscale)
 
-add_library(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} MODULE)
+add_library(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} SHARED)
 target_link_libraries(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} LINK_PRIVATE "m" "-Wl,-whole-archive" ${AVCODEC_LIBRARY} ${AVUTIL_LIBRARY} ${SWRESAMPLE_LIBRARY} ${SWSCALE_LIBRARY} "-Wl,-no-whole-archive")
 set_target_properties(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} PROPERTIES LINKER_LANGUAGE C)
 
