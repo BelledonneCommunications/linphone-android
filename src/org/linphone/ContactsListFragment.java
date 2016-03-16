@@ -386,7 +386,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
 		} else {
 			if (onlyDisplayLinphoneContacts) {
-				if (sipContactsCursor != null) {
+				if (sipContactsCursor != null && sipContactsCursor.getCount() > 0) {
 					indexer = new AlphabetIndexer(sipContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(sipContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 					contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 					contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts(), sipContactsCursor));
@@ -397,7 +397,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 					edit.setEnabled(false);
 				}
 			} else {
-				if (allContactsCursor != null) {
+				if (allContactsCursor != null && allContactsCursor.getCount() > 0) {
 					indexer = new AlphabetIndexer(allContactsCursor, Compatibility.getCursorDisplayNameColumnIndex(allContactsCursor), " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 					contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 					contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getAllContacts(), allContactsCursor));
