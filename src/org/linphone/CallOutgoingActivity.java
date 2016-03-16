@@ -102,7 +102,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					finish();
 				}
 
-				if (call == mCall && (State.StreamsRunning == state || State.Connected == state)){
+				if (call == mCall && (State.Connected == state)){
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
@@ -113,7 +113,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 						LinphoneActivity.instance().startIncallActivity(mCall);
 					}
 					finish();
-
+					return;
 				}
 			}
 		};
