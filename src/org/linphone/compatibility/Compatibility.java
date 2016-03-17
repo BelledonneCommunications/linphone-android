@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.Contact;
+import org.linphone.LinphoneContact;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
 
@@ -131,7 +132,7 @@ public class Compatibility {
 		return -1;
 	}
 
-	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
+	public static LinphoneContact getContact(ContentResolver cr, Cursor cursor, int position) {
 		if (Version.sdkAboveOrEqual(Version.API05_ECLAIR_20)) {
 			return ApiFivePlus.getContact(cr, cursor, position);
 		}

@@ -41,7 +41,6 @@ public class CallAudioFragment extends Fragment {
 
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);
 		incallActvityInstance = (CallActivity) activity;
 		
 		if (incallActvityInstance != null) {

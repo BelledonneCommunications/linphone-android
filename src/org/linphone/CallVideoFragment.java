@@ -21,15 +21,13 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.compatibility.CompatibilityScaleGestureDetector;
 import org.linphone.compatibility.CompatibilityScaleGestureListener;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCore;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.app.Activity;
-//import android.opengl.GLSurfaceView;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -40,6 +38,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+//import android.opengl.GLSurfaceView;
 
 /**
  * @author Sylvain Berfini
@@ -260,8 +259,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		
 		inCallActivity = (CallActivity) activity;
 		if (inCallActivity != null) {
 			inCallActivity.bindVideoFragment(this);

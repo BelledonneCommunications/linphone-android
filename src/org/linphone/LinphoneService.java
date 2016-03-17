@@ -315,7 +315,7 @@ public final class LinphoneService extends Service {
 		LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), address);
 		Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
 		Bitmap bm = null;
 		try {
@@ -393,7 +393,7 @@ public final class LinphoneService extends Service {
 		
 		Uri pictureUri = null;
 		try {
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
 			if (contact != null)
 				pictureUri = contact.getThumbnailUri();
 		} catch (LinphoneCoreException e1) {
@@ -489,7 +489,6 @@ public final class LinphoneService extends Service {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void dumpDeviceInformation() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");

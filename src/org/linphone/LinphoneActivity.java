@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -44,7 +45,6 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.ui.AddressText;
 
 import android.Manifest;
@@ -99,7 +99,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int CALL_ACTIVITY = 19;
 	private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 200;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
-	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
 
 	private static LinphoneActivity instance;
@@ -116,7 +115,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ChatFragment chatFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = true, preferLinphoneContacts = false, emptyFragment = false, permissionAsked = false;
+	private boolean isAnimationDisabled = true, emptyFragment = false, permissionAsked = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -126,7 +125,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
-	private Dialog authInfoPassword;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -547,9 +545,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			//TODO display error message
 			return;
 		}
-		Contact c = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
+		LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), lAddress);
 
-		String displayName = c != null ? c.getName() : LinphoneUtils.getAddressDisplayName(sipUri);
+		String displayName = c != null ? c.getFullName() : LinphoneUtils.getAddressDisplayName(sipUri);
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
 
 		String status;
@@ -597,7 +595,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		return dateFormat.format(cal.getTime());
 	}
 
-	public void displayContact(Contact contact, boolean chatOnly) {
+	public void displayContact(LinphoneContact contact, boolean chatOnly) {
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT_DETAIL) {
 			ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
@@ -611,14 +609,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayContacts(boolean chatOnly) {
-		if (chatOnly) {
-			preferLinphoneContacts = true;
-		}
-
 		Bundle extras = new Bundle();
 		extras.putBoolean("ChatAddressOnly", chatOnly);
 		changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, extras);
-		preferLinphoneContacts = false;
 	}
 
 	public void displayChatList() {
@@ -677,8 +670,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				Log.e("Cannot display chat", e);
 				return;
 			}
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
-			displayName = contact != null ? contact.getName() : null;
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), lAddress);
+			displayName = contact != null ? contact.getFullName() : null;
 
 			if (contact != null && contact.getPhotoUri() != null) {
 				pictureUri = contact.getPhotoUri().toString();
@@ -1148,7 +1141,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
-	public void editContact(Contact contact)
+	public void editContact(LinphoneContact contact)
 	{
 			Bundle extras = new Bundle();
 			extras.putSerializable("Contact", contact);
@@ -1156,7 +1149,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	}
 
-	public void editContact(Contact contact, String sipAddress)
+	public void editContact(LinphoneContact contact, String sipAddress)
 	{
 
 			Bundle extras = new Bundle();
@@ -1241,7 +1234,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED){
-			ContactsManager.getInstance().enabledContactsAccess();
+			ContactsManager.getInstance().enableContactsAccess();
 			ContactsManager.getInstance().prepareContactsInBackground();
 		} else {
 			checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_READ_CONTACTS);

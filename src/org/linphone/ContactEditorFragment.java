@@ -77,9 +77,9 @@ public class ContactEditorFragment extends Fragment {
 	private static final int ADD_PHOTO = 1337;
 	
 	private boolean isNewContact = true;
-	private Contact contact;
+	private LinphoneContact contact;
 	private int contactID;
-	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
+	//private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
 	private ArrayList<ContentProviderOperation> ops;
 	private int firstSipAddressIndex = -1;
 	private LinearLayout sipAddresses, numbers;
@@ -88,16 +88,15 @@ public class ContactEditorFragment extends Fragment {
 	private Uri imageToUploadUri;
 	private String fileToUploadPath;
 	private Bitmap imageToUpload;
-	private Bitmap bitmapUnknown;
 	byte[] photoToAdd;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
 		
-		contact = null;
+		/*contact = null;
 		if (getArguments() != null) {
 			if (getArguments().getSerializable("Contact") != null) {
-				contact = (Contact) getArguments().getSerializable("Contact");
+				contact = (LinphoneContact) getArguments().getSerializable("Contact");
 				isNewContact = false;
 				contactID = Integer.parseInt(contact.getID());
 				contact.refresh(getActivity().getContentResolver());
@@ -181,7 +180,7 @@ public class ContactEditorFragment extends Fragment {
 						}
 						getFragmentManager().popBackStackImmediate();
 					} else {
-						Contact updatedContact = contactsManager.findContactWithDisplayName(contactsManager.getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
+						LinphoneContact updatedContact = contactsManager.findContactWithDisplayName(contactsManager.getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
 						if (updatedContact != null) {
 							LinphoneActivity.instance().displayContact(updatedContact, false);
 						} else {
@@ -249,7 +248,7 @@ public class ContactEditorFragment extends Fragment {
 				firstName.setText(fn);
 				lastName.setText(ln);
 			} else {
-				lastName.setText(contact.getName());
+				lastName.setText(contact.getFullName());
 				firstName.setText("");
 			}
 			deleteContact.setOnClickListener(new OnClickListener() {
@@ -262,8 +261,7 @@ public class ContactEditorFragment extends Fragment {
 					delete.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View view) {
-							deleteExistingContact();
-							ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(), contact);
+							contact.delete();
 							LinphoneActivity.instance().displayContacts(false);
 							dialog.dismiss();
 						}
@@ -319,7 +317,7 @@ public class ContactEditorFragment extends Fragment {
 		});
 
 		ops = new ArrayList<ContentProviderOperation>();
-		lastName.requestFocus();
+		lastName.requestFocus();*/
 		
 		return view;
 	}
@@ -348,7 +346,7 @@ public class ContactEditorFragment extends Fragment {
 		super.onPause();
 	}
 
-	private void pickImage() {
+	/*private void pickImage() {
 		imageToUploadUri = null;
 		final List<Intent> cameraIntents = new ArrayList<Intent>();
 		final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -416,24 +414,6 @@ public class ContactEditorFragment extends Fragment {
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
-		}
-	}
-
-	private void deleteExistingContact() {
-		String select = ContactsContract.Data.CONTACT_ID + " = ?";
-		String[] args = new String[] { contact.getID() };
-
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
-						.withSelection(select, args)
-						.build()
-		);
-
-		try {
-			getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-			ContactsManager.getInstance().removeAllFriends(contact);
-		} catch (Exception e) {
-			Log.w(e.getMessage() + ":" + e.getStackTrace());
 		}
 	}
 
@@ -962,5 +942,5 @@ public class ContactEditorFragment extends Fragment {
 	            );
 			}
 		}
-	}
+	}*/
 }

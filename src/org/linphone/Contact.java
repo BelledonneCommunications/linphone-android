@@ -32,6 +32,7 @@ import android.net.Uri;
 
 /**
  * @author Sylvain Berfini
+ * @deprecated
  */
 public class Contact implements Serializable {
 	private static final long serialVersionUID = 3790717505065723499L;

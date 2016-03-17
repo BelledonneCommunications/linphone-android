@@ -17,17 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 
-import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -112,9 +108,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
 		if(lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getActivity().getContentResolver(), lAddress);
 			if (contact != null) {
-				contactName.setText(contact.getName());
+				contactName.setText(contact.getFullName());
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
 				addToContacts.setVisibility(View.INVISIBLE);
 			} else {
