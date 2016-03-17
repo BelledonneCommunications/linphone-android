@@ -51,7 +51,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 @SuppressLint("DefaultLocale")
-public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
+public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView noSipContact, noContact;
@@ -369,7 +369,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	@Override
 	public void onResume() {
 		instance = this;
-		ContactsManager.addContactsListener(this);
 		super.onResume();
 
 		if (editConsumed) {
@@ -389,13 +388,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	@Override
 	public void onPause() {
 		instance = null;
-		ContactsManager.removeContactsListener(this);
 		super.onPause();
-	}
-
-	@Override
-	public void onContactsUpdated() {
-		invalidate();
 	}
 	
 	public void invalidate() {

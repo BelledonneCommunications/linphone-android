@@ -59,24 +59,12 @@ public class ContactsManager extends ContentObserver {
 			if (msg.what == CONTACTS_UPDATED && msg.obj instanceof List<?>) {
 				List<LinphoneContact> c = (List<LinphoneContact>) msg.obj;
 				ContactsManager.getInstance().setContacts(c);
-				for (ContactsUpdatedListener listener : contactsListeners) {
-					listener.onContactsUpdated();
-				}
 			}
 		}
 	};
-	
-	private static ArrayList<ContactsUpdatedListener> contactsListeners;
-	public static void addContactsListener(ContactsUpdatedListener listener) {
-		contactsListeners.add(listener);
-	}
-	public static void removeContactsListener(ContactsUpdatedListener listener) {
-		contactsListeners.remove(listener);
-	}
 
 	private ContactsManager(Handler handler) {
 		super(handler);
-		contactsListeners = new ArrayList<ContactsUpdatedListener>();
 	}
 	
 	@Override
@@ -86,7 +74,7 @@ public class ContactsManager extends ContentObserver {
 	
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
-		List<LinphoneContact> contacts = fetchContactsInBackground();
+		List<LinphoneContact> contacts = fetchContactsAsync();
 		Message msg = handler.obtainMessage();
 		msg.what = CONTACTS_UPDATED;
 		msg.obj = contacts;
@@ -199,7 +187,7 @@ public class ContactsManager extends ContentObserver {
 		}
 	}
 	
-	public List<LinphoneContact> fetchContactsInBackground() {
+	public List<LinphoneContact> fetchContactsAsync() {
 		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		
 		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
