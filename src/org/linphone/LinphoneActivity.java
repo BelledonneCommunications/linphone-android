@@ -125,6 +125,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
+	private boolean fetchedContactsOnce = false;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -1233,9 +1234,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
-		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED){
+		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
 			ContactsManager.getInstance().enableContactsAccess();
-			ContactsManager.getInstance().prepareContactsInBackground();
+			ContactsManager.getInstance().fetchContacts();
+			fetchedContactsOnce = true;
 		} else {
 			checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_READ_CONTACTS);
 		}

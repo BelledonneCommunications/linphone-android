@@ -214,25 +214,24 @@ public final class LinphoneUtils {
 	}
 
 	
-	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri) {
-		if (uri == null) {
+	public static void setImagePictureFromUri(Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
+		if (pictureUri == null) {
 			view.setImageResource(R.drawable.avatar);
 			return;
 		}
-		if (uri.getScheme().startsWith("http")) {
-			Bitmap bm = downloadBitmap(uri);
+		if (pictureUri.getScheme().startsWith("http")) {
+			Bitmap bm = downloadBitmap(pictureUri);
 			if (bm == null) view.setImageResource(R.drawable.avatar);
 			view.setImageBitmap(bm);
 		} else {
 			Bitmap bm = null;
 			try {
-				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),uri);
+				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), pictureUri);
 			} catch (IOException e) {
-				if (tUri != null) {
+				if (thumbnailUri != null) {
 					try {
-						bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
+						bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), thumbnailUri);
 					} catch (IOException ie) {
-						view.setImageURI(tUri);
 					}
 				}
 			}
