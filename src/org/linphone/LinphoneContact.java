@@ -38,9 +38,9 @@ public class LinphoneContact implements Serializable {
 	 */
 	private static final long serialVersionUID = 9015568163905205244L;
 
-	private LinphoneFriend friend;
+	private transient LinphoneFriend friend;
 	private String fullName, androidId;
-	private Uri photoUri, thumbnailUri;
+	private transient Uri photoUri, thumbnailUri;
 	private List<LinphoneNumberOrAddress> addresses;
 	
 	public LinphoneContact() {

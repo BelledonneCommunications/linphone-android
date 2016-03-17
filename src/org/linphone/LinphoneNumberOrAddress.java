@@ -19,7 +19,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 package org.linphone;
 
-public class LinphoneNumberOrAddress {
+import java.io.Serializable;
+
+public class LinphoneNumberOrAddress implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2301689469730072896L;
+	
 	private boolean isSIPAddress;
 	private String value;
 	

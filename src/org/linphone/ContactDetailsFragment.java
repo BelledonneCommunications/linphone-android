@@ -36,7 +36,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class ContactDetailsFragment extends Fragment implements OnClickListener {
+public class ContactDetailsFragment extends Fragment implements OnClickListener, ContactsUpdatedListener {
 	private LinphoneContact contact;
 	private ImageView editContact, deleteContact, back;
 	private LayoutInflater inflater;
@@ -104,6 +104,12 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	
 	public void changeDisplayedContact(LinphoneContact newContact) {
 		contact = newContact;
+		displayContact(inflater, view);
+	}
+
+	@Override
+	public void onContactsUpdated() {
+		contact.refresh();
 		displayContact(inflater, view);
 	}
 	
@@ -206,8 +212,15 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	}
 	
 	@Override
+	public void onPause() {
+		ContactsManager.removeContactsListener(this);
+		super.onPause();
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
+		ContactsManager.addContactsListener(this);
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
@@ -217,6 +230,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			//Contact has been deleted, return
 			LinphoneActivity.instance().displayContacts(false);
 		} else {
+			contact.refresh();
 			displayContact(inflater, view);
 		}
 	}
