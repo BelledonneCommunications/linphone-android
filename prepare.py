@@ -425,7 +425,7 @@ def main(argv=None):
         additional_args += ["-DENABLE_MPEG4=YES"]
         additional_args += ["-DENABLE_OPENH264=YES"]
         additional_args += ["-DENABLE_VPX=YES"]
-        additional_args += ["-DENABLE_X264=YES"]
+        #additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
     if args.disable_gpl_third_parties is True:
         additional_args += ["-DENABLE_GPL_THIRD_PARTIES=NO"]
 
