@@ -104,7 +104,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	
 	public void changeDisplayedContact(LinphoneContact newContact) {
 		contact = newContact;
-		//contact.refresh();
 		displayContact(inflater, view);
 	}
 	
@@ -214,7 +213,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
 			LinphoneActivity.instance().hideTabBar(false);
 		}
-		contact.refresh();
 		if (contact.getFullName() == null || contact.getFullName().equals("")) {
 			//Contact has been deleted, return
 			LinphoneActivity.instance().displayContacts(false);

@@ -114,7 +114,7 @@ public class ContactsManager {
 		
 		for (LinphoneContact c: getContacts()) {
 			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
-				if ((noa.isSIPAddress() && (noa.getValue().equals(sipUri) || noa.getValue().equals(sipUri.substring(4)))) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
+				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
 					return c;
 				}
 			}
@@ -122,7 +122,7 @@ public class ContactsManager {
 		return null;
 	}
 
-	public synchronized void prepareContactsInBackground() {
+	public synchronized void fetchContacts() {
 		contacts = new ArrayList<LinphoneContact>();
 		
 		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
@@ -137,15 +137,14 @@ public class ContactsManager {
 		
 		Cursor c = Compatibility.getContactsCursor(contentResolver, null);
 		if (c != null) {
-			c.moveToFirst();
-			do {
+			while (c.moveToNext()) {
 				String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
 				LinphoneContact contact = new LinphoneContact();
 				contact.setAndroidId(id);
 				contact.refresh();
 				contacts.add(contact);
 			}
-			while (c.moveToNext());
+			c.close();
 		}
 	}
 	
