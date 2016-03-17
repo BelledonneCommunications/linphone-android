@@ -108,7 +108,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
 		if(lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getActivity().getContentResolver(), lAddress);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			if (contact != null) {
 				contactName.setText(contact.getFullName());
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());

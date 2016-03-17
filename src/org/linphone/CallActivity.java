@@ -1557,7 +1557,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
-		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(contactName.getContext().getContentResolver(), lAddress);
+		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(lAddress);
 		if (lContact == null) {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 			contactPicture.setImageResource(R.drawable.avatar);
@@ -1720,7 +1720,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		conferenceList.setId(index + 1);
 		TextView contact = (TextView) confView.findViewById(R.id.contactNameOrNumber);
 
-		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(getContentResolver(),call.getRemoteAddress());
+		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(call.getRemoteAddress());
 		if (lContact == null) {
 			contact.setText(call.getRemoteAddress().getUserName());
 		} else {

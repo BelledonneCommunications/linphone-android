@@ -459,7 +459,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				chatRoom = lc.getChatRoom(lAddress);
 				chatRoom.markAsRead();
 				LinphoneActivity.instance().updateMissedChatCount();
-				contact = ContactsManager.getInstance().findContactFromAddress(getActivity().getContentResolver(), lAddress);
+				contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 				if (chatRoom != null) {
 					displayChatHeader(lAddress);
 					dispayMessageList();

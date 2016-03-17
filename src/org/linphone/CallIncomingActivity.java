@@ -232,7 +232,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			return;
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
-		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), address);
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 			name.setText(contact.getFullName());

@@ -348,7 +348,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				return view;
 			}
 
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getActivity().getContentResolver(), address);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 			String message = "";
 			Long time;
 
