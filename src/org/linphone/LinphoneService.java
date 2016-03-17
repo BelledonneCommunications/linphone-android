@@ -315,7 +315,7 @@ public final class LinphoneService extends Service {
 		LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
-		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), address);
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
 		Bitmap bm = null;
 		try {
@@ -393,7 +393,7 @@ public final class LinphoneService extends Service {
 		
 		Uri pictureUri = null;
 		try {
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
 			if (contact != null)
 				pictureUri = contact.getThumbnailUri();
 		} catch (LinphoneCoreException e1) {

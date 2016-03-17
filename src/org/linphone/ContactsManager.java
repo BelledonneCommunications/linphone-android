@@ -109,18 +109,12 @@ public class ContactsManager {
 	}
 	
 	public LinphoneContact findContactFromAddress(LinphoneAddress address) {
-		return findContactFromAddress(null, address);
-	}
-	
-	public LinphoneContact findContactFromAddress(ContentResolver contentResolver, LinphoneAddress address) {
 		String sipUri = address.asStringUriOnly();
-		if (sipUri.startsWith("sip:")) {
-			sipUri = sipUri.substring(4);
-		}
-
+		String username = address.getUserName();
+		
 		for (LinphoneContact c: getContacts()) {
 			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
-				if (noa.getValue().equals(sipUri)) {
+				if ((noa.isSIPAddress() && (noa.getValue().equals(sipUri) || noa.getValue().equals(sipUri.substring(4)))) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
 					return c;
 				}
 			}

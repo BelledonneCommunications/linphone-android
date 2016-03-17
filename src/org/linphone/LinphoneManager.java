@@ -864,7 +864,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		try {
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mServiceContext.getContentResolver(), from);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				if (LinphoneActivity.isInstanciated() && !LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
 					return;

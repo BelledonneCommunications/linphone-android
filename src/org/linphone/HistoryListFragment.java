@@ -440,7 +440,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.callDirection.setImageResource(R.drawable.call_status_outgoing);
 			}
 
-			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(getActivity().getContentResolver(), address);
+			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
 			String displayName = null;
 			final String sipUri = address.asString();
 			if(c != null){

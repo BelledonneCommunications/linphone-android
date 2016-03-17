@@ -545,7 +545,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			//TODO display error message
 			return;
 		}
-		LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), lAddress);
+		LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(lAddress);
 
 		String displayName = c != null ? c.getFullName() : LinphoneUtils.getAddressDisplayName(sipUri);
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
@@ -670,7 +670,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				Log.e("Cannot display chat", e);
 				return;
 			}
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(getContentResolver(), lAddress);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			displayName = contact != null ? contact.getFullName() : null;
 
 			if (contact != null && contact.getPhotoUri() != null) {
