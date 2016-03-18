@@ -120,6 +120,10 @@ public class ContactsManager extends ContentObserver {
 	public void enableContactsAccess() {
 		hasContactAccess = true;
 	}
+	
+	public boolean hasContactsAccess() {
+		return hasContactAccess;
+	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
 		preferLinphoneContacts = isPrefered;

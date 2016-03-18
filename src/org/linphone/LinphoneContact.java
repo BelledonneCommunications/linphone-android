@@ -44,25 +44,42 @@ public class LinphoneContact implements Serializable {
 	private String fullName, firstName, lastName, androidId;
 	private transient Uri photoUri, thumbnailUri;
 	private List<LinphoneNumberOrAddress> addresses;
+	private transient ArrayList<ContentProviderOperation> changesToCommit;
 	
 	public LinphoneContact() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
 		androidId = null;
 		thumbnailUri = null;
 		photoUri = null;
+		changesToCommit = new ArrayList<ContentProviderOperation>();
 	}
 
 	public void setFullName(String name) {
-		if (name == null) return;
-		
 		fullName = name;
-		if (friend != null) {
-			friend.setName(name);
-		}
 	}
 	
 	public String getFullName() {
 		return fullName;
+	}
+	
+	public void setFirstNameAndLastName(String fn, String ln) {
+		if (fn.length() == 0 && ln.length() == 0) return;
+		
+		if (isAndroidContact() && (!firstName.equals(fn) || !lastName.equals(ln))) {
+			String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'";
+			String[] args = new String[]{ getAndroidId() };
+
+			changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+				.withSelection(select, args)
+				.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+				.withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, fn)
+				.withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ln)
+				.build()
+			);
+		}
+		firstName = fn;
+		lastName = ln;
+		fullName = firstName + " " + lastName;
 	}
 	
 	public String getFirstName() {
@@ -91,6 +108,28 @@ public class LinphoneContact implements Serializable {
 
 	public Uri getThumbnailUri() {
 		return thumbnailUri;
+	}
+	
+	public void setPhoto(byte[] photo) {
+		if (isAndroidContact() && photo != null) {
+			if (!hasPhoto()) {
+				String rawContactId = findRawContactID(getAndroidId());
+				if (rawContactId != null) {
+					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+						.withSelection(ContactsContract.Data.RAW_CONTACT_ID + "= ?", new String[] { rawContactId })
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+						.build());
+				}
+			} else {
+				String id = findDataId(getAndroidId());
+				changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+					.withSelection(ContactsContract.Data._ID + "= ?", new String[] { id })
+					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+					.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+					.build());
+			}
+		}
 	}
 
 	public void addNumberOrAddress(LinphoneNumberOrAddress noa) {
@@ -129,6 +168,25 @@ public class LinphoneContact implements Serializable {
 
 	public String getAndroidId() {
 		return androidId;
+	}
+	
+	public void save() {
+		if (ContactsManager.getInstance().hasContactsAccess()) {
+			if (isAndroidContact()) {
+				try {
+					ContactsManager.getInstance().getContentResolver().applyBatch(ContactsContract.AUTHORITY, changesToCommit);
+				} catch (Exception e) {
+					Log.e(e);
+				} finally {
+					changesToCommit = new ArrayList<ContentProviderOperation>();
+				}
+			}
+		} else {
+			if (friend == null) {
+				friend = LinphoneCoreFactory.instance().createLinphoneFriend();
+			}
+			friend.setName(fullName);
+		}
 	}
 
 	public void delete() {
@@ -170,11 +228,11 @@ public class LinphoneContact implements Serializable {
 			photoUri = null;
 		} else {
 			String id = getAndroidId();
-			setFullName(getName(id));
-			setThumbnailUri(getContactPictureUri(id));
-			setPhotoUri(getContactPhotoUri(id));
+			fullName = getName(id);
 			lastName = getContactLastName(id);
 			firstName = getContactFirstName(id);
+			setThumbnailUri(getContactPictureUri(id));
+			setPhotoUri(getContactPhotoUri(id));
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact(id)) {
 				addresses.add(noa);
 			}
@@ -243,15 +301,46 @@ public class LinphoneContact implements Serializable {
 	
 	private String getName(String id) {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
-		Cursor cursor = resolver.query(getContactUri(id), null, null, null, null);
+		Cursor c = resolver.query(getContactUri(id), null, null, null, null);
 		String name = null;
-		if (cursor != null) {
-	        if (cursor.moveToFirst()) {
-	        	name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+		if (c != null) {
+	        if (c.moveToFirst()) {
+	        	name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 	        }
-	        cursor.close();
+	        c.close();
 		}
 		return name;
+	}
+	
+	private String findRawContactID(String id) {
+		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
+		String result = null;
+		String[] projection = { ContactsContract.Data.RAW_CONTACT_ID };
+		
+		String selection = ContactsContract.RawContacts.CONTACT_ID + "=?";
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, selection, new String[]{ id }, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID));
+			}
+			c.close();
+		}
+		return result;
+	}
+	
+	private String findDataId(String id) {
+		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
+		String result = null;
+		String[] projection = { ContactsContract.Data._ID };
+		String selection = ContactsContract.Data.CONTACT_ID + "='" + id + "' AND " + ContactsContract.Data.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE + "'";
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, selection, null, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				result = String.valueOf(c.getLong(c.getColumnIndex(ContactsContract.Data._ID)));
+			}
+			c.close();
+		}
+		return result;
 	}
 	
 	private List<LinphoneNumberOrAddress> getAddressesAndNumbersForAndroidContact(String id) {
