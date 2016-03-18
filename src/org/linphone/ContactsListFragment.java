@@ -275,8 +275,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 	private void removeContacts(){
 		int size = contactsList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			if(contactsList.isItemChecked(i)){
+		for (int i = size - 1; i >= 0; i--) {
+			if (contactsList.isItemChecked(i)) {
 				LinphoneContact contact = (LinphoneContact) contactsList.getAdapter().getItem(i);
 				contact.delete();
 			}
@@ -412,6 +412,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		}
 
 		public Object getItem(int position) {
+			if (position >= getCount()) return null;
 			return contacts.get(position);
 		}
 
