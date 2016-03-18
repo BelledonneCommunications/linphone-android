@@ -25,7 +25,9 @@ import java.util.List;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.mediastream.Log;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.database.Cursor;
@@ -123,23 +125,19 @@ public class LinphoneContact implements Serializable {
 
 	public void delete() {
 		if (isAndroidContact()) {
-			// TODO
-			/*String select = ContactsContract.Data.CONTACT_ID + " = ?";
-			String[] args = new String[] { contact.getID() };
+			String select = ContactsContract.Data.CONTACT_ID + " = ?";
+			String[] args = new String[] { getAndroidId() };
 	
 			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-			ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
-							.withSelection(select, args)
-							.build()
-			);
+			ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
 	
+			ContentResolver cr = ContactsManager.getInstance().getContentResolver();
 			try {
-				getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-				ContactsManager.getInstance().removeAllFriends(contact);
+				cr.applyBatch(ContactsContract.AUTHORITY, ops);
 			} catch (Exception e) {
-				Log.w(e.getMessage() + ":" + e.getStackTrace());
+				Log.e(e);
 			}
-			ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(), contact);*/
+			ContactsManager.getInstance().removeContact(this);
 		}
 		if (friend != null) {
 			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);

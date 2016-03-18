@@ -156,35 +156,17 @@ public class ContactsManager extends ContentObserver {
 		}
 		return null;
 	}
+
+	public synchronized void removeContact(LinphoneContact linphoneContact) {
+		contacts.remove(linphoneContact);
+	}
 	
 	public synchronized void setContacts(List<LinphoneContact> c) {
 		contacts = c;
 	}
 
 	public synchronized void fetchContacts() {
-		contacts = new ArrayList<LinphoneContact>();
-		
-		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
-			LinphoneContact contact = new LinphoneContact();
-			LinphoneAddress addr = friend.getAddress();
-			contact.setFullName(addr.getDisplayName());
-			contact.addNumberOrAddress(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
-			contacts.add(contact);
-		}
-
-		if (mAccount == null || !hasContactAccess) return;
-		
-		Cursor c = Compatibility.getContactsCursor(contentResolver, null);
-		if (c != null) {
-			while (c.moveToNext()) {
-				String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
-				LinphoneContact contact = new LinphoneContact();
-				contact.setAndroidId(id);
-				contact.refresh();
-				contacts.add(contact);
-			}
-			c.close();
-		}
+		setContacts(fetchContactsAsync());
 	}
 	
 	public List<LinphoneContact> fetchContactsAsync() {
