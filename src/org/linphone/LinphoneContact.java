@@ -123,11 +123,13 @@ public class LinphoneContact implements Serializable {
 				}
 			} else {
 				String id = findDataId(getAndroidId());
-				changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-					.withSelection(ContactsContract.Data._ID + "= ?", new String[] { id })
-					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-					.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
-					.build());
+				if (id != null) {
+					changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+						.withSelection(ContactsContract.Data._ID + "= ?", new String[] { id })
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+						.build());
+				}
 			}
 		}
 	}
@@ -171,15 +173,13 @@ public class LinphoneContact implements Serializable {
 	}
 	
 	public void save() {
-		if (ContactsManager.getInstance().hasContactsAccess()) {
-			if (isAndroidContact()) {
-				try {
-					ContactsManager.getInstance().getContentResolver().applyBatch(ContactsContract.AUTHORITY, changesToCommit);
-				} catch (Exception e) {
-					Log.e(e);
-				} finally {
-					changesToCommit = new ArrayList<ContentProviderOperation>();
-				}
+		if (isAndroidContact() && ContactsManager.getInstance().hasContactsAccess() && changesToCommit.size() > 0) {
+			try {
+				ContactsManager.getInstance().getContentResolver().applyBatch(ContactsContract.AUTHORITY, changesToCommit);
+			} catch (Exception e) {
+				Log.e(e);
+			} finally {
+				changesToCommit = new ArrayList<ContentProviderOperation>();
 			}
 		} else {
 			if (friend == null) {
@@ -193,16 +193,8 @@ public class LinphoneContact implements Serializable {
 		if (isAndroidContact()) {
 			String select = ContactsContract.Data.CONTACT_ID + " = ?";
 			String[] args = new String[] { getAndroidId() };
-	
-			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-			ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
-	
-			ContentResolver cr = ContactsManager.getInstance().getContentResolver();
-			try {
-				cr.applyBatch(ContactsContract.AUTHORITY, ops);
-			} catch (Exception e) {
-				Log.e(e);
-			}
+			changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
+			save();
 		}
 		deleteFriend();
 	}
