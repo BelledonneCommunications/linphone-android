@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 package org.linphone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.core.LinphoneFriend;
@@ -51,7 +52,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 @SuppressLint("DefaultLocale")
-public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView noSipContact, noContact;
@@ -273,14 +274,23 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		}
 	}
 
-	private void removeContacts(){
+	private void removeContacts() {
+		ArrayList<String> ids = new ArrayList<String>();
 		int size = contactsList.getAdapter().getCount();
+		
 		for (int i = size - 1; i >= 0; i--) {
 			if (contactsList.isItemChecked(i)) {
 				LinphoneContact contact = (LinphoneContact) contactsList.getAdapter().getItem(i);
-				contact.delete();
+				if (contact.isAndroidContact()) {
+					contact.deleteFriend();
+					ids.add(contact.getAndroidId());
+				} else {
+					contact.delete();
+				}
 			}
 		}
+		
+		ContactsManager.getInstance().deleteMultipleContactsAtOnce(ids);
 	}
 
 	public void quitEditMode(){
@@ -369,6 +379,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	@Override
 	public void onResume() {
 		instance = this;
+		ContactsManager.addContactsListener(this);
 		super.onResume();
 
 		if (editConsumed) {
@@ -388,7 +399,13 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	@Override
 	public void onPause() {
 		instance = null;
+		ContactsManager.removeContactsListener(this);
 		super.onPause();
+	}
+	
+	@Override
+	public void onContactsUpdated() {
+		invalidate();
 	}
 	
 	public void invalidate() {

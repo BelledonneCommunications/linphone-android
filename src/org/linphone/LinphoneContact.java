@@ -137,8 +137,11 @@ public class LinphoneContact implements Serializable {
 			} catch (Exception e) {
 				Log.e(e);
 			}
-			ContactsManager.getInstance().removeContact(this);
 		}
+		deleteFriend();
+	}
+	
+	public void deleteFriend() {
 		if (friend != null) {
 			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 		}
