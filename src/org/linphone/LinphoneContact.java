@@ -41,7 +41,7 @@ public class LinphoneContact implements Serializable {
 	private static final long serialVersionUID = 9015568163905205244L;
 
 	private transient LinphoneFriend friend;
-	private String fullName, androidId;
+	private String fullName, firstName, lastName, androidId;
 	private transient Uri photoUri, thumbnailUri;
 	private List<LinphoneNumberOrAddress> addresses;
 	
@@ -63,6 +63,14 @@ public class LinphoneContact implements Serializable {
 	
 	public String getFullName() {
 		return fullName;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	
+	public String getLastName() {
+		return lastName;
 	}
 	
 	public boolean hasPhoto() {
@@ -162,13 +170,11 @@ public class LinphoneContact implements Serializable {
 			photoUri = null;
 		} else {
 			String id = getAndroidId();
-			String name = getName(id);
-			Uri thumbnail = getContactPictureUri(id);
-			Uri photo = getContactPhotoUri(id);
-			
-			setFullName(name);
-			setThumbnailUri(thumbnail);
-			setPhotoUri(photo);
+			setFullName(getName(id));
+			setThumbnailUri(getContactPictureUri(id));
+			setPhotoUri(getContactPhotoUri(id));
+			lastName = getContactLastName(id);
+			firstName = getContactFirstName(id);
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact(id)) {
 				addresses.add(noa);
 			}
@@ -207,6 +213,32 @@ public class LinphoneContact implements Serializable {
 	private Uri getContactPhotoUri(String id) {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
+	}
+
+	private String getContactFirstName(String id) {
+		String result = null;
+		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, new String[]{ ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME }, ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?", new String[]{ id, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE }, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+			}
+			c.close();
+		}
+		return result;
+	}
+	
+	private String getContactLastName(String id) {
+		String result = null;
+		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, new String[]{ ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME }, ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?", new String[]{ id, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE }, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+			}
+			c.close();
+		}
+		return result;
 	}
 	
 	private String getName(String id) {

@@ -88,6 +88,7 @@ public class ContactsManager extends ContentObserver {
 	
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
+		Log.e("############################################ OnChange ############################################");
 		List<LinphoneContact> contacts = fetchContactsAsync();
 		Message msg = handler.obtainMessage();
 		msg.what = CONTACTS_UPDATED;
@@ -104,15 +105,15 @@ public class ContactsManager extends ContentObserver {
 		return instance;
 	}
 	
-	public boolean hasContacts() {
+	public synchronized boolean hasContacts() {
 		return contacts.size() > 0;
 	}
 	
-	public List<LinphoneContact> getContacts() {
+	public synchronized List<LinphoneContact> getContacts() {
 		return contacts;
 	}
 	
-	public List<LinphoneContact> getSIPContacts() {
+	public synchronized List<LinphoneContact> getSIPContacts() {
 		return contacts;
 	}
 	
