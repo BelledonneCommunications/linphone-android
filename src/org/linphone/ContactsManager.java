@@ -29,6 +29,7 @@ import org.linphone.mediastream.Log;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -52,6 +53,15 @@ public class ContactsManager extends ContentObserver {
 	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
+	
+	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
+	public static void addContactsListener(ContactsUpdatedListener listener) {
+		contactsUpdatedListeners.add(listener);
+	}
+	public static void removeContactsListener(ContactsUpdatedListener listener) {
+		contactsUpdatedListeners.remove(listener);
+	}
+	
 	private static Handler handler = new Handler() {
 		@SuppressWarnings("unchecked")
 		@Override
@@ -59,12 +69,16 @@ public class ContactsManager extends ContentObserver {
 			if (msg.what == CONTACTS_UPDATED && msg.obj instanceof List<?>) {
 				List<LinphoneContact> c = (List<LinphoneContact>) msg.obj;
 				ContactsManager.getInstance().setContacts(c);
+				for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+					listener.onContactsUpdated();
+				}
 			}
 		}
 	};
 
 	private ContactsManager(Handler handler) {
 		super(handler);
+		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
 	}
 	
 	@Override
@@ -156,10 +170,6 @@ public class ContactsManager extends ContentObserver {
 		}
 		return null;
 	}
-
-	public synchronized void removeContact(LinphoneContact linphoneContact) {
-		contacts.remove(linphoneContact);
-	}
 	
 	public synchronized void setContacts(List<LinphoneContact> c) {
 		contacts = c;
@@ -223,5 +233,28 @@ public class ContactsManager extends ContentObserver {
 			c.close();
 		}
 		return null;
+	}
+	
+	public void delete(String id) {
+		ArrayList<String> ids = new ArrayList<String>();
+		ids.add(id);
+		deleteMultipleContactsAtOnce(ids);
+	}
+	
+	public void deleteMultipleContactsAtOnce(List<String> ids) {
+		String select = ContactsContract.Data.CONTACT_ID + " = ?";
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		
+		for (String id : ids) {
+			String[] args = new String[] { id };
+			ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
+		}
+
+		ContentResolver cr = ContactsManager.getInstance().getContentResolver();
+		try {
+			cr.applyBatch(ContactsContract.AUTHORITY, ops);
+		} catch (Exception e) {
+			Log.e(e);
+		}
 	}
 }
