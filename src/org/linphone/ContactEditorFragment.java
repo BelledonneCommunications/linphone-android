@@ -33,7 +33,6 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -41,7 +40,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -67,7 +65,7 @@ public class ContactEditorFragment extends Fragment {
 	private static final int ADD_PHOTO = 1337;
 	private static final int PHOTO_SIZE = 128;
 	
-	private boolean isNewContact = true;
+	private boolean isNewContact;
 	private LinphoneContact contact;
 	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
 	private int firstSipAddressIndex = -1;
@@ -80,6 +78,8 @@ public class ContactEditorFragment extends Fragment {
 		this.inflater = inflater;
 		
 		contact = null;
+		isNewContact = true;
+		
 		if (getArguments() != null) {
 			Serializable obj = getArguments().getSerializable("Contact");
 			if (obj != null) {
@@ -88,10 +88,8 @@ public class ContactEditorFragment extends Fragment {
 				if (getArguments().getString("NewSipAdress") != null) {
 					newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
 				}
-
 			} else if (getArguments().getString("NewSipAdress") != null) {
 				newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
-				isNewContact = true;
 			}
 		}
 
@@ -257,7 +255,11 @@ public class ContactEditorFragment extends Fragment {
 		}
 
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-		LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+		if (contact != null) {
+			LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+		} else {
+			contactPicture.setImageResource(R.drawable.avatar);
+		}
 
 		contactPicture.setOnClickListener(new OnClickListener() {
 			@Override
@@ -339,19 +341,6 @@ public class ContactEditorFragment extends Fragment {
 		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
 
 		startActivityForResult(chooserIntent, ADD_PHOTO);
-	}
-
-	public String getRealPathFromURI(Uri contentUri) {
-		String[] proj = {MediaStore.Images.Media.DATA};
-		CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
-		Cursor cursor = loader.loadInBackground();
-		if (cursor != null && cursor.moveToFirst()) {
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			String result = cursor.getString(column_index);
-			cursor.close();
-			return result;
-		}
-		return null;
 	}
 
 	@Override
