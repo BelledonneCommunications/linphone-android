@@ -20,12 +20,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.PresenceActivityType;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -46,12 +48,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 /**
  * @author Sylvain Berfini
  */
-@SuppressLint("DefaultLocale")
 public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
@@ -77,8 +79,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	}
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-        Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
         View view = inflater.inflate(R.layout.contacts_list, container, false);
         
@@ -417,11 +418,28 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		contactsList.setSelectionFromTop(lastKnownPosition, 0);
 	}
 	
-	class ContactsListAdapter extends BaseAdapter {
+	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
 		private List<LinphoneContact> contacts;
+		String[] sections;
+		ArrayList<String> sectionsList;
+		Map<String, Integer>map = new LinkedHashMap<String, Integer>();
 		
 		ContactsListAdapter(List<LinphoneContact> contactsList) {
 			contacts = contactsList;
+			
+			map = new LinkedHashMap<String, Integer>();
+			String prevLetter = null;
+			for (int i = 0; i < contacts.size(); i++) {
+				LinphoneContact contact = contacts.get(i);
+				String firstLetter = contact.getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
+				if (!firstLetter.equals(prevLetter)) {
+					prevLetter = firstLetter;
+					map.put(firstLetter, i);
+				}
+			}
+			sectionsList = new ArrayList<String>(map.keySet());
+			sections = new String[sectionsList.size()];
+			sectionsList.toArray(sections);
 		}
 		
 		public int getCount() {
@@ -456,7 +474,13 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			name.setText(contact.getFullName());
 
 			LinearLayout separator = (LinearLayout) view.findViewById(R.id.separator);
-			separator.setVisibility(View.GONE);
+			TextView separatorText = (TextView) view.findViewById(R.id.separator_text);
+			if (getPositionForSection(getSectionForPosition(position)) != position) {
+				separator.setVisibility(View.GONE);
+			} else {
+				separator.setVisibility(View.VISIBLE);
+				separatorText.setText(String.valueOf(contact.getFullName().charAt(0)));
+			}
 			
 			ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
 			if (contact.hasPhoto()) {
@@ -518,6 +542,23 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			}
 			
 			return view;
+		}
+
+		@Override
+		public Object[] getSections() {
+			return sections;
+		}
+
+		@Override
+		public int getPositionForSection(int sectionIndex) {
+			return map.get(sections[sectionIndex]);
+		}
+
+		@Override
+		public int getSectionForPosition(int position) {
+			LinphoneContact contact = contacts.get(position);
+			String letter = contact.getFullName().substring(0, 1);
+			return sectionsList.indexOf(letter);
 		}
 	}
 }
