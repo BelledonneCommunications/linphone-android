@@ -126,6 +126,7 @@
 			android:divider="@color/colorE"
 			android:fastScrollAlwaysVisible="true"
 			android:fastScrollEnabled="true"
+			android:scrollbarStyle="outsideOverlay"
 			android:dividerHeight="1dp" />
 
 		<TextView
