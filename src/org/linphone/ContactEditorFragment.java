@@ -121,28 +121,26 @@ public class ContactEditorFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (isNewContact) {
-						boolean areAllFielsEmpty = true;
-						for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
-							if (nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals("")) {
-								areAllFielsEmpty = false;
-								break;
-							}
+					/*boolean areAllFielsEmpty = true;
+					for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
+						if (nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals("")) {
+							areAllFielsEmpty = false;
+							break;
 						}
-						if (areAllFielsEmpty) {
-							getFragmentManager().popBackStackImmediate();
-							return;
-						}
+					}
+					if (areAllFielsEmpty) {
+						getFragmentManager().popBackStackImmediate();
+						return;
+					}*/
+					contact = LinphoneContact.createAndroidContact();
 				}
+				contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString());
 				if (photoToAdd != null) {
 					contact.setPhoto(photoToAdd);
 				}
-				
-				contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString());
-
 				/*for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
 					numberOrAddress.save();
 				}*/
-				
 				contact.save();
 
 		        /*try {
