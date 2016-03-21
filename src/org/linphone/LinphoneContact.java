@@ -65,10 +65,10 @@ public class LinphoneContact implements Serializable {
 	}
 	
 	public void setFirstNameAndLastName(String fn, String ln) {
-		if (fn.length() == 0 && ln.length() == 0) return;
+		if (fn != null && fn.length() == 0 && ln != null && ln.length() == 0) return;
 		
 		if (isAndroidContact()) {
-			if ((firstName != null && !firstName.equals(fn)) || (lastName != null && !lastName.equals(ln))) {
+			if (firstName != null || lastName != null) {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'";
 				String[] args = new String[]{ getAndroidId() };
 	
@@ -124,28 +124,19 @@ public class LinphoneContact implements Serializable {
 	
 	public void setPhoto(byte[] photo) {
 		if (isAndroidContact() && photo != null) {
-			String id = findDataId(getAndroidId());
-			if (id != null) {
-				changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-					.withSelection(ContactsContract.Data._ID + "= ?", new String[] { id })
-					.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+			String rawContactId = findRawContactID(getAndroidId());
+			if (rawContactId != null) {
+				changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+					.withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
 					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+					.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
 					.build());
 			} else {
-				String rawContactId = findRawContactID(getAndroidId());
-				if (rawContactId != null) {
-					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-						.withValue(ContactsContract.Data.RAW_CONTACT_ID, new String[] { rawContactId })
-						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
-						.build());
-				} else {
-					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
-						.build());
-				}
+				changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+			        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+					.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+					.build());
 			}
 		}
 	}
@@ -317,28 +308,13 @@ public class LinphoneContact implements Serializable {
 	private String findRawContactID(String id) {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		String result = null;
-		String[] projection = { ContactsContract.Data.RAW_CONTACT_ID };
+		String[] projection = { ContactsContract.RawContacts._ID };
 		
 		String selection = ContactsContract.RawContacts.CONTACT_ID + "=?";
-		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, selection, new String[]{ id }, null);
+		Cursor c = resolver.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, new String[]{ id }, null);
 		if (c != null) {
 			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID));
-			}
-			c.close();
-		}
-		return result;
-	}
-	
-	private String findDataId(String id) {
-		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
-		String result = null;
-		String[] projection = { ContactsContract.Data._ID };
-		String selection = ContactsContract.Data.CONTACT_ID + "='" + id + "' AND " + ContactsContract.Data.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE + "'";
-		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, selection, null, null);
-		if (c != null) {
-			if (c.moveToFirst()) {
-				result = String.valueOf(c.getLong(c.getColumnIndex(ContactsContract.Data._ID)));
+				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
 			}
 			c.close();
 		}
