@@ -45,6 +45,7 @@ public class LinphoneContact implements Serializable {
 	private transient Uri photoUri, thumbnailUri;
 	private List<LinphoneNumberOrAddress> addresses;
 	private transient ArrayList<ContentProviderOperation> changesToCommit;
+	private boolean hasSipAddress;
 	
 	public LinphoneContact() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
@@ -52,6 +53,7 @@ public class LinphoneContact implements Serializable {
 		thumbnailUri = null;
 		photoUri = null;
 		changesToCommit = new ArrayList<ContentProviderOperation>();
+		hasSipAddress = false;
 	}
 
 	public void setFullName(String name) {
@@ -86,6 +88,7 @@ public class LinphoneContact implements Serializable {
 			        .build());
 			}
 		}
+		
 		firstName = fn;
 		lastName = ln;
 		fullName = firstName + " " + lastName;
@@ -121,11 +124,18 @@ public class LinphoneContact implements Serializable {
 	
 	public void setPhoto(byte[] photo) {
 		if (isAndroidContact() && photo != null) {
-			if (!hasPhoto()) {
+			String id = findDataId(getAndroidId());
+			if (id != null) {
+				changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+					.withSelection(ContactsContract.Data._ID + "= ?", new String[] { id })
+					.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+					.build());
+			} else {
 				String rawContactId = findRawContactID(getAndroidId());
 				if (rawContactId != null) {
 					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-						.withSelection(ContactsContract.Data.RAW_CONTACT_ID + "= ?", new String[] { rawContactId })
+						.withValue(ContactsContract.Data.RAW_CONTACT_ID, new String[] { rawContactId })
 						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
 						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
 						.build());
@@ -136,21 +146,15 @@ public class LinphoneContact implements Serializable {
 						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
 						.build());
 				}
-			} else {
-				String id = findDataId(getAndroidId());
-				if (id != null) {
-					changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-						.withSelection(ContactsContract.Data._ID + "= ?", new String[] { id })
-						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
-						.build());
-				}
 			}
 		}
 	}
 
 	public void addNumberOrAddress(LinphoneNumberOrAddress noa) {
 		if (noa == null) return;
+		if (noa.isSIPAddress()) {
+			hasSipAddress = true;
+		}
 		addresses.add(noa);
 	}
 
@@ -171,12 +175,7 @@ public class LinphoneContact implements Serializable {
 	}
 	
 	public boolean hasAddress() {
-		for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
-			if (noa.isSIPAddress()) {
-				return true;
-			}
-		}
-		return false;
+		return hasSipAddress;
 	}
 	
 	public void setAndroidId(String id) {
@@ -196,10 +195,9 @@ public class LinphoneContact implements Serializable {
 			} finally {
 				changesToCommit = new ArrayList<ContentProviderOperation>();
 			}
-		} else {
-			if (friend == null) {
-				friend = LinphoneCoreFactory.instance().createLinphoneFriend();
-			}
+		}
+		
+		if (isLinphoneFriend()) {
 			friend.setName(fullName);
 		}
 	}
@@ -234,6 +232,7 @@ public class LinphoneContact implements Serializable {
 			thumbnailUri = null;
 			photoUri = null;
 		} else {
+			hasSipAddress = false;
 			String id = getAndroidId();
 			fullName = getName(id);
 			lastName = getContactLastName(id);
@@ -241,7 +240,7 @@ public class LinphoneContact implements Serializable {
 			setThumbnailUri(getContactPictureUri(id));
 			setPhotoUri(getContactPhotoUri(id));
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact(id)) {
-				addresses.add(noa);
+				addNumberOrAddress(noa);
 			}
 		}
 	}
@@ -249,31 +248,16 @@ public class LinphoneContact implements Serializable {
 	public boolean isAndroidContact() {
 		return androidId != null;
 	}
-
-	public static LinphoneContact createLinphoneFriend(String name, String address) {
-		LinphoneContact contact = new LinphoneContact();
-		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend();
-		contact.friend = friend;
-		
-		if (name != null) {
-			contact.setFullName(name);
-		}
-		if (address != null) {
-			contact.addNumberOrAddress(new LinphoneNumberOrAddress(address, true));
-		}
-		
-		return contact;
+	
+	public boolean isLinphoneFriend() {
+		return friend != null;
 	}
 
-	public static LinphoneContact createAndroidContact() {
-		LinphoneContact contact = new LinphoneContact();
-		contact.changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-	        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-	        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-	        .withValue(ContactsContract.RawContacts.AGGREGATION_MODE, ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
-	        .build());
-		contact.setAndroidId("0");
-		return contact;
+	public static LinphoneContact createContact() {
+		if (ContactsManager.getInstance().hasContactsAccess()) {
+			return createAndroidContact();
+		}
+		return createLinphoneFriend();
 	}
 	
 	private Uri getContactUri(String id) {
@@ -390,5 +374,23 @@ public class LinphoneContact implements Serializable {
 		}
 		
 		return result;
+	}
+
+	private static LinphoneContact createAndroidContact() {
+		LinphoneContact contact = new LinphoneContact();
+		contact.changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+	        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+	        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+	        .withValue(ContactsContract.RawContacts.AGGREGATION_MODE, ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
+	        .build());
+		contact.setAndroidId("0");
+		return contact;
+	}
+
+	private static LinphoneContact createLinphoneFriend() {
+		LinphoneContact contact = new LinphoneContact();
+		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend();
+		contact.friend = friend;
+		return contact;
 	}
 }
