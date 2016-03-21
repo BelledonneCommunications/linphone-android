@@ -30,9 +30,11 @@ import org.linphone.mediastream.Log;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds;
 
 public class LinphoneContact implements Serializable {
 	/**
@@ -167,6 +169,76 @@ public class LinphoneContact implements Serializable {
 	
 	public boolean hasAddress() {
 		return hasSipAddress;
+	}
+	
+	public void removeNumberOrAddress(LinphoneNumberOrAddress noa) {
+		if (isAndroidContact() && noa.getOldValue() != null) {
+			String select;
+			if (noa.isSIPAddress()) {
+				select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
+			} else {
+				select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
+			}
+			String[] args = new String[]{ getAndroidId(), noa.getOldValue() };
+	
+			changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+				.withSelection(select, args)
+				.build());
+		}
+	}
+	
+	public void addOrUpdateNumberOrAddress(LinphoneNumberOrAddress noa) {
+		if (isAndroidContact() && noa.getValue() != null) {
+			if (noa.getOldValue() == null) {
+				ContentValues values = new ContentValues();
+				if (noa.isSIPAddress()) {
+					values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
+			        values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
+					values.put(CommonDataKinds.SipAddress.TYPE, CommonDataKinds.SipAddress.TYPE_CUSTOM);
+					values.put(CommonDataKinds.SipAddress.LABEL, ContactsManager.getInstance().getString(R.string.addressbook_label));
+				} else {
+			        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+			        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
+			        values.put(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM);
+					values.put(ContactsContract.CommonDataKinds.Phone.LABEL, ContactsManager.getInstance().getString(R.string.addressbook_label));
+				}
+				
+				String rawContactId = findRawContactID(getAndroidId());
+				if (rawContactId != null) {
+					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+							.withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
+					        .withValues(values)
+					        .build());
+				} else {
+					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+				        .withValues(values)
+				        .build());
+				}
+			} else {
+				ContentValues values = new ContentValues();
+				String select;
+				String[] args = new String[] { getAndroidId(), noa.getOldValue() };
+				
+				if (noa.isSIPAddress()) {
+					select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
+					values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
+			        values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
+				} else {
+					select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
+			        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+			        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
+				}
+				
+				String rawContactId = findRawContactID(getAndroidId());
+				if (rawContactId != null) {
+					changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+						.withSelection(select, args)
+				        .withValues(values)
+				        .build());
+				}
+			}
+		}
 	}
 	
 	public void setAndroidId(String id) {

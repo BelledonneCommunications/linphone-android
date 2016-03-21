@@ -52,6 +52,7 @@ public class ContactsManager extends ContentObserver {
 	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
+	private Context context;
 	
 	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
 	public static void addContactsListener(ContactsUpdatedListener listener) {
@@ -135,7 +136,8 @@ public class ContactsManager extends ContentObserver {
 		return isContactPresenceDisabled;
 	}
 
-	public void initializeContactManager(Context context, ContentResolver contentResolver){
+	public void initializeContactManager(Context context, ContentResolver contentResolver) {
+		this.context = context;
 		this.contentResolver = contentResolver;
 	}
 
@@ -265,5 +267,8 @@ public class ContactsManager extends ContentObserver {
 		} catch (Exception e) {
 			Log.e(e);
 		}
+	}
+	public String getString(int resourceID) {
+		return context.getString(resourceID);
 	}
 }

@@ -67,7 +67,7 @@ public class ContactEditorFragment extends Fragment {
 	
 	private boolean isNewContact;
 	private LinphoneContact contact;
-	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
+	private List<LinphoneNumberOrAddress> numbersAndAddresses;
 	private int firstSipAddressIndex = -1;
 	private LinearLayout sipAddresses, numbers;
 	private String newSipOrNumberToAdd;
@@ -121,9 +121,9 @@ public class ContactEditorFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (isNewContact) {
-					/*boolean areAllFielsEmpty = true;
-					for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
-						if (nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals("")) {
+					boolean areAllFielsEmpty = true;
+					for (LinphoneNumberOrAddress nounoa : numbersAndAddresses) {
+						if (nounoa.getValue() != null && !nounoa.getValue().equals("")) {
 							areAllFielsEmpty = false;
 							break;
 						}
@@ -131,24 +131,17 @@ public class ContactEditorFragment extends Fragment {
 					if (areAllFielsEmpty) {
 						getFragmentManager().popBackStackImmediate();
 						return;
-					}*/
+					}
 					contact = LinphoneContact.createContact();
 				}
 				contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString());
 				if (photoToAdd != null) {
 					contact.setPhoto(photoToAdd);
 				}
-				/*for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
-					numberOrAddress.save();
-				}*/
+				for (LinphoneNumberOrAddress numberOrAddress : numbersAndAddresses) {
+					contact.addOrUpdateNumberOrAddress(numberOrAddress);
+				}
 				contact.save();
-
-		        /*try {
-					addLinphoneFriendIfNeeded();
-					removeLinphoneTagIfNeeded();
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		        }*/
 
 				if (!isNewContact) {
 					if (LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet)) {
@@ -266,7 +259,7 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 
-		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();
+		numbersAndAddresses = new ArrayList<LinphoneNumberOrAddress>();
 		sipAddresses = initSipAddressFields(contact);
 		numbers = initNumbersFields(contact);
 
@@ -465,17 +458,17 @@ public class ContactEditorFragment extends Fragment {
 				return null;
 		}
 		
-		NewOrUpdatedNumberOrAddress tempNounoa;
+		LinphoneNumberOrAddress tempNounoa;
 		if (forceAddNumber) {
-			tempNounoa = new NewOrUpdatedNumberOrAddress(isSip);
+			tempNounoa = new LinphoneNumberOrAddress(null, isSip);
 		} else {
 			if(isNewContact || newSipOrNumberToAdd != null) {
-				tempNounoa = new NewOrUpdatedNumberOrAddress(isSip, numberOrAddress);
+				tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSip);
 			} else {
-				tempNounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+				tempNounoa = new LinphoneNumberOrAddress(null, isSip, numberOrAddress);
 			}
 		}
-		final NewOrUpdatedNumberOrAddress nounoa = tempNounoa;
+		final LinphoneNumberOrAddress nounoa = tempNounoa;
 		numbersAndAddresses.add(nounoa);
 		
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
@@ -486,7 +479,7 @@ public class ContactEditorFragment extends Fragment {
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				nounoa.setNewNumberOrAddress(noa.getText().toString());
+				nounoa.setValue(noa.getText().toString());
 			}
 			
 			@Override
@@ -498,14 +491,16 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 		if (forceAddNumber) {
-			nounoa.setNewNumberOrAddress(noa.getText().toString());
+			nounoa.setValue(noa.getText().toString());
 		}
 		
 		ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				nounoa.delete();
+				if (contact != null) {
+					contact.removeNumberOrAddress(nounoa);
+				}
 				numbersAndAddresses.remove(nounoa);
 				view.setVisibility(View.GONE);
 
@@ -517,7 +512,7 @@ public class ContactEditorFragment extends Fragment {
 	@SuppressLint("InflateParams")
 	private void addEmptyRowToAllowNewNumberOrAddress(final LinearLayout controls, final boolean isSip) {
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
-		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(isSip);
+		final LinphoneNumberOrAddress nounoa = new LinphoneNumberOrAddress(null, isSip);
 		
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
 		numbersAndAddresses.add(nounoa);
@@ -527,7 +522,7 @@ public class ContactEditorFragment extends Fragment {
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				nounoa.setNewNumberOrAddress(noa.getText().toString());
+				nounoa.setValue(noa.getText().toString());
 			}
 			
 			@Override
@@ -543,55 +538,19 @@ public class ContactEditorFragment extends Fragment {
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				nounoa.delete();
+				if (contact != null) {
+					contact.removeNumberOrAddress(nounoa);
+				}
 				numbersAndAddresses.remove(nounoa);
 				view.setVisibility(View.GONE);
 			}
 
 		});
 
-
 		controls.addView(view);
 	}
-
-	/*private void addLinphoneFriendIfNeeded(){
-		for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
-			if(numberOrAddress.newNumberOrAddress != null && numberOrAddress.isSipAddress) {
-				if(isNewContact){
-					Contact c = contactsManager.findContactWithDisplayName(ContactsManager.getInstance().getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
-					if (c != null && !contactsManager.isContactHasAddress(c, numberOrAddress.newNumberOrAddress)) {
-						contactsManager.createNewFriend(c, numberOrAddress.newNumberOrAddress);
-					}
-				} else {
-					if (!contactsManager.isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)){
-						if (numberOrAddress.oldNumberOrAddress == null) {
-							contactsManager.createNewFriend(contact, numberOrAddress.newNumberOrAddress);
-						} else {
-							if (contact.hasFriends())
-								contactsManager.updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
-						}
-					}
-				}
-			}
-		}
-	}*/
-
-	/*private void removeLinphoneTagIfNeeded(){
-		if(!isNewContact) {
-			boolean areAllSipFielsEmpty = true;
-			for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
-				if (!nounoa.isSipAddress && (nounoa.oldNumberOrAddress != null && !nounoa.oldNumberOrAddress.equals("") || nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals(""))) {
-					areAllSipFielsEmpty = false;
-					break;
-				}
-			}
-			if (areAllSipFielsEmpty && contactsManager.findRawLinphoneContactID(contact.getID()) != null) {
-				contactsManager.removeLinphoneContactTag(contact);
-			}
-		}
-	}*/
 	
-	class NewOrUpdatedNumberOrAddress {
+	/*class NewOrUpdatedNumberOrAddress {
 		private String oldNumberOrAddress;
 		private String newNumberOrAddress;
 		private boolean isSipAddress;
@@ -641,7 +600,7 @@ public class ContactEditorFragment extends Fragment {
 		}
 		
 		private void addNewNumber() {
-			/*if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
+			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
 				return;
 			}
 			
@@ -698,11 +657,11 @@ public class ContactEditorFragment extends Fragment {
 				        .build()
 				    );
 				}
-			}*/
+			}
 		}
 		
 		private void updateNumber() {
-			/*if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
+			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
 				return;
 			}
 			
@@ -734,7 +693,7 @@ public class ContactEditorFragment extends Fragment {
 	                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
 	                .build()
 	            );
-			}*/
+			}
 		}
-	}
+	}*/
 }
