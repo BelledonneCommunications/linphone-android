@@ -28,15 +28,25 @@ public class LinphoneNumberOrAddress implements Serializable {
 	private static final long serialVersionUID = -2301689469730072896L;
 	
 	private boolean isSIPAddress;
-	private String value;
+	private String value, oldValueForUpdatePurpose;
 	
 	public LinphoneNumberOrAddress(String v, boolean isSIP) {
 		value = v;
 		isSIPAddress = isSIP;
+		oldValueForUpdatePurpose = null;
 	}
 	
+	public LinphoneNumberOrAddress(String v, boolean isSip, String old) {
+		this(v, isSip);
+		oldValueForUpdatePurpose = old;
+	}
+
 	public boolean isSIPAddress() {
 		return isSIPAddress;
+	}
+	
+	public String getOldValue() {
+		return oldValueForUpdatePurpose;
 	}
 	
 	public String getValue() {
