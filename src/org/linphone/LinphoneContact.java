@@ -65,17 +65,26 @@ public class LinphoneContact implements Serializable {
 	public void setFirstNameAndLastName(String fn, String ln) {
 		if (fn.length() == 0 && ln.length() == 0) return;
 		
-		if (isAndroidContact() && (!firstName.equals(fn) || !lastName.equals(ln))) {
-			String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'";
-			String[] args = new String[]{ getAndroidId() };
-
-			changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-				.withSelection(select, args)
-				.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-				.withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, fn)
-				.withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ln)
-				.build()
-			);
+		if (isAndroidContact()) {
+			if ((firstName != null && !firstName.equals(fn)) || (lastName != null && !lastName.equals(ln))) {
+				String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'";
+				String[] args = new String[]{ getAndroidId() };
+	
+				changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+					.withSelection(select, args)
+					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+					.withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, fn)
+					.withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ln)
+					.build()
+				);
+			} else {
+				changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+			        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+			        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+			        .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, fn)
+			        .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ln)
+			        .build());
+			}
 		}
 		firstName = fn;
 		lastName = ln;
@@ -117,6 +126,12 @@ public class LinphoneContact implements Serializable {
 				if (rawContactId != null) {
 					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
 						.withSelection(ContactsContract.Data.RAW_CONTACT_ID + "= ?", new String[] { rawContactId })
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+						.build());
+				} else {
+					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
 						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
 						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
 						.build());
@@ -247,6 +262,17 @@ public class LinphoneContact implements Serializable {
 			contact.addNumberOrAddress(new LinphoneNumberOrAddress(address, true));
 		}
 		
+		return contact;
+	}
+
+	public static LinphoneContact createAndroidContact() {
+		LinphoneContact contact = new LinphoneContact();
+		contact.changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+	        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+	        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+	        .withValue(ContactsContract.RawContacts.AGGREGATION_MODE, ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
+	        .build());
+		contact.setAndroidId("0");
 		return contact;
 	}
 	

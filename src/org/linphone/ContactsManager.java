@@ -49,7 +49,6 @@ public class ContactsManager extends ContentObserver {
 	
 	private static ContactsManager instance;
 	private List<LinphoneContact> contacts;
-	//private Cursor contactCursor, sipContactCursor;
 	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
@@ -88,7 +87,6 @@ public class ContactsManager extends ContentObserver {
 	
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
-		Log.e("############################################ OnChange ############################################");
 		List<LinphoneContact> contacts = fetchContactsAsync();
 		Message msg = handler.obtainMessage();
 		msg.what = CONTACTS_UPDATED;
