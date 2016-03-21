@@ -48,7 +48,7 @@ public class ContactsManager extends ContentObserver {
 	private static final int CONTACTS_UPDATED = 543;
 	
 	private static ContactsManager instance;
-	private List<LinphoneContact> contacts;
+	private List<LinphoneContact> contacts, sipContacts;
 	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
@@ -112,7 +112,7 @@ public class ContactsManager extends ContentObserver {
 	}
 	
 	public synchronized List<LinphoneContact> getSIPContacts() {
-		return contacts;
+		return sipContacts;
 	}
 	
 	public void enableContactsAccess() {
@@ -176,6 +176,12 @@ public class ContactsManager extends ContentObserver {
 	
 	public synchronized void setContacts(List<LinphoneContact> c) {
 		contacts = c;
+		sipContacts = new ArrayList<LinphoneContact>();
+		for (LinphoneContact contact : contacts) {
+			if (contact.hasAddress()) {
+				sipContacts.add(contact);
+			}
+		}
 	}
 
 	public synchronized void fetchContacts() {

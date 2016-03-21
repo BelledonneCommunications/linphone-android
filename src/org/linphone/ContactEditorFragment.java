@@ -132,7 +132,7 @@ public class ContactEditorFragment extends Fragment {
 						getFragmentManager().popBackStackImmediate();
 						return;
 					}*/
-					contact = LinphoneContact.createAndroidContact();
+					contact = LinphoneContact.createContact();
 				}
 				contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString());
 				if (photoToAdd != null) {
