@@ -331,7 +331,7 @@ public class LinphoneContact implements Serializable {
 			}
 			friend.done();
 			
-			if (!isAndroidContact() && friend.getAddress() != null) {
+			if (friend.getAddress() != null) {
 				if (lc.findFriendByAddress(friend.getAddress().asString()) == null) {
 					try {
 						lc.addFriend(friend);
@@ -402,6 +402,14 @@ public class LinphoneContact implements Serializable {
 								Log.e(e);
 							}
 						}
+					}
+				}
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				if (lc != null) {
+					try {
+						lc.addFriend(friend);
+					} catch (LinphoneCoreException e) {
+						Log.e(e);
 					}
 				}
 			}

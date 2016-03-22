@@ -193,25 +193,44 @@ public class ContactsManager extends ContentObserver {
 	public List<LinphoneContact> fetchContactsAsync() {
 		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		
-		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
-			LinphoneContact contact = new LinphoneContact();
-			contact.setFriend(friend);
-			contact.refresh();
-			contacts.add(contact);
+		if (mAccount != null && hasContactsAccess()) {
+			Cursor c = Compatibility.getContactsCursor(contentResolver, null);
+			if (c != null) {
+				while (c.moveToNext()) {
+					String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
+					LinphoneContact contact = new LinphoneContact();
+					contact.setAndroidId(id);
+					contacts.add(contact);
+				}
+				c.close();
+			}
 		}
-
-		if (mAccount == null || !hasContactsAccess()) return contacts;
 		
-		Cursor c = Compatibility.getContactsCursor(contentResolver, null);
-		if (c != null) {
-			while (c.moveToNext()) {
-				String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
+		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+			String refkey = friend.getRefKey();
+			if (refkey != null) {
+				boolean found = false;
+				for (LinphoneContact contact : contacts) {
+					if (refkey.equals(contact.getAndroidId())) {
+						contact.setFriend(friend);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					LinphoneContact contact = new LinphoneContact();
+					contact.setFriend(friend);
+					contacts.add(contact);
+				}
+			} else {
 				LinphoneContact contact = new LinphoneContact();
-				contact.setAndroidId(id);
-				contact.refresh();
+				contact.setFriend(friend);
 				contacts.add(contact);
 			}
-			c.close();
+		}
+		
+		for (LinphoneContact contact : contacts) {
+			contact.refresh();
 		}
 		
 		return contacts;
