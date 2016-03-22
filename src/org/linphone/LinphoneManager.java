@@ -171,7 +171,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
 		mFriendsDatabaseFile = basePath + "/linphone-friends.db";
 		mErrorToneFile = basePath + "/error.wav";
-		mConfigFile = basePath + "/configrc";
 		mUserCertificatePath = basePath;
 
 		mPrefs = LinphonePreferences.instance();
@@ -197,7 +196,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mCallLogDatabaseFile;
 	private final String mFriendsDatabaseFile;
 	private final String mErrorToneFile;
-	private final String mConfigFile;
 	private final String mUserCertificatePath;
 	private ByteArrayInputStream mUploadingImageStream;
 
@@ -866,13 +864,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		try {
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(mServiceContext.getContentResolver(), from);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				if (LinphoneActivity.isInstanciated() && !LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
 					return;
 				} else {
 					if (contact != null) {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getName(), textMessage);
+						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
 					} else {
 						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
 					}

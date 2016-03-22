@@ -35,9 +35,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -46,7 +48,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
@@ -54,6 +55,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -148,9 +150,9 @@ public final class LinphoneUtils {
 
 			SimpleDateFormat dateFormat;
 			if (isToday(cal)) {
-				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format));
+				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format), Locale.getDefault());
 			} else {
-				dateFormat = new SimpleDateFormat(format);
+				dateFormat = new SimpleDateFormat(format, Locale.getDefault());
 			}
 
 			return dateFormat.format(cal.getTime());
@@ -212,32 +214,32 @@ public final class LinphoneUtils {
 	}
 
 	
-	public static void setImagePictureFromUri(Context c, ImageView view, Uri uri, Uri tUri) {
-		if (uri == null) {
+	public static void setImagePictureFromUri(Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
+		if (pictureUri == null) {
 			view.setImageResource(R.drawable.avatar);
 			return;
 		}
-		if (uri.getScheme().startsWith("http")) {
-			Bitmap bm = downloadBitmap(uri);
+		if (pictureUri.getScheme().startsWith("http")) {
+			Bitmap bm = downloadBitmap(pictureUri);
 			if (bm == null) view.setImageResource(R.drawable.avatar);
 			view.setImageBitmap(bm);
 		} else {
 			Bitmap bm = null;
 			try {
-				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),uri);
+				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), pictureUri);
 			} catch (IOException e) {
-				if(tUri != null){
+				if (thumbnailUri != null) {
 					try {
-						bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
+						bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), thumbnailUri);
 					} catch (IOException ie) {
-						view.setImageURI(tUri);
 					}
 				}
 			}
-			if(bm != null) {
+			if (bm != null) {
 				view.setImageBitmap(bm);
+			} else {
+				view.setImageResource(R.drawable.avatar);
 			}
-
 		}
 	}
 
@@ -455,6 +457,14 @@ public final class LinphoneUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static List<LinphoneContact> contactCursorToList(ContentResolver cr, Cursor cursor) {
+		ArrayList<LinphoneContact> list = new ArrayList<LinphoneContact>();
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+			list.add(Compatibility.getContact(cr, cursor, cursor.getPosition()));
+		}
+		return list;
 	}
 }
 

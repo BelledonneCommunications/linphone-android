@@ -1557,12 +1557,12 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(contactName.getContext().getContentResolver(), lAddress);
+		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(lAddress);
 		if (lContact == null) {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 			contactPicture.setImageResource(R.drawable.avatar);
 		} else {
-			contactName.setText(lContact.getName());
+			contactName.setText(lContact.getFullName());
 			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
 		}
 	}
@@ -1720,11 +1720,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		conferenceList.setId(index + 1);
 		TextView contact = (TextView) confView.findViewById(R.id.contactNameOrNumber);
 
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(),call.getRemoteAddress());
+		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(call.getRemoteAddress());
 		if (lContact == null) {
 			contact.setText(call.getRemoteAddress().getUserName());
 		} else {
-			contact.setText(lContact.getName());
+			contact.setText(lContact.getFullName());
 		}
 
 		registerCallDurationTimer(confView, call);

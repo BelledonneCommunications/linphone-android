@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.linphone.Contact;
+import org.linphone.LinphoneContact;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
 
@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.CheckBoxPreference;
@@ -208,7 +206,7 @@ public class ApiFivePlus {
 		return cursor.getColumnIndex(Data.DISPLAY_NAME);
 	}
 
-	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
+	public static LinphoneContact getContact(ContentResolver cr, Cursor cursor, int position) {
 		try {
 			if(cursor != null) {
 				cursor.moveToFirst();
@@ -222,16 +220,12 @@ public class ApiFivePlus {
 				Uri photo = getContactPhotoUri(id);
 				InputStream input = getContactPictureInputStream(cr, id);
 
-				Contact contact;
-				if (input == null) {
-					contact = new Contact(id, name);
-				} else {
-					Bitmap bm = null;
-					try {
-						bm = BitmapFactory.decodeStream(input);
-					} catch (OutOfMemoryError oome) {
-					}
-					contact = new Contact(id, name, photo, thumbnail, bm);
+				LinphoneContact contact = new LinphoneContact();
+				contact.setAndroidId(id);
+				contact.setFullName(name);
+				if (input != null) {
+					contact.setPhotoUri(photo);
+					contact.setThumbnailUri(thumbnail);
 				}
 
 				return contact;
@@ -270,9 +264,9 @@ public class ApiFivePlus {
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
 		if(cursor != null) {
-			Contact contact = getContact(cr, cursor, 0);
+			LinphoneContact contact = getContact(cr, cursor, 0);
 			if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
-				address.setDisplayName(contact.getName());
+				address.setDisplayName(contact.getFullName());
 				cursor.close();
 				return contact.getPhotoUri();
 			}

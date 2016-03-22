@@ -21,33 +21,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
-import android.app.Dialog;
-import android.app.Fragment;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Locale;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.BubbleChat;
 
-import android.media.ExifInterface;
-import android.support.v4.content.CursorLoader;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -55,13 +49,16 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -106,21 +103,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private LinphoneChatRoom chatRoom;
 	private String sipUri;
-	private String displayName;
-	private String pictureUri;
 	private EditText message;
 	private ImageView edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage, cancel;
 	private TextView contactName, remoteComposing;
 	private ImageView back, backToCall;
 	private EditText searchContactField;
 	private LinearLayout topBar, editList;
-	private LinearLayout textLayout;
 	private SearchContactsListAdapter searchAdapter;
 	private ListView messagesList, resultContactsSearch;
 	private LayoutInflater inflater;
 
 	private boolean isEditMode = false;
-	private Contact contact;
+	private LinphoneContact contact;
 	private Uri imageToUploadUri;
 	private String filePathToUpload;
 	private TextWatcher textWatcher;
@@ -152,8 +146,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		} else {
 			//Retrieve parameter from intent
 			sipUri = getArguments().getString("SipUri");
-			displayName = getArguments().getString("DisplayName");
-			pictureUri = getArguments().getString("PictureUri");
 		}
 
 		//Initialize UI
@@ -163,7 +155,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		resultContactsSearch = (ListView) view.findViewById(R.id.result_contacts);
 
 		editList = (LinearLayout) view.findViewById(R.id.edit_list);
-		textLayout = (LinearLayout) view.findViewById(R.id.message_layout);
 		topBar = (LinearLayout) view.findViewById(R.id.top_bar);
 
 		sendMessage = (ImageView) view.findViewById(R.id.send_message);
@@ -468,7 +459,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				chatRoom = lc.getChatRoom(lAddress);
 				chatRoom.markAsRead();
 				LinphoneActivity.instance().updateMissedChatCount();
-				contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+				contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 				if (chatRoom != null) {
 					displayChatHeader(lAddress);
 					dispayMessageList();
@@ -487,7 +478,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void displayChatHeader(LinphoneAddress address) {
 		if(contact != null) {
-			contactName.setText(contact.getName());
+			contactName.setText(contact.getFullName());
 		} else if(address != null){
 			contactName.setText(LinphoneUtils.getAddressDisplayName(address));
 		}
@@ -495,9 +486,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri) {
 		this.sipUri = newSipUri;
-		this.displayName = displayName;
-		this.pictureUri = pictureUri;
-
 		initChatRoom(sipUri);
 	}
 
@@ -732,7 +720,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		//Start new conversation in fast chat
 		if(newChatConversation && chatRoom == null) {
-			String address = searchContactField.getText().toString().toLowerCase();
+			String address = searchContactField.getText().toString().toLowerCase(Locale.getDefault());
 			if (address != null && !address.equals("")) {
 				initChatRoom(address);
 			}
@@ -748,7 +736,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			message.setListener(LinphoneManager.getInstance());
 			if (newChatConversation) {
-				exitNewConversationMode(contact, lAddress.asStringUriOnly(), null);
+				exitNewConversationMode(lAddress.asStringUriOnly());
 			} else {
 				invalidate();
 			}
@@ -860,12 +848,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	class FileUploadPrepareTask extends AsyncTask<Bitmap, Void, byte[]> {
 		private String path;
-		private int imageSize;
 		private ProgressDialog progressDialog;
 
 		public FileUploadPrepareTask(Context context, String fileToUploadPath, int size) {
 			path = fileToUploadPath;
-			imageSize = size;
 
 			progressDialog = new ProgressDialog(context);
 			progressDialog.setIndeterminate(true);
@@ -931,15 +917,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	private void showPopupMenuAskingImageSize(final String filePath) {
-		filePathToUpload = filePath;
-		try {
-			sendImage.showContextMenu();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
@@ -961,7 +938,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	//New conversation
-	private void exitNewConversationMode(Contact c, String address, String username){
+	private void exitNewConversationMode(String address) {
 		sipUri = address;
 		searchContactField.setVisibility(View.GONE);
 		resultContactsSearch.setVisibility(View.GONE);
@@ -1006,10 +983,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private class ContactAddress {
-		Contact contact;
+		LinphoneContact contact;
 		String address;
 
-		private ContactAddress(Contact c, String a){
+		private ContactAddress(LinphoneContact c, String a){
 			this.contact = c;
 			this.address = a;
 		}
@@ -1026,7 +1003,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			for (ContactAddress c : searchAdapter.contacts) {
 				String address = c.address;
 				if(address.startsWith("sip:")) address = address.substring(4);
-				if (c.contact.getName().toLowerCase().startsWith(search.toLowerCase()) || address.toLowerCase().startsWith(search.toLowerCase())) {
+				if (c.contact.getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault())) 
+						|| address.toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))) {
 					result.add(c);
 				}
 			}
@@ -1049,12 +1027,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 		}
 
-		public List<ContactAddress>getContactsList(){
+		public List<ContactAddress> getContactsList() {
 			List<ContactAddress> list = new ArrayList<ContactAddress>();
-			if(ContactsManager.getInstance().getAllContacts() != null) {
-				for (Contact con : ContactsManager.getInstance().getAllContacts()) {
-					for (String numberOrAddress : con.getNumbersOrAddresses()) {
-						list.add(new ContactAddress(con, numberOrAddress));
+			if(ContactsManager.getInstance().hasContacts()) {
+				for (LinphoneContact con : ContactsManager.getInstance().getContacts()) {
+					for (LinphoneNumberOrAddress noa : con.getNumbersOrAddresses()) {
+						list.add(new ContactAddress(con, noa.getValue()));
 					}
 				}
 			}
@@ -1092,10 +1070,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			final String a = contact.address;
-			final Contact c = contact.contact;
+			final LinphoneContact c = contact.contact;
 
 			TextView name = (TextView) view.findViewById(R.id.contact_name);
-			name.setText(c.getName());
+			name.setText(c.getFullName());
 
 			TextView address = (TextView) view.findViewById(R.id.contact_address);
 			address.setText(a);
@@ -1103,7 +1081,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					exitNewConversationMode(c, a, null);
+					exitNewConversationMode(a);
 				}
 			});
 

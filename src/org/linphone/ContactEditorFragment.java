@@ -21,38 +21,25 @@ package org.linphone;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.SyncFailedException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
+
 import org.linphone.mediastream.Version;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Shader;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.provider.ContactsContract;
-import android.app.Fragment;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -74,49 +61,43 @@ public class ContactEditorFragment extends Fragment {
 	private LinearLayout phoneNumbersSection, sipAddressesSection;
 	private EditText firstName, lastName;
 	private LayoutInflater inflater;
-	private static final int ADD_PHOTO = 1337;
 	
-	private boolean isNewContact = true;
-	private Contact contact;
-	private int contactID;
-	private List<NewOrUpdatedNumberOrAddress> numbersAndAddresses;
-	private ArrayList<ContentProviderOperation> ops;
+	private static final int ADD_PHOTO = 1337;
+	private static final int PHOTO_SIZE = 128;
+	
+	private boolean isNewContact;
+	private LinphoneContact contact;
+	private List<LinphoneNumberOrAddress> numbersAndAddresses;
 	private int firstSipAddressIndex = -1;
 	private LinearLayout sipAddresses, numbers;
 	private String newSipOrNumberToAdd;
-	private ContactsManager contactsManager;
-	private Uri imageToUploadUri;
-	private String fileToUploadPath;
-	private Bitmap imageToUpload;
-	private Bitmap bitmapUnknown;
-	byte[] photoToAdd;
+	private Uri pickedPhotoForContactUri;
+	private byte[] photoToAdd;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
 		
 		contact = null;
+		isNewContact = true;
+		
 		if (getArguments() != null) {
-			if (getArguments().getSerializable("Contact") != null) {
-				contact = (Contact) getArguments().getSerializable("Contact");
+			Serializable obj = getArguments().getSerializable("Contact");
+			if (obj != null) {
+				contact = (LinphoneContact) obj;
 				isNewContact = false;
-				contactID = Integer.parseInt(contact.getID());
-				contact.refresh(getActivity().getContentResolver());
 				if (getArguments().getString("NewSipAdress") != null) {
 					newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
 				}
-
 			} else if (getArguments().getString("NewSipAdress") != null) {
 				newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
-				isNewContact = true;
 			}
 		}
 
-		contactsManager = ContactsManager.getInstance();
-		
 		view = inflater.inflate(R.layout.contact_edit, container, false);
 		
 		phoneNumbersSection = (LinearLayout) view.findViewById(R.id.phone_numbers);
-		if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)) {
+		if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) || !ContactsManager.getInstance().hasContactsAccess()) {
+			//Currently linphone friends don't support phone numbers, so hide them
 			phoneNumbersSection.setVisibility(View.GONE);
 		}
 		
@@ -141,54 +122,36 @@ public class ContactEditorFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (isNewContact) {
-						boolean areAllFielsEmpty = true;
-						for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
-							if (nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals("")) {
-								areAllFielsEmpty = false;
-								break;
-							}
+					boolean areAllFielsEmpty = true;
+					for (LinphoneNumberOrAddress nounoa : numbersAndAddresses) {
+						if (nounoa.getValue() != null && !nounoa.getValue().equals("")) {
+							areAllFielsEmpty = false;
+							break;
 						}
-						if (areAllFielsEmpty) {
-							getFragmentManager().popBackStackImmediate();
-							return;
-						}
-					contactsManager.createNewContact(ops, firstName.getText().toString(), lastName.getText().toString());
-					setContactPhoto();
-				} else {
-					contactsManager.updateExistingContact(ops, contact, firstName.getText().toString(), lastName.getText().toString());
-					setContactPhoto();
+					}
+					if (areAllFielsEmpty) {
+						getFragmentManager().popBackStackImmediate();
+						return;
+					}
+					contact = LinphoneContact.createContact();
 				}
-
-				for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
-					numberOrAddress.save();
+				contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString());
+				if (photoToAdd != null) {
+					contact.setPhoto(photoToAdd);
 				}
+				for (LinphoneNumberOrAddress numberOrAddress : numbersAndAddresses) {
+					contact.addOrUpdateNumberOrAddress(numberOrAddress);
+				}
+				contact.save();
 
-		        try {
-					getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-					addLinphoneFriendIfNeeded();
-					removeLinphoneTagIfNeeded();
-					contactsManager.prepareContactsInBackground();
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		        }
-
-				if(isNewContact) {
-					getFragmentManager().popBackStackImmediate();
-				} else {
+				if (!isNewContact) {
 					if (LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet)) {
 						if(ContactsListFragment.isInstanciated()) {
 							ContactsListFragment.instance().invalidate();
 						}
-						getFragmentManager().popBackStackImmediate();
-					} else {
-						Contact updatedContact = contactsManager.findContactWithDisplayName(contactsManager.getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
-						if (updatedContact != null) {
-							LinphoneActivity.instance().displayContact(updatedContact, false);
-						} else {
-							LinphoneActivity.instance().displayContacts(false);
-						}
 					}
 				}
+				getFragmentManager().popBackStackImmediate();
 			}
 		});
 		
@@ -243,15 +206,16 @@ public class ContactEditorFragment extends Fragment {
 		});
 
 		if (!isNewContact) {
-			String fn = findContactFirstName(String.valueOf(contactID));
-			String ln = findContactLastName(String.valueOf(contactID));
+			String fn = contact.getFirstName();
+			String ln = contact.getLastName();
 			if (fn != null || ln != null) {
 				firstName.setText(fn);
 				lastName.setText(ln);
 			} else {
-				lastName.setText(contact.getName());
+				lastName.setText(contact.getFullName());
 				firstName.setText("");
 			}
+			
 			deleteContact.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -262,8 +226,7 @@ public class ContactEditorFragment extends Fragment {
 					delete.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View view) {
-							deleteExistingContact();
-							ContactsManager.getInstance().removeContactFromLists(getActivity().getContentResolver(), contact);
+							contact.delete();
 							LinphoneActivity.instance().displayContacts(false);
 							dialog.dismiss();
 						}
@@ -284,12 +247,11 @@ public class ContactEditorFragment extends Fragment {
 		}
 
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-		if (contact != null && contact.getPhotoUri() != null) {
-			InputStream input = Compatibility.getContactPictureInputStream(getActivity().getContentResolver(), contact.getID());
-			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
-        } else {
-        	contactPicture.setImageResource(R.drawable.avatar);
-        }
+		if (contact != null) {
+			LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+		} else {
+			contactPicture.setImageResource(R.drawable.avatar);
+		}
 
 		contactPicture.setOnClickListener(new OnClickListener() {
 			@Override
@@ -298,7 +260,7 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 
-		numbersAndAddresses = new ArrayList<NewOrUpdatedNumberOrAddress>();
+		numbersAndAddresses = new ArrayList<LinphoneNumberOrAddress>();
 		sipAddresses = initSipAddressFields(contact);
 		numbers = initNumbersFields(contact);
 
@@ -318,7 +280,6 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 
-		ops = new ArrayList<ContentProviderOperation>();
 		lastName.requestFocus();
 		
 		return view;
@@ -349,19 +310,19 @@ public class ContactEditorFragment extends Fragment {
 	}
 
 	private void pickImage() {
-		imageToUploadUri = null;
+		pickedPhotoForContactUri = null;
 		final List<Intent> cameraIntents = new ArrayList<Intent>();
 		final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
-		imageToUploadUri = Uri.fromFile(file);
+		pickedPhotoForContactUri = Uri.fromFile(file);
 		captureIntent.putExtra("crop", "true");
-		captureIntent.putExtra("outputX",256);
-		captureIntent.putExtra("outputY", 256);
+		captureIntent.putExtra("outputX", PHOTO_SIZE);
+		captureIntent.putExtra("outputY", PHOTO_SIZE);
 		captureIntent.putExtra("aspectX", 0);
 		captureIntent.putExtra("aspectY", 0);
 		captureIntent.putExtra("scale", true);
 		captureIntent.putExtra("return-data", false);
-		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
+		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, pickedPhotoForContactUri);
 		cameraIntents.add(captureIntent);
 
 		final Intent galleryIntent = new Intent();
@@ -374,44 +335,31 @@ public class ContactEditorFragment extends Fragment {
 		startActivityForResult(chooserIntent, ADD_PHOTO);
 	}
 
-	public String getRealPathFromURI(Uri contentUri) {
-		String[] proj = {MediaStore.Images.Media.DATA};
-		CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
-		Cursor cursor = loader.loadInBackground();
-		if (cursor != null && cursor.moveToFirst()) {
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			String result = cursor.getString(column_index);
-			cursor.close();
-			return result;
-		}
-		return null;
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
 			if (data != null && data.getExtras() != null && data.getExtras().get("data") != null) {
 				Bitmap bm = (Bitmap) data.getExtras().get("data");
-				showPopupMenuAskingImageSize(null, bm);
+				editContactPicture(null, bm);
 			}
 			else if (data != null && data.getData() != null) {
 				Uri selectedImageUri = data.getData();
 				try {
 					Bitmap selectedImage = MediaStore.Images.Media.getBitmap(LinphoneManager.getInstance().getContext().getContentResolver(), selectedImageUri);
-					selectedImage = Bitmap.createScaledBitmap(selectedImage, 256, 256, false);
-					showPopupMenuAskingImageSize(null, selectedImage);
+					selectedImage = Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
+					editContactPicture(null, selectedImage);
 				} catch (IOException e) { e.printStackTrace(); }
 			}
-			else if (imageToUploadUri != null) {
-				String filePath = imageToUploadUri.getPath();
-				showPopupMenuAskingImageSize(filePath, null);
+			else if (pickedPhotoForContactUri != null) {
+				String filePath = pickedPhotoForContactUri.getPath();
+				editContactPicture(filePath, null);
 			}
 			else {
 				File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
 				if (file.exists()) {
-					imageToUploadUri = Uri.fromFile(file);
-					String filePath = imageToUploadUri.getPath();
-					showPopupMenuAskingImageSize(filePath, null);
+					pickedPhotoForContactUri = Uri.fromFile(file);
+					String filePath = pickedPhotoForContactUri.getPath();
+					editContactPicture(filePath, null);
 				}
 			}
 		} else {
@@ -419,150 +367,25 @@ public class ContactEditorFragment extends Fragment {
 		}
 	}
 
-	private void deleteExistingContact() {
-		String select = ContactsContract.Data.CONTACT_ID + " = ?";
-		String[] args = new String[] { contact.getID() };
-
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
-						.withSelection(select, args)
-						.build()
-		);
-
-		try {
-			getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-			ContactsManager.getInstance().removeAllFriends(contact);
-		} catch (Exception e) {
-			Log.w(e.getMessage() + ":" + e.getStackTrace());
+	private void editContactPicture(String filePath, Bitmap image) {
+		if (image == null) {
+			image = BitmapFactory.decodeFile(filePath);
 		}
-	}
-
-	private void showPopupMenuAskingImageSize(final String filePath, final Bitmap image) {
-		fileToUploadPath = filePath;
-		imageToUpload = image;
-		editContactPicture(fileToUploadPath,imageToUpload);
-	}
-
-	private void editContactPicture(final String filePath, final Bitmap image) {
-		int SIZE_SMALL = 256;
-		int COMPRESSOR_QUALITY = 100;
-		Bitmap bitmapUnknown = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
-		Bitmap bm = null;
-
-		if(filePath != null){
-			int pixelsMax = SIZE_SMALL;
-			//Resize image
-			bm = BitmapFactory.decodeFile(filePath);
-			if (bm != null) {
-				if (bm.getWidth() > bm.getHeight() && bm.getWidth() > pixelsMax) {
-					bm = Bitmap.createScaledBitmap(bm, 256, 256, false);
-				}
-			}
-		} else if (image != null) {
-			bm = image;
-		}
-
-		// Rotate the bitmap if possible/needed, using EXIF data
-		try {
-			if (imageToUploadUri != null && filePath != null) {
-				ExifInterface exif = new ExifInterface(filePath);
-				int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-				Matrix matrix = new Matrix();
-				if (pictureOrientation == 6) {
-					matrix.postRotate(90);
-				} else if (pictureOrientation == 3) {
-					matrix.postRotate(180);
-				} else if (pictureOrientation == 8) {
-					matrix.postRotate(270);
-				}
-				bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		Bitmap bitmapRounded;
-		if(bm != null)
-		{
-			bitmapRounded = Bitmap.createScaledBitmap(bm,bitmapUnknown.getWidth(), bitmapUnknown.getWidth(), false);
-
-			Canvas canvas = new Canvas(bitmapRounded);
-			Paint paint = new Paint();
-			paint.setAntiAlias(true);
-			paint.setShader(new BitmapShader(bitmapRounded, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-			canvas.drawCircle(bitmapRounded.getWidth() / 2+0.7f, bitmapRounded.getHeight() / 2+0.7f,bitmapRounded.getWidth() / 2+0.1f, paint);
-			contactPicture.setImageBitmap(bitmapRounded);
-
-			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			bm.compress(Bitmap.CompressFormat.PNG,COMPRESSOR_QUALITY, outStream);
-			photoToAdd = outStream.toByteArray();
-		}
-	}
-
-
-	private void setContactPhoto(){
-		ContentResolver cr = getActivity().getContentResolver();
-		Uri updateUri = ContactsContract.Data.CONTENT_URI;
-
-		if(photoToAdd != null){
-			//New contact
-			if(isNewContact){
-				ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-								.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactID)
-								.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-								.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photoToAdd)
-								.build()
-				);
-			} else { //update contact picture
-				String w = ContactsContract.Data.CONTACT_ID + "='"
-						+ contact.getID() + "' AND "
-						+ ContactsContract.Data.MIMETYPE + " = '"
-						+ ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE + "'";
-
-				Cursor queryCursor = cr.query(updateUri,new String[] { ContactsContract.Data._ID}, w, null, null);
-				if (queryCursor == null) {
-					try {
-						throw new SyncFailedException("EE");
-					} catch (SyncFailedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					if(contact.getPhoto() == null) {
-						String rawContactId = ContactsManager.getInstance().findRawContactID(cr,String.valueOf(contactID));
-						ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-										.withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
-										.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-										.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photoToAdd)
-										.build()
-						);
-					}
-
-					if (queryCursor.moveToFirst()) { // otherwise no photo
-						int colIdx = queryCursor.getColumnIndex(ContactsContract.Data._ID);
-						long id = queryCursor.getLong(colIdx);
-
-
-						ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-								.withSelection(ContactsContract.Data._ID + "= ?",new String[] { String.valueOf(id) })
-								.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-								.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photoToAdd)
-								.build());
-					}
-					queryCursor.close();
-				}
-			}
-		}
+		
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.PNG , 75, stream);
+		photoToAdd = stream.toByteArray();
+		contactPicture.setImageBitmap(image);
 	}
 	
-	private LinearLayout initNumbersFields(final Contact contact) {
+	private LinearLayout initNumbersFields(final LinphoneContact contact) {
 		LinearLayout controls = (LinearLayout) view.findViewById(R.id.controls_numbers);
 		controls.removeAllViews();
 		
 		if (contact != null) {
-			for (String numberOrAddress : contact.getNumbersOrAddresses()) {
-				boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
-				if(!isSip) {
-					View view = displayNumberOrAddress(controls, numberOrAddress);
+			for (LinphoneNumberOrAddress numberOrAddress : contact.getNumbersOrAddresses()) {
+				if (!numberOrAddress.isSIPAddress()) {
+					View view = displayNumberOrAddress(controls, numberOrAddress.getValue());
 					if (view != null)
 						controls.addView(view);
 				}
@@ -585,15 +408,14 @@ public class ContactEditorFragment extends Fragment {
 		return controls;
 	}
 
-	private LinearLayout initSipAddressFields(final Contact contact) {
+	private LinearLayout initSipAddressFields(final LinphoneContact contact) {
 		LinearLayout controls = (LinearLayout) view.findViewById(R.id.controls_sip_address);
 		controls.removeAllViews();
 
 		if (contact != null) {
-			for (String numberOrAddress : contact.getNumbersOrAddresses()) {
-				boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
-				if(isSip) {
-					View view = displayNumberOrAddress(controls, numberOrAddress);
+			for (LinphoneNumberOrAddress numberOrAddress : contact.getNumbersOrAddresses()) {
+				if (numberOrAddress.isSIPAddress()) {
+					View view = displayNumberOrAddress(controls, numberOrAddress.getValue());
 					if (view != null)
 						controls.addView(view);
 				}
@@ -602,7 +424,7 @@ public class ContactEditorFragment extends Fragment {
 
 		if (newSipOrNumberToAdd != null) {
 			boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
-			if(isSip) {
+			if (isSip) {
 				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
 				if (view != null)
 					controls.addView(view);
@@ -637,17 +459,17 @@ public class ContactEditorFragment extends Fragment {
 				return null;
 		}
 		
-		NewOrUpdatedNumberOrAddress tempNounoa;
+		LinphoneNumberOrAddress tempNounoa;
 		if (forceAddNumber) {
-			tempNounoa = new NewOrUpdatedNumberOrAddress(isSip);
+			tempNounoa = new LinphoneNumberOrAddress(null, isSip);
 		} else {
 			if(isNewContact || newSipOrNumberToAdd != null) {
-				tempNounoa = new NewOrUpdatedNumberOrAddress(isSip, numberOrAddress);
+				tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSip);
 			} else {
-				tempNounoa = new NewOrUpdatedNumberOrAddress(numberOrAddress, isSip);
+				tempNounoa = new LinphoneNumberOrAddress(null, isSip, numberOrAddress);
 			}
 		}
-		final NewOrUpdatedNumberOrAddress nounoa = tempNounoa;
+		final LinphoneNumberOrAddress nounoa = tempNounoa;
 		numbersAndAddresses.add(nounoa);
 		
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
@@ -658,7 +480,7 @@ public class ContactEditorFragment extends Fragment {
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				nounoa.setNewNumberOrAddress(noa.getText().toString());
+				nounoa.setValue(noa.getText().toString());
 			}
 			
 			@Override
@@ -670,14 +492,16 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 		if (forceAddNumber) {
-			nounoa.setNewNumberOrAddress(noa.getText().toString());
+			nounoa.setValue(noa.getText().toString());
 		}
 		
 		ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				nounoa.delete();
+				if (contact != null) {
+					contact.removeNumberOrAddress(nounoa);
+				}
 				numbersAndAddresses.remove(nounoa);
 				view.setVisibility(View.GONE);
 
@@ -689,7 +513,7 @@ public class ContactEditorFragment extends Fragment {
 	@SuppressLint("InflateParams")
 	private void addEmptyRowToAllowNewNumberOrAddress(final LinearLayout controls, final boolean isSip) {
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
-		final NewOrUpdatedNumberOrAddress nounoa = new NewOrUpdatedNumberOrAddress(isSip);
+		final LinphoneNumberOrAddress nounoa = new LinphoneNumberOrAddress(null, isSip);
 		
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
 		numbersAndAddresses.add(nounoa);
@@ -699,7 +523,7 @@ public class ContactEditorFragment extends Fragment {
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				nounoa.setNewNumberOrAddress(noa.getText().toString());
+				nounoa.setValue(noa.getText().toString());
 			}
 			
 			@Override
@@ -715,252 +539,11 @@ public class ContactEditorFragment extends Fragment {
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				nounoa.delete();
 				numbersAndAddresses.remove(nounoa);
 				view.setVisibility(View.GONE);
 			}
-
 		});
 
-
 		controls.addView(view);
-	}
-	
-	private String findContactFirstName(String contactID) {
-		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-		          new String[]{ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME},
-		          ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?",
-		          new String[]{contactID, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE}, null);
-		if (c != null) {
-			String result = null;
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
-			}
-			c.close();
-			return result;
-		}
-		return null;
-	}
-	
-	private String findContactLastName(String contactID) {
-		Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-		          new String[]{ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME},
-		          ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?",
-		          new String[]{contactID, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE}, null);
-		if (c != null) {
-			String result = null;
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
-			}
-			c.close();
-			return result;
-		}
-		return null;
-	}
-
-	private void addLinphoneFriendIfNeeded(){
-		for (NewOrUpdatedNumberOrAddress numberOrAddress : numbersAndAddresses) {
-			if(numberOrAddress.newNumberOrAddress != null && numberOrAddress.isSipAddress) {
-				if(isNewContact){
-					Contact c = contactsManager.findContactWithDisplayName(ContactsManager.getInstance().getDisplayName(firstName.getText().toString(), lastName.getText().toString()));
-					if (c != null && !contactsManager.isContactHasAddress(c, numberOrAddress.newNumberOrAddress)) {
-						contactsManager.createNewFriend(c, numberOrAddress.newNumberOrAddress);
-					}
-				} else {
-					if (!contactsManager.isContactHasAddress(contact, numberOrAddress.newNumberOrAddress)){
-						if (numberOrAddress.oldNumberOrAddress == null) {
-							contactsManager.createNewFriend(contact, numberOrAddress.newNumberOrAddress);
-						} else {
-							if (contact.hasFriends())
-								contactsManager.updateFriend(numberOrAddress.oldNumberOrAddress, numberOrAddress.newNumberOrAddress);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private void removeLinphoneTagIfNeeded(){
-		if(!isNewContact) {
-			boolean areAllSipFielsEmpty = true;
-			for (NewOrUpdatedNumberOrAddress nounoa : numbersAndAddresses) {
-				if (!nounoa.isSipAddress && (nounoa.oldNumberOrAddress != null && !nounoa.oldNumberOrAddress.equals("") || nounoa.newNumberOrAddress != null && !nounoa.newNumberOrAddress.equals(""))) {
-					areAllSipFielsEmpty = false;
-					break;
-				}
-			}
-			if (areAllSipFielsEmpty && contactsManager.findRawLinphoneContactID(contact.getID()) != null) {
-				contactsManager.removeLinphoneContactTag(contact);
-			}
-		}
-	}
-	
-	class NewOrUpdatedNumberOrAddress {
-		private String oldNumberOrAddress;
-		private String newNumberOrAddress;
-		private boolean isSipAddress;
-		
-		public NewOrUpdatedNumberOrAddress() {
-			oldNumberOrAddress = null;
-			newNumberOrAddress = null;
-			isSipAddress = false;
-		}
-		
-		public NewOrUpdatedNumberOrAddress(boolean isSip) {
-			oldNumberOrAddress = null;
-			newNumberOrAddress = null;
-			isSipAddress = isSip;
-		}
-		
-		public NewOrUpdatedNumberOrAddress(String old, boolean isSip) {
-			oldNumberOrAddress = old;
-			newNumberOrAddress = null;
-			isSipAddress = isSip;
-		}
-		
-		public NewOrUpdatedNumberOrAddress(boolean isSip, String newSip) {
-			oldNumberOrAddress = null;
-			newNumberOrAddress = newSip;
-			isSipAddress = isSip;
-		}
-		
-		public void setNewNumberOrAddress(String newN) {
-			newNumberOrAddress = newN;
-		}
-		
-		public void save() {
-			if (newNumberOrAddress == null || newNumberOrAddress.equals(oldNumberOrAddress))
-				return;
-
-			if (oldNumberOrAddress == null) {
-				// New number to add
-				addNewNumber();
-			} else {
-				// Old number to update
-				updateNumber();
-			}
-		}
-		
-		public void delete() {
-			if(contact != null) {
-				if (isSipAddress) {
-					if (contact.hasFriends()) {
-						ContactsManager.getInstance().removeFriend(oldNumberOrAddress);
-					} else {
-						Compatibility.deleteSipAddressFromContact(ops, oldNumberOrAddress, String.valueOf(contactID));
-					}
-					if (getResources().getBoolean(R.bool.use_linphone_tag)) {
-						Compatibility.deleteLinphoneContactTag(ops, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
-					}
-				} else {
-					String select = ContactsContract.Data.CONTACT_ID + "=? AND "
-							+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND "
-							+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
-					String[] args = new String[]{String.valueOf(contactID), oldNumberOrAddress};
-
-					ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
-									.withSelection(select, args)
-									.build()
-					);
-				}
-			}
-		}
-		
-		private void addNewNumber() {
-			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
-				return;
-			}
-			
-			if (isNewContact) {
-				if (isSipAddress) {
-					if (newNumberOrAddress.startsWith("sip:"))
-						newNumberOrAddress = newNumberOrAddress.substring(4);
-					if(!newNumberOrAddress.contains("@")) {
-						//Use default proxy config domain if it exists
-						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-						if(lpc != null){
-							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
-						} else {
-							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
-						}
-					}
-					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
-				} else {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
-						.withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
-				        .build()
-				    );
-				}
-			} else {
-				String rawContactId = contactsManager.findRawContactID(getActivity().getContentResolver(),String.valueOf(contactID));
-				if (isSipAddress) {
-					if (newNumberOrAddress.startsWith("sip:"))
-						newNumberOrAddress = newNumberOrAddress.substring(4);
-					if(!newNumberOrAddress.contains("@")) {
-						//Use default proxy config domain if it exists
-						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-						if(lpc != null){
-							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
-						} else {
-							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
-						}
-					}
-
-					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
-					if (getResources().getBoolean(R.bool.use_linphone_tag)) {
-						Compatibility.addLinphoneContactTag(getActivity(), ops, newNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
-					}
-				} else {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
-					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
-				        .build()
-				    );
-				}
-			}
-		}
-		
-		private void updateNumber() {
-			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
-				return;
-			}
-			
-			if (isSipAddress) {
-				if (newNumberOrAddress.startsWith("sip:"))
-					newNumberOrAddress = newNumberOrAddress.substring(4);
-				if(!newNumberOrAddress.contains("@")) {
-					//Use default proxy config domain if it exists
-					LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-					if(lpc != null){
-						newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
-					} else {
-						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
-					}
-				}
-				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
-				if (getResources().getBoolean(R.bool.use_linphone_tag)) {
-					Compatibility.updateLinphoneContactTag(getActivity(), ops, newNumberOrAddress, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
-				}
-			} else {
-				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
-						+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
-				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
-				
-	            ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
-	        		.withSelection(select, args) 
-	                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-	                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-	                .build()
-	            );
-			}
-		}
 	}
 }

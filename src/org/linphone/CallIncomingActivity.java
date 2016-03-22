@@ -54,7 +54,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
 	private LinearLayout declineUnlock;
-	private StatusFragment status;
 	private boolean isActive;
 	private float answerX;
 	private float declineX;
@@ -233,10 +232,10 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			return;
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-			name.setText(contact.getName());
+			name.setText(contact.getFullName());
 		} else {
 			name.setText(LinphoneUtils.getAddressDisplayName(address));
 		}
@@ -265,10 +264,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-
-	public void updateStatusFragment(StatusFragment fragment) {
-		status = fragment;
 	}
 
 	private void decline() {
