@@ -27,6 +27,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriend.SubscribePolicy;
 import org.linphone.mediastream.Log;
 
 import android.content.ContentProviderOperation;
@@ -389,6 +390,9 @@ public class LinphoneContact implements Serializable {
 			if (friend == null) {
 				friend = LinphoneCoreFactory.instance().createLinphoneFriend();
 				friend.setRefKey(id);
+				// Disable subscribes for now
+				friend.enableSubscribes(false);
+				friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 				friend.setName(fullName);
 				if (hasSipAddress) {
 					for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact(id)) {
@@ -550,6 +554,9 @@ public class LinphoneContact implements Serializable {
 	private static LinphoneContact createLinphoneFriend() {
 		LinphoneContact contact = new LinphoneContact();
 		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend();
+		// Disable subscribes for now
+		friend.enableSubscribes(false);
+		friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 		contact.friend = friend;
 		return contact;
 	}
