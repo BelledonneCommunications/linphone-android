@@ -96,7 +96,8 @@ public class ContactEditorFragment extends Fragment {
 		view = inflater.inflate(R.layout.contact_edit, container, false);
 		
 		phoneNumbersSection = (LinearLayout) view.findViewById(R.id.phone_numbers);
-		if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)) {
+		if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) || !ContactsManager.getInstance().hasContactsAccess()) {
+			//Currently linphone friends don't support phone numbers, so hide them
 			phoneNumbersSection.setVisibility(View.GONE);
 		}
 		
@@ -538,162 +539,11 @@ public class ContactEditorFragment extends Fragment {
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (contact != null) {
-					contact.removeNumberOrAddress(nounoa);
-				}
 				numbersAndAddresses.remove(nounoa);
 				view.setVisibility(View.GONE);
 			}
-
 		});
 
 		controls.addView(view);
 	}
-	
-	/*class NewOrUpdatedNumberOrAddress {
-		private String oldNumberOrAddress;
-		private String newNumberOrAddress;
-		private boolean isSipAddress;
-		
-		public NewOrUpdatedNumberOrAddress() {
-			oldNumberOrAddress = null;
-			newNumberOrAddress = null;
-			isSipAddress = false;
-		}
-		
-		public NewOrUpdatedNumberOrAddress(boolean isSip) {
-			oldNumberOrAddress = null;
-			newNumberOrAddress = null;
-			isSipAddress = isSip;
-		}
-		
-		public NewOrUpdatedNumberOrAddress(String old, boolean isSip) {
-			oldNumberOrAddress = old;
-			newNumberOrAddress = null;
-			isSipAddress = isSip;
-		}
-		
-		public NewOrUpdatedNumberOrAddress(boolean isSip, String newSip) {
-			oldNumberOrAddress = null;
-			newNumberOrAddress = newSip;
-			isSipAddress = isSip;
-		}
-		
-		public void setNewNumberOrAddress(String newN) {
-			newNumberOrAddress = newN;
-		}
-		
-		public void save() {
-			if (newNumberOrAddress == null || newNumberOrAddress.equals(oldNumberOrAddress))
-				return;
-
-			if (oldNumberOrAddress == null) {
-				// New number to add
-				addNewNumber();
-			} else {
-				// Old number to update
-				updateNumber();
-			}
-		}
-		
-		public void delete() {
-		}
-		
-		private void addNewNumber() {
-			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
-				return;
-			}
-			
-			if (isNewContact) {
-				if (isSipAddress) {
-					if (newNumberOrAddress.startsWith("sip:"))
-						newNumberOrAddress = newNumberOrAddress.substring(4);
-					if(!newNumberOrAddress.contains("@")) {
-						//Use default proxy config domain if it exists
-						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-						if(lpc != null){
-							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
-						} else {
-							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
-						}
-					}
-					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress);
-				} else {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
-						.withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
-				        .build()
-				    );
-				}
-			} else {
-				String rawContactId = contactsManager.findRawContactID(getActivity().getContentResolver(),String.valueOf(contactID));
-				if (isSipAddress) {
-					if (newNumberOrAddress.startsWith("sip:"))
-						newNumberOrAddress = newNumberOrAddress.substring(4);
-					if(!newNumberOrAddress.contains("@")) {
-						//Use default proxy config domain if it exists
-						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-						if(lpc != null){
-							newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
-						} else {
-							newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
-						}
-					}
-
-					Compatibility.addSipAddressToContact(getActivity(), ops, newNumberOrAddress, rawContactId);
-					if (getResources().getBoolean(R.bool.use_linphone_tag)) {
-						Compatibility.addLinphoneContactTag(getActivity(), ops, newNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
-					}
-				} else {
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)         
-					    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)       
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,  ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM)
-				        .withValue(ContactsContract.CommonDataKinds.Phone.LABEL, getString(R.string.addressbook_label))
-				        .build()
-				    );
-				}
-			}
-		}
-		
-		private void updateNumber() {
-			if (newNumberOrAddress == null || newNumberOrAddress.length() == 0) {
-				return;
-			}
-			
-			if (isSipAddress) {
-				if (newNumberOrAddress.startsWith("sip:"))
-					newNumberOrAddress = newNumberOrAddress.substring(4);
-				if(!newNumberOrAddress.contains("@")) {
-					//Use default proxy config domain if it exists
-					LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-					if(lpc != null){
-						newNumberOrAddress = newNumberOrAddress + "@" + lpc.getDomain();
-					} else {
-						newNumberOrAddress = newNumberOrAddress + "@" + getResources().getString(R.string.default_domain);
-					}
-				}
-				Compatibility.updateSipAddressForContact(ops, oldNumberOrAddress, newNumberOrAddress, String.valueOf(contactID));
-				if (getResources().getBoolean(R.bool.use_linphone_tag)) {
-					Compatibility.updateLinphoneContactTag(getActivity(), ops, newNumberOrAddress, oldNumberOrAddress, contactsManager.findRawLinphoneContactID(String.valueOf(contactID)));
-				}
-			} else {
-				String select = ContactsContract.Data.CONTACT_ID + "=? AND " 
-						+ ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " 
-						+ ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
-				String[] args = new String[] { String.valueOf(contactID), oldNumberOrAddress };   
-				
-	            ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI) 
-	        		.withSelection(select, args) 
-	                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-	                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newNumberOrAddress)
-	                .build()
-	            );
-			}
-		}
-	}*/
 }
