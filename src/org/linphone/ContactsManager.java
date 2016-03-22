@@ -121,7 +121,7 @@ public class ContactsManager extends ContentObserver {
 	}
 	
 	public boolean hasContactsAccess() {
-		return hasContactAccess;
+		return hasContactAccess && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
@@ -195,13 +195,12 @@ public class ContactsManager extends ContentObserver {
 		
 		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
 			LinphoneContact contact = new LinphoneContact();
-			LinphoneAddress addr = friend.getAddress();
-			contact.setFullName(addr.getDisplayName());
-			contact.addNumberOrAddress(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
+			contact.setFriend(friend);
+			contact.refresh();
 			contacts.add(contact);
 		}
 
-		if (mAccount == null || !hasContactAccess) return contacts;
+		if (mAccount == null || !hasContactsAccess()) return contacts;
 		
 		Cursor c = Compatibility.getContactsCursor(contentResolver, null);
 		if (c != null) {

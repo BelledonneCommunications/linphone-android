@@ -12,7 +12,7 @@
 	<bool name="orientation_portrait_only">false</bool>
 	<bool name="show_statusbar_only_on_dialer">false</bool>
 	<bool name="replace_assistant_with_old_interface">false</bool>
-
+	<bool name="force_use_of_linphone_friends">false</bool>
 
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 

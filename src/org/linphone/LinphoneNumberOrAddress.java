@@ -48,6 +48,10 @@ public class LinphoneNumberOrAddress implements Serializable {
 	public String getOldValue() {
 		return oldValueForUpdatePurpose;
 	}
+
+	public void setOldValue(String v) {
+		oldValueForUpdatePurpose = v;
+	}
 	
 	public String getValue() {
 		return value;
