@@ -502,6 +502,9 @@ public class ContactEditorFragment extends Fragment {
 		}
 		
 		ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
+		if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
+			delete.setVisibility(View.GONE);
+		}
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -542,6 +545,9 @@ public class ContactEditorFragment extends Fragment {
 		});
 		
 		final ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
+		if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
+			delete.setVisibility(View.GONE);
+		}
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
