@@ -265,6 +265,9 @@ public class ContactEditorFragment extends Fragment {
 		numbers = initNumbersFields(contact);
 
 		addSipAddress = (ImageView) view.findViewById(R.id.add_address_field);
+		if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
+			addSipAddress.setVisibility(View.GONE);
+		}
 		addSipAddress.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -273,6 +276,9 @@ public class ContactEditorFragment extends Fragment {
 		});
 
 		addNumber = (ImageView) view.findViewById(R.id.add_number_field);
+		if (getResources().getBoolean(R.bool.allow_only_one_phone_number)) {
+			addNumber.setVisibility(View.GONE);
+		}
 		addNumber.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
