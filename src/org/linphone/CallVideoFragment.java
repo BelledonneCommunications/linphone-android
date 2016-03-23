@@ -259,6 +259,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 	@Override
 	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 		inCallActivity = (CallActivity) activity;
 		if (inCallActivity != null) {
 			inCallActivity.bindVideoFragment(this);
