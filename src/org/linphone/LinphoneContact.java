@@ -409,7 +409,7 @@ public class LinphoneContact implements Serializable {
 					}
 				}
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				if (lc != null) {
+				if (lc != null && friend.getAddress() != null) {
 					try {
 						lc.addFriend(friend);
 					} catch (LinphoneCoreException e) {

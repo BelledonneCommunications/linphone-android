@@ -551,11 +551,17 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		@Override
 		public int getPositionForSection(int sectionIndex) {
+			if (sectionIndex >= sections.length || sectionIndex < 0) {
+				return 0;
+			}
 			return map.get(sections[sectionIndex]);
 		}
 
 		@Override
 		public int getSectionForPosition(int position) {
+			if (position >= contacts.size() || position < 0) {
+				return 0;
+			}
 			LinphoneContact contact = contacts.get(position);
 			String letter = contact.getFullName().substring(0, 1);
 			return sectionsList.indexOf(letter);
