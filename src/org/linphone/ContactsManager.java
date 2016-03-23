@@ -24,7 +24,9 @@ import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import android.accounts.Account;
@@ -166,9 +168,20 @@ public class ContactsManager extends ContentObserver {
 		String sipUri = address.asStringUriOnly();
 		String username = address.getUserName();
 		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LinphoneProxyConfig lpc = null;
+		if (lc != null) {
+			lpc = lc.getDefaultProxyConfig();
+		}
+		
 		for (LinphoneContact c: getContacts()) {
 			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
-				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
+				String normalized = null;
+				if (lpc != null) {
+					normalized = lpc.normalizePhoneNumber(noa.getValue());
+				}
+				
+				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (normalized != null && !noa.isSIPAddress() && normalized.equals(username)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
 					return c;
 				}
 			}

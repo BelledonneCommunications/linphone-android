@@ -39,7 +39,6 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -51,11 +50,9 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -457,14 +454,6 @@ public final class LinphoneUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static List<LinphoneContact> contactCursorToList(ContentResolver cr, Cursor cursor) {
-		ArrayList<LinphoneContact> list = new ArrayList<LinphoneContact>();
-		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			list.add(Compatibility.getContact(cr, cursor, cursor.getPosition()));
-		}
-		return list;
 	}
 }
 

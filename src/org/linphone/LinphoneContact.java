@@ -501,7 +501,12 @@ public class LinphoneContact implements Serializable {
 					
 					if (found) {
 						String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)); // PHONE_NUMBER == SIP_ADDRESS == "data1"...
-						result.add(new LinphoneNumberOrAddress(number, isSIP));
+						if (number != null && number.length() > 0) {
+							if (isSIP && !number.startsWith("sip:")) {
+								number = "sip:" + number;
+							}
+							result.add(new LinphoneNumberOrAddress(number, isSIP));
+						}
 					}
 				}
 			}
