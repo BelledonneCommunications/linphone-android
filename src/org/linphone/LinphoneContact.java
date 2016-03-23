@@ -378,9 +378,7 @@ public class LinphoneContact implements Serializable {
 			}
 		} else if (isAndroidContact()) {
 			String id = getAndroidId();
-			fullName = getName(id);
-			lastName = getContactLastName(id);
-			firstName = getContactFirstName(id);
+			getContactNames(id);
 			setThumbnailUri(getContactPictureUri(id));
 			setPhotoUri(getContactPhotoUri(id));
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact(id)) {
@@ -395,7 +393,7 @@ public class LinphoneContact implements Serializable {
 				friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 				friend.setName(fullName);
 				if (hasSipAddress) {
-					for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact(id)) {
+					for (LinphoneNumberOrAddress noa : addresses) {
 						if (noa.isSIPAddress()) {
 							try {
 								LinphoneAddress addr = LinphoneManager.getLc().interpretUrl(noa.getValue());
@@ -439,11 +437,6 @@ public class LinphoneContact implements Serializable {
 		return createLinphoneFriend();
 	}
 	
-	private Uri getContactUri(String id) {
-		Uri person = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, id);
-		return person;
-	}
-	
 	private Uri getContactPictureUri(String id) {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
@@ -453,44 +446,21 @@ public class LinphoneContact implements Serializable {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
 	}
-
-	private String getContactFirstName(String id) {
-		String result = null;
+	
+	private void getContactNames(String id) {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
-		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, new String[]{ ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME }, ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?", new String[]{ id, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE }, null);
+		String[] proj = new String[]{ ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ContactsContract.Contacts.DISPLAY_NAME };
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?";
+		String[] args = new String[]{ id, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE };
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, proj, select, args, null);
 		if (c != null) {
 			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+				firstName = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+				lastName = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+	        	fullName = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 			}
 			c.close();
 		}
-		return result;
-	}
-	
-	private String getContactLastName(String id) {
-		String result = null;
-		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
-		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, new String[]{ ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME }, ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?", new String[]{ id, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE }, null);
-		if (c != null) {
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
-			}
-			c.close();
-		}
-		return result;
-	}
-	
-	private String getName(String id) {
-		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
-		Cursor c = resolver.query(getContactUri(id), null, null, null, null);
-		String name = null;
-		if (c != null) {
-	        if (c.moveToFirst()) {
-	        	name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-	        }
-	        c.close();
-		}
-		return name;
 	}
 	
 	private String findRawContactID(String id) {
@@ -513,26 +483,27 @@ public class LinphoneContact implements Serializable {
 		List<LinphoneNumberOrAddress> result = new ArrayList<LinphoneNumberOrAddress>();
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		
-		Uri uri = ContactsContract.Data.CONTENT_URI;
-		String[] projection;
-
-		// SIP addresses
-		String selection2 = new StringBuilder().append(ContactsContract.Data.CONTACT_ID).append(" = ? AND ").append(ContactsContract.Data.MIMETYPE).append(" = '").append(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE).append("'").toString();
-		projection = new String[] { ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS };
-		Cursor c = resolver.query(uri, projection, selection2, new String[]{ id }, null);
+		String select = ContactsContract.Data.CONTACT_ID + " =? AND (" + ContactsContract.Data.MIMETYPE + "=? OR " + ContactsContract.Data.MIMETYPE + "=?)";
+		String[] projection = new String[] { ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, ContactsContract.Data.MIMETYPE }; // PHONE_NUMBER == SIP_ADDRESS == "data1"...
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ id, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE }, null);
 		if (c != null) {
 			while (c.moveToNext()) {
-				result.add(new LinphoneNumberOrAddress("sip:" + c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)), true)); 
-			}
-			c.close();
-		}
-
-		// Phone Numbers
-		c = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER }, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
-		if (c != null) {
-			while (c.moveToNext()) {
-				String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				result.add(new LinphoneNumberOrAddress(number, false));
+				String mime = c.getString(c.getColumnIndex(ContactsContract.Data.MIMETYPE));
+				if (mime != null && mime.length() > 0) {
+					boolean found = false;
+					boolean isSIP = false;
+					if (mime.equals(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)) {
+						found = true;
+						isSIP = true;
+					} else if (mime.equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
+						found = true;
+					}
+					
+					if (found) {
+						String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)); // PHONE_NUMBER == SIP_ADDRESS == "data1"...
+						result.add(new LinphoneNumberOrAddress(number, isSIP));
+					}
+				}
 			}
 			c.close();
 		}
