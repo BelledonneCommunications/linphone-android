@@ -258,7 +258,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putString("messageDraft", message.getText().toString());
+		if (message != null) {
+			outState.putString("messageDraft", message.getText().toString());
+		}
 		super.onSaveInstanceState(outState);
 	}
 
