@@ -333,6 +333,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			this.history = history;
 			this.context = context;
 		}
+		
+		public void destroy() {
+			this.history = null;
+		}
 
 		public void refreshHistory() {
 			this.history = null;
@@ -473,6 +477,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void dispayMessageList() {
 		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		if(chatRoom != null) {
+			if (adapter != null) adapter.destroy();
 			adapter = new ChatMessageAdapter(getActivity(), chatRoom.getHistory());
 			messagesList.setAdapter(adapter);
 		}
@@ -779,7 +784,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private LinphoneChatMessage getMessageForId(int id) {
-		for (LinphoneChatMessage message : chatRoom.getHistory()) {
+		if (adapter == null) return null;
+		for (int i = 0; i < adapter.getCount(); i++) {
+			LinphoneChatMessage message = adapter.getItem(i);
 			if (message.getStorageId() == id) {
 				return message;
 			}
