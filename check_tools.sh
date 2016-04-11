@@ -18,7 +18,12 @@ check_installed() {
 for prog in automake autoconf pkg-config java ant yasm nasm wget; do
 	check_installed "$prog" "it"
 done
-check_installed "libtoolize" "libtool"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then #OSX
+	check_installed "libtool" "libtool"
+else
+	check_installed "libtoolize" "libtool"
+fi
 check_installed "ndk-build" "android NDK"
 if check_installed "android" "android SDK"; then
 	check_installed "adb" "android SDK platform tools"
