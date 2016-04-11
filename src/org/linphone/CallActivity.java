@@ -33,12 +33,14 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -53,6 +55,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -78,9 +81,11 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class CallActivity extends Activity implements OnClickListener, SensorEventListener {
+public class CallActivity extends Activity implements OnClickListener, SensorEventListener, ActivityCompat.OnRequestPermissionsResultCallback {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
+	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
+	private static final int PERMISSIONS_ENABLED_CAMERA = 203;
 
 	private static CallActivity instance;
 
@@ -128,6 +133,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
+		
+		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 		setContentView(R.layout.call);
@@ -160,7 +169,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
 		mListener = new LinphoneCoreListenerBase(){
-
 			@Override
 			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -196,15 +204,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 				if (state == State.StreamsRunning) {
 					switchVideo(isVideoEnabled(call));
-					//Check media in progress
-					if(!call.mediaInProgress()){
-						if(LinphonePreferences.instance().isVideoEnabled()) {
-							enabledVideoButton(true);
-						}
-						enabledPauseButton(true);
-					} else {
-						enabledPauseButton(false);
-					}
 					enableAndRefreshInCallActions();
 
 					if (status != null) {
@@ -218,22 +217,31 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
 					if (!videoEnabled) {
 						acceptCallUpdate(false);
-						return;
 					}
 
 					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
 					boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
 					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
 					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-						showAcceptCallUpdateDialog();
+							showAcceptCallUpdateDialog();
+							timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
+								public void onTick(long millisUntilFinished) { }
+								public void onFinish() {
+									//TODO dismiss dialog
+									acceptCallUpdate(false);
+								}
+							}.start();
 
-						timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
-							public void onTick(long millisUntilFinished) { }
-							public void onFinish() {
-								//TODO dismiss dialog
-								acceptCallUpdate(false);
-							}
-						}.start();
+							/*showAcceptCallUpdateDialog();
+
+							timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
+								public void onTick(long millisUntilFinished) { }
+								public void onFinish() {
+									//TODO dismiss dialog
+
+								}
+							}.start();*/
+
 					}
 //        			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
 //        				mHandler.post(new Runnable() {
@@ -442,6 +450,37 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		LinphoneManager.getInstance().changeStatusToOnThePhone();
 	}
 
+	public void checkAndRequestPermission(String permission, int result) {
+		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			if (!ActivityCompat.shouldShowRequestPermissionRationale(this,permission)){
+				ActivityCompat.requestPermissions(this, new String[]{permission}, result);
+			}
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_CAMERA:
+				UIThreadDispatcher.dispatch(new Runnable() {
+					@Override
+					public void run() {
+						acceptCallUpdate(true);
+					}
+				});
+				break;
+			case PERMISSIONS_ENABLED_CAMERA:
+				UIThreadDispatcher.dispatch(new Runnable() {
+					@Override
+					public void run() {
+						enabledOrDisabledVideo(false);
+					}
+				});
+				break;
+		}
+		LinphonePreferences.instance().neverAskCameraPerm();
+	}
+
 	public void createInCallStats() {
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
 		menu = (ImageView) findViewById(R.id.call_quality);
@@ -472,17 +511,18 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		//Enabled transfer button
 		if(isTransferAllowed)
-			transfer.setEnabled(true);
+			enabledTransferButton(true);
 
 		//Enable conference button
 		if(LinphoneManager.getLc().getCallsNb() > 1 && LinphoneManager.getLc().getCallsNb() > confsize) {
-			conference.setEnabled(true);
+			enabledConferenceButton(true);
 		} else {
-			conference.setEnabled(false);
+			enabledConferenceButton(false);
 		}
 
 		refreshInCallActions();
 		refreshCallList(getResources());
+		enableAndRefreshInCallActions();
 	}
 
 	private void refreshInCallActions() {
@@ -494,10 +534,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					video.setImageResource(R.drawable.camera);
 					videoProgress.setVisibility(View.INVISIBLE);
 				} else {
-					video.setImageResource(R.drawable.camera_default);
+					video.setImageResource(R.drawable.camera_button);
 				}
 			} else {
-				video.setImageResource(R.drawable.camera_default);
+				video.setImageResource(R.drawable.camera_button);
 			}
 		}
 
@@ -534,12 +574,35 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void enableAndRefreshInCallActions() {
-		addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls());
-		transfer.setEnabled(getResources().getBoolean(R.bool.allow_transfers));
+		int confsize = 0;
+
+		if(LinphoneManager.getLc().isInConference()) {
+			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().isInConference() ? 1 : 0);
+		}
+
+		//Enabled transfer button
+		if(isTransferAllowed  && !LinphoneManager.getLc().soundResourcesLocked())
+			enabledTransferButton(true);
+
+		//Enable conference button
+		if(LinphoneManager.getLc().getCallsNb() > 1 && LinphoneManager.getLc().getCallsNb() > confsize && !LinphoneManager.getLc().soundResourcesLocked()) {
+			enabledConferenceButton(true);
+		} else {
+			enabledConferenceButton(false);
+		}
+
+		addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls() && !LinphoneManager.getLc().soundResourcesLocked());
 		options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
 
 		if(LinphoneManager.getLc().getCurrentCall() != null && LinphonePreferences.instance().isVideoEnabled() && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()) {
 			enabledVideoButton(true);
+		} else {
+			enabledVideoButton(false);
+		}
+		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()){
+			enabledPauseButton(true);
+		} else {
+			enabledPauseButton(false);
 		}
 		micro.setEnabled(true);
 		if(!isTablet()){
@@ -548,7 +611,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		transfer.setEnabled(true);
 		pause.setEnabled(true);
 		dialer.setEnabled(true);
-		conference.setEnabled(true);
+		enabledConferenceButton(true);
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -564,7 +627,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		if (id == R.id.video) {
-			enabledOrDisabledVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
+			if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+				enabledOrDisabledVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
+			} else {
+				checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
+			}
 		}
 		else if (id == R.id.micro) {
 			toggleMicro();
@@ -643,10 +710,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void enabledVideoButton(boolean enabled){
 		if(enabled) {
 			video.setEnabled(true);
-			video.setAlpha(1f);
 		} else {
 			video.setEnabled(false);
-			video.setAlpha(0.3f);
+			video.setAlpha(0.2f);
 		}
 	}
 
@@ -893,6 +959,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					if (cameraNumber > 1) {
 						switchCamera.startAnimation(slideInTopToBottom);
 					}
+					pause.startAnimation(slideInTopToBottom);
 				}
 			}
 			resetControlsHidingCallBack();
@@ -914,6 +981,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 						video.setEnabled(true);
 						transfer.setVisibility(View.INVISIBLE);
 						addCall.setVisibility(View.INVISIBLE);
+						conference.setVisibility(View.INVISIBLE);
 						displayVideoCall(false);
 						numpad.setVisibility(View.GONE);
 						options.setImageResource(R.drawable.options_default);
@@ -934,6 +1002,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 								video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
 								transfer.setVisibility(View.INVISIBLE);
 								addCall.setVisibility(View.INVISIBLE);
+								conference.setVisibility(View.INVISIBLE);
 								displayVideoCall(false);
 								numpad.setVisibility(View.GONE);
 								options.setImageResource(R.drawable.options_default);
@@ -944,6 +1013,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 						if (cameraNumber > 1) {
 							switchCamera.startAnimation(slideOutBottomToTop);
 						}
+						pause.startAnimation(slideOutBottomToTop);
 					}
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);
@@ -1040,6 +1110,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					transfer.setVisibility(View.INVISIBLE);
 				}
 				addCall.setVisibility(View.INVISIBLE);
+				conference.setVisibility(View.INVISIBLE);
 				animation.setAnimationListener(null);
 			}
 		});
@@ -1047,6 +1118,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			transfer.startAnimation(animation);
 		}
 		addCall.startAnimation(animation);
+		conference.startAnimation(animation);
 	}
 
 	private void hideAnimatedLandscapeCallOptions() {
@@ -1065,6 +1137,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				public void onAnimationEnd(Animation animation) {
 					transfer.setAnimation(null);
 					transfer.setVisibility(View.INVISIBLE);
+
 					animation = AnimationUtils.loadAnimation(CallActivity.this, R.anim.slide_out_top_to_bottom); // Reload animation to prevent transfer button to blink
 					animation.setAnimationListener(new AnimationListener() {
 						@Override
@@ -1084,6 +1157,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				}
 			});
 			transfer.startAnimation(animation);
+			conference.startAnimation(animation);
 		} else {
 			animation.setAnimationListener(new AnimationListener() {
 				@Override
@@ -1097,9 +1171,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					addCall.setVisibility(View.INVISIBLE);
+					conference.setVisibility(View.INVISIBLE);
 				}
 			});
 			addCall.startAnimation(animation);
+			conference.startAnimation(animation);
 		}
 	}
 
@@ -1116,17 +1192,19 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				options.setBackgroundResource(R.drawable.options);
+				options.setBackgroundResource(R.drawable.options_default);
 				if (isTransferAllowed) {
 					transfer.setVisibility(View.VISIBLE);
 				}
 				addCall.setVisibility(View.VISIBLE);
+				conference.setVisibility(View.VISIBLE);
 				animation.setAnimationListener(null);
 			}
 		});
 		if (isTransferAllowed) {
 			transfer.startAnimation(animation);
 		}
+		conference.startAnimation(animation);
 		addCall.startAnimation(animation);
 	}
 
@@ -1144,8 +1222,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				addCall.setAnimation(null);
-				options.setBackgroundResource(R.drawable.options);
+				options.setBackgroundResource(R.drawable.options_default);
 				addCall.setVisibility(View.VISIBLE);
+				conference.setVisibility(View.VISIBLE);
 				if (isTransferAllowed) {
 					animation.setAnimationListener(new AnimationListener() {
 						@Override
@@ -1163,6 +1242,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					});
 					transfer.startAnimation(animation);
 				}
+				conference.startAnimation(animation);
 			}
 		});
 		addCall.startAnimation(animation);
@@ -1171,9 +1251,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void hideOrDisplayAudioRoutes()
 	{
 		if (routeSpeaker.getVisibility() == View.VISIBLE) {
-			routeSpeaker.setVisibility(View.GONE);
-			routeBluetooth.setVisibility(View.GONE);
-			routeEarpiece.setVisibility(View.GONE);
+			routeSpeaker.setVisibility(View.INVISIBLE);
+			routeBluetooth.setVisibility(View.INVISIBLE);
+			routeEarpiece.setVisibility(View.INVISIBLE);
 		} else {
 			routeSpeaker.setVisibility(View.VISIBLE);
 			routeBluetooth.setVisibility(View.VISIBLE);
@@ -1303,7 +1383,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		TextView customText = (TextView) dialog.findViewById(R.id.customText);
 		customText.setText(getResources().getString(R.string.add_video_dialog));
-		Button delete = (Button) dialog.findViewById(R.id.delete);
+		Button delete = (Button) dialog.findViewById(R.id.delete_button);
 		delete.setText(R.string.accept);
 		Button cancel = (Button) dialog.findViewById(R.id.cancel);
 		cancel.setText(R.string.decline);
@@ -1311,19 +1391,22 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (CallActivity.isInstanciated()) {
-					Log.d("Call Update Accepted");
+				if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().cameraPermAsked()) {
 					CallActivity.instance().acceptCallUpdate(true);
+				} else {
+					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
 				}
+
 				dialog.dismiss();
 			}
 		});
 
-		cancel.setOnClickListener(new OnClickListener() {
+		cancel.setOnClickListener(new
+
+		OnClickListener() {
 			@Override
-			public void onClick(View view) {
+			public void onClick (View view){
 				if (CallActivity.isInstanciated()) {
-					Log.d("Call Update Denied");
 					CallActivity.instance().acceptCallUpdate(false);
 				}
 				dialog.dismiss();
@@ -1348,10 +1431,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
 			removeCallbacks();
-		}
-
-		if(LinphoneManager.getLc().getCurrentCall() != null && !LinphoneManager.getLc().getCurrentCall().mediaInProgress()){
-			enabledPauseButton(true);
 		}
 	}
 
@@ -1415,6 +1494,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 		mControls = null;
 		mControlsHandler = null;
+
+		mSensorManager.unregisterListener(this);
 
 		unbindDrawables(findViewById(R.id.topLayout));
 		instance = null;
@@ -1493,6 +1574,17 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		callsList.addView(callView);
 	}
 
+	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
+		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(contactName.getContext().getContentResolver(), lAddress);
+		if (lContact == null) {
+			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+			contactPicture.setImageResource(R.drawable.avatar);
+		} else {
+			contactName.setText(lContact.getName());
+			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
+		}
+	}
+
 	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
 		boolean isCallPaused, isInConference;
 		ImageView callState = (ImageView) callView.findViewById(R.id.call_pause);
@@ -1537,6 +1629,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 	public void refreshCallList(Resources resources) {
 		isConferenceRunning = LinphoneManager.getLc().isInConference();
+		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 
 		//MultiCalls
 		if(LinphoneManager.getLc().getCallsNb() > 1){
@@ -1546,7 +1639,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		//Active call
 		if(LinphoneManager.getLc().getCurrentCall() != null) {
 			displayNoCurrentCall(false);
-			if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()) && !isConferenceRunning) {
+			if(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()) && !isConferenceRunning && pausedCalls.size() == 0) {
 				displayVideoCall(false);
 			} else {
 				displayAudioCall();
@@ -1600,14 +1693,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		//Paused by remote
-		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 		if (pausedCalls.size() == 1) {
 			displayCallPaused(true);
 		} else {
 			displayCallPaused(false);
 		}
-
-
 	}
 
 	//Conference
@@ -1630,10 +1720,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	public void pauseOrResumeConference() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (lc.isInConference()) {
-			//conferenceStatus.setImageResource(R.drawable.pause_big_over);
+			conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
 			lc.leaveConference();
 		} else {
-			//conferenceStatus.setImageResource(R.drawable.pause_big_default);
+			conferenceStatus.setImageResource(R.drawable.pause_big_default);
 			lc.enterConference();
 		}
 		refreshCallList(getResources());
@@ -1647,8 +1737,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		/*Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(),call.getRemoteAddress());
 		if (lContact == null) {
 
+		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(getContentResolver(),call.getRemoteAddress());
+		if (lContact == null) {
+			contact.setText(call.getRemoteAddress().getUserName());
 		} else {
-			contact.setText(lContact.getName());
+			contact.setText(lContact.getFullName());
 		}*/
 
 		registerCallDurationTimer(confView, call);

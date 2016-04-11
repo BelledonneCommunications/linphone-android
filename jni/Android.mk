@@ -65,6 +65,8 @@ include $(linphone-root-dir)/submodules/externals/build/polarssl/Android.mk
 include $(linphone-root-dir)/submodules/bctoolbox/build/android/Android-polarssl.mk
 endif
 
+include $(linphone-root-dir)/submodules/bctoolbox/build/android/Android-tester.mk
+
 ifeq ($(BUILD_MEDIASTREAMER2_SDK), 0)
 include $(linphone-root-dir)/submodules/externals/build/antlr3/Android.mk
 include $(linphone-root-dir)/submodules/belle-sip/build/android/Android.mk

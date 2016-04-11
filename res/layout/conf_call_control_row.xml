@@ -49,9 +49,9 @@
 	<ImageView
 		android:id="@+id/quitConference"
 		android:src="@drawable/conference_exit_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:padding="20dp"
+		android:contentDescription="@string/content_description_exit_conference"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:gravity="center_vertical"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true" />

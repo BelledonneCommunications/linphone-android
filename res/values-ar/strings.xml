@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">لِنْفُونْ</string>
+  <string name="service_name">خدمة لِنْفُونْ</string>
+  <string name="addressbook_label">لِنْفُونْ</string>
+  <string name="notification_title">لِنْفُونْ</string>
+  <string name="wait_dialog_text">يجري التشغيل</string>
+  <string name="notification_registered">‫%s مُسجَّل‬</string>
+  <string name="notification_register_failure">‫فشل %s في التسجيل‬</string>
+  <string name="tunnel_host"></string>
+  <!--Common-->
+  <string name="username">إسم المستخدم</string>
+  <string name="display_name">الإسم المعروض</string>
+  <string name="password">كلمة السر</string>
+  <string name="confirm_password">تأكيد كلمة السر</string>
+  <string name="domain">النطاق</string>
+  <string name="remote_provisioning_url">عنوان الموقع</string>
+  <string name="email">البريد الإلكتروني</string>
+  <string name="delete_text">أأنت متأكد من حذف تحديدك ؟</string>
+  <string name="delete">حذف</string>
+  <string name="retry">إعادة المحاولة</string>
+  <string name="cancel">إلغاء</string>
+  <string name="accept">قبول</string>
+  <string name="continue_text">استمرار</string>
+  <string name="about">حول</string>
+  <string name="deny">رفض</string>
+  <string name="no_account">لم يُهيَّأ أي حساب</string>
+  <string name="search">بحث</string>
+  <string name="outgoing">الصادرة</string>
+  <string name="incoming">الواردة</string>
+  <string name="missed">الفائتة</string>
+  <string name="settings">اﻹعدادات</string>
+  <string name="connect">الاتصال</string>
+  <string name="decline">رفض</string>
+  <string name="conference">اجتماع</string>
+  <!--Launch screen-->
+  <string name="app_description">‫الزبون SIP <i>الحر</i>‬</string>
+  <!--Assistant-->
+  <string name="welcome">مرحبا</string>
+  <string name="assistant">المرشد</string>
+  <string name="assistant_create_account">إنشاء الحساب</string>
+  <string name="assistant_finish">أنهِ التهئية</string>
+  <string name="assistant_validate_account">لقد أُنشِيء حسابك. يُرجى الاطلاع على رسائل بريدك الإلكتروني لتأكيد حسابك. حالما تنتهي من ذلك، عُد إلى هنا واضغط على الزر.</string>
+  <string name="assistant_welcome_desc">سيمكنك هذا المرشد من إعداد حسابك SIP لإجراء المكالمات.</string>
+  <string name="assistant_linphone_login_desc">أدخِل اسم المستخدم وكلمة السر لحساب لِنْفُونْ</string>
+  <string name="assistant_login_desc">‫أدخِل اسم المستخدم وكلمة السر الحساب مع نطاق SIP‬</string>
+  <string name="assistant_remote_provisioning_desc">يٌرجى إدخال عنوان التهئية البعيدة</string>
+  <string name="transport">النقل</string>
+  <string name="assistant_login_linphone">استخدم حساب لِنْفُونْ</string>
+  <string name="assistant_login_generic">استخدم حساب SIP</string>
+  <string name="assistant_remote_provisioning">اجذب التهئية البعيدة</string>
+  <string name="assistant_create_account_part_1">1/2</string>
+  <string name="assistant_create_account_part_2">2/2</string>
+  <string name="assistant_display_name_optional">الاسم المعروض (اختياري)</string>
+  <string name="assistant_linphone_account">هيِّءْ حساب لِنْفُونْ</string>
+  <string name="assistant_generic_account">هيِّءْ حساب SIP</string>
+  <string name="assistant_remote_provisioning_title">اجذب التهئية البعيدة</string>
+  <string name="assistant_fetch_apply">اجذبْ وطبِّق</string>
+  <string name="assistant_login">الولوج</string>
+  <string name="assistant_ec_calibration">معايرة مزيل الصدى في طور الإنجاز</string>
+  <string name="assistant_remote_provisioning_login">أدخل اسم الولوج</string>
+  <string name="assistant_account_not_validated">لم يتم تأكيد حسابك بعد.</string>
+  <string name="assistant_account_validated">تم تأكيد حسابك.</string>
+  <string name="assistant_error_bad_credentials">اسم المسخدم أو كلمة السر غير صحيحة</string>
+  <string name="wizard_failed">حدث خطأ، حاول لاحقا.</string>
+  <string name="wizard_server_unavailable">انعدام الوصول للخادم، تأكد من اتصالك بالشبكة.</string>
+  <string name="wizard_username_unavailable">إن إسم المستخدم هذا مُستعمَل.</string>
+  <string name="wizard_username_incorrect">اسم المستخدم غير صحيح.</string>
+  <string name="wizard_email_incorrect">عنوانك الإلكتروني غير صحيح.</string>
+  <string name="wizard_password_incorrect">كلمة السر غير صحيحة.</string>
+  <string name="wizard_passwords_unmatched">كلمتا السر غير متطابقتين.</string>
+  <string name="setup_confirm_username">سيكون اسم المستخدم هو %s.\r\n\r\nقد يختلف عما أدخلته ليوافق المعايير.\r\nأتقبل ذلك ؟</string>
+  <string name="first_launch_no_login_password">يُرجى إدخال إسم المستخدم وكلمة السر</string>
+  <!--Dailer-->
+  <string name="address_bar_hint">أدخل رقما أو عنوانا</string>
+  <!--History-->
+  <string name="no_call_history">لا وجود للمكالمات في تاريخك</string>
+  <string name="no_missed_call_history">لا وجود للمكالمات الفائتة في تاريخك</string>
+  <string name="delete_history_log">أتود حذف سجل المكالمات المحددة ؟</string>
+  <string name="today">اليوم</string>
+  <string name="yesterday">اﻷمس</string>
+  <!--Contacts-->
+  <string name="no_contact">لا وجود لأي جهة اتصال في دفتر عناوينك.</string>
+  <string name="no_sip_contact">لا وجود لأي جهة اتصال SIP في دفتر عناوينك.</string>
+  <string name="delete_contacts">أتود حذف جهات الاتصال المحددة ؟</string>
+  <string name="delete_contact">أتود حذف جهة الاتصال المحددة ؟</string>
+  <string name="sip_address">عنوان SIP</string>
+  <string name="phone_number">رقم الهاتف</string>
+  <string name="contact_first_name">اﻹسم</string>
+  <string name="contact_last_name">اللقب</string>
+  <!--Chat-->
+  <string name="no_chat_history">لا وجود لأي محادثة</string>
+  <string name="delete_conversation">أتود حذف المحادثات المحددة ؟</string>
+  <string name="delete_message">أتود حذف الرسالة المحددة ؟</string>
+  <string name="remote_composing">المُراسِل يكتب...</string>
+  <string name="share_picture_size_small">صغيرة</string>
+  <string name="share_picture_size_medium">متوسطة</string>
+  <string name="share_picture_size_large">كبيرة</string>
+  <string name="share_picture_size_real">الحجم الحقيقي</string>
+  <string name="text_copied_to_clipboard">نُسخ النص في الحافظة</string>
+  <string name="copy_text">نسخ النص</string>
+  <string name="image_picker_title">اختر المصدر</string>
+  <string name="image_saved">حُفظَت الصورة</string>
+  <string name="image_not_saved">خطأ، لم تُحفَظ الصورة</string>
+  <string name="wait">يُرجى الانتظار...</string>
+  <string name="processing_image">قد تستلزم معالجة الصور بضع ثوان حسب حجم الملف.</string>
+  <!--Status Bar-->
+  <string name="status_connected">مُسجَّل</string>
+  <string name="status_not_connected">غير مُسجَّل</string>
+  <string name="status_in_progress">يجري التسجيل</string>
+  <string name="status_error">فشِل التسجيل</string>
+  <string name="voicemail_unread">الرسائل غير المقروءة</string>
+  <!--Side Menu-->
+  <string name="menu_assistant">المرشد</string>
+  <string name="menu_settings">اﻹعدادات</string>
+  <string name="menu_about">حول</string>
+  <string name="quit">غادِرْ</string>
+  <!--Call-->
+  <string name="incoming_call">مكالمة واردة</string>
+  <string name="outgoing_call">مكالمة صادرة</string>
+  <string name="add_video_dialog">يود مخاطبك تشغيل الفيديو</string>
+  <string name="no_current_call">لا وجود لأي مكالمة نشيطة</string>
+  <string name="call_paused_by_remote">أوقف مخاطبك المكالمة مؤقتا</string>
+  <string name="couldnt_accept_call">حدث خطأ خلال قبول المكالمة</string>
+  <string name="zrtp_dialog">رمز ZRTP هو %s\nيُفترَض عليك قبوله فقط إذا كان مخاطبك قد أخبرك برؤيته لنفس الرمز الذي تراه</string>
+  <string name="unknown_incoming_call_name">مجهول</string>
+  <string name="call_stats_audio">الصوت</string>
+  <string name="call_stats_video">الفيديو</string>
+  <string name="call_stats_codec">المِرماز :</string>
+  <string name="call_stats_upload">صبيب الرفع :</string>
+  <string name="call_stats_download">صبيب التنزيل :</string>
+  <string name="call_stats_ice">توصيل ICE :</string>
+  <string name="call_stats_video_resolution">مقاس الفيديو :</string>
+  <string name="call">مكالمة</string>
+  <!--About-->
+  <string name="menu_send_log">إرسال السجل</string>
+  <string name="menu_reset_log">إعادة تعيين السجل</string>
+  <!--Service-->
+  <string name="incall_notif_active">المكالمة الصوتية الجارية</string>
+  <string name="incall_notif_paused">المكالمة الموقَّفة مؤقتا الجارية</string>
+  <string name="incall_notif_video">المكالمة المرئية الجارية</string>
+  <string name="notification_started">بدَأ</string>
+  <string name="unread_messages">%i رسائل غير مقروءة</string>
+  <!--Errors-->
+  <string name="skipable_error_service_not_ready">تحذير : الخدمة غير جاهزة</string>
+  <string name="error">خطأ</string>
+  <string name="warning_wrong_destination_address">لا يمكن تركيب عنوان الوجهة انطلاقا من %s</string>
+  <string name="error_unknown">خطأ مجهول</string>
+  <string name="error_call_declined">مكالمة مرفوضة</string>
+  <string name="error_user_not_found">لم يعثر على المستخدم</string>
+  <string name="error_incompatible_media">مُعامِلات الوسائط غير متوافقة</string>
+  <string name="error_low_bandwidth">لمخاطبك سعة قناة ضيقة، لا يمكن إذن بدء الفيديو</string>
+  <string name="error_network_unreachable">تعذر الوصول إلى الشبكة</string>
+  <string name="error_bad_credentials">الاعتمادات غير صحيحة</string>
+  <string name="error_unauthorized">غير مُصرَّح</string>
+  <string name="error_io_error">خطأ في الشبكة</string>
+  <string name="download_image_failed">فشل التنزيل. يُرجى التحقق من اتصالك بالشبكة أو الإعادة لاحقا.</string>
+  <string name="remote_provisioning_failure">فشِل تنزيل أو تطبيق تشكيلة التهيئة عن بعد</string>
+  <string name="remote_provisioning_again_title">التهيئة عن بعد</string>
+  <string name="remote_provisioning_again_message">أتود تغيير عنوان التهئية البعيدة ؟</string>
+  <!--Account Settings-->
+  <string name="pref_sipaccount">حساب SIP</string>
+  <string name="pref_manage_title">الإدارة</string>
+  <string name="pref_disable_account">إيقاف</string>
+  <string name="pref_proxy">الوسيط</string>
+  <string name="pref_domain">النطاق*</string>
+  <string name="pref_passwd">كلمة السر*</string>
+  <string name="pref_username">إسم المستخدم*</string>
+  <string name="pref_enable_outbound_proxy">وسيط التوجُّه</string>
+  <string name="pref_help_proxy">إسم مضيف وسيط SIP أو عنوان IP (اختياري)</string>
+  <string name="pref_help_outbound_proxy">توجيه كل المكالمات عبر وسيط SIP</string>
+  <string name="pref_help_username">مثلا : john إذا كان حسابك john@sip.example.org</string>
+  <string name="pref_help_domain">sip.example.org إذا كان حسابك john@sip.example.org</string>
+  <string name="pref_help_password">يجب عليك إدخال كلمة السر مرة أخرى إذا أردت تحرير إسم المستخدم أو النطاق</string>
+  <string name="pref_expire_title">انتهاء الصلاحية</string>
+  <string name="pref_avpf">AVPF</string>
+  <string name="pref_avpf_rr_interval">نطاق RTCP الاعتيادي لـ AVPF بالثواني (ما بين 1 و 5)</string>
+  <string name="pref_escape_plus">استبدال + بـ 00</string>
+  <string name="pref_auth_userid">مُعرِّف استيثاق المستخدم</string>
+  <string name="pref_help_auth_userid">ادخل مُعرِّف استيثاق المستخدم (اختياري)</string>
+  <string name="pref_display_name">الإسم المعروض</string>
+  <string name="pref_help_display_name">ادخل الاسم المعروض (اختياري)</string>
+  <string name="pref_prefix">البادِئة</string>
+  <string name="pref_transport">النقل</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
+  <string name="pref_delete_account">حذف هذا الحساب</string>
+  <string name="pref_default_account">استخدام كافتراضي</string>
+  <!--Settings-->
+  <string name="pref_sipaccounts">حسابات SIP</string>
+  <string name="default_account_flag">الحساب الافتراضي</string>
+  <string name="pref_add_account">إضافة حساب</string>
+  <string name="pref_tunnel">النفق</string>
+  <string name="pref_tunnel_host">إسم المضيف</string>
+  <string name="pref_tunnel_port">المنفذ</string>
+  <string name="pref_tunnel_mode">الوضع</string>
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <string-array name="tunnel_mode_entries">
+    <item>غير مُشغَّل</item>
+    <item>3G فقط</item>
+    <item>دائما</item>
+    <item>تلقائي</item>
+  </string-array>
+  <string name="pref_none">بدون</string>
+  <string name="pref_preferences_title">التفضيلات</string>
+  <string name="pref_video_enable_title">تشغيل الفيديو</string>
+  <!--Audio settings-->
+  <string name="pref_audio_title">الصوت</string>
+  <string name="pref_echo_cancellation">إزالة الصدى</string>
+  <string name="pref_echo_cancellation_summary">إزالة الصدى المسموع من الطرف الآخر</string>
+  <string name="pref_echo_canceller_calibration">معايرة مزيل الصدى</string>
+  <string name="ec_calibrating">يُعايِر...</string>
+  <string name="no_echo">لا وجود لصدى</string>
+  <string name="failed">فشِل</string>
+  <string name="pref_adaptive_rate_control">التحكم في ملائمة الصبيب</string>
+  <string name="pref_codec_bitrate_limit">حد صبيب المِرماز</string>
+  <string name="pref_codecs">المراميز</string>
+  <!--Video settings-->
+  <string name="pref_video_title">الفيديو</string>
+  <string name="pref_video_use_front_camera_title">استخدام الكاميرا الأمامية</string>
+  <string name="pref_video_initiate_call_with_video_title">بدء اتصالات بالصورة</string>
+  <string name="pref_video_initiate_call_with_video">أرسِل دائما طلبات الفيديو</string>
+  <string name="pref_video_automatically_accept_video_title">قبول طلبات الفيديو الواردة</string>
+  <string name="pref_video_automatically_accept_video">قبول طلبات الفيديو دائما</string>
+  <string name="pref_preferred_video_size">حجم الفيديو المفضل</string>
+  <string name="pref_preferred_fps">معدل الإطارات المفضل</string>
+  <string name="pref_bandwidth_limit">حد سعة القناة بـ ك.بِتْ/ثانية</string>
+  <string name="pref_video_codecs_title">المراميز</string>
+  <!--Call settings-->
+  <string name="pref_call_title">مكالمة</string>
+  <string name="pref_rfc2833_dtmf">إرسال RFC2833 DTMFs</string>
+  <string name="pref_sipinfo_dtmf">إرسال SIP INFO DTMFs</string>
+  <string name="pref_voice_mail">عنوان العلبة الصوتية</string>
+  <!--Network settings-->
+  <string name="pref_network_title">الشبكة</string>
+  <string name="pref_wifi_only">استخدم WiFi فقط</string>
+  <string name="pref_stun_server">خادم STUN</string>
+  <string name="pref_ice_enable">تشغيل ICE</string>
+  <string name="pref_upnp_enable">تشغيل UPnP</string>
+  <string name="pref_transport_use_random_ports">استخدم منافذ عشوائية</string>
+  <string name="pref_sip_port_title">منفذ SIP المُراد استخدامه</string>
+  <string name="pref_video_port_title">منفذ الفيديو أو نطاق المنفذ</string>
+  <string name="pref_audio_port_title">منفذ الصوت أو نطاق المنفذ</string>
+  <string name="pref_video_port_description">منفذ الفيديو أو نطاق المنفذ (الأدنى – الأقصى)</string>
+  <string name="pref_audio_port_description">منفذ الصوت أو نطاق المنفذ (الأدنى – الأقصى)</string>
+  <string name="pref_media_encryption">وسيط التعمية</string>
+  <string name="pref_push_notification">تشغيل إشعارات التنبيه</string>
+  <string name="pref_ipv6_title">رخِّصْ IPv6</string>
+  <!--Advanced settings-->
+  <string name="pref_advanced_title">متقدم</string>
+  <string name="pref_debug">التنقيح</string>
+  <string name="pref_background_mode">وضع الخلفية</string>
+  <string name="pref_animation_enable_title">تشغيل التحريكات</string>
+  <string name="pref_autostart">البدء خلال الإقلاع</string>
+  <string name="pref_incoming_call_timeout_title">مهلة الانتظار قبل رفض المكالمة (بالثواني)</string>
+  <string name="pref_image_sharing_server_title">خادم المشاركة</string>
+  <string name="pref_remote_provisioning_title">التهيئة عن بعد</string>
+  <string name="pref_primary_account_title">الحساب اﻷوَّلي</string>
+  <string name="pref_display_name_title">الإسم المعروض</string>
+  <string name="pref_user_name_title">إسم المستخدم</string>
+  <!--Audio hack settings-->
+  <string name="pref_audio_hacks_title">تطويعات الصوت</string>
+  <string name="pref_audio_use_specific_mode_title">استخدم وضع محددا للتطويع</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (افتراضي)، 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">استخدم تطويعات API التوجيه</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">استخدم تطويعات الصوت لـ Galaxy S</string>
+  <!--Content description-->
+  <string name="content_description_back">الرجوع</string>
+  <string name="content_description_dialer">لوحة المفاتيح</string>
+  <string name="content_description_toggle_micro">تبديل الميكروفون</string>
+  <string name="content_description_toggle_speaker">تبديل مكبر الصوت</string>
+  <string name="content_description_decline">رفض</string>
+  <string name="content_description_hang_up">ضع السماعة</string>
+  <string name="content_description_accept">قبول</string>
+  <string name="content_description_edit">تحرير</string>
+  <string name="content_description_add_contact">إضافة إلى جهات الاتصال</string>
+  <string name="content_description_new_contact">جهة اتصال جديدة</string>
+  <string name="content_description_call">مكالمة</string>
+  <string name="content_description_backspace">مسافة</string>
+  <string name="content_description_chat">المحادثة</string>
+  <string name="content_description_dial_back">إعادة الاتصال</string>
+  <string name="content_description_contact_picture">صورة جهة الاتصال</string>
+  <string name="content_description_send_message">إرسال رسالة</string>
+  <string name="content_description_detail">التفاصيل</string>
+  <string name="content_description_delete">حذف</string>
+  <string name="content_description_add">إضافة مكالمة</string>
+  <string name="content_description_new_discussion">محادثة جديدة</string>
+  <string name="content_description_search">بحث</string>
+  <string name="content_description_all_contacts">كل جهات الاتصال</string>
+  <string name="content_description_linphone_contacts">جهات اتصال Linphone</string>
+  <string name="content_description_call_direction">اتجاه الاتصال</string>
+  <string name="content_description_all_calls">كل المكالمات</string>
+  <string name="content_description_missed_calls">المكالمات الفائتة</string>
+  <string name="content_description_switch_video">تبديل الفيديو</string>
+  <string name="content_description_add_call">إضافة مكالمة</string>
+  <string name="content_description_pause">توقيف مؤقت</string>
+  <string name="content_description_numpad">لوحة الأرقام</string>
+  <string name="content_description_history">زر التاريخ</string>
+  <string name="content_description_chat_button">زر المحادثات</string>
+  <string name="content_description_contacts">رز جهات الاتصال</string>
+  <string name="content_description_call_quality">جودة المكالمة</string>
+  <string name="content_description_encryption">التعمية</string>
+  <string name="content_description_switch_camera">تبديل الكاميرا</string>
+  <string name="content_description_cancel_button">زر الإلغاء</string>
+  <string name="content_description_message_status">حالة الرسالة</string>
+  <string name="content_description_conference">اجتماع</string>
+  <string name="content_description_default_account">الحساب الافتراضي</string>
+  <string name="content_description_contact_first_name">اﻹسم</string>
+  <string name="content_description_contact_last_name">اللقب</string>
+  <string name="content_description_transfer">تحويل</string>
+  <string name="content_description_bluetooth">بلوتوث</string>
+</resources>

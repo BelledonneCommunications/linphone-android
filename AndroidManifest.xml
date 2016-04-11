@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.linphone"
    
-      android:versionCode="1002" android:installLocation="auto">
+      android:versionCode="3100" android:installLocation="auto">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23"/>
     
     <!-- Permissions for Push Notification -->
@@ -109,7 +109,6 @@
 
         <activity android:name=".CallActivity"
 		   android:theme="@style/FullScreen"
-           android:noHistory="true"
            android:launchMode="singleTop">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -217,6 +216,13 @@
         
 		<activity android:name="org.linphone.tutorials.TutorialRegistrationActivity"
 		    android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+	<activity android:name="org.linphone.tutorials.TutorialCardDavSync"
+                    android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

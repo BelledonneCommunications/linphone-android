@@ -17,16 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -93,24 +94,21 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format),false));
 
-		LinphoneAddress lAddress;
+		LinphoneAddress lAddress = null;
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			//Obiane specification
-			LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(sipUri);
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 
-			if(friend != null) {
-				contactName.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+			if (contact != null) {
+				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
+				view.findViewById(R.id.add_contact).setVisibility(View.GONE);
 			} else {
-				contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
+				contactPicture.setImageResource(R.drawable.avatar);
+				view.findViewById(R.id.add_contact).setVisibility(View.VISIBLE);
 			}
-
-			contactPicture.setImageResource(R.drawable.avatar);
-			contactAddress.setText(lAddress.asStringUriOnly());
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
-	
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		

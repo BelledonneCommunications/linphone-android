@@ -11,13 +11,11 @@
 		android:id="@+id/delete_chatroom"
 		android:button="@drawable/checkbox"
 		android:contentDescription="@string/content_description_delete"
-		android:paddingRight="5dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
-		android:visibility="gone" />
 	
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -44,6 +42,13 @@
 					android:layout_height="35dp"
 					android:adjustViewBounds="true"/>
 
+				<ImageView
+					android:id="@+id/mask"
+					android:src="@drawable/avatar_mask"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:adjustViewBounds="true"/>
+
 			</RelativeLayout>
 
 			<TextView
@@ -65,10 +70,8 @@
 			<TextView
 				android:id="@+id/sipUri"
 				android:lines="1"
-				android:ellipsize="marquee"
-				android:marqueeRepeatLimit="marquee_forever"
+				android:ellipsize="end"
 				android:scrollHorizontally="true"
-				android:fadingEdge="horizontal"
 				android:singleLine="true"
 				style="@style/font2"
 				android:layout_width="wrap_content"
@@ -79,6 +82,7 @@
 				android:id="@+id/unreadMessages"
 				android:layout_width="20dp"
 				android:layout_height="20dp"
+				android:contentDescription="@string/content_description_unread_chat_message"
 				android:background="@drawable/chat_list_indicator"
 				style="@style/font7"
 				android:gravity="center"
@@ -94,7 +98,8 @@
 				android:layout_below="@id/sipUri"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				style="@style/font9"/>
+				android:layout_marginRight="30dp"
+				style="@style/font11"/>
 
 		</RelativeLayout>
 	    

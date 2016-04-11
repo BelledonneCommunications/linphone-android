@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">Linphone</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">Загружается</string>
+  <string name="tunnel_host"></string>
+  <!--Common-->
+  <string name="username">Имя пользователя</string>
+  <string name="display_name">Display name</string>
+  <string name="password">Пароль</string>
+  <string name="delete">Удалить</string>
+  <string name="retry">Retry</string>
+  <string name="cancel">Отменить</string>
+  <string name="accept">Принять</string>
+  <string name="continue_text">Продолжить</string>
+  <string name="about">О программе</string>
+  <string name="deny">Deny</string>
+  <string name="outgoing">Исходящий</string>
+  <string name="incoming">Входящий</string>
+  <string name="missed">Пропущенный</string>
+  <string name="settings">Настройки</string>
+  <string name="decline">Отклонить</string>
+  <string name="conference">Конференция</string>
+  <!--Launch screen-->
+  <!--Assistant-->
+  <string name="assistant_welcome_desc">Этот помощник поможет Вам настроить учётную запись SIP для звонков.</string>
+  <string name="transport">Транспорт</string>
+  <string name="assistant_account_not_validated">Ваша учётная запись ещё не подтверждена.</string>
+  <string name="assistant_account_validated">Ваша учётная запись подтверждена.</string>
+  <string name="wizard_failed">Произошла ошибка, попробуйте повторить позже.</string>
+  <string name="wizard_username_unavailable">Это имя пользователя уже использовано.</string>
+  <string name="first_launch_no_login_password">Пожалуйста введите имя пользователя и пароль</string>
+  <!--Dailer-->
+  <!--History-->
+  <string name="today">Сегодня</string>
+  <string name="yesterday">Вчера</string>
+  <!--Contacts-->
+  <string name="no_contact">Нет контакта в Вашей адресной книге.</string>
+  <string name="no_sip_contact">Нет SIP контакта в Вашей адресной книге.</string>
+  <string name="sip_address">адрес SIP</string>
+  <string name="phone_number">Номер телефона</string>
+  <string name="contact_first_name">Имя</string>
+  <string name="contact_last_name">Фамилия</string>
+  <!--Chat-->
+  <string name="remote_composing">Remote is writing...</string>
+  <string name="share_picture_size_small">Маленький</string>
+  <string name="share_picture_size_medium">Средний</string>
+  <string name="share_picture_size_large">Большой</string>
+  <string name="share_picture_size_real">Оригинальный размер</string>
+  <string name="text_copied_to_clipboard">Текст скопирован в буфер обмена</string>
+  <string name="copy_text">Скопировать текст</string>
+  <string name="image_picker_title">Выбрать источник</string>
+  <string name="image_saved">Картинка сохранена</string>
+  <string name="image_not_saved">Ошибка, картинка не сохранена</string>
+  <string name="wait">Please wait...</string>
+  <!--Status Bar-->
+  <string name="status_connected">Зарегистрирован</string>
+  <string name="status_in_progress">В процессе регистрации</string>
+  <string name="status_error">Ошибка регистрации</string>
+  <!--Side Menu-->
+  <string name="menu_settings">Настройки</string>
+  <string name="menu_about">О программе</string>
+  <!--Call-->
+  <string name="unknown_incoming_call_name">Неизвестнвй</string>
+  <string name="call_stats_audio">Аудио</string>
+  <string name="call_stats_video">Видео</string>
+  <string name="call_stats_codec">Кодек:</string>
+  <string name="call_stats_upload">Полоса пропускания загрузки:</string>
+  <string name="call_stats_download">Полоса пропускания скачивания:</string>
+  <string name="call_stats_ice">Подключение ICE:</string>
+  <string name="call_stats_video_resolution">Video size:</string>
+  <string name="call">Звонок</string>
+  <!--About-->
+  <!--Service-->
+  <string name="incall_notif_active">Идёт Аудио звонок</string>
+  <string name="incall_notif_paused">Звонок на Паузе</string>
+  <string name="incall_notif_video">Идёт Видео звонок</string>
+  <string name="notification_started">начат</string>
+  <string name="unread_messages">%i unread messages</string>
+  <!--Errors-->
+  <string name="skipable_error_service_not_ready">Внимание : сервис не готов</string>
+  <string name="error">Ошибка</string>
+  <string name="error_call_declined">Звонок сброшен</string>
+  <string name="error_user_not_found">Пользователь не найден</string>
+  <string name="error_incompatible_media">Несовместимые параметры потока</string>
+  <string name="error_network_unreachable">Сеть недоступна</string>
+  <string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
+  <string name="remote_provisioning_again_title">Remote provisioning</string>
+  <!--Account Settings-->
+  <string name="pref_sipaccount">Имя SIP</string>
+  <string name="pref_manage_title">Manage</string>
+  <string name="pref_disable_account">Деактивировать</string>
+  <string name="pref_proxy">Прокси</string>
+  <string name="pref_domain">Сервер*</string>
+  <string name="pref_passwd">Пароль*</string>
+  <string name="pref_username">Имя пользователя*</string>
+  <string name="pref_enable_outbound_proxy">Исходящий прокси</string>
+  <string name="pref_help_proxy">Имя сервера SIP прокси или адрес ip (необязательно)</string>
+  <string name="pref_help_outbound_proxy">Отправить все звонки через SIP прокси</string>
+  <string name="pref_help_username">Например: john если Ваш адрес john@sip.example.org</string>
+  <string name="pref_help_domain">sip.example.org если Ваш адрес john@sip.example.org</string>
+  <string name="pref_help_password">You have to re-enter your password if you edit the username and/or the domain</string>
+  <string name="pref_expire_title">Истекает</string>
+  <string name="pref_escape_plus">Заменить + на 00</string>
+  <string name="pref_auth_userid">Auth userid</string>
+  <string name="pref_display_name">Display name</string>
+  <string name="pref_prefix">Префикс</string>
+  <string name="pref_transport">Транспорт</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
+  <string name="pref_delete_account">Удалить учётную запись</string>
+  <string name="pref_default_account">Использовать как основную</string>
+  <!--Settings-->
+  <string name="pref_sipaccounts">Учётные записи SIP</string>
+  <string name="default_account_flag">Default account</string>
+  <string name="pref_add_account">Добавить учётную запись</string>
+  <string name="pref_tunnel">Туннель</string>
+  <string name="pref_tunnel_host">Сервер</string>
+  <string name="pref_tunnel_port">Порт</string>
+  <string name="pref_tunnel_mode">Режим</string>
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <string-array name="tunnel_mode_entries">
+    <item>выключено</item>
+    <item>только 3G</item>
+    <item>всегда</item>
+    <item>авто</item>
+  </string-array>
+  <string name="pref_none">Отсутствует</string>
+  <string name="pref_preferences_title">Настройки</string>
+  <string name="pref_video_enable_title">Разрешить видео</string>
+  <!--Audio settings-->
+  <string name="pref_audio_title">Аудио</string>
+  <string name="pref_echo_cancellation">Шумоподавление</string>
+  <string name="pref_echo_cancellation_summary">Удаляет эхо, слышимое другой стороной</string>
+  <string name="ec_calibrating">Настраиваем…</string>
+  <string name="no_echo">Нет эха</string>
+  <string name="failed">неудавшийся</string>
+  <string name="pref_codecs">Кодеки</string>
+  <!--Video settings-->
+  <string name="pref_video_title">Видео</string>
+  <string name="pref_video_use_front_camera_title">Использовать фронтальную камеру</string>
+  <string name="pref_video_initiate_call_with_video_title">Начинать видео звонки</string>
+  <string name="pref_video_initiate_call_with_video">Всегда посылать видео запросы</string>
+  <string name="pref_video_automatically_accept_video_title">Принимать входящие видео звонки</string>
+  <string name="pref_video_automatically_accept_video">Всегда принимать видео запросы</string>
+  <string name="pref_preferred_video_size">Preferred video size</string>
+  <string name="pref_video_codecs_title">Кодеки</string>
+  <!--Call settings-->
+  <string name="pref_call_title">Звонок</string>
+  <string name="pref_rfc2833_dtmf">Послать RFC2833 DTMFs</string>
+  <string name="pref_sipinfo_dtmf">Послать SIP INFO DTMFs</string>
+  <!--Network settings-->
+  <string name="pref_network_title">Сеть</string>
+  <string name="pref_stun_server">Сервер Stun</string>
+  <string name="pref_ice_enable">Разрешить ICE</string>
+  <string name="pref_upnp_enable">Enable UPNP</string>
+  <string name="pref_transport_use_random_ports">Использовать случайный порт</string>
+  <string name="pref_sip_port_title">SIP порт занят</string>
+  <string name="pref_video_port_title">Видео порт или диапазон портов</string>
+  <string name="pref_audio_port_title">Аудио порт или диапазон портов</string>
+  <string name="pref_video_port_description">Видео порт или диапазон портов (минимум-максимум)</string>
+  <string name="pref_audio_port_description">Аудио порт или диапазон портов (минимум-максимум)</string>
+  <string name="pref_media_encryption">Шифрование потока</string>
+  <string name="pref_push_notification">Разрешить серверные уведомления</string>
+  <!--Advanced settings-->
+  <string name="pref_advanced_title">Продвинутые</string>
+  <string name="pref_debug">Отладка</string>
+  <string name="pref_background_mode">Фоновый режим</string>
+  <string name="pref_animation_enable_title">Разрешить анимацию</string>
+  <string name="pref_autostart">Запускаться с системой</string>
+  <string name="pref_image_sharing_server_title">Общий сервер</string>
+  <string name="pref_remote_provisioning_title">Удалённое резервирование</string>
+  <string name="pref_primary_account_title">Основная учётная запись</string>
+  <string name="pref_display_name_title">Отображаемое имя</string>
+  <string name="pref_user_name_title">Имя пользователя</string>
+  <!--Audio hack settings-->
+  <string name="pref_audio_hacks_title">Audio хаки</string>
+  <string name="pref_audio_use_specific_mode_title">Использовать хаки спец. режима</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (по умолчанию), 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">Использовать хак API маршрутизации</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Использовать аудио хак Galaxy S</string>
+  <!--Content description-->
+  <string name="content_description_back">Назад</string>
+  <string name="content_description_dialer">Клавиатура</string>
+  <string name="content_description_decline">Отклонить</string>
+  <string name="content_description_hang_up">Положить трубку</string>
+  <string name="content_description_accept">Accept</string>
+  <string name="content_description_edit">Редактировать</string>
+  <string name="content_description_add_contact">Кнопка добавить к контактам</string>
+  <string name="content_description_new_contact">Новый контакт</string>
+  <string name="content_description_call">Звонок</string>
+  <string name="content_description_chat">Чат</string>
+  <string name="content_description_delete">Удалить</string>
+  <string name="content_description_add">Добавить звонок</string>
+  <string name="content_description_add_call">Добавить звонок</string>
+  <string name="content_description_conference">Конференция</string>
+  <string name="content_description_default_account">Default account</string>
+  <string name="content_description_contact_first_name">Имя</string>
+  <string name="content_description_contact_last_name">Фамилия</string>
+  <string name="content_description_transfer">Перевести</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
+</resources>

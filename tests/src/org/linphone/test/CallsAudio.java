@@ -49,6 +49,7 @@ public class CallsAudio extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 
 		assertOutgoingCallIsCorrectlyRunning();
+		assertCallIsCorrectlyRunning();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
@@ -364,17 +365,14 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected OutgoingCall Activity", CallOutgoingActivity.class);
 
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-
 		waitForCallState(call, LinphoneCall.State.OutgoingProgress);
 	}
 	
 	private void assertCallIsCorrectlyRunning() {
 		solo.waitForActivity("CallActivity", 5000);
 		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
-		
-		solo.sleep(2000);
-		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 
+		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 		waitForCallState(call, LinphoneCall.State.StreamsRunning);
 	}
 	

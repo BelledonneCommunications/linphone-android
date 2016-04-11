@@ -53,11 +53,11 @@
   <string name="decline">Refuser</string>
   <string name="conference">Conférence</string>
   <!--Launch screen-->
-  <string name="app_description">le client SIP libre</string>
   <!--Assistant-->
   <string name="welcome">Bienvenue</string>
   <string name="assistant">Assistant</string>
   <string name="assistant_create_account">Créer un compte</string>
+  <string name="assistant_finish">Terminer la configuration</string>
   <string name="assistant_validate_account">Votre compte a été créé. Vérifiez vos emails pour valider votre compte.
     Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="assistant_welcome_desc">Cet assistant va vous guider pour réaliser des appels à l\'aide d\'un compte SIP.</string>
@@ -86,7 +86,7 @@
   <string name="wizard_username_unavailable">Ce nom d\'utilisateur est déjà pris.</string>
   <string name="wizard_username_incorrect">Votre nom d\'utilisateur est invalide.</string>
   <string name="wizard_email_incorrect">Votre email est invalide.</string>
-  <string name="wizard_password_incorrect">Votre mot de passe est invalide (6 caractères minimum).</string>
+  <string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide.</string>
   <string name="wizard_passwords_unmatched">Les mots de passes ne correspondent pas.</string>
   <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de votre saisie.\r\nContinuer ?</string>
   <string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
@@ -294,21 +294,24 @@
   <string name="content_description_decline">Refuser</string>
   <string name="content_description_hang_up">Raccrocher</string>
   <string name="content_description_accept">Accepter</string>
-  <string name="content_description_edit">Bouton éditer</string>
-  <string name="content_description_valid">Bouton valider</string>
+  <string name="content_description_edit">Modifier</string>
+  <string name="content_description_edit_list">Edition de list</string>
+  <string name="content_description_valid">Valider</string>
   <string name="content_description_add_contact">Button Ajouter aux contacts</string>
   <string name="content_description_new_contact">Nouveau contact</string>
   <string name="content_description_call">Appel</string>
   <string name="content_description_backspace">Retour</string>
   <string name="content_description_chat">Chat</string>
   <string name="content_description_dial_back">Rappeler</string>
+  <string name="content_description_dialer_back">Retour au dialer</string>
   <string name="content_description_contact_picture">Photo contact</string>
   <string name="content_description_send_message">Envoyer message</string>
   <string name="content_description_detail">Détails</string>
-  <string name="content_description_delete">Boutton supprimer</string>
-  <string name="content_description_add">Boutton ajouter</string>
+  <string name="content_description_delete">Supprimer</string>
+  <string name="content_description_add">Ajouter un appel</string>
   <string name="content_description_new_discussion">Nouvelle discussion</string>
   <string name="content_description_search">Rechercher</string>
+  <string name="content_description_search_contact">Recherche d\'un contact</string>
   <string name="content_description_all_contacts">Tous les contacts</string>
   <string name="content_description_linphone_contacts">Contacts Linphone</string>
   <string name="content_description_call_direction">Direction d\'appel</string>
@@ -327,4 +330,25 @@
   <string name="content_description_cancel_button">Bouton annuler</string>
   <string name="content_description_message_status">Status de message</string>
   <string name="content_description_conference">Conférence</string>
+
+  <string name="content_description_username_field">Champ nom d\'utilisateur</string>
+  <string name="content_description_display_field">Champ nom d\'affichage</string>
+  <string name="content_description_domain_field">Champ domaine</string>
+  <string name="content_description_confirm_password_field">Champ confirmation du mot de passe</string>
+  <string name="content_description_email_field">Champ email</string>
+  <string name="content_description_default_account">Compte par défaut</string>
+  <string name="content_description_deselect_all">Tout déselectionner</string>
+  <string name="content_description_select_all">Tout sélectionner</string>
+  <string name="content_description_contact_first_name">Prénom</string>
+  <string name="content_description_contact_last_name">Nom</string>
+  <string name="content_description_back_call">Retour à l\'appel</string>
+  <string name="content_description_send_file">Envoi d\'un fichier</string>
+  <string name="content_description_message">Message</string>
+  <string name="content_description_unread_chat_message">Message non lu</string>
+  <string name="content_description_transfer">Transfert</string>
+  <string name="content_description_earpiece">Ecouteur</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
+  <string name="content_description_call_options">Options d\'appel</string>
+  <string name="content_description_audio_route">Route audio</string>
+  <string name="content_description_exit_conference">Quitter la conférence</string>
 </resources>

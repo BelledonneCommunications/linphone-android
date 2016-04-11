@@ -152,11 +152,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	public void enabledDeleteButton(Boolean enabled){
 		if(enabled){
 			delete.setEnabled(true);
-			delete.setAlpha(1f);
 		} else {
 			if (getNbItemsChecked() == 0){
 				delete.setEnabled(false);
-				delete.setAlpha(0.2f);
 			}
 		}
 	}
@@ -433,8 +431,15 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.callDirection.setImageResource(R.drawable.call_status_outgoing);
 			}
 
-			LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
-			holder.contactPicture.setImageResource(R.drawable.avatar);
+			Contact c = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
+			String displayName = null;
+			final String sipUri = address.asStringUriOnly();
+			if(c != null){
+				displayName = c.getName();
+				LinphoneUtils.setImagePictureFromUri(view.getContext(),holder.contactPicture,c.getPhotoUri(),c.getThumbnailUri());
+			} else {
+				holder.contactPicture.setImageResource(R.drawable.avatar);
+			}
 
 			if(friend != null) {
 				holder.contact.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));

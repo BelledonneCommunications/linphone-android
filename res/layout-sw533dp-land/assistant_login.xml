@@ -54,6 +54,7 @@
 						android:background="@drawable/resizable_textfield"
 						android:textColor="@color/colorB"
 						android:inputType="text|textEmailAddress"
+						android:contentDescription="@string/content_description_username_field"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
 						android:singleLine="true"/>
@@ -107,6 +108,7 @@
 						android:background="@drawable/resizable_textfield"
 						android:textColor="@color/colorB"
 						android:inputType="textEmailAddress"
+						android:contentDescription="@string/content_description_display_field"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
 						android:singleLine="true"/>
@@ -131,6 +133,7 @@
 						android:background="@drawable/resizable_textfield"
 						android:textColor="@color/colorB"
 						android:inputType="textEmailAddress"
+						android:contentDescription="@string/content_description_domain_field"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
 						android:singleLine="true"/>

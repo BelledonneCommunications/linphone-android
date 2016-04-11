@@ -246,7 +246,7 @@ public final class LinphoneService extends Service {
 			}
 		}
 
-		this.getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, mObserver);
+		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
 
 		startForegroundCompat(NOTIF_ID, mNotif);
 
@@ -267,15 +267,6 @@ public final class LinphoneService extends Service {
 																							, 600000
 																							, mkeepAlivePendingIntent);
 	}
-
-	private ContentObserver mObserver = new ContentObserver(new Handler()) {
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-		}
-
-	};
 		
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
@@ -319,7 +310,7 @@ public final class LinphoneService extends Service {
 		LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(userName,domain,null);
 		address.setDisplayName(displayName);
 
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		Uri pictureUri = contact != null ? contact.getThumbnailUri() : null;
 		Bitmap bm = null;
 		try {
@@ -397,7 +388,7 @@ public final class LinphoneService extends Service {
 		
 		Uri pictureUri = null;
 		try {
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
 			if (contact != null)
 				pictureUri = contact.getThumbnailUri();
 		} catch (LinphoneCoreException e1) {
@@ -493,7 +484,6 @@ public final class LinphoneService extends Service {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void dumpDeviceInformation() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");
@@ -586,7 +576,7 @@ public final class LinphoneService extends Service {
 	    mNM.cancel(MESSAGE_NOTIF_ID);
 
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
-		getContentResolver().unregisterContentObserver(mObserver);
+		getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
 		super.onDestroy();
 	}
 	

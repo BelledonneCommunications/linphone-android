@@ -35,15 +35,13 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -170,12 +168,6 @@ public class StatusFragment extends Fragment {
 		} else if (activity instanceof AssistantActivity) {
 			((AssistantActivity) activity).updateStatusFragment(this);
 			isInCall = false;
-		} else if (activity instanceof CallIncomingActivity) {
-			((CallIncomingActivity) activity).updateStatusFragment(this);
-			isInCall = true;
-		} else if (activity instanceof CallOutgoingActivity) {
-			((CallOutgoingActivity) activity).updateStatusFragment(this);
-			isInCall = true;
 		}
 	}
 	
@@ -192,7 +184,7 @@ public class StatusFragment extends Fragment {
 			voicemailCount.setVisibility(View.GONE);
 			
 			if (isInCall && isAttached) {
-				LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+				//LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 				//initCallStatsRefresher(call, callStats);
 			} else if (!isInCall) {
 				voicemailCount.setVisibility(View.VISIBLE);
@@ -316,19 +308,26 @@ public class StatusFragment extends Fragment {
 		super.onResume();
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		LinphoneCall call = lc.getCurrentCall();
-		if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
-			if (call != null) {
-				startCallQuality();
-				refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+		if(lc != null) {
+			LinphoneCall call = lc.getCurrentCall();
+			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
+				if (call != null) {
+					startCallQuality();
+					refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+				}
+				menu.setVisibility(View.INVISIBLE);
+				encryption.setVisibility(View.VISIBLE);
+				callQuality.setVisibility(View.VISIBLE);
+
+				// We are obviously connected
+				if(lc.getDefaultProxyConfig() == null){
+					statusLed.setImageResource(R.drawable.led_disconnected);
+					statusText.setText(getString(R.string.no_account));
+				} else {
+					statusLed.setImageResource(getStatusIconResource(lc.getDefaultProxyConfig().getState(),true));
+					statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+				}
 			}
-			menu.setVisibility(View.INVISIBLE);
-			encryption.setVisibility(View.VISIBLE);
-			callQuality.setVisibility(View.VISIBLE);
-			
-			// We are obviously connected
-			statusLed.setImageResource(R.drawable.led_connected);
-			statusText.setText(getString(R.string.status_connected));
 		} else {
 			statusText.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);

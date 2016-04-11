@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.linphone.Contact;
+import org.linphone.LinphoneContact;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
@@ -81,7 +81,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 	private Bitmap defaultBitmap;
 
 	@SuppressLint("InflateParams")
-	public BubbleChat(final Context context, LinphoneChatMessage message, Contact c) {
+	public BubbleChat(final Context context, LinphoneChatMessage message, LinphoneContact c) {
 		if (message == null) {
 			return;
 		}
@@ -206,11 +206,21 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 
 		TextView contact = (TextView) view.findViewById(R.id.contact_header);
 
-		String displayName = LinphoneUtils.getAddressDisplayName(nativeMessage.getFrom());
+
+
+		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+
+		String displayName = nativeMessage.getFrom().getUserName();
 		final String sipUri = nativeMessage.getFrom().asStringUriOnly();
-		//if (c != null) {
-		//	displayName = c.getName();
-		//}
+		if(!nativeMessage.isOutgoing()) {
+			if (c != null) {
+				displayName = c.getName();
+				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, c.getPhotoUri(), c.getThumbnailUri());
+			} else {
+				contactPicture.setImageResource(R.drawable.avatar);
+			}
+		}
+
 		contact.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
 	}
 

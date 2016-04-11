@@ -1,6 +1,5 @@
-package org.linphone;
 /*
-CallManager.java
+ContactsManager.java
 Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -18,20 +17,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+package org.linphone;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.Data;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -40,46 +52,84 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ContactsManager {
 	private static ContactsManager instance;
-	private List<Contact> contactList, sipContactList, searchContactList;
+	private List<Contact> contactList, sipContactList;
 	private Cursor contactCursor, sipContactCursor;
 	private Account mAccount;
-	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
+	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
 	private Context context;
+	
+	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
+	public static void addContactsListener(ContactsUpdatedListener listener) {
+		contactsUpdatedListeners.add(listener);
+	}
+	public static void removeContactsListener(ContactsUpdatedListener listener) {
+		contactsUpdatedListeners.remove(listener);
+	}
+	
+	private static Handler handler = new Handler() {
+		@SuppressWarnings("unchecked")
+		@Override
+		public void handleMessage (Message msg) {
+			if (msg.what == CONTACTS_UPDATED && msg.obj instanceof List<?>) {
+				List<LinphoneContact> c = (List<LinphoneContact>) msg.obj;
+				ContactsManager.getInstance().setContacts(c);
+				for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+					listener.onContactsUpdated();
+				}
+			}
+		}
+	};
 
-	private ContactsManager() {}
+	private ContactsManager(Handler handler) {
+		super(handler);
+		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
+	}
+	
+	@Override
+	public void onChange(boolean selfChange) {
+		 onChange(selfChange, null);
+	}
+	
+	@Override
+	public void onChange(boolean selfChange, Uri uri) {
+		List<LinphoneContact> contacts = fetchContactsAsync();
+		Message msg = handler.obtainMessage();
+		msg.what = CONTACTS_UPDATED;
+		msg.obj = contacts;
+		handler.sendMessage(msg);
+	}
+	
+	public ContentResolver getContentResolver() {
+		return contentResolver;
+	}
 
 	public static final synchronized ContactsManager getInstance() {
-		if (instance == null) instance = new ContactsManager();
+		if (instance == null) instance = new ContactsManager(handler);
 		return instance;
 	}
-
-	public List<Contact> getAllContacts() {
-		return contactList;
+	
+	public synchronized boolean hasContacts() {
+		return contacts.size() > 0;
+	}
+	
+	public synchronized List<LinphoneContact> getContacts() {
+		return contacts;
 	}
 
-	public List<Contact> getSIPContacts() {
-		return sipContactList;
 	}
-
-	public List<Contact> getSearchContacts() {
-		return searchContactList;
-	}
-
 	public Cursor getAllContactsCursor() {
 		return contactCursor;
 	}
-
-	public Cursor getSIPContactsCursor() {
-		return sipContactCursor;
+	
+	public boolean hasContactsAccess() {
+		return hasContactAccess && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
@@ -94,7 +144,7 @@ public class ContactsManager {
 		return isContactPresenceDisabled;
 	}
 
-	public void initializeContactManager(Context context, ContentResolver contentResolver){
+	public void initializeContactManager(Context context, ContentResolver contentResolver) {
 		this.context = context;
 		this.contentResolver = contentResolver;
 	}
@@ -117,7 +167,7 @@ public class ContactsManager {
 		} else {
 			mAccount = accounts[0];
 		}
-		initializeContactManager(context,contentResolver);
+		initializeContactManager(context, contentResolver);
 	}
 
 	public String getDisplayName(String firstName, String lastName) {
@@ -182,7 +232,7 @@ public class ContactsManager {
 		);
 	}
 
-	//Manage Linphone Friend if we cannot use Sip address
+//Manage Linphone Friend if we cannot use Sip address
 	public boolean createNewFriend(Contact contact, String sipUri) {
 		if (!sipUri.startsWith("sip:")) {
 			sipUri = "sip:" + sipUri;
@@ -246,32 +296,6 @@ public class ContactsManager {
 				LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 			}
 		}
-	}
-
-	public Cursor searchFriends(String search) {
-		searchContactList =  new ArrayList<Contact>();
-		for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
-			if (LinphoneUtils.getAddressDisplayName(friend.getAddress()).toLowerCase().contains(search.toLowerCase()) || friend.getAddress().getUserName().toLowerCase().contains(search.toLowerCase())) {
-				searchContactList.add(new Contact(friend.getRefKey(),friend.getAddress().asStringUriOnly(),LinphoneUtils.getAddressDisplayName(friend.getAddress())));
-			}
-		}
-
-		if(searchContactList != null){
-			return getFriendListCursor(searchContactList,true);
-		}
-		return null;
-	}
-
-	public LinphoneFriend findLinphoneFriend(LinphoneAddress address) {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
-			for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
-				if (friend.getAddress().equals(address)) {
-					return friend;
-				}
-			}
-		}
-		return null;
 	}
 
 	public Contact findContactWithDisplayName(String displayName) {
@@ -339,79 +363,19 @@ public class ContactsManager {
 
 	public boolean removeContactTagIsNeeded(Contact contact){
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LinphoneProxyConfig lpc = null;
 		if (lc != null) {
-			LinphoneProxyConfig lpc = lc.createProxyConfig();
-			contact.refresh(contentResolver);
-			for (String address : contact.getNumbersOrAddresses()) {
-				if (!lpc.isPhoneNumber(address)) {
-					return false;
-				}
-			}
-			return true;
+			lpc = lc.getDefaultProxyConfig();
 		}
-		return false;
-	}
-
-	public void removeLinphoneContactTag(Contact contact){
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-		String select = ContactsContract.RawContacts._ID + " = ?";
-		String[] args = new String[] { findRawLinphoneContactID(contact.getID()) };
-
-
-		ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
-						.withSelection(select, args)
-						.build()
-		);
-
-		try {
-			contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
-		} catch (Exception e) {
-			Log.w(e.getMessage() + ":" + e.getStackTrace());
-		}
-	}
-
-	private Contact checkPhoneQueryResult(ContentResolver contentResolver, Cursor c, String columnPhone, String columnId, String username) {
-		boolean contactFound = false;
-
-		if (c != null) {
-			while (!contactFound && c.moveToNext()) {
-				String phone = c.getString(c.getColumnIndex(columnPhone));
-				if (phone.equals(username)) {
-					contactFound = true;
-				} else {
-					String normalizedUsername = null;
-					LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-					if (lc != null) {
-						LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
-						if (lpc != null) {
-							normalizedUsername = lpc.normalizePhoneNumber(phone);
-						}
-					}
-
-					if (normalizedUsername != null && normalizedUsername.equals(username)) {
-						contactFound = true;
-					}
+		
+		for (LinphoneContact c: getContacts()) {
+			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
+				String normalized = null;
+				if (lpc != null) {
+					normalized = lpc.normalizePhoneNumber(noa.getValue());
 				}
-
-				if(contactFound){
-					Contact contact = getContact(c.getString(c.getColumnIndex(columnId)), contentResolver);
-					c.close();
-					return contact;
-				}
-			}
-			c.close();
-		}
-		return null;
-	}
-
-	public Contact findContactWithAddress(LinphoneAddress address) {
-		String sipUri = address.asStringUriOnly();
-		if (sipUri.startsWith("sip:"))
-			sipUri = sipUri.substring(4);
-
-		for(Contact c: getAllContacts()){
-			for(String a: c.getNumbersOrAddresses()){
-				if(a.equals(sipUri))
+				
+				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (normalized != null && !noa.isSIPAddress() && normalized.equals(username)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
 					return c;
 			}
 		}
@@ -424,7 +388,7 @@ public class ContactsManager {
 			sipUri = sipUri.substring(4);
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
+		if(lc != null && lc.getFriendList() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList().length > 0) {
 			for (LinphoneFriend friend : LinphoneManager.getLcIfManagerNotDestroyedOrNull().getFriendList()) {
 				if (friend.getAddress().equals(address)) {
 					return getContact(friend.getRefKey(), contentResolver);
@@ -434,7 +398,7 @@ public class ContactsManager {
 
 		//Find Sip address
 		Contact contact;
-		String[] projection = new String[]{ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
+		String [] projection = new String[]  {ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME};
 		String selection = new StringBuilder()
 				.append(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)
 				.append(" = ?").toString();
@@ -450,12 +414,11 @@ public class ContactsManager {
 					return contact;
 				}
 			}
-			cur.close();
 		}
 
 		//Find number
 		Uri lookupUri = Uri.withAppendedPath(android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address.getUserName()));
-		projection = new String[]{ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+		projection = new String[] {ContactsContract.PhoneLookup._ID,ContactsContract.PhoneLookup.NUMBER,ContactsContract.PhoneLookup.DISPLAY_NAME };
 		Cursor c = contentResolver.query(lookupUri, projection, null, null, null);
 		contact = checkPhoneQueryResult(contentResolver, c, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup._ID, address.getUserName());
 
@@ -466,130 +429,62 @@ public class ContactsManager {
 		return null;
 
 	}
-
-	public void removeContactFromLists(ContentResolver contentResolver, Contact contact) {
-		for (Contact c : contactList) {
-			if (c != null && c.getID().equals(contact.getID())) {
-				contactList.remove(c);
-				contactCursor = Compatibility.getContactsCursor(contentResolver,getContactsId());
-				break;
-			}
-		}
-
-		for (Contact c : sipContactList) {
-			if (c != null && c.getID().equals(contact.getID())) {
-				sipContactList.remove(c);
-				sipContactCursor = Compatibility.getSIPContactsCursor(contentResolver,getContactsId());
-				break;
+	
+	public synchronized void setContacts(List<LinphoneContact> c) {
+		contacts = c;
+		sipContacts = new ArrayList<LinphoneContact>();
+		for (LinphoneContact contact : contacts) {
+			if (contact.hasAddress()) {
+				sipContacts.add(contact);
 			}
 		}
 	}
 
-	public boolean isContactHasAddress(Contact contact, String address){
-		if(contact != null) {
-			contact.refresh(contentResolver);
-			return contact.getNumbersOrAddresses().contains(address) || contact.getNumbersOrAddresses().contains("sip:" + address);
-		}
-		return false;
+	public synchronized void fetchContacts() {
+		setContacts(fetchContactsAsync());
 	}
-
-	public String findRawContactID(ContentResolver cr, String contactID) {
-		Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI,
-				new String[]{ContactsContract.RawContacts._ID},
-				ContactsContract.RawContacts.CONTACT_ID + "=?",
-				new String[]{contactID}, null);
-		if (c != null) {
-			String result = null;
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
-			}
-
-			c.close();
-			return result;
-		}
-		return null;
-	}
-
-	public String findRawLinphoneContactID(String contactID) {
-		String result = null;
-		String[] projection = { ContactsContract.RawContacts._ID };
-
-		String selection = ContactsContract.RawContacts.CONTACT_ID + "=? AND "
-				+ ContactsContract.RawContacts.ACCOUNT_TYPE + "=? ";
-
-		Cursor c = contentResolver.query(ContactsContract.RawContacts.CONTENT_URI, projection,
-				selection, new String[]{contactID, "org.linphone"}, null);
-		if (c != null) {
-			if (c.moveToFirst()) {
-				result = c.getString(c.getColumnIndex(ContactsContract.RawContacts._ID));
-			}
-		}
-		c.close();
-		return result;
-	}
-
-	//Migrate old IM contacts into SIP addresses or linphoneFriends
-	public void migrateContacts() {
-		Cursor oldContacts =  Compatibility.getImContactsCursor(contentResolver);
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-
-		if(oldContacts != null){
-			for (int i = 0; i < oldContacts.getCount(); i++) {
-				Contact contact = Compatibility.getContact(contentResolver, oldContacts, i);
-				for (String address : Compatibility.extractContactImAddresses(contact.getID(), contentResolver)) {
-					if (LinphoneUtils.isSipAddress(address)) {
-						if (address.startsWith("sip:")) {
-							address = address.substring(4);
-						}
-
-						//Add new sip address
-						Compatibility.addSipAddressToContact(context, ops, address, findRawContactID(contentResolver, contact.getID()));
-						try {
-							contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						ops.clear();
-
-						contact.refresh(contentResolver);
-
-						//If address sip is correctly add, remove the im address
-						if(contact.getNumbersOrAddresses().contains(address)){
-							Compatibility.deleteImAddressFromContact(ops, address, contact.getID());
-							try {
-								contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							ops.clear();
-						} else {
-							//Add linphone friend instead
-							if(createNewFriend(contact, address)) {
-								contact.refresh(contentResolver);
-
-								//Remove IM address
-								Compatibility.deleteImAddressFromContact(ops, address, contact.getID());
-								try {
-									contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
-								} catch (Exception e) {
-									e.printStackTrace();
-
-								}
-							}
-						}
-					}
-					ops.clear();
+	
+	public List<LinphoneContact> fetchContactsAsync() {
+		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
+		
+		if (mAccount != null && hasContactsAccess()) {
+			Cursor c = Compatibility.getContactsCursor(contentResolver, null);
+			if (c != null) {
+				while (c.moveToNext()) {
+					String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
+					LinphoneContact contact = new LinphoneContact();
+					contact.setAndroidId(id);
+					contacts.add(contact);
 				}
+				c.close();
 			}
-			oldContacts.close();
 		}
-
-	}
-
-	public synchronized void prepareContactsInBackground() {
-		if (contactCursor != null) {
-			contactCursor.close();
+		
+		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+			String refkey = friend.getRefKey();
+			if (refkey != null) {
+				boolean found = false;
+				for (LinphoneContact contact : contacts) {
+					if (refkey.equals(contact.getAndroidId())) {
+						contact.setFriend(friend);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					LinphoneContact contact = new LinphoneContact();
+					contact.setFriend(friend);
+					contacts.add(contact);
+				}
+			} else {
+				LinphoneContact contact = new LinphoneContact();
+				contact.setFriend(friend);
+				contacts.add(contact);
+			}
+		}
+		
+		for (LinphoneContact contact : contacts) {
+			contact.refresh();
 		}
 		if (sipContactCursor != null) {
 			sipContactCursor.close();
@@ -598,16 +493,8 @@ public class ContactsManager {
 		if(LinphoneActivity.instance().getResources().getBoolean(R.bool.use_linphone_friend)){
 			contactList = new ArrayList<Contact>();
 			for(LinphoneFriend friend : LinphoneManager.getLc().getFriendList()){
-				Contact contact = new Contact(friend.getRefKey(),friend.getAddress().asStringUriOnly(),LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+				Contact contact = new Contact(friend.getRefKey(),friend.getAddress());
 				contactList.add(contact);
-
-				Collections.sort(contactList, new Comparator<Contact>() {
-					@Override
-					public int compare(Contact a, Contact b) {
-						return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
-					}
-				});
-
 			}
 
 			contactCursor = getFriendListCursor(contactList,true);
@@ -669,10 +556,10 @@ public class ContactsManager {
 
 		sipContactsHandler.start();
 	}
-
-	public static String queryAddressOrNumber(ContentResolver resolver, Uri contactUri) {
+	
+	public static String getAddressOrNumberForAndroidContact(ContentResolver resolver, Uri contactUri) {
 		// Phone Numbers
-		String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+		String[] projection = new String[]{ ContactsContract.CommonDataKinds.Phone.NUMBER };
 		Cursor c = resolver.query(contactUri, projection, null, null, null);
 		if (c != null) {
 			while (c.moveToNext()) {
@@ -684,7 +571,7 @@ public class ContactsManager {
 		}
 
 		// SIP addresses
-		projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
+		projection = new String[] { ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS };
 		c = resolver.query(contactUri, projection, null, null, null);
 		if (c != null) {
 			while (c.moveToNext()) {
@@ -697,29 +584,33 @@ public class ContactsManager {
 		}
 		return null;
 	}
-
-	boolean isContactHasLinphoneTag(Contact contact, ContentResolver cr) {
+	
+	public void delete(String id) {
+		ArrayList<String> ids = new ArrayList<String>();
+		ids.add(id);
+		deleteMultipleContactsAtOnce(ids);
+	}
+	
+	public void deleteMultipleContactsAtOnce(List<String> ids) {
 		String select = ContactsContract.Data.CONTACT_ID + " = ?";
-		String[] args = new String[] { contact.getID() };
-
-		String[] projection = new String[] {ContactsContract.Data.MIMETYPE };
-
-		Cursor cursor = cr.query(ContactsContract.Data.CONTENT_URI, projection, select, args, null);
-
-		if (cursor != null) {
-			while (cursor.moveToNext()) {
-				if(cursor.getString(cursor.getColumnIndex(ContactsContract.Data.MIMETYPE)).equals("vnd.android.cursor.item/org.linphone.profile")){
-					cursor.close();
-					return true;
-				}
-			}
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		
+		for (String id : ids) {
+			String[] args = new String[] { id };
+			ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
 		}
-		cursor.close();
-		return false;
+
+		ContentResolver cr = ContactsManager.getInstance().getContentResolver();
+		try {
+			cr.applyBatch(ContactsContract.AUTHORITY, ops);
+		} catch (Exception e) {
+			Log.e(e);
+		}
 	}
 
 	public Cursor getFriendListCursor(List<Contact> contacts, boolean shouldGroupBy){
 		String[] columns = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.Data.DISPLAY_NAME };
+
 
 		if (!shouldGroupBy) {
 			return null;

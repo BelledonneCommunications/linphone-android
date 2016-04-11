@@ -17,9 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -31,10 +28,15 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -64,7 +66,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
 	private TextView noChatHistory;
-	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, contactPicture, cancel, backInCall;
+	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, cancel, backInCall;
 	private LinearLayout editList, topbar;
 	private boolean isEditMode = false;
 	
@@ -152,11 +154,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void enabledDeleteButton(Boolean enabled){
 		if(enabled){
 			delete.setEnabled(true);
-			delete.setAlpha(1f);
 		} else {
 			if (getNbItemsChecked() == 0){
 				delete.setEnabled(false);
-				delete.setAlpha(0.2f);
 			}
 		}
 	}
@@ -321,32 +321,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneActivity.instance().displayChat(sipUri);
 		}
 	}
-	
-	private String saveImageAsFile(int id, Bitmap bm) {
-		try {
-			String path = Environment.getExternalStorageDirectory().toString();
-			if (!path.endsWith("/"))
-				path += "/";
-			path += "Pictures/";
-			File directory = new File(path);
-			directory.mkdirs();
-			
-			String filename = getString(R.string.picture_name_format).replace("%s", String.valueOf(id));
-			File file = new File(path, filename);
-			
-			OutputStream fOut = null;
-			fOut = new FileOutputStream(file);
-
-			bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-			fOut.flush();
-			fOut.close();
-			
-			return path + filename;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
 	class ChatListAdapter extends BaseAdapter {
 
@@ -384,7 +358,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				return view;
 			}
 
-			//Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
+			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
 			String message = "";
 			Long time;
 
@@ -417,12 +391,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 
 			displayName.setSelected(true); // For animation
-			if(friend != null) {
-				displayName.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
-			} else {
-				displayName.setText(LinphoneUtils.getAddressDisplayName(address));
-			}
-
+			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getName());
 
 
 			/*if(contact != null){

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.Contact;
+import org.linphone.LinphoneContact;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
@@ -16,8 +17,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
-import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.text.TextUtils;
 
@@ -183,9 +184,9 @@ public class ApiNinePlus {
 		String sipUri = username + "@" + domain;
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
-		Contact contact = ApiFivePlus.getContact(cr, cursor, 0);
+		LinphoneContact contact = ApiFivePlus.getContact(cr, cursor, 0);
 		if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
-			address.setDisplayName(contact.getName());
+			address.setDisplayName(contact.getFullName());
 			cursor.close();
 			return contact.getPhotoUri();
 		}

@@ -32,27 +32,34 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class AssistantActivity extends Activity implements OnClickListener {
-	private static AssistantActivity instance;
+public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+private static AssistantActivity instance;
 	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
 	private AssistantFragmentsEnum firstFragment;
@@ -62,7 +69,9 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
 	private StatusFragment status;
+	private ProgressDialog progress;
 	private Dialog dialog;
+	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,24 +92,31 @@ public class AssistantActivity extends Activity implements OnClickListener {
             }
         }
         mPrefs = LinphonePreferences.instance();
-		if(mPrefs.isFirstLaunch()) {
+		//if(mPrefs.isFirstLaunch()) {
 			status.enableSideMenu(false);
-		}
+		//}
         
         mListener = new LinphoneCoreListenerBase(){
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
 				if(accountCreated && !newAccount){
-					if(address != null && address.asString().equals(cfg.getIdentity()) ) {
+					if(address != null && address.asString().equals(cfg.getAddress().asString()) ) {
 						if (state == RegistrationState.RegistrationOk) {
+							if(progress != null)
+								progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 								launchEchoCancellerCalibration(true);
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
+							if(progress != null)
+								progress.dismiss();
 							if(dialog == null || !dialog.isShowing()) {
 								dialog = createErrorDialog(cfg, smessage);
 								dialog.show();
 							}
+						} else if(!(state == RegistrationState.RegistrationProgress)) {
+							if(progress != null)
+								progress.dismiss();
 						}
 					}
 				}
@@ -151,6 +167,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	}
 	
 	private void changeFragment(Fragment newFragment) {
+		hideKeyboard();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment_container, newFragment);
 		transaction.commitAllowingStateLoss();
@@ -206,18 +223,43 @@ public class AssistantActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
-		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
-		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
-			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
-			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
-			changeFragment(fragment);
-			currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
-			back.setVisibility(View.VISIBLE);
-			cancel.setEnabled(false);
+	public void checkAndRequestAudioPermission() {
+		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
+			}
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
+			if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+				launchEchoCancellerCalibration(true);
+			} else {
+				success();
+			}
 		} else {
 			success();
-		}		
+		}
+	}
+
+	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
+		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
+			if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
+				fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
+				changeFragment(fragment);
+				currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
+				back.setVisibility(View.VISIBLE);
+				cancel.setEnabled(false);
+			} else {
+				success();
+			}
+		} else {
+			checkAndRequestAudioPermission();
+		}
 	}
 
 	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
@@ -328,7 +370,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 
-		if(displayName != null && !displayName.equals("")){
+		if(address != null && displayName != null && !displayName.equals("")){
 			address.setDisplayName(displayName);
 		}
 
@@ -369,7 +411,7 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				.setAvpfRRInterval(5);
 			}
 
-			if(transport != null){
+			if(transport != null) {
 				builder.setTransport(transport);
 			}
 		}
@@ -382,21 +424,36 @@ public class AssistantActivity extends Activity implements OnClickListener {
 				builder.setContactParameters(contactInfos);
 			}
 		}
-		
+
 		try {
 			builder.saveNewAccount();
+			if(!newAccount) {
+				displayRegistrationInProgressDialog();
+			}
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void displayWizardConfirm(String username) {
-		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
+ 	public void displayRegistrationInProgressDialog(){
+		if(LinphoneManager.getLc().isNetworkReachable()) {
+			progress = ProgressDialog.show(this,null,null);
+			Drawable d = new ColorDrawable(getResources().getColor(R.color.colorE));
+			d.setAlpha(200);
+			progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+			progress.getWindow().setBackgroundDrawable(d);
+			progress.setContentView(R.layout.progress_dialog);
+			progress.show();
+		}
+	}
 
+	public void displayAssistantConfirm(String username, String password) {
+		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
 		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
+		extras.putString("Password", password);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		
@@ -406,7 +463,6 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
-		LinphoneManager.getLcIfManagerNotDestroyedOrNull().refreshRegisters();
 		launchEchoCancellerCalibration(true);
 	}
 
@@ -439,8 +495,10 @@ public class AssistantActivity extends Activity implements OnClickListener {
 	
 	public void success() {
 		mPrefs.firstLaunchSuccessful();
-		LinphoneActivity.instance().isNewProxyConfig();
-		setResult(Activity.RESULT_OK);
+		if(LinphoneActivity.instance() != null) {
+			LinphoneActivity.instance().isNewProxyConfig();
+			setResult(Activity.RESULT_OK);
+		}
 		finish();
 	}
 }

@@ -1,86 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/bubble"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:gravity="left"
-	android:orientation="horizontal" >
-
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/resizable_chat_bubble_incoming"
-		android:orientation="horizontal" >
-
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp">
-
-			<TextView
-				android:id="@+id/contact_header"
-				style="@style/font12"
-				android:singleLine="true"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-
-			<TextView
-				android:id="@+id/message"
-				style="@style/font14"
-				android:linksClickable="true"
-				android:autoLink="web"
-				android:layout_gravity="left"
-				android:visibility="gone"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-
-			<ImageView
-				android:id="@+id/image"
-				android:visibility="gone"
-				android:layout_width="150dp"
-				android:layout_height="150dp"
-				android:scaleType="centerInside"
-				android:maxWidth="250dp"
-				android:maxHeight="250dp" />
-
-			<RelativeLayout
-				android:id="@+id/file_transfer_layout"
-				android:visibility="gone"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content">
-
-				<ProgressBar
-					android:id="@+id/progress_bar"
-					android:paddingRight="5dp"
-					android:layout_marginTop="10dp"
-					android:layout_marginBottom="10dp"
-					style="@android:style/Widget.ProgressBar.Horizontal"
-					android:layout_width="150dp"
-					android:layout_height="5dp"/>
-
-				<Button
-					android:id="@+id/accept_download"
-					android:text="@string/download"
-					android:background="@drawable/resizable_confirm_delete_button"
-					style="@style/font7"
-					android:textAllCaps="true"
-					android:paddingLeft="10dp"
-					android:paddingRight="10dp"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="10dp"
-					android:layout_below="@id/progress_bar"/>
-
-			</RelativeLayout>
-
-		</LinearLayout>
-
-	</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bubble"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   	android:gravity="left"
+    android:orientation="horizontal">
 
 	<CheckBox
-		android:id="@+id/delete"
+		android:id="@+id/delete_message"
 		android:button="@drawable/checkbox"
 		android:contentDescription="@string/content_description_delete"
 		android:layout_marginLeft="5dp"
@@ -91,5 +18,95 @@
 		android:layout_alignParentRight="true"
 		android:visibility="gone" />
 
+	<LinearLayout
+		android:id="@+id/message_content"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 
-</LinearLayout>
+		<LinearLayout
+			android:background="@drawable/resizable_chat_bubble_incoming"
+			android:layout_height="wrap_content"
+			android:padding="10dp"
+			android:orientation="horizontal">
+			<RelativeLayout
+				android:id="@+id/avatar_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				<ImageView
+					android:id="@+id/contact_picture"
+					android:src="@drawable/avatar"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="40dp"
+					android:layout_height="40dp"/>
+
+				<ImageView
+					android:id="@+id/mask"
+					android:src="@drawable/avatar_chat_mask"
+					android:layout_width="40dp"
+					android:layout_height="40dp"/>
+
+			</RelativeLayout>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:paddingLeft="10dp">
+
+				<TextView
+					android:id="@+id/contact_header"
+					style="@style/font9"
+					android:singleLine="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+				<TextView
+					android:id="@+id/message"
+					style="@style/font11"
+					android:linksClickable="true"
+					android:autoLink="web"
+					android:visibility="gone"
+				android:maxHeight="250dp" />
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+				<ImageView
+					android:id="@+id/image"
+					android:layout_width="150dp"
+					android:layout_height="150dp"
+					android:scaleType="centerInside"
+					android:visibility="gone"
+					android:maxWidth="250dp"
+					android:maxHeight="250dp"/>
+
+				<RelativeLayout
+					android:id="@+id/file_transfer_layout"
+					android:visibility="gone"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+
+					<ProgressBar
+						android:id="@+id/progress_bar"
+						style="@android:style/Widget.ProgressBar.Horizontal"
+						android:paddingRight="5dp"
+						android:layout_marginTop="10dp"
+						android:layout_marginBottom="10dp"
+						android:layout_width="150dp"
+						android:layout_height="5dp"/>
+
+					<Button
+						android:id="@+id/accept_download"
+						android:text="@string/accept"
+						android:background="@drawable/resizable_assistant_button"
+						style="@style/font8"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_below="@id/progress_bar"/>
+
+				</RelativeLayout>
+			</LinearLayout>
+		</LinearLayout>
+
+	</LinearLayout>
+
+</RelativeLayout>

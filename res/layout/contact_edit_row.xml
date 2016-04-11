@@ -18,7 +18,8 @@
 			android:layout_toStartOf="@+id/delete"/>
 
 		<ImageView
-			android:id="@+id/delete"
+			android:id="@+id/delete_field"
+			android:src="@drawable/delete_field_default"
 			android:contentDescription="@string/content_description_add"
 			android:layout_gravity="center"
 			android:layout_width="30dp"

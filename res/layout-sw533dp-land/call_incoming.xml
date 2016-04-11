@@ -161,7 +161,6 @@
 				android:layout_height="wrap_content"
 				android:alpha="0.2"/>
 
-
 			<ImageView
 				android:src="@drawable/arrow_hangup"
 				android:layout_width="wrap_content"

@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone-tjänst</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">Startar upp</string>
+  <string name="tunnel_host"></string>
+  <!--Common-->
+  <string name="username">Användarnamn</string>
+  <string name="display_name">Visningsnamn</string>
+  <string name="password">Lösenord</string>
+  <string name="delete">Ta bort</string>
+  <string name="retry">Försök igen</string>
+  <string name="cancel">Avbryt</string>
+  <string name="accept">Acceptera</string>
+  <string name="continue_text">Fortsätt</string>
+  <string name="about">Om</string>
+  <string name="deny">Neka</string>
+  <string name="search">Sök</string>
+  <string name="outgoing">Utgående</string>
+  <string name="incoming">Inkommande</string>
+  <string name="missed">Missade</string>
+  <string name="settings">Inställningar</string>
+  <string name="decline">Avvisa</string>
+  <string name="conference">Konferens</string>
+  <!--Launch screen-->
+  <!--Assistant-->
+  <string name="wizard_username_unavailable">Detta användarnamn används redan.</string>
+  <string name="first_launch_no_login_password">Ange din inloggning och lösenord</string>
+  <!--Dailer-->
+  <!--History-->
+  <string name="today">Idag</string>
+  <string name="yesterday">Igår</string>
+  <!--Contacts-->
+  <string name="no_contact">Inga kontakter i din adressbok.</string>
+  <string name="no_sip_contact">Inga SIP-kontakter i din adressbok.</string>
+  <string name="sip_address">SIP-adress</string>
+  <string name="phone_number">Telefonnummer</string>
+  <string name="contact_first_name">Förnamn</string>
+  <string name="contact_last_name">Efternamn</string>
+  <!--Chat-->
+  <string name="share_picture_size_small">Liten</string>
+  <string name="share_picture_size_medium">Mellan</string>
+  <string name="share_picture_size_large">Stor</string>
+  <string name="share_picture_size_real">Riktig storlek</string>
+  <string name="copy_text">Kopiera text</string>
+  <string name="image_picker_title">Välj källa</string>
+  <string name="image_saved">Bild sparad</string>
+  <string name="image_not_saved">Fel, bild ej sparad</string>
+  <string name="wait">Vänta...</string>
+  <!--Status Bar-->
+  <string name="status_connected">Registrerad</string>
+  <string name="status_in_progress">Registrering pågår</string>
+  <string name="status_error">Registrering misslyckades</string>
+  <string name="voicemail_unread">olästa meddelanden</string>
+  <!--Side Menu-->
+  <string name="menu_settings">Inställningar</string>
+  <string name="menu_about">Om</string>
+  <!--Call-->
+  <string name="unknown_incoming_call_name">Okänd</string>
+  <string name="call_stats_audio">Ljud</string>
+  <string name="call_stats_video">Video</string>
+  <string name="call_stats_upload">Uppladdningsbandbredd:</string>
+  <string name="call_stats_download">Nerladdningsbandbredd:</string>
+  <string name="call_stats_ice">ICE-anslutning:</string>
+  <string name="call_stats_video_resolution">Video-storlek:</string>
+  <string name="call">Ring</string>
+  <!--About-->
+  <string name="menu_send_log">Skicka logg</string>
+  <string name="menu_reset_log">Nollställ logg</string>
+  <!--Service-->
+  <string name="incall_notif_active">Ljudsamtal pågår</string>
+  <string name="incall_notif_paused">Pausat samtal pågår</string>
+  <string name="notification_started">startad</string>
+  <string name="unread_messages">%i olästa meddelanden</string>
+  <!--Errors-->
+  <string name="skipable_error_service_not_ready">Varning: tjänst inte redo</string>
+  <string name="error">Fel</string>
+  <string name="error_unknown">Okänt fel</string>
+  <string name="error_call_declined">Samtal avvisat</string>
+  <string name="error_user_not_found">Användare ej funnen</string>
+  <string name="error_incompatible_media">Okompatibla mediaparametrar</string>
+  <string name="error_network_unreachable">Nätverk otillgängligt</string>
+  <string name="error_bad_credentials">Felaktigt inloggningsuppgifter</string>
+  <string name="error_io_error">Nätverksfel</string>
+  <!--Account Settings-->
+  <string name="pref_sipaccount">SIP-konto</string>
+  <string name="pref_manage_title">Hantera</string>
+  <string name="pref_disable_account">Inaktivera</string>
+  <string name="pref_proxy">Proxy</string>
+  <string name="pref_domain">Domän*</string>
+  <string name="pref_passwd">Lösenord*</string>
+  <string name="pref_username">Användarnamn*</string>
+  <string name="pref_enable_outbound_proxy">Utgående proxy</string>
+  <string name="pref_avpf">AVPF</string>
+  <string name="pref_escape_plus">Ersätt + med 00</string>
+  <string name="pref_display_name">Visningsnamn</string>
+  <string name="pref_prefix">Prefix</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
+  <string name="pref_delete_account">Ta bort detta konto</string>
+  <string name="pref_default_account">Använd som standard</string>
+  <!--Settings-->
+  <string name="pref_sipaccounts">SIP-konton</string>
+  <string name="default_account_flag">Standardkonto</string>
+  <string name="pref_add_account">Lägg till konto</string>
+  <string name="pref_tunnel">Tunnel</string>
+  <string name="pref_tunnel_host">Värdnamn</string>
+  <string name="pref_tunnel_port">Port</string>
+  <string name="pref_tunnel_mode">Läge</string>
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <string name="pref_none">Ingen</string>
+  <string name="pref_preferences_title">Inställningar</string>
+  <string name="pref_video_enable_title">Aktivera video</string>
+  <!--Audio settings-->
+  <string name="pref_audio_title">Ljud</string>
+  <string name="ec_calibrating">Kalibrerar...</string>
+  <string name="no_echo">Inget eko</string>
+  <string name="failed">misslyckades</string>
+  <!--Video settings-->
+  <string name="pref_video_title">Video</string>
+  <string name="pref_video_use_front_camera_title">Använd front-kamera</string>
+  <string name="pref_video_initiate_call_with_video_title">Initiera videosamtal</string>
+  <string name="pref_video_initiate_call_with_video">Skicka alltid videoförfrågningar</string>
+  <string name="pref_video_automatically_accept_video_title">Acceptera inkommande videoförfrågningar</string>
+  <string name="pref_video_automatically_accept_video">Acceptera alltid videoförfrågningar</string>
+  <string name="pref_preferred_video_size">Föredragen videostorlek</string>
+  <string name="pref_bandwidth_limit">Bandbreddsgräns i kbit/s</string>
+  <!--Call settings-->
+  <string name="pref_call_title">Ring</string>
+  <string name="pref_rfc2833_dtmf">Skicka RFC2833 DTMF</string>
+  <!--Network settings-->
+  <string name="pref_network_title">Nätverk</string>
+  <string name="pref_stun_server">Stun-server</string>
+  <string name="pref_ice_enable">Aktivera ICE</string>
+  <string name="pref_upnp_enable">Aktivera UPNP</string>
+  <string name="pref_transport_use_random_ports">Använd slumpade portar</string>
+  <string name="pref_sip_port_title">SIP-port att använda</string>
+  <string name="pref_media_encryption">Media-kryptering</string>
+  <!--Advanced settings-->
+  <string name="pref_advanced_title">Avancerat</string>
+  <string name="pref_background_mode">Bakgrundsläge</string>
+  <string name="pref_animation_enable_title">Aktivera animeringar</string>
+  <string name="pref_autostart">Starta vid uppstart</string>
+  <string name="pref_image_sharing_server_title">Delar server</string>
+  <string name="pref_primary_account_title">Primärt konto</string>
+  <string name="pref_display_name_title">Visningsnamn</string>
+  <string name="pref_user_name_title">Användarnamn</string>
+  <!--Audio hack settings-->
+  <string name="pref_audio_hacks_title">Ljud-hacks</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Använd Galaxy S-ljudhack</string>
+  <!--Content description-->
+  <string name="content_description_back">Tillbaka</string>
+  <string name="content_description_toggle_micro">Växla micro</string>
+  <string name="content_description_toggle_speaker">Växla högtalare</string>
+  <string name="content_description_decline">Avvisa</string>
+  <string name="content_description_hang_up">Lägg på</string>
+  <string name="content_description_accept">Acceptera</string>
+  <string name="content_description_edit">Redigera</string>
+  <string name="content_description_add_contact">Lägg till kontakter</string>
+  <string name="content_description_new_contact">Ny kontakt</string>
+  <string name="content_description_call">Ring</string>
+  <string name="content_description_chat">Chatt</string>
+  <string name="content_description_dial_back">Ring tillbaka</string>
+  <string name="content_description_contact_picture">Kontakt-bild</string>
+  <string name="content_description_send_message">Skicka meddelande</string>
+  <string name="content_description_delete">Ta bort</string>
+  <string name="content_description_add">Lägg till samtal</string>
+  <string name="content_description_new_discussion">Ny diskussion</string>
+  <string name="content_description_search">Sök</string>
+  <string name="content_description_all_contacts">Alla kontakter</string>
+  <string name="content_description_linphone_contacts">Linphone-kontakter</string>
+  <string name="content_description_all_calls">Alla samtal</string>
+  <string name="content_description_missed_calls">Missade samtal</string>
+  <string name="content_description_switch_video">Växla video</string>
+  <string name="content_description_add_call">Lägg till samtal</string>
+  <string name="content_description_pause">Pausa</string>
+  <string name="content_description_history">Historik-knapp</string>
+  <string name="content_description_chat_button">Chatt-knapp</string>
+  <string name="content_description_contacts">Kontakter-knapp</string>
+  <string name="content_description_call_quality">Samtalskvalitet</string>
+  <string name="content_description_encryption">Kryptering</string>
+  <string name="content_description_switch_camera">Växla kamera</string>
+  <string name="content_description_cancel_button">Avbryt-knapp</string>
+  <string name="content_description_message_status">Meddelandestatus</string>
+  <string name="content_description_conference">Konferens</string>
+  <string name="content_description_default_account">Standardkonto</string>
+  <string name="content_description_contact_first_name">Förnamn</string>
+  <string name="content_description_contact_last_name">Efternamn</string>
+  <string name="content_description_transfer">Överför</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
+</resources>

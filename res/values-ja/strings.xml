@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone サービス</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">はじめます</string>
+  <string name="notification_registered">%sを登録しました</string>
+  <string name="notification_register_failure">%sの登録に失敗しました</string>
+  <string name="tunnel_host"></string>
+  <!--Common-->
+  <string name="username">ユーザー名</string>
+  <string name="display_name">表示する名前</string>
+  <string name="password">パスワード</string>
+  <string name="confirm_password">パスワードを再入力</string>
+  <string name="domain">ドメイン</string>
+  <string name="remote_provisioning_url">URL</string>
+  <string name="email">メールアドレス</string>
+  <string name="delete_text">選択した内容を本当に削除しますか？</string>
+  <string name="delete">削除する</string>
+  <string name="retry">再送する</string>
+  <string name="cancel">キャンセル</string>
+  <string name="accept">受理</string>
+  <string name="continue_text">続行</string>
+  <string name="about">概要</string>
+  <string name="deny">拒否する</string>
+  <string name="no_account">アカウントがありません</string>
+  <string name="search">検索</string>
+  <string name="outgoing">発信</string>
+  <string name="incoming">着信</string>
+  <string name="missed">ミス</string>
+  <string name="settings">設定</string>
+  <string name="connect">接続する</string>
+  <string name="decline">接続しない</string>
+  <string name="conference">会談</string>
+  <!--Launch screen-->
+  <string name="app_description">the <i>libre</i> SIP client</string>
+  <!--Assistant-->
+  <string name="welcome">ようこそ</string>
+  <string name="assistant">アシスタント</string>
+  <string name="assistant_create_account">アカウントを作成する</string>
+  <string name="assistant_finish">完了しました</string>
+  <string name="assistant_validate_account">アカウントを作成しました。あなたのメールを確認し、アカウントを認証してください。その後このボタンを押して再開してください。</string>
+  <string name="assistant_welcome_desc">SIPアカウントの設定を行います。</string>
+  <string name="assistant_linphone_login_desc">Linphoneのユーザー名とパスワードを入力してください</string>
+  <string name="assistant_login_desc">SIPドメインのユーザー名とパスワードを入力してください</string>
+  <string name="assistant_remote_provisioning_desc">プロビショニングURLを入力してください</string>
+  <string name="transport">トランスポート</string>
+  <string name="assistant_login_linphone">Linphoneのアカウントで使う</string>
+  <string name="assistant_login_generic">SIPアカウントで使う</string>
+  <string name="assistant_remote_provisioning">リモート設定</string>
+  <string name="assistant_create_account_part_1">1/2</string>
+  <string name="assistant_create_account_part_2">2/2</string>
+  <string name="assistant_display_name_optional">表示する名前(任意)</string>
+  <string name="assistant_linphone_account">Linphoneアカウントを登録する</string>
+  <string name="assistant_generic_account">SIPアカウントを登録する</string>
+  <string name="assistant_remote_provisioning_title">リモート設定</string>
+  <string name="assistant_login">ログイン</string>
+  <string name="assistant_ec_calibration">エコーキャンセルを設定しています</string>
+  <string name="assistant_remote_provisioning_login">ログインしてください</string>
+  <string name="assistant_account_not_validated">未確認のアカウントです。</string>
+  <string name="assistant_account_validated">確認済みのアカウントです。</string>
+  <string name="assistant_error_bad_credentials">ユーザー名かパスワードが異なります</string>
+  <string name="wizard_failed">エラーが発生しました。のちほど再試行してください。</string>
+  <string name="wizard_username_unavailable">このユーザー名はすでに使われています。</string>
+  <string name="first_launch_no_login_password">ユーザー名とパスワードを入力してください</string>
+  <!--Dailer-->
+  <!--History-->
+  <string name="today">今日</string>
+  <string name="yesterday">昨日</string>
+  <!--Contacts-->
+  <string name="no_contact">電話帳に連絡先がありません</string>
+  <string name="no_sip_contact">電話帳にSIPの連絡先がありません</string>
+  <string name="sip_address">SIPアドレス</string>
+  <string name="phone_number">電話番号</string>
+  <string name="contact_first_name">名前</string>
+  <string name="contact_last_name">名字</string>
+  <!--Chat-->
+  <string name="remote_composing">リモート先が入力中...</string>
+  <string name="share_picture_size_small">小さい</string>
+  <string name="share_picture_size_medium">中くらい</string>
+  <string name="share_picture_size_large">大きい</string>
+  <string name="share_picture_size_real">原寸大</string>
+  <string name="text_copied_to_clipboard">テキストをクリップボードにコピーする</string>
+  <string name="copy_text">コピーしたテキスト</string>
+  <string name="image_picker_title">選択したソース</string>
+  <string name="image_saved">保存した画像</string>
+  <string name="image_not_saved">エラー、画像が保存できません。</string>
+  <string name="wait">お待ちください...</string>
+  <string name="processing_image">画像の処理は、ファイルサイズによっては数秒かかることがあります</string>
+  <!--Status Bar-->
+  <string name="status_connected">登録済</string>
+  <string name="status_not_connected">登録なし</string>
+  <string name="status_in_progress">登録に問題があります</string>
+  <string name="status_error">登録できませんでした</string>
+  <string name="voicemail_unread">未読メッセージ</string>
+  <!--Side Menu-->
+  <string name="menu_assistant">アシスタント</string>
+  <string name="menu_settings">設定</string>
+  <string name="menu_about">概要</string>
+  <string name="quit">退出</string>
+  <!--Call-->
+  <string name="incoming_call">着信</string>
+  <string name="outgoing_call">発信</string>
+  <string name="unknown_incoming_call_name">不明</string>
+  <string name="call_stats_audio">オーディオ</string>
+  <string name="call_stats_video">ビデオ</string>
+  <string name="call_stats_codec">コーデック:</string>
+  <string name="call_stats_upload">アップロード幅:</string>
+  <string name="call_stats_download">ダウンロード幅:</string>
+  <string name="call_stats_ice">ICE 接続:</string>
+  <string name="call_stats_video_resolution">ビデオ解像度:</string>
+  <string name="call">発信</string>
+  <!--About-->
+  <string name="menu_send_log">ログを送信する</string>
+  <string name="menu_reset_log">ログをリセットする</string>
+  <!--Service-->
+  <string name="incall_notif_active">オーディオを呼び出し中</string>
+  <string name="incall_notif_paused">コールの一時停止中</string>
+  <string name="incall_notif_video">ビデオキャプチャーコール進行中</string>
+  <string name="notification_started">はじめます</string>
+  <string name="unread_messages">%i 未読メッセージ</string>
+  <!--Errors-->
+  <string name="skipable_error_service_not_ready">警告：未提供のサービスです</string>
+  <string name="error">エラー</string>
+  <string name="error_unknown">不明なエラー</string>
+  <string name="error_call_declined">呼び出しが拒否されました</string>
+  <string name="error_user_not_found">ユーザーがおりません</string>
+  <string name="error_incompatible_media">互換性のないメディアパラメーター</string>
+  <string name="error_network_unreachable">ネットワークに到達できません</string>
+  <string name="error_bad_credentials">不正な証明書です</string>
+  <string name="error_unauthorized">無断</string>
+  <string name="error_io_error">ネットワークエラー</string>
+  <string name="remote_provisioning_failure">ダウンロードした、リモートプロビジョニング設定を適用できませんでした...</string>
+  <string name="remote_provisioning_again_title">遠隔準備</string>
+  <!--Account Settings-->
+  <string name="pref_sipaccount">SIPアカウント</string>
+  <string name="pref_manage_title">管理</string>
+  <string name="pref_disable_account">無効にする</string>
+  <string name="pref_proxy">プロキシ</string>
+  <string name="pref_domain">ドメイン*</string>
+  <string name="pref_passwd">パスワード*</string>
+  <string name="pref_username">ユーザー名*</string>
+  <string name="pref_enable_outbound_proxy">Outbound proxy</string>
+  <string name="pref_help_proxy">SIP のプロキシ名 もしくは IPアドレス (任意)</string>
+  <string name="pref_help_outbound_proxy">SIP プロキシ経由で呼び出しを実行する</string>
+  <string name="pref_help_username">一例: john であればあなたのアカウント は john@sip.example.org</string>
+  <string name="pref_help_domain">sip.example.org であればあなたのアカウント は john@sip.example.org</string>
+  <string name="pref_help_password">あなたのユーザ名/またはドメインを編集した場合はパスワードを再入力する必要があります。</string>
+  <string name="pref_expire_title">Expire</string>
+  <string name="pref_avpf">AVPF</string>
+  <string name="pref_avpf_rr_interval">AVPFによる正規のRTCP間隔 (1秒 から 5秒)</string>
+  <string name="pref_escape_plus">00 で置き換える</string>
+  <string name="pref_auth_userid">ユーザーIDを認証</string>
+  <string name="pref_display_name">表示名</string>
+  <string name="pref_prefix">プレフィックス</string>
+  <string name="pref_transport">トランスポート</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
+  <string name="pref_delete_account">このアカウントを削除する</string>
+  <string name="pref_default_account">デフォルトで使用する</string>
+  <!--Settings-->
+  <string name="pref_sipaccounts">SIPアカウント</string>
+  <string name="default_account_flag">デフォルトのアカウント</string>
+  <string name="pref_add_account">アカウントを追加する</string>
+  <string name="pref_tunnel">トンネル</string>
+  <string name="pref_tunnel_host">ホスト名</string>
+  <string name="pref_tunnel_port">ポート</string>
+  <string name="pref_tunnel_mode">モード</string>
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <string-array name="tunnel_mode_entries">
+    <item>無効</item>
+    <item>3Gのみ</item>
+    <item>常に</item>
+    <item>自動</item>
+  </string-array>
+  <string name="pref_none">なし</string>
+  <string name="pref_preferences_title">設定</string>
+  <string name="pref_video_enable_title">ビデオを有効にする</string>
+  <!--Audio settings-->
+  <string name="pref_audio_title">オーディオ</string>
+  <string name="pref_echo_cancellation">エコーキャンセル</string>
+  <string name="pref_echo_cancellation_summary">相手が聞こえるエコーを削除する</string>
+  <string name="ec_calibrating">調整中...</string>
+  <string name="ec_calibrated">%s msで調整しました</string>
+  <string name="no_echo">エコーなし</string>
+  <string name="failed">失敗</string>
+  <string name="pref_adaptive_rate_control">適応レート制御</string>
+  <string name="pref_codec_bitrate_limit">コーデックのビットレート制限</string>
+  <string name="pref_codecs">Codecs</string>
+  <!--Video settings-->
+  <string name="pref_video_title">ビデオ</string>
+  <string name="pref_video_use_front_camera_title">フロントカメラを使用する</string>
+  <string name="pref_video_initiate_call_with_video_title">ビデオ通話を開始する</string>
+  <string name="pref_video_initiate_call_with_video">ビデオ表示の要請を常に送信</string>
+  <string name="pref_video_automatically_accept_video_title">ビデオ表示の要求を受け入れる</string>
+  <string name="pref_video_automatically_accept_video">ビデオ表示の要求を常に受け入れる</string>
+  <string name="pref_video_preset">動画の設定</string>
+  <string name="pref_preferred_video_size">動画の大きさ</string>
+  <string name="pref_preferred_fps">FPSの値</string>
+  <string name="pref_bandwidth_limit">帯域限度 in kbits/s</string>
+  <string name="pref_video_codecs_title">コーデック</string>
+  <!--Call settings-->
+  <string name="pref_call_title">発信</string>
+  <string name="pref_rfc2833_dtmf">DTMFをRFC2833で送信する</string>
+  <string name="pref_sipinfo_dtmf">DTMFをSIP情報で送信する</string>
+  <string name="pref_voice_mail">音声メールのURI</string>
+  <!--Network settings-->
+  <string name="pref_network_title">ネットワーク</string>
+  <string name="pref_wifi_only">WiFiのみ</string>
+  <string name="pref_stun_server">Stunサーバー</string>
+  <string name="pref_ice_enable">ICEを有効にする</string>
+  <string name="pref_upnp_enable">UPNPを使う</string>
+  <string name="pref_transport_use_random_ports">ランダムポートを使用する</string>
+  <string name="pref_sip_port_title">SIPポートを使用する</string>
+  <string name="pref_video_port_title">ビデオのポートまたはポート範囲</string>
+  <string name="pref_audio_port_title">オーディオのポートまたはポート範囲</string>
+  <string name="pref_video_port_description">ビデオのポートまたはポート範囲 (最小-最大)</string>
+  <string name="pref_audio_port_description">オーディオのポートまたはポート範囲 (最小-最大)</string>
+  <string name="pref_media_encryption">メディアの暗号化</string>
+  <string name="pref_push_notification">プッシュ通知を有効にする</string>
+  <string name="pref_ipv6_title">IPv6を使用する</string>
+  <!--Advanced settings-->
+  <string name="pref_advanced_title">拡張</string>
+  <string name="pref_debug">デバッグ</string>
+  <string name="pref_background_mode">バックグラウンド動作</string>
+  <string name="pref_animation_enable_title">アニメーションを有効にする</string>
+  <string name="pref_autostart">起動時に開始する</string>
+  <string name="pref_image_sharing_server_title">共有サーバー</string>
+  <string name="pref_remote_provisioning_title">遠隔準備</string>
+  <string name="pref_primary_account_title">優先アカウント</string>
+  <string name="pref_display_name_title">表示名</string>
+  <string name="pref_user_name_title">ユーザー名</string>
+  <!--Audio hack settings-->
+  <string name="pref_audio_hacks_title">オーディオ設定</string>
+  <string name="pref_audio_use_specific_mode_title">特定のハックを使用する</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (デフォルト), 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">ルーティングAPIを使用する</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy Sハックを使用する</string>
+  <!--Content description-->
+  <string name="content_description_back">戻る</string>
+  <string name="content_description_dialer">ダイヤラー</string>
+  <string name="content_description_toggle_micro">マイク切り替えトグル</string>
+  <string name="content_description_toggle_speaker">スピーカー切り替えトグル</string>
+  <string name="content_description_decline">拒否</string>
+  <string name="content_description_hang_up">ハングアップ</string>
+  <string name="content_description_accept">受理する</string>
+  <string name="content_description_edit">編集</string>
+  <string name="content_description_add_contact">連絡先に追加</string>
+  <string name="content_description_new_contact">新しい連絡先</string>
+  <string name="content_description_call">発信</string>
+  <string name="content_description_backspace">バックスペース</string>
+  <string name="content_description_chat">チャット</string>
+  <string name="content_description_dial_back">コールバック</string>
+  <string name="content_description_contact_picture">連絡相手の画像</string>
+  <string name="content_description_send_message">送信メッセージ</string>
+  <string name="content_description_detail">詳細</string>
+  <string name="content_description_delete">削除する</string>
+  <string name="content_description_add">追加発信</string>
+  <string name="content_description_new_discussion">新しいやりとりを行う</string>
+  <string name="content_description_search">検索</string>
+  <string name="content_description_all_contacts">すべての連絡先</string>
+  <string name="content_description_linphone_contacts">Linphoneでの連絡先</string>
+  <string name="content_description_call_direction">宛先を指定</string>
+  <string name="content_description_all_calls">すべての呼出</string>
+  <string name="content_description_missed_calls">失敗した呼出</string>
+  <string name="content_description_switch_video">ビデオの切り替え</string>
+  <string name="content_description_add_call">追加発信</string>
+  <string name="content_description_pause">一時停止</string>
+  <string name="content_description_numpad">キーパッド</string>
+  <string name="content_description_history">履歴ボタン</string>
+  <string name="content_description_chat_button">チャットボタン</string>
+  <string name="content_description_contacts">連絡ボタン</string>
+  <string name="content_description_call_quality">通話品質</string>
+  <string name="content_description_encryption">暗号化</string>
+  <string name="content_description_switch_camera">カメラをスイッチする</string>
+  <string name="content_description_cancel_button">キャンセルボタン</string>
+  <string name="content_description_message_status">メッセージ状態</string>
+  <string name="content_description_conference">会談</string>
+  <string name="content_description_default_account">デフォルトのアカウント</string>
+  <string name="content_description_contact_first_name">名前</string>
+  <string name="content_description_contact_last_name">名字</string>
+  <string name="content_description_transfer">転送</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
+</resources>

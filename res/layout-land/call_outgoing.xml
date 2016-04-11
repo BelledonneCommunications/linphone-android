@@ -53,8 +53,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_above="@id/menu"
-		android:layout_below="@id/top_bar"
-		android:paddingTop="10dp">
+		android:paddingTop="10dp"
+		android:layout_below="@+id/top_bar">
 
 		<LinearLayout
 			android:background="@color/colorG"
@@ -107,7 +107,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="12dp"/>
+			android:padding="10dp"/>
 
 		<ImageView
 			android:id="@+id/speaker"

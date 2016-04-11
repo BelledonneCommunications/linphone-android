@@ -32,7 +32,7 @@
 			<ImageView
 				android:id="@+id/contact_call"
 				android:src="@drawable/call_start_button"
-				android:contentDescription="@string/content_description_dial_back"
+				android:contentDescription="@string/content_description_call"
 				android:layout_width="60dp"
 				android:layout_height="60dp"
 				android:layout_margin="10dp"

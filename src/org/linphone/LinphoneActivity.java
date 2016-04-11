@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -44,9 +45,9 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.ui.AddressText;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -56,11 +57,13 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -88,12 +91,15 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked {
+public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
+	private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 200;
+	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
+	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
 
 	private static LinphoneActivity instance;
 
@@ -107,7 +113,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ChatFragment chatFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = true, preferLinphoneContacts = false;
+	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -117,6 +123,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
+	private boolean fetchedContactsOnce = false;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -158,7 +165,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
 			finish();
 			startActivityForResult(wizard, REMOTE_PROVISIONING_LOGIN_ACTIVITY);
-		} else if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
+		} else if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch() || LinphoneManager.getLc().getProxyConfigList().length == 0) {
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
 				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
@@ -168,7 +175,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 
 		//TODO rework
-		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+		if (getResources().getBoolean(R.bool.use_linphone_tag) && getPackageManager().checkPermission(Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 			ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
 		} else {
 			ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
@@ -205,6 +212,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 
 			@Override
+			public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
+				//authInfoPassword = displayWrongPasswordDialog(username, realm, domain);
+				//authInfoPassword.show();
+			}
+
+			@Override
 			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
 				if (state.equals(RegistrationState.RegistrationCleared)) {
 					if (lc != null) {
@@ -219,7 +232,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
 					newProxyConfig = false;
 					if (proxy.getError() == Reason.BadCredentials) {
-						displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
+						//displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
 					}
 					if (proxy.getError() == Reason.Unauthorized) {
 						displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
@@ -233,9 +246,17 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (state == State.IncomingReceived) {
-					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
+					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
+						startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
+					} else {
+						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL);
+					}
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
-					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
+					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
+						startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
+					} else {
+						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO);
+					}
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
 					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
@@ -462,6 +483,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		case ABOUT:
 			newFragment = new AboutFragment();
 			break;
+		case EMPTY:
+			newFragment = new EmptyFragment();
+			break;
 		case CHAT_LIST:
 			newFragment = new ChatListFragment();
 			chatListFragment = newFragment;
@@ -497,7 +521,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-		if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
+		/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 			if (newFragmentType.isRightOf(currentFragment)) {
 				transaction.setCustomAnimations(R.anim.slide_in_right_to_left,
 						R.anim.slide_out_right_to_left,
@@ -509,7 +533,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						R.anim.slide_in_right_to_left,
 						R.anim.slide_out_right_to_left);
 			}
-		}
+		}*/
 
 		if (newFragmentType != FragmentsAvailable.DIALER
 				|| newFragmentType != FragmentsAvailable.CONTACTS_LIST
@@ -533,13 +557,16 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 		}
 
-
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
 		if(newFragmentType == FragmentsAvailable.EMPTY){
 			ll.setVisibility(View.VISIBLE);
-			transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
+
+			if(newFragmentType == FragmentsAvailable.CONTACT_EDITOR){
+				transaction.addToBackStack(newFragmentType.toString());
+			}
 			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
 		} else {
@@ -551,6 +578,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 				transaction.replace(R.id.fragmentContainer2, newFragment);
 			} else {
+				if (newFragmentType == FragmentsAvailable.EMPTY) {
+					ll.setVisibility(View.VISIBLE);
+					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
+					emptyFragment = true;
+				}
+
 				if (newFragmentType == FragmentsAvailable.DIALER
 						|| newFragmentType == FragmentsAvailable.ABOUT
 						|| newFragmentType == FragmentsAvailable.SETTINGS
@@ -561,14 +594,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
 				}
 
-				if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
-					if (newFragmentType.isRightOf(currentFragment)) {
-						transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
-					} else {
-						transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
-					}
-				}
-				transaction.replace(R.id.fragmentContainer, newFragment);
 			}
 			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
@@ -598,9 +623,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			//TODO display error message
 			return;
 		}
-		Contact c = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
+		LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(lAddress);
 
-		String displayName = c != null ? c.getName() : null;
+		String displayName = c != null ? c.getFullName() : LinphoneUtils.getAddressDisplayName(sipUri);
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
 
 		String status;
@@ -620,10 +645,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
 			HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
-			historyDetailFragment.changeDisplayedHistory(sipUri, displayName, pictureUri, status, callTime, callDate);
+			historyDetailFragment.changeDisplayedHistory(lAddress.asStringUriOnly(), displayName, pictureUri, status, callTime, callDate);
 		} else {
 			Bundle extras = new Bundle();
-			extras.putString("SipUri", sipUri);
+			extras.putString("SipUri", lAddress.asString());
 			if (displayName != null) {
 				extras.putString("DisplayName", displayName);
 				extras.putString("PictureUri", pictureUri);
@@ -648,7 +673,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		return dateFormat.format(cal.getTime());
 	}
 
-	public void displayContact(Contact contact, boolean chatOnly) {
+	public void displayContact(LinphoneContact contact, boolean chatOnly) {
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CONTACT_DETAIL) {
 			ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
@@ -662,14 +687,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayContacts(boolean chatOnly) {
-		if (chatOnly) {
-			preferLinphoneContacts = true;
-		}
-
 		Bundle extras = new Bundle();
 		extras.putBoolean("ChatAddressOnly", chatOnly);
 		changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, extras);
-		preferLinphoneContacts = false;
 	}
 
 	public void displayChatList() {
@@ -728,8 +748,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				Log.e("Cannot display chat", e);
 				return;
 			}
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), lAddress);
-			displayName = contact != null ? contact.getName() : null;
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
+			displayName = contact != null ? contact.getFullName() : null;
 
 			if (contact != null && contact.getPhotoUri() != null) {
 				pictureUri = contact.getPhotoUri().toString();
@@ -739,7 +759,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.CHAT) {
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
-			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT) {
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
 				ChatFragment chatFragment = (ChatFragment) fragment2;
 				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
 			} else {
@@ -851,6 +871,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			hideTabBar(true);
 			//mTopBar.setVisibility(View.VISIBLE);
 			break;
+		case ABOUT:
+			hideTabBar(true);
+			break;
 		case CHAT_LIST:
 		case CHAT:
 			chatImage.setImageResource(R.drawable.footer_chat_selected);
@@ -894,7 +917,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Bundle bundle = new Bundle();
 		bundle.putInt("Account", accountNumber);
 		changeCurrentFragment(FragmentsAvailable.ACCOUNT_SETTINGS, bundle);
-		mTabBar.setVisibility(View.VISIBLE);
 		//settings.setSelected(true);
 	}
 
@@ -1196,7 +1218,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
-	public void editContact(Contact contact)
+	public void editContact(LinphoneContact contact)
 	{
 			Bundle extras = new Bundle();
 			extras.putSerializable("Contact", contact);
@@ -1204,7 +1226,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	}
 
-	public void editContact(Contact contact, String sipAddress)
+	public void editContact(LinphoneContact contact, String sipAddress)
 	{
 
 			Bundle extras = new Bundle();
@@ -1255,6 +1277,35 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		super.onPause();
 	}
 
+	public void checkAndRequestPermission(String permission, int result) {
+		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			if (!ActivityCompat.shouldShowRequestPermissionRationale(this,permission) && !permissionAsked) {
+				permissionAsked = true;
+				if(LinphonePreferences.instance().shouldInitiateVideoCall() ||
+						LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, permission}, result);
+				} else {
+					ActivityCompat.requestPermissions(this, new String[]{permission}, result);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_RECORD_AUDIO:
+				startActivity(new Intent(this, CallOutgoingActivity.class));
+				LinphonePreferences.instance().neverAskAudioPerm();
+				break;
+			case PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL:
+				startActivity(new Intent(this, CallIncomingActivity.class));
+				LinphonePreferences.instance().neverAskAudioPerm();
+				break;
+		}
+		permissionAsked = false;
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -1262,7 +1313,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
-		ContactsManager.getInstance().prepareContactsInBackground();
+		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
+			ContactsManager.getInstance().enableContactsAccess();
+			ContactsManager.getInstance().fetchContacts();
+			fetchedContactsOnce = true;
+		} else {
+			checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_READ_CONTACTS);
+		}
 
 		updateMissedChatCount();
 		refreshAccounts();
@@ -1270,14 +1327,22 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		LinphoneManager.getInstance().changeStatusToOnline();
 
-		if(getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
+		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				LinphoneCall.State callState = call.getState();
 				if (callState == State.IncomingReceived) {
-					startActivity(new Intent(this, CallIncomingActivity.class));
-				} else if (callState == State.OutgoingInit) {
-					startActivity(new Intent(this, CallOutgoingActivity.class));
+					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
+						startActivity(new Intent(this, CallIncomingActivity.class));
+					} else {
+						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL);
+					}
+				} else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
+					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
+						startActivity(new Intent(this, CallOutgoingActivity.class));
+					} else {
+						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO);
+					}
 				} else {
 					if (call.getCurrentParamsCopy().getVideoEnabled()) {
 						startVideoActivity(call);
@@ -1371,7 +1436,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					if (CallActivity.isInstanciated()) {
 						CallActivity.instance().startIncomingCallActivity();
 					} else {
-						startActivity(new Intent(this, CallIncomingActivity.class));
+						if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
+							startActivity(new Intent(this, CallIncomingActivity.class));
+						} else {
+							checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL);
+						}
 					}
 				}
 			}
@@ -1519,8 +1588,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-					int position = Integer.parseInt(view.getTag().toString());
-					LinphoneActivity.instance().displayAccountSettings(position);
+					if(view != null) {
+						int position = Integer.parseInt(view.getTag().toString());
+						LinphoneActivity.instance().displayAccountSettings(position);
+					}
 					openOrCloseSideMenu(false);
 				}
 			});

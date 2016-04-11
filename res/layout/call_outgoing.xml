@@ -56,9 +56,28 @@
 		android:layout_below="@id/top_bar"
 		android:paddingTop="10dp">
 
-		<LinearLayout
-			android:background="@color/colorG"
-			android:layout_alignParentBottom="true"
+		<TextView
+			android:id="@+id/contact_name"
+			style="@style/font5"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:gravity="center"
+			android:layout_centerHorizontal="true"
+			android:paddingTop="5dp"/>
+
+		<TextView
+			android:id="@+id/contact_number"
+			style="@style/font2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/contact_name"
+			android:layout_gravity="center"
+			android:layout_centerHorizontal="true"
+			android:paddingBottom="10dp"/>
+
+		<RelativeLayout
+			android:id="@+id/avatar_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"
@@ -106,7 +125,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="12dp"/>
+			android:padding="10dp"/>
 
 		<ImageView
 			android:id="@+id/speaker"

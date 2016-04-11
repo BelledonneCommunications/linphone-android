@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone-dienst</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">Bezig met opstarten</string>
+  <string name="tunnel_host"></string>
+  <!--Common-->
+  <string name="username">Gebruikersnaam</string>
+  <string name="display_name">Weergavenaam</string>
+  <string name="password">Wachtwoord</string>
+  <string name="delete">Verwijderen</string>
+  <string name="cancel">Annuleren</string>
+  <string name="accept">Accepteren</string>
+  <string name="about">Over</string>
+  <string name="deny">Weigeren</string>
+  <string name="outgoing">Uitgaande</string>
+  <string name="incoming">Inkomende</string>
+  <string name="missed">Gemist</string>
+  <string name="settings">Instellingen</string>
+  <string name="decline">Weigeren</string>
+  <!--Launch screen-->
+  <!--Assistant-->
+  <string name="assistant_welcome_desc">Deze wizard zal u helpen bij het gebruiken van een SIP-account voor uw oproepen.</string>
+  <string name="transport">Transport</string>
+  <!--Dailer-->
+  <!--History-->
+  <string name="today">Vandaag</string>
+  <string name="yesterday">Gisteren</string>
+  <!--Contacts-->
+  <string name="sip_address">SIP-adres</string>
+  <string name="phone_number">Telefoonnummer</string>
+  <string name="contact_first_name">Voornaam</string>
+  <string name="contact_last_name">Achternaam</string>
+  <!--Chat-->
+  <string name="share_picture_size_small">Klein</string>
+  <string name="share_picture_size_medium">Middel</string>
+  <string name="share_picture_size_large">Groot</string>
+  <!--Status Bar-->
+  <string name="status_connected">Geregistreerd</string>
+  <!--Side Menu-->
+  <string name="menu_settings">Instellingen</string>
+  <string name="menu_about">Over</string>
+  <!--Call-->
+  <string name="unknown_incoming_call_name">Onbekend</string>
+  <string name="call_stats_audio">Audio</string>
+  <string name="call_stats_video">Video</string>
+  <string name="call_stats_codec">Codec:</string>
+  <string name="call_stats_upload">Uploadbandbreedte:</string>
+  <string name="call_stats_download">Downloadbandbreedte:</string>
+  <string name="call_stats_video_resolution">Videogrootte:</string>
+  <string name="call">Oproep</string>
+  <!--About-->
+  <string name="menu_send_log">Log versturen</string>
+  <!--Service-->
+  <!--Errors-->
+  <string name="error">Fout</string>
+  <!--Account Settings-->
+  <string name="pref_sipaccount">SIP-account</string>
+  <string name="pref_manage_title">Beheren</string>
+  <string name="pref_disable_account">Uitschakelen</string>
+  <string name="pref_proxy">Proxy</string>
+  <string name="pref_domain">Domein*</string>
+  <string name="pref_passwd">Wachtwoord*</string>
+  <string name="pref_username">Gebruikersnaam*</string>
+  <string name="pref_avpf">AVPF</string>
+  <string name="pref_escape_plus">+ door 00 vervangen</string>
+  <string name="pref_display_name">Weergavenaam</string>
+  <string name="pref_prefix">Voorvoegsel</string>
+  <string name="pref_transport">Transport</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
+  <!--Settings-->
+  <string name="pref_sipaccounts">SIP-accounts</string>
+  <string name="default_account_flag">Standaard account</string>
+  <string name="pref_add_account">Account toevoegen</string>
+  <string name="pref_tunnel">Tunnel</string>
+  <string name="pref_tunnel_host">Hostnaam</string>
+  <string name="pref_tunnel_port">Poort</string>
+  <string name="pref_tunnel_mode">Modus</string>
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <string name="pref_none">Geen</string>
+  <string name="pref_preferences_title">Voorkeuren</string>
+  <string name="pref_video_enable_title">Video inschakelen</string>
+  <!--Audio settings-->
+  <string name="pref_audio_title">Audio</string>
+  <string name="failed">gefaald</string>
+  <string name="pref_codecs">Codecs</string>
+  <!--Video settings-->
+  <string name="pref_video_title">Video</string>
+  <string name="pref_video_codecs_title">Codecs</string>
+  <!--Call settings-->
+  <string name="pref_call_title">Oproep</string>
+  <!--Network settings-->
+  <string name="pref_network_title">Netwerk</string>
+  <string name="pref_stun_server">Stun-server</string>
+  <string name="pref_ice_enable">ICE inschakelen</string>
+  <string name="pref_upnp_enable">UPNP inschakelen</string>
+  <string name="pref_transport_use_random_ports">Willekeurige poorten gebruiken</string>
+  <string name="pref_media_encryption">Mediaversleuteling</string>
+  <!--Advanced settings-->
+  <string name="pref_advanced_title">Geavanceerd</string>
+  <string name="pref_debug">Foutopsporing</string>
+  <string name="pref_background_mode">Achtergrondsmodus</string>
+  <string name="pref_animation_enable_title">Animaties inschakelen</string>
+  <string name="pref_primary_account_title">Primaire account</string>
+  <string name="pref_display_name_title">Weergavenaam</string>
+  <string name="pref_user_name_title">Gebruikersnaam</string>
+  <!--Audio hack settings-->
+  <string name="pref_audio_hacks_title">Audiohacks</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (standaard), 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">Routing API-hack gebruiken</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy S-audiohack gebruiken</string>
+  <!--Content description-->
+  <string name="content_description_decline">Weigeren</string>
+  <string name="content_description_hang_up">Ophangen</string>
+  <string name="content_description_accept">Accepteren</string>
+  <string name="content_description_new_contact">Nieuw contact</string>
+  <string name="content_description_call">Oproep</string>
+  <string name="content_description_chat">Chat</string>
+  <string name="content_description_delete">Verwijderen</string>
+  <string name="content_description_add">Oproep toevoegen</string>
+  <string name="content_description_add_call">Oproep toevoegen</string>
+  <string name="content_description_default_account">Standaard account</string>
+  <string name="content_description_contact_first_name">Voornaam</string>
+  <string name="content_description_contact_last_name">Achternaam</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
+</resources>

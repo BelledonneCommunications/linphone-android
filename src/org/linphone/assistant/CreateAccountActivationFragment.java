@@ -38,8 +38,9 @@ import de.timroes.axmlrpc.XMLRPCServerException;
  * @author Sylvain Berfini
  */
 public class CreateAccountActivationFragment extends Fragment {
-	private String username;
+	private String username, password, domain;
 	private Handler mHandler = new Handler();
+	private Button checkAccount;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,11 +48,13 @@ public class CreateAccountActivationFragment extends Fragment {
 		View view = inflater.inflate(R.layout.assistant_account_creation_activation, container, false);
 		
 		username = getArguments().getString("Username");
-		
-		Button checkAccount = (Button) view.findViewById(R.id.assistant_check);
+		password = getArguments().getString("Password");
+
+		checkAccount = (Button) view.findViewById(R.id.assistant_check);
 		checkAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				checkAccount.setEnabled(false);
 				isAccountVerified(username);
 			}
 		});
@@ -72,12 +75,15 @@ public class CreateAccountActivationFragment extends Fragment {
 			XMLRPCCallback listener = new XMLRPCCallback() {
 				Runnable runNotOk = new Runnable() {
     				public void run() {
+						checkAccount.setEnabled(true);
     					Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
 					}
 	    		};
 	    		
 	    		Runnable runOk = new Runnable() {
     				public void run() {
+						checkAccount.setEnabled(true);
+						AssistantActivity.instance().saveCreatedAccount(username,password,null, getString(R.string.default_domain),null);
     					AssistantActivity.instance().isAccountVerified(username);
 					}
 	    		};

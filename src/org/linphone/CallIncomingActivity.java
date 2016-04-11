@@ -55,7 +55,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
 	private LinearLayout declineUnlock;
-	private StatusFragment status;
 	private boolean isActive;
 	private float answerX;
 	private float declineX;
@@ -71,6 +70,10 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_incoming);
@@ -233,15 +236,10 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			return;
 		}
 		LinphoneAddress address = mCall.getRemoteAddress();
-		LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());
-		//Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
-		//if (contact != null) {
-			//LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-		//	name.setText(contact.getName());
-		//} else {
-
-		if(friend == null){
-			name.setText(LinphoneUtils.getAddressDisplayName(address));
+		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		if (contact != null) {
+			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+			name.setText(contact.getName());
 		} else {
 			name.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
 		}
@@ -270,10 +268,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-
-	public void updateStatusFragment(StatusFragment fragment) {
-		status = fragment;
 	}
 
 	private void decline() {

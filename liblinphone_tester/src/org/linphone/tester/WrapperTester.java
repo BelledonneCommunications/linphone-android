@@ -7,6 +7,7 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.MediastreamerAndroidContext;
+import org.linphone.mediastream.Factory;
 
 import android.test.AndroidTestCase;
 import junit.framework.Assert;
@@ -87,16 +88,19 @@ public class WrapperTester extends AndroidTestCase {
 		friend.setRefKey(key);
 		Assert.assertEquals(friend.getRefKey(),key);
 		
-		MediastreamerAndroidContext.enableFilterFromName("MSUlawEnc", false);
-		Assert.assertFalse(MediastreamerAndroidContext.filterFromNameEnabled("MSUlawEnc"));
-		MediastreamerAndroidContext.enableFilterFromName("MSUlawEnc", true);
+		//Test filter enablement
+		Factory factory = mCore.getMSFactory();
+		factory.enableFilterFromName("MSUlawEnc", false);
+		Assert.assertFalse(factory.filterFromNameEnabled("MSUlawEnc"));
+		factory.enableFilterFromName("MSUlawEnc", true);
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
-		mCore = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase(),null);
+		LinphoneCoreFactory.instance().setDebugMode(true, "WrapperTester");
+		mCore = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase(),getContext());
 	}
 
 	@Override

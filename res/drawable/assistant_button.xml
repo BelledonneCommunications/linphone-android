@@ -3,7 +3,7 @@
 	<item android:state_pressed="true"
 		  android:drawable="@drawable/resizable_cancel_button_over" />
 	<item android:state_enabled="false"
-		  android:drawable="@drawable/resizable_cancel_button_over" />
+		  android:drawable="@drawable/resizable_assistant_button_disabled" />
 	<item
 		android:drawable="@drawable/resizable_cancel_button" />
 </selector>

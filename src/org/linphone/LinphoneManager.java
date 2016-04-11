@@ -59,6 +59,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
@@ -165,11 +166,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
 		mRingSoundFile = basePath + "/oldphone_mono.wav";
 		mRingbackSoundFile = basePath + "/ringback.wav";
-		mPauseSoundFile = basePath + "/toy_mono.wav";
+		mPauseSoundFile = basePath + "/hold.mkv";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 		mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
+		mFriendsDatabaseFile = basePath + "/linphone-friends.db";
 		mErrorToneFile = basePath + "/error.wav";
-		mConfigFile = basePath + "/configrc";
 		mUserCertificatePath = basePath;
 
 		mPrefs = LinphonePreferences.instance();
@@ -193,8 +194,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
 	private final String mCallLogDatabaseFile;
+	private final String mFriendsDatabaseFile;
 	private final String mErrorToneFile;
-	private final String mConfigFile;
 	private final String mUserCertificatePath;
 	private ByteArrayInputStream mUploadingImageStream;
 
@@ -658,6 +659,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setRingback(mRingbackSoundFile);
 		//mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
+		mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
 		mLc.setUserCertificatesPath(mUserCertificatePath);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 
@@ -691,7 +693,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private void copyAssetsFromPackage() throws IOException {
 		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
 		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
-		copyIfNotExist(R.raw.toy_mono, mPauseSoundFile);
+		copyIfNotExist(R.raw.hold, mPauseSoundFile);
 		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
@@ -831,10 +833,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void displayWarning(LinphoneCore lc, String message) {}
 
-	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
-		//Dialog authInfoPassword = LinphoneActivity.instance().displayPasswordDialog(username, realm, domain);
-		//authInfoPassword.show();
-	}
+	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {}
 	public void byeReceived(LinphoneCore lc, String from) {}
 	public void displayMessage(LinphoneCore lc, String message) {}
 	public void show(LinphoneCore lc) {}
@@ -867,13 +866,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		try {
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(mServiceContext.getContentResolver(), from);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				if (LinphoneActivity.isInstanciated() && !LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
 					return;
 				} else {
 					if (contact != null) {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getName(), textMessage);
+						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
 					} else {
 						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
 					}
@@ -1464,5 +1463,15 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			int delay_ms, Object data) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void friendListCreated(LinphoneCore lc, LinphoneFriendList list) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void friendListRemoved(LinphoneCore lc, LinphoneFriendList list) {
+		// TODO Auto-generated method stub
 	}
 }

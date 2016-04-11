@@ -13,6 +13,7 @@
 	<bool name="orientation_portrait_only">false</bool>
 	<bool name="show_statusbar_only_on_dialer">false</bool>
 	<bool name="replace_assistant_with_old_interface">false</bool>
+
 	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
 	<bool name="display_remote_provisioning_login_activity">false</bool>
 
@@ -73,6 +74,13 @@
 
 	<bool name="hide_phone_numbers_in_editor">false</bool>
 	<bool name="hide_sip_addresses_in_editor">false</bool>
+	
+	<bool name="hide_contact_phone_numbers">false</bool>
+	<bool name="hide_contact_sip_addresses">false</bool>
+	
+	<bool name="allow_only_one_phone_number">false</bool>
+	<bool name="allow_only_one_sip_address">false</bool>
+	
 	<bool name="setup_cancel_move_to_back">false</bool>
 
 

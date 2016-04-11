@@ -479,10 +479,9 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountPassword(int n, String password) {
-		LinphoneAuthInfo info = getClonedAuthInfo(n);
-		if(info != null) {
-			info.setPassword(password);
-			saveAuthInfo(info);
+		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, null, null, getAccountDomain(n));
+			LinphoneManager.getLc().addAuthInfo(authInfo);
 		}
 	}
 
@@ -1032,7 +1031,7 @@ public class LinphonePreferences {
 	}
 
 	public boolean isAutoStartEnabled() {
-		return getConfig().getBool("app", "auto_start", true);
+		return getConfig().getBool("app", "auto_start", false);
 	}
 
 	public void setAutoStart(boolean autoStartEnabled) {
@@ -1204,5 +1203,21 @@ public class LinphonePreferences {
 
 	public Boolean isDebugLogsEnabled(){
 		return getConfig().getBool("app", "debug_logs_enabled", false);
+	}
+
+	public Boolean audioPermAsked(){
+		return getConfig().getBool("app", "audio_perm", false);
+	}
+
+	public void neverAskAudioPerm(){
+		 getConfig().setBool("app", "audio_perm", true);
+	}
+
+	public Boolean cameraPermAsked(){
+		return getConfig().getBool("app", "camera_perm", false);
+	}
+
+	public void neverAskCameraPerm(){
+		getConfig().setBool("app", "camera_perm", true);
 	}
 }

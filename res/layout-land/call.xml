@@ -212,32 +212,27 @@
                         android:layout_weight="0.8"
                         android:padding="15dp" />
 
-                    <ImageView
-                        android:id="@+id/hang_up"
-                        android:src="@drawable/call_hangup"
-                        android:background="@drawable/hangup"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4"
-                        android:padding="12dp"/>
 
-                    <ImageView
-                        android:id="@+id/chat"
-                        android:src="@drawable/chat"
-                        android:background="@color/colorC"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:padding="15dp"/>
-                </LinearLayout>
+					<ImageView
+						android:id="@+id/hang_up"
+						android:src="@drawable/call_hangup"
+						android:background="@drawable/hangup"
+						android:contentDescription="@string/content_description_hang_up"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="0.5"
+						android:padding="12dp"/>
 
-                <LinearLayout
-                    android:id="@+id/menu"
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="60dp"
-                    android:orientation="vertical">
+					<ImageView
+						android:id="@+id/chat"
+						android:src="@drawable/footer_chat"
+						android:background="@color/colorC"
+						android:contentDescription="@string/content_description_chat_button"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:padding="15dp"/>
+				</LinearLayout>
 
                     <LinearLayout
                         android:background="@color/colorF"
@@ -251,22 +246,19 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <ImageView
-                                android:id="@+id/video"
-                                android:src="@drawable/camera_default"
-                                android:background="@drawable/button_background"
-                                android:padding="20dp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+					<RelativeLayout
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1">
 
-                            <ProgressBar
-                                android:id="@+id/video_in_progress"
-                                style="?android:attr/progressBarStyle"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
-                                android:visibility="gone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+						<ImageView
+							android:id="@+id/video"
+							android:src="@drawable/camera_default"
+							android:background="@drawable/button_background"
+							android:contentDescription="@string/content_description_switch_video"
+							android:padding="20dp"
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"/>
 
                         </RelativeLayout>
 
@@ -279,37 +271,46 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <ImageView
-                        android:id="@+id/speaker"
-                        android:src="@drawable/speaker_default"
-                        android:background="@drawable/button_background"
-                        android:padding="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+					<ImageView
+						android:id="@+id/micro"
+						android:src="@drawable/micro_default"
+						android:background="@drawable/button_background"
+						android:contentDescription="@string/content_description_toggle_micro"
+						android:padding="10dp"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1" />
 
-                    <ImageView
-                        android:id="@+id/audio_route"
-                        android:src="@drawable/routes"
-                        android:background="@drawable/button_background"
-                        android:visibility="gone"
-                        android:padding="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+					<ImageView
+						android:id="@+id/speaker"
+						android:src="@drawable/speaker_default"
+						android:background="@drawable/button_background"
+						android:contentDescription="@string/content_description_toggle_speaker"
+						android:padding="15dp"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1" />
 
-                    <ImageView
-                        android:id="@+id/options"
-                        android:src="@drawable/options_default"
-                        android:background="@drawable/button_background"
-                        android:padding="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
+					<ImageView
+						android:id="@+id/audio_route"
+						android:src="@drawable/routes_default"
+						android:background="@drawable/button_background"
+						android:contentDescription="@string/content_description_audio_route"
+						android:visibility="gone"
+						android:padding="20dp"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1" />
 
-            </LinearLayout>
-        </LinearLayout>
+					<ImageView
+						android:id="@+id/options"
+						android:src="@drawable/options_default"
+						android:background="@drawable/button_background"
+						android:contentDescription="@string/content_description_call_options"
+						android:padding="15dp"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1" />
 
 			<LinearLayout
                 android:id="@+id/menu_bottom"
@@ -330,25 +331,27 @@
                     android:visibility="invisible"
                     android:layout_weight="0.5"/>
 
-                <ImageView
-                    android:id="@+id/route_bluetooth"
-                    android:src="@drawable/route_bluetooth"
-                    android:background="@drawable/button_call_background"
-                    android:padding="15dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+				<ImageView
+					android:id="@+id/route_bluetooth"
+					android:src="@drawable/route_bluetooth"
+					android:background="@drawable/button_background"
+					android:contentDescription="@string/content_description_bluetooth"
+					android:padding="15dp"
+					android:visibility="invisible"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.4" />
 
-                <ImageView
-                    android:id="@+id/add_call"
-                    android:src="@drawable/options_add_call"
-                    android:background="@drawable/button_call_background"
-                    android:padding="15dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+				<ImageView
+					android:id="@+id/add_call"
+					android:src="@drawable/options_add_call"
+					android:background="@drawable/button_background"
+					android:contentDescription="@string/content_description_add_call"
+					android:padding="15dp"
+					android:visibility="invisible"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.4" />
 
             </LinearLayout>
 
@@ -371,25 +374,27 @@
                     android:visibility="invisible"
                     android:layout_weight="0.5"/>
 
-                <ImageView
-                    android:id="@+id/route_earpiece"
-                    android:src="@drawable/route_earpiece"
-                    android:background="@drawable/button_call_background"
-                    android:padding="15dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"/>
+				<ImageView
+					android:id="@+id/route_earpiece"
+					android:src="@drawable/route_earpiece"
+					android:background="@drawable/button_background"
+					android:contentDescription="@string/content_description_earpiece"
+					android:padding="15dp"
+					android:visibility="invisible"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.4"/>
 
-                <ImageView
-                    android:id="@+id/transfer"
-                    android:src="@drawable/options_transfer_call"
-                    android:background="@drawable/button_call_background"
-                    android:padding="15dp"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"/>
+				<ImageView
+					android:id="@+id/transfer"
+					android:src="@drawable/options_transfer_call"
+					android:background="@drawable/button_background"
+					android:contentDescription="@string/content_description_transfer"
+					android:padding="15dp"
+					android:visibility="invisible"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.4"/>
 
             </LinearLayout>
 
@@ -414,7 +419,8 @@
 				<ImageView
 					android:id="@+id/route_speaker"
 					android:src="@drawable/route_speaker"
-					android:background="@drawable/button_call_background"
+					android:background="@drawable/button_background"
+					android:contentDescription="@string/content_description_toggle_speaker"
 					android:visibility="invisible"
 					android:padding="15dp"
 					android:layout_width="match_parent"
@@ -424,7 +430,8 @@
 				<ImageView
 					android:id="@+id/conference"
 					android:src="@drawable/options_start_conference"
-					android:background="@drawable/button_call_background"
+					android:background="@drawable/button_background"
+					android:contentDescription="@string/content_description_conference"
 					android:visibility="invisible"
 					android:padding="15dp"
 					android:layout_width="match_parent"

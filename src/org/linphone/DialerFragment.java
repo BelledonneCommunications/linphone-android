@@ -221,7 +221,7 @@ public class DialerFragment extends Fragment {
 				mAddress.setText(intent.getData().getSchemeSpecificPart());
 			} else {
 				Uri contactUri = intent.getData();
-				String address = ContactsManager.getInstance().queryAddressOrNumber(LinphoneService.instance().getContentResolver(),contactUri);
+				String address = ContactsManager.getAddressOrNumberForAndroidContact(LinphoneService.instance().getContentResolver(), contactUri);
 				if(address != null) {
 					mAddress.setText(address);
 				} else {

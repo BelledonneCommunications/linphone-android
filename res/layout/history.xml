@@ -38,7 +38,12 @@
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
+<<<<<<< HEAD
 			android:contentDescription="@string/content_description_edit"
+=======
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit_list"
+>>>>>>> public/master
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"

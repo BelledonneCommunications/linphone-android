@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/default_account"
+	android:contentDescription="@string/content_description_default_account"
 	android:background="@color/colorF"
 	android:layout_width="match_parent"
 	android:layout_height="70dp">
@@ -42,8 +43,15 @@
 		android:src="@drawable/led_connected"
 		android:layout_width="25dp"
 		android:layout_height="25dp"
+<<<<<<< HEAD
 		android:layout_alignParentRight="true"
 		android:padding="7dp"
 		android:layout_marginTop="10dp"/>
+=======
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentTop="true"/>
+>>>>>>> public/master
 
 </RelativeLayout>
