@@ -53,6 +53,7 @@
 [submodule "submodules/externals/libxml2"]
 	path = submodules/externals/libxml2
 	url = git://git.gnome.org/libxml2.git
+	ignore = dirty
 [submodule "submodules/externals/libupnp"]
 	path = submodules/externals/libupnp
 	url = git://git.linphone.org/libupnp.git
@@ -65,6 +66,7 @@
 [submodule "submodules/externals/opus"]
 	path = submodules/externals/opus
 	url = git://git.linphone.org/opus.git
+	ignore = dirty
 [submodule "submodules/mswebrtc"]
 	path = submodules/mswebrtc
 	url = git://git.linphone.org/mswebrtc.git

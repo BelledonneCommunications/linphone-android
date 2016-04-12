@@ -24,7 +24,6 @@
 
 import argparse
 import os
-import platform
 import re
 import shutil
 import sys
@@ -38,7 +37,8 @@ try:
     import prepare
 except Exception as e:
     error(
-        "Could not find prepare module: {}, probably missing submodules/cmake-builder? Try running:\ngit submodule update --init --recursive".format(e))
+        "Could not find prepare module: {}, probably missing submodules/cmake-builder? Try running:\n"
+        "git submodule sync && git submodule update --init --recursive".format(e))
     exit(1)
 
 
@@ -61,16 +61,19 @@ class AndroidTarget(prepare.Target):
         if os.path.isdir('liblinphone-sdk'):
             shutil.rmtree('liblinphone-sdk', ignore_errors=False, onerror=self.handle_remove_read_only)
 
+
 class AndroidArmTarget(AndroidTarget):
 
     def __init__(self):
         AndroidTarget.__init__(self, 'arm')
-        self.additional_args += [ '-DENABLE_VIDEO=NO' ]
+        self.additional_args += ['-DENABLE_VIDEO=NO']
+
 
 class AndroidArmv7Target(AndroidTarget):
 
     def __init__(self):
         AndroidTarget.__init__(self, 'armv7')
+
 
 class AndroidX86Target(AndroidTarget):
 
@@ -85,14 +88,14 @@ targets = {
 platforms = ['all', 'arm', 'armv7', 'x86']
 
 
-
 class PlatformListAction(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         if values:
             for value in values:
                 if value not in platforms:
-                    message = ("invalid platform: {0!r} (choose from {1})".format(value, ', '.join([repr(platform) for platform in platforms])))
+                    message = ("invalid platform: {0!r} (choose from {1})".format(
+                        value, ', '.join([repr(platform) for platform in platforms])))
                     raise argparse.ArgumentError(self, message)
             setattr(namespace, self.dest, values)
 
@@ -134,7 +137,7 @@ def check_is_installed(binary, prog='it', warn=True):
 def check_tools():
     ret = 0
 
-    #at least FFmpeg requires no whitespace in sources path...
+    # at least FFmpeg requires no whitespace in sources path...
     if " " in os.path.dirname(os.path.realpath(__file__)):
         error("Invalid location: path should not contain any spaces.")
         ret = 1
@@ -380,11 +383,13 @@ def main(argv=None):
     argparser.add_argument(
         '--disable-gpl-third-parties', help="Disable GPL third parties such as FFMpeg, x264.", action='store_true')
     argparser.add_argument(
-        '--enable-non-free-codecs', help="Enable non-free codecs such as OpenH264, MPEG4, etc.. Final application must comply with their respective license (see README.md).", action='store_true')
+        '--enable-non-free-codecs', help="Enable non-free codecs such as OpenH264, MPEG4, "
+        "etc.. Final application must comply with their respective license (see README.md).", action='store_true')
     argparser.add_argument(
         '-f', '--force', help="Force preparation, even if working directory already exist.", action='store_true')
     argparser.add_argument(
-        '-G', '--generator', help="CMake build system generator (default: Unix Makefiles, use cmake -h to get the complete list).", default='Unix Makefiles', dest='generator')
+        '-G', '--generator', help="CMake build system generator (default: Unix Makefiles, use cmake -h to get the complete list).",
+        default='Unix Makefiles', dest='generator')
     argparser.add_argument(
         '-L', '--list-cmake-variables', help="List non-advanced CMake cache variables.", action='store_true', dest='list_cmake_variables')
     argparser.add_argument(
@@ -392,7 +397,8 @@ def main(argv=None):
     argparser.add_argument(
         '-t', '--tunnel', help="Enable Tunnel.", action='store_true')
     argparser.add_argument('platform', nargs='*', action=PlatformListAction, default=[
-                           'arm', 'armv7', 'x86'], help="The platform to build for (default is 'arm armv7 x86'). Space separated architectures in list: {0}.".format(', '.join([repr(platform) for platform in platforms])))
+                           'arm', 'armv7', 'x86'], help="The platform to build for (default is 'arm armv7 x86'). "
+                           "Space separated architectures in list: {0}.".format(', '.join([repr(platform) for platform in platforms])))
 
     args, additional_args2 = argparser.parse_known_args()
 
@@ -425,7 +431,7 @@ def main(argv=None):
         additional_args += ["-DENABLE_MPEG4=YES"]
         additional_args += ["-DENABLE_OPENH264=YES"]
         additional_args += ["-DENABLE_VPX=YES"]
-        #additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
+        # additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
     if args.disable_gpl_third_parties is True:
         additional_args += ["-DENABLE_GPL_THIRD_PARTIES=NO"]
 
