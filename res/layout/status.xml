@@ -14,7 +14,6 @@
 		<ImageView
 			android:id="@+id/side_menu_button"
 			android:src="@drawable/menu_burger"
-			android:contentDescription="@string/content_description_menu"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:padding="10dp"

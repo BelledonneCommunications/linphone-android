@@ -41,9 +41,7 @@
 
 		<ImageView
 			android:id="@+id/back_to_call"
-			android:src="@drawable/call_back"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_back_call"
+			android:src="@drawable/call_back_button"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
@@ -53,8 +51,6 @@
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit_list"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
@@ -69,33 +65,25 @@
 		android:layout_width="match_parent"
 		android:layout_height="1dp"/>
 
-		<LinearLayout
-			android:id="@+id/message_layout"
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
-
-			<ImageView
-				android:id="@+id/send_picture"
-				android:src="@drawable/chat_send_file"
-				android:contentDescription="@string/content_description_send_file"
-				android:padding="5dp"
-				android:layout_weight="0.1"
+	<LinearLayout
+        android:id="@+id/footer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_alignParentBottom="true"
+	    android:layout_centerHorizontal="true"
+   		android:background="@color/colorD">
+       
+	    <RelativeLayout 
+	        android:id="@+id/message_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+	        
+	        <ImageView
+	            android:id="@+id/send_picture"
+				android:padding="15dp"
+				android:scaleType="center"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-
-			<EditText
-				android:id="@+id/message"
-				android:textColor="@color/colorB"
-				android:imeOptions="flagNoExtractUi"
-				android:textCursorDrawable="@null"
-				android:inputType="textMultiLine"
-				android:contentDescription="@string/content_description_message"
-				android:maxLines="3"
-				android:padding="5dp"
-				android:layout_margin="5dp"
-				android:layout_weight="1"
-				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true"
@@ -109,11 +97,9 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:src="@drawable/chat_send_message"
-				android:contentDescription="@string/content_description_send_message"
-				android:padding="5dp"
-				android:layout_weight="0.1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+				android:layout_alignTop="@+id/message"
+				android:layout_alignParentRight="true"/>
+
 
 			<EditText
 				android:id="@+id/message"

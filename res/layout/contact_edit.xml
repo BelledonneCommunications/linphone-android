@@ -14,7 +14,7 @@
 		<ImageView
 			android:id="@+id/back"
 			android:src="@drawable/back"
-			android:contentDescription="@string/content_description_cancel_button"
+			android:contentDescription="@string/content_description_back"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
@@ -37,7 +37,7 @@
 		<ImageView
 			android:id="@+id/ok"
 			android:src="@drawable/valid"
-			android:contentDescription="@string/content_description_valid"
+			android:contentDescription="@string/content_description_edit"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
@@ -74,19 +74,6 @@
 					android:layout_alignParentLeft="true"
 					android:layout_marginLeft="5dp"/>
 
-					<ImageView
-						android:id="@+id/mask"
-						android:src="@drawable/avatar_mask"
-						android:contentDescription="@string/content_description_contact_picture"
-						android:layout_width="100dp"
-						android:layout_height="100dp"
-						android:adjustViewBounds="true"
-						android:layout_alignParentLeft="true"
-						android:layout_marginLeft="5dp"/>
-
-				</RelativeLayout>
-
-
 				<TextView
 					android:text="@string/contact_last_name"
 					style="@style/font13"
@@ -99,7 +86,6 @@
 					android:id="@+id/contactLastName"
 					android:background="@drawable/resizable_textfield"
 					style="@style/font6"
-					android:contentDescription="@string/content_description_contact_last_name"
 					android:textCursorDrawable="@null"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
@@ -120,7 +106,6 @@
 					android:textCursorDrawable="@null"
 					android:background="@drawable/resizable_textfield"
 					style="@style/font6"
-					android:contentDescription="@string/content_description_contact_first_name"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
 					android:gravity="left"
@@ -130,7 +115,6 @@
 		    </LinearLayout>
 
 			<LinearLayout
-				android:id="@+id/sip_addresses"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="10dp"
@@ -168,8 +152,8 @@
 
 			</LinearLayout>
 
+
 			<LinearLayout
-				android:id="@+id/phone_numbers"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="10dp"

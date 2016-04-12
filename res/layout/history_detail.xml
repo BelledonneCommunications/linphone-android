@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
 			  android:background="@color/colorG"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
 			  android:orientation="vertical" >
-=======
-	android:background="@color/colorH"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
->>>>>>> public/master
 
 	<LinearLayout
 		android:id="@+id/top_bar"
@@ -21,12 +14,7 @@
 
 		<ImageView
 			android:id="@+id/back"
-<<<<<<< HEAD
 			android:src="@drawable/back_button"
-=======
-			android:src="@drawable/back"
-			android:background="@drawable/toolbar_button"
->>>>>>> public/master
 			android:contentDescription="@string/content_description_back"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
@@ -51,7 +39,6 @@
 		android:orientation="horizontal">
 
 		<ImageView
-<<<<<<< HEAD
 			android:id="@+id/contact_picture"
 			android:src="@drawable/avatar"
 			android:contentDescription="@string/content_description_contact_picture"
@@ -83,16 +70,6 @@
 
 		</LinearLayout>
 
-=======
-			android:id="@+id/add_contact"
-			android:src="@drawable/contact_add"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_add_contact"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2"
-			android:padding="15dp"/>
->>>>>>> public/master
 	</LinearLayout>
 
 	<ScrollView
@@ -174,14 +151,8 @@
 			android:padding="10dp">
 
 			<TextView
-<<<<<<< HEAD
 				android:id="@+id/date"
 				style="@style/font2"
-=======
-				android:id="@+id/contact_name"
-				style="@style/font5"
-				android:gravity="center_horizontal"
->>>>>>> public/master
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"/>
 
@@ -191,83 +162,6 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"/>
 
-<<<<<<< HEAD
-=======
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:padding="10dp"
-				android:gravity="center"
-				android:orientation="horizontal">
-
-				<ImageView
-					android:id="@+id/call"
-					android:src="@drawable/call_start_body_default"
-					android:contentDescription="@string/content_description_call"
-					android:layout_width="60dp"
-					android:layout_height="60dp"
-					android:layout_margin="10dp"/>
-
-				<ImageView
-					android:id="@+id/chat"
-					android:src="@drawable/chat_start_body_default"
-					android:contentDescription="@string/content_description_chat"
-					android:layout_width="60dp"
-					android:layout_height="60dp"
-					android:layout_margin="10dp"/>
-
-			</LinearLayout>
-
-			<LinearLayout
-				android:id="@+id/log_row"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
-
-				<View
-					android:background="@color/colorE"
-					android:layout_width="wrap_content"
-					android:layout_height="1dp"/>
-
-				<TextView
-					android:text="@string/call"
-					style="@style/font13"
-					android:textAllCaps="true"
-					android:layout_marginTop="2dp"
-					android:layout_gravity="center"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
-
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal"
-					android:gravity="center"
-					android:padding="10dp">
-
-					<ImageView
-						android:id="@+id/direction"
-						android:paddingLeft="10dp"
-						android:paddingRight="10dp"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"/>
-
-					<TextView
-						android:id="@+id/date"
-						style="@style/font10"
-						android:paddingRight="10dp"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"/>
-
-					<TextView
-						android:id="@+id/time"
-						style="@style/font10"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"/>
-
-				</LinearLayout>
-			</LinearLayout>
->>>>>>> public/master
 		</LinearLayout>
 	</LinearLayout>
 			</LinearLayout>

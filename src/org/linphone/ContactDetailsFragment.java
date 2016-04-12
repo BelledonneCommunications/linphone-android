@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.linphone.compatibility.Compatibility;
@@ -26,6 +27,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,7 +115,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			contactPicture.setImageBitmap(BitmapFactory.decodeStream(input));
         } else {
         	contactPicture.setImageResource(R.drawable.avatar);
-        }*/
+        }
 
 		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getFullName());
@@ -248,8 +250,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				public void onClick(View view) {
 					dialog.dismiss();
 
-		if (id == R.id.back) {
-			LinphoneActivity.instance().displayContacts(false);
-		}
-	}
-}
+					if (id == R.id.back) {
+						LinphoneActivity.instance().displayContacts(false);
+					}
+				}
+			}

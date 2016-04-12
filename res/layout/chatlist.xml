@@ -24,7 +24,7 @@
 		<ImageView
 			android:id="@+id/back_in_call"
 			android:src="@drawable/call_back_button"
-			android:contentDescription="@string/content_description_back_call"
+			android:contentDescription="@string/content_description_call"
 			android:visibility="invisible"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
@@ -39,7 +39,7 @@
 		<ImageView
 			android:id="@+id/edit"
 			android:src="@drawable/edit_list_button"
-			android:contentDescription="@string/content_description_edit_list"
+			android:contentDescription="@string/content_description_edit"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"

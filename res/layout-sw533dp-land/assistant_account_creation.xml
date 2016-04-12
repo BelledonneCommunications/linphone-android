@@ -56,7 +56,6 @@
 					android:background="@drawable/resizable_textfield"
 					android:textColor="@color/colorB"
 					android:inputType="text|textEmailAddress"
-					android:contentDescription="@string/content_description_username_field"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
 					android:singleLine="true"/>
@@ -133,7 +132,6 @@
 					android:background="@drawable/resizable_textfield"
 					android:textColor="@color/colorB"
 					android:inputType="textPassword"
-					android:contentDescription="@string/content_description_confirm_password_field"
 					android:textCursorDrawable="@null"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
@@ -171,7 +169,6 @@
 					android:background="@drawable/resizable_textfield"
 					android:textColor="@color/colorB"
 					android:inputType="text|textEmailAddress"
-					android:contentDescription="@string/content_description_email_field"
 					android:textCursorDrawable="@null"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"

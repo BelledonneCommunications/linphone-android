@@ -56,28 +56,9 @@
 		android:paddingTop="10dp"
 		android:layout_above="@+id/menu">
 
-		<TextView
-			android:id="@+id/contact_name"
-			style="@style/font5"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
-			android:gravity="center"
-			android:paddingTop="5dp"/>
-
-		<TextView
-			android:id="@+id/contact_number"
-			style="@style/font2"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/contact_name"
-			android:layout_gravity="center"
-			android:layout_centerHorizontal="true"
-			android:paddingBottom="10dp"/>
-
-		<RelativeLayout
-			android:id="@+id/avatar_layout"
+		<LinearLayout
+			android:background="@color/colorG"
+			android:layout_alignParentBottom="true"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"

@@ -9,13 +9,7 @@
 
 	<ImageView
 		android:id="@+id/cancel"
-<<<<<<< HEAD
 		android:src="@drawable/cancel_button"
-=======
-		android:src="@drawable/cancel_edit"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_cancel_button"
->>>>>>> public/master
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="0.2"
@@ -28,13 +22,7 @@
 
 	<ImageView
 		android:id="@+id/select_all"
-<<<<<<< HEAD
 		android:src="@drawable/select_all_button"
-=======
-		android:src="@drawable/select_all"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_select_all"
->>>>>>> public/master
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="0.2"
@@ -42,13 +30,7 @@
 
 	<ImageView
 		android:id="@+id/deselect_all"
-<<<<<<< HEAD
 		android:src="@drawable/deselect_all_button"
-=======
-		android:src="@drawable/deselect_all"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_deselect_all"
->>>>>>> public/master
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="0.2"
@@ -58,11 +40,6 @@
 	<ImageView
 		android:id="@+id/delete"
 		android:src="@drawable/delete_button"
-<<<<<<< HEAD
-=======
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_delete_selection"
->>>>>>> public/master
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="0.2"
