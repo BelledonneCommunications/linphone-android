@@ -28,7 +28,6 @@ proguard-project.txt
 project.properties
 res/.DS_Store
 res/raw/lpconfig.xsd
-res/raw/rootca.pem
 submodules/externals/build/cunit/CUnit/
 submodules/externals/build/ffmpeg/arm/
 submodules/externals/build/ffmpeg/x86

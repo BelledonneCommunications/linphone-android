@@ -693,7 +693,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private void copyAssetsFromPackage() throws IOException {
 		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
 		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
-		copyIfNotExist(R.raw.hold, mPauseSoundFile);
+		//copyIfNotExist(R.raw.hold, mPauseSoundFile);
 		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
 		copyIfNotExist(R.raw.linphonerc_default, mLinphoneConfigFile);
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());

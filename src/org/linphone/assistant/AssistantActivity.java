@@ -443,7 +443,7 @@ private static AssistantActivity instance;
 			d.setAlpha(200);
 			progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 			progress.getWindow().setBackgroundDrawable(d);
-			progress.setContentView(R.layout.progress_dialog);
+			progress.setContentView(R.layout.dialog);
 			progress.show();
 		}
 	}

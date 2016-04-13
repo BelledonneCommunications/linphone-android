@@ -74,7 +74,7 @@
 	    android:layout_centerHorizontal="true"
    		android:background="@color/colorD">
        
-	    <RelativeLayout 
+	    <LinearLayout
 	        android:id="@+id/message_layout"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content">
@@ -116,7 +116,7 @@
 	            android:background="@drawable/resizable_textfield"
 	            android:layout_centerVertical="true"/>
 	        
-	    </RelativeLayout>
+	    </LinearLayout>
 	</LinearLayout>
 
 	<TextView

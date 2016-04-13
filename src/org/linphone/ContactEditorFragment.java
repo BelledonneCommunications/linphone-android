@@ -101,7 +101,7 @@ public class ContactEditorFragment extends Fragment {
 			phoneNumbersSection.setVisibility(View.GONE);
 		}
 		
-		sipAddressesSection = (LinearLayout) view.findViewById(R.id.sip_addresses);
+		sipAddressesSection = (LinearLayout) view.findViewById(R.id.sip_addresse);
 		if (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
 			sipAddressesSection.setVisibility(View.GONE);
 		}
@@ -265,27 +265,27 @@ public class ContactEditorFragment extends Fragment {
 		numbers = initNumbersFields(contact);
 
 		addSipAddress = (ImageView) view.findViewById(R.id.add_address_field);
-		if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
+		//if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
 			addSipAddress.setVisibility(View.GONE);
-		}
+		/*}
 		addSipAddress.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				addEmptyRowToAllowNewNumberOrAddress(sipAddresses,true);
 			}
 		});
-
+		*/
 		addNumber = (ImageView) view.findViewById(R.id.add_number_field);
-		if (getResources().getBoolean(R.bool.allow_only_one_phone_number)) {
+	//	if (getResources().getBoolean(R.bool.allow_only_one_phone_number)) {
 			addNumber.setVisibility(View.GONE);
-		}
+	/*	}
 		addNumber.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				addEmptyRowToAllowNewNumberOrAddress(numbers,false);
 			}
 		});
-
+	*/
 		lastName.requestFocus();
 		
 		return view;
@@ -501,7 +501,7 @@ public class ContactEditorFragment extends Fragment {
 			nounoa.setValue(noa.getText().toString());
 		}
 		
-		ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
+	/*	ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
 		if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
 			delete.setVisibility(View.GONE);
 		}
@@ -516,6 +516,7 @@ public class ContactEditorFragment extends Fragment {
 
 			}
 		});
+		*/
 		return view;
 	}
 	
@@ -544,7 +545,7 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 		
-		final ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
+		/*final ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
 		if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
 			delete.setVisibility(View.GONE);
 		}
@@ -555,7 +556,7 @@ public class ContactEditorFragment extends Fragment {
 				view.setVisibility(View.GONE);
 			}
 		});
-
+		*/
 		controls.addView(view);
 	}
 }

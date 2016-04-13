@@ -113,7 +113,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ChatFragment chatFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = false, preferLinphoneContacts = false;
+	private boolean isAnimationDisabled = false, preferLinphoneContacts = false, emptyFragment = false, permissionAsked = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -492,9 +492,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			break;
 		case CHAT:
 			newFragment = new ChatFragment();
-			break;
-		case EMPTY:
-			newFragment = new EmptyFragment();
 			break;
 		default:
 			break;

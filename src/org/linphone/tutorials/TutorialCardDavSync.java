@@ -54,17 +54,17 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tuto_carddav);
+	/*	setContentView(R.layout.tuto_carddav);
 		
 		username = (EditText) findViewById(R.id.carddav_username);
 		password = (EditText) findViewById(R.id.carddav_pwd);
 		ha1 = (EditText) findViewById(R.id.carddav_ha1);
 		server = (EditText) findViewById(R.id.carddav_server);
 		logs = (TextView) findViewById(R.id.carddav_events);
-		
+
 		synchronize = (Button) findViewById(R.id.carddav_synchronize);
 		synchronize.setOnClickListener(this);
-
+*/
 		LinphoneCoreFactory.instance().setDebugMode(true, "CardDAV sync tutorial");
 		try {
 			lc = LinphoneCoreFactory.instance().createLinphoneCore(this, this);

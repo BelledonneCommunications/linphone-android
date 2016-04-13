@@ -214,7 +214,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 		final String sipUri = nativeMessage.getFrom().asStringUriOnly();
 		if(!nativeMessage.isOutgoing()) {
 			if (c != null) {
-				displayName = c.getName();
+				displayName = c.getFullName();
 				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, c.getPhotoUri(), c.getThumbnailUri());
 			} else {
 				contactPicture.setImageResource(R.drawable.avatar);

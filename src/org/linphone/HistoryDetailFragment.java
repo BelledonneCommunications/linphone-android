@@ -26,6 +26,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 
 import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -97,7 +98,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		LinphoneAddress lAddress = null;
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
+		/*	Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), lAddress);
 
 			if (contact != null) {
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
@@ -106,6 +107,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				contactPicture.setImageResource(R.drawable.avatar);
 				view.findViewById(R.id.add_contact).setVisibility(View.VISIBLE);
 			}
+		*/
 		} catch (LinphoneCoreException e) {
 			e.printStackTrace();
 		}

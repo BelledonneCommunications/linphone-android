@@ -358,7 +358,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				return view;
 			}
 
-			Contact contact = ContactsManager.getInstance().findContactWithAddress(getActivity().getContentResolver(), address);
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address); //findContactWithAddress(getActivity().getContentResolver(), address);
 			String message = "";
 			Long time;
 
@@ -391,7 +391,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 
 			displayName.setSelected(true); // For animation
-			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getName());
+			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getFullName());
 
 
 			/*if(contact != null){

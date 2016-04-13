@@ -150,13 +150,14 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		}
 
 		LinphoneAddress address = mCall.getRemoteAddress();
-		Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		//Contact contact = ContactsManager.getInstance().findContactWithAddress(getContentResolver(), address);
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-			name.setText(contact.getName());
-		} else {
+			name.setText(contact.getFullName());
+		} /*else {
 			name.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
-		}
+		}*/
 		number.setText(address.asStringUriOnly());
 		Log.w(address.asStringUriOnly());
 	}

@@ -509,7 +509,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().isInConference() ? 1 : 0);
 		}
 
-		//Enabled transfer button
+	/*	//Enabled transfer button
 		if(isTransferAllowed)
 			enabledTransferButton(true);
 
@@ -519,7 +519,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		} else {
 			enabledConferenceButton(false);
 		}
-
+*/
 		refreshInCallActions();
 		refreshCallList(getResources());
 		enableAndRefreshInCallActions();
@@ -534,10 +534,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					video.setImageResource(R.drawable.camera);
 					videoProgress.setVisibility(View.INVISIBLE);
 				} else {
-					video.setImageResource(R.drawable.camera_button);
+					video.setImageResource(R.drawable.camera_default);
 				}
 			} else {
-				video.setImageResource(R.drawable.camera_button);
+				video.setImageResource(R.drawable.camera_default);
 			}
 		}
 
@@ -581,7 +581,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		//Enabled transfer button
-		if(isTransferAllowed  && !LinphoneManager.getLc().soundResourcesLocked())
+	/*	if(isTransferAllowed  && !LinphoneManager.getLc().soundResourcesLocked())
 			enabledTransferButton(true);
 
 		//Enable conference button
@@ -590,7 +590,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		} else {
 			enabledConferenceButton(false);
 		}
-
+*/
 		addCall.setEnabled(LinphoneManager.getLc().getCallsNb() < LinphoneManager.getLc().getMaxCalls() && !LinphoneManager.getLc().soundResourcesLocked());
 		options.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call) && (addCall.isEnabled() || transfer.isEnabled()));
 
@@ -611,7 +611,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		transfer.setEnabled(true);
 		pause.setEnabled(true);
 		dialer.setEnabled(true);
-		enabledConferenceButton(true);
+	//	enabledConferenceButton(true);
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -710,6 +710,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void enabledVideoButton(boolean enabled){
 		if(enabled) {
 			video.setEnabled(true);
+			video.setAlpha(1f);
 		} else {
 			video.setEnabled(false);
 			video.setAlpha(0.2f);
@@ -1368,6 +1369,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			status.getView().setVisibility(View.VISIBLE);
 		}
 		findViewById(R.id.status).setVisibility(View.VISIBLE);
+        //TODO
 		//findViewById(R.id.fragmentContainer).setPadding(0, LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
 	}
 
@@ -1575,12 +1577,12 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
-		Contact lContact  = ContactsManager.getInstance().findContactWithAddress(contactName.getContext().getContentResolver(), lAddress);
+		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(lAddress); //findContactWithAddress(contactName.getContext().getContentResolver(), lAddress);
 		if (lContact == null) {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
 			contactPicture.setImageResource(R.drawable.avatar);
 		} else {
-			contactName.setText(lContact.getName());
+			contactName.setText(lContact.getFullName());
 			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
 		}
 	}
@@ -1720,7 +1722,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	public void pauseOrResumeConference() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (lc.isInConference()) {
-			conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
+			conferenceStatus.setImageResource(R.drawable.pause_big_over);
 			lc.leaveConference();
 		} else {
 			conferenceStatus.setImageResource(R.drawable.pause_big_default);
