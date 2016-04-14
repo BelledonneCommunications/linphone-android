@@ -325,10 +325,10 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		if (onlyDisplayLinphoneContacts) {
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts()));
+			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts(search)));
 		} else {
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getContacts()));
+			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getContacts(search)));
 		}
 	}
 	
