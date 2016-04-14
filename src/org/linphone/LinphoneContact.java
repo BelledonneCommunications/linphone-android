@@ -21,6 +21,7 @@ package org.linphone;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
@@ -39,7 +40,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 
-public class LinphoneContact implements Serializable {
+public class LinphoneContact implements Serializable, Comparable<LinphoneContact> {
 	/**
 	 * 
 	 */
@@ -437,6 +438,13 @@ public class LinphoneContact implements Serializable {
 		return createLinphoneFriend();
 	}
 	
+	@Override
+	public int compareTo(LinphoneContact contact) {
+		String firstLetter = getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
+		String contactfirstLetter = contact.getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
+		return firstLetter.compareTo(contactfirstLetter);
+	}
+
 	private Uri getContactPictureUri(String id) {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);

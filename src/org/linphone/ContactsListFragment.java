@@ -459,10 +459,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
-			LinphoneContact contact = null;
-			do {
-				contact = (LinphoneContact) getItem(position);
-			} while (contact == null);
+			LinphoneContact contact = (LinphoneContact) getItem(position);
+			if (contact == null) return null;
 			
 			if (convertView != null) {
 				view = convertView;

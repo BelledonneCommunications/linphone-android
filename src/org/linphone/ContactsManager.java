@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.linphone.compatibility.Compatibility;
@@ -245,6 +246,7 @@ public class ContactsManager extends ContentObserver {
 		for (LinphoneContact contact : contacts) {
 			contact.refresh();
 		}
+		Collections.sort(contacts);
 		
 		return contacts;
 	}
