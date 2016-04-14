@@ -27,7 +27,6 @@
 			android:id="@+id/contact_picture_layout"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
 			android:gravity="center_vertical">
 
 			<ImageView
@@ -40,20 +39,18 @@
 				android:layout_alignParentLeft="true"
 				android:layout_marginLeft="5dp"/>
 
-
 			<ImageView
 				android:id="@+id/friendStatus"
 				android:visibility="visible"
-				android:layout_width="15dp"
-				android:layout_height="15dp"
-				android:layout_alignRightOf="@id/contact_picture"
-				android:layout_alignBottomOf="@id/contact_picture"
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:layout_alignBottom="@+id/contact_picture"
+				android:layout_alignRight="@+id/contact_picture"
 				android:adjustViewBounds="true"
 				android:layout_marginRight="3dp"
 				android:layout_marginBottom="3dp"
 				android:scaleType="centerInside"
-				android:src="@drawable/presence_unregistered"
-				/>
+				android:src="@drawable/presence_unregistered" />
 		</RelativeLayout>
 
 		<TextView 
