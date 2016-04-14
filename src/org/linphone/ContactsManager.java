@@ -22,6 +22,7 @@ package org.linphone;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
@@ -117,6 +118,28 @@ public class ContactsManager extends ContentObserver {
 	
 	public synchronized List<LinphoneContact> getSIPContacts() {
 		return sipContacts;
+	}
+	
+	public synchronized List<LinphoneContact> getContacts(String search) {
+		search = search.toLowerCase(Locale.getDefault());
+		List<LinphoneContact> searchContacts = new ArrayList<LinphoneContact>();
+		for (LinphoneContact contact : contacts) {
+			if (contact.getFullName().toLowerCase(Locale.getDefault()).contains(search)) {
+				searchContacts.add(contact);
+			}
+		}
+		return searchContacts;
+	}
+	
+	public synchronized List<LinphoneContact> getSIPContacts(String search) {
+		search = search.toLowerCase(Locale.getDefault());
+		List<LinphoneContact> searchContacts = new ArrayList<LinphoneContact>();
+		for (LinphoneContact contact : sipContacts) {
+			if (contact.getFullName().toLowerCase(Locale.getDefault()).contains(search)) {
+				searchContacts.add(contact);
+			}
+		}
+		return searchContacts;
 	}
 	
 	public void enableContactsAccess() {
