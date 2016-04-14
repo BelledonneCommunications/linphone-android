@@ -23,15 +23,38 @@
 		android:layout_margin="5dp"
 		android:gravity="center_vertical">
 
-		<ImageView
-			android:id="@+id/contact_picture"
-			android:src="@drawable/avatar"
-			android:contentDescription="@string/content_description_contact_picture"
-			android:layout_width="35dp"
-			android:layout_height="35dp"
-			android:adjustViewBounds="true"
-			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="5dp"/>
+		<RelativeLayout
+			android:id="@+id/contact_picture_layout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="5dp"
+			android:gravity="center_vertical">
+
+			<ImageView
+				android:id="@+id/contact_picture"
+				android:src="@drawable/avatar"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:layout_width="35dp"
+				android:layout_height="35dp"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginLeft="5dp"/>
+
+
+			<ImageView
+				android:id="@+id/friendStatus"
+				android:visibility="visible"
+				android:layout_width="15dp"
+				android:layout_height="15dp"
+				android:layout_alignRightOf="@id/contact_picture"
+				android:layout_alignBottomOf="@id/contact_picture"
+				android:adjustViewBounds="true"
+				android:layout_marginRight="3dp"
+				android:layout_marginBottom="3dp"
+				android:scaleType="centerInside"
+				android:src="@drawable/presence_unregistered"
+				/>
+		</RelativeLayout>
 
 		<TextView 
 		    android:id="@+id/name"
@@ -39,22 +62,10 @@
 			style="@style/font2"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/contact_picture"
+		    android:layout_toRightOf="@id/contact_picture_layout"
 		    android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/delete"
 		    android:layout_marginLeft="10dp" />
-		
-		<ImageView 
-		    android:id="@+id/friendStatus"
-		    android:visibility="gone"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
-		    android:layout_centerVertical="true"
-	        android:adjustViewBounds="true"
-	        android:layout_marginRight="20dp"
-	        android:scaleType="centerInside"
-	        android:src="@drawable/led_connected" />
 
 		<CheckBox
 			android:id="@+id/delete"

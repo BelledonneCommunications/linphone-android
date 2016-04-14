@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
+import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
 
 import android.content.ContentProviderOperation;
@@ -429,6 +430,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	public void setFriend(LinphoneFriend f) {
 		friend = f;
+	}
+
+	public PresenceModel getFriendPresenceModel(){
+		if(friend != null)return friend.getPresenceModel();
+		else return null;
 	}
 
 	public static LinphoneContact createContact() {

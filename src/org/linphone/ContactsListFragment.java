@@ -25,8 +25,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.OnlineStatus;
 import org.linphone.core.PresenceActivityType;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
+import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -458,93 +463,65 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			View view = null;
-			LinphoneContact contact = (LinphoneContact) getItem(position);
-			if (contact == null) return null;
-			
-			if (convertView != null) {
-				view = convertView;
-			} else {
-				view = mInflater.inflate(R.layout.contact_cell, parent, false);
-			}
+            View view = null;
+            LinphoneContact contact = (LinphoneContact) getItem(position);
+            if (contact == null) return null;
 
-			CheckBox delete = (CheckBox) view.findViewById(R.id.delete);
-			
-			TextView name = (TextView) view.findViewById(R.id.name);
-			name.setText(contact.getFullName());
+            if (convertView != null) {
+                view = convertView;
+            } else {
+                view = mInflater.inflate(R.layout.contact_cell, parent, false);
+            }
 
-			LinearLayout separator = (LinearLayout) view.findViewById(R.id.separator);
-			TextView separatorText = (TextView) view.findViewById(R.id.separatorText);
-			if (getPositionForSection(getSectionForPosition(position)) != position) {
-				separator.setVisibility(View.GONE);
-			} else {
-				separator.setVisibility(View.VISIBLE);
-				separatorText.setText(String.valueOf(contact.getFullName().charAt(0)));
-			}
-			
-			ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
-			if (contact.hasPhoto()) {
-				LinphoneUtils.setImagePictureFromUri(getActivity(), icon, contact.getPhotoUri(), contact.getThumbnailUri());
-			} else if (contact.getPhotoUri() != null) {
-				icon.setImageURI(contact.getPhotoUri());
-			} else {
-				icon.setImageResource(R.drawable.avatar);
-			}
+            //CheckBox delete = (CheckBox) view.findViewById(R.id.delete);
+            TextView name = (TextView) view.findViewById(R.id.name);
+            name.setText(contact.getFullName());
 
-			if (isEditMode) {
-				delete.setVisibility(View.VISIBLE);
-				delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-						contactsList.setItemChecked(position, b);
-						if(getNbItemsChecked() == getCount()){
-							deselectAll.setVisibility(View.VISIBLE);
-							selectAll.setVisibility(View.GONE);
-							enabledDeleteButton(true);
-						} else {
-							if(getNbItemsChecked() == 0){
-								deselectAll.setVisibility(View.GONE);
-								selectAll.setVisibility(View.VISIBLE);
-								enabledDeleteButton(false);
-							} else {
-								deselectAll.setVisibility(View.GONE);
-								selectAll.setVisibility(View.VISIBLE);
-								enabledDeleteButton(true);
-							}
-						}
-					}
-				});
-				if (contactsList.isItemChecked(position)) {
-					delete.setChecked(true);
-				} else {
-					delete.setChecked(false);
-				}
-			} else {
-				delete.setVisibility(View.GONE);
-			}
-			
-			ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
-			LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();
-			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
-				friendStatus.setVisibility(View.VISIBLE);
-				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();
-				if (presenceActivity == PresenceActivityType.Online) {
-					friendStatus.setImageResource(R.drawable.led_connected);
-				} else if (presenceActivity == PresenceActivityType.Busy) {
-					friendStatus.setImageResource(R.drawable.led_error);
-				} else if (presenceActivity == PresenceActivityType.Away) {
-					friendStatus.setImageResource(R.drawable.led_inprogress);
-				} else if (presenceActivity == PresenceActivityType.Offline) {
-					friendStatus.setImageResource(R.drawable.led_disconnected);
-				} else {
-					friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
-				}
-			}
-			
+            LinearLayout separator = (LinearLayout) view.findViewById(R.id.separator);
+            TextView separatorText = (TextView) view.findViewById(R.id.separatorText);
+            if (getPositionForSection(getSectionForPosition(position)) != position) {
+                separator.setVisibility(View.GONE);
+            } else {
+                separator.setVisibility(View.VISIBLE);
+                separatorText.setText(String.valueOf(contact.getFullName().charAt(0)));
+            }
+
+            ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
+            if (contact.hasPhoto()) {
+                LinphoneUtils.setImagePictureFromUri(getActivity(), icon, contact.getPhotoUri(), contact.getThumbnailUri());
+            } else if (contact.getPhotoUri() != null) {
+                icon.setImageURI(contact.getPhotoUri());
+            } else {
+                icon.setImageResource(R.drawable.avatar);
+            }
+
+            if (contact != null) {
+                ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
+                if (contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null){
+                    PresenceModel presenceModel = contact.getFriendPresenceModel();
+                    PresenceBasicStatus basicStatus = presenceModel.getBasicStatus();
+                    String presenceStatus = "";
+                    if (basicStatus == PresenceBasicStatus.Open || basicStatus == PresenceBasicStatus.Open)
+                        presenceStatus = basicStatus.toString();
+                    Log.e("===>>> updateAvatarPresence status = " + presenceStatus + " - vs basicStatus = " + basicStatus);
+
+                    if (basicStatus == PresenceBasicStatus.Closed) {
+                        friendStatus.setImageResource(R.drawable.presence_unregistered);
+                    } else if (presenceStatus == OnlineStatus.Online.toString()) {
+                        friendStatus.setImageResource(R.drawable.presence_online);
+                    } else {
+                        friendStatus.setImageResource(R.drawable.presence_offline);
+                    }
+                } else{
+                    Log.e("===>>> updateAvatarPresence friend is null ");
+                    friendStatus.setImageResource(R.drawable.presence_unregistered);
+                }
+            }
+
 			return view;
 		}
 
-		@Override
+    	@Override
 		public Object[] getSections() {
 			return sections;
 		}

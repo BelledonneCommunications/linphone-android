@@ -842,6 +842,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+
+		// TODO:
+		Log.e("===>> notifyPresenceReceived : "+lf.getName());
 	}
 
 	@Override

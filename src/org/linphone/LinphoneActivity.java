@@ -42,6 +42,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
@@ -65,6 +66,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.transition.ChangeTransform;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -273,6 +275,19 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 				int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 				displayMissedCalls(missedCalls);
+			}
+
+			@Override
+			public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+			//	if(currentFragment == FragmentsAvailable.HISTORY_DETAIL || currentFragment == FragmentsAvailable.HISTORY_LIST || currentFragment == FragmentsAvailable.CONTACTS_LIST
+			//			|| currentFragment == FragmentsAvailable.CONTACT_DETAIL || currentFragment == FragmentsAvailable.CONTACT_EDITOR || currentFragment == FragmentsAvailable.CHAT_LIST
+			//			|| currentFragment == FragmentsAvailable.CHAT){
+
+				if(currentFragment == FragmentsAvailable.CONTACTS_LIST){
+					if (contactListFragment != null && contactListFragment.isVisible()) {
+						((ContactsListFragment) contactListFragment).invalidate();
+					}
+				}
 			}
 		};
 
