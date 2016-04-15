@@ -47,6 +47,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AddressText;
+import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -118,7 +119,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private boolean isAnimationDisabled = false, preferLinphoneContacts = false, emptyFragment = false, permissionAsked = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
-	private LinearLayout mTabBar;
+  	private LinearLayout mTabBar;
 
 	private DrawerLayout sideMenu;
 	private String[] sideMenuItems;
@@ -126,6 +127,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
 	private boolean fetchedContactsOnce = false;
+
+    private ArrayList<AvatarWithPresenceImage> listeners;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -201,7 +204,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 		}
 
-		mListener = new LinphoneCoreListenerBase(){
+        mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 				if(!displayChatMessageNotification(message.getFrom().asStringUriOnly())) {
@@ -279,15 +282,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 			@Override
 			public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-			//	if(currentFragment == FragmentsAvailable.HISTORY_DETAIL || currentFragment == FragmentsAvailable.HISTORY_LIST || currentFragment == FragmentsAvailable.CONTACTS_LIST
-			//			|| currentFragment == FragmentsAvailable.CONTACT_DETAIL || currentFragment == FragmentsAvailable.CONTACT_EDITOR || currentFragment == FragmentsAvailable.CHAT_LIST
-			//			|| currentFragment == FragmentsAvailable.CHAT){
-
-				if(currentFragment == FragmentsAvailable.CONTACTS_LIST){
-					if (contactListFragment != null && contactListFragment.isVisible()) {
-						((ContactsListFragment) contactListFragment).invalidate();
-					}
-				}
+			    for(AvatarWithPresenceImage listener : listeners){
+                    if(listener.isThisFriend(lf)){
+                        listener.updatePresenceIcon(lc, lf);
+                    }
+                }
 			}
 		};
 
@@ -417,6 +416,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		missedCalls = (TextView) findViewById(R.id.missed_calls);
 		missedChats = (TextView) findViewById(R.id.missed_chats);
 	}
+
+
+    public void addPresenceUpdatedListener(AvatarWithPresenceImage aWPI){
+        listeners.add(aWPI);
+    }
 
 	private boolean isTablet() {
 		return getResources().getBoolean(R.bool.isTablet);

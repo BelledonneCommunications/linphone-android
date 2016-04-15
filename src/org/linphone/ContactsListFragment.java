@@ -32,6 +32,7 @@ import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -101,40 +102,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
         contactsList = (ListView) view.findViewById(R.id.contactsList);
         contactsList.setOnItemClickListener(this);
         
-   /*     allContacts = (ImageView) view.findViewById(R.id.all_contacts);
-        allContacts.setOnClickListener(this);
-        
-        linphoneContacts = (ImageView) view.findViewById(R.id.linphone_contacts);
-        linphoneContacts.setOnClickListener(this);
-
-		allContactsSelected = view.findViewById(R.id.all_contacts_select);
-		linphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
-        
-        newContact = (ImageView) view.findViewById(R.id.newContact);
-        newContact.setOnClickListener(this);
-        newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
-
-        allContacts.setEnabled(onlyDisplayLinphoneContacts);
-        linphoneContacts.setEnabled(!allContacts.isEnabled());
-
-		selectAll = (ImageView) view.findViewById(R.id.select_all);
-		selectAll.setOnClickListener(this);
-
-		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
-		deselectAll.setOnClickListener(this);
-
-		delete = (ImageView) view.findViewById(R.id.delete);
-		delete.setOnClickListener(this);
-*/
 		editList = (LinearLayout) view.findViewById(R.id.edit_list);
 		topbar = (LinearLayout) view.findViewById(R.id.top_bar);
-/*
-		cancel = (ImageView) view.findViewById(R.id.cancel);
-		cancel.setOnClickListener(this);
 
-		edit = (ImageView) view.findViewById(R.id.edit);
-		edit.setOnClickListener(this);
-  */
 		clearSearchField = (ImageView) view.findViewById(R.id.clearSearchField);
 		clearSearchField.setOnClickListener(this);
 		
@@ -236,23 +206,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			enabledDeleteButton(false);
 			isEditMode = true;
 		}
-		
-	/*	if (id == R.id.all_contacts) {
-			onlyDisplayLinphoneContacts = false;
-			allContactsSelected.setVisibility(View.VISIBLE);
-			allContacts.setEnabled(false);
-			linphoneContacts.setEnabled(true);
-			linphoneContactsSelected.setVisibility(View.INVISIBLE);
-		} 
-		else if (id == R.id.linphone_contacts) {
-			allContactsSelected.setVisibility(View.INVISIBLE);
-			linphoneContactsSelected.setVisibility(View.VISIBLE);
-			linphoneContacts.setEnabled(false);
-			allContacts.setEnabled(true);
-			onlyDisplayLinphoneContacts = true;
 
-		}
-*/
 		if(isEditMode){
 			deselectAll.setVisibility(View.GONE);
 			selectAll.setVisibility(View.VISIBLE);
@@ -264,12 +218,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			changeContactsAdapter();
 		}
 
-	/*	if (id == R.id.newContact) {
-			editConsumed = true;
-			LinphoneActivity.instance().addContact(null, sipAddressToAdd);
-		} 
-		else
-		*/
         if (id == R.id.clearSearchField) {
 			searchField.setText("");
 		}
@@ -495,27 +443,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
                 icon.setImageResource(R.drawable.avatar);
             }
 
-            if (contact != null) {
-                ImageView friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
-                if (contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null){
-                    PresenceModel presenceModel = contact.getFriendPresenceModel();
-                    PresenceBasicStatus basicStatus = presenceModel.getBasicStatus();
-                    String presenceStatus = "";
-                    if (basicStatus == PresenceBasicStatus.Open || basicStatus == PresenceBasicStatus.Open)
-                        presenceStatus = basicStatus.toString();
-                    Log.e("===>>> updateAvatarPresence status = " + presenceStatus + " - vs basicStatus = " + basicStatus);
-
-                    if (basicStatus == PresenceBasicStatus.Closed) {
-                        friendStatus.setImageResource(R.drawable.presence_unregistered);
-                    } else if (presenceStatus == OnlineStatus.Online.toString()) {
-                        friendStatus.setImageResource(R.drawable.presence_online);
-                    } else {
-                        friendStatus.setImageResource(R.drawable.presence_offline);
-                    }
-                } else{
-                    Log.e("===>>> updateAvatarPresence friend is null ");
-                    friendStatus.setImageResource(R.drawable.presence_unregistered);
-                }
+            AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
+            if(contact != null && contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null) {
+                avatarWithPresenceImage.setLinphoneContact(contact);
             }
 
 			return view;
