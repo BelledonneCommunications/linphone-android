@@ -387,21 +387,21 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			registerForContextMenu(v);
 			RelativeLayout rlayout = new RelativeLayout(context);
 
-		/*	CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
+			//CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
 
 			if(isEditMode) {
-				deleteChatBubble.setVisibility(View.VISIBLE);
+				//deleteChatBubble.setVisibility(View.VISIBLE);
 				if(message.isOutgoing()){
 					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 					layoutParams.setMargins(100, 10, 10, 10);
 					v.setLayoutParams(layoutParams);
 				} else {
-					LinearLayout message_layout = (LinearLayout) v.findViewById(R.id.message_content);
+					LinearLayout message_layout = (LinearLayout) v.findViewById(R.id.message_layout);
 					message_layout.setGravity(Gravity.RIGHT);
 				}
 
-				deleteChatBubble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			/*	deleteChatBubble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						messagesList.setItemChecked(position, b);
@@ -423,12 +423,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					}
 				});
 
+
 				if(messagesList.isItemChecked(position)) {
 					deleteChatBubble.setChecked(true);
 				} else {
 					deleteChatBubble.setChecked(false);
 				}
-
+				*/
 				rlayout.addView(v);
 			} else {
 				if(message.isOutgoing()){
@@ -444,7 +445,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 				rlayout.addView(v);
 			}
-			*/
+			
 			return rlayout;
 		}
 	}

@@ -748,6 +748,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayChat(String sipUri) {
+		Log.e("===>>> displayChat");
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
 		}
