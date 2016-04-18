@@ -63,8 +63,13 @@ import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceActivityType;
+import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
+import org.linphone.core.PresenceNote;
+import org.linphone.core.PresencePerson;
+import org.linphone.core.PresenceService;
 import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 import org.linphone.core.TunnelConfig;
@@ -588,6 +593,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
+
+			//TODO: server test Presence
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
+			mLc.setPresenceModel(model);
 
 			TimerTask lTask = new TimerTask() {
 				@Override

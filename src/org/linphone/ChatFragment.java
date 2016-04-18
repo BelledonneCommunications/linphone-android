@@ -23,8 +23,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
@@ -1004,6 +1006,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
+
+
+
 	private void searchContacts(String search) {
 		if (search == null || search.length() == 0) {
 			resultContactsSearch.setAdapter(new SearchContactsListAdapter(null));
@@ -1025,40 +1030,24 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		searchAdapter.notifyDataSetChanged();
 	}
 
+
+
 	class SearchContactsListAdapter extends BaseAdapter {
-		private List<LinphoneFriend> contacts;
 		private LayoutInflater mInflater;
+		private List<LinphoneContact> contacts;
+		Map<String, Integer> map = new LinkedHashMap<String, Integer>();
 
-		SearchContactsListAdapter(List<LinphoneFriend> contactsList) {
-			mInflater = inflater;
-		/*	if(contactsList == null){
-				contacts = getContactsList();
-			} else {
-		*/		contacts = contactsList;
-		//	}
-		}
+		SearchContactsListAdapter(List<LinphoneContact> contactsList) {
+			contacts = contactsList;
 
-		public List<ContactAddress>getContactsList(){
-			List<ContactAddress> list = new ArrayList<ContactAddress>();
-			/*for(Contact con: ContactsManager.getInstance().getAllContacts()){
-				for(String numberOrAddress : con.getNumbersOrAddresses()){
-					list.add(new ContactAddress(con, numberOrAddress));
-				}
-			}
-			*/return list;
 		}
 
 		public int getCount() {
 			return contacts.size();
 		}
 
-		public LinphoneFriend getItem(int position) {
-		/*	if (contacts == null || position >= contacts.size()) {
-				contacts = getContactsList();
-				return contacts.get(position);
-			} else {
-		*/		return  contacts.get(position);
-		//	}
+		public LinphoneContact getItem(int position) {
+			return  contacts.get(position);
 		}
 
 		public long getItemId(int position) {
@@ -1067,10 +1056,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
-			LinphoneFriend f;
+			LinphoneContact c;
 			do {
-				f = getItem(position);
-			} while (f == null);
+				c = getItem(position);
+			} while (c == null);
 
 			if (convertView != null) {
 				view = convertView;
@@ -1079,18 +1068,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			final String a = contact.getFullName();
-			final LinphoneContact c = contact;
+			//final LinphoneContact c = contact;
 
 			TextView name = (TextView) view.findViewById(R.id.contact_name);
 			name.setText(c.getFullName());
 
-			final LinphoneAddress laddress = f.getAddress();
+			final String laddress =  c.getNumbersOrAddresses().get(0).toString();
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					//exitNewConversationMode(c, a, null);
-					exitNewConversationMode(laddress.toString());
+					exitNewConversationMode(laddress);
 				}
 			});
 

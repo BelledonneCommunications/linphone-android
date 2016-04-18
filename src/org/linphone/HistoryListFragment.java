@@ -28,6 +28,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -391,6 +392,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.select = (CheckBox) view.findViewById(R.id.delete);
 				holder.callDirection = (ImageView) view.findViewById(R.id.icon);
 				holder.contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+				holder.avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
 			}
 
 			final LinphoneCallLog log = mLogs.get(position);
@@ -447,6 +449,12 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		*/		holder.contact.setText(LinphoneUtils.getAddressDisplayName(address));
 		//	}
 
+			holder.avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
+			if(c != null && c.isLinphoneFriend() && c.getFriendPresenceModel() != null) {
+				holder.avatarWithPresenceImage.setLinphoneContact(c);
+				LinphoneActivity.instance().addPresenceUpdatedListener(holder.avatarWithPresenceImage);
+			}
+
 			if (isEditMode) {
 				holder.select.setVisibility(View.VISIBLE);
 				holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -499,5 +507,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		CheckBox select;
 		ImageView callDirection;
 		ImageView contactPicture;
+		AvatarWithPresenceImage avatarWithPresenceImage;
 	}
 }

@@ -283,6 +283,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			@Override
 			public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 			    for(AvatarWithPresenceImage listener : listeners){
+					Log.e("===>> LinphoneActivity : notifyPresenceReceived : "+lf.getName().toString());
                     if(listener.isThisFriend(lf)){
                         listener.updatePresenceIcon(lc, lf);
                     }

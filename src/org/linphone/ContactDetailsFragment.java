@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -115,7 +116,14 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
         } else {
         	contactPicture.setImageResource(R.drawable.avatar);
         }
-		
+
+		AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
+		avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_BIG);
+		if(contact != null && contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null) {
+			avatarWithPresenceImage.setLinphoneContact(contact);
+			LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+		}
+
 		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getFullName());
 		

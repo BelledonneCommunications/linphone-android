@@ -438,7 +438,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	public boolean compareFriend(LinphoneFriend mFriend){
-		return this.friend == mFriend;
+		return this.friend.equals(mFriend);
 	}
 
 	public static LinphoneContact createContact() {

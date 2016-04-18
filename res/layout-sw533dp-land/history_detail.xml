@@ -39,9 +39,18 @@
 		android:padding="20dp"
 		android:orientation="vertical">
 
+
+		<org.linphone.ui.AvatarWithPresenceImage
+			android:id="@+id/avatar_with_presence"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			/>
+
 		<ImageView
 			android:id="@+id/contact_picture"
 			android:src="@drawable/avatar"
+			android:visibility="gone"
 			android:contentDescription="@string/content_description_contact_picture"
 			android:layout_width="80dp"
 			android:layout_height="80dp"

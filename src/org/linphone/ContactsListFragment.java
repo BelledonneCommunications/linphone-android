@@ -425,16 +425,14 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
             TextView name = (TextView) view.findViewById(R.id.name);
             name.setText(contact.getFullName());
 
-            LinearLayout separator = (LinearLayout) view.findViewById(R.id.separator);
-            TextView separatorText = (TextView) view.findViewById(R.id.separatorText);
+		    TextView separatorText = (TextView) view.findViewById(R.id.separator);
             if (getPositionForSection(getSectionForPosition(position)) != position) {
-                separator.setVisibility(View.GONE);
+				separatorText.setVisibility(View.GONE);
             } else {
-                separator.setVisibility(View.VISIBLE);
-                separatorText.setText(String.valueOf(contact.getFullName().charAt(0)));
+				separatorText.setVisibility(View.VISIBLE);
             }
 
-            ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
+    /*          ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
             if (contact.hasPhoto()) {
                 LinphoneUtils.setImagePictureFromUri(getActivity(), icon, contact.getPhotoUri(), contact.getThumbnailUri());
             } else if (contact.getPhotoUri() != null) {
@@ -442,10 +440,12 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
             } else {
                 icon.setImageResource(R.drawable.avatar);
             }
-
+    */
             AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
+            avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
             if(contact != null && contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null) {
                 avatarWithPresenceImage.setLinphoneContact(contact);
+             	LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
             }
 
 			return view;

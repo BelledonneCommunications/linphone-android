@@ -26,6 +26,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -361,6 +362,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address); //findContactWithAddress(getActivity().getContentResolver(), address);
 			String message = "";
 			Long time;
+
+			AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
+			avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
+			if(contact != null && contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null) {
+				avatarWithPresenceImage.setLinphoneContact(contact);
+				LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+			}
 
 			//Obiane specification
 			LinphoneFriend friend = LinphoneManager.getLc().findFriendByAddress(address.asStringUriOnly());

@@ -22,9 +22,17 @@
 		android:layout_margin="5dp"
 		android:gravity="center_vertical">
 
+		<org.linphone.ui.AvatarWithPresenceImage
+			android:id="@+id/avatar_with_presence"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			/>
+
 		<ImageView
 			android:id="@+id/contact_picture"
 			android:src="@drawable/avatar"
+			android:visibility="gone"
 			android:contentDescription="@string/content_description_contact_picture"
 			android:layout_width="35dp"
 			android:layout_height="35dp"
@@ -37,7 +45,7 @@
 			android:src="@drawable/call_status_incoming"
 			android:contentDescription="@string/content_description_call_direction"
 			android:padding="7dp"
-			android:layout_toRightOf="@id/contact_picture"
+			android:layout_toRightOf="@id/avatar_with_presence"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:adjustViewBounds="true"
