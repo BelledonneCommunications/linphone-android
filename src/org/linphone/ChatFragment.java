@@ -445,7 +445,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 				rlayout.addView(v);
 			}
-			
 			return rlayout;
 		}
 	}
