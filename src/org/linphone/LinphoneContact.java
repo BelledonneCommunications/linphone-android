@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
+import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
 
@@ -417,6 +418,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					}
 				}
 			}
+		}else if (isLinphoneFriend()) {
+			friend.enableSubscribes(true);
+			friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
+			//friend.setPresenceModel(model);
+
+
 		}
 	}
 	
@@ -433,7 +441,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	public PresenceModel getFriendPresenceModel(){
-		if(friend != null)return friend.getPresenceModel();
+		if(friend != null) {
+			Log.e("===>> getFriendPresenceModel - friend != null : "+friend.getPresenceModel());
+			return friend.getPresenceModel();
+		}
 		else return null;
 	}
 

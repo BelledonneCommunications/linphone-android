@@ -119,7 +119,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 		AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
 		avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_BIG);
-		if(contact != null && contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null) {
+		if(contact != null && contact.isLinphoneFriend()) {
 			avatarWithPresenceImage.setLinphoneContact(contact);
 			LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
 		}

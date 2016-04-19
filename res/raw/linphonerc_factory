@@ -80,7 +80,7 @@ uuid=3ac65678-272f-47d9-8aff-19950c565687
 friends_migration_done=1
 user_certificates_path=/data/user/0/org.linphone/files
 file_transfer_server_url=https://www.linphone.org:444/lft.php
-config-uri=https://85.233.205.218/xmlrpc?username=sylvain&password=cotcot&domain=sip.orangecyberdefense.com
+config-uri=https://85.233.205.218/xmlrpc?username=margaux&password=cotcot&domain=sip.orangecyberdefense.com
 
 [audio_codec_0]
 mime=opus
@@ -219,10 +219,10 @@ rate=90000
 enabled=1
 recv_fmtp=profile-level-id=42801F
 
-[friend_0]
+[friend_1]
 url="Sylvain Berfini" <sip:sylvain@sip.linphone.org>
 
-[friend_1]
+[friend_0]
 url="Margaux Clerc" <sip:margaux@sip.linphone.org>
 
 [friend_2]

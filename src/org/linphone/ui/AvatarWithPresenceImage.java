@@ -75,6 +75,8 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
 
     public void setLinphoneContact(LinphoneContact mContact){
         this.contact = mContact;
+        //this.contact.refresh();
+        updatePresenceIcon(null, null);
     }
 
     public boolean isThisFriend(LinphoneFriend myFriend){
@@ -102,6 +104,10 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                     friendStatusSmall.setImageResource(R.drawable.presence_offline);
                     friendStatusBig.setImageResource(R.drawable.presence_offline);
                 }
+            } else if(contact.isLinphoneFriend()){
+                Log.e("===>>> updateAvatarPresence friend infromation is null ");
+                friendStatusSmall.setImageResource(R.drawable.presence_offline);
+                friendStatusBig.setImageResource(R.drawable.presence_offline);
             } else{
                 Log.e("===>>> updateAvatarPresence friend is null ");
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);

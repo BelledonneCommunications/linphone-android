@@ -450,7 +450,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		//	}
 
 			holder.avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
-			if(c != null && c.isLinphoneFriend() && c.getFriendPresenceModel() != null) {
+			if(c != null && c.isLinphoneFriend() ) {
 				holder.avatarWithPresenceImage.setLinphoneContact(c);
 				LinphoneActivity.instance().addPresenceUpdatedListener(holder.avatarWithPresenceImage);
 			}

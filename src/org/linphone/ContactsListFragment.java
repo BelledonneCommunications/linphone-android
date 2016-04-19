@@ -414,6 +414,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
             View view = null;
             LinphoneContact contact = (LinphoneContact) getItem(position);
             if (contact == null) return null;
+            Log.e("===>> getView - contact : isAndroidContact = "+contact.isAndroidContact()+" - is LinphoneFriend = "+contact.isLinphoneFriend());
+            contact.refresh();
 
             if (convertView != null) {
                 view = convertView;
@@ -443,11 +445,17 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
     */
             AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
             avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
-            if(contact != null && contact.isLinphoneFriend() && contact.getFriendPresenceModel() != null) {
+            if(contact != null ) {
                 avatarWithPresenceImage.setLinphoneContact(contact);
-             	LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+                if (contact.isLinphoneFriend()) {
+                    Log.e("===>> getView - contact != null");
+                    LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+                }
+            }else {
+                Log.e("===>> getView - everything == null");
+                avatarWithPresenceImage.setLinphoneContact(contact);
+                LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
             }
-
 			return view;
 		}
 

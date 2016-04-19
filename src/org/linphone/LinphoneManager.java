@@ -243,6 +243,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
 
+		instance.enableProxyPublish(true);
 		return instance;
 	}
 
@@ -347,6 +348,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			return lc.getPresenceModel() != null && lc.getPresenceModel().getActivity() != null;
 		}
 		return false;
+	}
+
+	private void enableProxyPublish( boolean enabled) {
+		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
+		LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
+		for (LinphoneProxyConfig proxyConfig : proxyList){
+			proxyConfig.edit();
+			proxyConfig.enablePublish(enabled);
+			proxyConfig.done();
+		}
 	}
 
 	public void changeStatusToOnline() {
@@ -790,6 +801,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void doDestroy() {
+		enableProxyPublish(false);
 		if (LinphoneService.isReady()) // indeed, no need to crash
 			ChatStorage.getInstance().close();
 
@@ -809,6 +821,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public static synchronized void destroy() {
+		instance.enableProxyPublish(false);
 		if (instance == null) return;
 		getInstance().changeStatusToOffline();
 		sExited = true;
@@ -853,7 +866,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 
 		// TODO:
-		Log.e("===>> notifyPresenceReceived : "+lf.getName());
+		Log.e("===>> LinphoneMAnager - notifyPresenceReceived : "+lf.getName());
 	}
 
 	@Override

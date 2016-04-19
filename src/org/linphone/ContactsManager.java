@@ -228,7 +228,7 @@ public class ContactsManager extends ContentObserver {
 	}
 	
 	public List<LinphoneContact> fetchContactsAsync() {
-		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
+	List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		
 		if (mAccount != null && hasContactsAccess()) {
 			Cursor c = Compatibility.getContactsCursor(contentResolver, null);

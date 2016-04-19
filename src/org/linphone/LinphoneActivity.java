@@ -148,8 +148,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
+		listeners = new ArrayList<AvatarWithPresenceImage>();
 		//Obiane specifics
-		//HTTP to HTTPS migration
+		//HTTP to HTTPS migrationf
 		if(LinphonePreferences.instance().getRemoteProvisioningUrl() != null) {
 			if(LinphonePreferences.instance().getRemoteProvisioningUrl().startsWith("http://")) {
 				LinphonePreferences.instance().setRemoteProvisioningUrl(LinphonePreferences.instance().getRemoteProvisioningUrl().replace("http://", "https://"));
@@ -282,8 +283,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 			@Override
 			public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+				Log.e("===>> LinphoneActivity : notifyPresenceReceived 1 : "+lf.getName().toString());
 			    for(AvatarWithPresenceImage listener : listeners){
-					Log.e("===>> LinphoneActivity : notifyPresenceReceived : "+lf.getName().toString());
+					Log.e("===>> LinphoneActivity : notifyPresenceReceived 2 : "+lf.getName().toString());
                     if(listener.isThisFriend(lf)){
                         listener.updatePresenceIcon(lc, lf);
                     }
