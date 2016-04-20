@@ -105,7 +105,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			if (contact != null && contact.isLinphoneFriend() ) {
 				avatarWithPresenceImage.setLinphoneContact(contact);
-				LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+				LinphoneManager.getInstance().addPresenceUpdatedListener(avatarWithPresenceImage);
 			}
 		} catch(LinphoneCoreException e) {
 			e.printStackTrace();

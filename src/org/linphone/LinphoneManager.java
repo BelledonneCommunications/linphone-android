@@ -78,6 +78,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -203,7 +204,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mErrorToneFile;
 	private final String mUserCertificatePath;
 	private ByteArrayInputStream mUploadingImageStream;
-
+	private ArrayList<AvatarWithPresenceImage> listeners;
 	private Timer mTimer;
 
 	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
@@ -242,7 +243,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
-
+		instance.listeners = new ArrayList<AvatarWithPresenceImage>();
 		instance.enableProxyPublish(true);
 		return instance;
 	}
@@ -350,11 +351,15 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		return false;
 	}
 
-	private void enableProxyPublish( boolean enabled) {
+	public void enableProxyPublish( boolean enabled) {
+		changeStatusToOffline();
+		Log.e("==>> enableProxyPublish : "+enabled);
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
 		if(lc != null ) {
 			LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
+			Log.e("==>> enableProxyPublish : LC not null : "+proxyList.length);
 			for (LinphoneProxyConfig proxyConfig : proxyList) {
+				Log.e("==>> enableProxyPublish : proxyList");
 				proxyConfig.edit();
 				proxyConfig.enablePublish(enabled);
 				proxyConfig.done();
@@ -803,7 +808,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void doDestroy() {
-		enableProxyPublish(false);
 		if (LinphoneService.isReady()) // indeed, no need to crash
 			ChatStorage.getInstance().close();
 
@@ -866,9 +870,17 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+	Log.e("===>> LinphoneManager - notifyPresenceReceived : "+lf.getName());
+		for(AvatarWithPresenceImage listener : listeners){
+			if(listener.isThisFriend(lf)){
+				Log.e("===>> LinphoneManager : notifyPresenceReceived 2 : "+lf.getName().toString());
+				listener.updatePresenceIcon(lc, lf);
+			}
+		}
+	}
 
-		// TODO:
-		Log.e("===>> LinphoneMAnager - notifyPresenceReceived : "+lf.getName());
+	public void addPresenceUpdatedListener(AvatarWithPresenceImage aWPI){
+		listeners.add(aWPI);
 	}
 
 	@Override

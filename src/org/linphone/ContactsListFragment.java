@@ -444,14 +444,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
     */
             AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
             avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
-            if(contact != null ) {
+            if(contact != null && contact.isLinphoneFriend()) {
                 avatarWithPresenceImage.setLinphoneContact(contact);
-                if (contact.isLinphoneFriend()) {
-                    LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
-                }
-            }else {
-                avatarWithPresenceImage.setLinphoneContact(contact);
-                LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+                LinphoneManager.getInstance().addPresenceUpdatedListener(avatarWithPresenceImage);
             }
 			return view;
 		}

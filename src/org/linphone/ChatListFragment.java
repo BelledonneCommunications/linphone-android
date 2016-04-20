@@ -367,7 +367,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
 			if(contact != null && contact.isLinphoneFriend()) {
 				avatarWithPresenceImage.setLinphoneContact(contact);
-				LinphoneActivity.instance().addPresenceUpdatedListener(avatarWithPresenceImage);
+				LinphoneManager.getInstance().addPresenceUpdatedListener(avatarWithPresenceImage);
 			}
 
 			//Obiane specification

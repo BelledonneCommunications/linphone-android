@@ -377,7 +377,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
 				friend.setPresenceModel(model);
 			}
-			Log.e("===>>> LinphoneContact : isAndroidContact & isLinphoneFriend : ");
 			fullName = friend.getName();
 			thumbnailUri = null;
 			photoUri = null;
@@ -387,7 +386,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				hasSipAddress = true;
 			}
 		} else if (isAndroidContact()) {
-			Log.e("===>>> LinphoneContact : isAndroidContact : "+getFriendPresenceModel().toString());
 			String id = getAndroidId();
 			getContactNames(id);
 			setThumbnailUri(getContactPictureUri(id));

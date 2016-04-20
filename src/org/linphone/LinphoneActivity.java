@@ -284,12 +284,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			@Override
 			public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 				Log.e("===>> LinphoneActivity : notifyPresenceReceived 1 : "+lf.getName().toString());
-			    for(AvatarWithPresenceImage listener : listeners){
+			   /* for(AvatarWithPresenceImage listener : listeners){
 					Log.e("===>> LinphoneActivity : notifyPresenceReceived 2 : "+lf.getName().toString());
                     if(listener.isThisFriend(lf)){
 				        listener.updatePresenceIcon(lc, lf);
                     }
-                }
+                }*/
 			}
 		};
 
@@ -321,6 +321,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		mAlwaysChangingPhoneAngle = rotation;
 
 		updateAnimationsState();
+		LinphoneManager.getInstance().enableProxyPublish(true);
 	}
 
 	public void resetListener(){
@@ -421,10 +422,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 
-    public void addPresenceUpdatedListener(AvatarWithPresenceImage aWPI){
-        listeners.add(aWPI);
-    }
-
+   /* public void addPresenceUpdatedListener(AvatarWithPresenceImage aWPI){
+		listeners.add(aWPI);
+	}
+*/
 	private boolean isTablet() {
 		return getResources().getBoolean(R.bool.isTablet);
 	}
@@ -1292,6 +1293,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onPause() {
+		Log.e("LinphoneActivity - onPause");
+		//LinphoneManager.getInstance().enableProxyPublish(false);
 		getIntent().putExtra("PreviousActivity", 0);
 
 		super.onPause();
