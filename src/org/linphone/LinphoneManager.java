@@ -352,11 +352,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	private void enableProxyPublish( boolean enabled) {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
-		for (LinphoneProxyConfig proxyConfig : proxyList){
-			proxyConfig.edit();
-			proxyConfig.enablePublish(enabled);
-			proxyConfig.done();
+		if(lc != null ) {
+			LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
+			for (LinphoneProxyConfig proxyConfig : proxyList) {
+				proxyConfig.edit();
+				proxyConfig.enablePublish(enabled);
+				proxyConfig.done();
+			}
 		}
 	}
 

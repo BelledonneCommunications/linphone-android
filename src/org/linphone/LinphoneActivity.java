@@ -287,7 +287,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			    for(AvatarWithPresenceImage listener : listeners){
 					Log.e("===>> LinphoneActivity : notifyPresenceReceived 2 : "+lf.getName().toString());
                     if(listener.isThisFriend(lf)){
-                        listener.updatePresenceIcon(lc, lf);
+				        listener.updatePresenceIcon(lc, lf);
                     }
                 }
 			}

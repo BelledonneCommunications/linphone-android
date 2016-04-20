@@ -371,6 +371,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		hasSipAddress = false;
 		
 		if (!isAndroidContact() && isLinphoneFriend()) {
+			if(getFriendPresenceModel() == null){
+				friend.enableSubscribes(true);
+				friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
+				PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
+				friend.setPresenceModel(model);
+			}
+			Log.e("===>>> LinphoneContact : isAndroidContact & isLinphoneFriend : ");
 			fullName = friend.getName();
 			thumbnailUri = null;
 			photoUri = null;
@@ -380,6 +387,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				hasSipAddress = true;
 			}
 		} else if (isAndroidContact()) {
+			Log.e("===>>> LinphoneContact : isAndroidContact : "+getFriendPresenceModel().toString());
 			String id = getAndroidId();
 			getContactNames(id);
 			setThumbnailUri(getContactPictureUri(id));
@@ -422,9 +430,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			friend.enableSubscribes(true);
 			friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
 			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
-			//friend.setPresenceModel(model);
+			friend.setPresenceModel(model);
 
-
+			Log.e("===>>> LinphoneContact - isLinphoneFriend :" + getFriendPresenceModel().toString());
 		}
 	}
 	
@@ -442,7 +450,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	public PresenceModel getFriendPresenceModel(){
 		if(friend != null) {
-			Log.e("===>> getFriendPresenceModel - friend != null : "+friend.getPresenceModel());
 			return friend.getPresenceModel();
 		}
 		else return null;

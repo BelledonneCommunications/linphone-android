@@ -92,11 +92,10 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                 friendStatusBig = (ImageView) this.findViewById(R.id.friend_status_big);
                 PresenceModel presenceModel = contact.getFriendPresenceModel();
                 PresenceBasicStatus basicStatus = presenceModel.getBasicStatus();
-
+                Log.e("===>>> updateAvatarPresence basicStatus = "+ presenceModel.getBasicStatus().toString()+" - "+ presenceModel.getActivity().getType().toString());
                 if (basicStatus == PresenceBasicStatus.Closed) {
                     friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
                     friendStatusBig.setImageResource(R.drawable.presence_unregistered);
-                    Log.e("===>>> updateAvatarPresence basicStatus == Closed");
                 } else if (presenceModel.getActivity().getType() == PresenceActivityType.TV ) {
                     friendStatusSmall.setImageResource(R.drawable.presence_online);
                     friendStatusBig.setImageResource(R.drawable.presence_online);
@@ -105,11 +104,9 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                     friendStatusBig.setImageResource(R.drawable.presence_offline);
                 }
             } else if(contact.isLinphoneFriend()){
-                Log.e("===>>> updateAvatarPresence friend infromation is null ");
                 friendStatusSmall.setImageResource(R.drawable.presence_offline);
                 friendStatusBig.setImageResource(R.drawable.presence_offline);
             } else{
-                Log.e("===>>> updateAvatarPresence friend is null ");
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
             }
