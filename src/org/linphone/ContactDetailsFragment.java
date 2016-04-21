@@ -260,9 +260,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			});
 			dialog.show();
 		}
-		if (id == R.id.back) {
+	*/	if (id == R.id.back) {
 			LinphoneActivity.instance().displayContacts(false);
 		}
-	*/
+
 	}
 }

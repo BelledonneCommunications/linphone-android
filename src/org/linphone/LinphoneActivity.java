@@ -283,13 +283,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 			@Override
 			public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-				Log.e("===>> LinphoneActivity : notifyPresenceReceived 1 : "+lf.getName().toString());
-			   /* for(AvatarWithPresenceImage listener : listeners){
-					Log.e("===>> LinphoneActivity : notifyPresenceReceived 2 : "+lf.getName().toString());
-                    if(listener.isThisFriend(lf)){
-				        listener.updatePresenceIcon(lc, lf);
-                    }
-                }*/
+
 			}
 		};
 
@@ -751,7 +745,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayChat(String sipUri) {
-		Log.e("===>>> displayChat");
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
 		}
@@ -1293,8 +1286,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onPause() {
-		Log.e("LinphoneActivity - onPause");
-		//LinphoneManager.getInstance().enableProxyPublish(false);
+		LinphoneManager.getInstance().enableProxyPublish(false);
 		getIntent().putExtra("PreviousActivity", 0);
 
 		super.onPause();
@@ -1348,7 +1340,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		refreshAccounts();
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
-		LinphoneManager.getInstance().changeStatusToOnline();
+		//LinphoneManager.getInstance().changeStatusToOnline();
+		LinphoneManager.getInstance().enableProxyPublish(true);
 
 		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
 			if (LinphoneManager.getLc().getCalls().length > 0) {
@@ -1375,6 +1368,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 		}
+
 	}
 
 	@Override

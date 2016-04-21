@@ -374,7 +374,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			if(getFriendPresenceModel() == null){
 				friend.enableSubscribes(true);
 				friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
-				PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
+				PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Offline, null);
 				friend.setPresenceModel(model);
 			}
 			fullName = friend.getName();

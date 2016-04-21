@@ -433,15 +433,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				separatorText.setVisibility(View.VISIBLE);
             }
 
-    /*          ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
-            if (contact.hasPhoto()) {
-                LinphoneUtils.setImagePictureFromUri(getActivity(), icon, contact.getPhotoUri(), contact.getThumbnailUri());
-            } else if (contact.getPhotoUri() != null) {
-                icon.setImageURI(contact.getPhotoUri());
-            } else {
-                icon.setImageResource(R.drawable.avatar);
-            }
-    */
             AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
             avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
             if(contact != null && contact.isLinphoneFriend()) {

@@ -352,36 +352,33 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void enableProxyPublish( boolean enabled) {
-		changeStatusToOffline();
-		Log.e("==>> enableProxyPublish : "+enabled);
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
 		if(lc != null ) {
 			LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
-			Log.e("==>> enableProxyPublish : LC not null : "+proxyList.length);
+			if(!enabled)
+				changeStatusToOffline();
 			for (LinphoneProxyConfig proxyConfig : proxyList) {
-				Log.e("==>> enableProxyPublish : proxyList");
 				proxyConfig.edit();
 				proxyConfig.enablePublish(enabled);
 				proxyConfig.done();
 			}
+			if(enabled)
+				changeStatusToOnline();
 		}
 	}
 
 	public void changeStatusToOnline() {
+
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.Online) {
-			lc.getPresenceModel().getActivity().setType(PresenceActivityType.Online);
-		} else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
-			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
+		if (isInstanciated() && lc != null ){
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
 			lc.setPresenceModel(model);
 		}
 	}
 
 	public void changeStatusToOnThePhone() {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.OnThePhone) {
-			lc.getPresenceModel().getActivity().setType(PresenceActivityType.OnThePhone);
-		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
+		if (isInstanciated() && lc != null) {
 			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.OnThePhone, null);
 			lc.setPresenceModel(model);
 		}
@@ -389,10 +386,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void changeStatusToOffline() {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.Offline) {
-			lc.getPresenceModel().getActivity().setType(PresenceActivityType.Offline);
-		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
-			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Offline, null);
+		 if (isInstanciated() && lc != null) {
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Away, null);
 			lc.setPresenceModel(model);
 		}
 	}
@@ -827,7 +822,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public static synchronized void destroy() {
-		instance.enableProxyPublish(false);
 		if (instance == null) return;
 		getInstance().changeStatusToOffline();
 		sExited = true;
@@ -870,10 +864,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-	Log.e("===>> LinphoneManager - notifyPresenceReceived : "+lf.getName());
 		for(AvatarWithPresenceImage listener : listeners){
 			if(listener.isThisFriend(lf)){
-				Log.e("===>> LinphoneManager : notifyPresenceReceived 2 : "+lf.getName().toString());
+				Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 				listener.updatePresenceIcon(lc, lf);
 			}
 		}
