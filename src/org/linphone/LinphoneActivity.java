@@ -570,17 +570,15 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				hideStatusBar();
 			}
 		}
-
+		emptyFragment = false;
 		LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
 		if(newFragmentType == FragmentsAvailable.EMPTY){
 			ll.setVisibility(View.VISIBLE);
-
-			if(newFragmentType == FragmentsAvailable.CONTACT_EDITOR){
-				transaction.addToBackStack(newFragmentType.toString());
-			}
+			emptyFragment = true;
+			transaction.replace(R.id.fragmentContainer2, newFragment);
 			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
 		} else {
@@ -608,6 +606,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
 				}
 
+				/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
+					if (newFragmentType.isRightOf(currentFragment)) {
+						transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
+					} else {
+						transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
+					}
+				}*/
+				transaction.replace(R.id.fragmentContainer, newFragment);
 			}
 			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
