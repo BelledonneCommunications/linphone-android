@@ -866,7 +866,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 		for(AvatarWithPresenceImage listener : listeners){
 			if(listener.isThisFriend(lf)){
-				Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
+				//Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 				listener.updatePresenceIcon(lc, lf);
 			}
 		}

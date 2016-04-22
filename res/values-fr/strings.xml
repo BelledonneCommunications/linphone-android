@@ -8,10 +8,10 @@
   <string name="search_contact">Rechercher un contact</string>
 
   <!--Custom-->
-  <string name="app_name">Orange Secure Phone</string>
-  <string name="service_name">Orange Secure Phone Service</string>
+  <string name="app_name">Mobile Security Intense</string>
+  <string name="service_name">Mobile Security Intense</string>
   <string name="addressbook_label">Linphone</string>
-  <string name="notification_title">Orange Secure Phone</string>
+  <string name="notification_title">Mobile Security Intense</string>
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s enregistré</string>
   <string name="notification_register_failure">%s n\'a pas pu s\'enregistrer</string>
