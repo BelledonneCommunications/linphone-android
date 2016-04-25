@@ -429,8 +429,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
 			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
 			friend.setPresenceModel(model);
-
-			Log.e("===>>> LinphoneContact - isLinphoneFriend :" + getFriendPresenceModel().toString());
 		}
 	}
 	

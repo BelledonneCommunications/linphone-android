@@ -74,7 +74,7 @@
 	    android:layout_centerHorizontal="true"
    		android:background="@color/colorD">
        
-	    <LinearLayout
+	    <RelativeLayout
 	        android:id="@+id/message_layout"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content">
@@ -103,20 +103,21 @@
 
 			<EditText
 				android:id="@+id/message"
-                android:imeOptions="flagNoExtractUi"
-	            android:textCursorDrawable="@null"
-            	android:inputType="textMultiLine"
-            	android:maxLines="2"
-	            android:textColor="@android:color/black"
-	            android:layout_width="match_parent"
-	            android:layout_height="40dp"
+				android:imeOptions="flagNoExtractUi"
+				android:textCursorDrawable="@null"
+				android:inputType="textMultiLine"
+				android:maxLines="2"
+				android:textColor="@android:color/black"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
 				android:padding="10dp"
-	            android:layout_toRightOf="@id/send_picture"
-	            android:layout_toLeftOf="@id/send_message"
-	            android:background="@drawable/resizable_textfield"
-	            android:layout_centerVertical="true"/>
+				android:layout_toRightOf="@id/send_picture"
+				android:layout_toLeftOf="@id/send_message"
+				android:background="@drawable/resizable_textfield"
+				android:layout_centerVertical="true"
+			 />
 	        
-	    </LinearLayout>
+	    </RelativeLayout>
 	</LinearLayout>
 
 	<TextView

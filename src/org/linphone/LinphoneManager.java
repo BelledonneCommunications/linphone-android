@@ -367,6 +367,19 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+    //TODO to Complete
+    public void subscribeFriendList(boolean enabled){
+        LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
+        if(lc != null ) {
+         /*   if (enabled) {
+               lc.linphone_friend_list_update_subscriptions(linphone_core_get_default_friend_list(LC), NULL, TRUE);
+            } else {
+                linphone_friend_list_close_subscriptions(linphone_core_get_default_friend_list(LC));
+            }
+            */
+        }
+    }
+
 	public void changeStatusToOnline() {
 
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
@@ -866,7 +879,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 		for(AvatarWithPresenceImage listener : listeners){
 			if(listener.isThisFriend(lf)){
-				//Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
+				Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 				listener.updatePresenceIcon(lc, lf);
 			}
 		}
