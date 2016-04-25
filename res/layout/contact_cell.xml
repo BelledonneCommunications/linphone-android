@@ -38,7 +38,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_toRightOf="@id/avatar_with_presence"
 		    android:layout_centerVertical="true"
-			android:layout_toLeftOf="@id/delete"
+			android:layout_toLeftOf="@id/delete_message"
 		    android:layout_marginLeft="15dp" />
 
 		<CheckBox

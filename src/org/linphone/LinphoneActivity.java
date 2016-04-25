@@ -1293,7 +1293,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onPause() {
 		LinphoneManager.getInstance().enableProxyPublish(false);
-		LinphoneManager.getInstance().subscribeFriendList(false);
+		//LinphoneManager.getInstance().subscribeFriendList(false);
 		getIntent().putExtra("PreviousActivity", 0);
 
 		super.onPause();
@@ -1349,7 +1349,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		//LinphoneManager.getInstance().changeStatusToOnline();
 		LinphoneManager.getInstance().enableProxyPublish(true);
-		LinphoneManager.getInstance().subscribeFriendList(true);
+		//LinphoneManager.getInstance().subscribeFriendList(true);
 
 		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
 			if (LinphoneManager.getLc().getCalls().length > 0) {

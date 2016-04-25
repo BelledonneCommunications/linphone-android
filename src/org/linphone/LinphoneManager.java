@@ -353,7 +353,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void enableProxyPublish( boolean enabled) {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if(lc != null ) {
+        if(lc != null ) {
 			LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
 			if(!enabled)
 				changeStatusToOffline();
@@ -362,21 +362,21 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				proxyConfig.enablePublish(enabled);
 				proxyConfig.done();
 			}
+            subscribeFriendList(enabled);
 			if(enabled)
 				changeStatusToOnline();
 		}
 	}
 
-    //TODO to Complete
-    public void subscribeFriendList(boolean enabled){
+     public void subscribeFriendList(boolean enabled){
         LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
         if(lc != null ) {
-         /*   if (enabled) {
-               lc.linphone_friend_list_update_subscriptions(linphone_core_get_default_friend_list(LC), NULL, TRUE);
+           LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
+            if (enabled) {
+                //mFriendList.updateSubscriptions(lc.getDefaultProxyConfig(), true);
             } else {
-                linphone_friend_list_close_subscriptions(linphone_core_get_default_friend_list(LC));
+                mFriendList.closeSubscriptions();
             }
-            */
         }
     }
 
@@ -879,7 +879,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 		for(AvatarWithPresenceImage listener : listeners){
 			if(listener.isThisFriend(lf)){
-				Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
+				//Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 				listener.updatePresenceIcon(lc, lf);
 			}
 		}
