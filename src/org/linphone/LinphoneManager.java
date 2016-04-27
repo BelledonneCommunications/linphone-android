@@ -352,20 +352,23 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void enableProxyPublish( boolean enabled) {
-		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-        if(lc != null ) {
-			LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
-			if(!enabled)
-				changeStatusToOffline();
-			for (LinphoneProxyConfig proxyConfig : proxyList) {
-				proxyConfig.edit();
-				proxyConfig.enablePublish(enabled);
-				proxyConfig.done();
-			}
-            subscribeFriendList(enabled);
-			if(enabled)
-				changeStatusToOnline();
-		}
+        LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
+        if (lc != null ) {
+            if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady())) {
+                Log.e("===>>> enableProxyPublish in the loop" );
+                LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
+                if (!enabled)
+                    changeStatusToOffline();
+                for (LinphoneProxyConfig proxyConfig : proxyList) {
+                    proxyConfig.edit();
+                    proxyConfig.enablePublish(enabled);
+                    proxyConfig.done();
+                }
+                subscribeFriendList(enabled);
+                if (enabled)
+                    changeStatusToOnline();
+            }
+        }
 	}
 
      public void subscribeFriendList(boolean enabled){
@@ -377,12 +380,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
     }
 
 	public void changeStatusToOnline() {
-
-		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && lc != null ){
-			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
-			lc.setPresenceModel(model);
-		}
+        LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
+        if (isInstanciated() && lc != null) {
+            if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady())) {
+                PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
+                lc.setPresenceModel(model);
+            }
+        }
 	}
 
 	public void changeStatusToOnThePhone() {
@@ -617,8 +621,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
 			//TODO: server test Presence
-			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
-			mLc.setPresenceModel(model);
+			//PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
+			//mLc.setPresenceModel(model);
+            //changeStatusToOnline();
+            instance.enableProxyPublish(true);
 
 			TimerTask lTask = new TimerTask() {
 				@Override
