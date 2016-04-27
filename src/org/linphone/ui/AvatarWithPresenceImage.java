@@ -47,7 +47,6 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
         init();
     }
 
-
     private void init() {
         this.inflate(getContext(), R.layout.avatar_with_presence, this);
         friendStatusSmall = (ImageView) this.findViewById(R.id.friend_status_small);
@@ -83,6 +82,15 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
         return this.contact.compareFriend(myFriend);
     }
 
+    public String getFriendName(){
+        return this.contact.getFullName();
+    }
+
+    //TODO
+    public boolean isThisFriendByName(LinphoneFriend myFriend){
+        return this.contact.compareFriend(myFriend);
+    }
+
     @Override
     public void updatePresenceIcon (LinphoneCore lc, LinphoneFriend friend){
 
@@ -95,16 +103,17 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                 if (basicStatus == PresenceBasicStatus.Closed) {
                     friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
                     friendStatusBig.setImageResource(R.drawable.presence_unregistered);
-                } else if ((presenceModel.getActivity().getType() == PresenceActivityType.TV ) || (presenceModel.getActivity().getType() == PresenceActivityType.Online)) {
+                } else if ((presenceModel.getActivity().getType() == PresenceActivityType.TV )) {
                     friendStatusSmall.setImageResource(R.drawable.presence_online);
                     friendStatusBig.setImageResource(R.drawable.presence_online);
                 } else {
-                    friendStatusSmall.setImageResource(R.drawable.presence_offline);
-                    friendStatusBig.setImageResource(R.drawable.presence_offline);
+                    friendStatusSmall.setImageResource(R.drawable.presence_away);
+                    friendStatusBig.setImageResource(R.drawable.presence_away);
                 }
-            } else if(contact.isLinphoneFriend()){
-                friendStatusSmall.setImageResource(R.drawable.presence_offline);
-                friendStatusBig.setImageResource(R.drawable.presence_offline);
+            /*} else if(contact.isLinphoneFriend()){
+                friendStatusSmall.setImageResource(R.drawable.presence_away);
+                friendStatusBig.setImageResource(R.drawable.presence_away);
+            */
             } else{
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);

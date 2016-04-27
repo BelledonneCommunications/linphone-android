@@ -356,6 +356,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	public void onPause() {
 		instance = null;
 		ContactsManager.removeContactsListener(this);
+        LinphoneManager.getInstance().removePresenceUpdatedListener();
 		super.onPause();
 	}
 	

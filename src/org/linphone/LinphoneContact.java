@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
 import org.linphone.core.PresenceActivityType;
+import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
 
@@ -374,7 +375,8 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			if(getFriendPresenceModel() == null){
 				friend.enableSubscribes(true);
 				friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
-				PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Offline, null);
+				PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel();
+                model.setBasicStatus(PresenceBasicStatus.Closed);
 				friend.setPresenceModel(model);
 			}
 			fullName = friend.getName();

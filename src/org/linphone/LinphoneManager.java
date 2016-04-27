@@ -372,11 +372,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
         if(lc != null ) {
            LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
-            if (enabled) {
-                //mFriendList.updateSubscriptions(lc.getDefaultProxyConfig(), true);
-            } else {
-                mFriendList.closeSubscriptions();
-            }
+            mFriendList.enableSubscriptions(enabled);
         }
     }
 
@@ -878,8 +874,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 		for(AvatarWithPresenceImage listener : listeners){
+            Log.e("===>> LinphoneManager : notifyPresenceReceived : "+listener.getFriendName()+" vs "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 			if(listener.isThisFriend(lf)){
-				//Log.e("===>> LinphoneManager : notifyPresenceReceived : "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
+				Log.e("===>> LinphoneManager : notifyPresenceReceived 2: "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 				listener.updatePresenceIcon(lc, lf);
 			}
 		}
@@ -888,6 +885,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void addPresenceUpdatedListener(AvatarWithPresenceImage aWPI){
 		listeners.add(aWPI);
 	}
+
+    public void removePresenceUpdatedListener(){
+        listeners.clear();
+    }
 
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
