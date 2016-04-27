@@ -84,6 +84,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -286,15 +288,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
 		if (state == LinphoneChatMessage.State.FileTransferDone) {
-			if(msg.isOutgoing() && mUploadingImageStream != null){
+			if (msg.isOutgoing() && mUploadingImageStream != null) {
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
 				File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
 				try {
-					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
-					msg.setAppData(url);
-					file.delete();
+					Bitmap bm = BitmapFactory.decodeFile(file.getPath());
+					if (bm != null) {
+						String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
+						msg.setAppData(url);
+						file.delete();
+					}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -302,7 +307,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 
-		if(state == LinphoneChatMessage.State.FileTransferError) {
+		if (state == LinphoneChatMessage.State.FileTransferError) {
 			//TODO
 		}
 
