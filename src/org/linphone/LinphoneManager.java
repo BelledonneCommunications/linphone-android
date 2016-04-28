@@ -598,7 +598,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			e.printStackTrace();
 		}
 		finally {
-			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+          	    mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
 			mLc = null;
 		}
 	}

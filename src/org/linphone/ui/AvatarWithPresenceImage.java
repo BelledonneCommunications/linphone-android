@@ -12,6 +12,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.OnlineStatus;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceActivityType;
@@ -106,8 +107,13 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                 PresenceModel presenceModel = contact.getFriendPresenceModel();
                 PresenceBasicStatus basicStatus = presenceModel.getBasicStatus();
                 if (basicStatus == PresenceBasicStatus.Closed) {
-                    friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
-                    friendStatusBig.setImageResource(R.drawable.presence_unregistered);
+                    if(friend.getPresenceModel() != null){
+                        friendStatusSmall.setImageResource(R.drawable.presence_away);
+                        friendStatusBig.setImageResource(R.drawable.presence_away);
+                    }else {
+                        friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
+                        friendStatusBig.setImageResource(R.drawable.presence_unregistered);
+                    }
                 } else if ((presenceModel.getActivity().getType() == PresenceActivityType.TV )) {
                     friendStatusSmall.setImageResource(R.drawable.presence_online);
                     friendStatusBig.setImageResource(R.drawable.presence_online);
@@ -119,10 +125,10 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                 friendStatusSmall.setImageResource(R.drawable.presence_away);
                 friendStatusBig.setImageResource(R.drawable.presence_away);
             */
-            } else{
+            }/* else{
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
                 friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
-            }
+            }*/
         }
     }
 }
