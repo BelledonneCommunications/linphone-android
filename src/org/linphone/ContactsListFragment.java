@@ -356,7 +356,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	public void onPause() {
 		instance = null;
 		ContactsManager.removeContactsListener(this);
-        LinphoneManager.getInstance().removePresenceUpdatedListener();
+        //LinphoneManager.getInstance().removePresenceUpdatedListener();
 		super.onPause();
 	}
 	
@@ -435,7 +435,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
             }
 
             AvatarWithPresenceImage avatarWithPresenceImage = (AvatarWithPresenceImage) view.findViewById(R.id.avatar_with_presence);
-            avatarWithPresenceImage.setFormatAvatarImage(AvatarWithPresenceImage.AVATAR_SMALL);
             if(contact != null && contact.isLinphoneFriend()) {
                 avatarWithPresenceImage.setLinphoneContact(contact);
                 LinphoneManager.getInstance().addPresenceUpdatedListener(avatarWithPresenceImage);

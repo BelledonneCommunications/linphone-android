@@ -55,6 +55,11 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
 
         friendStatusBig  = (ImageView) this.findViewById(R.id.friend_status_big);
         contactPictureBig = (ImageView) this.findViewById(R.id.contact_picture_big);
+
+        friendStatusSmall.setVisibility(View.VISIBLE);
+        contactPictureSmall.setVisibility(View.VISIBLE);
+        friendStatusBig.setVisibility(View.GONE);
+        contactPictureBig.setVisibility(View.GONE);
     }
 
     public void setFormatAvatarImage(int format){
