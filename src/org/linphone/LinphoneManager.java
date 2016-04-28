@@ -355,7 +355,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
         if (lc != null ) {
             if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady())) {
-                Log.e("===>>> enableProxyPublish in the loop" );
                 LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
                 if (!enabled)
                     changeStatusToOffline();
@@ -615,16 +614,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
 			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log));
-			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
+            LinphonePreferences.instance().enableDebugLogs(isDebugLogEnabled);
+            LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
-			//TODO: server test Presence
-			//PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
-			//mLc.setPresenceModel(model);
-            //changeStatusToOnline();
-            instance.enableProxyPublish(true);
+			instance.enableProxyPublish(true);
 
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -651,7 +647,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
 		mLc = lc;
-		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
+		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) ;//&& mPrefs.isDebugEnabled();
+        LinphonePreferences.instance().enableDebugLogs(isDebugLogEnabled);
 		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 		LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
@@ -843,7 +840,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		instance.doDestroy();
 	}
 
-	private String getString(int key) {
+	public String getString(int key) {
 		return mR.getString(key);
 	}
 
@@ -880,9 +877,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 		for(AvatarWithPresenceImage listener : listeners){
-            Log.e("===>> LinphoneManager : notifyPresenceReceived : "+listener.getFriendName()+" vs "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
+           // Log.e("===>> LinphoneManager : notifyPresenceReceived : "+listener.getFriendName()+" vs "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 			if(listener.isThisFriend(lf)){
-				Log.e("===>> LinphoneManager : notifyPresenceReceived 2: "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
+			//	Log.e("===>> LinphoneManager : notifyPresenceReceived 2: "+lf.getName().toString()+" - "+lf.getPresenceModel().getActivity().getType());
 				listener.updatePresenceIcon(lc, lf);
 			}
 		}

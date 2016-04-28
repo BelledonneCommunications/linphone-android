@@ -30,6 +30,7 @@ import org.linphone.mediastream.Log;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -136,7 +137,9 @@ public class Digit extends Button implements AddressAware {
 				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0){
+							Log.setEnableLog(false);
 							LinphonePreferences.instance().enableDebugLogs(false);
+							LinphoneCoreFactory.instance().setDebugMode(false, getResources().getString(R.string.app_name));
 							LinphoneCoreFactory.instance().enableLogCollection(false);
 						}
 						if(which == 1) {
@@ -152,7 +155,9 @@ public class Digit extends Button implements AddressAware {
 				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0) {
+							Log.setEnableLog(true);
 							LinphonePreferences.instance().enableDebugLogs(true);
+							LinphoneCoreFactory.instance().setDebugMode(true, getResources().getString(R.string.app_name));
 							LinphoneCoreFactory.instance().enableLogCollection(true);
 						}
 					}
