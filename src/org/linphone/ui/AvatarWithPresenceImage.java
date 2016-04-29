@@ -108,7 +108,6 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                 PresenceBasicStatus basicStatus = presenceModel.getBasicStatus();
                 if (basicStatus == PresenceBasicStatus.Closed) {
                     if(presenceModel.getActivity() != null && contact.isPresenceReceived() ){
-                        Log.e("===>>> updatePresenceIcon 1");
                         friendStatusSmall.setImageResource(R.drawable.presence_away);
                         friendStatusBig.setImageResource(R.drawable.presence_away);
                     }else {
@@ -119,18 +118,10 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                     friendStatusSmall.setImageResource(R.drawable.presence_online);
                     friendStatusBig.setImageResource(R.drawable.presence_online);
                 } else {
-                    Log.e("===>>> updatePresenceIcon 2");
                     friendStatusSmall.setImageResource(R.drawable.presence_away);
                     friendStatusBig.setImageResource(R.drawable.presence_away);
                 }
-            /*} else if(contact.isLinphoneFriend()){
-                friendStatusSmall.setImageResource(R.drawable.presence_away);
-                friendStatusBig.setImageResource(R.drawable.presence_away);
-            */
-            }/* else{
-                friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
-                friendStatusSmall.setImageResource(R.drawable.presence_unregistered);
-            }*/
+            }
         }
     }
 }
