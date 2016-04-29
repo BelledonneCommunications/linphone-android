@@ -440,8 +440,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	
 	@Override
 	public int compareTo(LinphoneContact contact) {
-		String firstLetter = getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
-		String contactfirstLetter = contact.getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
+		String fullName = getFullName();
+		String contactFullName = contact.getFullName();
+		String firstLetter = fullName == null || fullName.isEmpty() ? "" : fullName.substring(0, 1).toUpperCase(Locale.getDefault());
+		String contactfirstLetter = contactFullName == null || contactFullName.isEmpty() ? "" : contactFullName.substring(0, 1).toUpperCase(Locale.getDefault());
 		return firstLetter.compareTo(contactfirstLetter);
 	}
 
