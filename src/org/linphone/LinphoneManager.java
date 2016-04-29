@@ -690,7 +690,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		resetCameraFromPreferences();
-		mLc.setFileTransferServer(LinphonePreferences.instance().getSharingPictureServerUrl());
 	}
 
 	private void copyAssetsFromPackage() throws IOException {

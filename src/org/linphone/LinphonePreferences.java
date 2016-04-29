@@ -1039,11 +1039,11 @@ public class LinphonePreferences {
 	}
 
 	public String getSharingPictureServerUrl() {
-		return getConfig().getString("app", "sharing_server", null);
+		return getLc().getFileTransferServer();
 	}
 
 	public void setSharingPictureServerUrl(String url) {
-		getConfig().setString("app", "sharing_server", url);
+		getLc().setFileTransferServer(url);
 	}
 
 	public void setRemoteProvisioningUrl(String url) {

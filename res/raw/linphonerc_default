@@ -12,7 +12,6 @@ keepalive_period=30000
 size=qvga
 
 [app]
-sharing_server=https://www.linphone.org:444/lft.php
 tunnel=disabled
 push_notification=1
 auto_start=1
@@ -20,3 +19,7 @@ auto_start=1
 [tunnel]
 host=
 port=443
+
+[misc]
+log_collection_upload_server_url=https://www.linphone.org:444/lft.php
+file_transfer_server_url=https://www.linphone.org:444/lft.php
