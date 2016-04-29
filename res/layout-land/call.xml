@@ -24,7 +24,7 @@
 			<FrameLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_above="@+id/call_bar">
+                android:layout_alignBottom="@+id/menu_bottom">
 
 				<RelativeLayout
 					android:layout_width="match_parent"
@@ -188,7 +188,7 @@
 			</FrameLayout>
 
             <LinearLayout
-                android:id="@+id/call_bar"
+                android:id="@+id/menu"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
@@ -233,7 +233,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/menu"
+
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="60dp"

@@ -175,48 +175,12 @@
 				</RelativeLayout>
 			</FrameLayout>
 
-			<LinearLayout
-				android:id="@+id/main_bar"
-				android:layout_width="match_parent"
-				android:layout_height="60dp"
-				android:layout_alignParentBottom="true"
-				android:layout_gravity="center"
-				android:orientation="horizontal" >
-
-				<ImageView
-					android:id="@+id/dialer"
-					android:src="@drawable/dialer"
-					android:background="@color/colorC"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="0.8"
-					android:padding="15dp" />
-
-				<ImageView
-					android:id="@+id/hang_up"
-					android:src="@drawable/call_hangup"
-					android:background="@drawable/hangup"
-					android:layout_gravity="center"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="0.4"
-					android:padding="12dp"/>
-
-				<ImageView
-					android:id="@+id/chat"
-					android:src="@drawable/chat"
-					android:background="@color/colorC"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="0.8"
-					android:padding="15dp"/>
-			</LinearLayout>
 
 			<LinearLayout
                 android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-				android:layout_above="@id/main_bar"
+                android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -288,7 +252,45 @@
                     android:layout_weight="1" />
             </LinearLayout>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/main_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/dialer"
+                        android:src="@drawable/dialer"
+                        android:background="@color/colorC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:padding="15dp" />
+
+                    <ImageView
+                        android:id="@+id/hang_up"
+                        android:src="@drawable/call_hangup"
+                        android:background="@drawable/hangup"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:padding="12dp"/>
+
+                    <ImageView
+                        android:id="@+id/chat"
+                        android:src="@drawable/chat"
+                        android:background="@color/colorC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:padding="15dp"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
 
 			<LinearLayout
                 android:id="@+id/menu_bottom"

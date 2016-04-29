@@ -24,7 +24,7 @@
 			<FrameLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_above="@+id/call_bar">
+                android:layout_above="@+id/menu">
 
 				<RelativeLayout
 					android:layout_width="match_parent"
@@ -190,7 +190,7 @@
 			</FrameLayout>
 
             <LinearLayout
-                android:id="@+id/call_bar"
+                android:id="@+id/menu"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
@@ -201,7 +201,7 @@
                     android:id="@+id/main_bar"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.6"
                     android:orientation="horizontal" >
 
                     <ImageView
@@ -233,83 +233,76 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/menu"
+                 <LinearLayout
+                    android:background="@color/colorF"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical">
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
 
-                    <LinearLayout
-                        android:background="@color/colorF"
+                    <RelativeLayout
+                        android:background="@drawable/button_background"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:orientation="horizontal">
-
-                        <RelativeLayout
-                            android:background="@drawable/button_background"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-
-                            <ImageView
-                                android:id="@+id/video"
-                                android:src="@drawable/camera_default"
-                                android:background="@drawable/button_background"
-                                android:padding="20dp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
-
-                            <ProgressBar
-                                android:id="@+id/video_in_progress"
-                                style="?android:attr/progressBarStyle"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
-                                android:visibility="gone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
-
-                        </RelativeLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
 
                         <ImageView
-                            android:id="@+id/micro"
-                            android:src="@drawable/micro_default"
+                            android:id="@+id/video"
+                            android:src="@drawable/camera_default"
                             android:background="@drawable/button_background"
-                            android:padding="12dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:id="@+id/speaker"
-                            android:src="@drawable/speaker_default"
-                            android:background="@drawable/button_background"
-                            android:padding="15dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:id="@+id/audio_route"
-                            android:src="@drawable/routes"
-                            android:background="@drawable/button_background"
-                            android:visibility="gone"
                             android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
+                            android:layout_height="wrap_content"/>
 
-                        <ImageView
-                            android:id="@+id/options"
-                            android:src="@drawable/options_default"
-                            android:background="@drawable/button_background"
-                            android:padding="15dp"
+                        <ProgressBar
+                            android:id="@+id/video_in_progress"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                    </LinearLayout>
+                            android:layout_height="wrap_content"/>
 
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/micro"
+                        android:src="@drawable/micro_default"
+                        android:background="@drawable/button_background"
+                        android:padding="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/speaker"
+                        android:src="@drawable/speaker_default"
+                        android:background="@drawable/button_background"
+                        android:padding="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/audio_route"
+                        android:src="@drawable/routes"
+                        android:background="@drawable/button_background"
+                        android:visibility="gone"
+                        android:padding="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/options"
+                        android:src="@drawable/options_default"
+                        android:background="@drawable/button_background"
+                        android:padding="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
                 </LinearLayout>
+
             </LinearLayout>
 
                 <LinearLayout
