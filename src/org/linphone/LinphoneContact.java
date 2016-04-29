@@ -368,16 +368,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
 		hasSipAddress = false;
 		
-		if (!isAndroidContact() && isLinphoneFriend()) {
-			fullName = friend.getName();
-			thumbnailUri = null;
-			photoUri = null;
-			LinphoneAddress addr = friend.getAddress();
-			if (addr != null) {
-				addresses.add(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
-				hasSipAddress = true;
-			}
-		} else if (isAndroidContact()) {
+		if (isAndroidContact()) {
 			String id = getAndroidId();
 			getContactNames(id);
 			setThumbnailUri(getContactPictureUri(id));
@@ -415,6 +406,15 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						Log.e(e);
 					}
 				}
+			}
+		} else if (isLinphoneFriend()) {
+			fullName = friend.getName();
+			thumbnailUri = null;
+			photoUri = null;
+			LinphoneAddress addr = friend.getAddress();
+			if (addr != null) {
+				addresses.add(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
+				hasSipAddress = true;
 			}
 		}
 	}

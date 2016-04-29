@@ -431,7 +431,11 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			String prevLetter = null;
 			for (int i = 0; i < contacts.size(); i++) {
 				LinphoneContact contact = contacts.get(i);
-				String firstLetter = contact.getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
+				String fullName = contact.getFullName();
+				if (fullName == null || fullName.isEmpty()) {
+					continue;
+				}
+				String firstLetter = fullName.substring(0, 1).toUpperCase(Locale.getDefault());
 				if (!firstLetter.equals(prevLetter)) {
 					prevLetter = firstLetter;
 					map.put(firstLetter, i);
@@ -561,7 +565,11 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				return 0;
 			}
 			LinphoneContact contact = contacts.get(position);
-			String letter = contact.getFullName().substring(0, 1);
+			String fullName = contact.getFullName();
+			if (fullName == null || fullName.isEmpty()) {
+				return 0;
+			}
+			String letter = fullName.substring(0, 1);
 			return sectionsList.indexOf(letter);
 		}
 	}
