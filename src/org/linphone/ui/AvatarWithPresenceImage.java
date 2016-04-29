@@ -107,7 +107,8 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                 PresenceModel presenceModel = contact.getFriendPresenceModel();
                 PresenceBasicStatus basicStatus = presenceModel.getBasicStatus();
                 if (basicStatus == PresenceBasicStatus.Closed) {
-                    if(friend.getPresenceModel() != null){
+                    if(presenceModel.getActivity() != null && contact.isPresenceReceived() ){
+                        Log.e("===>>> updatePresenceIcon 1");
                         friendStatusSmall.setImageResource(R.drawable.presence_away);
                         friendStatusBig.setImageResource(R.drawable.presence_away);
                     }else {
@@ -118,6 +119,7 @@ public class AvatarWithPresenceImage extends RelativeLayout implements onPresenc
                     friendStatusSmall.setImageResource(R.drawable.presence_online);
                     friendStatusBig.setImageResource(R.drawable.presence_online);
                 } else {
+                    Log.e("===>>> updatePresenceIcon 2");
                     friendStatusSmall.setImageResource(R.drawable.presence_away);
                     friendStatusBig.setImageResource(R.drawable.presence_away);
                 }

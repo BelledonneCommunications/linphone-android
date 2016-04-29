@@ -457,6 +457,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return this.friend.equals(mFriend);
 	}
 
+    public boolean isPresenceReceived(){
+        return this.friend.isPresenceReceived();
+    }
+
 	public static LinphoneContact createContact() {
 		if (ContactsManager.getInstance().hasContactsAccess()) {
 			return createAndroidContact();
