@@ -18,3 +18,7 @@ push_notification=1
 [tunnel]
 host=
 port=443
+
+[misc]
+log_collection_upload_server_url=https://www.linphone.org:444/lft.php
+file_transfer_server_url=https://www.linphone.org:444/lft.php
