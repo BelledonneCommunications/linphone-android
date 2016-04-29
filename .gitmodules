@@ -101,3 +101,6 @@
 [submodule "submodules/externals/libmatroska-c"]
 	path = submodules/externals/libmatroska-c
 	url = git://git.linphone.org/libmatroska-c
+[submodule "submodules/externals/polarssl"]
+	path = submodules/externals/polarssl
+	url = git://git.linphone.org/polarssl.git
