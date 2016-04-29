@@ -139,8 +139,8 @@ public class Digit extends Button implements AddressAware {
 						if(which == 0){
 							Log.setEnableLog(false);
 							LinphonePreferences.instance().enableDebugLogs(false);
-							LinphoneCoreFactory.instance().setDebugMode(false, getResources().getString(R.string.app_name));
 							LinphoneCoreFactory.instance().enableLogCollection(false);
+							LinphoneCoreFactory.instance().setDebugMode(false, getResources().getString(R.string.app_name));
 						}
 						if(which == 1) {
 							LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -157,8 +157,8 @@ public class Digit extends Button implements AddressAware {
 						if(which == 0) {
 							Log.setEnableLog(true);
 							LinphonePreferences.instance().enableDebugLogs(true);
-							LinphoneCoreFactory.instance().setDebugMode(true, getResources().getString(R.string.app_name));
 							LinphoneCoreFactory.instance().enableLogCollection(true);
+							LinphoneCoreFactory.instance().setDebugMode(true, getResources().getString(R.string.app_name));
 						}
 					}
 				});

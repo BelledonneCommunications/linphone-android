@@ -356,8 +356,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         if (lc != null ) {
             if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady())) {
                 LinphoneProxyConfig[] proxyList = lc.getProxyConfigList();
-                if (!enabled)
-                    changeStatusToOffline();
+               // if (!enabled)
+               //     changeStatusToOffline();
                 for (LinphoneProxyConfig proxyConfig : proxyList) {
                     proxyConfig.edit();
                     proxyConfig.enablePublish(enabled);
@@ -381,7 +381,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void changeStatusToOnline() {
         LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
         if (isInstanciated() && lc != null) {
-            if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady())) {
+            if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady()) && (lc.getPresenceModel().getActivity().getType() != PresenceActivityType.TV)) {
                 PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
                 lc.setPresenceModel(model);
             }
@@ -620,8 +620,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
-			instance.enableProxyPublish(true);
-
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -834,7 +832,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public static synchronized void destroy() {
 		if (instance == null) return;
-		getInstance().changeStatusToOffline();
 		sExited = true;
 		instance.doDestroy();
 	}

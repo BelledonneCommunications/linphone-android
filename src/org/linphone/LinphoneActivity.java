@@ -52,13 +52,16 @@ import org.linphone.ui.AvatarWithPresenceImage;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -1292,7 +1295,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onPause() {
-		LinphoneManager.getInstance().enableProxyPublish(false);
+		LinphoneManager.getInstance().enableProxyPublish(!isApplicationBroughtToBackground(this));
 		//LinphoneManager.getInstance().subscribeFriendList(false);
 		getIntent().putExtra("PreviousActivity", 0);
 
@@ -1311,6 +1314,27 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 		}
+	}
+
+	public static boolean isApplicationBroughtToBackground(final Activity activity) {
+		ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
+
+		// Check the top Activity against the list of Activities contained in the Application's package.
+		if (!tasks.isEmpty()) {
+			ComponentName topActivity = tasks.get(0).topActivity;
+			try {
+				PackageInfo pi = activity.getPackageManager().getPackageInfo(activity.getPackageName(), PackageManager.GET_ACTIVITIES);
+				for (ActivityInfo activityInfo : pi.activities) {
+					if(topActivity.getClassName().equals(activityInfo.name)) {
+						return false;
+					}
+				}
+			} catch( PackageManager.NameNotFoundException e) {
+				return false; // Never happens.
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -1378,6 +1402,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 	}
+
+
+	@Override
+	protected void onStop() {
+
+		super.onStop();
+	}
+
 
 	@Override
 	protected void onDestroy() {

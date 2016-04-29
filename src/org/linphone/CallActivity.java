@@ -447,7 +447,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		createInCallStats();
-		LinphoneManager.getInstance().changeStatusToOnThePhone();
 	}
 
 	public void checkAndRequestPermission(String permission, int result) {
