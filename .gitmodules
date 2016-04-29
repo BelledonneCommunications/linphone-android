@@ -50,6 +50,7 @@
 [submodule "submodules/externals/antlr3"]
 	path = submodules/externals/antlr3
 	url = git://git.linphone.org/antlr3.git
+	ignore = dirty
 [submodule "submodules/externals/libxml2"]
 	path = submodules/externals/libxml2
 	url = git://git.gnome.org/libxml2.git
