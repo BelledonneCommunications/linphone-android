@@ -481,7 +481,10 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				separator.setVisibility(View.GONE);
 			} else {
 				separator.setVisibility(View.VISIBLE);
-				separatorText.setText(String.valueOf(contact.getFullName().charAt(0)));
+				String fullName = contact.getFullName();
+				if (fullName != null && !fullName.isEmpty()) {
+					separatorText.setText(String.valueOf(fullName.charAt(0)));
+				}
 			}
 			
 			ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
