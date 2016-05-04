@@ -172,20 +172,6 @@ public final class LinphoneService extends Service {
 				if (state == LinphoneCall.State.IncomingReceived) {
 					onIncomingReceived();
 				}
-				
-				if (state == State.CallUpdatedByRemote) {
-					// If the correspondent proposes video while audio call
-					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
-					boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
-					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-						try {
-							LinphoneManager.getLc().deferCallUpdate(call);
-						} catch (LinphoneCoreException e) {
-							e.printStackTrace();
-						}
-					}
-				}
 
 				if (state == State.StreamsRunning) {
 					// Workaround bug current call seems to be updated after state changed to streams running

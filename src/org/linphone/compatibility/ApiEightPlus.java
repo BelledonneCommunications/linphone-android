@@ -48,9 +48,7 @@ public class ApiEightPlus {
             String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
             if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
                 GCMRegistrar.getMethod("register", Context.class, String[].class).invoke(null, context, new String[]{newPushSenderID});
-
                 Log.d("Push Notification: storing current sender id = " + newPushSenderID);
-                LinphonePreferences.instance().setPushNotificationRegistrationID(newPushSenderID);
             } else {
                 Log.d("Push Notification: already registered with id = " + regId);
                 LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
