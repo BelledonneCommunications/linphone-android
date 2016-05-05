@@ -724,7 +724,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		if (isVideoEnabled) {
-			LinphoneCallParams params = call.getCurrentParamsCopy();
+			LinphoneCallParams params = LinphoneManager.getLc().createCallParams(call);
 			params.setVideoEnabled(false);
 			LinphoneManager.getLc().updateCall(call, params);
 		} else {
@@ -1317,7 +1317,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			return;
 		}
 
-		LinphoneCallParams params = call.getCurrentParamsCopy();
+		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(call);
 		if (accept) {
 			params.setVideoEnabled(true);
 			LinphoneManager.getLc().enableVideo(true, true);
