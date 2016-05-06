@@ -26,8 +26,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneContact;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneBuffer;
@@ -36,9 +38,11 @@ import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneContent;
 import org.linphone.mediastream.Log;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -138,7 +142,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			LinphoneManager.addListener(this);
 		}
 
-		if (externalBodyUrl != null || fileTransferContent != null ) {
+		if (externalBodyUrl != null || fileTransferContent != null) {
 			String appData = message.getAppData();
 			ImageView imageView = (ImageView) view.findViewById(R.id.image);
 
@@ -167,14 +171,19 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 					acceptDownload.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							v.setEnabled(false);
-							String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
-							File file = new File(Environment.getExternalStorageDirectory(), filename);
-							nativeMessage.setAppData(filename);
-							LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
-							nativeMessage.setListener(LinphoneManager.getInstance());
-							nativeMessage.setFileTransferFilepath(file.getPath());
-							nativeMessage.downloadFile();
+							if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+								v.setEnabled(false);
+								String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
+								File file = new File(Environment.getExternalStorageDirectory(), filename);
+								nativeMessage.setAppData(filename);
+								LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
+								nativeMessage.setListener(LinphoneManager.getInstance());
+								nativeMessage.setFileTransferFilepath(file.getPath());
+								nativeMessage.downloadFile();
+							} else {
+								Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+								LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+							}
 						}
 					});
 				} else {

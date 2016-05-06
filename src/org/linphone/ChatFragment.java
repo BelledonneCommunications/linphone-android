@@ -38,6 +38,7 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.BubbleChat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -45,6 +46,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -218,6 +220,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				if (from.asStringUriOnly().equals(sipUri)) {
 					invalidate();
 					messagesList.setSelection(adapter.getCount()-1);
+					
+					String externalBodyUrl = message.getExternalBodyUrl();
+					LinphoneContent fileTransferContent = message.getFileTransferInformation();
+					if (externalBodyUrl != null || fileTransferContent != null) {
+						LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+					}
 				}
 			}
 			

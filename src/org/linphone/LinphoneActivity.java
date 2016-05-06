@@ -100,6 +100,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 200;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
+	private static final int PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE = 204;
 
 	private static LinphoneActivity instance;
 
@@ -1195,6 +1196,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
 		super.onPause();
+	}
+	
+	public void checkAndRequestExternalStoragePermission() {
+		if (getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE);
+		}
 	}
 
 	public void checkAndRequestPermission(String permission, int result) {
