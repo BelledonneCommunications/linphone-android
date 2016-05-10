@@ -338,17 +338,24 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		ArrayList<LinphoneChatMessage> history;
 		Context context;
 
-		public ChatMessageAdapter(Context context, LinphoneChatMessage[] history) {
-			this.history = new ArrayList<LinphoneChatMessage>(Arrays.asList(history));
+		public ChatMessageAdapter(Context context) {
 			this.context = context;
+			refreshHistory();
 		}
 		
 		public void destroy() {
+			history.clear();
 			history = null;
+			notifyDataSetInvalidated();
 		}
 
 		public void refreshHistory() {
-			this.history = new ArrayList<LinphoneChatMessage>(Arrays.asList(chatRoom.getHistory()));
+			if (history != null) {
+				history.clear();
+			}
+			LinphoneChatMessage[] messages = chatRoom.getHistory();
+			history = new ArrayList<LinphoneChatMessage>(Arrays.asList(messages));
+			messages = null;
 		}
 
 		public void addMessage(LinphoneChatMessage message) {
@@ -373,12 +380,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			LinphoneChatMessage message = history.get(position);
+			RelativeLayout rlayout = new RelativeLayout(context);
 
 			BubbleChat bubble = new BubbleChat(context, message, contact);
 			View v = bubble.getView();
 
 			registerForContextMenu(v);
-			RelativeLayout rlayout = new RelativeLayout(context);
 
 			CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
 
@@ -470,9 +477,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	public void dispayMessageList() {
 		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		if(chatRoom != null) {
-			if (adapter != null) adapter.destroy();
-			adapter = new ChatMessageAdapter(getActivity(), chatRoom.getHistory());
-			messagesList.setAdapter(adapter);
+			if (adapter != null) {
+				adapter.refreshHistory();
+				adapter.notifyDataSetChanged();
+			} else {
+				adapter = new ChatMessageAdapter(getActivity());
+				messagesList.setAdapter(adapter);
+			}
 		}
 	}
 
@@ -540,6 +551,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				break;
 		}
 		return true;
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (adapter != null) adapter.destroy();
+		adapter = null;
+		super.onDestroy();
 	}
 
 	@Override
