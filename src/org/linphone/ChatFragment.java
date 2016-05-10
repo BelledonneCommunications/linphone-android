@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -334,60 +335,44 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
-		LinphoneChatMessage[] history;
+		ArrayList<LinphoneChatMessage> history;
 		Context context;
 
 		public ChatMessageAdapter(Context context, LinphoneChatMessage[] history) {
-			this.history = history;
+			this.history = new ArrayList<LinphoneChatMessage>(Arrays.asList(history));
 			this.context = context;
 		}
 		
 		public void destroy() {
-			this.history = null;
+			history = null;
 		}
 
 		public void refreshHistory() {
-			this.history = null;
-			this.history = chatRoom.getHistory();
+			this.history = new ArrayList<LinphoneChatMessage>(Arrays.asList(chatRoom.getHistory()));
 		}
 
 		public void addMessage(LinphoneChatMessage message) {
-			LinphoneChatMessage[] newHist = new LinphoneChatMessage[getCount() +1];
-			for(int i=0; i< getCount(); i++){
-				newHist[i] = this.history[i];
-			}
-			newHist[getCount()] = message;
-			this.history = newHist;
-		}
-
-		public void removeMessage(LinphoneChatMessage message) {
-			LinphoneChatMessage[] newHist = new LinphoneChatMessage[getCount() -1];
-			for(int i=0; i< getCount(); i++){
-				if(this.history[i].getStorageId() != newHist[i].getStorageId())
-					newHist[i] = this.history[i];
-			}
-			newHist[getCount()] = message;
-			this.history = newHist;
+			history.add(message);
 		}
 
 		@Override
 		public int getCount() {
-			return history.length;
+			return history.size();
 		}
 
 		@Override
 		public LinphoneChatMessage getItem(int position) {
-			return history[position];
+			return history.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return history[position].getStorageId();
+			return history.get(position).getStorageId();
 		}
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			LinphoneChatMessage message = history[position];
+			LinphoneChatMessage message = history.get(position);
 
 			BubbleChat bubble = new BubbleChat(context, message, contact);
 			View v = bubble.getView();
@@ -753,7 +738,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (newChatConversation) {
 				exitNewConversationMode(lAddress.asStringUriOnly());
 			} else {
-				invalidate();
+				displayBubbleChat(message);
 			}
 
 			Log.i("Sent message current status: " + message.getStatus());

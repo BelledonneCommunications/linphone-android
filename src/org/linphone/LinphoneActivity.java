@@ -864,10 +864,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		return getChatStorage().getDrafts();
 	}
 
-	public List<ChatMessage> getChatMessages(String correspondent) {
-		return getChatStorage().getMessages(correspondent);
-	}
-
 	public void removeFromChatList(String sipUri) {
 		getChatStorage().removeDiscussion(sipUri);
 	}
@@ -875,8 +871,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void removeFromDrafts(String sipUri) {
 		getChatStorage().deleteDraft(sipUri);
 	}
-
-
 
 	public void updateMissedChatCount() {
 		displayMissedChats(getUnreadMessageCount());
