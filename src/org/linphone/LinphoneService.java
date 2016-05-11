@@ -135,9 +135,11 @@ public final class LinphoneService extends Service {
 		mNotificationTitle = getString(R.string.service_name);
 
 		// Needed in order for the two next calls to succeed, libraries must have been loaded first
-		LinphonePreferences.instance().setContext(getApplicationContext());
+		LinphonePreferences.instance().setContext(getBaseContext());
 		LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
-		LinphoneCoreFactory.instance().enableLogCollection(LinphonePreferences.instance().isDebugEnabled());
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
 		
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);

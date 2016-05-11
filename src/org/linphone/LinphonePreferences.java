@@ -19,6 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
@@ -81,7 +87,25 @@ public class LinphonePreferences {
 		}
 
 		if (!LinphoneManager.isInstanciated()) {
-			return LinphoneCoreFactory.instance().createLpConfig(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			File linphonerc = new File(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			if (linphonerc.exists()) {
+				return LinphoneCoreFactory.instance().createLpConfig(linphonerc.getAbsolutePath());
+			} else {
+				InputStream inputStream = mContext.getResources().openRawResource(R.raw.linphonerc_default);
+			    InputStreamReader inputreader = new InputStreamReader(inputStream);
+			    BufferedReader buffreader = new BufferedReader(inputreader);
+			    StringBuilder text = new StringBuilder();
+			    String line;
+				try {
+				    while ((line = buffreader.readLine()) != null) {
+			            text.append(line);
+			            text.append('\n');
+			        }
+				} catch (IOException ioe) {
+					
+				}
+			    return LinphoneCoreFactory.instance().createLpConfigFromString(text.toString());
+			}
 		}
 
 		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
