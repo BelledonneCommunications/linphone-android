@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.mediastream.Log;
 
 import android.app.Fragment;
 import android.net.Uri;
@@ -156,8 +157,14 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
 		} else if (id == R.id.add_contact) {
-			String uriToAdd = sipUri;
-			LinphoneActivity.instance().displayContactsForEdition(uriToAdd);
+			String uri = sipUri;
+			try {
+				LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+				uri = addr.asStringUriOnly();
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
+			}
+			LinphoneActivity.instance().displayContactsForEdition(uri);
 		}
 	}
 }
