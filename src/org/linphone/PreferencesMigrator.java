@@ -22,12 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.mediastream.Log;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
-
 import android.preference.PreferenceManager;
 
 /**
@@ -155,7 +155,7 @@ public class PreferencesMigrator {
 			try {
 				builder.saveNewAccount();
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 			
 			if (isDefaultAccount) {

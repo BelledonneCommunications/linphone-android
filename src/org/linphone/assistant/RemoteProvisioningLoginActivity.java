@@ -106,7 +106,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			prxCfg.setIdentity(identity);
 			lc.addProxyConfig(prxCfg);
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 			return false;
 		}
 		

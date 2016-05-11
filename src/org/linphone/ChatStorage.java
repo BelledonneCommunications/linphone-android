@@ -71,7 +71,7 @@ public class ChatStorage {
 		try {
 			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		return true;
 	}
@@ -110,7 +110,7 @@ public class ChatStorage {
 			try {
 				id = c.getString(c.getColumnIndex("id"));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		c.close();
@@ -250,7 +250,7 @@ public class ChatStorage {
 			try {
 				message = c.getString(c.getColumnIndex("message"));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		c.close();
@@ -271,7 +271,7 @@ public class ChatStorage {
 					String to = c.getString(c.getColumnIndex("remoteContact"));
 					drafts.add(to);
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 			c.close();
@@ -296,7 +296,7 @@ public class ChatStorage {
 				try {
 					message = c.getString(c.getColumnIndex("message"));
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 			c.close();

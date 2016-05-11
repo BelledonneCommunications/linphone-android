@@ -222,7 +222,7 @@ public class StatusFragment extends Fragment {
 				return R.drawable.led_disconnected;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		
 		return R.drawable.led_disconnected;
@@ -246,7 +246,7 @@ public class StatusFragment extends Fragment {
 				return context.getString(R.string.status_not_connected);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		
 		return context.getString(R.string.status_not_connected);

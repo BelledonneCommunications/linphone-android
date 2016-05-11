@@ -301,7 +301,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						file.delete();
 					}
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 				removePendingMessage(msg);
 			}
@@ -570,7 +570,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mLc.destroy();
 		}
 		catch (RuntimeException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		finally {
 			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
@@ -609,7 +609,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mTimer.schedule(lTask, 0, 20);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 			Log.e(e, "Cannot start linphone");
 		}
 	}
@@ -786,7 +786,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mLc.destroy();
 		}
 		catch (RuntimeException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		finally {
 			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
@@ -943,7 +943,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			else if (LinphoneService.isReady())
 				return LinphoneService.instance().getApplicationContext();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		return null;
 	}
@@ -963,7 +963,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			try {
 				mLc.acceptCall(call);
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
@@ -1037,7 +1037,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				try {
 					LinphoneManager.getLc().deferCallUpdate(call);
 				} catch (LinphoneCoreException e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 		}

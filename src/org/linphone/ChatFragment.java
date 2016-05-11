@@ -905,7 +905,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();

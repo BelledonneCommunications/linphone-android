@@ -1326,7 +1326,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		try {
 			LinphoneManager.getLc().acceptCallUpdate(call, params);
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 

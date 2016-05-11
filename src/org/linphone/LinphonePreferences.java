@@ -156,7 +156,7 @@ public class LinphonePreferences {
 			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
 			return authInfo;
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 
 		return null;
@@ -399,7 +399,7 @@ public class LinphonePreferences {
 					setAccountOutboundProxyEnabled(n, true);
 				}
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}
@@ -414,7 +414,7 @@ public class LinphonePreferences {
 				proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getProxy());
 				transport = proxyAddr.getTransport();
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 
@@ -458,7 +458,7 @@ public class LinphonePreferences {
 				saveAuthInfo(info);
 			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -476,7 +476,7 @@ public class LinphonePreferences {
 			prxCfg.setIdentity(addr.asString());
 			prxCfg.done();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -527,7 +527,7 @@ public class LinphonePreferences {
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -559,7 +559,7 @@ public class LinphonePreferences {
 				setAccountOutboundProxyEnabled(n, true);
 			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -581,7 +581,7 @@ public class LinphonePreferences {
 			}
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 

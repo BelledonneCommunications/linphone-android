@@ -1466,7 +1466,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				return R.drawable.led_disconnected;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 
 		return R.drawable.led_disconnected;

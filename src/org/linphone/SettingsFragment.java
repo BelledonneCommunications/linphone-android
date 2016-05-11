@@ -442,7 +442,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						lc.enablePayloadType(pt, false);
 					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
+						Log.e(e);
 					}
 					continue;
 				} else {
@@ -460,7 +460,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
+						Log.e(e);
 					}
 					return true;
 				}
@@ -579,7 +579,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
+						Log.e(e);
 					}
 					return true;
 				}

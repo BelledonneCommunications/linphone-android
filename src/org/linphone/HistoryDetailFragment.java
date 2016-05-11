@@ -104,7 +104,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		try {
 			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 
 		if(lAddress != null) {

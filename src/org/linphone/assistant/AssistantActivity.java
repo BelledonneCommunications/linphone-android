@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 
 import android.Manifest;
 import android.app.Activity;
@@ -48,7 +49,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -367,7 +367,7 @@ private static AssistantActivity instance;
 		try {
 			address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 
 		if(address != null && displayName != null && !displayName.equals("")){
@@ -432,7 +432,7 @@ private static AssistantActivity instance;
 			}
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 

@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -122,7 +123,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             m.invoke(mPreferenceManager);
         } catch(Exception e) {
-            e.printStackTrace();
+            Log.e(e);
         }
     }
 
@@ -135,7 +136,7 @@ public class PreferencesListFragment extends ListFragment {
 	        m.setAccessible(true);
 	        m.invoke(mPreferenceManager);
         } catch(Exception e) {
-        	e.printStackTrace();
+        	Log.e(e);
         }
     }
 
@@ -153,7 +154,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             m.invoke(mPreferenceManager, requestCode, resultCode, data);
         } catch(Exception e) {
-            e.printStackTrace();
+            Log.e(e);
         }
     }
 
@@ -187,7 +188,7 @@ public class PreferencesListFragment extends ListFragment {
             PreferenceManager preferenceManager = c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
             return preferenceManager;
         } catch(Exception e) {
-            e.printStackTrace();
+            Log.e(e);
             return null;
         }
     }
@@ -214,7 +215,7 @@ public class PreferencesListFragment extends ListFragment {
                 postBindPreferences();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            Log.e(e);
         }
     }
     
@@ -230,7 +231,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             return (PreferenceScreen) m.invoke(mPreferenceManager);
         } catch(Exception e) {
-            e.printStackTrace();
+            Log.e(e);
         }
         
         return null;
@@ -249,7 +250,7 @@ public class PreferencesListFragment extends ListFragment {
             PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(mPreferenceManager, getActivity(), preferencesResId, getPreferenceScreen());
             setPreferenceScreen(prefScreen);
         } catch(Exception e) {
-            e.printStackTrace();
+            Log.e(e);
         }
     }
     

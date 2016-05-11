@@ -22,6 +22,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.tutorials.TutorialHelloWorld;
 import org.linphone.core.tutorials.TutorialNotifier;
+import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -93,7 +94,7 @@ public class TutorialHelloWorldActivity extends Activity {
 					}
 				});
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}
