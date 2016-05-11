@@ -588,9 +588,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log));
-			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
-			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
@@ -619,9 +616,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
 		mLc = lc;
-		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) && mPrefs.isDebugEnabled();
-		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
-		LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();

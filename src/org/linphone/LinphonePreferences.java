@@ -81,7 +81,6 @@ public class LinphonePreferences {
 		}
 
 		if (!LinphoneManager.isInstanciated()) {
-			Log.w("LinphoneManager not instanciated yet...");
 			return LinphoneCoreFactory.instance().createLpConfig(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
 		}
 
@@ -1196,14 +1195,6 @@ public class LinphonePreferences {
 
 	public String getDebugPopupAddress(){
 		return getConfig().getString("app", "debug_popup_magic", null);
-	}
-
-	public void enableDebugLogs(Boolean debugMode){
-		getConfig().setBool("app", "debug_logs_enabled", debugMode);
-	}
-
-	public Boolean isDebugLogsEnabled(){
-		return getConfig().getBool("app", "debug_logs_enabled", false);
 	}
 
 	public Boolean audioPermAsked(){
