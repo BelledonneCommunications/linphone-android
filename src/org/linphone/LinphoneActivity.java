@@ -437,7 +437,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
-		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction transaction = fm.beginTransaction();
 
 		/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
 			if (newFragmentType.isRightOf(currentFragment)) {
@@ -454,14 +455,19 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}*/
 
 		if (newFragmentType != FragmentsAvailable.DIALER
-				|| newFragmentType != FragmentsAvailable.CONTACTS_LIST
-				|| newFragmentType != FragmentsAvailable.CHAT_LIST
-				|| newFragmentType != FragmentsAvailable.HISTORY_LIST) {
+				&& newFragmentType != FragmentsAvailable.CONTACTS_LIST
+				&& newFragmentType != FragmentsAvailable.CHAT_LIST
+				&& newFragmentType != FragmentsAvailable.HISTORY_LIST) {
 			transaction.addToBackStack(newFragmentType.toString());
+		} else {
+			while (fm.getBackStackEntryCount() > 0) {
+				fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			}
 		}
+		
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
-		getFragmentManager().executePendingTransactions();
+		fm.executePendingTransactions();
 
 		currentFragment = newFragmentType;
 	}
