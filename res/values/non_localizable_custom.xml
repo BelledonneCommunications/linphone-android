@@ -18,7 +18,7 @@
 
 	<!-- Push notification settings -->
 	<bool name="enable_push_id">true</bool>
-	<string name="push_sender_id">1286</string>
+	<string name="push_sender_id">1021925406904</string>
 	<bool name="hide_camera_settings">false</bool>
 	<bool name="hide_wizard">false</bool>
 
