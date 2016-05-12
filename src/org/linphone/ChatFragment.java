@@ -369,10 +369,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			LinphoneChatMessage message = history.get(position);
-			RelativeLayout rlayout = new RelativeLayout(context);
+			RelativeLayout rlayout;
 
+			if (convertView != null) {
+				rlayout = (RelativeLayout) convertView;
+				View bbv = rlayout.getChildAt(0);
+				rlayout.removeAllViews();
+				BubbleChat bbc = (BubbleChat) bbv.getTag();
+				bbc.destroy();
+			} else {
+				rlayout = new RelativeLayout(context);
+			}
 			BubbleChat bubble = new BubbleChat(context, message, contact);
 			View v = bubble.getView();
+			v.setTag(bubble);
 
 			registerForContextMenu(v);
 
@@ -470,7 +480,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				adapter.refreshHistory();
 				adapter.notifyDataSetChanged();
 			} else {
-				adapter = new ChatMessageAdapter(getActivity());
+				adapter = new ChatMessageAdapter(getActivity().getApplicationContext());
 				messagesList.setAdapter(adapter);
 			}
 		}

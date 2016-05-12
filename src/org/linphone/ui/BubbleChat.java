@@ -236,6 +236,10 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 	public View getView() {
 		return view;
 	}
+	
+	public void destroy() {
+		defaultBitmap.recycle();
+	}
 
 	private String timestampToHumanDate(Context context, long timestamp) {
 		try {
