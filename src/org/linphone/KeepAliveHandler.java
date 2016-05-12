@@ -28,7 +28,7 @@ public class KeepAliveHandler extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i("Keep alive handler invoked");
+		//Log.i("Keep alive handler invoked"); //TODO FIXME Crash since the log rework
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			//first refresh registers
 			LinphoneManager.getLc().refreshRegisters();
