@@ -68,16 +68,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	private ImageView clearSearchField;
 	private EditText searchField;
 
-	private static ContactsListFragment instance;
-	
-	static final boolean isInstanciated() {
-		return instance != null;
-	}
-
-	public static final ContactsListFragment instance() {
-		return instance;
-	}
-
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
@@ -379,7 +369,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	
 	@Override
 	public void onResume() {
-		instance = this;
 		ContactsManager.addContactsListener(this);
 		super.onResume();
 
@@ -399,7 +388,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	
 	@Override
 	public void onPause() {
-		instance = null;
 		ContactsManager.removeContactsListener(this);
 		super.onPause();
 	}

@@ -39,7 +39,6 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.BubbleChat;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -47,7 +46,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -89,8 +87,6 @@ import android.widget.Toast;
 
 
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener {
-	private static ChatFragment instance;
-
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_PICTURE_SMALL = 2;
@@ -128,14 +124,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ByteArrayInputStream mUploadingImageStream;
 	private boolean newChatConversation = false;
 
-	public static boolean isInstanciated() {
-		return instance != null;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		instance = this;
 		final View view = inflater.inflate(R.layout.chat, container, false);
 
 		LinphoneManager.addListener(this);
@@ -219,6 +210,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
+					LinphoneService.instance().removeMessageNotification();
+					cr.markAsRead();
 					invalidate();
 					messagesList.setSelection(adapter.getCount()-1);
 					
@@ -255,10 +248,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		};
 
 		return view;
-	}
-
-	public static ChatFragment instance() {
-		return instance;
 	}
 
 	public String getSipUri() {
@@ -567,10 +556,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneService.instance().removeMessageNotification();
 
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().updateChatFragment(null);
-		}
-
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
@@ -598,7 +583,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
-			LinphoneActivity.instance().updateChatFragment(this);
 		}
 
 		if(LinphoneManager.getLc().isIncall()){

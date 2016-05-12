@@ -112,8 +112,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ImageView cancel;
 	private FragmentsAvailable currentFragment, nextFragment;
 	private List<FragmentsAvailable> fragmentsHistory;
-	private Fragment dialerFragment, chatListFragment, historyListFragment, contactListFragment;
-	private ChatFragment chatFragment;
+	private Fragment dialerFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
 	private boolean isAnimationDisabled = true, emptyFragment = false, permissionAsked = false;
@@ -195,13 +194,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-				if(!displayChatMessageNotification(message.getFrom().asStringUriOnly())) {
-					cr.markAsRead();
-				}
 		        displayMissedChats(getUnreadMessageCount());
-		        if (chatListFragment != null && chatListFragment.isVisible()) {
-		            ((ChatListFragment) chatListFragment).refresh();
-		        }
 			}
 
 			@Override
@@ -373,14 +366,18 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		switch (newFragmentType) {
 		case HISTORY_LIST:
 			newFragment = new HistoryListFragment();
-			historyListFragment = newFragment;
+			if (isTablet()) {
+				((HistoryListFragment) newFragment).displayFirstLog();
+			}
 			break;
 		case HISTORY_DETAIL:
 			newFragment = new HistoryDetailFragment();
 			break;
 		case CONTACTS_LIST:
 			newFragment = new ContactsListFragment();
-			contactListFragment = newFragment;
+			if (isTablet()) {
+				((ContactsListFragment) newFragment).displayFirstContact();
+			}
 			break;
 		case CONTACT_DETAIL:
 			newFragment = new ContactDetailsFragment();
@@ -409,7 +406,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			break;
 		case CHAT_LIST:
 			newFragment = new ChatListFragment();
-			chatListFragment = newFragment;
+			if (isTablet()) {
+				((ChatListFragment) newFragment).displayFirstChat();
+			}
 			break;
 		case CHAT:
 			newFragment = new ChatFragment();
@@ -642,15 +641,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
 	}
 
-	public boolean displayChatMessageNotification(String address){
-		if(chatFragment != null) {
-			if(chatFragment.getSipUri().equals(address)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public int getUnreadMessageCount() {
 		int count = 0;
 		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
@@ -718,10 +708,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 		}
 
-		if (chatListFragment != null && chatListFragment.isVisible()) {
-			((ChatListFragment) chatListFragment).refresh();
-		}
-
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
 		displayMissedChats(getUnreadMessageCount());
@@ -737,30 +723,15 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			history_selected.setVisibility(View.VISIBLE);
 			LinphoneManager.getLc().resetMissedCallsCount();
 			displayMissedCalls(0);
-			if(isTablet()) {
-				if (historyListFragment != null && historyListFragment.isVisible()) {
-					((HistoryListFragment) historyListFragment).displayFirstLog();
-				}
-			}
 		} else if (id == R.id.contacts) {
 			changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, null);
 			contacts_selected.setVisibility(View.VISIBLE);
-			if(isTablet()) {
-				if (contactListFragment != null && contactListFragment.isVisible()) {
-					((ContactsListFragment) contactListFragment).displayFirstContact();
-				}
-			}
 		} else if (id == R.id.dialer) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, null);
 			dialer_selected.setVisibility(View.VISIBLE);
 		} else if (id == R.id.chat) {
 			changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
 			chat_selected.setVisibility(View.VISIBLE);
-			if(isTablet()) {
-				if (chatListFragment != null && chatListFragment.isVisible()) {
-					((ChatListFragment) chatListFragment).displayFirstChat();
-				}
-			}
 		} else if (id == R.id.cancel){
 			hideTopBar();
 			displayDialer();
@@ -825,14 +796,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 
-	public void updateChatFragment(ChatFragment fragment) {
-		chatFragment = fragment;
-	}
-
-	public void updateChatListFragment(ChatListFragment fragment) {
-		chatListFragment = fragment;
-	}
-
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
 	}
@@ -884,10 +847,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public int onMessageSent(String to, String message) {
 		getChatStorage().deleteDraft(to);
-		if (chatListFragment != null && chatListFragment.isVisible()) {
-			((ChatListFragment) chatListFragment).refresh();
-		}
-
 		return getChatStorage().saveTextMessage("", to, message, System.currentTimeMillis());
 	}
 

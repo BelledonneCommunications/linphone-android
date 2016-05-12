@@ -22,8 +22,10 @@ import java.util.List;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
@@ -61,6 +63,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, cancel, backInCall;
 	private LinearLayout editList, topbar;
 	private boolean isEditMode = false;
+	private LinphoneCoreListenerBase mListener;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,6 +100,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
+		
+		mListener = new LinphoneCoreListenerBase() {
+			@Override
+			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+				refresh();
+			}
+		};
 		return view;
 	}
 
@@ -194,11 +204,24 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT_LIST);
-			LinphoneActivity.instance().updateChatListFragment(this);
 			LinphoneActivity.instance().hideTabBar(false);
 		}
 		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
+		
 		refresh();
+	}
+	
+	@Override
+	public void onPause() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
+		}
+		super.onPause();
 	}
 
 	@Override
@@ -381,7 +404,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getFullName());
 
 
-			if(contact != null){
+			if (contact != null) {
 				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 			} else {
 				contactPicture.setImageResource(R.drawable.avatar);

@@ -144,14 +144,6 @@ public class ContactEditorFragment extends Fragment {
 					contact.addOrUpdateNumberOrAddress(numberOrAddress);
 				}
 				contact.save();
-
-				if (!isNewContact) {
-					if (LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet)) {
-						if(ContactsListFragment.isInstanciated()) {
-							ContactsListFragment.instance().invalidate();
-						}
-					}
-				}
 				getFragmentManager().popBackStackImmediate();
 			}
 		});

@@ -864,14 +864,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		try {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-				if (LinphoneActivity.isInstanciated() && !LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
-					return;
+				if (contact != null) {
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
 				} else {
-					if (contact != null) {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
-					} else {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
-					}
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
 				}
 			}
 		} catch (Exception e) {
