@@ -36,7 +36,7 @@ public class KeepAliveHandler extends BroadcastReceiver {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				Log.e("Cannot sleep for 2s", e);
+				//Log.e("Cannot sleep for 2s", e); //TODO FIXME Crash since the log rework
 			}
 			
 		}
