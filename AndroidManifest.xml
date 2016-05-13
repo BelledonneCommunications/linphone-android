@@ -189,6 +189,7 @@
 	
 		<receiver android:name="org.linphone.BootReceiver">
 			<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
+			<intent-filter><action android:name="android.intent.action.ACTION_SHUTDOWN"></action></intent-filter>
 		</receiver>
 	
 		<receiver android:name="org.linphone.PhoneStateChangedReceiver">
@@ -244,8 +245,8 @@
             </intent-filter>
         </activity>
 
-	<activity android:name="org.linphone.tutorials.TutorialCardDavSync"
-                    android:theme="@style/NoTitle">
+		<activity android:name="org.linphone.tutorials.TutorialCardDavSync"
+            android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

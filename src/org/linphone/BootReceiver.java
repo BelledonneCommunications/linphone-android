@@ -18,8 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LpConfig;
+import org.linphone.mediastream.Log;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,13 +31,20 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
-		String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
-		LpConfig lpConfig = LinphoneCoreFactory.instance().createLpConfig(path);
-		if (lpConfig.getBool("app", "auto_start", false)) {
-			Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
-			lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-			context.startService(lLinphoneServiceIntent);
+		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				Log.w("Device is shutting down, destroying LinphoneCore to unregister");
+				lc.destroy();
+			}
+		} else {
+			String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
+			LpConfig lpConfig = LinphoneCoreFactory.instance().createLpConfig(path);
+			if (lpConfig.getBool("app", "auto_start", false)) {
+				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
+				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
+				context.startService(lLinphoneServiceIntent);
+			}
 		}
 	}
 }
