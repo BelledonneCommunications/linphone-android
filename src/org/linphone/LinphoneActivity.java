@@ -110,9 +110,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private View contacts_selected, history_selected, dialer_selected, chat_selected;
 	private RelativeLayout mTopBar;
 	private ImageView cancel;
-	private FragmentsAvailable currentFragment, nextFragment;
+	private FragmentsAvailable pendingFragmentTransaction, currentFragment, nextFragment;
 	private List<FragmentsAvailable> fragmentsHistory;
-	private Fragment dialerFragment;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
 	private boolean isAnimationDisabled = true, emptyFragment = false, permissionAsked = false;
@@ -176,19 +175,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		setContentView(R.layout.main);
 		instance = this;
 		fragmentsHistory = new ArrayList<FragmentsAvailable>();
+		pendingFragmentTransaction = FragmentsAvailable.UNKNOW;
 
 		initButtons();
 		initSideMenu();
 
-		currentFragment = nextFragment = FragmentsAvailable.DIALER;
-		fragmentsHistory.add(currentFragment);
+		currentFragment = nextFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
-			if (findViewById(R.id.fragmentContainer) != null) {
-				dialerFragment = new DialerFragment();
-				dialerFragment.setArguments(getIntent().getExtras());
-				getFragmentManager().beginTransaction().add(R.id.fragmentContainer, dialerFragment, currentFragment.toString()).commit();
-				selectMenu(FragmentsAvailable.DIALER);
-			}
+			changeCurrentFragment(FragmentsAvailable.DIALER, getIntent().getExtras());
 		}
 
 		mListener = new LinphoneCoreListenerBase(){
@@ -356,6 +350,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		if (currentFragment == FragmentsAvailable.DIALER) {
 			try {
+				DialerFragment dialerFragment = DialerFragment.instance();
 				dialerSavedState = getFragmentManager().saveFragmentInstanceState(dialerFragment);
 			} catch (Exception e) {
 			}
@@ -390,7 +385,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (extras == null) {
 				newFragment.setInitialSavedState(dialerSavedState);
 			}
-			dialerFragment = newFragment;
 			break;
 		case SETTINGS:
 			newFragment = new SettingsFragment();
@@ -465,7 +459,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 		
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
-		transaction.commitAllowingStateLoss();
+		transaction.commit();
 		fm.executePendingTransactions();
 
 		currentFragment = newFragmentType;
@@ -488,7 +482,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			ll.setVisibility(View.VISIBLE);
 			emptyFragment = true;
 			transaction.replace(R.id.fragmentContainer2, newFragment);
-			transaction.commitAllowingStateLoss();
+			transaction.commit();
 			getFragmentManager().executePendingTransactions();
 		} else {
 			if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
@@ -524,7 +518,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}*/
 				transaction.replace(R.id.fragmentContainer, newFragment);
 			}
-			transaction.commitAllowingStateLoss();
+			transaction.commit();
 			getFragmentManager().executePendingTransactions();
 
 			currentFragment = newFragmentType;
@@ -619,11 +613,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Bundle extras = new Bundle();
 		extras.putBoolean("ChatAddressOnly", chatOnly);
 		changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, extras);
-	}
-
-	public void displayChatList() {
-		Bundle extras = new Bundle();
-		changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
 	}
 
 	public void displayContactsForEdition(String sipAddress) {
@@ -791,7 +780,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void updateDialerFragment(DialerFragment fragment) {
-		dialerFragment = fragment;
 		// Hack to maintain soft input flags
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
@@ -973,17 +961,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		LinphoneManager.getInstance().newOutgoingCall(address);
 	}
 
-	public void setAddressAndGoToDialer(String number) {
-		Bundle extras = new Bundle();
-		extras.putString("SipUri", number);
-		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
-	}
-
-	@Override
-	public void goToDialer() {
-		changeCurrentFragment(FragmentsAvailable.DIALER, null);
-	}
-
 	public void startVideoActivity(LinphoneCall currentCall) {
 		Intent intent = new Intent(this, CallActivity.class);
 		intent.putExtra("VideoEnabled", true);
@@ -1065,12 +1042,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	private void initInCallMenuLayout(boolean callTransfer) {
 		selectMenu(FragmentsAvailable.DIALER);
+		DialerFragment dialerFragment = DialerFragment.instance();
 		if (dialerFragment != null) {
 			((DialerFragment) dialerFragment).resetLayout(callTransfer);
 		}
 	}
 
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
+		DialerFragment dialerFragment = DialerFragment.instance();
 		if (dialerFragment != null) {
 			((DialerFragment) dialerFragment).resetLayout(false);
 		}
@@ -1123,6 +1102,16 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		finish();
 		stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 	}
+	
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		if (pendingFragmentTransaction != FragmentsAvailable.UNKNOW) {
+			changeCurrentFragment(pendingFragmentTransaction, null, true);
+			selectMenu(pendingFragmentTransaction);
+			pendingFragmentTransaction = FragmentsAvailable.UNKNOW;
+		}
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1130,16 +1119,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (data.getExtras().getBoolean("Exit", false)) {
 				quit();
 			} else {
-				FragmentsAvailable newFragment = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
-				changeCurrentFragment(newFragment, null, true);
-				selectMenu(newFragment);
+				pendingFragmentTransaction = (FragmentsAvailable) data.getExtras().getSerializable("FragmentToDisplay");
 			}
 		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
 			getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
 			boolean callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
 			boolean chat = data == null ? false : data.getBooleanExtra("chat", false);
 			if(chat){
-				displayChatList();
+				pendingFragmentTransaction = FragmentsAvailable.CHAT_LIST;
 			}
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				initInCallMenuLayout(callTransfer);
@@ -1291,6 +1278,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 		} else {
+			DialerFragment dialerFragment = DialerFragment.instance();
 			if (dialerFragment != null) {
 				if (extras != null && extras.containsKey("SipUriOrNumber")) {
 					if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
@@ -1564,5 +1552,4 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 interface ContactPicked {
 	void setAddresGoToDialerAndCall(String number, String name, Uri photo);
-	void goToDialer();
 }
