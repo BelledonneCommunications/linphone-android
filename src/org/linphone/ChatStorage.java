@@ -71,7 +71,7 @@ public class ChatStorage {
 		try {
 			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		return true;
 	}
@@ -110,7 +110,7 @@ public class ChatStorage {
 			try {
 				id = c.getString(c.getColumnIndex("id"));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		c.close();
@@ -250,7 +250,7 @@ public class ChatStorage {
 			try {
 				message = c.getString(c.getColumnIndex("message"));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		c.close();
@@ -271,7 +271,7 @@ public class ChatStorage {
 					String to = c.getString(c.getColumnIndex("remoteContact"));
 					drafts.add(to);
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 			c.close();
@@ -280,64 +280,14 @@ public class ChatStorage {
 		return drafts;
 	}
 
-	public List<ChatMessage> getMessages(String correspondent) {
-		List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-
-		if (!useNativeAPI) {
-			Cursor c = db.query(TABLE_NAME, null, "remoteContact LIKE \"" + correspondent + "\"", null, null, null, "id ASC");
-
-			while (c.moveToNext()) {
-				try {
-					String message, timestamp, url;
-					int id = c.getInt(c.getColumnIndex("id"));
-					int direction = c.getInt(c.getColumnIndex("direction"));
-					message = c.getString(c.getColumnIndex("message"));
-					timestamp = c.getString(c.getColumnIndex("time"));
-					int status = c.getInt(c.getColumnIndex("status"));
-					byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
-					int read = c.getInt(c.getColumnIndex("read"));
-					url = c.getString(c.getColumnIndex("url"));
-
-					ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status, read == READ);
-					chatMessage.setUrl(url);
-					chatMessages.add(chatMessage);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			c.close();
-		} else {
-			LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
-			LinphoneChatMessage[] history = room.getHistory();
-			for (int i = 0; i < history.length; i++) {
-				LinphoneChatMessage message = history[i];
-
-				Bitmap bm = null;
-				String url = message.getExternalBodyUrl();
-				if (url != null && !url.startsWith("http")) {
-					bm = BitmapFactory.decodeFile(url);
-				}
-				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), bm,
-						String.valueOf(message.getTime()), !message.isOutgoing(),
-						message.getStatus().toInt(), message.isRead());
-				chatMessage.setUrl(url);
-				chatMessages.add(chatMessage);
-			}
-		}
-
-		return chatMessages;
-	}
-
 	public String getTextMessageForId(LinphoneChatRoom chatroom, int id) {
 		String message = null;
 
 		if (useNativeAPI) {
-			LinphoneChatMessage[] history = chatroom.getHistory();
-			for (LinphoneChatMessage msg : history) {
-				if (msg.getStorageId() == id) {
-					message = msg.getText();
-					break;
-				}
+			LinphoneChatMessage msg = getMessage(chatroom, id);
+			
+			if (msg != null) {
+				message = msg.getText();
 			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, "id LIKE " + id, null, null, null, null);
@@ -346,7 +296,7 @@ public class ChatStorage {
 				try {
 					message = c.getString(c.getColumnIndex("message"));
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 			c.close();
@@ -410,12 +360,9 @@ public class ChatStorage {
 
 	public void deleteMessage(LinphoneChatRoom chatroom, int id) {
 		if (useNativeAPI) {
-			LinphoneChatMessage[] history = chatroom.getHistory();
-			for (LinphoneChatMessage message : history) {
-				if (message.getStorageId() == id) {
-					chatroom.deleteMessage(message);
-					break;
-				}
+			LinphoneChatMessage msg = getMessage(chatroom, id);
+			if (msg != null){
+				chatroom.deleteMessage(msg);
 			}
 		} else {
 			db.delete(TABLE_NAME, "id LIKE " + id, null);

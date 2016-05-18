@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
 import android.annotation.SuppressLint;
@@ -143,14 +144,6 @@ public class ContactEditorFragment extends Fragment {
 					contact.addOrUpdateNumberOrAddress(numberOrAddress);
 				}
 				contact.save();
-
-				if (!isNewContact) {
-					if (LinphoneActivity.instance().getResources().getBoolean(R.bool.isTablet)) {
-						if(ContactsListFragment.isInstanciated()) {
-							ContactsListFragment.instance().invalidate();
-						}
-					}
-				}
 				getFragmentManager().popBackStackImmediate();
 			}
 		});
@@ -354,7 +347,7 @@ public class ContactEditorFragment extends Fragment {
 					Bitmap selectedImage = MediaStore.Images.Media.getBitmap(LinphoneManager.getInstance().getContext().getContentResolver(), selectedImageUri);
 					selectedImage = Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
 					editContactPicture(null, selectedImage);
-				} catch (IOException e) { e.printStackTrace(); }
+				} catch (IOException e) { Log.e(e); }
 			}
 			else if (pickedPhotoForContactUri != null) {
 				String filePath = pickedPhotoForContactUri.getPath();

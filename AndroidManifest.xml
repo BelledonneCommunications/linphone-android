@@ -43,8 +43,7 @@
 	<uses-permission android:name="android.permission.GET_TASKS" />
 
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
-
-    <application android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:largeHeap="true" android:allowBackup="false" android:debuggable="false">
+    <application android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:largeHeap="true" android:allowBackup="true" android:debuggable="false">
 
 		<activity android:name="org.linphone.LinphoneLauncherActivity"
 		    android:label="@string/app_name"
@@ -169,6 +168,7 @@
 	
 		<receiver android:name="org.linphone.BootReceiver">
 			<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
+			<intent-filter><action android:name="android.intent.action.ACTION_SHUTDOWN"></action></intent-filter>
 		</receiver>
 	
 		<receiver android:name="org.linphone.PhoneStateChangedReceiver">
@@ -224,8 +224,8 @@
             </intent-filter>
         </activity>
 
-	<activity android:name="org.linphone.tutorials.TutorialCardDavSync"
-                    android:theme="@style/NoTitle">
+		<activity android:name="org.linphone.tutorials.TutorialCardDavSync"
+            android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

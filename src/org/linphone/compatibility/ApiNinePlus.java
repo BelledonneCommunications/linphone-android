@@ -8,6 +8,7 @@ import org.linphone.LinphoneContact;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.ContentProviderOperation;
@@ -275,7 +276,7 @@ public class ApiNinePlus {
 			try {
 				contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}

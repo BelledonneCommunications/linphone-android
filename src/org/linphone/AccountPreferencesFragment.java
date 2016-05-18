@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.os.Bundle;
@@ -455,7 +456,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 					builder.saveNewAccount();
 				}
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 			LinphoneActivity.instance().isNewProxyConfig();
 			LinphoneManager.getLc().refreshRegisters();

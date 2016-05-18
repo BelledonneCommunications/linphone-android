@@ -135,8 +135,11 @@ public final class LinphoneService extends Service {
 		mNotificationTitle = getString(R.string.service_name);
 
 		// Needed in order for the two next calls to succeed, libraries must have been loaded first
+		LinphonePreferences.instance().setContext(getBaseContext());
 		LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
-		LinphoneCoreFactory.instance().enableLogCollection(!(getResources().getBoolean(R.bool.disable_every_log)));
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
 		
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
@@ -174,20 +177,6 @@ public final class LinphoneService extends Service {
 				
 				if (state == LinphoneCall.State.IncomingReceived) {
 					onIncomingReceived();
-				}
-				
-				if (state == State.CallUpdatedByRemote) {
-					// If the correspondent proposes video while audio call
-					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
-					boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
-					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-						try {
-							LinphoneManager.getLc().deferCallUpdate(call);
-						} catch (LinphoneCoreException e) {
-							e.printStackTrace();
-						}
-					}
 				}
 
 				if (state == State.StreamsRunning) {
@@ -554,7 +543,11 @@ public final class LinphoneService extends Service {
 	public void onTaskRemoved(Intent rootIntent) {
 		if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
 			Log.d("Task removed, stop service");
-			LinphoneManager.getLc().setNetworkReachable(false);
+			
+			// If push is enabled, don't unregister account, otherwise do unregister
+			if (LinphonePreferences.instance().isPushNotificationEnabled()) {
+				LinphoneManager.getLc().setNetworkReachable(false);
+			}
 			stopSelf();
 		}
 		super.onTaskRemoved(rootIntent);

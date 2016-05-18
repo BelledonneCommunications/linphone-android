@@ -22,6 +22,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.tutorials.TutorialNotifier;
 import org.linphone.core.tutorials.TutorialRegistration;
+import org.linphone.mediastream.Log;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,7 +98,7 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 						sipAddressWidget.getText().toString(),
 						sipPasswordWidget.getText().toString());
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 				outputText.setText(e.getMessage() +"\n"+outputText.getText());
 			}
 		}

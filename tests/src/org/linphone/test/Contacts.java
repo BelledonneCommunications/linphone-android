@@ -51,11 +51,7 @@ public class Contacts extends SampleTest {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.contact_name));
 		solo.enterText(3, iContext.getString(org.linphone.test.R.string.contact_number));
 		solo.clickOnView(solo.getView(org.linphone.R.id.ok));
-		
-		if (ContactsListFragment.instance() != null) {
-			ContactsListFragment.instance().invalidate();
-			solo.sleep(1000);
-		}
+		solo.sleep(2000);
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 

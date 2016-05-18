@@ -269,7 +269,7 @@ public class BluetoothManager extends BroadcastReceiver {
 				Log.d("Bluetooth receiver stopped");
 			} catch (Exception e) {}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 	

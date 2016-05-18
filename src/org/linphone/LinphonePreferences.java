@@ -19,6 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
@@ -81,8 +87,25 @@ public class LinphonePreferences {
 		}
 
 		if (!LinphoneManager.isInstanciated()) {
-			Log.w("LinphoneManager not instanciated yet...");
-			return LinphoneCoreFactory.instance().createLpConfig(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			File linphonerc = new File(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			if (linphonerc.exists()) {
+				return LinphoneCoreFactory.instance().createLpConfig(linphonerc.getAbsolutePath());
+			} else {
+				InputStream inputStream = mContext.getResources().openRawResource(R.raw.linphonerc_default);
+			    InputStreamReader inputreader = new InputStreamReader(inputStream);
+			    BufferedReader buffreader = new BufferedReader(inputreader);
+			    StringBuilder text = new StringBuilder();
+			    String line;
+				try {
+				    while ((line = buffreader.readLine()) != null) {
+			            text.append(line);
+			            text.append('\n');
+			        }
+				} catch (IOException ioe) {
+					
+				}
+			    return LinphoneCoreFactory.instance().createLpConfigFromString(text.toString());
+			}
 		}
 
 		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
@@ -133,7 +156,7 @@ public class LinphonePreferences {
 			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
 			return authInfo;
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 
 		return null;
@@ -376,7 +399,7 @@ public class LinphonePreferences {
 					setAccountOutboundProxyEnabled(n, true);
 				}
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}
@@ -391,7 +414,7 @@ public class LinphonePreferences {
 				proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getProxy());
 				transport = proxyAddr.getTransport();
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 
@@ -435,7 +458,7 @@ public class LinphonePreferences {
 				saveAuthInfo(info);
 			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -453,7 +476,7 @@ public class LinphonePreferences {
 			prxCfg.setIdentity(addr.asString());
 			prxCfg.done();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -504,7 +527,7 @@ public class LinphonePreferences {
 			prxCfg.setIdentity(identity);
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -536,7 +559,7 @@ public class LinphonePreferences {
 				setAccountOutboundProxyEnabled(n, true);
 			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -558,7 +581,7 @@ public class LinphonePreferences {
 			}
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -988,6 +1011,7 @@ public class LinphonePreferences {
 
 	public void setPushNotificationRegistrationID(String regId) {
 		 getConfig().setString("app", "push_notification_regid", regId);
+		 setPushNotificationEnabled(isPushNotificationEnabled());
 	}
 
 	public String getPushNotificationRegistrationID() {
@@ -1195,14 +1219,6 @@ public class LinphonePreferences {
 
 	public String getDebugPopupAddress(){
 		return getConfig().getString("app", "debug_popup_magic", null);
-	}
-
-	public void enableDebugLogs(Boolean debugMode){
-		getConfig().setBool("app", "debug_logs_enabled", debugMode);
-	}
-
-	public Boolean isDebugLogsEnabled(){
-		return getConfig().getBool("app", "debug_logs_enabled", false);
 	}
 
 	public Boolean audioPermAsked(){

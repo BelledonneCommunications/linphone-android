@@ -55,7 +55,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.assistant_remote_provisioning_login);
-
+		
 		login = (EditText) findViewById(R.id.assistant_username);
 		password = (EditText) findViewById(R.id.assistant_password);
 		domain = (EditText) findViewById(R.id.assistant_domain);
@@ -71,11 +71,10 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			domain.setEnabled(false);
 		}
 
-		mListener = new LinphoneCoreListenerBase() {
+		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void configuringStatus(LinphoneCore lc, final LinphoneCore.RemoteProvisioningState state, String message) {
 				if (state == LinphoneCore.RemoteProvisioningState.ConfiguringSuccessful) {
-
 					//TODO
 				} else if (state == LinphoneCore.RemoteProvisioningState.ConfiguringFailed) {
 					Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();

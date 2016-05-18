@@ -17,18 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.AvatarWithPresenceImage;
 
-import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,7 +37,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
-	private ImageView dialBack, chat, addToContacts, back;
+	private ImageView dialBack, chat, /*addToContacts, */back;
 	private View view;
 	private ImageView contactPicture, callDirection;
 	private AvatarWithPresenceImage avatarWithPresenceImage;
@@ -74,9 +71,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		if (getResources().getBoolean(R.bool.disable_chat))
 			view.findViewById(R.id.chat).setVisibility(View.GONE);
 		
-	//	addToContacts = (ImageView) view.findViewById(R.id.add_contact);
-	//	addToContacts.setOnClickListener(this);
-
+		//addToContacts = (ImageView) view.findViewById(R.id.add_contact);
+		//addToContacts.setOnClickListener(this);
+		
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		
 		contactName = (TextView) view.findViewById(R.id.contact_name);
@@ -98,13 +95,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void displayHistory(String status, String callTime, String callDate) {
-		contactName.setText(displayName == null ? sipUri : displayName);
-		if (displayName == null) {
-			contactAddress.setText(LinphoneUtils.getUsernameFromAddress(sipUri));
-		} else {
-			contactAddress.setText(sipUri);
-		}
-		
 		if (status.equals(getResources().getString(R.string.missed))) {
 			callDirection.setImageResource(R.drawable.call_status_missed);
 		} else if (status.equals(getResources().getString(R.string.incoming))) {
@@ -115,19 +105,36 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		time.setText(callTime == null ? "" : callTime);
 		Long longDate = Long.parseLong(callDate);
-		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(), longDate, getString(R.string.history_detail_date_format), false));
+		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format), false));
 
+		LinphoneAddress lAddress = null;
 		try {
-			LinphoneAddress lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			if (contact != null && contact.isLinphoneFriend() ) {
 				avatarWithPresenceImage.setLinphoneContact(contact);
 				LinphoneManager.getInstance().addPresenceUpdatedListener(avatarWithPresenceImage);
 			}
-		} catch(LinphoneCoreException e) {
-			e.printStackTrace();
+		} catch (LinphoneCoreException e) {
+			Log.e(e);
 		}
-	
+
+		if(lAddress != null) {
+			contactAddress.setText(lAddress.asStringUriOnly());
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
+			if (contact != null) {
+				contactName.setText(contact.getFullName());
+				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
+				//addToContacts.setVisibility(View.INVISIBLE);
+			} else {
+				contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
+				contactPicture.setImageResource(R.drawable.avatar);
+				//addToContacts.setVisibility(View.VISIBLE);
+			}
+		} else {
+			contactAddress.setText(sipUri);
+			contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
+		}
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
@@ -161,11 +168,15 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
 			LinphoneActivity.instance().displayChat(sipUri);
-		}
-		/*else if (id == R.id.add_contact) {
-			String uriToAdd = sipUri;
-			LinphoneActivity.instance().displayContactsForEdition(uriToAdd);
-		}
-	*/
+		} /*else if (id == R.id.add_contact) {
+			String uri = sipUri;
+			try {
+				LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+				uri = addr.asStringUriOnly();
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
+			}
+			LinphoneActivity.instance().displayContactsForEdition(uri);
+		}*/
 	}
 }

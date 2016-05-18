@@ -9,7 +9,6 @@ mtu=1300
 animations=0
 show_login_view=1
 debug_popup_magic=#1234
-debug=1
 server_url=http://85.233.205.218:443/xmlrpc
 
 [sip]
@@ -36,7 +35,6 @@ dtmf_player_amp=0.1
 
 #remove this property for any application that is not Linphone public version itself
 ec_calibrator_cool_tones=1
-
 
 [misc]
 max_calls=10

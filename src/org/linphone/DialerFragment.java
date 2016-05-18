@@ -53,7 +53,6 @@ public class DialerFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
-		instance = this;
         View view = inflater.inflate(R.layout.dialer, container, false);
 		
 		mAddress = (AddressText) view.findViewById(R.id.address);
@@ -143,8 +142,15 @@ public class DialerFragment extends Fragment {
 	}
 	
 	@Override
+	public void onPause() {
+		instance = null;
+		super.onPause();
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
+		instance = this;
 		
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
