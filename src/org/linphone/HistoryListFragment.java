@@ -27,14 +27,13 @@ import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCallLog;
 import org.linphone.core.LinphoneCallLog.CallStatus;
-import org.linphone.core.LinphoneFriend;
 import org.linphone.ui.AvatarWithPresenceImage;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -433,9 +432,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.callDirection.setImageResource(R.drawable.call_status_outgoing);
 			}
 
-			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address); //findContactWithAddress(getActivity().getContentResolver(), address);
+			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
 			String displayName = null;
-			final String sipUri = address.asStringUriOnly();
+			final String sipUri = address.asString();
 			if(c != null){
 				displayName = c.getFullName();
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),holder.contactPicture,c.getPhotoUri(),c.getThumbnailUri());
@@ -443,11 +442,11 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.contactPicture.setImageResource(R.drawable.avatar);
 			}
 
-		/*	if(friend != null) {
-				holder.contact.setText(LinphoneUtils.getAddressDisplayName(friend.getAddress()));
+			if (displayName == null) {
+				holder.contact.setText(LinphoneUtils.getAddressDisplayName(sipUri));
 			} else {
-		*/		holder.contact.setText(LinphoneUtils.getAddressDisplayName(address));
-		//	}
+				holder.contact.setText(displayName);
+			}
 
 			if(c != null && c.isLinphoneFriend() ) {
 				holder.avatarWithPresenceImage.setLinphoneContact(c);

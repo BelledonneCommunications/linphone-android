@@ -37,7 +37,7 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
-	private ImageView dialBack, chat, addToContacts, back;
+	private ImageView dialBack, chat, /*addToContacts, */back;
 	private View view;
 	private ImageView contactPicture, callDirection;
 	private AvatarWithPresenceImage avatarWithPresenceImage;
@@ -119,22 +119,22 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			Log.e(e);
 		}
 
-		/*if(lAddress != null) {
+		if(lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			if (contact != null) {
 				contactName.setText(contact.getFullName());
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
-				addToContacts.setVisibility(View.INVISIBLE);
+				//addToContacts.setVisibility(View.INVISIBLE);
 			} else {
 				contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
 				contactPicture.setImageResource(R.drawable.avatar);
-				addToContacts.setVisibility(View.VISIBLE);
+				//addToContacts.setVisibility(View.VISIBLE);
 			}
 		} else {
 			contactAddress.setText(sipUri);
 			contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
-		}*/
+		}
 	}
 	
 	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
