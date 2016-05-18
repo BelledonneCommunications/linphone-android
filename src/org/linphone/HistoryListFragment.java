@@ -205,7 +205,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
 			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			historyList.setAdapter(new CallHistoryAdapter(getActivity()));
+			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 		}
 	}
 

@@ -18,6 +18,7 @@ public class Transfer extends SampleTest {
 	@LargeTest
 	public void testACallTransfer() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
+		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
@@ -28,6 +29,7 @@ public class Transfer extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.conference_account_login) + "@" + iContext.getString(org.linphone.test.R.string.conference_account_domain));
+		solo.sleep(1000);
 		solo.clickOnView(solo.getView(org.linphone.R.id.call)); // Transfer button as the same id, only the image changes
 		
 		solo.sleep(2000);

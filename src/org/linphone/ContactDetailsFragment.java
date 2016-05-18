@@ -87,11 +87,11 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
 		}
 		
-//		editContact = (ImageView) view.findViewById(R.id.editContact);
-//		editContact.setOnClickListener(this);
+		//editContact = (ImageView) view.findViewById(R.id.editContact);
+		//editContact.setOnClickListener(this);
 		
-//		deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
-//		deleteContact.setOnClickListener(this);
+		//deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
+		//deleteContact.setOnClickListener(this);
 
 		back = (ImageView) view.findViewById(R.id.back);
 		if(getResources().getBoolean(R.bool.isTablet)){
@@ -138,15 +138,15 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				displayednumberOrAddress = displayednumberOrAddress.replace("sip:", "");
 			}
 
-	/*		TextView label = (TextView) v.findViewById(R.id.address_label);
+			/*TextView label = (TextView) v.findViewById(R.id.address_label);
 			if (noa.isSIPAddress()) {
 				label.setText(R.string.sip_address);
 				skip |= getResources().getBoolean(R.bool.hide_contact_sip_addresses);
 			} else {
 				label.setText(R.string.phone_number);
 				skip |= getResources().getBoolean(R.bool.hide_contact_phone_numbers);
-			}
-	*/
+			}*/
+			
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
 			tv.setText(displayednumberOrAddress);
 			tv.setSelected(true);
@@ -234,7 +234,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	public void onClick(View v) {
 		int id = v.getId();
 			
-	/*	if (id == R.id.editContact) {
+		/*if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
 		}
 		if (id == R.id.deleteContact) {
@@ -259,10 +259,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				}
 			});
 			dialog.show();
+		}*/
+		if (id == R.id.back) {
+			getFragmentManager().popBackStackImmediate();
 		}
-	*/	if (id == R.id.back) {
-			LinphoneActivity.instance().displayContacts(false);
-		}
-
 	}
 }

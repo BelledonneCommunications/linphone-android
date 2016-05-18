@@ -90,6 +90,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -293,23 +295,26 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
 		if (state == LinphoneChatMessage.State.FileTransferDone) {
-			if(msg.isOutgoing() && mUploadingImageStream != null){
+			if (msg.isOutgoing() && mUploadingImageStream != null) {
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
 				File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
 				try {
-					String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
-					msg.setAppData(url);
-					file.delete();
+					Bitmap bm = BitmapFactory.decodeFile(file.getPath());
+					if (bm != null) {
+						String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
+						msg.setAppData(url);
+						file.delete();
+					}
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 				removePendingMessage(msg);
 			}
 		}
 
-		if(state == LinphoneChatMessage.State.FileTransferError) {
+		if (state == LinphoneChatMessage.State.FileTransferError) {
 			//TODO
 		}
 
@@ -379,18 +384,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
     }
 
 	public void changeStatusToOnline() {
-        LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-        if (isInstanciated() && lc != null) {
-            if ((lc.getGlobalState() == GlobalState.GlobalOn) && (LinphoneService.isReady()) && (lc.getPresenceModel().getActivity().getType() != PresenceActivityType.TV)) {
-                PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
-                lc.setPresenceModel(model);
-            }
-        }
+		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
+		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.Online) {
+			lc.getPresenceModel().getActivity().setType(PresenceActivityType.Online);
+		} else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
+			lc.setPresenceModel(model);
+		}
 	}
 
 	public void changeStatusToOnThePhone() {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && lc != null) {
+		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.OnThePhone) {
+			lc.getPresenceModel().getActivity().setType(PresenceActivityType.OnThePhone);
+		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
 			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.OnThePhone, null);
 			lc.setPresenceModel(model);
 		}
@@ -398,8 +405,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void changeStatusToOffline() {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		 if (isInstanciated() && lc != null) {
-			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Away, null);
+		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.Offline) {
+			lc.getPresenceModel().getActivity().setType(PresenceActivityType.Offline);
+		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Offline, null);
 			lc.setPresenceModel(model);
 		}
 	}
@@ -595,16 +604,15 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mLc.destroy();
 		}
 		catch (RuntimeException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		finally {
-          	    mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
 			mLc = null;
 		}
 	}
 
 	public void restartLinphoneCore(){
-
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
 		sExited = false;
@@ -614,10 +622,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log));
-            LinphonePreferences.instance().enableDebugLogs(isDebugLogEnabled);
-            LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
-			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
@@ -639,22 +643,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mTimer.schedule(lTask, 0, 20);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 			Log.e(e, "Cannot start linphone");
 		}
 	}
 
 	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
 		mLc = lc;
-		boolean isDebugLogEnabled = !(mR.getBoolean(R.bool.disable_every_log)) ;//&& mPrefs.isDebugEnabled();
-        LinphonePreferences.instance().enableDebugLogs(isDebugLogEnabled);
-		LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
-		LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
 		prefMigrator.migrateSharingServerUrlIfNeeded();
-
+		
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
 		}
@@ -822,7 +822,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mLc.destroy();
 		}
 		catch (RuntimeException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		finally {
 			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
@@ -833,11 +833,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public static synchronized void destroy() {
 		if (instance == null) return;
+		getInstance().changeStatusToOffline();
 		sExited = true;
 		instance.doDestroy();
 	}
 
-	public String getString(int key) {
+	private String getString(int key) {
 		return mR.getString(key);
 	}
 
@@ -914,14 +915,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		try {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-				if (LinphoneActivity.isInstanciated() && !LinphoneActivity.instance().displayChatMessageNotification(from.asStringUriOnly())) {
-					return;
+				if (contact != null) {
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
 				} else {
-					if (contact != null) {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
-					} else {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
-					}
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
 				}
 			}
 		} catch (Exception e) {
@@ -993,7 +990,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			else if (LinphoneService.isReady())
 				return LinphoneService.instance().getApplicationContext();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		return null;
 	}
@@ -1013,7 +1010,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			try {
 				mLc.acceptCall(call);
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
@@ -1074,6 +1071,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 					Log.i("Last call ended: releasing incall (CPU only) wake lock");
 				} else {
 					Log.i("Last call ended: no incall (CPU only) wake lock were held");
+				}
+			}
+		}
+
+		if (state == State.CallUpdatedByRemote) {
+			// If the correspondent proposes video while audio call
+			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
+			boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
+			boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+			if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+				try {
+					LinphoneManager.getLc().deferCallUpdate(call);
+				} catch (LinphoneCoreException e) {
+					Log.e(e);
 				}
 			}
 		}

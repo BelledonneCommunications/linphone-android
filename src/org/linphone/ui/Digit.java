@@ -30,7 +30,6 @@ import org.linphone.mediastream.Log;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -133,14 +132,12 @@ public class Digit extends Button implements AddressAware {
 		public void displayDebugPopup(){
 			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
 			alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
-			if(LinphonePreferences.instance().isDebugLogsEnabled()) {
+			if(LinphonePreferences.instance().isDebugEnabled()) {
 				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0){
-							Log.setEnableLog(false);
-							LinphonePreferences.instance().enableDebugLogs(false);
+							LinphonePreferences.instance().setDebugEnabled(false);
 							LinphoneCoreFactory.instance().enableLogCollection(false);
-							LinphoneCoreFactory.instance().setDebugMode(false, getResources().getString(R.string.app_name));
 						}
 						if(which == 1) {
 							LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -155,10 +152,8 @@ public class Digit extends Button implements AddressAware {
 				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0) {
-							Log.setEnableLog(true);
-							LinphonePreferences.instance().enableDebugLogs(true);
+							LinphonePreferences.instance().setDebugEnabled(true);
 							LinphoneCoreFactory.instance().enableLogCollection(true);
-							LinphoneCoreFactory.instance().setDebugMode(true, getResources().getString(R.string.app_name));
 						}
 					}
 				});

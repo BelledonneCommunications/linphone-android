@@ -28,7 +28,7 @@ public class KeepAliveHandler extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i("Keep alive handler invoked");
+		//Log.i("Keep alive handler invoked"); //TODO FIXME Crash since the log rework
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			//first refresh registers
 			LinphoneManager.getLc().refreshRegisters();
@@ -36,7 +36,7 @@ public class KeepAliveHandler extends BroadcastReceiver {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				Log.e("Cannot sleep for 2s", e);
+				//Log.e("Cannot sleep for 2s", e); //TODO FIXME Crash since the log rework
 			}
 			
 		}

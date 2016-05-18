@@ -426,7 +426,15 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					}
 				}
 			}
-		}else if (isLinphoneFriend()) {
+		} else if (isLinphoneFriend()) {
+			fullName = friend.getName();
+			thumbnailUri = null;
+			photoUri = null;
+			LinphoneAddress addr = friend.getAddress();
+			if (addr != null) {
+				addresses.add(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
+				hasSipAddress = true;
+			}
 			friend.enableSubscribes(true);
 			friend.setIncSubscribePolicy(SubscribePolicy.SPAccept);
 			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
@@ -470,8 +478,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	
 	@Override
 	public int compareTo(LinphoneContact contact) {
-		String firstLetter = getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
-		String contactfirstLetter = contact.getFullName().substring(0, 1).toUpperCase(Locale.getDefault());
+		String fullName = getFullName();
+		String contactFullName = contact.getFullName();
+		String firstLetter = fullName == null || fullName.isEmpty() ? "" : fullName.substring(0, 1).toUpperCase(Locale.getDefault());
+		String contactfirstLetter = contactFullName == null || contactFullName.isEmpty() ? "" : contactFullName.substring(0, 1).toUpperCase(Locale.getDefault());
 		return firstLetter.compareTo(contactfirstLetter);
 	}
 

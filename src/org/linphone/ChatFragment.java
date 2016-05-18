@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,8 +87,6 @@ import android.widget.Toast;
 
 
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener {
-	private static ChatFragment instance;
-
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_PICTURE_SMALL = 2;
@@ -125,14 +124,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ByteArrayInputStream mUploadingImageStream;
 	private boolean newChatConversation = false;
 
-	public static boolean isInstanciated() {
-		return instance != null;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		instance = this;
 		final View view = inflater.inflate(R.layout.chat, container, false);
 
 		LinphoneManager.addListener(this);
@@ -151,6 +145,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		//Initialize UI
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		messagesList = (ListView) view.findViewById(R.id.chat_message_list);
+		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		searchContactField = (EditText) view.findViewById(R.id.search_contact_field);
 		resultContactsSearch = (ListView) view.findViewById(R.id.result_contacts);
 
@@ -216,8 +211,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
+					LinphoneService.instance().removeMessageNotification();
+					cr.markAsRead();
 					invalidate();
 					messagesList.setSelection(adapter.getCount()-1);
+					
+					String externalBodyUrl = message.getExternalBodyUrl();
+					LinphoneContent fileTransferContent = message.getFileTransferInformation();
+					if (externalBodyUrl != null || fileTransferContent != null) {
+						LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+					}
 				}
 			}
 			
@@ -246,14 +249,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		};
 
 		return view;
-	}
-
-	public static ChatFragment instance() {
-		return instance;
-	}
-
-	public String getSipUri() {
-		return sipUri;
 	}
 
 	@Override
@@ -326,66 +321,67 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
-		LinphoneChatMessage[] history;
+		ArrayList<LinphoneChatMessage> history;
 		Context context;
 
-		public ChatMessageAdapter(Context context, LinphoneChatMessage[] history) {
-			this.history = history;
-			this.context = context;
+		public ChatMessageAdapter(Context c) {
+			context = c;
+			history = new ArrayList<LinphoneChatMessage>();
+			refreshHistory();
 		}
 		
 		public void destroy() {
-			this.history = null;
+			if (history != null) {
+				history.clear();
+			}
 		}
 
 		public void refreshHistory() {
-			this.history = null;
-			this.history = chatRoom.getHistory();
+			history.clear();
+			LinphoneChatMessage[] messages = chatRoom.getHistory();
+			history.addAll(Arrays.asList(messages));
+			notifyDataSetChanged();
 		}
 
 		public void addMessage(LinphoneChatMessage message) {
-			LinphoneChatMessage[] newHist = new LinphoneChatMessage[getCount() +1];
-			for(int i=0; i< getCount(); i++){
-				newHist[i] = this.history[i];
-			}
-			newHist[getCount()] = message;
-			this.history = newHist;
-		}
-
-		public void removeMessage(LinphoneChatMessage message) {
-			LinphoneChatMessage[] newHist = new LinphoneChatMessage[getCount() -1];
-			for(int i=0; i< getCount(); i++){
-				if(this.history[i].getStorageId() != newHist[i].getStorageId())
-					newHist[i] = this.history[i];
-			}
-			newHist[getCount()] = message;
-			this.history = newHist;
+			history.add(message);
+			notifyDataSetChanged();
 		}
 
 		@Override
 		public int getCount() {
-			return history.length;
+			return history.size();
 		}
 
 		@Override
 		public LinphoneChatMessage getItem(int position) {
-			return history[position];
+			return history.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return history[position].getStorageId();
+			return history.get(position).getStorageId();
 		}
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			LinphoneChatMessage message = history[position];
+			LinphoneChatMessage message = history.get(position);
+			RelativeLayout rlayout;
 
+			if (convertView != null) {
+				rlayout = (RelativeLayout) convertView;
+				View bbv = rlayout.getChildAt(0);
+				rlayout.removeAllViews();
+				BubbleChat bbc = (BubbleChat) bbv.getTag();
+				bbc.destroy();
+			} else {
+				rlayout = new RelativeLayout(context);
+			}
 			BubbleChat bubble = new BubbleChat(context, message, contact);
 			View v = bubble.getView();
+			v.setTag(bubble);
 
 			registerForContextMenu(v);
-			RelativeLayout rlayout = new RelativeLayout(context);
 
 			CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
 
@@ -476,12 +472,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	public void dispayMessageList() {
-		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		if(chatRoom != null) {
-			if (adapter != null) adapter.destroy();
-			adapter = new ChatMessageAdapter(getActivity(), chatRoom.getHistory());
-			messagesList.setAdapter(adapter);
+			if (adapter != null) {
+				adapter.refreshHistory();
+			} else {
+				adapter = new ChatMessageAdapter(getActivity().getApplicationContext());
+			}
 		}
+		messagesList.setAdapter(adapter);
 	}
 
 	private void displayChatHeader(LinphoneAddress address) {
@@ -557,10 +555,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneService.instance().removeMessageNotification();
 
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().updateChatFragment(null);
-		}
-
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
@@ -572,12 +566,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		//Hide keybord
 		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(message.getWindowToken(), 0);
+		
 		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (adapter != null) {
+			adapter.destroy();
+		}
+		super.onDestroy();
 	}
 
 	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onResume() {
+		super.onResume();
+		
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
 
@@ -588,7 +593,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
-			LinphoneActivity.instance().updateChatFragment(this);
 		}
 
 		if(LinphoneManager.getLc().isIncall()){
@@ -615,7 +619,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			resultContactsSearch.setVisibility(View.GONE);
 			remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 		}
-		super.onResume();
 	}
 
 	private void selectAllList(boolean isSelectAll){
@@ -746,7 +749,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (newChatConversation) {
 				exitNewConversationMode(lAddress.asStringUriOnly());
 			} else {
-				invalidate();
+				displayBubbleChat(message);
 			}
 
 			Log.i("Sent message current status: " + message.getStatus());
@@ -797,7 +800,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void invalidate() {
 		adapter.refreshHistory();
-		adapter.notifyDataSetChanged();
 		chatRoom.markAsRead();
 	}
 
@@ -895,7 +897,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();

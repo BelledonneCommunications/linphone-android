@@ -402,7 +402,7 @@ public final class LinphoneUtils {
 		try {
 			Runtime.getRuntime().exec(new String[] { "logcat", "-c" });
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -462,7 +462,7 @@ public final class LinphoneUtils {
             }
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 }
