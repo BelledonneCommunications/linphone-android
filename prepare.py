@@ -319,7 +319,7 @@ def list_features_with_args(debug, additional_args):
     option_regex = re.compile("ENABLE_(.*):(.*)=(.*)")
     options = {}
     ended = True
-    build_type = 'Debug' if debug else 'Release'
+    build_type = 'Debug' if debug else 'RelWithDebInfo'
 
     for line in Popen(tmptarget.cmake_command(build_type, False, True, additional_args, verbose=False),
                       cwd=tmpdir, shell=False, stdout=PIPE).stdout.readlines():
@@ -478,7 +478,10 @@ def main(argv=None):
         if args.clean:
             target.clean()
         else:
-            retcode = prepare.run(target, args.debug, False, args.list_cmake_variables, args.force, additional_args)
+            build_type = 'RelWithDebInfo'
+            if args.debug:
+                build_type = 'Debug'
+            retcode = prepare.run(target, build_type, False, args.list_cmake_variables, args.force, additional_args)
             if retcode != 0:
                 return retcode
 
