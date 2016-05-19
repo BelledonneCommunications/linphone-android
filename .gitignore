@@ -17,6 +17,7 @@ liblinphone-junit-report.xml
 liblinphone-sdk
 liblinphonetester_*.zip
 libs
+libs-debug
 linphone-android.iml
 linphone-junit-report*.xml
 linphonetester_*.zip
