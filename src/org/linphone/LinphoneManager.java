@@ -18,68 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
-import static android.media.AudioManager.MODE_RINGTONE;
-import static android.media.AudioManager.STREAM_RING;
-import static android.media.AudioManager.STREAM_VOICE_CALL;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneBuffer;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCallStats;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneContent;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.EcCalibratorStatus;
-import org.linphone.core.LinphoneCore.GlobalState;
-import org.linphone.core.LinphoneCore.LogCollectionUploadState;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCore.RemoteProvisioningState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListener;
-import org.linphone.core.LinphoneEvent;
-import org.linphone.core.LinphoneFriend;
-import org.linphone.core.LinphoneFriendList;
-import org.linphone.core.LinphoneInfoMessage;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.PayloadType;
-import org.linphone.core.PresenceActivity;
-import org.linphone.core.PresenceActivityType;
-import org.linphone.core.PresenceBasicStatus;
-import org.linphone.core.PresenceModel;
-import org.linphone.core.PresenceNote;
-import org.linphone.core.PresencePerson;
-import org.linphone.core.PresenceService;
-import org.linphone.core.PublishState;
-import org.linphone.core.SubscriptionState;
-import org.linphone.core.TunnelConfig;
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
-import org.linphone.ui.AvatarWithPresenceImage;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -116,6 +54,63 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneBuffer;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneContent;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.LinphoneCore.GlobalState;
+import org.linphone.core.LinphoneCore.LogCollectionUploadState;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCore.RemoteProvisioningState;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListener;
+import org.linphone.core.LinphoneEvent;
+import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendList;
+import org.linphone.core.LinphoneInfoMessage;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.PayloadType;
+import org.linphone.core.PresenceActivityType;
+import org.linphone.core.PresenceModel;
+import org.linphone.core.PublishState;
+import org.linphone.core.SubscriptionState;
+import org.linphone.core.TunnelConfig;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
+import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.ui.AvatarWithPresenceImage;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static android.media.AudioManager.MODE_RINGTONE;
+import static android.media.AudioManager.STREAM_RING;
+import static android.media.AudioManager.STREAM_VOICE_CALL;
 
 /**
  *
@@ -385,10 +380,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void changeStatusToOnline() {
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.Online) {
-			lc.getPresenceModel().getActivity().setType(PresenceActivityType.Online);
+		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.TV) {
+			lc.getPresenceModel().getActivity().setType(PresenceActivityType.TV);
 		} else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
-			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.Online, null);
+			PresenceModel model = LinphoneCoreFactory.instance().createPresenceModel(PresenceActivityType.TV, null);
 			lc.setPresenceModel(model);
 		}
 	}
