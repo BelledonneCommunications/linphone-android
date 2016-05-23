@@ -185,7 +185,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 
 	public void displayFirstChat(){
-		if(mConversations.size() > 0) {
+		if (mConversations != null && mConversations.size() > 0) {
 			LinphoneActivity.instance().displayChat(mConversations.get(0));
 		} else {
 			LinphoneActivity.instance().displayEmptyFragment();
