@@ -22,15 +22,10 @@
 #
 ############################################################################
 
-import argparse
 import os
-import re
-import shutil
 import sys
-import tempfile
-from logging import error, warning, info, INFO, basicConfig
-from subprocess import Popen, PIPE
-from distutils.spawn import find_executable
+from logging import error, warning, info
+from subprocess import Popen
 sys.dont_write_bytecode = True
 sys.path.insert(0, 'submodules/cmake-builder')
 try:
@@ -42,6 +37,7 @@ except Exception as e:
     exit(1)
 
 
+
 class AndroidTarget(prepare.Target):
 
     def __init__(self, arch):
@@ -50,118 +46,110 @@ class AndroidTarget(prepare.Target):
         self.config_file = 'configs/config-android.cmake'
         self.toolchain_file = 'toolchains/toolchain-android-' + arch + '.cmake'
         self.output = 'liblinphone-sdk/android-' + arch
-        self.additional_args = [
-            '-DCMAKE_INSTALL_MESSAGE=LAZY',
-            '-DLINPHONE_BUILDER_EXTERNAL_SOURCE_PATH=' + current_path + '/submodules'
-        ]
-
-    def clean(self):
-        if os.path.isdir('WORK'):
-            shutil.rmtree('WORK', ignore_errors=False, onerror=self.handle_remove_read_only)
-        if os.path.isdir('liblinphone-sdk'):
-            shutil.rmtree('liblinphone-sdk', ignore_errors=False, onerror=self.handle_remove_read_only)
+        self.external_source_path = os.path.join(current_path, 'submodules')
 
 
 class AndroidArmTarget(AndroidTarget):
 
     def __init__(self):
-        AndroidTarget.__init__(self, 'arm')
+        super(AndroidArmTarget, self).__init__('arm')
         self.additional_args += ['-DENABLE_VIDEO=NO']
 
 
 class AndroidArmv7Target(AndroidTarget):
 
     def __init__(self):
-        AndroidTarget.__init__(self, 'armv7')
+        super(AndroidArmv7Target, self).__init__('armv7')
 
 
 class AndroidX86Target(AndroidTarget):
 
     def __init__(self):
-        AndroidTarget.__init__(self, 'x86')
+        super(AndroidX86Target, self).__init__('x86')
 
-targets = {
+
+
+
+android_targets = {
     'arm': AndroidArmTarget(),
     'armv7': AndroidArmv7Target(),
     'x86': AndroidX86Target()
 }
-platforms = ['all', 'arm', 'armv7', 'x86']
 
+class AndroidPreparator(prepare.Preparator):
 
-class PlatformListAction(argparse.Action):
+    def __init__(self, targets=android_targets):
+        super(AndroidPreparator, self).__init__(targets)
+        self.veryclean = True
+        self.show_gpl_disclaimer = True
+        self.argparser.add_argument('-ac', '--all-codecs', help="Enable all codecs, including the non-free ones", action='store_true')
 
-    def __call__(self, parser, namespace, values, option_string=None):
-        if values:
-            for value in values:
-                if value not in platforms:
-                    message = ("invalid platform: {0!r} (choose from {1})".format(
-                        value, ', '.join([repr(platform) for platform in platforms])))
-                    raise argparse.ArgumentError(self, message)
-            setattr(namespace, self.dest, values)
+    def parse_args(self):
+        super(AndroidPreparator, self).parse_args()
 
+        if self.args.all_codecs:
+            self.additional_args += ["-DENABLE_GPL_THIRD_PARTIES=YES"]
+            self.additional_args += ["-DENABLE_NON_FREE_CODECS=YES"]
+            self.additional_args += ["-DENABLE_AMRNB=YES"]
+            self.additional_args += ["-DENABLE_AMRWB=YES"]
+            self.additional_args += ["-DENABLE_BV16=YES"]
+            self.additional_args += ["-DENABLE_CODEC2=YES"]
+            self.additional_args += ["-DENABLE_G729=YES"]
+            self.additional_args += ["-DENABLE_GSM=YES"]
+            self.additional_args += ["-DENABLE_ILBC=YES"]
+            self.additional_args += ["-DENABLE_ISAC=YES"]
+            self.additional_args += ["-DENABLE_OPUS=YES"]
+            self.additional_args += ["-DENABLE_SILK=YES"]
+            self.additional_args += ["-DENABLE_SPEEX=YES"]
+            self.additional_args += ["-DENABLE_FFMPEG=YES"]
+            self.additional_args += ["-DENABLE_H263=YES"]
+            self.additional_args += ["-DENABLE_H263P=YES"]
+            self.additional_args += ["-DENABLE_MPEG4=YES"]
+            self.additional_args += ["-DENABLE_OPENH264=YES"]
+            self.additional_args += ["-DENABLE_VPX=YES"]
+            # self.additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
 
-def gpl_disclaimer(platforms):
-    cmakecache = 'WORK/android-{arch}/cmake/CMakeCache.txt'.format(arch=platforms[0])
-    gpl_third_parties_enabled = "ENABLE_GPL_THIRD_PARTIES:BOOL=YES" in open(
-        cmakecache).read() or "ENABLE_GPL_THIRD_PARTIES:BOOL=ON" in open(cmakecache).read()
+    def clean(self):
+        super(AndroidPreparator, self).clean()
+        if os.path.isfile('Makefile'):
+            os.remove('Makefile')
+        if os.path.isdir('WORK') and not os.listdir('WORK'):
+            os.rmdir('WORK')
+        if os.path.isdir('liblinphone-sdk') and not os.listdir('liblinphone-sdk'):
+            os.rmdir('liblinphone-sdk')
 
-    if gpl_third_parties_enabled:
-        warning("\n***************************************************************************"
-                "\n***************************************************************************"
-                "\n***** CAUTION, this liblinphone SDK is built using 3rd party GPL code *****"
-                "\n***** Even if you acquired a proprietary license from Belledonne      *****"
-                "\n***** Communications, this SDK is GPL and GPL only.                   *****"
-                "\n***** To disable 3rd party gpl code, please use:                      *****"
-                "\n***** $ ./prepare.py -DENABLE_GPL_THIRD_PARTIES=NO                    *****"
-                "\n***************************************************************************"
-                "\n***************************************************************************")
-    else:
-        warning("\n***************************************************************************"
-                "\n***************************************************************************"
-                "\n***** Linphone SDK without 3rd party GPL software                     *****"
-                "\n***** If you acquired a proprietary license from Belledonne           *****"
-                "\n***** Communications, this SDK can be used to create                  *****"
-                "\n***** a proprietary linphone-based application.                       *****"
-                "\n***************************************************************************"
-                "\n***************************************************************************")
+    def prepare(self):
+        retcode = super(AndroidPreparator, self).prepare()
+        if retcode != 0:
+            if retcode == 51:
+                if os.path.isfile('Makefile'):
+                    Popen("make help-prepare-options".split(" "))
+                retcode = 0
+            return retcode
+        # Only generated makefile if we are using Ninja or Makefile
+        if self.generator().endswith('Ninja'):
+            if not check_is_installed("ninja", "it"):
+                return 1
+            self.generate_makefile('ninja -C')
+            info("You can now run 'make' to build.")
+        elif self.generator().endswith("Unix Makefiles"):
+            self.generate_makefile('$(MAKE) -C')
+            info("You can now run 'make' to build.")
+        else:
+            warning("Not generating meta-makefile for generator {}.".format(self.generator()))
 
-
-def check_is_installed(binary, prog='it', warn=True):
-    if not find_executable(binary):
-        if warn:
-            error("Could not find {}. Please install {}.".format(binary, prog))
-        return False
-    return True
-
-
-def check_tools():
-    ret = 0
-
-    # at least FFmpeg requires no whitespace in sources path...
-    if " " in os.path.dirname(os.path.realpath(__file__)):
-        error("Invalid location: path should not contain any spaces.")
-        ret = 1
-
-    ret |= not check_is_installed('cmake')
-
-    if not os.path.isdir("submodules/linphone/mediastreamer2/src") or not os.path.isdir("submodules/linphone/oRTP/src"):
-        error("Missing some git submodules. Did you run:\n\tgit submodule update --init --recursive")
-        ret = 1
-
-    return ret
-
-
-def generate_makefile(platforms, generator):
-    arch_targets = ""
-    for arch in platforms:
-        arch_targets += """
+    def generate_makefile(self, generator):
+        platforms = self.args.target
+        arch_targets = ""
+        for arch in platforms:
+            arch_targets += """
 {arch}: {arch}-build
 
 {arch}-build:
 \t{generator} WORK/android-{arch}/cmake
 \t@echo "Done"
 """.format(arch=arch, generator=generator)
-    makefile = """
+        makefile = """
 archs={archs}
 TOPDIR=$(shell pwd)
 LINPHONE_ANDROID_VERSION=$(shell git describe --always)
@@ -326,203 +314,18 @@ help: help-prepare-options
 """.format(archs=' '.join(platforms), arch_opts='|'.join(platforms),
            first_arch=platforms[0], options=' '.join(sys.argv),
            arch_targets=arch_targets, generator=generator)
-    f = open('Makefile', 'w')
-    f.write(makefile)
-    f.close()
-    gpl_disclaimer(platforms)
+        f = open('Makefile', 'w')
+        f.write(makefile)
+        f.close()
 
 
-def list_features_with_args(debug, additional_args):
-    tmpdir = tempfile.mkdtemp(prefix="linphone-android")
-    tmptarget = AndroidArmv7Target()
-    tmptarget.abs_cmake_dir = tmpdir
 
-    option_regex = re.compile("ENABLE_(.*):(.*)=(.*)")
-    options = {}
-    ended = True
-    build_type = 'Debug' if debug else 'RelWithDebInfo'
-
-    for line in Popen(tmptarget.cmake_command(build_type, False, True, additional_args, verbose=False),
-                      cwd=tmpdir, shell=False, stdout=PIPE).stdout.readlines():
-        match = option_regex.match(line)
-        if match is not None:
-            (name, typeof, value) = match.groups()
-            options["ENABLE_{}".format(name)] = value
-            ended &= (value == 'ON')
-    shutil.rmtree(tmpdir)
-    return (options, ended)
-
-
-def list_features(debug, args):
-    additional_args = args
-    options = {}
-    info("Searching for available features...")
-    # We have to iterate multiple times to activate ALL options, so that options depending
-    # of others are also listed (cmake_dependent_option macro will not output options if
-    # prerequisite is not met)
-    while True:
-        (options, ended) = list_features_with_args(debug, additional_args)
-        if ended:
-            break
-        else:
-            additional_args = []
-            # Activate ALL available options
-            for k in options.keys():
-                additional_args.append("-D{}=ON".format(k))
-
-    # Now that we got the list of ALL available options, we must correct default values
-    # Step 1: all options are turned off by default
-    for x in options.keys():
-        options[x] = 'OFF'
-    # Step 2: except options enabled when running with default args
-    (options_tmp, ended) = list_features_with_args(debug, args)
-    final_dict = dict(options.items() + options_tmp.items())
-
-    notice_features = "Here are available features:"
-    for k, v in final_dict.items():
-        notice_features += "\n\t{}={}".format(k, v)
-    info(notice_features)
-    info("To enable some feature, please use -DENABLE_SOMEOPTION=ON (example: -DENABLE_OPUS=ON)")
-    info("Similarly, to disable some feature, please use -DENABLE_SOMEOPTION=OFF (example: -DENABLE_OPUS=OFF)")
-
-
-def main(argv=None):
-    basicConfig(format="%(levelname)s: %(message)s", level=INFO)
-
-    if argv is None:
-        argv = sys.argv
-    argparser = argparse.ArgumentParser(
-        description="Prepare build of Linphone and its dependencies.")
-    argparser.add_argument(
-        '-ac', '--all-codecs', help="Enable all codecs, including the non-free ones", action='store_true')
-    argparser.add_argument(
-        '-c', '-C', '--clean', help="Clean a previous build instead of preparing a build.", action='store_true')
-    argparser.add_argument(
-        '-d', '--debug', help="Prepare a debug build, eg. add debug symbols and use no optimizations.", action='store_true')
-    argparser.add_argument(
-        '-dv', '--debug-verbose', help="Activate ms_debug logs.", action='store_true')
-    argparser.add_argument(
-        '--disable-gpl-third-parties', help="Disable GPL third parties such as FFMpeg, x264.", action='store_true')
-    argparser.add_argument(
-        '--enable-non-free-codecs', help="Enable non-free codecs such as OpenH264, MPEG4, "
-        "etc.. Final application must comply with their respective license (see README.md).", action='store_true')
-    argparser.add_argument(
-        '-f', '--force', help="Force preparation, even if working directory already exist.", action='store_true')
-    argparser.add_argument(
-        '-G', '--generator', help="CMake build system generator (default: Unix Makefiles, use cmake -h to get the complete list).",
-        default='Unix Makefiles', dest='generator')
-    argparser.add_argument(
-        '-L', '--list-cmake-variables', help="List non-advanced CMake cache variables.", action='store_true', dest='list_cmake_variables')
-    argparser.add_argument(
-        '-lf', '--list-features', help="List optional features and their default values.", action='store_true', dest='list_features')
-    argparser.add_argument(
-        '-t', '--tunnel', help="Enable Tunnel.", action='store_true')
-    argparser.add_argument('platform', nargs='*', action=PlatformListAction, default=[
-                           'arm', 'armv7', 'x86'], help="The platform to build for (default is 'arm armv7 x86'). "
-                           "Space separated architectures in list: {0}.".format(', '.join([repr(platform) for platform in platforms])))
-
-    args, additional_args2 = argparser.parse_known_args()
-
-    additional_args = ["-G", args.generator]
-
-    if check_tools() != 0:
+def main():
+    preparator = AndroidPreparator()
+    preparator.parse_args()
+    if preparator.check_tools() != 0:
         return 1
-
-    if args.debug_verbose is True:
-        additional_args += ["-DENABLE_DEBUG_LOGS=YES"]
-    if args.enable_non_free_codecs is True:
-        additional_args += ["-DENABLE_NON_FREE_CODECS=YES"]
-    if args.all_codecs is True:
-        additional_args += ["-DENABLE_GPL_THIRD_PARTIES=YES"]
-        additional_args += ["-DENABLE_NON_FREE_CODECS=YES"]
-        additional_args += ["-DENABLE_AMRNB=YES"]
-        additional_args += ["-DENABLE_AMRWB=YES"]
-        additional_args += ["-DENABLE_BV16=YES"]
-        additional_args += ["-DENABLE_CODEC2=YES"]
-        additional_args += ["-DENABLE_G729=YES"]
-        additional_args += ["-DENABLE_GSM=YES"]
-        additional_args += ["-DENABLE_ILBC=YES"]
-        additional_args += ["-DENABLE_ISAC=YES"]
-        additional_args += ["-DENABLE_OPUS=YES"]
-        additional_args += ["-DENABLE_SILK=YES"]
-        additional_args += ["-DENABLE_SPEEX=YES"]
-        additional_args += ["-DENABLE_FFMPEG=YES"]
-        additional_args += ["-DENABLE_H263=YES"]
-        additional_args += ["-DENABLE_H263P=YES"]
-        additional_args += ["-DENABLE_MPEG4=YES"]
-        additional_args += ["-DENABLE_OPENH264=YES"]
-        additional_args += ["-DENABLE_VPX=YES"]
-        # additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
-    if args.disable_gpl_third_parties is True:
-        additional_args += ["-DENABLE_GPL_THIRD_PARTIES=NO"]
-
-    if args.tunnel or os.path.isdir("submodules/tunnel"):
-        if not os.path.isdir("submodules/tunnel"):
-            info("Tunnel wanted but not found yet, trying to clone it...")
-            p = Popen("git clone gitosis@git.linphone.org:tunnel.git submodules/tunnel".split(" "))
-            p.wait()
-            if p.returncode != 0:
-                error("Could not clone tunnel. Please see http://www.belledonne-communications.com/voiptunnel.html")
-                return 1
-        warning("Tunnel enabled, disabling GPL third parties.")
-        additional_args += ["-DENABLE_TUNNEL=YES", "-DENABLE_GPL_THIRD_PARTIES=OFF"]
-
-    # User's options are priority upon all automatic options
-    additional_args += additional_args2
-
-    if args.list_features:
-        list_features(args.debug, additional_args)
-        return 0
-
-    selected_platforms_dup = []
-    for platform in args.platform:
-        if platform == 'all':
-            selected_platforms_dup += ['arm', 'armv7', 'x86']
-        else:
-            selected_platforms_dup += [platform]
-    # unify platforms but keep provided order
-    selected_platforms = []
-    for x in selected_platforms_dup:
-        if x not in selected_platforms:
-            selected_platforms.append(x)
-
-    if os.path.isdir('WORK') and not args.clean and not args.force:
-        warning("Working directory WORK already exists. Please remove it (option -C or -c) before re-executing CMake "
-                "to avoid conflicts between executions, or force execution (option -f) if you are aware of consequences.")
-        if os.path.isfile('Makefile'):
-            Popen("make help-prepare-options".split(" "))
-        return 0
-
-    for platform in selected_platforms:
-        target = targets[platform]
-
-        if args.clean:
-            target.clean()
-        else:
-            build_type = 'RelWithDebInfo'
-            if args.debug:
-                build_type = 'Debug'
-            retcode = prepare.run(target, build_type, False, args.list_cmake_variables, args.force, additional_args)
-            if retcode != 0:
-                return retcode
-
-    if args.clean:
-        if os.path.isfile('Makefile'):
-            os.remove('Makefile')
-    elif selected_platforms:
-        # only generated makefile if we are using Ninja or Makefile
-        if args.generator.endswith('Ninja'):
-            if not check_is_installed("ninja", "it"):
-                return 1
-            generate_makefile(selected_platforms, 'ninja -C')
-            info("You can now run 'make' to build.")
-        elif args.generator.endswith("Unix Makefiles"):
-            generate_makefile(selected_platforms, '$(MAKE) -C')
-            info("You can now run 'make' to build.")
-        else:
-            warning("Not generating meta-makefile for generator {}.".format(target.generator))
-
-    return 0
+    return preparator.run()
 
 if __name__ == "__main__":
     sys.exit(main())
