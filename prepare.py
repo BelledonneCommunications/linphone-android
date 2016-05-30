@@ -52,20 +52,20 @@ class AndroidTarget(prepare.Target):
 class AndroidArmTarget(AndroidTarget):
 
     def __init__(self):
-        super(AndroidArmTarget, self).__init__('arm')
+        AndroidTarget.__init__(self, 'arm')
         self.additional_args += ['-DENABLE_VIDEO=NO']
 
 
 class AndroidArmv7Target(AndroidTarget):
 
     def __init__(self):
-        super(AndroidArmv7Target, self).__init__('armv7')
+        AndroidTarget.__init__(self, 'armv7')
 
 
 class AndroidX86Target(AndroidTarget):
 
     def __init__(self):
-        super(AndroidX86Target, self).__init__('x86')
+        AndroidTarget.__init__(self, 'x86')
 
 
 
@@ -79,13 +79,13 @@ android_targets = {
 class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
-        super(AndroidPreparator, self).__init__(targets)
+        prepare.Preparator.__init__(self, targets)
         self.veryclean = True
         self.show_gpl_disclaimer = True
         self.argparser.add_argument('-ac', '--all-codecs', help="Enable all codecs, including the non-free ones", action='store_true')
 
     def parse_args(self):
-        super(AndroidPreparator, self).parse_args()
+        prepare.Preparator.parse_args(self)
 
         if self.args.all_codecs:
             self.additional_args += ["-DENABLE_GPL_THIRD_PARTIES=YES"]
@@ -110,33 +110,13 @@ class AndroidPreparator(prepare.Preparator):
             # self.additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
 
     def clean(self):
-        super(AndroidPreparator, self).clean()
+        prepare.Preparator.clean(self)
         if os.path.isfile('Makefile'):
             os.remove('Makefile')
         if os.path.isdir('WORK') and not os.listdir('WORK'):
             os.rmdir('WORK')
         if os.path.isdir('liblinphone-sdk') and not os.listdir('liblinphone-sdk'):
             os.rmdir('liblinphone-sdk')
-
-    def prepare(self):
-        retcode = super(AndroidPreparator, self).prepare()
-        if retcode != 0:
-            if retcode == 51:
-                if os.path.isfile('Makefile'):
-                    Popen("make help-prepare-options".split(" "))
-                retcode = 0
-            return retcode
-        # Only generated makefile if we are using Ninja or Makefile
-        if self.generator().endswith('Ninja'):
-            if not check_is_installed("ninja", "it"):
-                return 1
-            self.generate_makefile('ninja -C')
-            info("You can now run 'make' to build.")
-        elif self.generator().endswith("Unix Makefiles"):
-            self.generate_makefile('$(MAKE) -C')
-            info("You can now run 'make' to build.")
-        else:
-            warning("Not generating meta-makefile for generator {}.".format(self.generator()))
 
     def generate_makefile(self, generator):
         platforms = self.args.target
@@ -324,6 +304,7 @@ def main():
     preparator = AndroidPreparator()
     preparator.parse_args()
     if preparator.check_tools() != 0:
+        preparator.show_missing_dependencies()
         return 1
     return preparator.run()
 
