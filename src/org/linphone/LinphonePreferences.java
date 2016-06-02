@@ -1236,4 +1236,12 @@ public class LinphonePreferences {
 	public void neverAskCameraPerm(){
 		getConfig().setBool("app", "camera_perm", true);
 	}
+
+	public String getActivityToLaunchOnIncomingReceived() {
+		return getConfig().getString("app", "incoming_call_activity", "org.linphone.LinphoneActivity");
+	}
+
+	public void setActivityToLaunchOnIncomingReceived(String name) {
+		getConfig().setString("app", "incoming_call_activity", name);
+	}
 }

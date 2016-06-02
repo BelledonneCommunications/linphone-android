@@ -192,7 +192,7 @@ public class RemoteProvisioningActivity extends Activity {
 
 	private void goToLinphoneActivity() {
 		if (LinphoneService.isReady()) {
-			LinphoneService.instance().setActivityToLaunchOnIncomingReceived(LinphoneLauncherActivity.class);
+			LinphoneService.instance().setActivityToLaunchOnIncomingReceived("org.linphone.LinphoneLauncherActivity");
 			//finish(); // To prevent the user to come back to this page using back button
 			startActivity(new Intent().setClass(this, LinphoneLauncherActivity.class));
 		} else {

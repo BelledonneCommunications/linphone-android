@@ -127,6 +127,7 @@ public final class LinphoneService extends Service {
 		mMsgNotifCount = 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -163,8 +164,14 @@ public final class LinphoneService extends Service {
 		LinphoneManager.createAndStart(LinphoneService.this);
 
 		instance = this; // instance is ready once linphone manager has been created
-		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase(){
-
+		incomingReceivedActivityName = LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
+		try {
+			incomingReceivedActivity = (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
+		} catch (ClassNotFoundException e) {
+			Log.e(e);
+		}
+		
+		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (instance == null) {
@@ -411,6 +418,7 @@ public final class LinphoneService extends Service {
 	private Object[] mSetForegroundArgs = new Object[1];
 	private Object[] mStartForegroundArgs = new Object[2];
 	private Object[] mStopForegroundArgs = new Object[1];
+	private String incomingReceivedActivityName;
 	private Class<? extends Activity> incomingReceivedActivity = LinphoneActivity.class;
 
 	void invokeMethod(Method method, Object[] args) {
@@ -569,8 +577,15 @@ public final class LinphoneService extends Service {
 		super.onDestroy();
 	}
 	
-	public void setActivityToLaunchOnIncomingReceived(Class<? extends Activity> activity) {
-		incomingReceivedActivity = activity;
+	@SuppressWarnings("unchecked")
+	public void setActivityToLaunchOnIncomingReceived(String activityName) {
+		try {
+			incomingReceivedActivity = (Class<? extends Activity>) Class.forName(activityName);
+			incomingReceivedActivityName = activityName;
+			LinphonePreferences.instance().setActivityToLaunchOnIncomingReceived(incomingReceivedActivityName);
+		} catch (ClassNotFoundException e) {
+			Log.e(e);
+		}
 		resetIntentLaunchedOnNotificationClick();
 	}
 	
