@@ -34,6 +34,9 @@ set(SUPPORT_SOURCES
 )
 
 add_library(support STATIC ${SUPPORT_SOURCES})
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+	target_compile_options(support PRIVATE "-std=c99")
+endif()
 
 install(TARGETS support
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
