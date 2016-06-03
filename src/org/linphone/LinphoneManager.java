@@ -573,7 +573,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
-			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+			try {
+				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
 			mLc = null;
 		}
 	}
@@ -794,7 +798,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
-			mServiceContext.unregisterReceiver(instance.mKeepAliveReceiver);
+			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
 			mLc = null;
 			instance = null;
 		}
