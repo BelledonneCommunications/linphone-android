@@ -145,7 +145,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
         }
 
 		if (!LinphoneManager.isInstanciated()) {
-			Log.e("No service running: avoid crash by starting the launch", this.getClass().getName());
 			finish();
 			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
 			return;
@@ -255,11 +254,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				displayMissedCalls(missedCalls);
 			}
 		};
-
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(mListener);
-		}
 
 		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 		displayMissedCalls(missedCalls);
@@ -1141,6 +1135,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
+
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.removeListener(mListener);
+		}
+		
 		super.onPause();
 	}
 	
@@ -1186,6 +1186,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (!LinphoneService.isReady())  {
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
 
 		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
 			ContactsManager.getInstance().enableContactsAccess();
@@ -1194,6 +1199,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else {
 			checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_READ_CONTACTS);
 		}
+
+		refreshAccounts();
 
 		updateMissedChatCount();
 
@@ -1233,11 +1240,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (mOrientationHelper != null) {
 			mOrientationHelper.disable();
 			mOrientationHelper = null;
-		}
-
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.removeListener(mListener);
 		}
 
 		instance = null;
@@ -1457,7 +1459,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void refreshAccounts(){
-		if(LinphoneManager.getLc().getProxyConfigList().length > 1) {
+		if (LinphoneManager.getLc().getProxyConfigList().length > 1) {
 			accountsList.setVisibility(View.VISIBLE);
 			accountsList.setAdapter(new AccountsListAdapter());
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1479,8 +1481,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void initAccounts() {
 		accountsList = (ListView) findViewById(R.id.accounts_list);
 		defaultAccount = (RelativeLayout) findViewById(R.id.default_account);
-
-		refreshAccounts();
 	}
 
 	class AccountsListAdapter extends BaseAdapter {

@@ -142,17 +142,20 @@ public class StatusFragment extends Fragment {
 			
 		};
 
+        return view;
+    }
+
+	public void setLinphoneCoreListener() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
+			
 			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
 				mListener.registrationState(lc, lpc, lpc.getState(), null);
 			}
 		}
-
-        return view;
-    }
+	}
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -306,9 +309,15 @@ public class StatusFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if(lc != null) {
+		if (lc != null) {
+			lc.addListener(mListener);
+			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			if (lpc != null) {
+				mListener.registrationState(lc, lpc, lpc.getState(), null);
+			}
+			
 			LinphoneCall call = lc.getCurrentCall();
 			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 				if (call != null) {
@@ -338,20 +347,15 @@ public class StatusFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		
-		if (mCallQualityUpdater != null) {
-			refreshHandler.removeCallbacks(mCallQualityUpdater);
-			mCallQualityUpdater = null;
-		}
-	}
-	
-	@Override
-	public void onDestroy() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
 		
-		super.onDestroy();
+		if (mCallQualityUpdater != null) {
+			refreshHandler.removeCallbacks(mCallQualityUpdater);
+			mCallQualityUpdater = null;
+		}
 	}
 	
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {

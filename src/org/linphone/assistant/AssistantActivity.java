@@ -128,7 +128,7 @@ private static AssistantActivity instance;
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
@@ -500,5 +500,15 @@ private static AssistantActivity instance;
 			setResult(Activity.RESULT_OK);
 		}
 		finish();
+	}
+
+	public void setLinphoneCoreListener() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
+		if (status != null) {
+			status.setLinphoneCoreListener();
+		}
 	}
 }

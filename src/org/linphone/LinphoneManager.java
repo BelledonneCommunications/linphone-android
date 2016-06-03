@@ -578,9 +578,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	public void restartLinphoneCore(){
+	public void restartLinphoneCore() {
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
+
+		IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
+        
 		sExited = false;
 	}
 
