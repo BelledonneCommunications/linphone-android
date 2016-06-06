@@ -213,7 +213,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				if (from.asStringUriOnly().equals(sipUri)) {
 					LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
-					invalidate();
+					adapter.addMessage(cr.getHistory(1)[0]);
 					messagesList.setSelection(adapter.getCount()-1);
 					
 					String externalBodyUrl = message.getExternalBodyUrl();
@@ -464,13 +464,19 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 				if (chatRoom != null) {
 					displayChatHeader(lAddress);
-					dispayMessageList();
+					displayMessageList();
 				}
 			}
 		}
 	}
+	
+	private void redrawMessageList() {
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		}
+	}
 
-	public void dispayMessageList() {
+	private void displayMessageList() {
 		if(chatRoom != null) {
 			if (adapter != null) {
 				adapter.refreshHistory();
@@ -631,7 +637,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		isEditMode = false;
 		editList.setVisibility(View.GONE);
 		topBar.setVisibility(View.VISIBLE);
-		dispayMessageList();
+		redrawMessageList();
 	}
 
 	private void removeChats(){
@@ -702,7 +708,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			topBar.setVisibility(View.INVISIBLE);
 			editList.setVisibility(View.VISIBLE);
 			isEditMode = true;
-			dispayMessageList();
+			redrawMessageList();
 			//TODO refaire la liste
 		}
 		if(id == R.id.start_call){
@@ -716,11 +722,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void sendTextMessage() {
 		sendTextMessage(message.getText().toString());
 		message.setText("");
-	}
-
-	private void displayBubbleChat(LinphoneChatMessage message){
-		adapter.addMessage(message);
-		adapter.notifyDataSetChanged();
 	}
 
 	private void sendTextMessage(String messageToSend) {
@@ -748,7 +749,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (newChatConversation) {
 				exitNewConversationMode(lAddress.asStringUriOnly());
 			} else {
-				displayBubbleChat(message);
+				adapter.addMessage(message);
 			}
 
 			Log.i("Sent message current status: " + message.getStatus());
@@ -767,7 +768,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				initChatRoom(address);
 			}
 		}
-		invalidate();
 
 		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
 			try {
@@ -924,7 +924,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneManager.getInstance().setUploadingImageStream(mUploadingImageStream);
 
 			chatRoom.sendChatMessage(message);
-			displayBubbleChat(message);
+			adapter.addMessage(message);
 		}
 	}
 
@@ -1103,7 +1103,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	//LinphoneChatMessage Listener
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
-		invalidate();
+		redrawMessageList();
 	}
 
 	@Override
