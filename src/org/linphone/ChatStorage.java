@@ -327,7 +327,7 @@ public class ChatStorage {
 		List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
 
 		for (LinphoneChatRoom chatroom : chats) {
-			if (chatroom.getHistory(1).length > 0) {
+			if (chatroom.getHistorySize() > 0) {
 				rooms.add(chatroom);
 			}
 		}
