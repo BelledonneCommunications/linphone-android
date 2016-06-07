@@ -54,7 +54,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
 	private LinearLayout declineUnlock;
-	private boolean isActive;
+	private boolean isScreenActive, alreadyAcceptedOrDeniedCall;
 	private float answerX;
 	private float declineX;
 
@@ -87,9 +87,9 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-			isActive = pm.isInteractive();
+			isScreenActive = pm.isInteractive();
 		} else {
-			isActive = pm.isScreenOn();
+			isScreenActive = pm.isScreenOn();
 		}
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -102,7 +102,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(isActive) {
+				if(isScreenActive) {
 					answer();
 				} else {
 					decline.setVisibility(View.GONE);
@@ -111,7 +111,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			}
 		});
 
-		if(!isActive) {
+		if(!isScreenActive) {
 			accept.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -177,7 +177,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		decline.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(isActive) {
+				if(isScreenActive) {
 					decline();
 				} else {
 					accept.setVisibility(View.GONE);
@@ -215,6 +215,9 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
+		
+		alreadyAcceptedOrDeniedCall = false;
+		mCall = null;
 
 		// Only one call ringing at a time is allowed
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
@@ -267,11 +270,21 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	}
 
 	private void decline() {
+		if (alreadyAcceptedOrDeniedCall) {
+			return;
+		}
+		alreadyAcceptedOrDeniedCall = true;
+		
 		LinphoneManager.getLc().terminateCall(mCall);
 		finish();
 	}
 
 	private void answer() {
+		if (alreadyAcceptedOrDeniedCall) {
+			return;
+		}
+		alreadyAcceptedOrDeniedCall = true;
+		
 		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(mCall);
 
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance().getApplicationContext());

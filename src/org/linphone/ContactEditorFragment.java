@@ -250,6 +250,7 @@ public class ContactEditorFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				pickImage();
+				LinphoneActivity.instance().checkAndRequestCameraPermission();
 			}
 		});
 
