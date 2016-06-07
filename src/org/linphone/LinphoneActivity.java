@@ -97,7 +97,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
-	private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 200;
+	private static final int PERMISSIONS_REQUEST_CONTACTS = 200;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
 	private static final int PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE = 204;
@@ -115,7 +115,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = true, emptyFragment = false, permissionAsked = false;
+	private boolean isAnimationDisabled = true, emptyFragment = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -229,13 +229,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
 						startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
 					} else {
-						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL);
+						checkAndRequestAudioPermission(true);
 					}
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
 					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
 						startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
 					} else {
-						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO);
+						checkAndRequestAudioPermission(false);
 					}
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					// Convert LinphoneCore message for internalization
@@ -1146,44 +1146,101 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 	
 	public void checkAndRequestExternalStoragePermission() {
+		if (LinphonePreferences.instance().writeExternalStoragePermAsked()) {
+			return;
+		}
 		if (getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
 			checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE);
 		}
 	}
 	
 	public void checkAndRequestCameraPermission() {
+		if (LinphonePreferences.instance().cameraPermAsked()) {
+			return;
+		}
 		if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
 			checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
+		}
+	}
+	
+	public void checkAndRequestReadContactsPermission() {
+		if (LinphonePreferences.instance().readContactsPermAsked()) {
+			return;
+		}
+		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
+		}
+	}
+	
+	public void checkAndRequestWriteContactsPermission() {
+		if (LinphonePreferences.instance().writeContactsPermAsked()) {
+			return;
+		}
+		if (getPackageManager().checkPermission(Manifest.permission.WRITE_CONTACTS, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
+		}
+	}
+	
+	public void checkAndRequestAudioPermission(boolean isIncomingCall) {
+		if (LinphonePreferences.instance().audioPermAsked()) {
+			return;
+		}
+		ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECORD_AUDIO }, isIncomingCall ? PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL : PERMISSIONS_REQUEST_RECORD_AUDIO);
+		if (LinphonePreferences.instance().shouldInitiateVideoCall() ||
+				LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+			checkAndRequestCameraPermission();
 		}
 	}
 
 	public void checkAndRequestPermission(String permission, int result) {
 		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			if (!ActivityCompat.shouldShowRequestPermissionRationale(this,permission) && !permissionAsked) {
-				permissionAsked = true;
-				if(LinphonePreferences.instance().shouldInitiateVideoCall() ||
-						LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, permission}, result);
-				} else {
-					ActivityCompat.requestPermissions(this, new String[]{permission}, result);
-				}
-			}
+			ActivityCompat.requestPermissions(this, new String[]{ permission }, result);
 		}
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (grantResults.length > 0) {
+			for (int i = 0; i < grantResults.length; i++) {
+				if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+	                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
+	                	if (permissions[i] == Manifest.permission.RECORD_AUDIO) {
+	                		LinphonePreferences.instance().neverAskAudioPerm();
+	                	} else if (permissions[i] == Manifest.permission.CAMERA) {
+	                		LinphonePreferences.instance().neverAskCameraPerm();
+	                	} else if (permissions[i] == Manifest.permission.READ_CONTACTS) {
+	                		LinphonePreferences.instance().neverAskReadContactsPerm();
+	                	} else if (permissions[i] == Manifest.permission.WRITE_CONTACTS) {
+	                		LinphonePreferences.instance().neverAskWriteContactsPerm();
+	                	} else if (permissions[i] == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+	                		LinphonePreferences.instance().neverAskWriteExternalStoragePerm();
+	                	}
+	                } else {
+	                	//TODO: show dialog explaining what we need the permission for
+	                }
+				} else {
+					if (permissions[i] == Manifest.permission.RECORD_AUDIO) {
+                		LinphonePreferences.instance().neverAskAudioPerm();
+                	} else if (permissions[i] == Manifest.permission.CAMERA) {
+                		LinphonePreferences.instance().neverAskCameraPerm();
+                	} else if (permissions[i] == Manifest.permission.READ_CONTACTS) {
+                		LinphonePreferences.instance().neverAskReadContactsPerm();
+                	} else if (permissions[i] == Manifest.permission.WRITE_CONTACTS) {
+                		LinphonePreferences.instance().neverAskWriteContactsPerm();
+                	} else if (permissions[i] == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+                		LinphonePreferences.instance().neverAskWriteExternalStoragePerm();
+                	}
+				}
+			}
+		}
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_RECORD_AUDIO:
 				startActivity(new Intent(this, CallOutgoingActivity.class));
-				LinphonePreferences.instance().neverAskAudioPerm();
 				break;
 			case PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL:
 				startActivity(new Intent(this, CallIncomingActivity.class));
-				LinphonePreferences.instance().neverAskAudioPerm();
 				break;
 		}
-		permissionAsked = false;
 	}
 
 	@Override
@@ -1204,7 +1261,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			ContactsManager.getInstance().fetchContacts();
 			fetchedContactsOnce = true;
 		} else {
-			checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_READ_CONTACTS);
+			checkAndRequestReadContactsPermission();
 		}
 
 		refreshAccounts();
@@ -1223,13 +1280,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
 						startActivity(new Intent(this, CallIncomingActivity.class));
 					} else {
-						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL);
+						checkAndRequestAudioPermission(true);
 					}
 				} else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
 					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
 						startActivity(new Intent(this, CallOutgoingActivity.class));
 					} else {
-						checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO);
+						checkAndRequestAudioPermission(false);
 					}
 				} else {
 					if (call.getCurrentParamsCopy().getVideoEnabled()) {
@@ -1323,7 +1380,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().audioPermAsked()) {
 							startActivity(new Intent(this, CallIncomingActivity.class));
 						} else {
-							checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL);
+							checkAndRequestAudioPermission(true);
 						}
 					}
 				}

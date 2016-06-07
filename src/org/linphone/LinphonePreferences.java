@@ -1241,6 +1241,30 @@ public class LinphonePreferences {
 	public void neverAskCameraPerm(){
 		getConfig().setBool("app", "camera_perm", true);
 	}
+	
+	public Boolean readContactsPermAsked(){
+		return getConfig().getBool("app", "read_contacts_perm", false);
+	}
+
+	public void neverAskReadContactsPerm(){
+		 getConfig().setBool("app", "read_contacts_perm", true);
+	}
+	
+	public Boolean writeContactsPermAsked(){
+		return getConfig().getBool("app", "write_contacts_perm", false);
+	}
+
+	public void neverAskWriteContactsPerm(){
+		 getConfig().setBool("app", "write_contacts_perm", true);
+	}
+	
+	public Boolean writeExternalStoragePermAsked(){
+		return getConfig().getBool("app", "write_external_storage_perm", false);
+	}
+
+	public void neverAskWriteExternalStoragePerm(){
+		 getConfig().setBool("app", "write_external_storage_perm", true);
+	}
 
 	public String getActivityToLaunchOnIncomingReceived() {
 		return getConfig().getString("app", "incoming_call_activity", "org.linphone.LinphoneActivity");
