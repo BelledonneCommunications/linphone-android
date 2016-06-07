@@ -83,6 +83,8 @@ public class ContactsManager extends ContentObserver {
 	private ContactsManager(Handler handler) {
 		super(handler);
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
+		contacts = new ArrayList<LinphoneContact>();
+		sipContacts = new ArrayList<LinphoneContact>();
 	}
 	
 	@Override
