@@ -446,16 +446,20 @@ public class LinphonePreferences {
 
 	public void setAccountUsername(int n, String username) {
 		String identity = "sip:" + username + "@" + getAccountDomain(n);
-		LinphoneAuthInfo info = getClonedAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
+		LinphoneAuthInfo old_info = getAuthInfo(n);
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
 			prxCfg.setIdentity(identity);
+			prxCfg.enableRegister(true);
 			prxCfg.done();
 
-			if(info != null) {
-				info.setUsername(username);
-				saveAuthInfo(info);
+			if (old_info != null) {
+				// We have to remove the previous auth info after otherwise we can't unregister the previous proxy config
+				LinphoneAuthInfo new_info = old_info.clone();
+				getLc().removeAuthInfo(old_info);
+				new_info.setUsername(username);
+				saveAuthInfo(new_info);
 			}
 		} catch (LinphoneCoreException e) {
 			Log.e(e);
@@ -514,18 +518,21 @@ public class LinphonePreferences {
 	}
 	public void setAccountDomain(int n, String domain) {
 		String identity = "sip:" + getAccountUsername(n) + "@" + domain;
-
+		LinphoneAuthInfo old_info = getAuthInfo(n);
 		try {
-			LinphoneAuthInfo authInfo = getClonedAuthInfo(n);
-			if(authInfo != null) {
-				authInfo.setDomain(domain);
-				saveAuthInfo(authInfo);
-			}
-
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
 			prxCfg.setIdentity(identity);
+			prxCfg.enableRegister(true);
 			prxCfg.done();
+
+			if (old_info != null) {
+				// We have to remove the previous auth info after otherwise we can't unregister the previous proxy config
+				LinphoneAuthInfo new_info = old_info.clone();
+				getLc().removeAuthInfo(old_info);
+				new_info.setDomain(domain);
+				saveAuthInfo(new_info);
+			}
 		} catch (LinphoneCoreException e) {
 			Log.e(e);
 		}
@@ -721,7 +728,7 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
-		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
+		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
 		if (getLc().getProxyConfigList().length != 0) {
@@ -729,6 +736,12 @@ public class LinphonePreferences {
 		} else {
 			getLc().setDefaultProxyConfig(null);
 		}
+		
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		if (authInfo != null) {
+			getLc().removeAuthInfo(authInfo);
+		}
+		
 		getLc().refreshRegisters();
 	}
 	// End of accounts settings
