@@ -728,6 +728,11 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		if (authInfo != null) {
+			getLc().removeAuthInfo(authInfo);
+		}
+		
 		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
@@ -735,11 +740,6 @@ public class LinphonePreferences {
 			resetDefaultProxyConfig();
 		} else {
 			getLc().setDefaultProxyConfig(null);
-		}
-		
-		LinphoneAuthInfo authInfo = getAuthInfo(n);
-		if (authInfo != null) {
-			getLc().removeAuthInfo(authInfo);
 		}
 		
 		getLc().refreshRegisters();

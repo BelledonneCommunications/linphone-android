@@ -392,7 +392,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
 
     	final Preference delete = manage.getPreference(2);
-    	delete.setEnabled(true);
+    	delete.setEnabled(!isNewAccount);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
 	        	mPrefs.deleteAccount(n);
