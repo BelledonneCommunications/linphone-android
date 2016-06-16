@@ -80,6 +80,7 @@ class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
         prepare.Preparator.__init__(self, targets)
+        self.release_with_debug_info = True
         self.veryclean = True
         self.show_gpl_disclaimer = True
         self.argparser.add_argument('-ac', '--all-codecs', help="Enable all codecs, including the non-free ones", action='store_true')
