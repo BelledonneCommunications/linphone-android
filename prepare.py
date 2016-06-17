@@ -160,9 +160,11 @@ copy-libs:
 \trm -rf libs/armeabi
 \tif test -d "liblinphone-sdk/android-arm"; then \\
 \t\tmkdir -p libs-debug/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/libc++_shared.so libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs-debug/armeabi && \\
 \t\tmkdir -p libs/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/libc++_shared.so libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs/armeabi && \\
 \t\tsh WORK/android-arm/strip.sh libs/armeabi/*.so; \\
@@ -177,9 +179,11 @@ copy-libs:
 \trm -rf libs/armeabi-v7a
 \tif test -d "liblinphone-sdk/android-armv7"; then \\
 \t\tmkdir -p libs-debug/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/libc++_shared.so libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs-debug/armeabi-v7a && \\
 \t\tmkdir -p libs/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/libc++_shared.so libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs/armeabi-v7a && \\
 \t\tsh WORK/android-armv7/strip.sh libs/armeabi-v7a/*.so; \\
@@ -194,9 +198,11 @@ copy-libs:
 \trm -rf libs/x86
 \tif test -d "liblinphone-sdk/android-x86"; then \\
 \t\tmkdir -p libs-debug/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/libc++_shared.so libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/lib*-x86.so libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs-debug/x86 && \\
 \t\tmkdir -p libs/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/libc++_shared.so libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/lib*-x86.so libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs/x86 && \\
 \t\tsh WORK/android-x86/strip.sh libs/x86/*.so; \\
