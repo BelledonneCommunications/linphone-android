@@ -110,6 +110,9 @@ class AndroidPreparator(prepare.Preparator):
             self.additional_args += ["-DENABLE_VPX=YES"]
             # self.additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
 
+    def list_feature_target(self):
+        return android_targets['armv7']
+
     def clean(self):
         prepare.Preparator.clean(self)
         if os.path.isfile('Makefile'):
