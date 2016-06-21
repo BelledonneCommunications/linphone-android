@@ -42,8 +42,9 @@ public class WelcomeFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_welcome, container, false);
 
+		LinphoneManager.getInstance().getCodecDownloader().setFileDirection(getContext().getFilesDir().toString());
 		if (LinphonePreferences.instance().isFirstLaunch() && Version.getCpuAbis().contains("armeabi-v7a")
-				&& !Version.getCpuAbis().contains("x86") && !CodecDownloader.codecExist(getContext())) {
+				&& !Version.getCpuAbis().contains("x86") && !CodecDownloader.codecExist()) {
 			LinphoneManager.getInstance().getCodecDownloader().startDownload(getContext(), null);
 		}
 

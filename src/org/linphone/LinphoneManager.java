@@ -291,7 +291,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			public void startDownload(Context context, Object obj) {
 				box = (CheckBoxPreference)obj;
 				ctxt = context;
-				this.setFileDirection(ctxt.getFilesDir().toString());
 				askPopUp();
 			}
 

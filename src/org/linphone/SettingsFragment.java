@@ -572,7 +572,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
-			if (pt.getMime().equals("H264") && CodecDownloader.codecExist(ctxt))
+			if (pt.getMime().equals("H264") && CodecDownloader.codecExist())
 				codec.setSummary(CodecDownloader.getLicenseMessage());
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
@@ -582,7 +582,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					boolean enable = (Boolean) newValue;
 					try {
 						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
-								&& pt.getMime().equals("H264") && !CodecDownloader.codecExist(ctxt)) {
+								&& pt.getMime().equals("H264") && !CodecDownloader.codecExist()) {
 							LinphoneManager.getInstance().getCodecDownloader().startDownload(ctxt, codec);
 						}
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
