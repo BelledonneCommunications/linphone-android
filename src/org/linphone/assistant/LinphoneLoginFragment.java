@@ -22,13 +22,16 @@ import org.linphone.R;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
@@ -36,16 +39,22 @@ import android.widget.Toast;
 public class LinphoneLoginFragment extends Fragment implements OnClickListener, TextWatcher {
 	private EditText login, password, displayName;
 	private Button apply;
+	private TextView forgotPassword;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_linphone_login, container, false);
+
+		String url = "http://linphone.org/free-sip-service.html&action=recover";
 		
 		login = (EditText) view.findViewById(R.id.assistant_username);
 		login.addTextChangedListener(this);
 		password = (EditText) view.findViewById(R.id.assistant_password);
 		password.addTextChangedListener(this);
+		forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
+		forgotPassword.setText(Html.fromHtml("<a href=\"" + url + "\"'>"+ getString(R.string.forgot_password) + "</a>"));
+		forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
 		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
