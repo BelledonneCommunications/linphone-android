@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.mediastream.Version;
@@ -42,9 +43,8 @@ public class WelcomeFragment extends Fragment implements OnClickListener {
 		View view = inflater.inflate(R.layout.assistant_welcome, container, false);
 
 		if (LinphonePreferences.instance().isFirstLaunch() && Version.getCpuAbis().contains("armeabi-v7a")
-			&& !Version.getCpuAbis().contains("x86") && !CodecDownloader.codecExist(getContext())) {
-			CodecDownloader download = new CodecDownloader(getContext());
-				download.askPopUp("Do you want to download h264 codec?","No","Yes");
+				&& !Version.getCpuAbis().contains("x86") && !CodecDownloader.codecExist(getContext())) {
+			LinphoneManager.getInstance().getCodecDownloader().startDownload(getContext(), null);
 		}
 
 		createAccount = (Button) view.findViewById(R.id.create_account);

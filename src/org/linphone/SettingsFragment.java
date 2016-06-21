@@ -557,7 +557,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (final PayloadType pt : lc.getVideoCodecs()) {
-			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
+			final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMime());
 
 			if (!pt.getMime().equals("VP8")) {
@@ -572,6 +572,8 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
+			if (pt.getMime().equals("H264") && CodecDownloader.codecExist(ctxt))
+				codec.setSummary(CodecDownloader.getLicenseMessage());
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -579,11 +581,9 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
-						if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && pt.getMime().equals("H264")) {
-							if (enable && !CodecDownloader.codecExist(ctxt)) {
-								CodecDownloader download = new CodecDownloader(ctxt);
-								download.askPopUp("Do you want to download h264 codec?","No","Yes");
-							}
+						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
+								&& pt.getMime().equals("H264") && !CodecDownloader.codecExist(ctxt)) {
+							LinphoneManager.getInstance().getCodecDownloader().startDownload(ctxt, codec);
 						}
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
