@@ -22,8 +22,11 @@
 #
 ############################################################################
 
+import fnmatch
 import os
+import re
 import sys
+from distutils.spawn import find_executable
 from logging import error, warning, info
 from subprocess import Popen
 sys.dont_write_bytecode = True
@@ -80,6 +83,9 @@ class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
         prepare.Preparator.__init__(self, targets)
+        self.min_supported_ndk = 10
+        self.max_supported_ndk = 11
+        self.unsupported_ndk_version = None
         self.release_with_debug_info = True
         self.veryclean = True
         self.show_gpl_disclaimer = True
@@ -113,6 +119,53 @@ class AndroidPreparator(prepare.Preparator):
     def list_feature_target(self):
         return android_targets['armv7']
 
+    def check_ndk_version(self):
+        retval = True
+        ndk_build = find_executable('ndk-build')
+        ndk_path = os.path.dirname(ndk_build)
+        # NDK prior to r11 had a RELEASE.TXT file holding the version number
+        release_file = os.path.join(ndk_path, 'RELEASE.TXT')
+        if os.path.isfile(release_file):
+            version = open(release_file).read().strip()
+            res = re.match('^r(\d+)(.*)$', version)
+            version = int(res.group(1))
+            retval = False
+        else:
+            # Hack to find the NDK version since the RELEASE.TXT file is no longer there
+            python_config_files = []
+            for root, dirnames, filenames in os.walk(ndk_path):
+                for filename in fnmatch.filter(filenames, 'python-config'):
+                    python_config_files.append(os.path.join(root, filename))
+            if len(python_config_files) > 0:
+                version = open(python_config_files[0]).readlines()[0]
+                res = re.match('^.*/aosp-ndk-r(\d+).*$', version)
+                version = int(res.group(1))
+                retval = False
+            else:
+                error("Could not get Android NDK version!")
+                sys.exit(-1)
+        if retval == False and (version < self.min_supported_ndk or version > self.max_supported_ndk):
+            self.unsupported_ndk_version = version
+            retval = True
+        return retval
+
+    def check_environment(self):
+        ret = 0
+        ret_sdk = not self.check_is_installed('android', 'Android SDK tools')
+        ret_ndk = not self.check_is_installed('ndk-build', 'Android NDK r{}'.format(self.max_supported_ndk))
+        if not ret_ndk:
+            ret_ndk = self.check_ndk_version()
+        ret |= ret_sdk
+        ret |= ret_ndk
+        ret |= prepare.Preparator.check_environment(self)
+        return ret
+
+    def show_environment_errors(self):
+        if self.unsupported_ndk_version is not None:
+            error("Unsupported Android NDK r{}. Please install version r{}.".format(self.unsupported_ndk_version, self.max_supported_ndk))
+        else:
+            prepare.Preparator.show_environment_errors(self)
+
     def clean(self):
         prepare.Preparator.clean(self)
         if os.path.isfile('Makefile'):
@@ -122,7 +175,7 @@ class AndroidPreparator(prepare.Preparator):
         if os.path.isdir('liblinphone-sdk') and not os.listdir('liblinphone-sdk'):
             os.rmdir('liblinphone-sdk')
 
-    def generate_makefile(self, generator):
+    def generate_makefile(self, generator, project_file=''):
         platforms = self.args.target
         arch_targets = ""
         for arch in platforms:
@@ -313,8 +366,8 @@ help: help-prepare-options
 def main():
     preparator = AndroidPreparator()
     preparator.parse_args()
-    if preparator.check_tools() != 0:
-        preparator.show_missing_dependencies()
+    if preparator.check_environment() != 0:
+        preparator.show_environment_errors()
         return 1
     return preparator.run()
 
