@@ -17,11 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.mediastream.Version;
-import org.linphone.tools.CodecDownloader;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -41,12 +37,6 @@ public class WelcomeFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_welcome, container, false);
-
-		LinphoneManager.getInstance().getCodecDownloader().setFileDirection(getContext().getFilesDir().toString());
-		if (LinphonePreferences.instance().isFirstLaunch() && Version.getCpuAbis().contains("armeabi-v7a")
-				&& !Version.getCpuAbis().contains("x86") && !CodecDownloader.codecExist()) {
-			LinphoneManager.getInstance().getCodecDownloader().startDownload(getContext(), null);
-		}
 
 		createAccount = (Button) view.findViewById(R.id.create_account);
 		createAccount.setOnClickListener(this);

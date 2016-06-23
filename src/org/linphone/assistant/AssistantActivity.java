@@ -27,12 +27,13 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.tools.CodecDownloader;
 
 import android.Manifest;
 import android.app.Activity;
@@ -242,10 +243,10 @@ private static AssistantActivity instance;
 			if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
 			} else {
-				success();
+				launchDownloadCodec();
 			}
 		} else {
-			success();
+			launchDownloadCodec();
 		}
 	}
 
@@ -260,7 +261,7 @@ private static AssistantActivity instance;
 				back.setVisibility(View.VISIBLE);
 				cancel.setEnabled(false);
 			} else {
-				success();
+				launchDownloadCodec();
 			}
 		} else {
 			checkAndRequestAudioPermission();
@@ -351,6 +352,22 @@ private static AssistantActivity instance;
 	public void loadLinphoneConfig(){
 		//LinphoneManager.getInstance().loadConfig();
 		//LinphoneManager.getInstance().restartLinphoneCore();
+	}
+
+	private void launchDownloadCodec() {
+		CodecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !CodecDownloader.codecExist()) {
+			CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
+			changeFragment(codecFragment);
+			currentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
+			back.setVisibility(View.VISIBLE);
+			cancel.setEnabled(false);
+		} else
+			endDownloadCodec();
+	}
+
+	public void endDownloadCodec() {
+		success();
 	}
 
 	public void saveCreatedAccount(String username, String password, String displayName, String domain, TransportType transport) {
@@ -484,7 +501,7 @@ private static AssistantActivity instance;
 	}
 
 	public void isEchoCalibrationFinished() {
-		success();
+		launchDownloadCodec();
 	}
 
 	public Dialog createErrorDialog(LinphoneProxyConfig proxy, String message){

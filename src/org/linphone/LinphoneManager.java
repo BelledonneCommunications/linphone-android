@@ -39,6 +39,8 @@ import java.util.TimerTask;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
+import org.linphone.core.CodecDownloadAction;
+import org.linphone.core.CodecDownloadListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneCall;
@@ -142,6 +144,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private LinphonePreferences mPrefs;
 	private LinphoneCore mLc;
 	private CodecDownloader mCodecDownloader;
+	private CodecDownloadListener mCodecListener;
+	private CodecDownloadAction mCodecAction;
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
@@ -220,116 +224,94 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.enableSpeaker(speakerOn);
 	}
 
-	private void initCodecDownloader() {
-		mCodecDownloader = new CodecDownloader() {
-			Context ctxt = mServiceContext;
+	public void initCodecDownloader() {
+		mCodecListener = new CodecDownloadListener() {
 			ProgressDialog progress;
-			CheckBoxPreference box;
+			int box = 1;
+			int ctxt = 0;
 
 			@Override
-			public void listenerDownloadStarting() {
-				if (mServiceContext == null) return;
+			public void listenerUpdateProgressBar(final int current, final int max) {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						progress = new ProgressDialog(ctxt);
-						progress.setCanceledOnTouchOutside(false);
-						progress.setCancelable(false);
-						progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+						if (progress == null) {
+							progress = new ProgressDialog((Context)LinphoneManager.getInstance().getCodecDownloader().getUserData(ctxt));
+							progress.setCanceledOnTouchOutside(false);
+							progress.setCancelable(false);
+							progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+						} else if (current <= max) {
+							progress.setMessage("Downloading OpenH264");
+							progress.setMax(max);
+							progress.setProgress(current);
+							progress.show();
+						} else {
+							progress.dismiss();
+							progress = null;
+							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(((Context)LinphoneManager.getInstance().getCodecDownloader().getUserData(ctxt)).getFilesDir() + "/" + CodecDownloader.getNameLib());
+							LinphoneManager.getLc().reloadMsPlugins(null);
+							if (LinphoneManager.getInstance().getCodecDownloader().getUserDataSize() > box
+									&& LinphoneManager.getInstance().getCodecDownloader().getUserData(box) != null)
+								((CheckBoxPreference)LinphoneManager.getInstance().getCodecDownloader().getUserData(box)).setSummary(CodecDownloader.getLicenseMessage());
+						}
 					}
 				});
 			}
 
 			@Override
-			public void listenerUpdateMsg(final int now, final int max) {
-				if (progress == null) return;
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						progress.setMessage("Downloading OpenH264");
-						progress.setMax(max);
-						progress.setProgress(now);
-						progress.show();
-					}
-				});
-			}
-
-			@Override
-			public void listenerDownloadEnding() {
-				if (progress == null) return;
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						progress.dismiss();
-						LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(ctxt.getFilesDir()+"/" + CodecDownloader.getNameLib());
-						LinphoneManager.getLc().reloadMsPlugins(null);
-						AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
-						builder.setMessage(CodecDownloader.getLicenseMessage() + " downloaded");
-						builder.setCancelable(false);
-						builder.setNeutralButton("Ok", null);
-						builder.show();
-						if (box != null) box.setSummary(CodecDownloader.getLicenseMessage());
-					}
-				});
-			}
-
-			@Override
-			public void listenerDownloadFailed(final String error) {
+			public void listenerDownloadFailed (final String error){
 				if (progress == null) return;
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
 						if (progress != null) progress.dismiss();
-						AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
+						AlertDialog.Builder builder = new AlertDialog.Builder((Context)LinphoneManager.getInstance().getCodecDownloader().getUserData(ctxt));
 						builder.setMessage(error);
+						builder.setCancelable(false);
+						builder.setNeutralButton("Ok", null);
 						builder.show();
 					}
 				});
 			}
-
+		};
+		mCodecAction = new CodecDownloadAction() {
 			@Override
-			public void startDownload(Context context, Object obj) {
-				box = (CheckBoxPreference)obj;
-				ctxt = context;
+			public void startDownload() {
 				askPopUp();
 			}
 
-
 			public void askPopUp() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
+				AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
 				builder.setCancelable(false);
-				AlertDialog.Builder show = builder.setMessage("Do you want to download "
+				AlertDialog.Builder show = builder.setMessage("Do you agree to download "
 						+ CodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (which == DialogInterface.BUTTON_POSITIVE)
 							mCodecDownloader.downloadCodec();
-					}
-				});
+						}
+					});
 				builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (which == DialogInterface.BUTTON_NEGATIVE){
 							// Disable H264
-							PayloadType h264 = null;
-							for (PayloadType pt : mLc.getVideoCodecs()) {
-								if (pt.getMime().equals("H264")) h264 = pt;
-							}
-
-							if (h264 == null) return;
-
-							if (LinphonePreferences.instance().isFirstLaunch()) {
-								try {
-									mLc.enablePayloadType(h264, false);
-								} catch (LinphoneCoreException e) {
-									e.printStackTrace();
-								}
-							}
 						}
 					}
 				}).show();
 			}
 		};
+		mCodecDownloader = new CodecDownloader();
+		mCodecDownloader.setCodecDownloadlistener(mCodecListener);
+		mCodecDownloader.setCodecDownloadAction(mCodecAction);
+	}
+
+	public CodecDownloadListener getCodecDownloadListener() {
+		return mCodecListener;
+	}
+
+	public CodecDownloadAction getCodecDownloadAction() {
+		return mCodecAction;
 	}
 
 	public CodecDownloader getCodecDownloader(){

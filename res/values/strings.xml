@@ -78,6 +78,9 @@
 	<string name="assistant_account_not_validated">Your account has not been validated yet.</string>
 	<string name="assistant_account_validated">Your account has been validated.</string>
 	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
+	<string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>
+	<string name="assistant_codec_downloading">Downloading OpenH264 Video Codec provided by Cisco Systems, Inc.</string>
+	<string name="assistant_codec_downloaded">OpenH264 Video Codec provided by Cisco Systems, Inc. downloaded.</string>
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>

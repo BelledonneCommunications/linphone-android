@@ -37,7 +37,6 @@ import org.linphone.tools.CodecDownloader;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -540,7 +539,6 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initVideoSettings() {
-		final Context ctxt = LinphoneManager.getInstance().getContext();
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 		initializePreferredVideoFpsPreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_fps_key)));
 		EditTextPreference bandwidth = (EditTextPreference) findPreference(getString(R.string.pref_bandwidth_limit_key));
@@ -581,9 +579,14 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
+						CodecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
 						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
 								&& pt.getMime().equals("H264") && !CodecDownloader.codecExist()) {
-							LinphoneManager.getInstance().getCodecDownloader().startDownload(ctxt, codec);
+							LinphoneManager.getInstance().getCodecDownloader().setCodecDownloadlistener(LinphoneManager.getInstance().getCodecDownloadListener());
+							LinphoneManager.getInstance().getCodecDownloader().setCodecDownloadAction(LinphoneManager.getInstance().getCodecDownloader().getCodecDownloadAction());
+							LinphoneManager.getInstance().getCodecDownloader().setUserData(0,LinphoneManager.getInstance().getContext());
+							LinphoneManager.getInstance().getCodecDownloader().setUserData(1,codec);
+							LinphoneManager.getInstance().getCodecDownloader().getCodecDownloadAction().startDownload();
 						}
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
