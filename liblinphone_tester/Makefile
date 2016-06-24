@@ -14,7 +14,7 @@ copy-libs:
 	mkdir -p assets/config_files
 	if test -d "../liblinphone-sdk/android-arm"; then \
 		mkdir -p libs/armeabi && \
-		cp -f ../liblinphone-sdk/android-arm/lib/libc++_shared.so libs/armeabi && \
+		cp -f ../liblinphone-sdk/android-arm/lib/libgnustl_shared.so libs/armeabi && \
 		cp -f ../liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs/armeabi && \
 		cp -f ../liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs/armeabi && \
 		cp -f ../liblinphone-sdk/android-arm/share/linphone/rootca.pem assets/config_files; \
@@ -26,7 +26,7 @@ copy-libs:
 	rm -rf libs/armeabi-v7a
 	if test -d "../liblinphone-sdk/android-armv7"; then \
 		mkdir -p libs/armeabi-v7a && \
-		cp -f ../liblinphone-sdk/android-armv7/lib/libc++_shared.so libs/armeabi-v7a && \
+		cp -f ../liblinphone-sdk/android-armv7/lib/libgnustl_shared.so libs/armeabi-v7a && \
 		cp -f ../liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs/armeabi-v7a && \
 		cp -f ../liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs/armeabi-v7a && \
 		cp -f ../liblinphone-sdk/android-armv7/share/linphone/rootca.pem assets/config_files; \
@@ -38,7 +38,7 @@ copy-libs:
 	rm -rf libs/x86
 	if test -d "../liblinphone-sdk/android-x86"; then \
 		mkdir -p libs/x86 && \
-		cp -f ../liblinphone-sdk/android-x86/lib/libc++_shared.so libs/x86 && \
+		cp -f ../liblinphone-sdk/android-x86/lib/libgnustl_shared.so libs/x86 && \
 		cp -f ../liblinphone-sdk/android-x86/lib/lib*-x86.so libs/x86 && \
 		cp -f ../liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs/x86 && \
 		cp -f ../liblinphone-sdk/android-x86/share/linphone/rootca.pem assets/config_files; \
