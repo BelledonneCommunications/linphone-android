@@ -22,8 +22,11 @@
 #
 ############################################################################
 
+import fnmatch
 import os
+import re
 import sys
+from distutils.spawn import find_executable
 from logging import error, warning, info
 from subprocess import Popen
 sys.dont_write_bytecode = True
@@ -80,6 +83,10 @@ class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
         prepare.Preparator.__init__(self, targets)
+        self.min_supported_ndk = 10
+        self.max_supported_ndk = 11
+        self.unsupported_ndk_version = None
+        self.release_with_debug_info = True
         self.veryclean = True
         self.show_gpl_disclaimer = True
         self.argparser.add_argument('-ac', '--all-codecs', help="Enable all codecs, including the non-free ones", action='store_true')
@@ -109,6 +116,56 @@ class AndroidPreparator(prepare.Preparator):
             self.additional_args += ["-DENABLE_VPX=YES"]
             # self.additional_args += ["-DENABLE_X264=YES"] # Do not activate x264 because it has text relocation issues
 
+    def list_feature_target(self):
+        return android_targets['armv7']
+
+    def check_ndk_version(self):
+        retval = True
+        ndk_build = find_executable('ndk-build')
+        ndk_path = os.path.dirname(ndk_build)
+        # NDK prior to r11 had a RELEASE.TXT file holding the version number
+        release_file = os.path.join(ndk_path, 'RELEASE.TXT')
+        if os.path.isfile(release_file):
+            version = open(release_file).read().strip()
+            res = re.match('^r(\d+)(.*)$', version)
+            version = int(res.group(1))
+            retval = False
+        else:
+            # Hack to find the NDK version since the RELEASE.TXT file is no longer there
+            python_config_files = []
+            for root, dirnames, filenames in os.walk(ndk_path):
+                for filename in fnmatch.filter(filenames, 'python-config'):
+                    python_config_files.append(os.path.join(root, filename))
+            if len(python_config_files) > 0:
+                version = open(python_config_files[0]).readlines()[0]
+                res = re.match('^.*/aosp-ndk-r(\d+).*$', version)
+                version = int(res.group(1))
+                retval = False
+            else:
+                error("Could not get Android NDK version!")
+                sys.exit(-1)
+        if retval == False and (version < self.min_supported_ndk or version > self.max_supported_ndk):
+            self.unsupported_ndk_version = version
+            retval = True
+        return retval
+
+    def check_environment(self):
+        ret = 0
+        ret_sdk = not self.check_is_installed('android', 'Android SDK tools')
+        ret_ndk = not self.check_is_installed('ndk-build', 'Android NDK r{}'.format(self.max_supported_ndk))
+        if not ret_ndk:
+            ret_ndk = self.check_ndk_version()
+        ret |= ret_sdk
+        ret |= ret_ndk
+        ret |= prepare.Preparator.check_environment(self)
+        return ret
+
+    def show_environment_errors(self):
+        if self.unsupported_ndk_version is not None:
+            error("Unsupported Android NDK r{}. Please install version r{}.".format(self.unsupported_ndk_version, self.max_supported_ndk))
+        else:
+            prepare.Preparator.show_environment_errors(self)
+
     def clean(self):
         prepare.Preparator.clean(self)
         if os.path.isfile('Makefile'):
@@ -118,7 +175,7 @@ class AndroidPreparator(prepare.Preparator):
         if os.path.isdir('liblinphone-sdk') and not os.listdir('liblinphone-sdk'):
             os.rmdir('liblinphone-sdk')
 
-    def generate_makefile(self, generator):
+    def generate_makefile(self, generator, project_file=''):
         platforms = self.args.target
         arch_targets = ""
         for arch in platforms:
@@ -159,9 +216,11 @@ copy-libs:
 \trm -rf libs/armeabi
 \tif test -d "liblinphone-sdk/android-arm"; then \\
 \t\tmkdir -p libs-debug/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/libgnustl_shared.so libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs-debug/armeabi && \\
 \t\tmkdir -p libs/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/libgnustl_shared.so libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs/armeabi && \\
 \t\tsh WORK/android-arm/strip.sh libs/armeabi/*.so; \\
@@ -176,9 +235,11 @@ copy-libs:
 \trm -rf libs/armeabi-v7a
 \tif test -d "liblinphone-sdk/android-armv7"; then \\
 \t\tmkdir -p libs-debug/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/libgnustl_shared.so libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs-debug/armeabi-v7a && \\
 \t\tmkdir -p libs/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/libgnustl_shared.so libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs/armeabi-v7a && \\
 \t\tsh WORK/android-armv7/strip.sh libs/armeabi-v7a/*.so; \\
@@ -193,9 +254,11 @@ copy-libs:
 \trm -rf libs/x86
 \tif test -d "liblinphone-sdk/android-x86"; then \\
 \t\tmkdir -p libs-debug/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/libgnustl_shared.so libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/lib*-x86.so libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs-debug/x86 && \\
 \t\tmkdir -p libs/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/libgnustl_shared.so libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/lib*-x86.so libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs/x86 && \\
 \t\tsh WORK/android-x86/strip.sh libs/x86/*.so; \\
@@ -303,8 +366,8 @@ help: help-prepare-options
 def main():
     preparator = AndroidPreparator()
     preparator.parse_args()
-    if preparator.check_tools() != 0:
-        preparator.show_missing_dependencies()
+    if preparator.check_environment() != 0:
+        preparator.show_environment_errors()
         return 1
     return preparator.run()
 
