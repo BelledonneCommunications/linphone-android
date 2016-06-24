@@ -176,7 +176,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			}
 			preference.setSummary(newValue.toString());
 			return true;
-		}		
+		}
 	};
 	OnPreferenceChangeListener prefixChangedListener = new OnPreferenceChangeListener() {
 		@Override
@@ -231,6 +231,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			} else {
 				mPrefs.setReplacePlusByZeroZero(n, value);
 			}
+			return true;
+		}
+	};
+	OnPreferenceChangeListener friendlistSubscribeListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean value = (Boolean) newValue;
+			LinphoneManager.getInstance().subscribeFriendList(value);
 			return true;
 		}
 	};
@@ -362,6 +370,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 
     	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(7);
 		escape.setOnPreferenceChangeListener(escapeChangedListener);
+		if(!isNewAccount){
+			escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
+		}
+
+		CheckBoxPreference friendlistSubscribe = (CheckBoxPreference) advanced.getPreference(8);
+		friendlistSubscribe.setOnPreferenceChangeListener(friendlistSubscribeListener);
 		if(!isNewAccount){
 			escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
 		}

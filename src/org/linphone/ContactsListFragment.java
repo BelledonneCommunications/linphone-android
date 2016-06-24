@@ -459,6 +459,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			}
 
 			CheckBox delete = (CheckBox) view.findViewById(R.id.delete);
+			ImageView linphoneFriend = (ImageView) view.findViewById(R.id.friendLinphone);
 			
 			TextView name = (TextView) view.findViewById(R.id.name);
 			name.setText(contact.getFullName());
@@ -474,7 +475,13 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 					separatorText.setText(String.valueOf(fullName.charAt(0)));
 				}
 			}
-			
+
+			if(contact.isInLinphoneFriendList()){
+				linphoneFriend.setVisibility(View.VISIBLE);
+			} else {
+				linphoneFriend.setVisibility(View.GONE);
+			}
+
 			ImageView icon = (ImageView) view.findViewById(R.id.contact_picture);
 			if (contact.hasPhoto()) {
 				LinphoneUtils.setImagePictureFromUri(getActivity(), icon, contact.getPhotoUri(), contact.getThumbnailUri());

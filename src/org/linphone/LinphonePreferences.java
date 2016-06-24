@@ -662,6 +662,15 @@ public class LinphonePreferences {
 		prxCfg.done();
 	}
 
+	public boolean isFriendlistsubscriptionEnabled() {
+		return getConfig().getBool("app", "friendlist_subscription_enabled", false);
+	}
+
+	public void enabledFriendlistSubscription(boolean enabled) {
+		getConfig().setBool("app", "friendlist_subscription_enabled", enabled);
+
+	}
+
 	public void setDefaultAccount(int accountIndex) {
 		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		if (accountIndex >= 0 && accountIndex < prxCfgs.length)

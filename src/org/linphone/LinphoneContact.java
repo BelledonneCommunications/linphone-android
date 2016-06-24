@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
+import org.linphone.core.PresenceBasicStatus;
 import org.linphone.mediastream.Log;
 
 import android.content.ContentProviderOperation;
@@ -444,6 +445,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	
 	public boolean isLinphoneFriend() {
 		return friend != null;
+	}
+
+	public boolean isInLinphoneFriendList() {
+		return (friend != null && friend.getPresenceModel() != null &&  friend.getPresenceModel().getBasicStatus().equals(PresenceBasicStatus.Open));
 	}
 
 	public void setFriend(LinphoneFriend f) {

@@ -221,7 +221,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
 		userAgent.append(" (");
 		userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
-		userAgent.append(Build.DEVICE + " " + Build.MODEL +  " Android/" + Build.VERSION.SDK_INT);
+		userAgent.append(Build.DEVICE + " " + Build.MODEL + " Android/" + Build.VERSION.SDK_INT);
 		userAgent.append(")");
 		return userAgent.toString();
 	}
@@ -378,6 +378,15 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			lc.setPresenceModel(model);
 		}
 	}
+
+	public void subscribeFriendList(boolean enabled){
+		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
+		if(lc != null ) {
+			LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
+			mFriendList.enableSubscriptions(enabled);
+		}
+	}
+
 
 	public static synchronized final LinphoneManager getInstance() {
 		if (instance != null) return instance;
@@ -667,6 +676,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
 		mLc.setUserCertificatesPath(mUserCertificatePath);
+		subscribeFriendList(mPrefs.isFriendlistsubscriptionEnabled());
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 
 		int availableCores = Runtime.getRuntime().availableProcessors();
@@ -897,7 +907,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		Log.i("New global state [",state,"]");
 		if (state == GlobalState.GlobalOn){
 			try {
-					initLiblinphone(lc);
+				initLiblinphone(lc);
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
@@ -1032,7 +1042,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				}
 			}
 		}
-
 		if (state == State.CallUpdatedByRemote) {
 			// If the correspondent proposes video while audio call
 			boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
