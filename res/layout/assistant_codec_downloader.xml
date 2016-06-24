@@ -77,6 +77,17 @@
 		android:layout_toRightOf="@+id/imageView"
 		android:layout_toEndOf="@+id/imageView"/>
 
+	<Button
+		style="@style/font7"
+		android:text="Ok"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/answerOk"
+		android:layout_alignTop="@+id/answerYes"
+		android:layout_centerHorizontal="true"/>
+
 	<TextView
 		style="@style/font7"
 		android:text="@string/assistant_codec_downloaded"

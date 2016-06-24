@@ -33,7 +33,7 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.tools.CodecDownloader;
+import org.linphone.tools.OpenH264Helper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
@@ -570,8 +570,8 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
-			if (pt.getMime().equals("H264") && CodecDownloader.codecExist())
-				codec.setSummary(CodecDownloader.getLicenseMessage());
+			if (pt.getMime().equals("H264") && OpenH264Helper.codecExist())
+				codec.setSummary(OpenH264Helper.getLicenseMessage());
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -579,14 +579,14 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
-						CodecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+						OpenH264Helper.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
 						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
-								&& pt.getMime().equals("H264") && !CodecDownloader.codecExist()) {
-							LinphoneManager.getInstance().getCodecDownloader().setCodecDownloadlistener(LinphoneManager.getInstance().getCodecDownloadListener());
-							LinphoneManager.getInstance().getCodecDownloader().setCodecDownloadAction(LinphoneManager.getInstance().getCodecDownloader().getCodecDownloadAction());
-							LinphoneManager.getInstance().getCodecDownloader().setUserData(0,LinphoneManager.getInstance().getContext());
-							LinphoneManager.getInstance().getCodecDownloader().setUserData(1,codec);
-							LinphoneManager.getInstance().getCodecDownloader().getCodecDownloadAction().startDownload();
+								&& pt.getMime().equals("H264") && !OpenH264Helper.codecExist()) {
+							LinphoneManager.getInstance().getOpenH264Helper().setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
+							LinphoneManager.getInstance().getOpenH264Helper().setOpenH264HelperAction(LinphoneManager.getInstance().getOpenH264Helper().getOpenH264HelperAction());
+							LinphoneManager.getInstance().getOpenH264Helper().setUserData(0,LinphoneManager.getInstance().getContext());
+							LinphoneManager.getInstance().getOpenH264Helper().setUserData(1,codec);
+							LinphoneManager.getInstance().getOpenH264Helper().getOpenH264HelperAction().startDownload();
 						}
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {

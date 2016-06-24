@@ -25,16 +25,17 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.CodecDownloadListener;
+import org.linphone.core.OpenH264HelperListener;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.PayloadType;
-import org.linphone.tools.CodecDownloader;
+import org.linphone.tools.OpenH264Helper;
 
 /**
  * @author Erwan CROZE
@@ -50,18 +51,19 @@ public class CodecDownloaderFragment extends Fragment {
 		final TextView question = (TextView) view.findViewById(R.id.question);
 		final TextView downloading = (TextView) view.findViewById(R.id.downloading);
 		final TextView downloaded = (TextView) view.findViewById(R.id.downloaded);
-		final TextView yes = (TextView) view.findViewById(R.id.answerYes);
-		final TextView no = (TextView) view.findViewById(R.id.answerNo);
+		final Button yes = (Button) view.findViewById(R.id.answerYes);
+		final Button no = (Button) view.findViewById(R.id.answerNo);
+		final Button ok = (Button) view.findViewById(R.id.answerOk);
 		final ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
 		final TextView downloadingInfo = (TextView) view.findViewById(R.id.downloadingInfo);
 
-		CodecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+		OpenH264Helper.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
 
-		final CodecDownloader codecDownloader = new CodecDownloader();
-		final CodecDownloadListener codecListener = new CodecDownloadListener() {
+		final OpenH264Helper codecDownloader = new OpenH264Helper();
+		final OpenH264HelperListener codecListener = new OpenH264HelperListener() {
 
 			@Override
-			public void listenerUpdateProgressBar(final int current, final int max) {
+			public void OnProgress(final int current, final int max) {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -74,10 +76,11 @@ public class CodecDownloaderFragment extends Fragment {
 						} else {
 							downloadingInfo.setVisibility(View.INVISIBLE);
 							bar.setVisibility(View.INVISIBLE);
-							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(LinphoneManager.getInstance().getContext().getFilesDir() + "/" + CodecDownloader.getNameLib());
+							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(LinphoneManager.getInstance().getContext().getFilesDir() + "/" + OpenH264Helper.getNameLib());
 							LinphoneManager.getLc().reloadMsPlugins(null);
 							downloading.setVisibility(View.INVISIBLE);
 							downloaded.setVisibility(View.VISIBLE);
+							enabledH264(true);
 							AssistantActivity.instance().endDownloadCodec();
 						}
 					}
@@ -85,7 +88,7 @@ public class CodecDownloaderFragment extends Fragment {
 			}
 
 			@Override
-			public void listenerDownloadFailed (final String error){
+			public void OnDownloadFailure (final String error){
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -95,18 +98,22 @@ public class CodecDownloaderFragment extends Fragment {
 						no.setVisibility(View.INVISIBLE);
 						bar.setVisibility(View.INVISIBLE);
 						downloadingInfo.setVisibility(View.INVISIBLE);
-						downloaded.setText(error);
+						downloaded.setText("Sorry an error has occurred.");
 						downloaded.setVisibility(View.VISIBLE);
+						ok.setVisibility(View.VISIBLE);
+						enabledH264(false);
+						AssistantActivity.instance().endDownloadCodec();
 					}
 				});
 			}
 		};
 
-		codecDownloader.setCodecDownloadlistener(codecListener);
+		codecDownloader.setOpenH264HelperListener(codecListener);
 		downloading.setVisibility(View.INVISIBLE);
 		downloaded.setVisibility(View.INVISIBLE);
 		bar.setVisibility(View.INVISIBLE);
 		downloadingInfo.setVisibility(View.INVISIBLE);
+		ok.setVisibility(View.INVISIBLE);
 
 		yes.setOnClickListener(new View.OnClickListener() {
 								   @Override
@@ -115,6 +122,7 @@ public class CodecDownloaderFragment extends Fragment {
 									   yes.setVisibility(View.INVISIBLE);
 									   no.setVisibility(View.INVISIBLE);
 									   downloading.setVisibility(View.VISIBLE);
+									   ok.setVisibility(View.INVISIBLE);
 									   bar.setVisibility(View.VISIBLE);
 									   downloadingInfo.setVisibility(View.INVISIBLE);
 									   codecDownloader.downloadCodec();
@@ -124,23 +132,26 @@ public class CodecDownloaderFragment extends Fragment {
 		no.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				PayloadType h264 = null;
-				for (PayloadType pt : LinphoneManager.getLc().getVideoCodecs()) {
-					if (pt.getMime().equals("H264")) h264 = pt;
-				}
-
-				if (h264 != null) {
-					try {
-						LinphoneManager.getLc().enablePayloadType(h264, false);
-					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
-					}
-				}
-
+				enabledH264(false);
 				AssistantActivity.instance().endDownloadCodec();
 			}
 		});
 
 		return view;
+	}
+
+	private void enabledH264(boolean enable) {
+		PayloadType h264 = null;
+		for (PayloadType pt : LinphoneManager.getLc().getVideoCodecs()) {
+			if (pt.getMime().equals("H264")) h264 = pt;
+		}
+
+		if (h264 != null) {
+			try {
+				LinphoneManager.getLc().enablePayloadType(h264, enable);
+			} catch (LinphoneCoreException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
