@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:gravity="center_vertical"
+    android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	android:paddingTop="5dp"
+    android:background="@drawable/list_selector">
+
+	<CheckBox
+		android:id="@+id/delete_chatroom"
+		android:button="@drawable/checkbox"
+		android:contentDescription="@string/content_description_delete"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:adjustViewBounds="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:visibility="invisible"
+		android:layout_alignParentTop="true"/>
+	
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_centerVertical="true"
+	    android:orientation="horizontal">
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:gravity="center">
+
+			<RelativeLayout
+				android:id="@+id/avatar_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true">
+
+				<ImageView
+					android:id="@+id/contact_picture"
+					android:src="@drawable/avatar"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:adjustViewBounds="true"/>
+
+				<ImageView
+					android:id="@+id/mask"
+					android:src="@drawable/avatar_mask"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:adjustViewBounds="true"/>
+
+			</RelativeLayout>
+
+			<TextView
+				android:id="@+id/date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/avatar_layout"
+				android:layout_marginTop="5dp"
+				android:singleLine="true"
+				style="@style/font2"/>
+
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingLeft="10dp">
+
+			<TextView
+				android:id="@+id/sipUri"
+				android:lines="1"
+				android:ellipsize="end"
+				android:singleLine="true"
+				style="@style/font6"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="30dp"/>
+
+			<TextView
+				android:id="@+id/unreadMessages"
+				android:layout_width="20dp"
+				android:layout_height="20dp"
+				android:background="@drawable/chat_list_indicator"
+				android:contentDescription="@string/content_description_unread_chat_message"
+				style="@style/font18"
+				android:gravity="center"
+				android:singleLine="true"
+				android:layout_above="@+id/lastMessage"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"/>
+
+			<TextView
+				android:id="@+id/lastMessage"
+				android:maxLines="2"
+				android:ellipsize="end"
+				android:layout_below="@id/sipUri"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="30dp"
+				style="@style/font11"/>
+
+		</RelativeLayout>
+	    
+	</LinearLayout>
+    
+</RelativeLayout>

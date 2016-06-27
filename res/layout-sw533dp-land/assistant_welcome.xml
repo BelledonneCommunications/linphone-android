@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="30dp"
+		android:orientation="vertical">
+
+		<TextView
+			android:text="@string/welcome"
+			style="@style/font6"
+			android:textAllCaps="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"/>
+
+		<TextView
+			android:text="@string/assistant_welcome_desc"
+			style="@style/font11"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="20dp"
+			android:layout_gravity="center"/>
+
+		<TableLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="30dp"
+			android:orientation="horizontal">
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="center"
+			android:layout_margin="10dp">
+
+			<Button
+				android:id="@+id/create_account"
+				android:text="@string/assistant_create_account"
+				android:background="@drawable/assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/assistant_create_account"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="40dp"/>
+
+			<Button
+				android:id="@+id/login_linphone"
+				android:text="@string/assistant_login_linphone"
+				android:background="@drawable/assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/assistant_login_linphone"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="40dp"
+				android:layout_marginLeft="30dp"/>
+		</TableRow>
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="center"
+			android:layout_margin="10dp">
+
+			<Button
+				android:id="@+id/login_generic"
+				android:text="@string/assistant_login_generic"
+				android:background="@drawable/assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/assistant_login_generic"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="40dp"/>
+
+			<Button
+				android:id="@+id/remote_provisioning"
+				android:text="@string/assistant_remote_provisioning"
+				android:background="@drawable/assistant_button"
+				style="@style/font8"
+				android:contentDescription="@string/assistant_remote_provisioning"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="40dp"
+				android:layout_marginLeft="30dp"/>
+
+		</TableRow>
+	</TableLayout>
+
+	</LinearLayout>
+</ScrollView>

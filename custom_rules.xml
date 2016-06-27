@@ -36,6 +36,7 @@
 			<class name="org.linphone.core.PresencePersonImpl" />
 			<class name="org.linphone.core.PresenceServiceImpl" />
 			<class name="org.linphone.core.ErrorInfoImpl" />
+			<class name="org.linphone.core.TunnelConfigImpl" />
 		</javah>
 		<javah outputfile="gen/xml2lpc_jni.h">
 			<classpath>
@@ -126,24 +127,28 @@
 		<zip destfile="liblinphone-android-sdk-${version.name}.zip">
 			<zipfileset dir="libs" prefix="libs" includes="**/*.so" />
 			<zipfileset dir="${out.absolute.dir}" includes="liblinphone.jar" prefix="libs"/>
+			<zipfileset dir="libs-debug" prefix="libs-debug" includes="**/*.so" />
+			<zipfileset dir="${out.absolute.dir}" includes="liblinphone.jar" prefix="libs-debug"/>
 		</zip>
 	</target>
 
 	<target name="linphone-android-sdk">
-                <echo level="info">Creating library output jar file...</echo>
-                <property name="out.library.jar.file" location="${out.absolute.dir}/linphone.jar" />
-                <jar destfile="${out.library.jar.file}">
-                        <fileset dir="${out.classes.absolute.dir}"
-                                includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class"/>
-                        <fileset dir="submodules/linphone/java" >
-                                <include name="common/org/linphone/core/*.java"/>
-                                <include name="j2se/org/linphone/core/*.java"/>
-                        </fileset>
-                </jar>
+		<echo level="info">Creating library output jar file...</echo>
+		<property name="out.library.jar.file" location="${out.absolute.dir}/linphone.jar" />
+		<jar destfile="${out.library.jar.file}">
+			<fileset dir="${out.classes.absolute.dir}"
+				includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/**/*.class  de/timroes/axmlrpc/**/*.class de/timroes/base64/Base64.class"/>
+			<fileset dir="submodules/linphone/java" >
+				<include name="common/org/linphone/core/*.java"/>
+				<include name="j2se/org/linphone/core/*.java"/>
+			</fileset>
+		</jar>
 		<zip destfile="linphone-android-sdk-${version.name}.zip">
-                        <zipfileset dir="libs" prefix="libs" includes="**/*.so" />
-                        <zipfileset dir="${out.absolute.dir}" includes="linphone.jar" prefix="libs"/>
-                </zip>
-        </target>
+			<zipfileset dir="libs" prefix="libs" includes="**/*.so" />
+			<zipfileset dir="${out.absolute.dir}" includes="linphone.jar" prefix="libs"/>
+			<zipfileset dir="libs-debug" prefix="libs-debug" includes="**/*.so" />
+			<zipfileset dir="${out.absolute.dir}" includes="linphone.jar" prefix="libs-debug"/>
+		</zip>
+	</target>
 
 </project>

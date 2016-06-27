@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="30dp"
+		android:gravity="center_horizontal"
+		android:orientation="vertical" >
+
+		<TextView
+			android:text="@string/assistant_create_account"
+			style="@style/font6"
+			android:textAllCaps="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<TextView
+			android:text="@string/assistant_create_account_part_2"
+			style="@style/font11"
+			android:paddingTop="10dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<TextView
+			android:text="@string/assistant_validate_account"
+			style="@style/font11"
+			android:paddingTop="10dp"
+			android:gravity="center"
+			android:layout_gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<Button
+			android:id="@+id/assistant_check"
+			android:text="@string/assistant_finish"
+			android:background="@drawable/assistant_button"
+			android:textColor="@drawable/assistant_button_text_color"
+			style="@style/font8"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_margin="10dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"/>
+
+	</LinearLayout>
+</ScrollView>

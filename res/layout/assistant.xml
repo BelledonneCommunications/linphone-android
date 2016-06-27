@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:background="@color/colorH"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		tools:layout="@layout/status"/>
+
+	<include layout="@layout/assistant_topbar" android:id="@+id/topbar" />
+
+	<LinearLayout
+		android:id="@+id/fragment_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="horizontal" />
+
+</LinearLayout>

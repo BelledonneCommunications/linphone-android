@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone.ui;
 
-import org.linphone.InCallActivity;
+import org.linphone.CallActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
@@ -132,11 +132,11 @@ public class Digit extends Button implements AddressAware {
 		public void displayDebugPopup(){
 			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
 			alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
-			if(LinphonePreferences.instance().isDebugLogsEnabled()) {
+			if(LinphonePreferences.instance().isDebugEnabled()) {
 				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0){
-							LinphonePreferences.instance().enableDebugLogs(false);
+							LinphonePreferences.instance().setDebugEnabled(false);
 							LinphoneCoreFactory.instance().enableLogCollection(false);
 						}
 						if(which == 1) {
@@ -152,7 +152,7 @@ public class Digit extends Button implements AddressAware {
 				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0) {
-							LinphonePreferences.instance().enableDebugLogs(true);
+							LinphonePreferences.instance().setDebugEnabled(true);
 							LinphoneCoreFactory.instance().enableLogCollection(true);
 						}
 					}
@@ -166,8 +166,8 @@ public class Digit extends Button implements AddressAware {
 			if (!mPlayDtmf) return false;
 			if (!linphoneServiceReady()) return true;
 
-			if (InCallActivity.isInstanciated()) {
-				InCallActivity.instance().resetControlsHidingCallBack();
+			if (CallActivity.isInstanciated()) {
+				CallActivity.instance().resetControlsHidingCallBack();
 			}
 			
 			LinphoneCore lc = LinphoneManager.getLc();
@@ -215,7 +215,7 @@ public class Digit extends Button implements AddressAware {
 			}
 			return true;
 		}
-	};
-	
+	}
+
 
 }

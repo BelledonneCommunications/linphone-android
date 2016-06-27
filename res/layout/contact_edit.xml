@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@color/colorH"
+  	android:orientation="vertical">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:background="@color/colorF"
+		android:layout_width="match_parent"
+		android:layout_height="60dp">
+
+		<ImageView
+			android:id="@+id/cancel"
+			android:src="@drawable/cancel_edit"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_cancel_button"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
+
+		<ImageView
+			android:id="@+id/delete_contact"
+			android:src="@drawable/delete"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_delete"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<ImageView
+			android:id="@+id/ok"
+			android:src="@drawable/valid"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_valid"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
+
+	</LinearLayout>
+
+    <ScrollView
+        android:id="@+id/controlsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical" >
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="20dp"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:gravity="center"
+				android:orientation="vertical">
+
+				<RelativeLayout
+					android:id="@+id/avatar_layout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center">
+
+					<ImageView
+						android:id="@+id/contact_picture"
+						android:src="@drawable/avatar"
+						android:contentDescription="@string/content_description_contact_picture"
+						android:layout_width="100dp"
+						android:layout_height="100dp"
+						android:adjustViewBounds="true"
+						android:layout_alignParentLeft="true"
+						android:layout_marginLeft="5dp"/>
+
+					<ImageView
+						android:id="@+id/mask"
+						android:src="@drawable/avatar_mask"
+						android:layout_width="100dp"
+						android:layout_height="100dp"
+						android:adjustViewBounds="true"
+						android:layout_alignParentLeft="true"
+						android:layout_marginLeft="5dp"/>
+
+				</RelativeLayout>
+
+
+				<TextView
+					android:text="@string/contact_last_name"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:paddingTop="10dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/contactLastName"
+					android:background="@drawable/resizable_textfield"
+					style="@style/font6"
+					android:contentDescription="@string/content_description_contact_last_name"
+					android:textCursorDrawable="@null"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:gravity="left"
+					android:paddingRight="5dp"
+					android:inputType="textPersonName|textCapWords"/>
+
+				<TextView
+					android:text="@string/contact_first_name"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:paddingTop="10dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/contactFirstName"
+					android:textCursorDrawable="@null"
+					android:background="@drawable/resizable_textfield"
+					style="@style/font6"
+					android:contentDescription="@string/content_description_contact_first_name"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:gravity="left"
+					android:paddingRight="5dp"
+					android:inputType="textPersonName|textCapWords"/>
+		        
+		    </LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/sip_addresses"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:orientation="vertical">
+
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_gravity="center">
+
+					<TextView
+						android:text="@string/sip_address"
+						style="@style/font13"
+						android:textAllCaps="true"
+						android:layout_centerVertical="true"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+
+					<ImageView
+						android:id="@+id/add_address_field"
+						android:src="@drawable/add_field_default"
+						android:contentDescription="@string/content_description_add"
+						android:layout_alignParentRight="true"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:paddingLeft="5dp"/>
+				</RelativeLayout>
+
+				<LinearLayout
+					android:id="@+id/controls_sip_address"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+
+				</LinearLayout>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/phone_numbers"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:orientation="vertical">
+
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_gravity="center">
+
+					<TextView
+						android:text="@string/phone_number"
+						style="@style/font13"
+						android:textAllCaps="true"
+						android:layout_centerVertical="true"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+
+					<ImageView
+						android:id="@+id/add_number_field"
+						android:src="@drawable/add_field_default"
+						android:contentDescription="@string/content_description_add"
+						android:layout_alignParentRight="true"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:paddingLeft="5dp"/>
+				</RelativeLayout>
+
+				<LinearLayout
+					android:id="@+id/controls_numbers"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+
+				</LinearLayout>
+
+			</LinearLayout>
+
+		</LinearLayout>
+    
+    </ScrollView>
+
+</LinearLayout>

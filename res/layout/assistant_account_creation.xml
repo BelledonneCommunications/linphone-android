@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="30dp"
+		android:orientation="vertical">
+
+		<TextView
+			android:text="@string/assistant_create_account"
+			style="@style/font6"
+			android:textAllCaps="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"/>
+
+		<TextView
+			android:text="@string/assistant_create_account_part_1"
+			style="@style/font11"
+			android:paddingTop="10dp"
+			android:layout_gravity="center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:layout_marginTop="30dp"
+			android:orientation="vertical">
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:id="@+id/username_label"
+					android:text="@string/username"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/username"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:contentDescription="@string/content_description_username_field"
+					android:inputType="text|textEmailAddress"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:singleLine="true"/>
+
+				<TextView
+					android:id="@+id/username_error"
+					android:text="@string/error"
+					style="@style/font20"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:visibility="invisible"/>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:id="@+id/password_label"
+					style="@style/font13"
+					android:text="@string/password"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/password"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="textPassword"
+					android:textCursorDrawable="@null"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
+					android:singleLine="true"/>
+
+				<TextView
+					android:id="@+id/password_error"
+					android:text="@string/error"
+					style="@style/font20"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:visibility="invisible"/>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:id="@+id/confirm_password_label"
+					android:text="@string/confirm_password"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/confirm_password"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="textPassword"
+					android:contentDescription="@string/content_description_confirm_password_field"
+					android:textCursorDrawable="@null"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
+					android:singleLine="true"/>
+
+				<TextView
+					android:id="@+id/confirm_password_error"
+					android:text="@string/error"
+					style="@style/font20"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:visibility="invisible"/>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:id="@+id/email_label"
+					android:text="@string/email"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/email"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="text|textEmailAddress"
+					android:contentDescription="@string/content_description_email_field"
+					android:textCursorDrawable="@null"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
+					android:singleLine="true"/>
+
+				<TextView
+					android:id="@+id/email_error"
+					android:text="@string/error"
+					style="@style/font20"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:visibility="invisible"/>
+
+			</LinearLayout>
+
+			<Button
+				android:id="@+id/assistant_create"
+				android:text="@string/assistant_create_account"
+				android:background="@drawable/assistant_button"
+				android:textColor="@drawable/assistant_button_text_color"
+				style="@style/font8"
+				android:layout_width="wrap_content"
+				android:layout_height="40dp"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:layout_marginTop="20dp"/>
+
+		</LinearLayout>
+	</LinearLayout>
+</ScrollView>

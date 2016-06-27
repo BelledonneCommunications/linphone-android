@@ -28,7 +28,6 @@ import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
@@ -36,11 +35,10 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.purchase.InAppPurchaseActivity;
-import org.linphone.setup.SetupActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
-
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -51,7 +49,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
@@ -76,12 +73,12 @@ public class SettingsFragment extends PreferencesListFragment {
 		initSettings();
 		setListeners();
 		hideSettings();
-		
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
-				
+
 				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
 				Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 
@@ -104,8 +101,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	// Inits the values or the listener on some settings
 	private void initSettings() {
-		//Init accounts on Resume instead of on Create to update the account list when coming back from wizard
-
 		initTunnelSettings();
 		initAudioSettings();
 		initVideoSettings();
@@ -113,25 +108,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		initNetworkSettings();
 		initAdvancedSettings();
 
-		// Add action on About button
-		findPreference(getString(R.string.menu_about_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (LinphoneActivity.isInstanciated()) {
-					LinphoneActivity.instance().displayAbout();
-					return true;
-				}
-				return false;
-			}
-		});
-		findPreference(getString(R.string.setup_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(LinphoneService.instance(), SetupActivity.class);
-				startActivityForResult(intent, WIZARD_INTENT);
-				return true;
-			}
-		});
 		findPreference(getString(R.string.pref_add_account_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -162,28 +138,16 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	// Read the values set in resources and hides the settings accordingly
 	private void hideSettings() {
-		if (!getResources().getBoolean(R.bool.display_about_in_settings)) {
-			hidePreference(R.string.menu_about_key);
-		}
-
 		if (getResources().getBoolean(R.bool.hide_accounts)) {
 			emptyAndHidePreference(R.string.pref_sipaccounts_key);
 		}
 
-		if (getResources().getBoolean(R.bool.hide_wizard)){
-			hidePreference(R.string.setup_key);
-		}
-
-		if(!getResources().getBoolean(R.bool.replace_wizard_with_old_interface)){
+		if(!getResources().getBoolean(R.bool.replace_assistant_with_old_interface)){
 			hidePreference(R.string.pref_add_account_key);
 		}
 
 		if (getResources().getBoolean(R.bool.disable_animations)) {
 			uncheckAndHidePreference(R.string.pref_animation_enable_key);
-		}
-
-		if (!getResources().getBoolean(R.bool.enable_linphone_friends)) {
-			emptyAndHidePreference(R.string.pref_linphone_friend_key);
 		}
 
 		if (getResources().getBoolean(R.bool.disable_chat)) {
@@ -329,7 +293,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			// For each, add menus to configure it
 			String username = mPrefs.getAccountUsername(accountId);
 			String domain = mPrefs.getAccountDomain(accountId);
-			LedPreference account = new LedPreference(LinphoneService.instance());
+			LedPreference account = new LedPreference(getActivity());
 
 			if (username == null) {
 				account.setTitle(getString(R.string.pref_sipaccount));
@@ -361,13 +325,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-				LinphoneAddress addr = null;
-				try {
-					addr = LinphoneCoreFactory.instance().createLinphoneAddress(lpc.getIdentity());
-				} catch (LinphoneCoreException e) {
-					me.setLed(R.drawable.led_disconnected);
-					return;
-				}
+				LinphoneAddress addr = lpc.getAddress();
 				if (addr.getUserName().equals(username) && addr.getDomain().equals(domain)) {
 					if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
 						me.setLed(R.drawable.led_connected);
@@ -393,7 +351,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initMediaEncryptionPreference(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
-		entries.add(getString(R.string.media_encryption_none));
+		entries.add(getString(R.string.pref_none));
 		values.add(getString(R.string.pref_media_encryption_key_none));
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -438,21 +396,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		pref.setValue(key);
 	}
 
-	private void initializeVideoPresetPreferences(ListPreference pref) {
-		List<CharSequence> entries = new ArrayList<CharSequence>();
-		List<CharSequence> values = new ArrayList<CharSequence>();
-		entries.add("default");
-		values.add("default");
-		entries.add("high-fps");
-		values.add("high-fps");
-		entries.add("custom");
-		values.add("custom");
-		setListPreferenceValues(pref, entries, values);
-		String value = mPrefs.getVideoPreset();
-		pref.setSummary(value);
-		pref.setValue(value);
-	}
-
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
@@ -471,7 +414,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initializePreferredVideoFpsPreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
-		entries.add("none");
+		entries.add(getString(R.string.pref_none));
 		values.add("0");
 		for (int i = 5; i <= 30; i += 5) {
 			String str = Integer.toString(i);
@@ -481,7 +424,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		setListPreferenceValues(pref, entries, values);
 		String value = Integer.toString(mPrefs.getPreferredVideoFps());
 		if (value.equals("0")) {
-			value = "none";
+			value = getString(R.string.pref_none);
 		}
 		pref.setSummary(value);
 		pref.setValue(value);
@@ -511,7 +454,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						lc.enablePayloadType(pt, false);
 					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
+						Log.e(e);
 					}
 					continue;
 				} else {
@@ -529,7 +472,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
+						Log.e(e);
 					}
 					return true;
 				}
@@ -548,10 +491,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		CheckBoxPreference adaptiveRateControl = (CheckBoxPreference) findPreference(getString(R.string.pref_adaptive_rate_control_key));
 		adaptiveRateControl.setChecked(mPrefs.isAdaptiveRateControlEnabled());
-
-		ListPreference adaptiveRateAlgorithm = (ListPreference) findPreference(getString(R.string.pref_adaptive_rate_algorithm_key));
-		adaptiveRateAlgorithm.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
-		adaptiveRateAlgorithm.setValue(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
 
 		ListPreference bitrateLimit = (ListPreference) findPreference(getString(R.string.pref_codec_bitrate_limit_key));
 		bitrateLimit.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
@@ -576,16 +515,6 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-
-		findPreference(getString(R.string.pref_adaptive_rate_algorithm_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				mPrefs.setAdaptiveRateAlgorithm(AdaptiveRateAlgorithm.fromString((String) newValue));
-				preference.setSummary(String.valueOf(mPrefs.getAdaptiveRateAlgorithm()));
-				return true;
-			}
-		});
-
 
 		findPreference(getString(R.string.pref_codec_bitrate_limit_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -622,7 +551,6 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initVideoSettings() {
-		initializeVideoPresetPreferences((ListPreference) findPreference(getString(R.string.pref_video_preset_key)));
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 		initializePreferredVideoFpsPreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_fps_key)));
 		EditTextPreference bandwidth = (EditTextPreference) findPreference(getString(R.string.pref_bandwidth_limit_key));
@@ -630,12 +558,16 @@ public class SettingsFragment extends PreferencesListFragment {
 		bandwidth.setSummary(bandwidth.getText());
 		updateVideoPreferencesAccordingToPreset();
 
+		ListPreference videoPresetPref = (ListPreference) findPreference(getString(R.string.pref_video_preset_key));
+		videoPresetPref.setSummary(mPrefs.getVideoPreset());
+		videoPresetPref.setValue(mPrefs.getVideoPreset());
+
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_video_codecs_key));
 		codecs.removeAll();
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (final PayloadType pt : lc.getVideoCodecs()) {
-			CheckBoxPreference codec = new CheckBoxPreference(LinphoneService.instance());
+			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMime());
 
 			if (!pt.getMime().equals("VP8")) {
@@ -659,7 +591,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
-						e.printStackTrace();
+						Log.e(e);
 					}
 					return true;
 				}
@@ -671,7 +603,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_enable_key))).setChecked(mPrefs.isVideoEnabled());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_use_front_camera_key))).setChecked(mPrefs.useFrontCam());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
-		//((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_share_my_video_key))).setChecked(mPrefs.shouldAutomaticallyShareMyVideo());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_accept_video_key))).setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
 	}
 
@@ -683,14 +614,14 @@ public class SettingsFragment extends PreferencesListFragment {
 			findPreference(getString(R.string.pref_preferred_video_fps_key)).setEnabled(false);
 			findPreference(getString(R.string.pref_bandwidth_limit_key)).setEnabled(false);
 		}
-		((ListPreference) findPreference(getString(R.string.pref_video_preset_key))).setSummary(mPrefs.getVideoPreset());
+		findPreference(getString(R.string.pref_video_preset_key)).setSummary(mPrefs.getVideoPreset());
 		int fps = mPrefs.getPreferredVideoFps();
 		String fpsStr = Integer.toString(fps);
 		if (fpsStr.equals("0")) {
-			fpsStr = "none";
+			fpsStr = getString(R.string.pref_none);
 		}
-		((ListPreference) findPreference(getString(R.string.pref_preferred_video_fps_key))).setSummary(fpsStr);
-		((EditTextPreference) findPreference(getString(R.string.pref_bandwidth_limit_key))).setSummary(Integer.toString(mPrefs.getBandwidthLimit()));
+		findPreference(getString(R.string.pref_preferred_video_fps_key)).setSummary(fpsStr);
+		findPreference(getString(R.string.pref_bandwidth_limit_key)).setSummary(Integer.toString(mPrefs.getBandwidthLimit()));
 	}
 
 	private void setVideoPreferencesListener() {
@@ -720,17 +651,6 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-
-		/*
-		findPreference(getString(R.string.pref_video_automatically_share_my_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean enable = (Boolean) newValue;
-				mPrefs.setAutomaticallyShareMyVideo(enable);
-				return true;
-			}
-		});
-		*/
 
 		findPreference(getString(R.string.pref_video_automatically_accept_video_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -926,7 +846,8 @@ public class SettingsFragment extends PreferencesListFragment {
 				int port = -1;
 				try {
 					port = Integer.parseInt(newValue.toString());
-				} catch (NumberFormatException nfe) { }
+				} catch (NumberFormatException nfe) {
+				}
 
 				mPrefs.setSipPort(port);
 				preference.setSummary(newValue.toString());
@@ -1051,7 +972,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String value = (String) newValue;
-				if(value.equals("")) return false;
+				if (value.equals("")) return false;
 
 				mPrefs.setDefaultUsername(value);
 				preference.setSummary(value);
@@ -1059,7 +980,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -1069,9 +990,12 @@ public class SettingsFragment extends PreferencesListFragment {
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 
-			if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
-				LinphoneActivity.instance().hideStatusBar();
-			}
 		}
+	}
+
+	@Override
+	public void onPause() {
+		LinphoneActivity.instance().hideTopBar();
+		super.onPause();
 	}
 }

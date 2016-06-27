@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				xmlns:tools="http://schemas.android.com/tools"
+				android:id="@+id/topLayout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@color/colorH">
+
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		tools:layout="@layout/status" />
+
+	<RelativeLayout
+		android:id="@+id/top_bar"
+		android:background="@color/colorF"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:layout_below="@id/status">
+
+		<TextView
+			android:text="@string/incoming_call"
+			style="@style/font1"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"/>
+
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:id="@+id/contact_detail"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:paddingTop="10dp"
+		android:layout_above="@+id/menu"
+		android:layout_below="@+id/top_bar">
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+
+			<RelativeLayout
+				android:id="@+id/avatar_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:gravity="center">
+
+				<ImageView
+					android:id="@+id/contact_picture"
+					android:src="@drawable/avatar"
+					android:contentDescription="@string/content_description_contact_picture"
+					android:layout_width="200dp"
+					android:layout_height="wrap_content"
+					android:adjustViewBounds="true"/>
+
+				<ImageView
+					android:src="@drawable/avatar_mask_border"
+					android:layout_width="200dp"
+					android:layout_height="wrap_content"
+					android:adjustViewBounds="true"
+					android:layout_alignParentTop="true"/>
+
+			</RelativeLayout>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical">
+
+				<TextView
+					android:id="@+id/contact_name"
+					style="@style/font5"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentTop="true"
+					android:layout_centerHorizontal="true"
+					android:paddingTop="5dp"/>
+
+				<TextView
+					android:id="@+id/contact_number"
+					style="@style/font2"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/contact_name"
+					android:layout_gravity="center"
+					android:layout_centerHorizontal="true"
+					android:paddingBottom="10dp"/>
+
+			</LinearLayout>
+		</LinearLayout>
+
+	</RelativeLayout>
+
+	<LinearLayout
+		android:id="@+id/menu"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_alignParentBottom="true"
+		android:orientation="horizontal" >
+
+		<ImageView
+			android:id="@+id/decline"
+			android:src="@drawable/call_hangup"
+			android:background="@drawable/hangup"
+			android:contentDescription="@string/content_description_decline"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:padding="12dp"/>
+
+		<LinearLayout
+			android:id="@+id/acceptUnlock"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:orientation="horizontal"
+			android:background="@color/colorA"
+			android:paddingLeft="15dp"
+			android:paddingTop="15dp"
+			android:paddingBottom="15dp"
+			android:layout_gravity="bottom">
+
+			<ImageView
+				android:src="@drawable/arrow_accept"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+			<ImageView
+				android:src="@drawable/arrow_accept"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:alpha="0.6"/>
+
+			<ImageView
+				android:id="@+id/acceptArrow"
+				android:src="@drawable/arrow_accept"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:alpha="0.2"/>
+		</LinearLayout>
+
+		<ImageView
+			android:id="@+id/accept"
+			android:src="@drawable/call_audio_start"
+			android:background="@drawable/call"
+			android:contentDescription="@string/content_description_accept"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:padding="12dp"/>
+
+		<LinearLayout
+			android:id="@+id/declineUnlock"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:orientation="horizontal"
+			android:background="@color/colorD"
+			android:paddingLeft="15dp"
+			android:paddingTop="15dp"
+			android:paddingBottom="15dp"
+			android:layout_gravity="bottom">
+
+			<ImageView
+				android:id="@+id/arrow_hangup"
+				android:src="@drawable/arrow_hangup"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:alpha="0.2"/>
+
+
+			<ImageView
+				android:src="@drawable/arrow_hangup"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:alpha="0.6"/>
+
+			<ImageView
+				android:src="@drawable/arrow_hangup"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+		</LinearLayout>
+	</LinearLayout>
+
+</RelativeLayout>

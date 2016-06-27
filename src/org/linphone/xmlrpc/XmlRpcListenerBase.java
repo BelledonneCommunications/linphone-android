@@ -84,4 +84,10 @@ public class XmlRpcListenerBase implements XmlRpcListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void onRemoteProvisioningFilenameSent(String result) {
+		// TODO Auto-generated method stub
+
+	}
 }

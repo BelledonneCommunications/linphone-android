@@ -43,6 +43,7 @@
 				<resourcecontains resource="${output.file}" substring="longMsg=junit.framework.AssertionFailedError: View with id: '" />
 				<resourcecontains resource="${output.file}" substring="longMsg=java.lang.RuntimeException:" />
 				<resourcecontains resource="${output.file}" substring="longMsg=java.lang.NullPointerException:" />
+				<resourcecontains resource="${output.file}" substring="android.util.AndroidException: INSTRUMENTATION_FAILED:" />
 			</or>
 		</condition>
 		<exec executable="bash" unless:set="has.crashed">
@@ -72,7 +73,7 @@
 		</exec>
 		<exec executable="bash" >
 			<arg value="-c" />
-			<arg value="cat ${archive.name} |ndk-stack -sym obj/local/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
+			<arg value="cat ${archive.name} |ndk-stack -sym libs-debug/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
 		</exec>
 		<fail message="Tests crashed" status="125"/>
 	</target>

@@ -6,6 +6,8 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.PayloadType;
+import org.linphone.mediastream.MediastreamerAndroidContext;
+import org.linphone.mediastream.Factory;
 
 import android.test.AndroidTestCase;
 import junit.framework.Assert;
@@ -31,7 +33,7 @@ public class WrapperTester extends AndroidTestCase {
 		mCore.enableVideoMulticast(false);
 		Assert.assertEquals(false, mCore.videoMulticastEnabled());
 		
-		LinphoneCallParams params = mCore.createDefaultCallParameters();
+		LinphoneCallParams params = mCore.createCallParams(null);
 		params.enableAudioMulticast(true);
 		Assert.assertEquals(true, params.audioMulticastEnabled());
 		params.enableAudioMulticast(false);
@@ -85,13 +87,20 @@ public class WrapperTester extends AndroidTestCase {
 		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend("sip:lala@test.linphone.org");
 		friend.setRefKey(key);
 		Assert.assertEquals(friend.getRefKey(),key);
+		
+		//Test filter enablement
+		Factory factory = mCore.getMSFactory();
+		factory.enableFilterFromName("MSUlawEnc", false);
+		Assert.assertFalse(factory.filterFromNameEnabled("MSUlawEnc"));
+		factory.enableFilterFromName("MSUlawEnc", true);
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
-		mCore = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase(),null);
+		LinphoneCoreFactory.instance().setDebugMode(true, "WrapperTester");
+		mCore = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase(),getContext());
 	}
 
 	@Override

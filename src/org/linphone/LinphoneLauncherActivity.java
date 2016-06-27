@@ -21,7 +21,7 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.mediastream.Log;
-import org.linphone.setup.RemoteProvisioningActivity;
+import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
 import android.app.Activity;
@@ -46,16 +46,11 @@ public class LinphoneLauncherActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		// Used to change for the lifetime of the app the name used to tag the logs
-		new Log(getResources().getString(R.string.app_name), !getResources().getBoolean(R.bool.disable_every_log));
-		
 		// Hack to avoid to draw twice LinphoneActivity on tablets
-        if (getResources().getBoolean(R.bool.isTablet)) {
-        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-		setContentView(R.layout.launcher);
+        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+		setContentView(R.layout.launch_screen);
         
 		mHandler = new Handler();
 		
@@ -79,7 +74,6 @@ public class LinphoneLauncherActivity extends Activity {
 			classToStart = LinphoneActivity.class;
 		}
 		
-		LinphoneService.instance().setActivityToLaunchOnIncomingReceived(classToStart);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -99,7 +93,6 @@ public class LinphoneLauncherActivity extends Activity {
 					throw new RuntimeException("waiting thread sleep() has been interrupted");
 				}
 			}
-
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {

@@ -2,18 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:background="@drawable/background"
     android:orientation="vertical" >
     
     <TextView 
-   		android:contentDescription="@string/content_description_welcome"
 	    android:paddingTop="40dp"
 	    android:textSize="20sp"
 	    android:textStyle="bold"
 	    android:textColor="@android:color/black"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="@string/setup_title_assistant"/>
+	    android:text="@string/assistant"/>
     
    	<TextView 
 	    android:paddingTop="10dp"
@@ -41,23 +39,20 @@
 	            android:id="@+id/setup_username"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:hint="@string/setup_username_hint"
+	            android:hint="@string/username"
 	            android:inputType="phone"
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@android:color/black"
-            	android:background="@drawable/setup_field_background" />
+	            android:textColor="@android:color/black" />
 	        
 	        <ImageView 
-	    		android:contentDescription="@string/content_description_setup_ok"
 	            android:id="@+id/setup_username_ok"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:paddingRight="5dp"
 	            android:layout_centerVertical="true"
-	            android:layout_alignParentRight="true"
-	            android:src="@drawable/wizard_notok"/>
+	            android:layout_alignParentRight="true"/>
         
         </RelativeLayout>
         
@@ -70,13 +65,12 @@
 	            android:id="@+id/setup_email"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:hint="@string/setup_email_hint"
+	            android:hint="@string/email"
 	            android:inputType="textEmailAddress"
 	            android:paddingLeft="10dp"
 	            android:paddingRight="10dp"
 	            android:singleLine="true"
-	            android:textColor="@android:color/black"
-            	android:background="@drawable/setup_field_background" />
+	            android:textColor="@android:color/black" />
         
         </RelativeLayout>
         

@@ -24,7 +24,7 @@ public class XmlRpcHelper {
     public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
     
     private XMLRPCClient mXmlRpcClient;
-    
+
     public XmlRpcHelper() {
     	try {
     		mXmlRpcClient = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
@@ -275,7 +275,6 @@ public class XmlRpcHelper {
 				public void onResponse(long id, Object object) {
 					String result = (String)object;
 					Log.d("isAccountActivatedAsync: " + result);
-					
 					if ("OK".equals(result)) {
 						listener.onAccountActivatedFetched(true);
 						return;
@@ -285,7 +284,6 @@ public class XmlRpcHelper {
 					}
 					listener.onAccountActivatedFetched(false);
 				}
-				
 				@Override
 				public void onError(long id, XMLRPCException error) {
 					Log.e(error);
@@ -819,5 +817,40 @@ public class XmlRpcHelper {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 		}
 		return false;
+	}
+
+	public void getRemoteProvisioningFilenameAsync(final XmlRpcListener listener,String username, String domain, String password){
+		if (mXmlRpcClient != null) {
+			mXmlRpcClient.callAsync(new XMLRPCCallback() {
+				@Override
+				public void onServerError(long id, XMLRPCServerException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+
+				@Override
+				public void onResponse(long id, Object object) {
+					String result = (String)object;
+					Log.d("getRemoteProvisioningFilenameAsync: " + result);
+
+					if (result.startsWith("ERROR_")) {
+						Log.e(result);
+						listener.onError(result);
+						return;
+					}
+
+					listener.onRemoteProvisioningFilenameSent(result);
+				}
+
+				@Override
+				public void onError(long id, XMLRPCException error) {
+					Log.e(error);
+					listener.onError(error.toString());
+				}
+			}, "get_remote_provisioning_filename", username, domain, password);
+		} else {
+			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
+			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
+		}
 	}
 }

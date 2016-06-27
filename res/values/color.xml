@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_app_color">#ffcf4c29</color>
-    
-    <color name="text_selected">#ffcf4c29</color>
-    <color name="text_over">#ffb9c4cb</color>
-    <color name="text_default">#ff5b656f</color>
-    <color name="text_disabled">#ffa6b3bf</color>
-    <color name="text_header">#ff7e8e9e</color>
-    
-    <color name="text_switch_selected">#ffffff</color>
-    <color name="text_switch">#ff41484f</color>
-    
-    <color name="text_button">#ff41484f</color>
-    <color name="text_button_disabled">#ffa6b3bf</color>
-    <color name="text_button_selected">#ff41484f</color>
-    <color name="text_button_over">#ffcf4c29</color>
-    
-    <color name="numpad_background_bottom">#ffe4edf2</color>
-    <color name="numpad_background_dialer">#ffd8d8d8</color>
-    <color name="numpad_background_top">#ffb1bdc3</color>
-    
-    <color name="missed_calls_background">#ffcf4c29</color>
-    
+    <color name="colorA">#ff5e00</color>
+    <color name="colorB">#000000</color>
+    <color name="colorC">#444444</color>
+    <color name="colorD">#808080</color>
+    <color name="colorE">#c4c4c4</color>
+    <color name="colorF">#e1e1e1</color>
+    <color name="colorG">#f3f3f3</color>
+    <color name="colorH">#ffffff</color>
+    <color name="colorI">#ff0000</color>
+    <color name="colorJ">#ffa645</color>
+    <color name="colorK">#3eb5c0</color>
+    <color name="colorL">#96c11f</color>
+
     <color name="transparent">#00000000</color>
-    
-    <color name="landscape_background">#CCCCCC</color>
-    
-    <color name="text_contrast">#ff000000</color> <!-- If background is white, set to black, else set to white -->
-    <color name="menu_button_background">#ff262a2e</color>
 </resources>

@@ -2,7 +2,7 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.InCallActivity;
+import org.linphone.CallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
@@ -18,7 +18,8 @@ public class Transfer extends SampleTest {
 	@LargeTest
 	public void testACallTransfer() {
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call));
+		solo.sleep(1000);
+		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 		
 		assertCallIsCorrectlyRunning();
 
@@ -28,7 +29,8 @@ public class Transfer extends SampleTest {
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.conference_account_login) + "@" + iContext.getString(org.linphone.test.R.string.conference_account_domain));
-		solo.clickOnView(solo.getView(org.linphone.R.id.Call)); // Transfer button as the same id, only the image changes
+		solo.sleep(1000);
+		solo.clickOnView(solo.getView(org.linphone.R.id.call)); // Transfer button as the same id, only the image changes
 		
 		solo.sleep(2000);
 		Assert.assertTrue(LinphoneTestManager.getLc(1).getCallsNb() > 0);
@@ -41,7 +43,7 @@ public class Transfer extends SampleTest {
 	
 	private void assertCallIsCorrectlyRunning() {
 		solo.waitForActivity("InCallActivity", 5000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
+		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 		
 		solo.sleep(2000);
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];

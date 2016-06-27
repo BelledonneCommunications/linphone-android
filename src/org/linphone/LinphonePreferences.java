@@ -20,6 +20,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
@@ -84,8 +89,25 @@ public class LinphonePreferences {
 		}
 
 		if (!LinphoneManager.isInstanciated()) {
-			Log.w("LinphoneManager not instanciated yet...");
-			return LinphoneCoreFactory.instance().createLpConfig(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			File linphonerc = new File(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			if (linphonerc.exists()) {
+				return LinphoneCoreFactory.instance().createLpConfig(linphonerc.getAbsolutePath());
+			} else {
+				InputStream inputStream = mContext.getResources().openRawResource(R.raw.linphonerc_default);
+			    InputStreamReader inputreader = new InputStreamReader(inputStream);
+			    BufferedReader buffreader = new BufferedReader(inputreader);
+			    StringBuilder text = new StringBuilder();
+			    String line;
+				try {
+				    while ((line = buffreader.readLine()) != null) {
+			            text.append(line);
+			            text.append('\n');
+			        }
+				} catch (IOException ioe) {
+					
+				}
+			    return LinphoneCoreFactory.instance().createLpConfigFromString(text.toString());
+			}
 		}
 
 		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
@@ -136,7 +158,7 @@ public class LinphonePreferences {
 			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
 			return authInfo;
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 
 		return null;
@@ -340,7 +362,7 @@ public class LinphonePreferences {
 			lc.addProxyConfig(prxCfg);
 			lc.addAuthInfo(authInfo);
 
-			if (!tempNoDefault && LinphonePreferences.instance().getAccountCount() == 1)
+			if (!tempNoDefault)
 				lc.setDefaultProxyConfig(prxCfg);
 		}
 	}
@@ -379,7 +401,7 @@ public class LinphonePreferences {
 					setAccountOutboundProxyEnabled(n, true);
 				}
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}
@@ -394,7 +416,7 @@ public class LinphonePreferences {
 				proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxyConfig.getProxy());
 				transport = proxyAddr.getTransport();
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 
@@ -426,17 +448,23 @@ public class LinphonePreferences {
 
 	public void setAccountUsername(int n, String username) {
 		String identity = "sip:" + username + "@" + getAccountDomain(n);
-		LinphoneAuthInfo info = getClonedAuthInfo(n); // Get the auth info before editing the proxy config to ensure to get the correct auth info
+		LinphoneAuthInfo old_info = getAuthInfo(n);
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
 			prxCfg.setIdentity(identity);
+			prxCfg.enableRegister(true);
 			prxCfg.done();
 
-			info.setUsername(username);
-			saveAuthInfo(info);
+			if (old_info != null) {
+				// We have to remove the previous auth info after otherwise we can't unregister the previous proxy config
+				LinphoneAuthInfo new_info = old_info.clone();
+				getLc().removeAuthInfo(old_info);
+				new_info.setUsername(username);
+				saveAuthInfo(new_info);
+			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -454,25 +482,24 @@ public class LinphonePreferences {
 			prxCfg.setIdentity(addr.asString());
 			prxCfg.done();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
 	public String getAccountDisplayName(int n) {
-		try {
-			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(getProxyConfig(n).getIdentity());
+		LinphoneAddress addr = getProxyConfig(n).getAddress();
+		if(addr != null) {
 			return addr.getDisplayName();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 		return null;
 	}
 
 	public void setAccountUserId(int n, String userId) {
 		LinphoneAuthInfo info = getClonedAuthInfo(n);
-		info.setUserId(userId);
-		saveAuthInfo(info);
+		if(info != null) {
+			info.setUserId(userId);
+			saveAuthInfo(info);
+		}
 	}
 
 	public String getAccountUserId(int n) {
@@ -481,9 +508,10 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountPassword(int n, String password) {
-		LinphoneAuthInfo info = getClonedAuthInfo(n);
-		info.setPassword(password);
-		saveAuthInfo(info);
+		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, null, null, getAccountDomain(n));
+			LinphoneManager.getLc().addAuthInfo(authInfo);
+		}
 	}
 
 	public String getAccountPassword(int n) {
@@ -492,18 +520,23 @@ public class LinphonePreferences {
 	}
 	public void setAccountDomain(int n, String domain) {
 		String identity = "sip:" + getAccountUsername(n) + "@" + domain;
-
+		LinphoneAuthInfo old_info = getAuthInfo(n);
 		try {
-			LinphoneAuthInfo authInfo = getClonedAuthInfo(n);
-			authInfo.setDomain(domain);
-			saveAuthInfo(authInfo);
-
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
 			prxCfg.setIdentity(identity);
+			prxCfg.enableRegister(true);
 			prxCfg.done();
+
+			if (old_info != null) {
+				// We have to remove the previous auth info after otherwise we can't unregister the previous proxy config
+				LinphoneAuthInfo new_info = old_info.clone();
+				getLc().removeAuthInfo(old_info);
+				new_info.setDomain(domain);
+				saveAuthInfo(new_info);
+			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -535,7 +568,7 @@ public class LinphonePreferences {
 				setAccountOutboundProxyEnabled(n, true);
 			}
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -557,7 +590,7 @@ public class LinphonePreferences {
 			}
 			prxCfg.done();
 		} catch (LinphoneCoreException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 	}
 
@@ -697,14 +730,21 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
-		final LinphoneProxyConfig proxyCfg = getProxyConfig(n);
-
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		if (authInfo != null) {
+			getLc().removeAuthInfo(authInfo);
+		}
+		
+		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
 		if (getLc().getProxyConfigList().length != 0) {
 			resetDefaultProxyConfig();
-			getLc().refreshRegisters();
+		} else {
+			getLc().setDefaultProxyConfig(null);
 		}
+		
+		getLc().refreshRegisters();
 	}
 	// End of accounts settings
 
@@ -952,30 +992,35 @@ public class LinphonePreferences {
 
 	public void setPushNotificationEnabled(boolean enable) {
 		 getConfig().setBool("app", "push_notification", enable);
+		 
+		 LinphoneCore lc = getLc();
+		 if (lc == null) {
+			 return;
+		 }
 
 		 if (enable) {
 			 // Add push infos to exisiting proxy configs
 			 String regId = getPushNotificationRegistrationID();
 			 String appId = getString(R.string.push_sender_id);
-			 if (regId != null && getLc().getProxyConfigList().length > 0) {
-				 for (LinphoneProxyConfig lpc : getLc().getProxyConfigList()) {
+			 if (regId != null && lc.getProxyConfigList().length > 0) {
+				 for (LinphoneProxyConfig lpc : lc.getProxyConfigList()) {
 					 String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
 					 lpc.edit();
 					 lpc.setContactUriParameters(contactInfos);
 					 lpc.done();
 					 Log.d("Push notif infos added to proxy config");
 				 }
-				 getLc().refreshRegisters();
+				 lc.refreshRegisters();
 			 }
 		 } else {
-			 if (getLc().getProxyConfigList().length > 0) {
-				 for (LinphoneProxyConfig lpc : getLc().getProxyConfigList()) {
+			 if (lc.getProxyConfigList().length > 0) {
+				 for (LinphoneProxyConfig lpc : lc.getProxyConfigList()) {
 					 lpc.edit();
 					 lpc.setContactUriParameters(null);
 					 lpc.done();
 					 Log.d("Push notif infos removed from proxy config");
 				 }
-				 getLc().refreshRegisters();
+				 lc.refreshRegisters();
 			 }
 		 }
 	}
@@ -986,6 +1031,7 @@ public class LinphonePreferences {
 
 	public void setPushNotificationRegistrationID(String regId) {
 		 getConfig().setString("app", "push_notification_regid", regId);
+		 setPushNotificationEnabled(isPushNotificationEnabled());
 	}
 
 	public String getPushNotificationRegistrationID() {
@@ -1037,25 +1083,22 @@ public class LinphonePreferences {
 	}
 
 	public String getSharingPictureServerUrl() {
-		return getConfig().getString("app", "sharing_server", null);
+		return getLc().getFileTransferServer();
 	}
 
 	public void setSharingPictureServerUrl(String url) {
-		getConfig().setString("app", "sharing_server", url);
+		getLc().setFileTransferServer(url);
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
 		if (url != null && url.length() == 0) {
 			url = null;
 		}
-
-		LpConfig config = getConfig();
-		config.setString("misc", "config-uri", url);
-		config.sync();
+		getLc().setProvisioningUri(url);
 	}
 
 	public String getRemoteProvisioningUrl() {
-		return getConfig().getString("misc", "config-uri", null);
+		return getLc().getProvisioningUri();
 	}
 
 	public void setDefaultDisplayName(String displayName) {
@@ -1085,8 +1128,7 @@ public class LinphonePreferences {
 				if(servers.length > 0) {
 					tunnelConfig = servers[0];
 				} else {
-					tunnelConfig = new TunnelConfig();
-					tunnelConfig.setDelay(500);
+					tunnelConfig = LinphoneCoreFactory.instance().createTunnelConfig();
 				}
 			}
 			return tunnelConfig;
@@ -1228,15 +1270,59 @@ public class LinphonePreferences {
 		return purchasables;
 	}
 
+	public String getXmlRpcServerUrl() {
+		return getConfig().getString("app", "server_url", null);
+	}
+
 	public String getDebugPopupAddress(){
 		return getConfig().getString("app", "debug_popup_magic", null);
 	}
 
-	public void enableDebugLogs(Boolean debugMode){
-		getConfig().setBool("app", "debug_logs_enabled", debugMode);
+	public Boolean audioPermAsked(){
+		return getConfig().getBool("app", "audio_perm", false);
 	}
 
-	public Boolean isDebugLogsEnabled(){
-		return getConfig().getBool("app", "debug_logs_enabled", false);
+	public void neverAskAudioPerm(){
+		 getConfig().setBool("app", "audio_perm", true);
+	}
+
+	public Boolean cameraPermAsked(){
+		return getConfig().getBool("app", "camera_perm", false);
+	}
+
+	public void neverAskCameraPerm(){
+		getConfig().setBool("app", "camera_perm", true);
+	}
+	
+	public Boolean readContactsPermAsked(){
+		return getConfig().getBool("app", "read_contacts_perm", false);
+	}
+
+	public void neverAskReadContactsPerm(){
+		 getConfig().setBool("app", "read_contacts_perm", true);
+	}
+	
+	public Boolean writeContactsPermAsked(){
+		return getConfig().getBool("app", "write_contacts_perm", false);
+	}
+
+	public void neverAskWriteContactsPerm(){
+		 getConfig().setBool("app", "write_contacts_perm", true);
+	}
+	
+	public Boolean writeExternalStoragePermAsked(){
+		return getConfig().getBool("app", "write_external_storage_perm", false);
+	}
+
+	public void neverAskWriteExternalStoragePerm(){
+		 getConfig().setBool("app", "write_external_storage_perm", true);
+	}
+
+	public String getActivityToLaunchOnIncomingReceived() {
+		return getConfig().getString("app", "incoming_call_activity", "org.linphone.LinphoneActivity");
+	}
+
+	public void setActivityToLaunchOnIncomingReceived(String name) {
+		getConfig().setString("app", "incoming_call_activity", name);
 	}
 }

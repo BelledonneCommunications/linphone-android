@@ -22,6 +22,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.tutorials.TutorialBuddyStatus;
 import org.linphone.core.tutorials.TutorialNotifier;
+import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -104,7 +105,7 @@ public class TutorialBuddyStatusActivity extends Activity {
 					}
 				});
 			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.Contact;
+import org.linphone.LinphoneContact;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.ContentProviderOperation;
@@ -16,8 +18,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
-import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.text.TextUtils;
 
@@ -99,16 +101,6 @@ public class ApiNinePlus {
 		Uri uri = Data.CONTENT_URI;
 		String[] projection;
 
-		// Phone Numbers
-		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
-		if (c != null) {
-	        while (c.moveToNext()) {
-	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
-	            list.add(number); 
-	        }
-	        c.close();
-		}
-
 		// SIP addresses
 		String selection2 = new StringBuilder()
 			.append(Data.CONTACT_ID)
@@ -119,11 +111,21 @@ public class ApiNinePlus {
 			.append("'")
 			.toString();
 		projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
-		c = cr.query(uri, projection, selection2, new String[]{id}, null);
+		Cursor c = cr.query(uri, projection, selection2, new String[]{id}, null);
 		if (c != null) {
 			int nbid = c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS);
 			while (c.moveToNext()) {
 				list.add("sip:" + c.getString(nbid)); 
+			}
+			c.close();
+		}
+
+		// Phone Numbers
+		c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
+		if (c != null) {
+			while (c.moveToNext()) {
+				String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+				list.add(number);
 			}
 			c.close();
 		}
@@ -183,9 +185,9 @@ public class ApiNinePlus {
 		String sipUri = username + "@" + domain;
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
-		Contact contact = ApiFivePlus.getContact(cr, cursor, 0);
+		LinphoneContact contact = ApiFivePlus.getContact(cr, cursor, 0);
 		if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
-			address.setDisplayName(contact.getName());
+			address.setDisplayName(contact.getFullName());
 			cursor.close();
 			return contact.getPhotoUri();
 		}
@@ -274,7 +276,7 @@ public class ApiNinePlus {
 			try {
 				contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 	}

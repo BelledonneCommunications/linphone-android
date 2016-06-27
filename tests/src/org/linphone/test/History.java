@@ -2,7 +2,7 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.InCallActivity;
+import org.linphone.CallActivity;
 import org.linphone.LinphoneActivity;
 import org.linphone.core.LinphoneCall;
 
@@ -29,8 +29,8 @@ public class History extends SampleTest {
 	@LargeTest
 	public void testBFilterMissedCalls() {		
 		goToHistory();
-		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_missed_call));
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.missed_calls));
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_missed_call_history)));
 	}
 	
@@ -40,13 +40,13 @@ public class History extends SampleTest {
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.account_test_calls_login));
 		
 		solo.waitForActivity("InCallActivity", 5000);
-		solo.assertCurrentActivity("Expected InCall Activity", InCallActivity.class);
+		solo.assertCurrentActivity("Expected InCall Activity", CallActivity.class);
 		
 		solo.sleep(2000);
 		Assert.assertEquals(1, LinphoneTestManager.getLc().getCallsNb());
 		waitForCallState(LinphoneTestManager.getLc().getCalls()[0],LinphoneCall.State.StreamsRunning);
 		
-		solo.clickOnView(solo.getView(org.linphone.R.id.hangUp));
+		solo.clickOnView(solo.getView(org.linphone.R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
@@ -55,11 +55,13 @@ public class History extends SampleTest {
 	@LargeTest
 	public void testDDeleteOne() {		
 		goToHistory();
-		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
 		solo.sleep(500);
+		solo.clickOnCheckBox(1);
 		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
+		solo.sleep(500);
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
 	}
 
 	@SmallTest
@@ -68,9 +70,12 @@ public class History extends SampleTest {
 	public void testEDeleteAll() {		
 		goToHistory();
 
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));	
-		solo.clickOnView(solo.getView(org.linphone.R.id.deleteAll));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
+		solo.clickOnView(solo.getView(org.linphone.R.id.edit));
+		solo.clickOnView(solo.getView(org.linphone.R.id.select_all));
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
+		solo.sleep(500);
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
+
 		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.no_call_history)));
 	}
 	

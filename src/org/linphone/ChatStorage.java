@@ -71,14 +71,14 @@ public class ChatStorage {
 		try {
 			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode >= 2200;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Log.e(e);
 		}
 		return true;
 	}
 
 	private ChatStorage(Context c) {
 	    context = c;
-	    boolean useLinphoneStorage = c.getResources().getBoolean(R.bool.use_linphone_chat_storage);
+	    boolean useLinphoneStorage = true;
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LinphoneService.instance());
 		boolean updateNeeded = prefs.getBoolean(c.getString(R.string.pref_first_time_linphone_chat_storage), !LinphonePreferences.instance().isFirstLaunch());
 		updateNeeded = updateNeeded && !isVersionUsingNewChatStorage();
@@ -110,7 +110,7 @@ public class ChatStorage {
 			try {
 				id = c.getString(c.getColumnIndex("id"));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		c.close();
@@ -250,7 +250,7 @@ public class ChatStorage {
 			try {
 				message = c.getString(c.getColumnIndex("message"));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(e);
 			}
 		}
 		c.close();
@@ -271,7 +271,7 @@ public class ChatStorage {
 					String to = c.getString(c.getColumnIndex("remoteContact"));
 					drafts.add(to);
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 			c.close();
@@ -280,64 +280,14 @@ public class ChatStorage {
 		return drafts;
 	}
 
-	public List<ChatMessage> getMessages(String correspondent) {
-		List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-
-		if (!useNativeAPI) {
-			Cursor c = db.query(TABLE_NAME, null, "remoteContact LIKE \"" + correspondent + "\"", null, null, null, "id ASC");
-
-			while (c.moveToNext()) {
-				try {
-					String message, timestamp, url;
-					int id = c.getInt(c.getColumnIndex("id"));
-					int direction = c.getInt(c.getColumnIndex("direction"));
-					message = c.getString(c.getColumnIndex("message"));
-					timestamp = c.getString(c.getColumnIndex("time"));
-					int status = c.getInt(c.getColumnIndex("status"));
-					byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
-					int read = c.getInt(c.getColumnIndex("read"));
-					url = c.getString(c.getColumnIndex("url"));
-
-					ChatMessage chatMessage = new ChatMessage(id, message, rawImage, timestamp, direction == INCOMING, status, read == READ);
-					chatMessage.setUrl(url);
-					chatMessages.add(chatMessage);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			c.close();
-		} else {
-			LinphoneChatRoom room = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
-			LinphoneChatMessage[] history = room.getHistory();
-			for (int i = 0; i < history.length; i++) {
-				LinphoneChatMessage message = history[i];
-
-				Bitmap bm = null;
-				String url = message.getExternalBodyUrl();
-				if (url != null && !url.startsWith("http")) {
-					bm = BitmapFactory.decodeFile(url);
-				}
-				ChatMessage chatMessage = new ChatMessage(i+1, message.getText(), bm,
-						String.valueOf(message.getTime()), !message.isOutgoing(),
-						message.getStatus().toInt(), message.isRead());
-				chatMessage.setUrl(url);
-				chatMessages.add(chatMessage);
-			}
-		}
-
-		return chatMessages;
-	}
-
 	public String getTextMessageForId(LinphoneChatRoom chatroom, int id) {
 		String message = null;
 
 		if (useNativeAPI) {
-			LinphoneChatMessage[] history = chatroom.getHistory();
-			for (LinphoneChatMessage msg : history) {
-				if (msg.getStorageId() == id) {
-					message = msg.getText();
-					break;
-				}
+			LinphoneChatMessage msg = getMessage(chatroom, id);
+			
+			if (msg != null) {
+				message = msg.getText();
 			}
 		} else {
 			Cursor c = db.query(TABLE_NAME, null, "id LIKE " + id, null, null, null, null);
@@ -346,7 +296,7 @@ public class ChatStorage {
 				try {
 					message = c.getString(c.getColumnIndex("message"));
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e(e);
 				}
 			}
 			c.close();
@@ -356,71 +306,53 @@ public class ChatStorage {
 	}
 
 	public LinphoneChatMessage getMessage(LinphoneChatRoom chatroom, int id) {
-		if (useNativeAPI) {
-			LinphoneChatMessage[] history = chatroom.getHistory();
-			for (LinphoneChatMessage msg : history) {
-				if (msg.getStorageId() == id) {
-					return msg;
-				}
+		LinphoneChatMessage[] history = chatroom.getHistory();
+		for (LinphoneChatMessage msg : history) {
+			if (msg.getStorageId() == id) {
+				return msg;
 			}
 		}
 		return null;
 	}
 
 	public void removeDiscussion(String correspondent) {
-		if (useNativeAPI) {
-			LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
-			chatroom.deleteHistory();
-		} else {
-			db.delete(TABLE_NAME, "remoteContact LIKE \"" + correspondent + "\"", null);
-		}
+		LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(correspondent);
+		chatroom.deleteHistory();
 	}
 
 	public ArrayList<String> getChatList() {
 		ArrayList<String> chatList = new ArrayList<String>();
 
-		if (useNativeAPI) {
-			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-			List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
+		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+		List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
 
-			for (LinphoneChatRoom chatroom : chats) {
-				if (chatroom.getHistory(1).length > 0) {
-					rooms.add(chatroom);
+		for (LinphoneChatRoom chatroom : chats) {
+			if (chatroom.getHistorySize() > 0) {
+				rooms.add(chatroom);
+			}
+		}
+
+		if (rooms.size() > 1) {
+			Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
+				@Override
+				public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
+					LinphoneChatMessage[] messagesA = a.getHistory(1);
+					LinphoneChatMessage[] messagesB = b.getHistory(1);
+					long atime = messagesA[0].getTime();
+					long btime = messagesB[0].getTime();
+
+					if (atime > btime)
+						return -1;
+					else if (btime > atime)
+						return 1;
+					else
+						return 0;
 				}
-			}
+			});
+		}
 
-			if (rooms.size() > 1) {
-				Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
-					@Override
-					public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
-						LinphoneChatMessage[] messagesA = a.getHistory(1);
-						LinphoneChatMessage[] messagesB = b.getHistory(1);
-						long atime = messagesA[0].getTime();
-						long btime = messagesB[0].getTime();
-
-						if (atime > btime)
-							return -1;
-						else if (btime > atime)
-							return 1;
-						else
-							return 0;
-					}
-				});
-			}
-
-			for (LinphoneChatRoom chatroom : rooms) {
-				chatList.add(chatroom.getPeerAddress().asStringUriOnly());
-			}
-		} else {
-			Cursor c = db.query(TABLE_NAME, null, null, null, "remoteContact", null, "id DESC");
-			while (c != null && c.moveToNext()) {
-				try {
-					String remoteContact = c.getString(c.getColumnIndex("remoteContact"));
-					chatList.add(remoteContact);
-				} catch (IllegalStateException ise) {
-				}
-			}
-			c.close();
+		for (LinphoneChatRoom chatroom : rooms) {
+			chatList.add(chatroom.getPeerAddress().asStringUriOnly());
 		}
 
 		return chatList;
@@ -428,12 +360,9 @@ public class ChatStorage {
 
 	public void deleteMessage(LinphoneChatRoom chatroom, int id) {
 		if (useNativeAPI) {
-			LinphoneChatMessage[] history = chatroom.getHistory();
-			for (LinphoneChatMessage message : history) {
-				if (message.getStorageId() == id) {
-					chatroom.deleteMessage(message);
-					break;
-				}
+			LinphoneChatMessage msg = getMessage(chatroom, id);
+			if (msg != null){
+				chatroom.deleteMessage(msg);
 			}
 		} else {
 			db.delete(TABLE_NAME, "id LIKE " + id, null);
@@ -454,53 +383,6 @@ public class ChatStorage {
 		}
 	}
 
-	public int getUnreadMessageCount() {
-		int count;
-		if (!useNativeAPI) {
-			Cursor c = db.query(TABLE_NAME, null, "read LIKE " + NOT_READ, null, null, null, null);
-			count = c.getCount();
-			c.close();
-		} else {
-			count = 0;
-			LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-			for (LinphoneChatRoom chatroom : chats) {
-				count += chatroom.getUnreadMessagesCount();
-			}
-		}
-		return count;
-	}
-
-	public int getUnreadMessageCount(String contact) {
-		int count;
-		if (!useNativeAPI) {
-			Cursor c = db.query(TABLE_NAME, null, "remoteContact LIKE \"" + contact + "\" AND read LIKE " + NOT_READ, null, null, null, null);
-			count = c.getCount();
-			c.close();
-		} else {
-			LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(contact);
-			count = chatroom.getUnreadMessagesCount();
-		}
-		return count;
-	}
-
-	public byte[] getRawImageFromMessage(int id) {
-		if (useNativeAPI) {
-			//Handled before this point
-			return null;
-		}
-
-		String[] columns = { "image" };
-		Cursor c = db.query(TABLE_NAME, columns, "id LIKE " + id + "", null, null, null, null);
-
-		if (c.moveToFirst()) {
-			byte[] rawImage = c.getBlob(c.getColumnIndex("image"));
-			c.close();
-			return (rawImage == null || rawImage.length == 0) ? null : rawImage;
-		}
-
-		c.close();
-		return null;
-	}
 
 	class ChatHelper extends SQLiteOpenHelper {
 

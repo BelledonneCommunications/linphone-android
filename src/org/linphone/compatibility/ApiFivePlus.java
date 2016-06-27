@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.linphone.Contact;
+import org.linphone.LinphoneContact;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
 
@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.CheckBoxPreference;
@@ -102,16 +100,6 @@ public class ApiFivePlus {
 
 		Uri uri = Data.CONTENT_URI;
 		String[] projection = {ContactsContract.CommonDataKinds.Im.DATA};
-
-		// Phone Numbers
-		Cursor c = cr.query(Phone.CONTENT_URI, new String[] { Phone.NUMBER }, Phone.CONTACT_ID + " = " + id, null, null);
-		if (c != null) {
-	        while (c.moveToNext()) {
-	            String number = c.getString(c.getColumnIndex(Phone.NUMBER));
-	            list.add(number); 
-	        }
-	        c.close();
-		}
 		
 		// IM addresses
 		String selection = new StringBuilder()
@@ -122,11 +110,21 @@ public class ApiFivePlus {
 			.append(ContactsContract.CommonDataKinds.Im.CUSTOM_PROTOCOL)
 			.append(") = 'sip'")
 			.toString();
-		c = cr.query(uri, projection, selection, new String[]{id}, null);
+		Cursor c = cr.query(uri, projection, selection, new String[]{id}, null);
 		if (c != null) {
 			int nbId = c.getColumnIndex(ContactsContract.CommonDataKinds.Im.DATA);
 			while (c.moveToNext()) {
 				list.add("sip:" + c.getString(nbId)); 
+			}
+			c.close();
+		}
+
+		// Phone Numbers
+		c = cr.query(Phone.CONTENT_URI, new String[]{Phone.NUMBER}, Phone.CONTACT_ID + " = " + id, null, null);
+		if (c != null) {
+			while (c.moveToNext()) {
+				String number = c.getString(c.getColumnIndex(Phone.NUMBER));
+				list.add(number);
 			}
 			c.close();
 		}
@@ -208,7 +206,7 @@ public class ApiFivePlus {
 		return cursor.getColumnIndex(Data.DISPLAY_NAME);
 	}
 
-	public static Contact getContact(ContentResolver cr, Cursor cursor, int position) {
+	public static LinphoneContact getContact(ContentResolver cr, Cursor cursor, int position) {
 		try {
 			if(cursor != null) {
 				cursor.moveToFirst();
@@ -222,16 +220,12 @@ public class ApiFivePlus {
 				Uri photo = getContactPhotoUri(id);
 				InputStream input = getContactPictureInputStream(cr, id);
 
-				Contact contact;
-				if (input == null) {
-					contact = new Contact(id, name);
-				} else {
-					Bitmap bm = null;
-					try {
-						bm = BitmapFactory.decodeStream(input);
-					} catch (OutOfMemoryError oome) {
-					}
-					contact = new Contact(id, name, photo, thumbnail, bm);
+				LinphoneContact contact = new LinphoneContact();
+				contact.setAndroidId(id);
+				contact.setFullName(name);
+				if (input != null) {
+					contact.setPhotoUri(photo);
+					contact.setThumbnailUri(thumbnail);
 				}
 
 				return contact;
@@ -270,9 +264,9 @@ public class ApiFivePlus {
 		
 		Cursor cursor = getSIPContactCursor(cr, sipUri);
 		if(cursor != null) {
-			Contact contact = getContact(cr, cursor, 0);
+			LinphoneContact contact = getContact(cr, cursor, 0);
 			if (contact != null && contact.getNumbersOrAddresses().contains(sipUri)) {
-				address.setDisplayName(contact.getName());
+				address.setDisplayName(contact.getFullName());
 				cursor.close();
 				return contact.getPhotoUri();
 			}
@@ -292,13 +286,12 @@ public class ApiFivePlus {
 	}
 	
 	public static Notification createMessageNotification(Context context, String title, String msg, PendingIntent intent) {
-		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
-		.setSmallIcon(R.drawable.chat_icon_over)
-		.setContentTitle(title)
-		.setContentText(msg)
-		.setContentIntent(intent);
-	
-		Notification notif = notifBuilder.build();
+		Notification notif = new Notification();
+		notif.icon = R.drawable.topbar_chat_notification;
+		notif.iconLevel = 0;
+		notif.when = System.currentTimeMillis();
+		notif.flags &= Notification.FLAG_ONGOING_EVENT;
+		
 		notif.defaults |= Notification.DEFAULT_VIBRATE;
 		notif.defaults |= Notification.DEFAULT_SOUND;
 		notif.defaults |= Notification.DEFAULT_LIGHTS;
@@ -398,7 +391,7 @@ public class ApiFivePlus {
 
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
 		NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
-		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setSmallIcon(R.drawable.linphone_logo)
 		.setContentTitle(title)
 		.setContentText(text)
 		.setContentIntent(intent);

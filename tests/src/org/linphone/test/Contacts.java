@@ -2,7 +2,7 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.ContactsFragment;
+import org.linphone.ContactsListFragment;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 
@@ -23,21 +23,21 @@ public class Contacts extends SampleTest {
 		goToHistory();
 		
 		solo.clickOnView(solo.getView(org.linphone.R.id.detail));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.add_to_contacts));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_add_contact));
+		solo.clickOnView(solo.getView(org.linphone.R.id.add_contact));
+		solo.clickOnView(solo.getView(org.linphone.R.id.newContact));
 		
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.account_test_calls_login) + "@" + iContext.getString(org.linphone.test.R.string.account_test_calls_domain)));
 		
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
-		
+		solo.clickOnView(solo.getView(org.linphone.R.id.ok));
+
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
+		solo.clickOnView(solo.getView(org.linphone.R.id.deleteContact));
 		solo.sleep(1000);
-		solo.clickOnText(aContext.getString(R.string.button_ok));
-		
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
+
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 
@@ -46,16 +46,12 @@ public class Contacts extends SampleTest {
 	@LargeTest
 	public void testBCreateContactWithPhoneNumber() {
 		goToContacts();
-		
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_add_contact));
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.newContact));
 		solo.enterText(0, iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.enterText(2, iContext.getString(org.linphone.test.R.string.contact_number));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
-		
-		if (ContactsFragment.instance() != null) {
-			ContactsFragment.instance().invalidate();
-			solo.sleep(1000);
-		}
+		solo.enterText(3, iContext.getString(org.linphone.test.R.string.contact_number));
+		solo.clickOnView(solo.getView(org.linphone.R.id.ok));
+		solo.sleep(2000);
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 
@@ -65,7 +61,7 @@ public class Contacts extends SampleTest {
 		goToContacts();
 
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_sip_contacts));
+		solo.clickOnView(solo.getView(org.linphone.R.id.linphone_contacts));
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 
@@ -73,13 +69,13 @@ public class Contacts extends SampleTest {
 	@LargeTest
 	public void testDEditContactAddSipAddressAndRemoveNumber() {
 		goToContacts();
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_all_contacts));
+		solo.clickOnView(solo.getView(org.linphone.R.id.all_contacts));
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_edit));
-		solo.clickOnView(solo.getView(org.linphone.R.id.delete));
-		solo.enterText(3, iContext.getString(org.linphone.test.R.string.contact_sip));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_ok));
+		solo.clickOnView(solo.getView(org.linphone.R.id.editContact));
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_field));
+		solo.enterText(2, iContext.getString(org.linphone.test.R.string.contact_sip));
+		solo.clickOnView(solo.getView(org.linphone.R.id.ok));
 		
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_sip)));
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_number)));
@@ -92,7 +88,7 @@ public class Contacts extends SampleTest {
 		goToContacts();
 		
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.button_sip_contacts));
+		solo.clickOnView(solo.getView(org.linphone.R.id.linphone_contacts));
 		Assert.assertTrue(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 
@@ -102,8 +98,8 @@ public class Contacts extends SampleTest {
 		goToContacts();
 
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnView(solo.getView(org.linphone.R.id.start_chat));
-		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.button_send_message)));
+		solo.clickOnView(solo.getView(org.linphone.R.id.contact_chat));
+		//Assert.assertTrue(solo.search(aContext.get(org.linphone.R.string.send_message)));
 	}
 
 	@SmallTest
@@ -113,9 +109,9 @@ public class Contacts extends SampleTest {
 		goToContacts();
 		
 		solo.clickOnText(iContext.getString(org.linphone.test.R.string.contact_name));
-		solo.clickOnText(aContext.getString(org.linphone.R.string.delete_contact));
+		solo.clickOnView(solo.getView(org.linphone.R.id.deleteContact));
 		solo.sleep(1000);
-		solo.clickOnText(aContext.getString(R.string.button_ok));
+		solo.clickOnView(solo.getView(org.linphone.R.id.delete_button));
 		Assert.assertFalse(solo.searchText(iContext.getString(org.linphone.test.R.string.contact_name)));
 	}
 	

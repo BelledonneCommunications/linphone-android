@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<TextView
+		android:text="@string/assistant_remote_provisioning_title"
+		style="@style/font6"
+		android:textAllCaps="true"
+		android:paddingTop="20dp"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"/>
+
+	<TextView
+		android:text="@string/assistant_remote_provisioning_login"
+		style="@style/font11"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:gravity="center"
+		android:orientation="vertical">
+
+		<TextView
+			android:text="@string/username"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<EditText
+			android:id="@+id/assistant_username"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
+
+		<TextView
+			android:text="@string/password"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<EditText
+			android:id="@+id/assistant_password"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textPassword"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
+
+
+		<TextView
+			android:text="@string/domain"
+			style="@style/font13"
+			android:textAllCaps="true"
+			android:paddingTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+
+		<EditText
+			android:id="@+id/assistant_domain"
+			android:background="@drawable/resizable_textfield"
+			android:textColor="@color/colorB"
+			android:textCursorDrawable="@null"
+			android:inputType="textEmailAddress"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:singleLine="true"/>
+
+		<Button
+			android:id="@+id/assistant_connect"
+			android:text="@string/connect"
+			android:background="@drawable/assistant_button"
+			style="@style/font8"
+			android:contentDescription="@string/content_description_valid"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:layout_marginTop="20dp"
+			android:layout_centerInParent="true"
+			android:layout_centerVertical="true"/>
+
+	</LinearLayout>
+ 
+</LinearLayout>

@@ -23,17 +23,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public enum FragmentsAvailable {
 	UNKNOW,
 	DIALER,
-	HISTORY,
+	EMPTY,
+	HISTORY_LIST,
 	HISTORY_DETAIL,
-	CONTACTS,
-	CONTACT,
-	EDIT_CONTACT,
+	CONTACTS_LIST,
+	CONTACT_DETAIL,
+	CONTACT_EDITOR,
 	ABOUT,
-	ABOUT_INSTEAD_OF_SETTINGS,
-	ABOUT_INSTEAD_OF_CHAT,
 	ACCOUNT_SETTINGS,
 	SETTINGS,
-	CHATLIST,
+	CHAT_LIST,
 	CHAT;
 
 	public boolean shouldAnimate() {
@@ -42,38 +41,36 @@ public enum FragmentsAvailable {
 
 	public boolean isRightOf(FragmentsAvailable fragment) {
 		switch (this) {
-		case HISTORY:
+		case HISTORY_LIST:
 			return fragment == UNKNOW;
 
 		case HISTORY_DETAIL:
-			return HISTORY.isRightOf(fragment) || fragment == HISTORY;
+			return HISTORY_LIST.isRightOf(fragment) || fragment == HISTORY_LIST;
 			
-		case CONTACTS:
+		case CONTACTS_LIST:
 			return HISTORY_DETAIL.isRightOf(fragment) || fragment == HISTORY_DETAIL;
 			
-		case CONTACT:
-			return CONTACTS.isRightOf(fragment) || fragment == CONTACTS;
+		case CONTACT_DETAIL:
+			return CONTACTS_LIST.isRightOf(fragment) || fragment == CONTACTS_LIST;
 			
-		case EDIT_CONTACT:
-			return CONTACT.isRightOf(fragment) || fragment == CONTACT;
+		case CONTACT_EDITOR:
+			return CONTACT_DETAIL.isRightOf(fragment) || fragment == CONTACT_DETAIL;
 			
 		case DIALER:
-			return EDIT_CONTACT.isRightOf(fragment) || fragment == EDIT_CONTACT;
-			
-		case ABOUT_INSTEAD_OF_CHAT:
-		case CHATLIST:
+			return CONTACT_EDITOR.isRightOf(fragment) || fragment == CONTACT_EDITOR;
+
+		case CHAT_LIST:
 			return DIALER.isRightOf(fragment) || fragment == DIALER;
-			
-		case ABOUT_INSTEAD_OF_SETTINGS:
+
 		case SETTINGS:
-			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST || fragment == FragmentsAvailable.ABOUT_INSTEAD_OF_CHAT;
+			return CHAT_LIST.isRightOf(fragment) || fragment == CHAT_LIST;
 		
 		case ABOUT:
 		case ACCOUNT_SETTINGS:
 			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
 			
 		case CHAT:
-			return CHATLIST.isRightOf(fragment) || fragment == CHATLIST;
+			return CHAT_LIST.isRightOf(fragment) || fragment == CHAT_LIST;
 			
 		default:
 			return false;
@@ -83,16 +80,16 @@ public enum FragmentsAvailable {
 	public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
 		switch (this) {
 		case HISTORY_DETAIL:
-			return fragment == HISTORY;
+			return fragment == HISTORY_LIST;
 			
-		case CONTACT:
-			return fragment == CONTACTS;
+			case CONTACT_DETAIL:
+			return fragment == CONTACTS_LIST;
 			
-		case EDIT_CONTACT:
-			return fragment == CONTACT || fragment == CONTACTS;
+		case CONTACT_EDITOR:
+			return fragment == CONTACT_DETAIL || fragment == CONTACTS_LIST;
 			
 		case CHAT:
-			return fragment == CHATLIST;
+			return fragment == CHAT_LIST;
 			
 		default:
 			return false;

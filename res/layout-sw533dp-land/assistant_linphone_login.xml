@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:padding="30dp"
+    android:orientation="vertical">
+
+	<TextView
+		android:text="@string/assistant_linphone_account"
+		style="@style/font6"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"/>
+
+	<TextView
+		android:text="@string/assistant_linphone_login_desc"
+		style="@style/font11"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="10dp"
+		android:layout_gravity="center"/>
+
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="30dp"
+		android:orientation="horizontal">
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="center"
+			android:layout_margin="10dp">
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:text="@string/username"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/assistant_username"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="text|textEmailAddress"
+					android:contentDescription="@string/content_description_username_field"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:singleLine="true"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:paddingLeft="30dp"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:text="@string/password"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/assistant_password"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="textPassword"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:singleLine="true"/>
+			</LinearLayout>
+		</TableRow>
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="center"
+			android:layout_margin="10dp">
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:text="@string/assistant_display_name_optional"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/assistant_display_name"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="textEmailAddress"
+					android:contentDescription="@string/content_description_display_field"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:singleLine="true"/>
+			</LinearLayout>
+
+			<View
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="0dp"/>
+
+		</TableRow>
+	</TableLayout>
+
+	<Button
+		android:id="@+id/assistant_apply"
+		android:text="@string/assistant_login"
+		android:background="@drawable/assistant_button"
+		android:textColor="@drawable/assistant_button_text_color"
+		style="@style/font8"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="40dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:layout_marginTop="20dp"/>
+
+</LinearLayout>

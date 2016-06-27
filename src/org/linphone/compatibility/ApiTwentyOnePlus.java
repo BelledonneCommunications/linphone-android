@@ -7,7 +7,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.app.NotificationCompat;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /*
@@ -44,10 +43,10 @@ public class ApiTwentyOnePlus {
 			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
 		}
 		
-		Notification notif = new NotificationCompat.Builder(context)
+		Notification notif = new Notification.Builder(context)
 			.setContentTitle(title)
 			.setContentText(msg)
-			.setSmallIcon(R.drawable.chat_icon_over)
+			.setSmallIcon(R.drawable.topbar_chat_notification)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
 			.setDefaults(Notification.DEFAULT_ALL)
@@ -64,7 +63,7 @@ public class ApiTwentyOnePlus {
 			String title, String msg, int iconID, Bitmap contactIcon,
 			String contactName, PendingIntent intent) {
 
-		Notification notif = new NotificationCompat.Builder(context).setContentTitle(contactName)
+		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
 			.setContentText(msg)
 			.setSmallIcon(iconID)
 			.setAutoCancel(false)
@@ -82,7 +81,7 @@ public class ApiTwentyOnePlus {
 		Notification notif;
 		
 		if (largeIcon != null) {
-			notif = new NotificationCompat.Builder(context)
+			notif = new Notification.Builder(context)
 		        .setContentTitle(title)
 		        .setContentText(message)
 		        .setSmallIcon(icon, level)
@@ -93,7 +92,7 @@ public class ApiTwentyOnePlus {
 				.setPriority(priority)
 		        .build();
 		} else {
-			notif = new NotificationCompat.Builder(context)
+			notif = new Notification.Builder(context)
 		        .setContentTitle(title)
 		        .setContentText(message)
 		        .setSmallIcon(icon, level)
@@ -112,10 +111,10 @@ public class ApiTwentyOnePlus {
 	}
 
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
-		Notification notif = new NotificationCompat.Builder(context)
+		Notification notif = new Notification.Builder(context)
 		.setContentTitle(title)
 		.setContentText(text)
-		.setSmallIcon(R.drawable.logo_linphone_57x57)
+		.setSmallIcon(R.drawable.linphone_logo)
 		.setAutoCancel(true)
 		.setContentIntent(intent)
 		.setDefaults(Notification.DEFAULT_ALL)

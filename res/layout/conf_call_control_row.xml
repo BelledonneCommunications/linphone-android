@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="70dp"
+	android:layout_width="match_parent"
+	android:layout_margin="2dp"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	android:background="@color/colorH"
+	android:padding="2dp"
+	android:divider="@color/colorE"
+	android:dividerHeight="1dp">
+
+	<ImageView
+		android:id="@+id/contactPicture"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:src="@drawable/avatar" />
+
+
+	<LinearLayout
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/contactNameOrNumber"
+			style="@style/font6"
+			android:singleLine="true"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical|left"
+			android:paddingLeft="20dp"
+			android:paddingRight="10dp"/>
+
+
+		<Chronometer
+			android:id="@+id/call_timer"
+			style="@style/font2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="20dp"
+			android:gravity="center_vertical|right"/>
+
+	</LinearLayout>
+
+
+	<ImageView
+		android:id="@+id/quitConference"
+		android:src="@drawable/conference_exit_default"
+		android:contentDescription="@string/content_description_exit_conference"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+
+</LinearLayout>

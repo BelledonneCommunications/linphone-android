@@ -2,114 +2,104 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@drawable/background"
+	android:background="@color/colorH"
 	android:orientation="vertical" >
 
 	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:id="@+id/top_bar"
 		android:orientation="horizontal"
-		android:background="@drawable/toolsbar_background">
+		android:background="@color/colorF"
+		android:layout_width="match_parent"
+		android:layout_height="60dp">
 
-		<TextView
-			android:contentDescription="@string/content_description_delete"
-			android:id="@+id/deleteAll"
-			android:background="@drawable/history_delete"
-			android:text="@string/button_delete_all"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:textColor="@drawable/text_button"
-			android:layout_width="match_parent"
+		<RelativeLayout
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
-			android:adjustViewBounds="true"
-			android:layout_weight="1"/>
+			android:layout_weight="0.2">
 
-		<TextView
-			android:contentDescription="@string/content_description_all_calls"
-			android:id="@+id/allCalls"
-			android:background="@drawable/history_all"
-			android:text="@string/button_all_call"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:textColor="@drawable/text_switch_button_color"
-			android:layout_width="match_parent"
+			<ImageView
+				android:id="@+id/all_calls"
+				android:src="@drawable/history_all"
+				android:background="@drawable/toolbar_button"
+				android:contentDescription="@string/content_description_all_contacts"
+				android:padding="15dp"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+			<View
+				android:id="@+id/all_calls_select"
+				android:background="@color/colorA"
+				android:layout_width="match_parent"
+				android:layout_height="5dp"
+				android:layout_alignParentBottom="true"/>
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
-			android:adjustViewBounds="true"
-			android:layout_weight="1"/>
+			android:layout_weight="0.2">
 
-		<TextView
-			android:contentDescription="@string/content_description_missed_calls"
-			android:id="@+id/missedCalls"
-			android:background="@drawable/history_missed"
-			android:text="@string/button_missed_call"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:textColor="@drawable/text_switch_button_color"
-			android:layout_width="match_parent"
+			<ImageView
+				android:id="@+id/missed_calls"
+				android:src="@drawable/history_missed"
+				android:background="@drawable/toolbar_button"
+				android:contentDescription="@string/content_description_linphone_contacts"
+				android:gravity="center"
+				android:padding="15dp"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+			<View
+				android:id="@+id/missed_calls_select"
+				android:background="@color/colorA"
+				android:layout_width="match_parent"
+				android:layout_height="5dp"
+				android:visibility="gone"
+				android:layout_alignParentBottom="true"/>
+		</RelativeLayout>
+
+		<View
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
-			android:adjustViewBounds="true"
-			android:layout_weight="1"/>
+			android:layout_weight="0.4"/>
 
-		<TextView
-			android:contentDescription="@string/content_description_edit"
+		<ImageView
 			android:id="@+id/edit"
-			android:background="@drawable/history_edit"
-			android:text="@string/button_edit"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:textColor="@drawable/text_button"
-			android:layout_width="match_parent"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit_list"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
-			android:adjustViewBounds="true"
-			android:layout_weight="1"/>
-
-		<TextView
-			android:contentDescription="@string/content_description_validate"
-			android:id="@+id/ok"
-			android:background="@drawable/history_ok"
-			android:text="@string/button_ok"
-			android:gravity="center"
-			android:paddingTop="20dp"
-			android:textColor="@drawable/text_button"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:scaleType="centerCrop"
-			android:adjustViewBounds="true"
-			android:layout_weight="1"/>
-
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
 	</LinearLayout>
 
-	<ExpandableListView
-		android:id="@+id/historyList"
+	<include layout="@layout/edit_list"/>
+
+	<ListView
+		android:id="@+id/history_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:divider="@android:color/darker_gray"
+		android:divider="@color/colorE"
 		android:cacheColorHint="@color/transparent"
 		android:dividerHeight="1dp" />
 
 	<TextView
-		android:id="@+id/noCallHistory"
+		android:id="@+id/no_call_history"
+		android:text="@string/no_call_history"
+		style="@style/font6"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:gravity="center"
-		android:text="@string/no_call_history"
-		android:textColor="@drawable/text_color"
-		android:textAppearance="@android:style/TextAppearance.Large"/>
+		android:gravity="center"/>
 
 	<TextView
-		android:id="@+id/noMissedCallHistory"
+		android:id="@+id/no_missed_call_history"
+		android:text="@string/no_missed_call_history"
+		style="@style/font6"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:gravity="center"
-		android:text="@string/no_missed_call_history"
-		android:textColor="@drawable/text_color"
-		android:textAppearance="@android:style/TextAppearance.Large"/>
+		android:gravity="center"/>
 
 </LinearLayout>

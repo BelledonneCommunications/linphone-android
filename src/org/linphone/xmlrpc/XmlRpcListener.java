@@ -15,4 +15,5 @@ public interface XmlRpcListener {
 	public void onActivateAccountLinkSent(String result);
 	public void onSignatureVerified(boolean success);
 	public void onUsernameSent(String result);
+	public void onRemoteProvisioningFilenameSent(String result);
 }

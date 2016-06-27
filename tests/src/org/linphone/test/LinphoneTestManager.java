@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
@@ -339,13 +340,6 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 	}
 
 	@Override
-	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
-			LinphoneAddress from, String message) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneChatMessage message) {
 		// TODO Auto-generated method stub
@@ -484,5 +478,15 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 									int delay_ms, Object data) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void friendListCreated(LinphoneCore lc, LinphoneFriendList list) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void friendListRemoved(LinphoneCore lc, LinphoneFriendList list) {
+		// TODO Auto-generated method stub
 	}
 }

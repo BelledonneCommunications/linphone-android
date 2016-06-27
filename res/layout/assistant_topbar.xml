@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/topbar"
+	android:background="@color/colorF"
+	android:orientation="horizontal"
+	android:layout_gravity="center_horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="60dp">
+
+	<ImageView
+		android:id="@+id/back"
+		android:src="@drawable/back"
+		android:background="@drawable/toolbar_button"
+		android:contentDescription="@string/content_description_back"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="0.2"
+		android:padding="18dp"/>
+
+	<TextView
+		android:text="@string/assistant"
+		style="@style/font1"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="0.6"
+		android:gravity="center"/>
+
+	<ImageView
+		android:id="@+id/assistant_cancel"
+		android:src="@drawable/dialer_back"
+		android:background="@drawable/toolbar_button"
+		android:contentDescription="@string/content_description_dialer_back"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="0.2"
+		android:padding="15dp"/>
+
+</LinearLayout>

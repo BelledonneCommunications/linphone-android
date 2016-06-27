@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/colorG"
+	android:layout_width="match_parent"
+	android:layout_height="35dp"
+	android:gravity="center">
+
+	<TextView
+		android:id="@+id/account_address"
+		style="@style/font13"
+		android:paddingLeft="10dp"
+		android:gravity="center_vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"/>
+
+	<ImageView
+		android:id="@+id/account_status"
+		android:src="@drawable/status_available"
+		android:layout_width="25dp"
+		android:layout_height="25dp"
+		android:padding="5dp"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true"/>
+
+	<ImageView
+		android:background="@color/colorH"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"/>
+</RelativeLayout>

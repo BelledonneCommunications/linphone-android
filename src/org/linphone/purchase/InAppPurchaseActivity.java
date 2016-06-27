@@ -229,11 +229,11 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 				String username = s.toString();
 				if (isUsernameCorrect(username)) {
 					usernameOk = true;
-					icon.setImageResource(R.drawable.wizard_ok);
+					//icon.setImageResource(R.drawable.wizard_ok);
 					errorMessage.setText("");
 				} else {
 					errorMessage.setText(R.string.wizard_username_incorrect);
-					icon.setImageResource(R.drawable.wizard_notok);
+					//icon.setImageResource(R.drawable.wizard_notok);
 				}
 				if (buyItemButton != null) buyItemButton.setEnabled(usernameOk);
 				if (recoverAccountButton != null) recoverAccountButton.setEnabled(usernameOk);

@@ -14,13 +14,16 @@ default.properties
 doc
 gen
 liblinphone-junit-report.xml
+liblinphone-sdk
 liblinphonetester_*.zip
 libs
+libs-debug
 linphone-android.iml
 linphone-junit-report*.xml
 linphonetester_*.zip
 lint.xml
 local.properties
+Makefile
 obj
 proguard-project.txt
 project.properties
@@ -38,3 +41,8 @@ tests/*$py.class
 tests/build.xml
 tests/project.properties
 ant_password.properties
+liblinphone_tester/liblinphonetester_*
+liblinphone_tester/tests.output
+tests/linphonetester_*
+tests/tests.output
+WORK

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/colorA"
+	android:alpha="0.5"
+	android:layout_height="50dp"
+	android:layout_width="match_parent"
+	android:layout_margin="2dp"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	android:padding="5dp">
+
+	<ImageView
+		android:id="@+id/contact_picture"
+		android:src="@drawable/conference_start"
+		android:layout_width="40dp"
+		android:layout_height="40dp"/>
+
+   	<TextView
+        android:id="@+id/contact_name"
+		android:text="@string/conference"
+		style="@style/font14"
+		android:singleLine="true"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="20dp"
+       	android:paddingRight="10dp"/>
+    
+    <ImageView
+		android:id="@+id/conference_pause"
+		android:src="@drawable/pause_small_over_selected"
+		android:contentDescription="@string/content_description_pause"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"/>
+
+</LinearLayout>
