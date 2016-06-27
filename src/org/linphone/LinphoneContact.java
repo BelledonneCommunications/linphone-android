@@ -313,24 +313,30 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 		if (isLinphoneFriend()) {
+			boolean hasAddr = false;
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc == null) return;
 			
 			friend.edit();
-			//TODO: handle removal of all existing SIP addresses
+			for (LinphoneAddress address : friend.getAddresses()) {
+				friend.removeAddress(address);
+			}
 			for (LinphoneNumberOrAddress address : addresses) {
-				try {
-					// Currently we only support 1 address / friend
-					LinphoneAddress addr = lc.interpretUrl(address.getValue());
-					if (addr != null) {
-						friend.setAddress(addr);
+				if (address.isSIPAddress()) {
+					try {
+						LinphoneAddress addr = lc.interpretUrl(address.getValue());
+						if (addr != null) {
+							friend.addAddress(addr);
+							hasAddr = true;
+						}
+					} catch (LinphoneCoreException e) {
+						Log.e(e);
 					}
-					break;
-				} catch (LinphoneCoreException e) {
-					Log.e(e);
 				}
 			}
-			friend.setName(fullName);
+			if (hasAddr) {
+				friend.setName(fullName);
+			}
 			friend.done();
 			
 			if (friend.getAddress() != null) {
@@ -389,7 +395,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 							try {
 								LinphoneAddress addr = LinphoneManager.getLc().interpretUrl(noa.getValue());
 								if (addr != null) {
-									friend.setAddress(addr);
+									friend.addAddress(addr);
 								}
 							} catch (LinphoneCoreException e) {
 								Log.e(e);
@@ -397,9 +403,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						}
 					}
 				}
-				friend.setName(fullName);
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				if (lc != null && friend.getAddress() != null) {
+					friend.setName(fullName);
 					try {
 						lc.addFriend(friend);
 					} catch (LinphoneCoreException e) {
