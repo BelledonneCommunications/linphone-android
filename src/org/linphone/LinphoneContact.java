@@ -203,12 +203,14 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 			
 			if (isLinphoneFriend()) {
-				if (!noa.getOldValue().startsWith("sip:")) {
-					noa.setOldValue("sip:" + noa.getOldValue());
+				if (noa.isSIPAddress()) {
+					if (!noa.getOldValue().startsWith("sip:")) {
+						noa.setOldValue("sip:" + noa.getOldValue());
+					}
 				}
 				LinphoneNumberOrAddress toRemove = null;
 				for (LinphoneNumberOrAddress address : addresses) {
-					if (noa.getOldValue().equals(address.getValue())) {
+					if (noa.getOldValue().equals(address.getValue()) && noa.isSIPAddress() == address.isSIPAddress()) {
 						toRemove = address;
 						break;
 					}
@@ -274,15 +276,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				}
 			}
 			if (isLinphoneFriend()) {
-				if (!noa.getValue().startsWith("sip:")) {
-					noa.setValue("sip:" + noa.getValue());
+				if (noa.isSIPAddress()) {
+					if (!noa.getValue().startsWith("sip:")) {
+						noa.setValue("sip:" + noa.getValue());
+					}
 				}
 				if (noa.getOldValue() != null) {
-					if (!noa.getOldValue().startsWith("sip:")) {
-						noa.setOldValue("sip:" + noa.getOldValue());
+					if (noa.isSIPAddress()) {
+						if (!noa.getOldValue().startsWith("sip:")) {
+							noa.setOldValue("sip:" + noa.getOldValue());
+						}
 					}
 					for (LinphoneNumberOrAddress address : addresses) {
-						if (noa.getOldValue().equals(address.getValue())) {
+						if (noa.getOldValue().equals(address.getValue()) && noa.isSIPAddress() == address.isSIPAddress()) {
 							address.setValue(noa.getValue());
 							break;
 						}
@@ -321,10 +327,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			for (LinphoneAddress address : friend.getAddresses()) {
 				friend.removeAddress(address);
 			}
-			for (LinphoneNumberOrAddress address : addresses) {
-				if (address.isSIPAddress()) {
+			for (String phone : friend.getPhoneNumbers()) {
+				friend.removePhoneNumber(phone);
+			}
+			for (LinphoneNumberOrAddress noa : addresses) {
+				if (noa.isSIPAddress()) {
 					try {
-						LinphoneAddress addr = lc.interpretUrl(address.getValue());
+						LinphoneAddress addr = lc.interpretUrl(noa.getValue());
 						if (addr != null) {
 							friend.addAddress(addr);
 							hasAddr = true;
@@ -332,6 +341,8 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					} catch (LinphoneCoreException e) {
 						Log.e(e);
 					}
+				} else {
+					friend.addPhoneNumber(noa.getValue());
 				}
 			}
 			if (hasAddr) {
@@ -400,6 +411,8 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 							} catch (LinphoneCoreException e) {
 								Log.e(e);
 							}
+						} else {
+							friend.addPhoneNumber(noa.getValue());
 						}
 					}
 				}
