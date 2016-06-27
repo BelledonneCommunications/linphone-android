@@ -24,6 +24,8 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListenerBase;
@@ -91,6 +93,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private Handler mControlsHandler = new Handler();
 	private Runnable mControls;
 	private ImageView switchCamera;
+	private TextView missedChats;
 	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout;
 	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
 	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu, chat;
@@ -161,7 +164,12 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new LinphoneCoreListenerBase() {
+			@Override
+			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+		        displayMissedChats();
+			}
+			
 			@Override
 			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -362,6 +370,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		chat = (ImageView) findViewById(R.id.chat);
 		chat.setOnClickListener(this);
+		missedChats = (TextView) findViewById(R.id.missed_chats);
 
 		//Others
 
@@ -500,6 +509,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		refreshInCallActions();
 		refreshCallList(getResources());
 		enableAndRefreshInCallActions();
+		displayMissedChats();
 	}
 
 	private void refreshInCallActions() {
@@ -1805,5 +1815,27 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+	}
+	
+	private void displayMissedChats() {
+		int count = 0;
+		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+		for (LinphoneChatRoom chatroom : chats) {
+			count += chatroom.getUnreadMessagesCount();
+		}
+		
+		if (count > 0) {
+			missedChats.setText(count + "");
+			missedChats.setVisibility(View.VISIBLE);
+			if (!isAnimationDisabled) {
+				missedChats.startAnimation(AnimationUtils.loadAnimation(this, R.anim.bounce));
+			}
+			if(count > 99){
+				//TODO
+			}
+		} else {
+			missedChats.clearAnimation();
+			missedChats.setVisibility(View.GONE);
+		}
 	}
 }

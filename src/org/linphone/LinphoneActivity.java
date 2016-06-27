@@ -1248,7 +1248,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		LinphoneManager.getInstance().changeStatusToOnline();
 
-		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
+		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				LinphoneCall.State callState = call.getState();
