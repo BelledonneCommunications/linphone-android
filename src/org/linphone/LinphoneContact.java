@@ -317,7 +317,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			if (lc == null) return;
 			
 			friend.edit();
-			friend.setName(fullName);
 			//TODO: handle removal of all existing SIP addresses
 			for (LinphoneNumberOrAddress address : addresses) {
 				try {
@@ -331,6 +330,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					Log.e(e);
 				}
 			}
+			friend.setName(fullName);
 			friend.done();
 			
 			if (friend.getAddress() != null) {
@@ -383,7 +383,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				// Disable subscribes for now
 				friend.enableSubscribes(false);
 				friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
-				friend.setName(fullName);
 				if (hasSipAddress) {
 					for (LinphoneNumberOrAddress noa : addresses) {
 						if (noa.isSIPAddress()) {
@@ -398,6 +397,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						}
 					}
 				}
+				friend.setName(fullName);
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				if (lc != null && friend.getAddress() != null) {
 					try {

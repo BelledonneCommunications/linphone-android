@@ -126,8 +126,10 @@ public class ContactsManager extends ContentObserver {
 		search = search.toLowerCase(Locale.getDefault());
 		List<LinphoneContact> searchContacts = new ArrayList<LinphoneContact>();
 		for (LinphoneContact contact : contacts) {
-			if (contact.getFullName().toLowerCase(Locale.getDefault()).contains(search)) {
-				searchContacts.add(contact);
+			if (contact.getFullName() != null) {
+				if (contact.getFullName().toLowerCase(Locale.getDefault()).contains(search)) {
+					searchContacts.add(contact);
+				}
 			}
 		}
 		return searchContacts;
@@ -137,8 +139,10 @@ public class ContactsManager extends ContentObserver {
 		search = search.toLowerCase(Locale.getDefault());
 		List<LinphoneContact> searchContacts = new ArrayList<LinphoneContact>();
 		for (LinphoneContact contact : sipContacts) {
-			if (contact.getFullName().toLowerCase(Locale.getDefault()).contains(search)) {
-				searchContacts.add(contact);
+			if (contact.getFullName() != null) {
+				if (contact.getFullName().toLowerCase(Locale.getDefault()).contains(search)) {
+					searchContacts.add(contact);
+				}
 			}
 		}
 		return searchContacts;
