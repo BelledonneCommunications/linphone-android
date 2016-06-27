@@ -1467,10 +1467,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void uploadStateChanged(LinphoneCore linphoneCore, LogCollectionUploadState state, String info) {
 		Log.d("Log upload state: " + state.toString() + ", info = " + info);
-
-		if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered) {
-			LinphoneActivity.instance().sendLogs(LinphoneService.instance().getApplicationContext(),info);
-		}
 	}
 
 	@Override

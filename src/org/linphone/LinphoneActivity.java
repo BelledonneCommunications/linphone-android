@@ -970,22 +970,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		startActivityForResult(intent, CALL_ACTIVITY);
 	}
 
-	public void sendLogs(Context context, String info){
-		final String appName = context.getString(R.string.app_name);
-
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.putExtra(Intent.EXTRA_EMAIL, new String[]{ context.getString(R.string.about_bugreport_email) });
-		i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-		i.putExtra(Intent.EXTRA_TEXT, info);
-		i.setType("application/zip");
-
-		try {
-			startActivity(Intent.createChooser(i, "Send mail..."));
-		} catch (android.content.ActivityNotFoundException ex) {
-			Log.e(ex);
-		}
-	}
-
 	/**
 	 * Register a sensor to track phoneOrientation changes
 	 */
