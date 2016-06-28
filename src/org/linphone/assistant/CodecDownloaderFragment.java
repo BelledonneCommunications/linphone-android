@@ -31,11 +31,11 @@ import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.OpenH264HelperListener;
+import org.linphone.core.OpenH264DownloadHelperListener;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.PayloadType;
-import org.linphone.tools.OpenH264Helper;
+import org.linphone.tools.OpenH264DownloadHelper;
 
 /**
  * @author Erwan CROZE
@@ -57,10 +57,9 @@ public class CodecDownloaderFragment extends Fragment {
 		final ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
 		final TextView downloadingInfo = (TextView) view.findViewById(R.id.downloadingInfo);
 
-		OpenH264Helper.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
-
-		final OpenH264Helper codecDownloader = new OpenH264Helper();
-		final OpenH264HelperListener codecListener = new OpenH264HelperListener() {
+		final OpenH264DownloadHelper codecDownloader = new OpenH264DownloadHelper();
+		codecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+		final OpenH264DownloadHelperListener codecListener = new OpenH264DownloadHelperListener() {
 
 			@Override
 			public void OnProgress(final int current, final int max) {
@@ -76,7 +75,7 @@ public class CodecDownloaderFragment extends Fragment {
 						} else {
 							downloadingInfo.setVisibility(View.INVISIBLE);
 							bar.setVisibility(View.INVISIBLE);
-							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(LinphoneManager.getInstance().getContext().getFilesDir() + "/" + OpenH264Helper.getNameLib());
+							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(LinphoneManager.getInstance().getContext().getFilesDir() + "/" + codecDownloader.getNameLib());
 							LinphoneManager.getLc().reloadMsPlugins(null);
 							downloading.setVisibility(View.INVISIBLE);
 							downloaded.setVisibility(View.VISIBLE);
@@ -88,7 +87,7 @@ public class CodecDownloaderFragment extends Fragment {
 			}
 
 			@Override
-			public void OnDownloadFailure (final String error){
+			public void OnError (final String error){
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {

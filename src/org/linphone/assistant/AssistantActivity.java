@@ -33,7 +33,7 @@ import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
-import org.linphone.tools.OpenH264Helper;
+import org.linphone.tools.OpenH264DownloadHelper;
 
 import android.Manifest;
 import android.app.Activity;
@@ -355,8 +355,9 @@ private static AssistantActivity instance;
 	}
 
 	private void launchDownloadCodec() {
-		OpenH264Helper.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
-		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !OpenH264Helper.codecExist()) {
+		OpenH264DownloadHelper downloadHelper = new OpenH264DownloadHelper();
+		downloadHelper.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
 			CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
 			changeFragment(codecFragment);
 			currentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
