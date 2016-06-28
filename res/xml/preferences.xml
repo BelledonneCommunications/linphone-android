@@ -10,8 +10,8 @@
 	    android:key="@string/pref_add_account_key"/>
 
 	<Preference
-	    android:title="In-app Store"
-	    android:key="in_app_store"/>
+	    android:title="@string/pref_in_app_store"
+	    android:key="@string/pref_in_app_store_key"/>
 
     <PreferenceCategory
         android:title="@string/pref_tunnel"

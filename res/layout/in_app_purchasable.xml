@@ -5,26 +5,15 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical" >
-    
-    <RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+
+    <Button
+        android:id="@+id/inapp_button"
+        android:text="@string/assistant_create_account"
+        android:background="@drawable/assistant_button"
+        style="@style/font8"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-           
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-	    	android:layout_centerInParent="true" />
-        
-        <TextView 
-            android:id="@+id/text"
-	    	android:layout_centerInParent="true"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="@android:color/black"/>
-       
-       </RelativeLayout>
+        android:paddingRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
     
 </LinearLayout>

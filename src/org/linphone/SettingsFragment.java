@@ -116,7 +116,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		findPreference("in_app_store").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		findPreference(getString(R.string.pref_in_app_store_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Intent intent = new Intent(LinphoneService.instance(), InAppPurchaseActivity.class);
@@ -145,6 +145,11 @@ public class SettingsFragment extends PreferencesListFragment {
 		if(!getResources().getBoolean(R.bool.replace_assistant_with_old_interface)){
 			hidePreference(R.string.pref_add_account_key);
 		}
+
+		if(!getResources().getBoolean(R.bool.in_app_purchase_in_settings)){
+			hidePreference(R.string.pref_in_app_store_key);
+		}
+
 
 		if (getResources().getBoolean(R.bool.disable_animations)) {
 			uncheckAndHidePreference(R.string.pref_animation_enable_key);

@@ -37,6 +37,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,7 +51,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	private InAppPurchaseHelper inAppPurchaseHelper;
 	private LinearLayout purchasableItemsLayout;
 	private ArrayList<Purchasable> purchasedItems;
-	private ImageView buyItemButton, recoverAccountButton;
+	private Button buyItemButton, recoverAccountButton;
 	private Handler mHandler = new Handler();
 	
 	private EditText username, email;
@@ -66,11 +67,10 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		setContentView(R.layout.in_app_store);
 		purchasableItemsLayout = (LinearLayout) findViewById(R.id.purchasable_items);
 		
-		username = (EditText) findViewById(R.id.setup_username);
-		email = (EditText) findViewById(R.id.setup_email);
-    	ImageView usernameOkIV = (ImageView) findViewById(R.id.setup_username_ok);
-    	addUsernameHandler(username, usernameOkIV);
-    	errorMessage = (TextView) findViewById(R.id.setup_error);
+		username = (EditText) findViewById(R.id.username);
+		email = (EditText) findViewById(R.id.email);
+		errorMessage = (TextView) findViewById(R.id.username_error);
+    	addUsernameHandler(username, errorMessage);
 	}
 	
 	@Override
@@ -174,11 +174,11 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	
 	private void displayBuySubscriptionButton(Purchasable item) {
 		View layout = LayoutInflater.from(this).inflate(R.layout.in_app_purchasable, purchasableItemsLayout);
-		TextView text = (TextView) layout.findViewById(R.id.text);
-		text.setText("Buy account (" + item.getPrice() + ")");
-		ImageView image = (ImageView) layout.findViewById(R.id.image);
-		image.setTag(item);
-		image.setOnClickListener(this);XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
+		Button button = (Button) layout.findViewById(R.id.inapp_button);
+		button.setText("Buy account (" + item.getPrice() + ")");
+		button.setTag(item);
+		button.setOnClickListener(this);
+		XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
 		xmlRpcHelper.createAccountAsync(new XmlRpcListenerBase() {
 			@Override
 			public void onAccountCreated(String result) {
@@ -186,19 +186,18 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 			}
 		}, getUsername(), email.getText().toString(), null);
 		
-		buyItemButton = image;
+		buyItemButton = button;
 		buyItemButton.setEnabled(usernameOk);
 	}
 	
 	private void displayRecoverAccountButton(Purchasable item) {
 		View layout = LayoutInflater.from(this).inflate(R.layout.in_app_purchasable, purchasableItemsLayout);
-		TextView text = (TextView) layout.findViewById(R.id.text);
-		text.setText("Recover account");
-		ImageView image = (ImageView) layout.findViewById(R.id.image);
-		image.setTag(item);
-		image.setOnClickListener(this);
+		Button button = (Button) layout.findViewById(R.id.inapp_button);
+		button.setText("Recover account");
+		button.setTag(item);
+		button.setOnClickListener(this);
 		
-		recoverAccountButton = image;
+		recoverAccountButton = button;
 		recoverAccountButton.setEnabled(usernameOk);
 	}
 	
@@ -214,7 +213,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		return lpc.isPhoneNumber(username);
 	}
 	
-	private void addUsernameHandler(final EditText field, final ImageView icon) {
+	private void addUsernameHandler(final EditText field, final TextView errorMessage) {
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				
@@ -229,11 +228,9 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 				String username = s.toString();
 				if (isUsernameCorrect(username)) {
 					usernameOk = true;
-					//icon.setImageResource(R.drawable.wizard_ok);
 					errorMessage.setText("");
 				} else {
 					errorMessage.setText(R.string.wizard_username_incorrect);
-					//icon.setImageResource(R.drawable.wizard_notok);
 				}
 				if (buyItemButton != null) buyItemButton.setEnabled(usernameOk);
 				if (recoverAccountButton != null) recoverAccountButton.setEnabled(usernameOk);
