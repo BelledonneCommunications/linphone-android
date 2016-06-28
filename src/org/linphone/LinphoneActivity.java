@@ -126,6 +126,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
 	private boolean fetchedContactsOnce = false;
+	private boolean doNotGoToCallActivity = false;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -1248,7 +1249,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		LinphoneManager.getInstance().changeStatusToOnline();
 
-		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY) {
+		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				LinphoneCall.State callState = call.getState();
@@ -1273,6 +1274,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 		}
+		doNotGoToCallActivity = false;
 	}
 
 	@Override
@@ -1309,6 +1311,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			LinphoneService.instance().removeMessageNotification();
 			String sipUri = extras.getString("ChatContactSipUri");
+			doNotGoToCallActivity = true;
 			displayChat(sipUri);
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
@@ -1333,19 +1336,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
-				LinphoneCall calls[] = LinphoneManager.getLc().getCalls();
-				if (calls.length > 0) {
-					LinphoneCall call = calls[0];
-
-					if (call != null && call.getState() != LinphoneCall.State.IncomingReceived) {
-						if (call.getCurrentParamsCopy().getVideoEnabled()) {
-							//startVideoActivity(call);
-						} else {
-							//startIncallActivity(call);
-						}
-					}
-				}
-
 				// If a call is ringing, start incomingcallactivity
 				Collection<LinphoneCall.State> incoming = new ArrayList<LinphoneCall.State>();
 				incoming.add(LinphoneCall.State.IncomingReceived);
