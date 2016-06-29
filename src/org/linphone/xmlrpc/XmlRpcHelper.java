@@ -24,14 +24,10 @@ public class XmlRpcHelper {
     public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
     
     private XMLRPCClient mXmlRpcClient;
-    
-    public XmlRpcHelper(String serverUrl) {
+
+    public XmlRpcHelper() {
     	try {
-			if(serverUrl != null) {
-				mXmlRpcClient = new XMLRPCClient(new URL(serverUrl));
-			} else {
-				mXmlRpcClient = new XMLRPCClient(new URL(LinphonePreferences.instance().getXmlRpcServerUrl()));
-			}
+    		mXmlRpcClient = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
 		} catch (MalformedURLException e) {
 			Log.e(e);
 		}
@@ -274,12 +270,11 @@ public class XmlRpcHelper {
 					Log.e(error);
 					listener.onError(error.toString());
 				}
-
+				
 				@Override
 				public void onResponse(long id, Object object) {
-					String result = (String) object;
+					String result = (String)object;
 					Log.d("isAccountActivatedAsync: " + result);
-
 					if ("OK".equals(result)) {
 						listener.onAccountActivatedFetched(true);
 						return;
@@ -289,7 +284,6 @@ public class XmlRpcHelper {
 					}
 					listener.onAccountActivatedFetched(false);
 				}
-
 				@Override
 				public void onError(long id, XMLRPCException error) {
 					Log.e(error);
@@ -858,27 +852,5 @@ public class XmlRpcHelper {
 			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
 			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
 		}
-	}
-
-	public String getRemoteProvisioningFilename(String username, String domain, String password){
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("get_remote_provisioning_filename", username, domain, password);
-				String result = (String)object;
-				Log.d("getRemoteProvisioningFilename:: " + result);
-
-				if (result.startsWith("ERROR_")) {
-					Log.e(result);
-					return result;
-				}
-				return result;
-
-			} catch (XMLRPCException e) {
-				Log.e(e);
-			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
 	}
 }

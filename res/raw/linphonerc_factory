@@ -32,3 +32,7 @@ ec_calibrator_cool_tones=1
 
 [misc]
 max_calls=10
+
+[in-app-purchase]
+server_url=https://www.linphone.org/xmlrpc.php
+purchasable_items_ids=test_account_subscription

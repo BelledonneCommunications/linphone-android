@@ -4,10 +4,14 @@
     <PreferenceCategory
         android:title="@string/pref_sipaccounts"
 	    android:key="@string/pref_sipaccounts_key"/>
-
+	
 	<Preference
 	    android:title="@string/pref_add_account"
 	    android:key="@string/pref_add_account_key"/>
+
+	<Preference
+	    android:title="@string/pref_in_app_store"
+	    android:key="@string/pref_in_app_store_key"/>
 
     <PreferenceCategory
         android:title="@string/pref_tunnel"

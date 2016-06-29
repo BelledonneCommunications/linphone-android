@@ -221,6 +221,7 @@
 	<string name="pref_sipaccounts">SIP Accounts</string>
 	<string name="default_account_flag">Default account</string>
 	<string name="pref_add_account">Add account</string>
+	<string name="pref_in_app_store">In-app Store</string>
 	<string name="pref_tunnel">Tunnel</string>
 	<string name="pref_tunnel_host">Hostname</string>
 	<string name="pref_tunnel_port">Port</string>
