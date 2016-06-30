@@ -242,7 +242,11 @@ private static AssistantActivity instance;
 		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
 			if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
+			} else {
+				isEchoCalibrationFinished();
 			}
+		} else {
+			isEchoCalibrationFinished();
 		}
 	}
 

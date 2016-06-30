@@ -249,8 +249,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 							progress.dismiss();
 							progress = null;
 							LinphoneManager.getLc().reloadMsPlugins(null);
-							if (ohcodec.getUserDataSize() > box
-									&& ohcodec.getUserData(box) != null)
+							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null)
 								((CheckBoxPreference)ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
 						}
 					}
@@ -259,7 +258,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 			@Override
 			public void OnError (final String error){
-				if (progress == null) return;
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
