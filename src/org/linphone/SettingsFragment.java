@@ -37,6 +37,8 @@ import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -571,7 +573,6 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
-			mCodecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
 			if (pt.getMime().equals("H264") && mCodecDownloader.isCodecFound())
 				codec.setSummary(mCodecDownloader.getLicenseMessage());
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
@@ -584,10 +585,27 @@ public class SettingsFragment extends PreferencesListFragment {
 						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
 								&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
 							LinphoneManager.getInstance().getOpenH264DownloadHelper().setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
-							LinphoneManager.getInstance().getOpenH264DownloadHelper().setOpenH264HelperAction(LinphoneManager.getInstance().getOpenH264DownloadHelper().getOpenH264DownloadHelperAction());
 							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(0,LinphoneManager.getInstance().getContext());
 							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(1,codec);
-							LinphoneManager.getInstance().getOpenH264DownloadHelper().getOpenH264DownloadHelperAction().startDownload();
+
+							AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
+							builder.setCancelable(false);
+							AlertDialog.Builder show = builder.setMessage("Do you agree to download "
+									+ mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == DialogInterface.BUTTON_POSITIVE)
+										mCodecDownloader.downloadCodec();
+								}
+							});
+							builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == DialogInterface.BUTTON_NEGATIVE){
+										// Disable H264
+									}
+								}
+							}).show();
 						}
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {

@@ -113,7 +113,8 @@ private static AssistantActivity instance;
 						if (state == RegistrationState.RegistrationOk) {
 							if (progress != null) progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								launchEchoCancellerCalibration(true);
+								if (!launchEchoCancellerCalibration(true))
+									launchDownloadCodec();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							if (progress != null) progress.dismiss();
@@ -242,15 +243,11 @@ private static AssistantActivity instance;
 		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
 			if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
-			} else {
-				launchDownloadCodec();
 			}
-		} else {
-			launchDownloadCodec();
 		}
 	}
 
-	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
+	private boolean launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
 		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
 			if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
@@ -260,12 +257,12 @@ private static AssistantActivity instance;
 				currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
 				back.setVisibility(View.VISIBLE);
 				cancel.setEnabled(false);
-			} else {
-				launchDownloadCodec();
+				return true;
 			}
 		} else {
 			checkAndRequestAudioPermission();
 		}
+		return false;
 	}
 
 	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
@@ -355,8 +352,7 @@ private static AssistantActivity instance;
 	}
 
 	private void launchDownloadCodec() {
-		OpenH264DownloadHelper downloadHelper = new OpenH264DownloadHelper();
-		downloadHelper.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+		OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
 			CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
 			changeFragment(codecFragment);
@@ -498,7 +494,8 @@ private static AssistantActivity instance;
 	
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
-		launchEchoCancellerCalibration(true);
+		if(!launchEchoCancellerCalibration(true))
+			launchDownloadCodec(); // Echo canceller cancel
 	}
 
 	public void isEchoCalibrationFinished() {

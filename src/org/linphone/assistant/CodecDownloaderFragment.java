@@ -31,9 +31,9 @@ import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.OpenH264DownloadHelperListener;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.PayloadType;
 import org.linphone.tools.OpenH264DownloadHelper;
 
@@ -57,8 +57,7 @@ public class CodecDownloaderFragment extends Fragment {
 		final ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
 		final TextView downloadingInfo = (TextView) view.findViewById(R.id.downloadingInfo);
 
-		final OpenH264DownloadHelper codecDownloader = new OpenH264DownloadHelper();
-		codecDownloader.setFileDirection(LinphoneManager.getInstance().getContext().getFilesDir().toString());
+		final OpenH264DownloadHelper codecDownloader = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		final OpenH264DownloadHelperListener codecListener = new OpenH264DownloadHelperListener() {
 
 			@Override
@@ -75,7 +74,6 @@ public class CodecDownloaderFragment extends Fragment {
 						} else {
 							downloadingInfo.setVisibility(View.INVISIBLE);
 							bar.setVisibility(View.INVISIBLE);
-							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(LinphoneManager.getInstance().getContext().getFilesDir() + "/" + codecDownloader.getNameLib());
 							LinphoneManager.getLc().reloadMsPlugins(null);
 							downloading.setVisibility(View.INVISIBLE);
 							downloaded.setVisibility(View.VISIBLE);

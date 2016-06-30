@@ -145,7 +145,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private LinphoneCore mLc;
 	private OpenH264DownloadHelper mCodecDownloader;
 	private OpenH264DownloadHelperListener mCodecListener;
-	private OpenH264DownloadHelperAction mCodecAction;
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
@@ -193,7 +192,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
-		initOpenH264Helper();
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -225,7 +223,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void initOpenH264Helper() {
-		mCodecDownloader = new OpenH264DownloadHelper();
+		mCodecDownloader = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		mCodecListener = new OpenH264DownloadHelperListener() {
 			ProgressDialog progress;
 			int box = 1;
@@ -250,7 +248,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						} else {
 							progress.dismiss();
 							progress = null;
-							LinphoneCoreFactoryImpl.loadOptionalLibraryWithPath(((Context)ohcodec.getUserData(ctxt)).getFilesDir() + "/" + mCodecDownloader.getNameLib());
 							LinphoneManager.getLc().reloadMsPlugins(null);
 							if (ohcodec.getUserDataSize() > box
 									&& ohcodec.getUserData(box) != null)
@@ -276,43 +273,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				});
 			}
 		};
-		mCodecAction = new OpenH264DownloadHelperAction() {
-			@Override
-			public void startDownload() {
-				askPopUp();
-			}
-
-			public void askPopUp() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
-				builder.setCancelable(false);
-				AlertDialog.Builder show = builder.setMessage("Do you agree to download "
-						+ mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (which == DialogInterface.BUTTON_POSITIVE)
-							mCodecDownloader.downloadCodec();
-						}
-					});
-				builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (which == DialogInterface.BUTTON_NEGATIVE){
-							// Disable H264
-						}
-					}
-				}).show();
-			}
-		};
 		mCodecDownloader.setOpenH264HelperListener(mCodecListener);
-		mCodecDownloader.setOpenH264HelperAction(mCodecAction);
 	}
 
 	public OpenH264DownloadHelperListener getOpenH264HelperListener() {
 		return mCodecListener;
-	}
-
-	public OpenH264DownloadHelperAction getOpenH264HelperAction() {
-		return mCodecAction;
 	}
 
 	public OpenH264DownloadHelper getOpenH264DownloadHelper(){
@@ -1005,6 +970,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == GlobalState.GlobalOn){
 			try {
 					initLiblinphone(lc);
+					initOpenH264Helper();
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
