@@ -88,7 +88,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private boolean storeAccount(String username, String password, String domain) {
 		LinphoneCore lc = LinphoneManager.getLc();
 
-		XmlRpcHelper xmlRpcHelper = new XmlRpcHelper(null);
+		XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
 		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
 			@Override
 			public void onRemoteProvisioningFilenameSent(String result) {

@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LpConfig;
 import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.purchase.Purchasable;
 
 import android.content.Context;
 
@@ -662,6 +664,15 @@ public class LinphonePreferences {
 		prxCfg.done();
 	}
 
+	public boolean isFriendlistsubscriptionEnabled() {
+		return getConfig().getBool("app", "friendlist_subscription_enabled", false);
+	}
+
+	public void enabledFriendlistSubscription(boolean enabled) {
+		getConfig().setBool("app", "friendlist_subscription_enabled", enabled);
+
+	}
+
 	public void setDefaultAccount(int accountIndex) {
 		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		if (accountIndex >= 0 && accountIndex < prxCfgs.length)
@@ -1228,7 +1239,44 @@ public class LinphonePreferences {
 	}
 
 	public boolean isContactsMigrationDone(){
-		return getConfig().getBool("app", "contacts_migration_done",false);
+		return getConfig().getBool("app", "contacts_migration_done", false);
+	}
+	
+	public String getInAppPurchaseValidatingServerUrl() {
+		return getConfig().getString("in-app-purchase", "server_url", null);
+	}
+	
+	public Purchasable getInAppPurchasedItem() {
+		String id = getConfig().getString("in-app-purchase", "purchase_item_id", null);
+		String payload = getConfig().getString("in-app-purchase", "purchase_item_payload", null);
+		String signature = getConfig().getString("in-app-purchase", "purchase_item_signature", null);
+		String username = getConfig().getString("in-app-purchase", "purchase_item_username", null);
+		
+		Purchasable item = new Purchasable(id).setPayloadAndSignature(payload, signature).setUserData(username);
+		return item;
+	}
+	
+	public void setInAppPurchasedItem(Purchasable item) {
+		if (item == null)
+			return;
+		
+		getConfig().setString("in-app-purchase", "purchase_item_id", item.getId());
+		getConfig().setString("in-app-purchase", "purchase_item_payload", item.getPayload());
+		getConfig().setString("in-app-purchase", "purchase_item_signature", item.getPayloadSignature());
+		getConfig().setString("in-app-purchase", "purchase_item_username", item.getUserData());
+	}
+	
+	public ArrayList<String> getInAppPurchasables() {
+		ArrayList<String>  purchasables = new ArrayList<String>();
+		String list = getConfig().getString("in-app-purchase", "purchasable_items_ids", null);
+		if (list != null) {
+			for(String purchasable : list.split(";")) {
+				if (purchasable.length() > 0) {
+					purchasables.add(purchasable);
+				}
+			}
+		}
+		return purchasables;
 	}
 
 	public String getXmlRpcServerUrl() {

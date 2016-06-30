@@ -50,13 +50,16 @@ import org.linphone.ui.AddressText;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -126,6 +129,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
 	private boolean fetchedContactsOnce = false;
+	private boolean doNotGoToCallActivity = false;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -970,22 +974,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		startActivityForResult(intent, CALL_ACTIVITY);
 	}
 
-	public void sendLogs(Context context, String info){
-		final String appName = context.getString(R.string.app_name);
-
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.putExtra(Intent.EXTRA_EMAIL, new String[]{ context.getString(R.string.about_bugreport_email) });
-		i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-		i.putExtra(Intent.EXTRA_TEXT, info);
-		i.setType("application/zip");
-
-		try {
-			startActivity(Intent.createChooser(i, "Send mail..."));
-		} catch (android.content.ActivityNotFoundException ex) {
-			Log.e(ex);
-		}
-	}
-
 	/**
 	 * Register a sensor to track phoneOrientation changes
 	 */
@@ -1137,6 +1125,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
 
+		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
+			LinphoneManager.getInstance().subscribeFriendList(!isApplicationBroughtToBackground(this));
+		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
@@ -1144,7 +1135,28 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		
 		super.onPause();
 	}
-	
+
+	public static boolean isApplicationBroughtToBackground(final Activity activity) {
+		ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
+
+		// Check the top Activity against the list of Activities contained in the Application's package.
+		if (!tasks.isEmpty()) {
+			ComponentName topActivity = tasks.get(0).topActivity;
+			try {
+				PackageInfo pi = activity.getPackageManager().getPackageInfo(activity.getPackageName(), PackageManager.GET_ACTIVITIES);
+				for (ActivityInfo activityInfo : pi.activities) {
+					if(topActivity.getClassName().equals(activityInfo.name)) {
+						return false;
+					}
+				}
+			} catch( PackageManager.NameNotFoundException e) {
+				return false; // Never happens.
+			}
+		}
+		return true;
+	}
+
 	public void checkAndRequestExternalStoragePermission() {
 		if (LinphonePreferences.instance().writeExternalStoragePermAsked()) {
 			return;
@@ -1186,7 +1198,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void checkAndRequestPermission(String permission, int result) {
 		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this, new String[]{ permission }, result);
+			ActivityCompat.requestPermissions(this, new String[]{permission}, result);
 		}
 	}
 
@@ -1259,12 +1271,15 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		refreshAccounts();
 
 		updateMissedChatCount();
+		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
+			LinphoneManager.getInstance().subscribeFriendList(true);
+		}
 
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
 		LinphoneManager.getInstance().changeStatusToOnline();
 
-		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY){
+		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				LinphoneCall.State callState = call.getState();
@@ -1289,6 +1304,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 		}
+		doNotGoToCallActivity = false;
 	}
 
 	@Override
@@ -1325,6 +1341,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			LinphoneService.instance().removeMessageNotification();
 			String sipUri = extras.getString("ChatContactSipUri");
+			doNotGoToCallActivity = true;
 			displayChat(sipUri);
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
@@ -1349,19 +1366,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
-				LinphoneCall calls[] = LinphoneManager.getLc().getCalls();
-				if (calls.length > 0) {
-					LinphoneCall call = calls[0];
-
-					if (call != null && call.getState() != LinphoneCall.State.IncomingReceived) {
-						if (call.getCurrentParamsCopy().getVideoEnabled()) {
-							//startVideoActivity(call);
-						} else {
-							//startIncallActivity(call);
-						}
-					}
-				}
-
 				// If a call is ringing, start incomingcallactivity
 				Collection<LinphoneCall.State> incoming = new ArrayList<LinphoneCall.State>();
 				incoming.add(LinphoneCall.State.IncomingReceived);

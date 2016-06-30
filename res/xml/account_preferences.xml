@@ -72,6 +72,10 @@
 		<CheckBoxPreference 
 			android:title="@string/pref_escape_plus"
 		    android:key="@string/pref_escape_plus_key"/>
+
+		<CheckBoxPreference
+			android:title="@string/pref_friendlist_subscribe"
+			android:key="@string/pref_friendlist_subscribe_key"/>
         
     </PreferenceCategory>
     

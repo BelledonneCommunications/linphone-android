@@ -41,6 +41,8 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <!-- Needed for in-app purchase -->
+    <uses-permission android:name="com.android.vending.BILLING" />
 
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     
@@ -128,6 +130,14 @@
         <activity android:name=".assistant.AssistantActivity"
 		    android:theme="@style/NoTitle"
             android:screenOrientation="behind">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+         
+         <activity android:name="org.linphone.purchase.InAppPurchaseActivity"
+		    android:theme="@style/NoTitle"
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

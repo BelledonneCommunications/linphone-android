@@ -95,6 +95,19 @@
 	        android:scaleType="centerInside"
 	        android:src="@drawable/led_connected" />
 
+		<ImageView
+			android:id="@+id/friendLinphone"
+			android:visibility="gone"
+			android:layout_width="20dp"
+			android:layout_height="20dp"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+			android:adjustViewBounds="true"
+			android:layout_marginRight="20dp"
+			android:scaleType="centerInside"
+			android:src="@drawable/linphone_user" />
+
+
 	</RelativeLayout>
     
 </LinearLayout>

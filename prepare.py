@@ -84,7 +84,7 @@ class AndroidPreparator(prepare.Preparator):
     def __init__(self, targets=android_targets):
         prepare.Preparator.__init__(self, targets)
         self.min_supported_ndk = 10
-        self.max_supported_ndk = 11
+        self.max_supported_ndk = 12
         self.unsupported_ndk_version = None
         self.release_with_debug_info = True
         self.veryclean = True
@@ -138,8 +138,8 @@ class AndroidPreparator(prepare.Preparator):
                     python_config_files.append(os.path.join(root, filename))
             if len(python_config_files) > 0:
                 version = open(python_config_files[0]).readlines()[0]
-                res = re.match('^.*/aosp-ndk-r(\d+).*$', version)
-                version = int(res.group(1))
+                res = re.match('^.*/(aosp-)?ndk-r(\d+).*$', version)
+                version = int(res.group(2))
                 retval = False
             else:
                 error("Could not get Android NDK version!")

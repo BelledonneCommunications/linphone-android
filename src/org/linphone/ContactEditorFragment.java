@@ -385,7 +385,7 @@ public class ContactEditorFragment extends Fragment {
 		if (contact != null) {
 			for (LinphoneNumberOrAddress numberOrAddress : contact.getNumbersOrAddresses()) {
 				if (!numberOrAddress.isSIPAddress()) {
-					View view = displayNumberOrAddress(controls, numberOrAddress.getValue());
+					View view = displayNumberOrAddress(controls, numberOrAddress.getValue(), false);
 					if (view != null)
 						controls.addView(view);
 				}
@@ -395,7 +395,7 @@ public class ContactEditorFragment extends Fragment {
 		if (newSipOrNumberToAdd != null) {
 			boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
 			if(!isSip) {
-				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
+				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, false);
 				if (view != null)
 					controls.addView(view);
 			}
@@ -415,7 +415,7 @@ public class ContactEditorFragment extends Fragment {
 		if (contact != null) {
 			for (LinphoneNumberOrAddress numberOrAddress : contact.getNumbersOrAddresses()) {
 				if (numberOrAddress.isSIPAddress()) {
-					View view = displayNumberOrAddress(controls, numberOrAddress.getValue());
+					View view = displayNumberOrAddress(controls, numberOrAddress.getValue(), true);
 					if (view != null)
 						controls.addView(view);
 				}
@@ -425,7 +425,7 @@ public class ContactEditorFragment extends Fragment {
 		if (newSipOrNumberToAdd != null) {
 			boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
 			if (isSip) {
-				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd);
+				View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, true);
 				if (view != null)
 					controls.addView(view);
 			}
@@ -438,35 +438,33 @@ public class ContactEditorFragment extends Fragment {
 		return controls;
 	}
 	
-	private View displayNumberOrAddress(final LinearLayout controls, String numberOrAddress) {
-		return displayNumberOrAddress(controls, numberOrAddress, false);
+	private View displayNumberOrAddress(final LinearLayout controls, String numberOrAddress, boolean isSIP) {
+		return displayNumberOrAddress(controls, numberOrAddress, isSIP, false);
 	}
 	
 	@SuppressLint("InflateParams")
-	private View displayNumberOrAddress(final LinearLayout controls, String numberOrAddress, boolean forceAddNumber) {
-		boolean isSip = LinphoneUtils.isStrictSipAddress(numberOrAddress) || !LinphoneUtils.isNumberAddress(numberOrAddress);
-		
-		if (isSip) {
+	private View displayNumberOrAddress(final LinearLayout controls, String numberOrAddress, boolean isSIP, boolean forceAddNumber) {
+		if (isSIP) {
 			if (firstSipAddressIndex == -1) {
 				firstSipAddressIndex = controls.getChildCount();
 			}
 			numberOrAddress = numberOrAddress.replace("sip:", "");
 		}
-		if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSip) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSip)) {
+		if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
 			if (forceAddNumber)
-				isSip = !isSip; // If number can't be displayed because we hide a sort of number, change that category
+				isSIP = !isSIP; // If number can't be displayed because we hide a sort of number, change that category
 			else
 				return null;
 		}
 		
 		LinphoneNumberOrAddress tempNounoa;
 		if (forceAddNumber) {
-			tempNounoa = new LinphoneNumberOrAddress(null, isSip);
+			tempNounoa = new LinphoneNumberOrAddress(null, isSIP);
 		} else {
 			if(isNewContact || newSipOrNumberToAdd != null) {
-				tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSip);
+				tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSIP);
 			} else {
-				tempNounoa = new LinphoneNumberOrAddress(null, isSip, numberOrAddress);
+				tempNounoa = new LinphoneNumberOrAddress(null, isSIP, numberOrAddress);
 			}
 		}
 		final LinphoneNumberOrAddress nounoa = tempNounoa;
@@ -475,7 +473,7 @@ public class ContactEditorFragment extends Fragment {
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
 
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
-		noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
+		noa.setInputType(isSIP ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
 		noa.setText(numberOrAddress);
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -496,7 +494,7 @@ public class ContactEditorFragment extends Fragment {
 		}
 		
 		ImageView delete = (ImageView) view.findViewById(R.id.delete_field);
-		if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
+		if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSIP) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSIP)) {
 			delete.setVisibility(View.GONE);
 		}
 		delete.setOnClickListener(new OnClickListener() {

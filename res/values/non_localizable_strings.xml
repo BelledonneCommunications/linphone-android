@@ -34,6 +34,7 @@
 	<string name="pref_sipaccounts_key">pref_sipaccounts_key</string>
 	<string name="setup_key">setup_key</string>
 	<string name="pref_add_account_key">pref_add_account_key</string>
+	<string name="pref_in_app_store_key">pref_in_app_store_key</string>
 	<string name="pref_video_key">pref_video_key</string>
     <string name="pref_video_codecs_key">pref_video_codecs_key</string>
 
@@ -71,6 +72,7 @@
 	<string name="pref_bandwidth_limit_key">pref_bandwidth_limit_key</string>
     <string name="pref_animation_enable_key">pref_animation_enable_key</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
+    <string name="pref_friendlist_subscribe_key">pref_friendlist_subscribe_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_autostart_key">pref_autostart_key</string>
     <string name="pref_enable_outbound_proxy_key">Outbound proxy</string>

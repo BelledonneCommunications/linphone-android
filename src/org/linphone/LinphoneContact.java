@@ -29,6 +29,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
+import org.linphone.core.PresenceBasicStatus;
 import org.linphone.mediastream.Log;
 
 import android.content.ContentProviderOperation;
@@ -203,12 +204,14 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 			
 			if (isLinphoneFriend()) {
-				if (!noa.getOldValue().startsWith("sip:")) {
-					noa.setOldValue("sip:" + noa.getOldValue());
+				if (noa.isSIPAddress()) {
+					if (!noa.getOldValue().startsWith("sip:")) {
+						noa.setOldValue("sip:" + noa.getOldValue());
+					}
 				}
 				LinphoneNumberOrAddress toRemove = null;
 				for (LinphoneNumberOrAddress address : addresses) {
-					if (noa.getOldValue().equals(address.getValue())) {
+					if (noa.getOldValue().equals(address.getValue()) && noa.isSIPAddress() == address.isSIPAddress()) {
 						toRemove = address;
 						break;
 					}
@@ -274,15 +277,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				}
 			}
 			if (isLinphoneFriend()) {
-				if (!noa.getValue().startsWith("sip:")) {
-					noa.setValue("sip:" + noa.getValue());
+				if (noa.isSIPAddress()) {
+					if (!noa.getValue().startsWith("sip:")) {
+						noa.setValue("sip:" + noa.getValue());
+					}
 				}
 				if (noa.getOldValue() != null) {
-					if (!noa.getOldValue().startsWith("sip:")) {
-						noa.setOldValue("sip:" + noa.getOldValue());
+					if (noa.isSIPAddress()) {
+						if (!noa.getOldValue().startsWith("sip:")) {
+							noa.setOldValue("sip:" + noa.getOldValue());
+						}
 					}
 					for (LinphoneNumberOrAddress address : addresses) {
-						if (noa.getOldValue().equals(address.getValue())) {
+						if (noa.getOldValue().equals(address.getValue()) && noa.isSIPAddress() == address.isSIPAddress()) {
 							address.setValue(noa.getValue());
 							break;
 						}
@@ -313,23 +320,34 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 		if (isLinphoneFriend()) {
+			boolean hasAddr = false;
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc == null) return;
 			
 			friend.edit();
-			friend.setName(fullName);
-			//TODO: handle removal of all existing SIP addresses
-			for (LinphoneNumberOrAddress address : addresses) {
-				try {
-					// Currently we only support 1 address / friend
-					LinphoneAddress addr = lc.interpretUrl(address.getValue());
-					if (addr != null) {
-						friend.setAddress(addr);
+			for (LinphoneAddress address : friend.getAddresses()) {
+				friend.removeAddress(address);
+			}
+			for (String phone : friend.getPhoneNumbers()) {
+				friend.removePhoneNumber(phone);
+			}
+			for (LinphoneNumberOrAddress noa : addresses) {
+				if (noa.isSIPAddress()) {
+					try {
+						LinphoneAddress addr = lc.interpretUrl(noa.getValue());
+						if (addr != null) {
+							friend.addAddress(addr);
+							hasAddr = true;
+						}
+					} catch (LinphoneCoreException e) {
+						Log.e(e);
 					}
-					break;
-				} catch (LinphoneCoreException e) {
-					Log.e(e);
+				} else {
+					friend.addPhoneNumber(noa.getValue());
 				}
+			}
+			if (hasAddr) {
+				friend.setName(fullName);
 			}
 			friend.done();
 			
@@ -383,23 +401,25 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				// Disable subscribes for now
 				friend.enableSubscribes(false);
 				friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
-				friend.setName(fullName);
 				if (hasSipAddress) {
 					for (LinphoneNumberOrAddress noa : addresses) {
 						if (noa.isSIPAddress()) {
 							try {
 								LinphoneAddress addr = LinphoneManager.getLc().interpretUrl(noa.getValue());
 								if (addr != null) {
-									friend.setAddress(addr);
+									friend.addAddress(addr);
 								}
 							} catch (LinphoneCoreException e) {
 								Log.e(e);
 							}
+						} else {
+							friend.addPhoneNumber(noa.getValue());
 						}
 					}
 				}
 				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				if (lc != null && friend.getAddress() != null) {
+					friend.setName(fullName);
 					try {
 						lc.addFriend(friend);
 					} catch (LinphoneCoreException e) {
@@ -425,6 +445,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	
 	public boolean isLinphoneFriend() {
 		return friend != null;
+	}
+
+	public boolean isInLinphoneFriendList() {
+		return (friend != null && friend.getPresenceModel() != null &&  friend.getPresenceModel().getBasicStatus().equals(PresenceBasicStatus.Open));
 	}
 
 	public void setFriend(LinphoneFriend f) {

@@ -58,9 +58,6 @@
 [submodule "submodules/externals/libupnp"]
 	path = submodules/externals/libupnp
 	url = git://git.linphone.org/libupnp.git
-[submodule "submodules/externals/cunit"]
-	path = submodules/externals/cunit
-	url = git://git.linphone.org/cunit.git
 [submodule "submodules/externals/axmlrpc"]
 	path = submodules/externals/axmlrpc
 	url = git://git.linphone.org/axmlrpc.git
@@ -104,3 +101,6 @@
 [submodule "submodules/belcard"]
 	path = submodules/belcard
 	url = git://git.linphone.org/belcard.git
+[submodule "submodules/bcunit"]
+	path = submodules/bcunit
+	url = git://git.linphone.org/bcunit.git
