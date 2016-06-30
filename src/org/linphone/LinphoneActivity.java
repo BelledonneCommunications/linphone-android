@@ -140,6 +140,17 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			return instance;
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putSerializable("CurrentFragment", currentFragment);
+		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +172,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			wizard.setClass(this, RemoteProvisioningLoginActivity.class);
 			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
 			startActivityForResult(wizard, REMOTE_PROVISIONING_LOGIN_ACTIVITY);
-		} else if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch() || LinphoneManager.getLc().getProxyConfigList().length == 0) {
+		} else if (savedInstanceState == null && (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch() || LinphoneManager.getLc().getProxyConfigList().length == 0)) {
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
 				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
@@ -187,6 +198,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		currentFragment = nextFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, getIntent().getExtras());
+		} else {
+			changeCurrentFragment(((FragmentsAvailable)savedInstanceState.getSerializable("CurrentFragment")), getIntent().getExtras());
 		}
 
 		mListener = new LinphoneCoreListenerBase(){

@@ -82,7 +82,12 @@ public class TestUnit extends AndroidTestCase {
 		String write_path = getContext().getCacheDir().getPath();
 		Tester tester = new Tester();
 
-		List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", res_path, "--writable-dir", write_path, "--suite", mSuite, "--test", mTest}));
+		List<String> list;
+		if (mTest != null && !mTest.isEmpty()) {
+			list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", res_path, "--writable-dir", write_path, "--suite", mSuite, "--test", mTest}));
+		} else {
+			list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", res_path, "--writable-dir", write_path, "--suite", mSuite}));
+		}
 		String[] array = list.toArray(new String[list.size()]);
 		Assert.assertTrue(tester.run(array) == 0);
 	}
