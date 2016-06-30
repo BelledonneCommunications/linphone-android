@@ -113,8 +113,7 @@ private static AssistantActivity instance;
 						if (state == RegistrationState.RegistrationOk) {
 							if (progress != null) progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								if (!launchEchoCancellerCalibration(true))
-									launchDownloadCodec();
+								launchEchoCancellerCalibration(true);
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							if (progress != null) progress.dismiss();
@@ -494,8 +493,7 @@ private static AssistantActivity instance;
 	
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
-		if(!launchEchoCancellerCalibration(true))
-			launchDownloadCodec(); // Echo canceller cancel
+		launchEchoCancellerCalibration(true);
 	}
 
 	public void isEchoCalibrationFinished() {
