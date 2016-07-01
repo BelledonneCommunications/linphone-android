@@ -74,6 +74,7 @@ private static AssistantActivity instance;
 	private ProgressDialog progress;
 	private Dialog dialog;
 	private boolean remoteProvisioningInProgress;
+	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,11 @@ private static AssistantActivity instance;
             	currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
             }
         }
+		if (savedInstanceState != null && savedInstanceState.containsKey("echoCanceller")) {
+			echoCancellerAlreadyDone = savedInstanceState.getBoolean("echoCanceller");
+		} else {
+			echoCancellerAlreadyDone = false;
+		}
         mPrefs = LinphonePreferences.instance();
 		//if(mPrefs.isFirstLaunch()) {
 			status.enableSideMenu(false);
@@ -154,6 +160,7 @@ private static AssistantActivity instance;
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable("CurrentFragment", currentFragment);
+		outState.putBoolean("echoCanceller", echoCancellerAlreadyDone);
 		super.onSaveInstanceState(outState);
 	}
 	
@@ -177,6 +184,10 @@ private static AssistantActivity instance;
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment_container, newFragment);
 		transaction.commitAllowingStateLoss();
+	}
+
+	public AssistantFragmentsEnum getCurrentFragment() {
+		return currentFragment;
 	}
 
 	@Override
@@ -253,13 +264,14 @@ private static AssistantActivity instance;
 	private boolean launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
 		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
-			if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+			if (needsEchoCalibration && mPrefs.isFirstLaunch() && !echoCancellerAlreadyDone) {
 				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 				fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 				changeFragment(fragment);
 				currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
 				back.setVisibility(View.VISIBLE);
 				cancel.setEnabled(false);
+				echoCancellerAlreadyDone = true;
 				return true;
 			}
 		} else {
