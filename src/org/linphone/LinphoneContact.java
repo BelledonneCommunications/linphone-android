@@ -153,8 +153,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
 						.build());
 				}
-			} else if (isLinphoneFriend()) {
-				//TODO: prepare photo changes in friend
 			}
 		}
 	}

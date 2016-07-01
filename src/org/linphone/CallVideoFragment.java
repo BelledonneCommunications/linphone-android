@@ -61,7 +61,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		if (LinphoneManager.getLc().hasCrappyOpenGL()) {
 			view = inflater.inflate(R.layout.video_no_opengl, container, false);
 		} else {
-	        	view = inflater.inflate(R.layout.video, container, false);
+        	view = inflater.inflate(R.layout.video, container, false);
 		}
         
 		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);

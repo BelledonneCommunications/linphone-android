@@ -140,17 +140,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			return instance;
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		outState.putSerializable("CurrentFragment", currentFragment);
-		super.onSaveInstanceState(outState);
-	}
-	
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +187,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		currentFragment = nextFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, getIntent().getExtras());
-		} else {
-			changeCurrentFragment(((FragmentsAvailable)savedInstanceState.getSerializable("CurrentFragment")), getIntent().getExtras());
 		}
 
 		mListener = new LinphoneCoreListenerBase(){
