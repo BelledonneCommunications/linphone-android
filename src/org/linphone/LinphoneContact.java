@@ -144,6 +144,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						.withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
 						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
 						.withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+						.withValue(ContactsContract.Data.IS_PRIMARY, 1)
 						.withValue(ContactsContract.Data.IS_SUPER_PRIMARY, 1)
 						.build());
 				} else {

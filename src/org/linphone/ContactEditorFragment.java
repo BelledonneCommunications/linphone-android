@@ -34,12 +34,14 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.provider.ContactsContract.DisplayPhoto;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
@@ -372,10 +374,31 @@ public class ContactEditorFragment extends Fragment {
 			image = BitmapFactory.decodeFile(filePath);
 		}
 		
+		Bitmap scaledPhoto;
+		int size = getThumbnailSize();
+		if (size > 0) {
+			scaledPhoto = Bitmap.createScaledBitmap(image, size, size, false);
+		} else {
+			scaledPhoto = Bitmap.createBitmap(image);
+		}
+		image.recycle();
+		
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		image.compress(Bitmap.CompressFormat.PNG , 75, stream);
-		photoToAdd = stream.toByteArray();
-		contactPicture.setImageBitmap(image);
+		scaledPhoto.compress(Bitmap.CompressFormat.PNG , 0, stream);
+		contactPicture.setImageBitmap(scaledPhoto);
+		photoToAdd = stream.toByteArray();		
+	}
+	
+	private int getThumbnailSize() {
+		int value = -1;
+		Cursor c = LinphoneActivity.instance().getContentResolver().query(DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI, new String[] { DisplayPhoto.THUMBNAIL_MAX_DIM }, null, null, null);
+		try {
+			c.moveToFirst();
+			value = c.getInt(0);
+		} catch (Exception e) {
+			Log.e(e);
+		}
+		return value;
 	}
 	
 	private LinearLayout initNumbersFields(final LinphoneContact contact) {
