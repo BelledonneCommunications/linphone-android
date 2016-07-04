@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphonePlayer;
+import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
@@ -180,18 +181,14 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				if (state == State.IncomingReceived) {
 					startIncomingCallActivity();
 					return;
-				}
-
-				if (state == State.Paused || state == State.PausedByRemote ||  state == State.Pausing) {
+				} else if (state == State.Paused || state == State.PausedByRemote ||  state == State.Pausing) {
 					if(LinphoneManager.getLc().getCurrentCall() != null) {
 						enabledVideoButton(false);
 					}
 					if(isVideoEnabled(call)){
 						showAudioView();
 					}
-				}
-
-				if (state == State.Resuming) {
+				} else if (state == State.Resuming) {
 					if(LinphonePreferences.instance().isVideoEnabled()){
 						status.refreshStatusItems(call, isVideoEnabled(call));
 						if(call.getCurrentParamsCopy().getVideoEnabled()){
@@ -201,9 +198,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					if(LinphoneManager.getLc().getCurrentCall() != null) {
 						enabledVideoButton(true);
 					}
-				}
-
-				if (state == State.StreamsRunning) {
+				} else if (state == State.StreamsRunning) {
 					switchVideo(isVideoEnabled(call));
 					enableAndRefreshInCallActions();
 
@@ -211,9 +206,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 						videoProgress.setVisibility(View.GONE);
 						status.refreshStatusItems(call, isVideoEnabled(call));
 					}
-				}
-
-				if (state == State.CallUpdatedByRemote) {
+				} else if (state == State.CallUpdatedByRemote) {
 					// If the correspondent proposes video while audio call
 					boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
 					if (!videoEnabled) {

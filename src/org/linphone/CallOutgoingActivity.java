@@ -26,6 +26,7 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -33,10 +34,14 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CallOutgoingActivity extends Activity implements OnClickListener{
 
@@ -88,16 +93,8 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-				if (LinphoneManager.getLc().getCallsNb() == 0) {
-					finish();
-					return;
-				}
-				if (call == mCall && State.CallEnd == state) {
-					finish();
-				}
-
-				if (call == mCall && (State.Connected == state)){
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {				
+				if (call == mCall && State.Connected == state) {
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
@@ -107,6 +104,22 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					} else {
 						LinphoneActivity.instance().startIncallActivity(mCall);
 					}
+					finish();
+					return;
+				} else if (state == State.Error) {
+					// Convert LinphoneCore message for internalization
+					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
+						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.NotFound) {
+						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.Media) {
+						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
+					} else if (message != null) {
+						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
+					}
+				}
+				
+				if (LinphoneManager.getLc().getCallsNb() == 0) {
 					finish();
 					return;
 				}
@@ -202,6 +215,20 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public void displayCustomToast(final String message, final int duration) {
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
+
+		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+		toastText.setText(message);
+
+		final Toast toast = new Toast(getApplicationContext());
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.setDuration(duration);
+		toast.setView(layout);
+		toast.show();
 	}
 
 	private void decline() {
