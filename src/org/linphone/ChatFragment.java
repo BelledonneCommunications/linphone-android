@@ -482,7 +482,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (adapter != null) {
 				adapter.refreshHistory();
 			} else {
-				adapter = new ChatMessageAdapter(getActivity().getApplicationContext());
+				adapter = new ChatMessageAdapter(getActivity());
 			}
 		}
 		messagesList.setAdapter(adapter);
