@@ -742,10 +742,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			chatRoom.sendChatMessage(message);
 			lAddress = chatRoom.getPeerAddress();
 
-			if (LinphoneActivity.isInstanciated()) {
-				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
-			}
-
 			message.setListener(LinphoneManager.getInstance());
 			if (newChatConversation) {
 				exitNewConversationMode(lAddress.asStringUriOnly());
@@ -819,9 +815,21 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void copyTextMessageToClipboard(int id) {
-		String msg = LinphoneActivity.instance().getChatStorage().getTextMessageForId(chatRoom, id);
-		if (msg != null) {
-			Compatibility.copyTextToClipboard(getActivity(), msg);
+		LinphoneChatMessage message = null;
+		for (int i = 0; i < adapter.getCount(); i++) {
+			LinphoneChatMessage msg = adapter.getItem(i);
+			if (msg.getStorageId() == id) {
+				message = msg;
+				break;
+			}
+		}
+		
+		String txt = null;
+		if (message != null) {
+			txt = message.getText();
+		}
+		if (txt != null) {
+			Compatibility.copyTextToClipboard(getActivity(), txt);
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT);
 		}
 	}

@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
@@ -61,7 +63,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -803,41 +804,50 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public List<String> getChatList() {
-		return getChatStorage().getChatList();
-	}
+		ArrayList<String> chatList = new ArrayList<String>();
 
-	public List<String> getDraftChatList() {
-		return getChatStorage().getDrafts();
+		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+		List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
+
+		for (LinphoneChatRoom chatroom : chats) {
+			if (chatroom.getHistorySize() > 0) {
+				rooms.add(chatroom);
+			}
+		}
+
+		if (rooms.size() > 1) {
+			Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
+				@Override
+				public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
+					LinphoneChatMessage[] messagesA = a.getHistory(1);
+					LinphoneChatMessage[] messagesB = b.getHistory(1);
+					long atime = messagesA[0].getTime();
+					long btime = messagesB[0].getTime();
+
+					if (atime > btime)
+						return -1;
+					else if (btime > atime)
+						return 1;
+					else
+						return 0;
+				}
+			});
+		}
+
+		for (LinphoneChatRoom chatroom : rooms) {
+			chatList.add(chatroom.getPeerAddress().asStringUriOnly());
+		}
+
+		return chatList;
 	}
 
 	public void removeFromChatList(String sipUri) {
-		getChatStorage().removeDiscussion(sipUri);
-	}
-
-	public void removeFromDrafts(String sipUri) {
-		getChatStorage().deleteDraft(sipUri);
+		LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(sipUri);
+		chatroom.deleteHistory();
 	}
 
 	public void updateMissedChatCount() {
 		displayMissedChats(getUnreadMessageCount());
-	}
-
-	public int onMessageSent(String to, String message) {
-		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveTextMessage("", to, message, System.currentTimeMillis());
-	}
-
-	public int onMessageSent(String to, Bitmap image, String imageURL) {
-		getChatStorage().deleteDraft(to);
-		return getChatStorage().saveImageMessage("", to, image, imageURL, System.currentTimeMillis());
-	}
-
-	public void onMessageStateChanged(String to, String message, int newState) {
-		getChatStorage().updateMessageStatus(to, message, newState);
-	}
-
-	public void onImageMessageStateChanged(String to, int id, int newState) {
-		getChatStorage().updateMessageStatus(to, id, newState);
 	}
 
 	public void displayMissedCalls(final int missedCallsCount) {
@@ -1041,10 +1051,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		return currentFragment;
 	}
 
-	public ChatStorage getChatStorage() {
-		return ChatStorage.getInstance();
-	}
-
 	public void addContact(String displayName, String sipUri)
 	{
 		Bundle extras = new Bundle();
@@ -1054,19 +1060,17 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void editContact(LinphoneContact contact)
 	{
-			Bundle extras = new Bundle();
-			extras.putSerializable("Contact", contact);
-			changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
-
+		Bundle extras = new Bundle();
+		extras.putSerializable("Contact", contact);
+		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
 	public void editContact(LinphoneContact contact, String sipAddress)
 	{
-
-			Bundle extras = new Bundle();
-			extras.putSerializable("Contact", contact);
-			extras.putSerializable("NewSipAdress", sipAddress);
-			changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
+		Bundle extras = new Bundle();
+		extras.putSerializable("Contact", contact);
+		extras.putSerializable("NewSipAdress", sipAddress);
+		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
 	public void quit() {

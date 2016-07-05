@@ -796,9 +796,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void doDestroy() {
-		if (LinphoneService.isReady()) // indeed, no need to crash
-			ChatStorage.getInstance().close();
-
 		BluetoothManager.getInstance().destroy();
 		try {
 			mTimer.cancel();
@@ -873,13 +870,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		LinphoneAddress from = message.getFrom();
 
 		String textMessage = message.getText();
-		String url = message.getExternalBodyUrl();
-		if (textMessage != null && textMessage.length() > 0) {
-			ChatStorage.getInstance().saveTextMessage(from.asStringUriOnly(), "", textMessage, message.getTime());
-		} else if (url != null && url.length() > 0) {
-			ChatStorage.getInstance().saveImageMessage(from.asStringUriOnly(), "", null, message.getExternalBodyUrl(), message.getTime());
-		}
-
 		try {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
