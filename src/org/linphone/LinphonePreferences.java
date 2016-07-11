@@ -1334,4 +1334,12 @@ public class LinphonePreferences {
 	public void setActivityToLaunchOnIncomingReceived(String name) {
 		getConfig().setString("app", "incoming_call_activity", name);
 	}
+
+	public boolean getServiceNotificationVisibility() {
+		return getConfig().getBool("app", "show_service_notification", true);
+	}
+
+	public void setServiceNotificationVisibility(boolean enable) {
+		getConfig().setBool("app", "show_service_notification", enable);
+	}
 }

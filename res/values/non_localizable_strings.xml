@@ -71,6 +71,7 @@
 	<string name="pref_preferred_video_fps_key">pref_preferred_video_fps_key</string>
 	<string name="pref_bandwidth_limit_key">pref_bandwidth_limit_key</string>
     <string name="pref_animation_enable_key">pref_animation_enable_key</string>
+    <string name="pref_service_notification_key">pref_service_notification_key</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_friendlist_subscribe_key">pref_friendlist_subscribe_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>

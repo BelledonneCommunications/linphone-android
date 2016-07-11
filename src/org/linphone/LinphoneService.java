@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LpConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
@@ -46,7 +47,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -126,6 +126,31 @@ public final class LinphoneService extends Service {
 	public void resetMessageNotifCount() {
 		mMsgNotifCount = 0;
 	}
+	
+	private boolean displayServiceNotification() {
+		return LinphonePreferences.instance().getServiceNotificationVisibility();
+	}
+	
+	public void showServiceNotification() {
+		startForegroundCompat(NOTIF_ID, mNotif);
+		
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) return;
+		LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+		if (lpc != null) {
+			if (lpc.isRegistered()) {
+				sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
+			} else {
+				sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
+			}
+		} else {
+			sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
+		}
+	}
+	
+	public void hideServiceNotification() {
+		stopForegroundCompat(NOTIF_ID);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -195,7 +220,7 @@ public final class LinphoneService extends Service {
 			
 			@Override
 			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
-				if (state == GlobalState.GlobalOn) {
+				if (state == GlobalState.GlobalOn && displayServiceNotification()) {
 					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}
@@ -207,15 +232,15 @@ public final class LinphoneService extends Service {
 //					return;
 //				}
 				if (!mDisableRegistrationStatus) {
-					if (state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+					if (displayServiceNotification() && state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 					}
 			
-					if ((state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
+					if (displayServiceNotification() && (state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
 					}
 					
-					if (state == RegistrationState.RegistrationNone) {
+					if (displayServiceNotification() && state == RegistrationState.RegistrationNone) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 					}
 				}
@@ -241,7 +266,9 @@ public final class LinphoneService extends Service {
 
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
 
-		startForegroundCompat(NOTIF_ID, mNotif);
+		if (displayServiceNotification()) {
+			startForegroundCompat(NOTIF_ID, mNotif);
+		}
 
 		if (!mTestDelayElapsed) {
 			// Only used when testing. Simulates a 5 seconds delay for launching service
@@ -505,7 +532,7 @@ public final class LinphoneService extends Service {
 		mDisableRegistrationStatus = true;
 	}
 
-	public synchronized void sendNotification(int level, int textId) {
+	private synchronized void sendNotification(int level, int textId) {
 		String text = getString(textId);
 		if (text.contains("%s") && LinphoneManager.getLc() != null) {
 			// Test for null lc is to avoid a NPE when Android mess up badly with the String resources.
@@ -593,10 +620,10 @@ public final class LinphoneService extends Service {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		if (mNotif != null) {
+		/*if (mNotif != null) {
 			mNotif.contentIntent = mNotifContentIntent;
 		}
-		notifyWrapper(NOTIF_ID, mNotif);
+		notifyWrapper(NOTIF_ID, mNotif);*/
 	}
 	
 	protected void onIncomingReceived() {
