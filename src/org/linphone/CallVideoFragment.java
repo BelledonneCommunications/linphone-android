@@ -38,7 +38,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-//import android.opengl.GLSurfaceView;
+import android.widget.RelativeLayout;
 
 /**
  * @author Sylvain Berfini
@@ -52,6 +52,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 	private float mZoomCenterX, mZoomCenterY;
 	private CompatibilityScaleGestureDetector mScaleDetector;
 	private CallActivity inCallActivity;
+	private int previewX, previewY;
 	
 	@SuppressWarnings("deprecation") // Warning useless because value is ignored and automatically set by new APIs.
 	@Override
@@ -104,6 +105,30 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			}
 		});
 		
+		mCaptureView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				switch (motionEvent.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					previewX = (int) motionEvent.getX();
+					previewY = (int) motionEvent.getY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					int x = (int) motionEvent.getX();
+					int y = (int) motionEvent.getY();
+					RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)mCaptureView.getLayoutParams();
+					lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0); // Clears the rule, as there is no removeRule until API 17.
+					lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+					int left = lp.leftMargin + (x - previewX);
+					int top = lp.topMargin + (y - previewY);
+					lp.leftMargin = left;
+					lp.topMargin = top;
+					view.setLayoutParams(lp);
+					break;
+				}
+				return true;
+			}
+		});
 		return view;
     }
 
