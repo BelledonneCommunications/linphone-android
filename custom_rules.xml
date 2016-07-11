@@ -8,50 +8,6 @@
 			failonerror="false" />
 	</target>
 
-	<target name="javah" depends="-set-debug-mode,-compile">
-		<echo level="info">Generate JNI header</echo>
-		<javah outputfile="gen/linphonecore_jni.h">
-			<classpath>
-				<pathelement location="${out.classes.absolute.dir}" />
-			</classpath>
-			<class name="org.linphone.core.LinphoneAddressImpl" />
-			<class name="org.linphone.core.LinphoneAuthInfoImpl" />
-			<class name="org.linphone.core.LinphoneCallImpl" />
-			<class name="org.linphone.core.LinphoneCallLogImpl" />
-			<class name="org.linphone.core.LinphoneCallParamsImpl" />
-			<class name="org.linphone.core.LinphoneCallStatsImpl" />
-			<class name="org.linphone.core.LinphoneChatMessageImpl" />
-			<class name="org.linphone.core.LinphoneChatRoomImpl" />
-			<class name="org.linphone.core.LinphoneCoreFactoryImpl" />
-			<class name="org.linphone.core.LinphoneCoreImpl" />
-			<class name="org.linphone.core.LinphoneFriendImpl" />
-			<class name="org.linphone.core.LinphoneProxyConfigImpl" />
-			<class name="org.linphone.core.PayloadTypeImpl" />
-			<class name="org.linphone.core.LpConfigImpl" />
-			<class name="org.linphone.core.LinphoneInfoMessageImpl" />
-			<class name="org.linphone.core.LinphoneEventImpl" />
-			<class name="org.linphone.core.PresenceActivityImpl" />
-			<class name="org.linphone.core.PresenceModelImpl" />
-			<class name="org.linphone.core.PresenceNoteImpl" />
-			<class name="org.linphone.core.PresencePersonImpl" />
-			<class name="org.linphone.core.PresenceServiceImpl" />
-			<class name="org.linphone.core.ErrorInfoImpl" />
-			<class name="org.linphone.core.TunnelConfigImpl" />
-		</javah>
-		<javah outputfile="gen/xml2lpc_jni.h">
-			<classpath>
-				<pathelement location="${out.classes.absolute.dir}" />
-			</classpath>
-			<class name="org.linphone.tools.Xml2Lpc" />
-		</javah>
-		<javah outputfile="gen/lpc2xml_jni.h">
-			<classpath>
-				<pathelement location="${out.classes.absolute.dir}" />
-			</classpath>
-			<class name="org.linphone.tools.Lpc2Xml" />
-		</javah>
-	</target>
-
 	<target name="partial-clean">
 	    <delete file="bin/${ant.project.name}.ap_" />
 	</target>
