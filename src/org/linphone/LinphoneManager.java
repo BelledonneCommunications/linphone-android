@@ -792,6 +792,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mLastNetworkType=curtype;
 			}
 		}
+		
+		if (mLc.isNetworkReachable()) {
+			// When network isn't available, push informations might not be set. This should fix the issue.
+			LinphonePreferences prefs = LinphonePreferences.instance();
+			prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

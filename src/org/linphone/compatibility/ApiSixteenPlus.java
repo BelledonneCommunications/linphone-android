@@ -56,6 +56,7 @@ public class ApiSixteenPlus {
 										| Notification.DEFAULT_VIBRATE)
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon)
+						.setNumber(msgCount)
 				.build();
 
 		return notif;

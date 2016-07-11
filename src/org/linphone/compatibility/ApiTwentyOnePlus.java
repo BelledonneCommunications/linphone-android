@@ -54,6 +54,7 @@ public class ApiTwentyOnePlus {
 			.setCategory(Notification.CATEGORY_MESSAGE)
 			.setVisibility(Notification.VISIBILITY_PRIVATE)
 			.setPriority(Notification.PRIORITY_HIGH)
+			.setNumber(msgCount)
 			.build();
 
 		return notif;

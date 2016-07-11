@@ -1017,7 +1017,7 @@ public class LinphonePreferences {
 					 lpc.edit();
 					 lpc.setContactUriParameters(contactInfos);
 					 lpc.done();
-					 Log.d("Push notif infos added to proxy config");
+					 Log.d("Push notif infos added to proxy config " + lpc.getAddress().asStringUriOnly());
 				 }
 				 lc.refreshRegisters();
 			 }
@@ -1027,7 +1027,7 @@ public class LinphonePreferences {
 					 lpc.edit();
 					 lpc.setContactUriParameters(null);
 					 lpc.done();
-					 Log.d("Push notif infos removed from proxy config");
+					 Log.d("Push notif infos removed from proxy config " + lpc.getAddress().asStringUriOnly());
 				 }
 				 lc.refreshRegisters();
 			 }
