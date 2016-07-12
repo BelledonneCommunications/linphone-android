@@ -49,7 +49,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -57,7 +56,6 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.view.Gravity;
 import android.view.WindowManager;
 
 /**
@@ -314,7 +312,7 @@ public final class LinphoneService extends Service {
 	
 	public void destroyOverlay() {
 		if (mOverlay != null) {
-			mWindowManager.removeView(mOverlay);
+			mWindowManager.removeViewImmediate(mOverlay);
 			mOverlay.destroy();
 		}
 		mOverlay = null;

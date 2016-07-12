@@ -29,10 +29,8 @@ import android.content.Intent;
  * Purpose of this receiver is to disable keep alives when screen is off
  * */
 public class KeepAliveReceiver extends BroadcastReceiver {
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
 		if (!LinphoneService.isReady()) {
 			Log.i("Keep alive broadcast received while Linphone service not ready");
 			return;
@@ -43,7 +41,5 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 				LinphoneManager.getLc().enableKeepAlive(false);
 			}
 		}
-
 	}
-
 }

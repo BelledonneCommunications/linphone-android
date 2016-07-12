@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
 import android.content.BroadcastReceiver;
@@ -25,10 +26,13 @@ import android.content.Context;
 import android.content.Intent;
 
 public class KeepAliveHandler extends BroadcastReceiver {
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		//Log.i("Keep alive handler invoked"); //TODO FIXME Crash since the log rework
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
+		
+		Log.i("Keep alive handler invoked");
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			//first refresh registers
 			LinphoneManager.getLc().refreshRegisters();
@@ -38,9 +42,6 @@ public class KeepAliveHandler extends BroadcastReceiver {
 			} catch (InterruptedException e) {
 				//Log.e("Cannot sleep for 2s", e); //TODO FIXME Crash since the log rework
 			}
-			
 		}
-
 	}
-
 }

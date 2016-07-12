@@ -1,11 +1,14 @@
 package org.linphone.ui;
 
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -48,7 +51,6 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 			}
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				LinphoneManager.getLc().setPreviewWindow(null);
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -64,7 +66,9 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 		setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+				Context context = LinphoneService.instance();
+				Intent intent = new Intent(context, LinphoneActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent);
 			}
 		});
 	}
