@@ -38,6 +38,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.Preference;
+import android.provider.Settings;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /**
@@ -362,5 +363,12 @@ public class Compatibility {
 		} else {
 			return ApiEightPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
 		}
+	}
+
+	public static boolean canDrawOverlays(Context context) {
+		if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+			return Settings.canDrawOverlays(context);
+		}
+		return true;
 	}
 }

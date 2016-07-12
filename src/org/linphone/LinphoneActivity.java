@@ -30,6 +30,7 @@ import java.util.List;
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -1111,7 +1112,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		} else if (requestCode == PERMISSIONS_REQUEST_OVERLAY) {
-			if (Settings.canDrawOverlays(this)) {
+			if (Compatibility.canDrawOverlays(this)) {
 				LinphonePreferences.instance().enableOverlay(true);
 			}
 		} else {
@@ -1156,7 +1157,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 	
 	public boolean checkAndRequestOverlayPermission() {
-		if (!Settings.canDrawOverlays(this)) {
+		if (!Compatibility.canDrawOverlays(this)) {
 			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 			startActivityForResult(intent, PERMISSIONS_REQUEST_OVERLAY);
 			return false;
