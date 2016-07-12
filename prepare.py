@@ -291,6 +291,7 @@ quick:
 \tant clean
 \tant debug
 \tant installd
+\tant run
 
 install-apk:
 \tant installd
