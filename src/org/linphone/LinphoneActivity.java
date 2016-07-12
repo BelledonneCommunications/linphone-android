@@ -67,6 +67,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
@@ -106,6 +107,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
 	private static final int PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE = 204;
 	private static final int PERMISSIONS_REQUEST_CAMERA = 205;
+	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
 
 	private static LinphoneActivity instance;
 
@@ -1108,6 +1110,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			} else {
 				resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
+		} else if (requestCode == PERMISSIONS_REQUEST_OVERLAY) {
+			if (Settings.canDrawOverlays(this)) {
+				LinphonePreferences.instance().enableOverlay(true);
+			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
@@ -1145,6 +1151,15 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			} catch( PackageManager.NameNotFoundException e) {
 				return false; // Never happens.
 			}
+		}
+		return true;
+	}
+	
+	public boolean checkAndRequestOverlayPermission() {
+		if (!Settings.canDrawOverlays(this)) {
+			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+			startActivityForResult(intent, PERMISSIONS_REQUEST_OVERLAY);
+			return false;
 		}
 		return true;
 	}

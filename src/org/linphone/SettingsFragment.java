@@ -39,6 +39,7 @@ import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -49,6 +50,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
 
 /**
  * @author Sylvain Berfini
@@ -609,6 +611,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_use_front_camera_key))).setChecked(mPrefs.useFrontCam());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_accept_video_key))).setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
+		((CheckBoxPreference) findPreference(getString(R.string.pref_overlay_key))).setChecked(mPrefs.isOverlayEnabled());
 	}
 
 	private void updateVideoPreferencesAccordingToPreset() {
@@ -699,6 +702,21 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setBandwidthLimit(Integer.parseInt(newValue.toString()));
 				preference.setSummary(newValue.toString());
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_overlay_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean enable = (Boolean) newValue;
+				if (enable) {
+					if (LinphoneActivity.instance().checkAndRequestOverlayPermission()) {
+						mPrefs.enableOverlay(true);
+					}
+				} else {
+					mPrefs.enableOverlay(false);
+				}
 				return true;
 			}
 		});

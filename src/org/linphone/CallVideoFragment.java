@@ -159,6 +159,9 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 	public void onResume() {		
 		super.onResume();
 		
+		if (LinphonePreferences.instance().isOverlayEnabled()) {
+			LinphoneService.instance().destroyOverlay();
+		}
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
 				LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
@@ -179,6 +182,9 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				 */
 				LinphoneManager.getLc().setVideoWindow(null);
 			}
+		}
+		if (LinphonePreferences.instance().isOverlayEnabled()) {
+			LinphoneService.instance().createOverlay();
 		}
 		
 		super.onPause();

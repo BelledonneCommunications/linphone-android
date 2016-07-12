@@ -111,12 +111,17 @@
 				android:title="@string/pref_bandwidth_limit"
 				android:key="@string/pref_bandwidth_limit_key"
 				android:numeric="integer" />
+			
+			<CheckBoxPreference 
+			    android:title="@string/pref_overlay"
+				android:key="@string/pref_overlay_key"
+				android:summary="@string/pref_overlay_summary"/>
 
-				<PreferenceCategory
-					android:title="@string/pref_video_codecs_title"
-					android:key="@string/pref_video_codecs_key"
-				    android:dependency="@string/pref_video_enable_key"
-					android:shouldDisableView="true"/>
+			<PreferenceCategory
+				android:title="@string/pref_video_codecs_title"
+				android:key="@string/pref_video_codecs_key"
+			    android:dependency="@string/pref_video_enable_key"
+				android:shouldDisableView="true"/>
 
 		</PreferenceScreen>
 

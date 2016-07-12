@@ -32,9 +32,9 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.LpConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
+import org.linphone.ui.LinphoneOverlay;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -49,6 +49,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -56,6 +57,8 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.view.Gravity;
+import android.view.WindowManager;
 
 /**
  * 
@@ -118,6 +121,8 @@ public final class LinphoneService extends Service {
 	private boolean mDisableRegistrationStatus;
 	private LinphoneCoreListenerBase mListener;
 	public static int notifcationsPriority = (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41) ? Notification.PRIORITY_MIN : 0);
+	private WindowManager mWindowManager;
+	private LinphoneOverlay mOverlay;
 
 	public int getMessageNotifCount() {
 		return mMsgNotifCount;
@@ -207,6 +212,10 @@ public final class LinphoneService extends Service {
 				if (state == LinphoneCall.State.IncomingReceived) {
 					onIncomingReceived();
 				}
+				
+				if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
+					destroyOverlay();
+				}
 
 				if (state == State.StreamsRunning) {
 					// Workaround bug current call seems to be updated after state changed to streams running
@@ -286,8 +295,30 @@ public final class LinphoneService extends Service {
 																							, SystemClock.elapsedRealtime()+600000
 																							, 600000
 																							, mkeepAlivePendingIntent);
-	}
 		
+		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+	}
+	
+	public void createOverlay() {
+		if (mOverlay != null) destroyOverlay();
+		
+		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		if (call == null || !call.getCurrentParamsCopy().getVideoEnabled()) return;
+		
+		mOverlay = new LinphoneOverlay(this);
+		WindowManager.LayoutParams params = mOverlay.getWindowManagerLayoutParams();
+		params.x = 0;
+		params.y = 0;
+		mWindowManager.addView(mOverlay, params);
+	}
+	
+	public void destroyOverlay() {
+		if (mOverlay != null) {
+			mWindowManager.removeView(mOverlay);
+			mOverlay.destroy();
+		}
+		mOverlay = null;
+	}
 
 	private enum IncallIconState {INCALL, PAUSE, VIDEO, IDLE}
 	private IncallIconState mCurrentIncallIconState = IncallIconState.IDLE;
@@ -586,6 +617,7 @@ public final class LinphoneService extends Service {
 
 	@Override
 	public synchronized void onDestroy() {
+		destroyOverlay();
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);

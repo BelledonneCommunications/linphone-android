@@ -19,12 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
@@ -1341,5 +1341,13 @@ public class LinphonePreferences {
 
 	public void setServiceNotificationVisibility(boolean enable) {
 		getConfig().setBool("app", "show_service_notification", enable);
+	}
+	
+	public boolean isOverlayEnabled() {
+		return getConfig().getBool("app", "display_overlay", false);
+	}
+	
+	public void enableOverlay(boolean enable) {
+		getConfig().setBool("app", "display_overlay", enable);
 	}
 }

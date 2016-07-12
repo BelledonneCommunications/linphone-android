@@ -252,6 +252,8 @@
 
 	<!-- Video settings -->
 	<string name="pref_video_title">Video</string>
+	<string name="pref_overlay">Video overlay</string>
+	<string name="pref_overlay_summary">Display call video in overlay when outside the application</string>
 	<string name="pref_video_use_front_camera_title">Use front camera</string>
 	<string name="pref_video_initiate_call_with_video_title">Initiate video calls</string>
 	<string name="pref_video_initiate_call_with_video">Always send video requests</string>
