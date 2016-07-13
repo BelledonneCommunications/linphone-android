@@ -103,13 +103,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
-	private static final int PERMISSIONS_REQUEST_CONTACTS = 200;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
-	private static final int PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE_WRITE = 204;
-	private static final int PERMISSIONS_REQUEST_CAMERA = 205;
 	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
-	private static final int PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE_READ = 207;
+	private static final int PERMISSIONS_REQUEST_SYNC = 207;
 
 	private static LinphoneActivity instance;
 
@@ -174,9 +171,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 		}
 
-		//TODO rework
-		if (getResources().getBoolean(R.bool.use_linphone_tag) && getPackageManager().checkPermission(Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-			ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
+			if (getPackageManager().checkPermission(Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+				checkSyncPermission();
+			} else {
+				ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+			}
 		} else {
 			ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
 		}
@@ -1167,23 +1167,23 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 	
 	public void checkAndRequestReadExternalStoragePermission() {
-		checkAndRequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE_READ);
+		checkAndRequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 0);
 	}
 
 	public void checkAndRequestExternalStoragePermission() {
-		checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSIONS_REQUEST_EXTERNAL_FILE_STORAGE_WRITE);
+		checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 0);
 	}
 	
 	public void checkAndRequestCameraPermission() {
-		checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
+		checkAndRequestPermission(Manifest.permission.CAMERA, 0);
 	}
 	
 	public void checkAndRequestReadContactsPermission() {
-		checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
+		checkAndRequestPermission(Manifest.permission.READ_CONTACTS, 0);
 	}
 	
 	public void checkAndRequestWriteContactsPermission() {
-		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
+		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
 	}
 	
 	public void checkAndRequestCallPermissions(boolean isIncomingCall) {
@@ -1217,6 +1217,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			ActivityCompat.requestPermissions(this, permissions, 0);
 		}
 	}
+	
+	private void checkSyncPermission() {
+		checkAndRequestPermission(Manifest.permission.WRITE_SYNC_SETTINGS, PERMISSIONS_REQUEST_SYNC);
+	}
 
 	public void checkAndRequestPermission(String permission, int result) {
 		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
@@ -1232,6 +1236,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				break;
 			case PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL:
 				startActivity(new Intent(this, CallIncomingActivity.class));
+				break;
+			case PERMISSIONS_REQUEST_SYNC:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+				} else {
+					ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
+				}
 				break;
 		}
 	}

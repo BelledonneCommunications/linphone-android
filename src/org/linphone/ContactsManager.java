@@ -174,7 +174,7 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
-		initializeContactManager(context,contentResolver);
+		initializeContactManager(context, contentResolver);
 		AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
 		Account[] accounts = accountManager.getAccountsByType(context.getPackageName());
@@ -330,6 +330,7 @@ public class ContactsManager extends ContentObserver {
 			Log.e(e);
 		}
 	}
+	
 	public String getString(int resourceID) {
 		return context.getString(resourceID);
 	}
