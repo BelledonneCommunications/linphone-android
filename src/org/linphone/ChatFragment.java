@@ -192,7 +192,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				@Override
 				public void onClick(View v) {
 					pickImage();
-					LinphoneActivity.instance().checkAndRequestCameraPermission();
+					LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
 				}
 			});
 			//registerForContextMenu(sendImage);

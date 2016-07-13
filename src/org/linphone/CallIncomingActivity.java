@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -49,7 +50,6 @@ import android.widget.Toast;
 
 public class CallIncomingActivity extends Activity implements LinphoneSliderTriggered {
 	private static CallIncomingActivity instance;
-	private static final int PERMISSIONS_REQUEST_CAMERA = 205;
 
 	private TextView name, number;
 	private ImageView contactPicture, accept, decline;
@@ -201,10 +201,8 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 				}
 			}
 		};
-
-		if (LinphonePreferences.instance().isVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-			checkAndRequestCameraPermission();
-		}
+		
+		checkAndRequestCallPermissions();
 
 		super.onCreate(savedInstanceState);
 		instance = this;
@@ -324,53 +322,20 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 	}
 	
-	private void checkAndRequestCameraPermission() {
-		if (LinphonePreferences.instance().cameraPermAsked()) {
-			return;
+	private void checkAndRequestCallPermissions() {
+		ArrayList<String> permissionsList = new ArrayList<String>();
+		if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO) && getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			permissionsList.add(Manifest.permission.RECORD_AUDIO);
 		}
-		checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
-	}
-
-	private void checkAndRequestPermission(String permission, int result) {
-		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this, new String[]{permission}, result);
-		}
-	}
-	
-	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-		if (grantResults.length > 0) {
-			for (int i = 0; i < grantResults.length; i++) {
-				if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-	                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
-	                	if (permissions[i].equals(Manifest.permission.RECORD_AUDIO)) {
-	                		LinphonePreferences.instance().neverAskAudioPerm();
-	                	} else if (permissions[i].equals(Manifest.permission.CAMERA)) {
-	                		LinphonePreferences.instance().neverAskCameraPerm();
-	                	} else if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
-	                		LinphonePreferences.instance().neverAskReadContactsPerm();
-	                	} else if (permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
-	                		LinphonePreferences.instance().neverAskWriteContactsPerm();
-	                	} else if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-	                		LinphonePreferences.instance().neverAskWriteExternalStoragePerm();
-	                	}
-	                } else {
-	                	//TODO: show dialog explaining what we need the permission for
-	                }
-				} else {
-					if (permissions[i].equals(Manifest.permission.RECORD_AUDIO)) {
-                		LinphonePreferences.instance().neverAskAudioPerm();
-                	} else if (permissions[i].equals(Manifest.permission.CAMERA)) {
-                		LinphonePreferences.instance().neverAskCameraPerm();
-                	} else if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
-                		LinphonePreferences.instance().neverAskReadContactsPerm();
-                	} else if (permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
-                		LinphonePreferences.instance().neverAskWriteContactsPerm();
-                	} else if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                		LinphonePreferences.instance().neverAskWriteExternalStoragePerm();
-                	}
-				}
+		if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) && getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+				permissionsList.add(Manifest.permission.CAMERA);
 			}
+		}
+		if (permissionsList.size() > 0) {
+			String[] permissions = new String[permissionsList.size()];
+			permissions = permissionsList.toArray(permissions);
+			ActivityCompat.requestPermissions(this, permissions, 0);
 		}
 	}
 }

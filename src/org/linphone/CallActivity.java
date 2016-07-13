@@ -454,13 +454,13 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, final int[] grantResults) {
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_CAMERA:
 				UIThreadDispatcher.dispatch(new Runnable() {
 					@Override
 					public void run() {
-						acceptCallUpdate(true);
+						acceptCallUpdate(grantResults[0] == PackageManager.PERMISSION_GRANTED);
 					}
 				});
 				break;
@@ -468,12 +468,11 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				UIThreadDispatcher.dispatch(new Runnable() {
 					@Override
 					public void run() {
-						enabledOrDisabledVideo(false);
+						disableVideo(grantResults[0] != PackageManager.PERMISSION_GRANTED);
 					}
 				});
 				break;
 		}
-		LinphonePreferences.instance().neverAskCameraPerm();
 	}
 
 	public void createInCallStats() {
@@ -606,7 +605,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		if (id == R.id.video) {
 			if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-				enabledOrDisabledVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
+				disableVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
 			} else {
 				checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
 			}
@@ -719,13 +718,13 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 	}
 
-	private void enabledOrDisabledVideo(final boolean isVideoEnabled) {
+	private void disableVideo(final boolean videoDisabled) {
 		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
 			return;
 		}
 
-		if (isVideoEnabled) {
+		if (videoDisabled) {
 			LinphoneCallParams params = LinphoneManager.getLc().createCallParams(call);
 			params.setVideoEnabled(false);
 			LinphoneManager.getLc().updateCall(call, params);
@@ -1379,7 +1378,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED || LinphonePreferences.instance().cameraPermAsked()) {
+				if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(CallActivity.this, Manifest.permission.CAMERA)) {
 					CallActivity.instance().acceptCallUpdate(true);
 				} else {
 					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
@@ -1389,9 +1388,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			}
 		});
 
-		cancel.setOnClickListener(new
-
-		OnClickListener() {
+		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick (View view){
 				if (CallActivity.isInstanciated()) {
