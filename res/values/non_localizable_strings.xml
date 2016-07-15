@@ -199,4 +199,6 @@
 		<item>Send logs</item>
 		<item>Cancel</item>
 	</string-array>
+	
+	<string name="pref_use_lime_encryption_key">pref_use_lime_encryption_key</string>
 </resources>

@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
+import org.linphone.core.LinphoneCore.LinphoneLimeState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
@@ -1309,5 +1310,13 @@ public class LinphonePreferences {
 	
 	public void enableOverlay(boolean enable) {
 		getConfig().setBool("app", "display_overlay", enable);
+	}
+	
+	public LinphoneLimeState getLimeEncryption() {
+		return getLc().getLimeEncryption();
+	}
+	
+	public void setLimeEncryption(LinphoneLimeState lime) {
+		getLc().setLimeEncryption(lime);
 	}
 }

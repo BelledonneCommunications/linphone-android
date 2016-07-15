@@ -19,13 +19,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
+import org.linphone.core.LinphoneCore.LinphoneLimeState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListenerBase;
@@ -37,9 +38,8 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
-import android.content.Intent;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -50,26 +50,23 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.provider.Settings;
 
 /**
  * @author Sylvain Berfini
  */
 public class SettingsFragment extends PreferencesListFragment {
-	private static final int WIZARD_INTENT = 1;
 	private static final int STORE_INTENT = 2;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
 
-	public SettingsFragment() {
-		super(R.xml.preferences);
-		mPrefs = LinphonePreferences.instance();
-	}
-
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+
+		mPrefs = LinphonePreferences.instance();
+		removePreviousPreferencesFile(); // Required when updating the preferences order
+		addPreferencesFromResource(R.xml.preferences);
 
 		// Init the settings page interface
 		initSettings();
@@ -100,6 +97,11 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 		};
 	}
+	
+	private void removePreviousPreferencesFile() {
+		File dir = new File(LinphoneActivity.instance().getFilesDir().getAbsolutePath() + "shared_prefs");
+		dir.delete();
+	}
 
 	// Inits the values or the listener on some settings
 	private void initSettings() {
@@ -107,6 +109,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		initAudioSettings();
 		initVideoSettings();
 		initCallSettings();
+		initChatSettings();
 		initNetworkSettings();
 		initAdvancedSettings();
 
@@ -134,6 +137,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		setAudioPreferencesListener();
 		setVideoPreferencesListener();
 		setCallPreferencesListener();
+		setChatPreferencesListener();
 		setNetworkPreferencesListener();
 		setAdvancedPreferencesListener();
 	}
@@ -435,6 +439,30 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 		pref.setSummary(value);
 		pref.setValue(value);
+	}
+	
+	private void initLimeEncryptionPreference(ListPreference pref) {
+		List<CharSequence> entries = new ArrayList<CharSequence>();
+		List<CharSequence> values = new ArrayList<CharSequence>();
+		entries.add(getString(R.string.lime_encryption_entry_disabled));
+		values.add(LinphoneLimeState.Disabled.toString());
+
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null || !lc.isLimeEncryptionAvailable()) {
+			setListPreferenceValues(pref, entries, values);
+			pref.setEnabled(false);
+			return;
+		}
+		
+		entries.add(getString(R.string.lime_encryption_entry_mandatory));
+		values.add(LinphoneLimeState.Mandatory.toString());
+		entries.add(getString(R.string.lime_encryption_entry_preferred));
+		values.add(LinphoneLimeState.Preferred.toString());
+		setListPreferenceValues(pref, entries, values);
+
+		LinphoneLimeState lime = mPrefs.getLimeEncryption();
+		pref.setSummary(lime.toString());
+		pref.setValue(lime.toString());
 	}
 
 	private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
@@ -776,6 +804,47 @@ public class SettingsFragment extends PreferencesListFragment {
 		});
 	}
 
+	private void initChatSettings() {
+		setPreferenceDefaultValueAndSummary(R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
+		initLimeEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_use_lime_encryption_key)));
+	}
+
+	private void setChatPreferencesListener() {
+		findPreference(getString(R.string.pref_image_sharing_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = (String) newValue;
+				mPrefs.setSharingPictureServerUrl(value);
+				preference.setSummary(value);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_use_lime_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = newValue.toString();
+				LinphoneLimeState lime = LinphoneLimeState.Disabled;
+				if (value.equals(LinphoneLimeState.Mandatory.toString()))
+					lime = LinphoneLimeState.Mandatory;
+				else if (value.equals(LinphoneLimeState.Preferred.toString()))
+					lime = LinphoneLimeState.Preferred;
+				mPrefs.setLimeEncryption(lime);
+
+				lime = mPrefs.getLimeEncryption();
+				if (lime == LinphoneLimeState.Disabled) {
+					preference.setSummary(getString(R.string.lime_encryption_entry_disabled));
+				} else if (lime == LinphoneLimeState.Mandatory) {
+					preference.setSummary(getString(R.string.lime_encryption_entry_mandatory));
+				} else if (lime == LinphoneLimeState.Preferred) {
+					preference.setSummary(getString(R.string.lime_encryption_entry_preferred));
+				}
+				
+				return true;
+			}
+		});
+	}
+
 	private void initNetworkSettings() {
 		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
 
@@ -919,7 +988,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		((CheckBoxPreference)findPreference(getString(R.string.pref_animation_enable_key))).setChecked(mPrefs.areAnimationsEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_service_notification_key))).setChecked(mPrefs.getServiceNotificationVisibility());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_autostart_key))).setChecked(mPrefs.isAutoStartEnabled());
-		setPreferenceDefaultValueAndSummary(R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
 		setPreferenceDefaultValueAndSummary(R.string.pref_remote_provisioning_key, mPrefs.getRemoteProvisioningUrl());
 		setPreferenceDefaultValueAndSummary(R.string.pref_display_name_key, mPrefs.getDefaultDisplayName());
 		setPreferenceDefaultValueAndSummary(R.string.pref_user_name_key, mPrefs.getDefaultUsername());
@@ -972,16 +1040,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean value = (Boolean) newValue;
 				mPrefs.setAutoStart(value);
-				return true;
-			}
-		});
-
-		findPreference(getString(R.string.pref_image_sharing_server_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				String value = (String) newValue;
-				mPrefs.setSharingPictureServerUrl(value);
-				preference.setSummary(value);
 				return true;
 			}
 		});

@@ -1250,7 +1250,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		
 		if (!LinphoneService.isReady())  {
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
@@ -1336,7 +1336,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-
+		
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			LinphoneService.instance().removeMessageNotification();
