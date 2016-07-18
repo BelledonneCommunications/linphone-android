@@ -287,6 +287,12 @@ generate-mediastreamer2-apk: java-clean build copy-libs update-mediastreamer2-pr
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
 \tant debug
 
+quick:
+\tant clean
+\tant debug
+\tant installd
+\tant run
+
 install-apk:
 \tant installd
 
@@ -327,7 +333,6 @@ run-basic-tests: update-project
 run-all-tests: update-project
 \tant partial-clean
 \t$(MAKE) -C tests run-all-tests ANT_SILENT=$(ANT_SILENT)
-
 
 pull-transifex:
 \ttx pull -af

@@ -25,6 +25,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
@@ -34,12 +36,14 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.provider.ContactsContract.DisplayPhoto;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
@@ -122,6 +126,10 @@ public class ContactEditorFragment extends Fragment {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				LinphoneProxyConfig lpc = lc != null ? lc.getDefaultProxyConfig() : null;
+				String defaultDomain = lpc != null ? lpc.getDomain() : null;
+				
 				if (isNewContact) {
 					boolean areAllFielsEmpty = true;
 					for (LinphoneNumberOrAddress nounoa : numbersAndAddresses) {
@@ -140,8 +148,16 @@ public class ContactEditorFragment extends Fragment {
 				if (photoToAdd != null) {
 					contact.setPhoto(photoToAdd);
 				}
-				for (LinphoneNumberOrAddress numberOrAddress : numbersAndAddresses) {
-					contact.addOrUpdateNumberOrAddress(numberOrAddress);
+				for (LinphoneNumberOrAddress noa : numbersAndAddresses) {
+					if (noa.isSIPAddress() && noa.getValue() != null) {
+						if (!noa.getValue().contains("@") && defaultDomain != null) {
+							noa.setValue(noa.getValue() + "@" + defaultDomain);
+						}
+						if (!noa.getValue().startsWith("sip:")) {
+							noa.setValue("sip:" + noa.getValue());
+						}
+					}
+					contact.addOrUpdateNumberOrAddress(noa);
 				}
 				contact.save();
 				getFragmentManager().popBackStackImmediate();
@@ -372,10 +388,31 @@ public class ContactEditorFragment extends Fragment {
 			image = BitmapFactory.decodeFile(filePath);
 		}
 		
+		Bitmap scaledPhoto;
+		int size = getThumbnailSize();
+		if (size > 0) {
+			scaledPhoto = Bitmap.createScaledBitmap(image, size, size, false);
+		} else {
+			scaledPhoto = Bitmap.createBitmap(image);
+		}
+		image.recycle();
+		
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		image.compress(Bitmap.CompressFormat.PNG , 75, stream);
-		photoToAdd = stream.toByteArray();
-		contactPicture.setImageBitmap(image);
+		scaledPhoto.compress(Bitmap.CompressFormat.PNG , 0, stream);
+		contactPicture.setImageBitmap(scaledPhoto);
+		photoToAdd = stream.toByteArray();		
+	}
+	
+	private int getThumbnailSize() {
+		int value = -1;
+		Cursor c = LinphoneActivity.instance().getContentResolver().query(DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI, new String[] { DisplayPhoto.THUMBNAIL_MAX_DIM }, null, null, null);
+		try {
+			c.moveToFirst();
+			value = c.getInt(0);
+		} catch (Exception e) {
+			Log.e(e);
+		}
+		return value;
 	}
 	
 	private LinearLayout initNumbersFields(final LinphoneContact contact) {
@@ -449,6 +486,9 @@ public class ContactEditorFragment extends Fragment {
 				firstSipAddressIndex = controls.getChildCount();
 			}
 			numberOrAddress = numberOrAddress.replace("sip:", "");
+			if (numberOrAddress.contains("@")) {
+				numberOrAddress = numberOrAddress.split("@")[0];
+			}
 		}
 		if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
 			if (forceAddNumber)

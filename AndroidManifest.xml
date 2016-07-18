@@ -27,6 +27,7 @@
 	<uses-feature 	 android:name="android.hardware.camera" android:required="false" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 	<!-- Needed to store received images if the user wants to -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<!-- Needed to use our own Contact editor -->
@@ -43,6 +44,8 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <!-- Needed for in-app purchase -->
     <uses-permission android:name="com.android.vending.BILLING" />
+    <!-- Needed for overlay widget -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
     
@@ -75,7 +78,7 @@
 			 </intent-filter>
 			 
             <intent-filter>
-                <data android:mimeType="vnd.android.cursor.item/org.linphone.profile" /> <!-- Change package ! -->
+                <data android:mimeType="@string/sync_mimetype" /> <!-- Change package in res/values/non_localizable_custom.xml ! -->
 		        <action android:name="android.intent.action.VIEW" />
 		        <category android:name="android.intent.category.BROWSABLE" />
 		        <category android:name="android.intent.category.DEFAULT" />
@@ -94,7 +97,6 @@
 
         <activity android:name=".CallIncomingActivity"
 		    android:theme="@style/NoTitle"
-            android:noHistory="true"
 			android:launchMode="singleTop"
             android:screenOrientation="behind">
             <intent-filter>
@@ -104,7 +106,6 @@
 
 		<activity android:name=".CallOutgoingActivity"
 			  android:theme="@style/NoTitle"
-			  android:noHistory="true"
 			  android:launchMode="singleTop"
 			  android:screenOrientation="behind">
 			<intent-filter>

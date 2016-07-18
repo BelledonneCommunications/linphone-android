@@ -59,6 +59,7 @@
 
     <string name="pref_wifi_only_key">pref_wifi_only_key</string>
 
+    <string name="pref_overlay_key">pref_overlay_key</string>
     <string name="pref_video_use_front_camera_key">pref_video_use_front_camera_key</string>
     <string name="pref_video_codec_h263_key">pref_video_codec_h263_key</string>
     <string name="pref_video_codec_mpeg4_key">pref_video_codec_mpeg4_key</string>
@@ -71,6 +72,7 @@
 	<string name="pref_preferred_video_fps_key">pref_preferred_video_fps_key</string>
 	<string name="pref_bandwidth_limit_key">pref_bandwidth_limit_key</string>
     <string name="pref_animation_enable_key">pref_animation_enable_key</string>
+    <string name="pref_service_notification_key">pref_service_notification_key</string>
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_friendlist_subscribe_key">pref_friendlist_subscribe_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
@@ -197,4 +199,6 @@
 		<item>Send logs</item>
 		<item>Cancel</item>
 	</string-array>
+	
+	<string name="pref_use_lime_encryption_key">pref_use_lime_encryption_key</string>
 </resources>

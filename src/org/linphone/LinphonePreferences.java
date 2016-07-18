@@ -19,12 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
 import org.linphone.core.LinphoneCore.FirewallPolicy;
+import org.linphone.core.LinphoneCore.LinphoneLimeState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
@@ -1017,7 +1018,7 @@ public class LinphonePreferences {
 					 lpc.edit();
 					 lpc.setContactUriParameters(contactInfos);
 					 lpc.done();
-					 Log.d("Push notif infos added to proxy config");
+					 Log.d("Push notif infos added to proxy config " + lpc.getAddress().asStringUriOnly());
 				 }
 				 lc.refreshRegisters();
 			 }
@@ -1027,7 +1028,7 @@ public class LinphonePreferences {
 					 lpc.edit();
 					 lpc.setContactUriParameters(null);
 					 lpc.done();
-					 Log.d("Push notif infos removed from proxy config");
+					 Log.d("Push notif infos removed from proxy config " + lpc.getAddress().asStringUriOnly());
 				 }
 				 lc.refreshRegisters();
 			 }
@@ -1287,51 +1288,43 @@ public class LinphonePreferences {
 		return getConfig().getString("app", "debug_popup_magic", null);
 	}
 
-	public Boolean audioPermAsked(){
-		return getConfig().getBool("app", "audio_perm", false);
-	}
-
-	public void neverAskAudioPerm(){
-		 getConfig().setBool("app", "audio_perm", true);
-	}
-
-	public Boolean cameraPermAsked(){
-		return getConfig().getBool("app", "camera_perm", false);
-	}
-
-	public void neverAskCameraPerm(){
-		getConfig().setBool("app", "camera_perm", true);
-	}
-	
-	public Boolean readContactsPermAsked(){
-		return getConfig().getBool("app", "read_contacts_perm", false);
-	}
-
-	public void neverAskReadContactsPerm(){
-		 getConfig().setBool("app", "read_contacts_perm", true);
-	}
-	
-	public Boolean writeContactsPermAsked(){
-		return getConfig().getBool("app", "write_contacts_perm", false);
-	}
-
-	public void neverAskWriteContactsPerm(){
-		 getConfig().setBool("app", "write_contacts_perm", true);
-	}
-	
-	public Boolean writeExternalStoragePermAsked(){
-		return getConfig().getBool("app", "write_external_storage_perm", false);
-	}
-
-	public void neverAskWriteExternalStoragePerm(){
-		 getConfig().setBool("app", "write_external_storage_perm", true);
-	}
-
 	public String getActivityToLaunchOnIncomingReceived() {
 		return getConfig().getString("app", "incoming_call_activity", "org.linphone.LinphoneActivity");
 	}
 
 	public void setActivityToLaunchOnIncomingReceived(String name) {
 		getConfig().setString("app", "incoming_call_activity", name);
+	}
+
+	public boolean getServiceNotificationVisibility() {
+		return getConfig().getBool("app", "show_service_notification", true);
+	}
+
+	public void setServiceNotificationVisibility(boolean enable) {
+		getConfig().setBool("app", "show_service_notification", enable);
+	}
+	
+	public boolean isOverlayEnabled() {
+		return getConfig().getBool("app", "display_overlay", false);
+	}
+	
+	public void enableOverlay(boolean enable) {
+		getConfig().setBool("app", "display_overlay", enable);
+	}
+	
+	public LinphoneLimeState getLimeEncryption() {
+		return getLc().getLimeEncryption();
+	}
+	
+	public void setLimeEncryption(LinphoneLimeState lime) {
+		getLc().setLimeEncryption(lime);
+	}
+
+	public boolean firstTimeAskingForPermission(String permission) {
+		boolean firstTime = getConfig().getBool("app", permission, true);
+		if (firstTime) {
+			getConfig().setBool("app", permission, false);
+		}
+		return firstTime;
 	}
 }

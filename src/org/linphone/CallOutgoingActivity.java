@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.linphone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -26,20 +27,27 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CallOutgoingActivity extends Activity implements OnClickListener{
-
 	private static CallOutgoingActivity instance;
 
 	private TextView name, number;
@@ -88,16 +96,8 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-				if (LinphoneManager.getLc().getCallsNb() == 0) {
-					finish();
-					return;
-				}
-				if (call == mCall && State.CallEnd == state) {
-					finish();
-				}
-
-				if (call == mCall && (State.Connected == state)){
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {				
+				if (call == mCall && State.Connected == state) {
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
@@ -107,6 +107,22 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					} else {
 						LinphoneActivity.instance().startIncallActivity(mCall);
 					}
+					finish();
+					return;
+				} else if (state == State.Error) {
+					// Convert LinphoneCore message for internalization
+					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
+						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.NotFound) {
+						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
+					} else if (message != null && call.getErrorInfo().getReason() == Reason.Media) {
+						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
+					} else if (message != null) {
+						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
+					}
+				}
+				
+				if (LinphoneManager.getLc().getCallsNb() == 0) {
 					finish();
 					return;
 				}
@@ -151,6 +167,12 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 			name.setText(LinphoneUtils.getAddressDisplayName(address));
 		}
 		number.setText(address.asStringUriOnly());
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		checkAndRequestCallPermissions();
 	}
 
 	@Override
@@ -204,7 +226,58 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		return super.onKeyDown(keyCode, event);
 	}
 
+	public void displayCustomToast(final String message, final int duration) {
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
+
+		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+		toastText.setText(message);
+
+		final Toast toast = new Toast(getApplicationContext());
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.setDuration(duration);
+		toast.setView(layout);
+		toast.show();
+	}
+
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
+	}
+	
+	private void checkAndRequestCallPermissions() {
+		ArrayList<String> permissionsList = new ArrayList<String>();
+		
+		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+		Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (recordAudio != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+				Log.i("[Permission] Asking for record audio");
+				permissionsList.add(Manifest.permission.RECORD_AUDIO);
+			}
+		}
+		if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+			if (camera != PackageManager.PERMISSION_GRANTED) {
+				if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+					Log.i("[Permission] Asking for camera");
+					permissionsList.add(Manifest.permission.CAMERA);
+				}
+			}
+		}
+		
+		if (permissionsList.size() > 0) {
+			String[] permissions = new String[permissionsList.size()];
+			permissions = permissionsList.toArray(permissions);
+			ActivityCompat.requestPermissions(this, permissions, 0);
+		}
+	}
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		for (int i = 0; i < permissions.length; i++) {
+			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		}
 	}
 }

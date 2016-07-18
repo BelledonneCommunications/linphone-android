@@ -2,7 +2,6 @@ package org.linphone.test;
 
 import junit.framework.Assert;
 
-import org.linphone.ChatStorage;
 import org.linphone.LinphoneActivity;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
@@ -29,9 +28,9 @@ public class Chat extends SampleTest {
 	public void testAEmptyChatHistory() {
 		goToChat();
 		
-		ChatStorage chatStorage = ChatStorage.getInstance();
-		for (String conversation : chatStorage.getChatList()) {
-			chatStorage.removeDiscussion(conversation);
+		LinphoneChatRoom[] chats = LinphoneTestManager.getInstance().getLc().getChatRooms();
+		for (LinphoneChatRoom chatroom : chats) {
+			chatroom.deleteHistory();
 		}
 		
 		Assert.assertEquals(0, LinphoneActivity.instance().getUnreadMessageCount());

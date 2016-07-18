@@ -3,12 +3,9 @@ package org.linphone.compatibility;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.Contact;
 import org.linphone.LinphoneContact;
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneAddress;
-import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.content.ContentProviderOperation;
@@ -194,90 +191,5 @@ public class ApiNinePlus {
 
 		cursor.close();
 		return null;
-	}
-
-	//Linphone Contacts Tag
-	public static void addLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newAddress, String rawContactId){
-		if(rawContactId != null) {
-			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-					.withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
-					.withValue(ContactsContract.Data.MIMETYPE, context.getString(R.string.sync_mimetype))
-					.withValue(ContactsContract.Data.DATA1, newAddress)
-					.withValue(ContactsContract.Data.DATA2, context.getString(R.string.app_name))
-					.withValue(ContactsContract.Data.DATA3, newAddress)
-					.build()
-			);
-		}
-	}
-	public static void updateLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newAddress, String oldAddress, String rawContactId){
-		if(rawContactId != null) {
-			ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-					.withSelection(ContactsContract.Data.RAW_CONTACT_ID + "=? AND " + ContactsContract.Data.DATA1 + "=? ", new String[]{rawContactId, oldAddress})
-					.withValue(ContactsContract.Data.DATA1, newAddress)
-					.withValue(ContactsContract.Data.DATA2, context.getString(R.string.app_name))
-					.withValue(ContactsContract.Data.DATA3, newAddress)
-					.build());
-		}
-	}
-
-	public static void deleteLinphoneContactTag(ArrayList<ContentProviderOperation> ops , String oldAddress, String rawContactId){
-		if(rawContactId != null) {
-			String select = ContactsContract.Data.RAW_CONTACT_ID + "=? AND "
-					+ ContactsContract.Data.DATA1 + "= ?";
-			String[] args = new String[]{rawContactId, oldAddress};
-
-			ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
-					.withSelection(select, args)
-					.build());
-		}
-	}
-
-	public static void createLinphoneContactTag(Context context, ContentResolver contentResolver, Contact contact, String rawContactId){
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-
-		if (contact != null) {
-			ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-				.withValue(ContactsContract.RawContacts.AGGREGATION_MODE, ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
-				.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, context.getString(R.string.sync_account_type))
-				.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, context.getString(R.string.sync_account_name))
-				.build()
-			);
-
-			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-							.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-							.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-							.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName())
-							.build()
-			);
-
-			List<String> numbersOrAddresses = contact.getNumbersOrAddresses();
-			for (String numberOrAddress : numbersOrAddresses) {
-				if (LinphoneUtils.isSipAddress(numberOrAddress)) {
-					if (numberOrAddress.startsWith("sip:")){
-						numberOrAddress = numberOrAddress.substring(4);
-					}
-
-					ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-						.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-						.withValue(ContactsContract.Data.MIMETYPE, context.getString(R.string.sync_mimetype))
-						.withValue(ContactsContract.Data.DATA1, numberOrAddress)
-						.withValue(ContactsContract.Data.DATA2, context.getString(R.string.app_name))
-						.withValue(ContactsContract.Data.DATA3, numberOrAddress)
-						.build()
-					);
-				}
-			}
-
-			ops.add(ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
-				.withValue(ContactsContract.AggregationExceptions.TYPE, ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER)
-				.withValue(ContactsContract.AggregationExceptions.RAW_CONTACT_ID1, rawContactId)
-				.withValueBackReference(ContactsContract.AggregationExceptions.RAW_CONTACT_ID2, 0).build());
-
-			try {
-				contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-		}
 	}
 }

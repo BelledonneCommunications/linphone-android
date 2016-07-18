@@ -57,7 +57,7 @@ import android.widget.TextView;
  */
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
-	private List<String> mConversations, mDrafts;
+	private List<String> mConversations;
 	private ListView chatList;
 	private TextView noChatHistory;
 	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, cancel, backInCall;
@@ -164,7 +164,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	private void hideAndDisplayMessageIfNoChat() {
-		if (mConversations.size() == 0 && mDrafts.size() == 0) {
+		if (mConversations.size() == 0) {
 			noChatHistory.setVisibility(View.VISIBLE);
 			chatList.setVisibility(View.GONE);
 			edit.setEnabled(false);
@@ -179,8 +179,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	
 	public void refresh() {
 		mConversations = LinphoneActivity.instance().getChatList();
-		mDrafts = LinphoneActivity.instance().getDraftChatList();
-		mConversations.removeAll(mDrafts);
 		hideAndDisplayMessageIfNoChat();
 	}
 
@@ -240,8 +238,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		LinphoneActivity.instance().removeFromChatList(sipUri);
 		mConversations = LinphoneActivity.instance().getChatList();
-		mDrafts = LinphoneActivity.instance().getDraftChatList();
-		mConversations.removeAll(mDrafts);
 		hideAndDisplayMessageIfNoChat();
 		return true;
 	}

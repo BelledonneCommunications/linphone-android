@@ -455,5 +455,14 @@ public final class LinphoneUtils {
 			Log.e(e);
 		}
 	}
+
+	public static String getExtensionFromFileName(String fileName) {
+		String extension = null;
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+		    extension = fileName.substring(i+1);
+		}
+		return extension;
+	}
 }
 

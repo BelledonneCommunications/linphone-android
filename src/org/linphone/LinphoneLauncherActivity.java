@@ -20,7 +20,6 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import org.linphone.mediastream.Log;
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
@@ -82,7 +81,6 @@ public class LinphoneLauncherActivity extends Activity {
 			}
 		}, 1000);
 	}
-
 
 	private class ServiceWaitThread extends Thread {
 		public void run() {

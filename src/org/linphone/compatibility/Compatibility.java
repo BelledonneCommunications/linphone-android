@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.Contact;
 import org.linphone.LinphoneContact;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.mediastream.Version;
@@ -38,6 +37,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.Preference;
+import android.provider.Settings;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /**
@@ -300,32 +300,6 @@ public class Compatibility {
 		ApiFivePlus.deleteSipAddressFromContact(ops, oldSipAddress, contactID);
 	}
 
-	//Linphone Contacts Tag
-	public static void addLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newSipAddress, String rawContactId) {
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			ApiNinePlus.addLinphoneContactTag(context, ops, newSipAddress, rawContactId);
-		}
-	}
-
-	public static void updateLinphoneContactTag(Context context, ArrayList<ContentProviderOperation> ops, String newSipAddress, String oldSipAddress, String rawContactId) {
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			ApiNinePlus.updateLinphoneContactTag(context, ops, newSipAddress, oldSipAddress, rawContactId);
-		}
-	}
-
-	public static void deleteLinphoneContactTag(ArrayList<ContentProviderOperation> ops, String oldSipAddress, String rawContactId) {
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			ApiNinePlus.deleteLinphoneContactTag(ops, oldSipAddress, rawContactId);
-		}
-	}
-
-	public static void createLinphoneContactTag(Context context, ContentResolver contentResolver, Contact contact, String rawContactId) {
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			ApiNinePlus.createLinphoneContactTag(context, contentResolver, contact, rawContactId);
-		}
-	}
-	//End of Linphone Contact Tag
-
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			ApiSixteenPlus.removeGlobalLayoutListener(viewTreeObserver, keyboardListener);
@@ -362,5 +336,12 @@ public class Compatibility {
 		} else {
 			return ApiEightPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
 		}
+	}
+
+	public static boolean canDrawOverlays(Context context) {
+		if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+			return Settings.canDrawOverlays(context);
+		}
+		return true;
 	}
 }

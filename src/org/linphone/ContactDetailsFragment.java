@@ -129,6 +129,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			if (displayednumberOrAddress.startsWith("sip:")) {
 				displayednumberOrAddress = displayednumberOrAddress.replace("sip:", "");
 			}
+			if (displayednumberOrAddress.contains("@")) {
+				displayednumberOrAddress = displayednumberOrAddress.split("@")[0];
+			}
 
 			TextView label = (TextView) v.findViewById(R.id.address_label);
 			if (noa.isSIPAddress()) {

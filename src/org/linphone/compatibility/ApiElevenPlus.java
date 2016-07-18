@@ -69,6 +69,7 @@ public class ApiElevenPlus {
 										| Notification.DEFAULT_SOUND
 										| Notification.DEFAULT_VIBRATE)
 						.setWhen(System.currentTimeMillis())
+						.setNumber(msgCount)
 						.setLargeIcon(contactIcon).getNotification();
 
 		return notif;

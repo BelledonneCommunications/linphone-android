@@ -25,6 +25,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.UIThreadDispatcher;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -44,12 +45,19 @@ public class GCMService extends GCMBaseIntentService {
 	
 	@Override
 	protected void onError(Context context, String errorId) {
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 		Log.e("Error while registering push notification : " + errorId);
 	}
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 		Log.d("Push notification received");
+		
 		if (!LinphoneService.isReady()) {
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 		} else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
@@ -68,13 +76,21 @@ public class GCMService extends GCMBaseIntentService {
 
 	@Override
 	protected void onRegistered(Context context, String regId) {
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 		Log.d("Registered push notification : " + regId);
+		
 		LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
+		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 		Log.w("Unregistered push notification : " + regId);
+		
 		LinphonePreferences.instance().setPushNotificationRegistrationID(null);
 	}
 	

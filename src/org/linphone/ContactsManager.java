@@ -174,7 +174,7 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public void initializeSyncAccount(Context context, ContentResolver contentResolver) {
-		initializeContactManager(context,contentResolver);
+		initializeContactManager(context, contentResolver);
 		AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
 		Account[] accounts = accountManager.getAccountsByType(context.getPackageName());
@@ -236,7 +236,7 @@ public class ContactsManager extends ContentObserver {
 	public List<LinphoneContact> fetchContactsAsync() {
 		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		
-		if (mAccount != null && hasContactsAccess()) {
+		if (hasContactsAccess()) {
 			Cursor c = Compatibility.getContactsCursor(contentResolver, null);
 			if (c != null) {
 				while (c.moveToNext()) {
@@ -330,6 +330,7 @@ public class ContactsManager extends ContentObserver {
 			Log.e(e);
 		}
 	}
+	
 	public String getString(int resourceID) {
 		return context.getString(resourceID);
 	}

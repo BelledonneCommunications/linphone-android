@@ -111,12 +111,17 @@
 				android:title="@string/pref_bandwidth_limit"
 				android:key="@string/pref_bandwidth_limit_key"
 				android:numeric="integer" />
+			
+			<CheckBoxPreference 
+			    android:title="@string/pref_overlay"
+				android:key="@string/pref_overlay_key"
+				android:summary="@string/pref_overlay_summary"/>
 
-				<PreferenceCategory
-					android:title="@string/pref_video_codecs_title"
-					android:key="@string/pref_video_codecs_key"
-				    android:dependency="@string/pref_video_enable_key"
-					android:shouldDisableView="true"/>
+			<PreferenceCategory
+				android:title="@string/pref_video_codecs_title"
+				android:key="@string/pref_video_codecs_key"
+			    android:dependency="@string/pref_video_enable_key"
+				android:shouldDisableView="true"/>
 
 		</PreferenceScreen>
 
@@ -136,6 +141,20 @@
 				android:key="@string/pref_voice_mail_key"/>
 
 	    </PreferenceScreen>
+	    
+		<PreferenceScreen
+		    android:title="@string/pref_chat_title">
+
+			 <EditTextPreference
+				android:title="@string/pref_image_sharing_server_title"
+				android:key="@string/pref_image_sharing_server_key"
+				android:summary="@string/pref_image_sharing_server_desc"/>
+			 
+			 <ListPreference 
+				android:title="@string/pref_use_lime_encryption"
+				android:key="@string/pref_use_lime_encryption_key"/>
+			
+		</PreferenceScreen>
 
 		<PreferenceScreen
 		    android:title="@string/pref_network_title">
@@ -203,6 +222,10 @@
 			    android:key="@string/pref_background_mode_key"/>
 
 			<CheckBoxPreference
+				android:title="@string/pref_service_notification"
+			    android:key="@string/pref_service_notification_key"/>
+
+			<CheckBoxPreference
 				android:title="@string/pref_animation_enable_title"
 				android:key="@string/pref_animation_enable_key"/>
 
@@ -214,10 +237,6 @@
 			    android:title="@string/pref_incoming_call_timeout_title"
 			    android:key="@string/pref_incoming_call_timeout_key"
 			    android:layout="@layout/hidden"/>
-
-			 <EditTextPreference
-				android:title="@string/pref_image_sharing_server_title"
-				android:key="@string/pref_image_sharing_server_key"/>
 
 			 <EditTextPreference
 				android:title="@string/pref_remote_provisioning_title"
