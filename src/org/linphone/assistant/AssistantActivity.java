@@ -42,6 +42,7 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
@@ -187,7 +188,8 @@ private static AssistantActivity instance;
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
-				setResult(Activity.RESULT_CANCELED);
+				LinphonePreferences.instance().firstLaunchSuccessful();
+				startActivity(new Intent().setClass(this, LinphoneActivity.class));
 				finish();
 			}
 		} else if (id == R.id.back) {
@@ -203,7 +205,8 @@ private static AssistantActivity instance;
 			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
-				setResult(Activity.RESULT_CANCELED);
+				LinphonePreferences.instance().firstLaunchSuccessful();
+				startActivity(new Intent().setClass(this, LinphoneActivity.class));
 				finish();
 			}
 		} else if (currentFragment == AssistantFragmentsEnum.LOGIN
@@ -519,10 +522,7 @@ private static AssistantActivity instance;
 	
 	public void success() {
 		mPrefs.firstLaunchSuccessful();
-		if(LinphoneActivity.instance() != null) {
-			LinphoneActivity.instance().isNewProxyConfig();
-			setResult(Activity.RESULT_OK);
-		}
+		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
 		finish();
 	}
 

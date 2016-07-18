@@ -100,8 +100,6 @@ import android.widget.Toast;
 public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
-	private static final int FIRST_LOGIN_ACTIVITY = 101;
-	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
 	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
 	private static final int PERMISSIONS_REQUEST_SYNC = 207;
@@ -161,13 +159,21 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			Intent wizard = new Intent();
 			wizard.setClass(this, RemoteProvisioningLoginActivity.class);
 			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
-			startActivityForResult(wizard, REMOTE_PROVISIONING_LOGIN_ACTIVITY);
-		} else if (savedInstanceState == null && (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch() || LinphoneManager.getLc().getProxyConfigList().length == 0)) {
+			startActivity(wizard);
+			finish();
+			return;
+		} else if (savedInstanceState == null && (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch())) {
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
 				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
-				startActivityForResult(new Intent().setClass(this, AssistantActivity.class), FIRST_LOGIN_ACTIVITY);
+				startActivity(new Intent().setClass(this, AssistantActivity.class));
+				finish();
+				return;
 			}
+		}
+		
+		if (getIntent() != null && getIntent().getExtras() != null) {
+			newProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
 		}
 
 		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
