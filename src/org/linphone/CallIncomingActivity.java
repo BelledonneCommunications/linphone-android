@@ -201,8 +201,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 				}
 			}
 		};
-		
-		checkAndRequestCallPermissions();
 
 		super.onCreate(savedInstanceState);
 		instance = this;
@@ -235,6 +233,8 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			finish();
 			return;
 		}
+		
+		
 		LinphoneAddress address = mCall.getRemoteAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
@@ -244,6 +244,12 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			name.setText(LinphoneUtils.getAddressDisplayName(address));
 		}
 		number.setText(address.asStringUriOnly());
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		checkAndRequestCallPermissions();
 	}
 
 	@Override
@@ -324,18 +330,38 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	
 	private void checkAndRequestCallPermissions() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
-		if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO) && getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			permissionsList.add(Manifest.permission.RECORD_AUDIO);
-		}
-		if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) && getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-				permissionsList.add(Manifest.permission.CAMERA);
+		
+		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+		Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (recordAudio != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+				Log.i("[Permission] Asking for record audio");
+				permissionsList.add(Manifest.permission.RECORD_AUDIO);
 			}
 		}
+		if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+			if (camera != PackageManager.PERMISSION_GRANTED) {
+				if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+					Log.i("[Permission] Asking for camera");
+					permissionsList.add(Manifest.permission.CAMERA);
+				}
+			}
+		}
+		
 		if (permissionsList.size() > 0) {
 			String[] permissions = new String[permissionsList.size()];
 			permissions = permissionsList.toArray(permissions);
 			ActivityCompat.requestPermissions(this, permissions, 0);
+		}
+	}
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		for (int i = 0; i < permissions.length; i++) {
+			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		}
 	}
 }

@@ -1319,4 +1319,12 @@ public class LinphonePreferences {
 	public void setLimeEncryption(LinphoneLimeState lime) {
 		getLc().setLimeEncryption(lime);
 	}
+
+	public boolean firstTimeAskingForPermission(String permission) {
+		boolean firstTime = getConfig().getBool("app", permission, true);
+		if (firstTime) {
+			getConfig().setBool("app", permission, false);
+		}
+		return firstTime;
+	}
 }

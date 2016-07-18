@@ -103,8 +103,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int FIRST_LOGIN_ACTIVITY = 101;
 	private static final int REMOTE_PROVISIONING_LOGIN_ACTIVITY = 102;
 	private static final int CALL_ACTIVITY = 19;
-	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
-	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL = 203;
 	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
 	private static final int PERMISSIONS_REQUEST_SYNC = 207;
 
@@ -235,17 +233,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (state == State.IncomingReceived) {
-					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(LinphoneActivity.this, Manifest.permission.RECORD_AUDIO)) {
-						startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
-					} else {
-						checkAndRequestCallPermissions(true);
-					}
+					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
-					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(LinphoneActivity.this, Manifest.permission.RECORD_AUDIO)) {
-						startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
-					} else {
-						checkAndRequestCallPermissions(false);
-					}
+					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
 					resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 				}
@@ -1158,7 +1148,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 	
 	public boolean checkAndRequestOverlayPermission() {
+		Log.i("[Permission] Draw overlays permission is " + (Compatibility.canDrawOverlays(this) ? "granted" : "denied"));
 		if (!Compatibility.canDrawOverlays(this)) {
+			Log.i("[Permission] Asking for overlay");
 			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 			startActivityForResult(intent, PERMISSIONS_REQUEST_OVERLAY);
 			return false;
@@ -1186,30 +1178,25 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
 	}
 	
-	public void checkAndRequestCallPermissions(boolean isIncomingCall) {
-		ArrayList<String> permissionsList = new ArrayList<String>();
-		if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO) && getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			permissionsList.add(Manifest.permission.RECORD_AUDIO);
-		}
-		if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) && getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-				permissionsList.add(Manifest.permission.CAMERA);
-			}
-		}
-		if (permissionsList.size() > 0) {
-			String[] permissions = new String[permissionsList.size()];
-			permissions = permissionsList.toArray(permissions);
-			ActivityCompat.requestPermissions(this, permissions, isIncomingCall ? PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL : PERMISSIONS_REQUEST_RECORD_AUDIO);
-		}
-	}
-	
 	public void checkAndRequestPermissionsToSendImage() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
-		if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) && getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+		
+		int readExternalStorage = getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName());
+		Log.i("[Permission] Read external storage permission is " + (readExternalStorage == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+		Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (readExternalStorage != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+				Log.i("[Permission] Asking for read external storage");
+				permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+			}
 		}
-		if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) && getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			permissionsList.add(Manifest.permission.CAMERA);
+		if (camera != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+				Log.i("[Permission] Asking for camera");
+				permissionsList.add(Manifest.permission.CAMERA);
+			}
 		}
 		if (permissionsList.size() > 0) {
 			String[] permissions = new String[permissionsList.size()];
@@ -1223,20 +1210,24 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void checkAndRequestPermission(String permission, int result) {
-		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this, new String[]{permission}, result);
+		int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
+		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+				Log.i("[Permission] Asking for " + permission);
+				ActivityCompat.requestPermissions(this, new String[] { permission }, result);
+			}
 		}
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		for (int i = 0; i < permissions.length; i++) {
+			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		}
+		
 		switch (requestCode) {
-			case PERMISSIONS_REQUEST_RECORD_AUDIO:
-				startActivity(new Intent(this, CallOutgoingActivity.class));
-				break;
-			case PERMISSIONS_REQUEST_RECORD_AUDIO_INCOMING_CALL:
-				startActivity(new Intent(this, CallIncomingActivity.class));
-				break;
 			case PERMISSIONS_REQUEST_SYNC:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
@@ -1283,18 +1274,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				LinphoneCall.State callState = call.getState();
+				
 				if (callState == State.IncomingReceived) {
-					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-						startActivity(new Intent(this, CallIncomingActivity.class));
-					} else {
-						checkAndRequestCallPermissions(true);
-					}
+					startActivity(new Intent(this, CallIncomingActivity.class));
 				} else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
-					if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-						startActivity(new Intent(this, CallOutgoingActivity.class));
-					} else {
-						checkAndRequestCallPermissions(false);
-					}
+					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
 					if (call.getCurrentParamsCopy().getVideoEnabled()) {
 						startVideoActivity(call);
@@ -1373,11 +1357,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					if (CallActivity.isInstanciated()) {
 						CallActivity.instance().startIncomingCallActivity();
 					} else {
-						if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-							startActivity(new Intent(this, CallIncomingActivity.class));
-						} else {
-							checkAndRequestCallPermissions(true);
-						}
+						startActivity(new Intent(this, CallIncomingActivity.class));
 					}
 				}
 			}

@@ -87,6 +87,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
 	private static final int PERMISSIONS_ENABLED_CAMERA = 203;
+	private static final int PERMISSIONS_ENABLED_MIC = 204;
 
 	private static CallActivity instance;
 
@@ -446,15 +447,23 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	public void checkAndRequestPermission(String permission, int result) {
-		if (getPackageManager().checkPermission(permission, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-			if (!ActivityCompat.shouldShowRequestPermissionRationale(this,permission)){
-				ActivityCompat.requestPermissions(this, new String[]{permission}, result);
+		int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
+		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+				Log.i("[Permission] Asking for " + permission);
+				ActivityCompat.requestPermissions(this, new String[] { permission }, result);
 			}
 		}
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, final int[] grantResults) {
+		for (int i = 0; i < permissions.length; i++) {
+			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		}
+		
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_CAMERA:
 				UIThreadDispatcher.dispatch(new Runnable() {
@@ -469,6 +478,16 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 					@Override
 					public void run() {
 						disableVideo(grantResults[0] != PackageManager.PERMISSION_GRANTED);
+					}
+				});
+				break;
+			case PERMISSIONS_ENABLED_MIC:
+				UIThreadDispatcher.dispatch(new Runnable() {
+					@Override
+					public void run() {
+						if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+							toggleMicro();
+						}
 					}
 				});
 				break;
@@ -518,6 +537,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				video.setImageResource(R.drawable.camera_button);
 			}
 		}
+		if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			video.setImageResource(R.drawable.camera_button);
+		}
 
 		if (isSpeakerEnabled) {
 			speaker.setImageResource(R.drawable.speaker_selected);
@@ -525,6 +547,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			speaker.setImageResource(R.drawable.speaker_default);
 		}
 
+		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			isMicMuted = true;
+		}
 		if (isMicMuted) {
 			micro.setImageResource(R.drawable.micro_selected);
 		} else {
@@ -604,14 +629,28 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		if (id == R.id.video) {
-			if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+			int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+			Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+			
+			if (camera == PackageManager.PERMISSION_GRANTED) {
 				disableVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
 			} else {
-				checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
+				if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
+				}
 			}
 		}
 		else if (id == R.id.micro) {
-			toggleMicro();
+			int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+			Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+			
+			if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+				toggleMicro();
+			} else {
+				if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+					checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_ENABLED_MIC);
+				}
+			}
 		}
 		else if (id == R.id.speaker) {
 			toggleSpeaker();
@@ -1378,10 +1417,17 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) == PackageManager.PERMISSION_GRANTED || !ActivityCompat.shouldShowRequestPermissionRationale(CallActivity.this, Manifest.permission.CAMERA)) {
+				int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+				Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+				
+				if (camera == PackageManager.PERMISSION_GRANTED) {
 					CallActivity.instance().acceptCallUpdate(true);
 				} else {
-					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
+					if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(CallActivity.this, Manifest.permission.CAMERA)) {
+						checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
+					} else {
+						CallActivity.instance().acceptCallUpdate(false);
+					}
 				}
 
 				dialog.dismiss();
