@@ -710,7 +710,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			editList.setVisibility(View.VISIBLE);
 			isEditMode = true;
 			redrawMessageList();
-			//TODO refaire la liste
 		}
 		if(id == R.id.start_call){
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, LinphoneUtils.getUsernameFromAddress(sipUri), null);
@@ -909,7 +908,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			String extension = LinphoneUtils.getExtensionFromFileName(path);
+			if (extension != null && extension.toLowerCase(Locale.getDefault()).equals("png")) {
+				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			} else {
+				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+			}
 			byte[] byteArray = stream.toByteArray();
 			return byteArray;
 		}
@@ -921,8 +925,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			mUploadingImageStream = new ByteArrayInputStream(result);
 
-			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", "jpeg", result, null);
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
+			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
+			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", extension, result, null);
 			content.setName(fileName);
 
 			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);

@@ -68,10 +68,8 @@
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 	<bool name="use_linphonecore_ringing">false</bool>
 
-
-	<string name="temp_photo_name">linphone-android-photo-temp.jpg</string>
-	<string name="temp_photo_name_with_date">linphone-android-photo-%s.jpg</string>
-
+	<string name="temp_photo_name">linphone-android-photo-temp</string>
+	<string name="temp_photo_name_with_date">linphone-android-photo-%s</string>
 
 	<bool name="hide_phone_numbers_in_editor">false</bool>
 	<bool name="hide_sip_addresses_in_editor">false</bool>

@@ -29,10 +29,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -79,6 +81,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -102,6 +105,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -284,6 +288,40 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void setUploadingImageStream(ByteArrayInputStream array){
 		this.mUploadingImageStream = array;
 	}
+	
+	private void storeImage(LinphoneChatMessage msg) {
+		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppData() == null) return;
+		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
+		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
+		if (bm == null) return;
+		
+		ContentValues values = new ContentValues();
+        values.put(Images.Media.TITLE, file.getName());
+        String extension = msg.getFileTransferInformation().getSubtype();
+        values.put(Images.Media.MIME_TYPE, "image/" + extension);
+        ContentResolver cr = getContext().getContentResolver();
+        Uri path = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        
+        OutputStream stream;
+		try {
+			stream = cr.openOutputStream(path);
+			if (extension != null && extension.toLowerCase(Locale.getDefault()).equals("png")) {
+				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			} else {
+				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+			}
+			
+			stream.close();
+			file.delete();
+	        bm.recycle();
+
+	        msg.setAppData(path.toString());
+		} catch (FileNotFoundException e) {
+			Log.e(e);
+		} catch (IOException e) {
+			Log.e(e);
+		}
+	}
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
@@ -292,17 +330,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
-				File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
-				try {
-					Bitmap bm = BitmapFactory.decodeFile(file.getPath());
-					if (bm != null) {
-						String url = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getPath(), file.getName(), null);
-						msg.setAppData(url);
-						file.delete();
-					}
-				} catch (FileNotFoundException e) {
-					Log.e(e);
-				}
+				storeImage(msg);
 				removePendingMessage(msg);
 			}
 		}

@@ -173,7 +173,8 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 						public void onClick(View v) {
 							if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 								v.setEnabled(false);
-								String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()));
+								String extension = nativeMessage.getFileTransferInformation().getSubtype();
+								String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())) + "." + extension;
 								File file = new File(Environment.getExternalStorageDirectory(), filename);
 								nativeMessage.setAppData(filename);
 								LinphoneManager.getInstance().addDownloadMessagePending(nativeMessage);
