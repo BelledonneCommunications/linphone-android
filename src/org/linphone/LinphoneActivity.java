@@ -105,6 +105,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int CALL_ACTIVITY = 19;
 	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
 	private static final int PERMISSIONS_REQUEST_SYNC = 207;
+	private static final int PERMISSIONS_REQUEST_CONTACTS = 208;
 
 	private static LinphoneActivity instance;
 
@@ -353,6 +354,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			newFragment = new HistoryDetailFragment();
 			break;
 		case CONTACTS_LIST:
+			checkAndRequestReadContactsPermission();
 			newFragment = new ContactsListFragment();
 			if (isTablet()) {
 				((ContactsListFragment) newFragment).displayFirstContact();
@@ -1171,7 +1173,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 	
 	public void checkAndRequestReadContactsPermission() {
-		checkAndRequestPermission(Manifest.permission.READ_CONTACTS, 0);
+		checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
 	}
 	
 	public void checkAndRequestWriteContactsPermission() {
@@ -1235,6 +1237,29 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
 				}
 				break;
+			case PERMISSIONS_REQUEST_CONTACTS:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					ContactsManager.getInstance().enableContactsAccess();
+					ContactsManager.getInstance().fetchContacts();
+					fetchedContactsOnce = true;
+				}
+				break;
+		}
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
+		Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (contacts == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
+			ContactsManager.getInstance().enableContactsAccess();
+			ContactsManager.getInstance().fetchContacts();
+			fetchedContactsOnce = true;
+		} else {
+			checkAndRequestReadContactsPermission();
 		}
 	}
 
@@ -1249,14 +1274,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
-		}
-
-		if (getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName()) == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
-			ContactsManager.getInstance().enableContactsAccess();
-			ContactsManager.getInstance().fetchContacts();
-			fetchedContactsOnce = true;
-		} else {
-			checkAndRequestReadContactsPermission();
 		}
 
 		refreshAccounts();

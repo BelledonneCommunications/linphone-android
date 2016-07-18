@@ -97,7 +97,6 @@
 
         <activity android:name=".CallIncomingActivity"
 		    android:theme="@style/NoTitle"
-            android:noHistory="true"
 			android:launchMode="singleTop"
             android:screenOrientation="behind">
             <intent-filter>
@@ -107,7 +106,6 @@
 
 		<activity android:name=".CallOutgoingActivity"
 			  android:theme="@style/NoTitle"
-			  android:noHistory="true"
 			  android:launchMode="singleTop"
 			  android:screenOrientation="behind">
 			<intent-filter>
