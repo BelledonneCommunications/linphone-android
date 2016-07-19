@@ -285,6 +285,7 @@ private static AssistantActivity instance;
 				echoCancellerAlreadyDone = true;
 				return true;
 			}
+			isEchoCalibrationFinished();
 		} else {
 			checkAndRequestAudioPermission();
 		}
@@ -378,6 +379,7 @@ private static AssistantActivity instance;
 	}
 
 	private void launchDownloadCodec() {
+		Log.i("linphone salut c'est miguel download");
 		OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
 			CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
