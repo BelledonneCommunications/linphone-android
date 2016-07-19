@@ -70,11 +70,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		removePreviousPreferencesFile(); // Required when updating the preferences order
 		addPreferencesFromResource(R.xml.preferences);
 
-		// Init the settings page interface
-		initSettings();
-		setListeners();
-		hideSettings();
-
 		mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
@@ -1098,17 +1093,15 @@ public class SettingsFragment extends PreferencesListFragment {
 	public void onResume() {
 		super.onResume();
 
+		// Init the settings page interface
+		initSettings();
+		setListeners();
+		hideSettings();
 		initAccounts();
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
 
 		}
-	}
-
-	@Override
-	public void onPause() {
-		LinphoneActivity.instance().hideTopBar();
-		super.onPause();
 	}
 }
