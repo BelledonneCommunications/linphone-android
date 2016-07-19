@@ -112,7 +112,7 @@ private static AssistantActivity instance;
 						if (state == RegistrationState.RegistrationOk) {
 							if (progress != null) progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								launchEchoCancellerCalibration(true);
+								success();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							if (progress != null) progress.dismiss();
@@ -252,26 +252,24 @@ private static AssistantActivity instance;
 			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
 			} else {
-				success();
+				goToLinphoneActivity();
 			}
 		} else {
-			success();
+			goToLinphoneActivity();
 		}
 	}
 
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
-		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
-			if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
-				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
-				fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
-				changeFragment(fragment);
-				currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
-				back.setVisibility(View.VISIBLE);
-				cancel.setEnabled(false);
-			} else {
-				success();
-			}
+		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
+			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
+			changeFragment(fragment);
+			currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
+			back.setVisibility(View.VISIBLE);
+			cancel.setEnabled(false);
 		} else {
 			checkAndRequestAudioPermission();
 		}
@@ -494,7 +492,7 @@ private static AssistantActivity instance;
 	}
 
 	public void isEchoCalibrationFinished() {
-		success();
+		goToLinphoneActivity();
 	}
 
 	public Dialog createErrorDialog(LinphoneProxyConfig proxy, String message){
@@ -521,6 +519,15 @@ private static AssistantActivity instance;
 	}
 	
 	public void success() {
+		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
+		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+			launchEchoCancellerCalibration(true);
+		} else {
+			goToLinphoneActivity();
+		}
+	}
+	
+	private void goToLinphoneActivity() {
 		mPrefs.firstLaunchSuccessful();
 		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
 		finish();

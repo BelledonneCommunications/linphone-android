@@ -239,7 +239,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
-		if(value != null) {
+		if (value != null) {
 			EditTextPreference etPref = (EditTextPreference) findPreference(getString(pref));
 			etPref.setText(value);
 			etPref.setSummary(value);
