@@ -23,6 +23,7 @@ import static android.view.View.VISIBLE;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -463,6 +464,19 @@ public final class LinphoneUtils {
 		    extension = fileName.substring(i+1);
 		}
 		return extension;
+	}
+	
+	public static void recursiveFileRemoval(File root) {
+		if (!root.delete()) {
+			if (root.isDirectory()) {
+				File[] files = root.listFiles();
+		        if (files != null) {
+		            for (File f : files) {
+		            	recursiveFileRemoval(f);
+		            }
+		        }
+			}
+		}
 	}
 }
 

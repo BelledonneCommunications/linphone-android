@@ -96,8 +96,8 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 	
 	private void removePreviousPreferencesFile() {
-		File dir = new File(getContext().getFilesDir().getAbsolutePath() + "shared_prefs");
-		dir.delete();
+		File dir = new File(getActivity().getFilesDir().getAbsolutePath() + "shared_prefs");
+		LinphoneUtils.recursiveFileRemoval(dir);
 	}
 
 	// Inits the values or the listener on some settings
