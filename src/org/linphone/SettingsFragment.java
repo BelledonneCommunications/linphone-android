@@ -39,7 +39,9 @@ import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -73,7 +75,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		setListeners();
 		hideSettings();
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
@@ -99,7 +101,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 	
 	private void removePreviousPreferencesFile() {
-		File dir = new File(LinphoneActivity.instance().getFilesDir().getAbsolutePath() + "shared_prefs");
+		File dir = new File(getContext().getFilesDir().getAbsolutePath() + "shared_prefs");
 		dir.delete();
 	}
 
@@ -573,16 +575,31 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				synchronized (SettingsFragment.this) {
-					try {
-						LinphoneManager.getInstance().startEcCalibration(mListener);
-						preference.setSummary(R.string.ec_calibrating);
-					} catch (LinphoneCoreException e) {
-						Log.w(e, "Cannot calibrate EC");
+					preference.setSummary(R.string.ec_calibrating);
+					
+					int recordAudio = getContext().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getContext().getPackageName());
+					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+						startEchoCancellerCalibration();
+					} else {
+						LinphoneActivity.instance().checkAndRequestRecordAudioPermissionForEchoCanceller();
 					}
 				}
 				return true;
 			}
 		});
+	}
+	
+	public void startEchoCancellerCalibration() {
+		try {
+			LinphoneManager.getInstance().startEcCalibration(mListener);
+		} catch (LinphoneCoreException e) {
+			Log.e(e);
+		}
+	}
+	
+	public void echoCalibrationFail() {
+		Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
+		echoCancellerCalibration.setSummary(R.string.failed);
 	}
 
 	private void initVideoSettings() {

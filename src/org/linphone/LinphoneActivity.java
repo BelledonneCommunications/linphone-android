@@ -104,6 +104,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
 	private static final int PERMISSIONS_REQUEST_SYNC = 207;
 	private static final int PERMISSIONS_REQUEST_CONTACTS = 208;
+	private static final int PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER = 209;
 
 	private static LinphoneActivity instance;
 
@@ -114,6 +115,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private RelativeLayout mTopBar;
 	private ImageView cancel;
 	private FragmentsAvailable pendingFragmentTransaction, currentFragment, nextFragment;
+	private Fragment fragment;
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
@@ -346,69 +348,69 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			} catch (Exception e) {
 			}
 		}
-
-		Fragment newFragment = null;
-
+		
+		fragment = null;
+		
 		switch (newFragmentType) {
 		case HISTORY_LIST:
-			newFragment = new HistoryListFragment();
+			fragment = new HistoryListFragment();
 			if (isTablet()) {
-				((HistoryListFragment) newFragment).displayFirstLog();
+				((HistoryListFragment) fragment).displayFirstLog();
 			}
 			break;
 		case HISTORY_DETAIL:
-			newFragment = new HistoryDetailFragment();
+			fragment = new HistoryDetailFragment();
 			break;
 		case CONTACTS_LIST:
 			checkAndRequestReadContactsPermission();
-			newFragment = new ContactsListFragment();
+			fragment = new ContactsListFragment();
 			if (isTablet()) {
-				((ContactsListFragment) newFragment).displayFirstContact();
+				((ContactsListFragment) fragment).displayFirstContact();
 			}
 			break;
 		case CONTACT_DETAIL:
-			newFragment = new ContactDetailsFragment();
+			fragment = new ContactDetailsFragment();
 			break;
 			case CONTACT_EDITOR:
-			newFragment = new ContactEditorFragment();
+				fragment = new ContactEditorFragment();
 			break;
 		case DIALER:
-			newFragment = new DialerFragment();
+			fragment = new DialerFragment();
 			if (extras == null) {
-				newFragment.setInitialSavedState(dialerSavedState);
+				fragment.setInitialSavedState(dialerSavedState);
 			}
 			break;
 		case SETTINGS:
-			newFragment = new SettingsFragment();
+			fragment = new SettingsFragment();
 			break;
 		case ACCOUNT_SETTINGS:
-			newFragment = new AccountPreferencesFragment();
+			fragment = new AccountPreferencesFragment();
 			break;
 		case ABOUT:
-			newFragment = new AboutFragment();
+			fragment = new AboutFragment();
 			break;
 		case EMPTY:
-			newFragment = new EmptyFragment();
+			fragment = new EmptyFragment();
 			break;
 		case CHAT_LIST:
-			newFragment = new ChatListFragment();
+			fragment = new ChatListFragment();
 			if (isTablet()) {
-				((ChatListFragment) newFragment).displayFirstChat();
+				((ChatListFragment) fragment).displayFirstChat();
 			}
 			break;
 		case CHAT:
-			newFragment = new ChatFragment();
+			fragment = new ChatFragment();
 			break;
 		default:
 			break;
 		}
 
-		if (newFragment != null) {
-			newFragment.setArguments(extras);
+		if (fragment != null) {
+			fragment.setArguments(extras);
 			if (isTablet()) {
-				changeFragmentForTablets(newFragment, newFragmentType, withoutAnimation);
+				changeFragmentForTablets(fragment, newFragmentType, withoutAnimation);
 			} else {
-				changeFragment(newFragment, newFragmentType, withoutAnimation);
+				changeFragment(fragment, newFragmentType, withoutAnimation);
 			}
 		}
 	}
@@ -1186,6 +1188,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
 	}
 	
+	public void checkAndRequestRecordAudioPermissionForEchoCanceller() {
+		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER);
+	}
+	
 	public void checkAndRequestPermissionsToSendImage() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
 		
@@ -1248,6 +1254,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					ContactsManager.getInstance().enableContactsAccess();
 					ContactsManager.getInstance().fetchContacts();
 					fetchedContactsOnce = true;
+				}
+				break;
+			case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					((SettingsFragment) fragment).startEchoCancellerCalibration();
+				} else {
+					((SettingsFragment) fragment).echoCalibrationFail();
 				}
 				break;
 		}
