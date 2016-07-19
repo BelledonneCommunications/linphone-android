@@ -93,6 +93,10 @@ public class SettingsFragment extends PreferencesListFragment {
 				}
 			}
 		};
+		
+		initSettings();
+		setListeners();
+		hideSettings();
 	}
 	
 	private void removePreviousPreferencesFile() {
@@ -1094,9 +1098,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		super.onResume();
 
 		// Init the settings page interface
-		initSettings();
-		setListeners();
-		hideSettings();
 		initAccounts();
 
 		if (LinphoneActivity.isInstanciated()) {
