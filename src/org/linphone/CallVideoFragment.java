@@ -27,6 +27,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -295,7 +296,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+		super.onAttach((Context)activity);
 		inCallActivity = (CallActivity) activity;
 		if (inCallActivity != null) {
 			inCallActivity.bindVideoFragment(this);

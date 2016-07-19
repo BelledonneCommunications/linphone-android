@@ -49,6 +49,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -452,7 +453,7 @@ private static AssistantActivity instance;
  	public void displayRegistrationInProgressDialog() {
 		if(LinphoneManager.getLc().isNetworkReachable()) {
 			progress = ProgressDialog.show(this, null, null);
-			Drawable d = new ColorDrawable(getResources().getColor(R.color.colorE));
+			Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
 			d.setAlpha(200);
 			progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 			progress.getWindow().setBackgroundDrawable(d);
@@ -465,7 +466,7 @@ private static AssistantActivity instance;
 		remoteProvisioningInProgress = true;
 		
 		progress = ProgressDialog.show(this, null, null);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorE));
+		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
 		d.setAlpha(200);
 		progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 		progress.getWindow().setBackgroundDrawable(d);

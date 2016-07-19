@@ -18,8 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,7 +42,7 @@ public class CallAudioFragment extends Fragment {
 
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+		super.onAttach((Context)activity);
 		incallActvityInstance = (CallActivity) activity;
 		
 		if (incallActvityInstance != null) {

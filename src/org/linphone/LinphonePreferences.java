@@ -31,12 +31,12 @@ import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
-import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.LinphoneLimeState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneNatPolicy;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LpConfig;
 import org.linphone.core.TunnelConfig;
@@ -909,40 +909,43 @@ public class LinphonePreferences {
 	}
 
 	public String getStunServer() {
-		return getLc().getStunServer();
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		if (nat == null) return null;
+		return nat.getStunServer();
 	}
 
 	public void setStunServer(String stun) {
-		getLc().setStunServer(stun);
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		if (nat == null) {
+			nat = getLc().createNatPolicy();
+		}
+		nat.setStunServer(stun);
 	}
 
 	public void setIceEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getLc().createNatPolicy();
+		
 		if (enabled) {
-			getLc().setFirewallPolicy(FirewallPolicy.UseIce);
+			nat.enableIce(true);
 		} else {
 			String stun = getStunServer();
 			if (stun != null && stun.length() > 0) {
-				getLc().setFirewallPolicy(FirewallPolicy.UseStun);
-			} else {
-				getLc().setFirewallPolicy(FirewallPolicy.NoFirewall);
+				nat.enableStun(true);
 			}
-		 }
+		}
+		getLc().setNatPolicy(nat);
 	}
 
 	public void setUpnpEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		
 		if (enabled) {
-			if (isIceEnabled()) {
-				Log.e("Cannot have both ice and upnp enabled, disabling upnp");
-			} else {
-				getLc().setFirewallPolicy(FirewallPolicy.UseUpnp);
-			}
+			nat.enableUpnp(true);
 		}
 		else {
 			String stun = getStunServer();
 			if (stun != null && stun.length() > 0) {
-				getLc().setFirewallPolicy(FirewallPolicy.UseStun);
-			} else {
-				getLc().setFirewallPolicy(FirewallPolicy.NoFirewall);
+				nat.enableStun(true);
 			}
 		}
 	}
@@ -985,11 +988,15 @@ public class LinphonePreferences {
 	}
 
 	public boolean isUpnpEnabled() {
-		return getLc().upnpAvailable() && getLc().getFirewallPolicy() == FirewallPolicy.UseUpnp;
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		if (nat == null) return false;
+		return nat.upnpEnabled();
 	}
 
 	public boolean isIceEnabled() {
-		return getLc().getFirewallPolicy() == FirewallPolicy.UseIce;
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		if (nat == null) return false;
+		return nat.iceEnabled();
 	}
 
 	public MediaEncryption getMediaEncryption() {

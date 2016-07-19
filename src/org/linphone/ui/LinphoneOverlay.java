@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;

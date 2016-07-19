@@ -63,11 +63,6 @@ public class CreateAccountFragment extends Fragment {
 	private boolean confirmPasswordOk = false;
 	private Button createAccount;
 	private final Pattern UPPER_CASE_REGEX = Pattern.compile("[A-Z]");
-	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '_', '-' };
-	private char[] acceptedCharsForPhoneNumbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+' };
-	private String inputFilterCharacters;
 	
 	private String getUsername() {
 		String username = usernameEdit.getText().toString();
@@ -96,9 +91,7 @@ public class CreateAccountFragment extends Fragment {
 
     	addXMLRPCUsernameHandler(usernameEdit, null);
 
-    	inputFilterCharacters = new String(acceptedChars);
     	if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
-    		inputFilterCharacters = new String(acceptedCharsForPhoneNumbers);
 			usernameEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
     	}
 

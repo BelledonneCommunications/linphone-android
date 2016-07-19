@@ -70,6 +70,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -901,7 +902,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public Dialog displayDialog(String text){
 		Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
 		d.setAlpha(200);
 		dialog.setContentView(R.layout.dialog);
 		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
@@ -915,7 +916,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public Dialog displayWrongPasswordDialog(final String username, final String realm, final String domain){
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
 		d.setAlpha(200);
 		dialog.setContentView(R.layout.input_dialog);
 		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);

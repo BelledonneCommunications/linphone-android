@@ -53,7 +53,6 @@ public class ContactsManager extends ContentObserver {
 	
 	private static ContactsManager instance;
 	private List<LinphoneContact> contacts, sipContacts;
-	private Account mAccount;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
 	private Context context;
@@ -179,17 +178,13 @@ public class ContactsManager extends ContentObserver {
 
 		Account[] accounts = accountManager.getAccountsByType(context.getPackageName());
 
-		if(accounts != null && accounts.length == 0) {
+		if (accounts != null && accounts.length == 0) {
 			Account newAccount = new Account(context.getString(R.string.sync_account_name), context.getPackageName());
 			try {
 				accountManager.addAccountExplicitly(newAccount, null, null);
-				mAccount = newAccount;
 			} catch (Exception e) {
 				Log.e(e);
-				mAccount = null;
 			}
-		} else {
-			mAccount = accounts[0];
 		}
 		initializeContactManager(context, contentResolver);
 	}

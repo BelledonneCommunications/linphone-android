@@ -160,6 +160,7 @@ public class SlidingDrawer extends ViewGroup {
 	 * @param defStyle
 	 *            The style to apply to this widget.
 	 */
+	@SuppressWarnings("deprecation")
 	public SlidingDrawer(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		TypedArray a = context.obtainStyledAttributes(attrs,

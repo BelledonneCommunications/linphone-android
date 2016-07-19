@@ -38,7 +38,7 @@ import de.timroes.axmlrpc.XMLRPCServerException;
  * @author Sylvain Berfini
  */
 public class CreateAccountActivationFragment extends Fragment {
-	private String username, password, domain;
+	private String username, password;
 	private Handler mHandler = new Handler();
 	private Button checkAccount;
 	
