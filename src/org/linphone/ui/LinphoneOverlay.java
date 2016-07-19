@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -26,6 +27,7 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 	private float y;
 	private float touchX;
 	private float touchY;
+	private boolean dragEnabled;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 
 	public LinphoneOverlay(Context context, AttributeSet attrs, int defStyle) {
@@ -62,13 +64,20 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 		params.width = callParams.getReceivedVideoSize().width;
 		params.height = callParams.getReceivedVideoSize().height;
 		LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
-		
+
 		setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Context context = LinphoneService.instance();
 				Intent intent = new Intent(context, LinphoneActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent);
+			}
+		});
+		setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				dragEnabled = true;
+				return true;
 			}
 		});
 	}
@@ -95,11 +104,14 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 			touchY = event.getY();
 			break;
 		case MotionEvent.ACTION_MOVE:
-			updateViewPostion();
+			if (dragEnabled) {
+				updateViewPostion();
+			}
 			break;
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
 			touchX = touchY = 0;
+			dragEnabled = false;
 			break;
 		default:
 			break;
