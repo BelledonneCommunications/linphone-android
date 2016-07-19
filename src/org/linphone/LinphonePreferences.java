@@ -52,6 +52,7 @@ public class LinphonePreferences {
 	private static final int LINPHONE_CORE_RANDOM_PORT = -1;
 	private static LinphonePreferences instance;
 	private Context mContext;
+	private String basePath;
 
 	public static final synchronized LinphonePreferences instance() {
 		if (instance == null) {
@@ -66,6 +67,7 @@ public class LinphonePreferences {
 
 	public void setContext(Context c) {
 		mContext = c;
+		basePath = mContext.getFilesDir().getAbsolutePath();
 	}
 
 	private String getString(int key) {
@@ -90,10 +92,10 @@ public class LinphonePreferences {
 		}
 
 		if (!LinphoneManager.isInstanciated()) {
-			File linphonerc = new File(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			File linphonerc = new File(basePath + "/.linphonerc");
 			if (linphonerc.exists()) {
 				return LinphoneCoreFactory.instance().createLpConfig(linphonerc.getAbsolutePath());
-			} else {
+			} else if (mContext != null) {
 				InputStream inputStream = mContext.getResources().openRawResource(R.raw.linphonerc_default);
 			    InputStreamReader inputreader = new InputStreamReader(inputStream);
 			    BufferedReader buffreader = new BufferedReader(inputreader);
@@ -105,13 +107,14 @@ public class LinphonePreferences {
 			            text.append('\n');
 			        }
 				} catch (IOException ioe) {
-					
+					Log.e(ioe);
 				}
 			    return LinphoneCoreFactory.instance().createLpConfigFromString(text.toString());
 			}
+		} else {
+			return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
 		}
-
-		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
+		return null;
 	}
 
 	public void removePreviousVersionAuthInfoRemoval() {
