@@ -292,6 +292,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				callFragment = new CallVideoFragment();
 				videoCallFragment = (CallVideoFragment) callFragment;
 				displayVideoCall(false);
+				LinphoneManager.getInstance().routeAudioToSpeaker();
 				isSpeakerEnabled = true;
 			} else {
 				callFragment = new CallAudioFragment();
