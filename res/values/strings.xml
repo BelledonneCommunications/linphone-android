@@ -267,6 +267,8 @@
 
 	<!-- Call settings -->
 	<string name="pref_call_title">Call</string>
+	<string name="pref_device_ringtone">Use device ringtone</string>
+	<string name="pref_auto_answer">Auto answer incoming calls</string>
 	<string name="pref_rfc2833_dtmf">Send RFC2833 DTMFs</string>
 	<string name="pref_sipinfo_dtmf">Send SIP INFO DTMFs</string>
 	<string name="pref_voice_mail">Voice mail URI</string>

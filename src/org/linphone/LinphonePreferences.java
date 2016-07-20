@@ -1337,4 +1337,28 @@ public class LinphonePreferences {
 		}
 		return firstTime;
 	}
+	
+	public boolean isDeviceRingtoneEnabled() {
+		return getConfig().getBool("app", "device_ringtone", true);
+	}
+	
+	public void enableDeviceRingtone(boolean enable) {
+		getConfig().setBool("app", "device_ringtone", enable);
+	}
+
+	public boolean isBisFeatureEnabled() {
+		return getConfig().getBool("app", "bis_feature", true);
+	}
+	
+	public void enableBisFeature(boolean enable) {
+		getConfig().setBool("app", "bis_feature", enable);
+	}
+
+	public boolean isAutoAnswerEnabled() {
+		return getConfig().getBool("app", "auto_answer", false);
+	}
+	
+	public void enableAutoAnswer(boolean enable) {
+		getConfig().setBool("app", "auto_answer", enable);
+	}
 }

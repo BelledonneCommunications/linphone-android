@@ -25,9 +25,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -132,6 +130,15 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		});
 		return view;
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		inCallActivity = (CallActivity) getActivity();
+		if (inCallActivity != null) {
+			inCallActivity.bindVideoFragment(this);
+		}
+	}
 
 	private void fixZOrder(SurfaceView video, SurfaceView preview) {
 		video.setZOrderOnTop(false);
@@ -292,15 +299,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		}
 		
 		super.onDestroy();
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach((Context)activity);
-		inCallActivity = (CallActivity) activity;
-		if (inCallActivity != null) {
-			inCallActivity.bindVideoFragment(this);
-		}
 	}
 	
 	@Override

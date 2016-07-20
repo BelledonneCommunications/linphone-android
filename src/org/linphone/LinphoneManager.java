@@ -170,7 +170,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
-		mRingSoundFile = basePath + "/oldphone_mono.wav";
+		mRingSoundFile = basePath + "/notes_of_the_optimistic.mkv";
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/hold.mkv";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
@@ -691,12 +691,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-		mLc.setRing(mRingSoundFile);
-		if (mR.getBoolean(R.bool.use_linphonecore_ringing)) {
-			disableRinging();
-		} else {
-			mLc.setRing(null); //We'll use the android media player api to play the ringtone
-		}
+		
 		mLc.setRingback(mRingbackSoundFile);
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
@@ -706,6 +701,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setUserCertificatesPath(mUserCertificatePath);
 		subscribeFriendList(mPrefs.isFriendlistsubscriptionEnabled());
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
+		enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 
 		int availableCores = Runtime.getRuntime().availableProcessors();
 		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
@@ -734,7 +730,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
-		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
+		copyIfNotExist(R.raw.notes_of_the_optimistic, mRingSoundFile);
 		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
 		copyIfNotExist(R.raw.hold, mPauseSoundFile);
 		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
@@ -998,7 +994,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 
-		if (state == State.IncomingReceived && mR.getBoolean(R.bool.auto_answer_calls)) {
+		if (state == State.IncomingReceived && LinphonePreferences.instance().isAutoAnswerEnabled()) {
 			try {
 				mLc.acceptCall(call);
 			} catch (LinphoneCoreException e) {
@@ -1122,11 +1118,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private boolean isRinging;
-	private boolean disableRinging = false;
-
-	public void disableRinging() {
-		disableRinging = true;
-	}
 
 	private void requestAudioFocus(){
 		if (!mAudioFocused){
@@ -1135,12 +1126,21 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
 		}
 	}
+	
+	public void enableDeviceRingtone(boolean use) {
+		if (use) {
+			mLc.setRing(null);
+		} else {
+			mLc.setRing(mRingSoundFile);
+		}
+	}
 
 	private synchronized void startRinging()  {
-		if (disableRinging) {
+		if (!LinphonePreferences.instance().isDeviceRingtoneEnabled()) {
 			routeAudioToSpeaker();
 			return;
 		}
+		
 		if (mR.getBoolean(R.bool.allow_ringing_while_early_media)) {
 			routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
 		}

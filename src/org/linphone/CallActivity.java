@@ -151,7 +151,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			BluetoothManager.getInstance().initBluetooth();
 		}
 
-		isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
+		isAnimationDisabled = !LinphonePreferences.instance().areAnimationsEnabled();
 		cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
 
 		try {

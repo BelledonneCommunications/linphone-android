@@ -166,11 +166,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			hidePreference(R.string.pref_in_app_store_key);
 		}
 
-
-		if (getResources().getBoolean(R.bool.disable_animations)) {
-			uncheckAndHidePreference(R.string.pref_animation_enable_key);
-		}
-
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			findPreference(getString(R.string.pref_image_sharing_server_key)).setLayoutResource(R.layout.hidden);
 		}
@@ -776,9 +771,14 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initCallSettings() {
+		CheckBoxPreference deviceRingtone = (CheckBoxPreference) findPreference(getString(R.string.pref_device_ringtone_key));
+		CheckBoxPreference autoAnswer = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
 
+		deviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
+		autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
+		
 		if (mPrefs.useRfc2833Dtmfs()) {
 			rfc2833.setChecked(true);
 			sipInfo.setChecked(false);
@@ -793,6 +793,45 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void setCallPreferencesListener() {
+		findPreference(getString(R.string.pref_device_ringtone_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean use = (Boolean) newValue;
+				mPrefs.enableDeviceRingtone(use);
+				LinphoneManager.getInstance().enableDeviceRingtone(use);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = newValue.toString();
+				MediaEncryption menc = MediaEncryption.None;
+				if (value.equals(getString(R.string.pref_media_encryption_key_srtp)))
+					menc = MediaEncryption.SRTP;
+				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
+					menc = MediaEncryption.ZRTP;
+				else if (value.equals(getString(R.string.pref_media_encryption_key_dtls)))
+					menc = MediaEncryption.DTLS;
+				mPrefs.setMediaEncryption(menc);
+
+				preference.setSummary(mPrefs.getMediaEncryption().toString());
+				return true;
+			}
+		});
+		
+		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
+		
+		findPreference(getString(R.string.pref_auto_answer_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean use = (Boolean) newValue;
+				mPrefs.enableAutoAnswer(use);
+				return true;
+			}
+		});
+		
 		findPreference(getString(R.string.pref_rfc2833_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -871,8 +910,6 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initNetworkSettings() {
-		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
-
 		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
 
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
@@ -968,24 +1005,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 				mPrefs.setSipPort(port);
 				preference.setSummary(newValue.toString());
-				return true;
-			}
-		});
-
-		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				String value = newValue.toString();
-				MediaEncryption menc = MediaEncryption.None;
-				if (value.equals(getString(R.string.pref_media_encryption_key_srtp)))
-					menc = MediaEncryption.SRTP;
-				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
-					menc = MediaEncryption.ZRTP;
-				else if (value.equals(getString(R.string.pref_media_encryption_key_dtls)))
-					menc = MediaEncryption.DTLS;
-				mPrefs.setMediaEncryption(menc);
-
-				preference.setSummary(mPrefs.getMediaEncryption().toString());
 				return true;
 			}
 		});

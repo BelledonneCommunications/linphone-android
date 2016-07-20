@@ -143,6 +143,20 @@ public class StatusFragment extends Fragment {
 			
 		};
 
+		isAttached = true;
+		Activity activity = getActivity();
+		
+		if (activity instanceof LinphoneActivity) {
+			((LinphoneActivity) activity).updateStatusFragment(this);
+			isInCall = false;
+		} else if (activity instanceof CallActivity) {
+			((CallActivity) activity).updateStatusFragment(this);
+			isInCall = true;
+		} else if (activity instanceof AssistantActivity) {
+			((AssistantActivity) activity).updateStatusFragment(this);
+			isInCall = false;
+		}
+
         return view;
     }
 
@@ -155,23 +169,6 @@ public class StatusFragment extends Fragment {
 			if (lpc != null) {
 				mListener.registrationState(lc, lpc, lpc.getState(), null);
 			}
-		}
-	}
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach((Context)activity);
-		isAttached = true;
-		
-		if (activity instanceof LinphoneActivity) {
-			((LinphoneActivity) activity).updateStatusFragment(this);
-			isInCall = false;
-		} else if (activity instanceof CallActivity) {
-			((CallActivity) activity).updateStatusFragment(this);
-			isInCall = true;
-		} else if (activity instanceof AssistantActivity) {
-			((AssistantActivity) activity).updateStatusFragment(this);
-			isInCall = false;
 		}
 	}
 	

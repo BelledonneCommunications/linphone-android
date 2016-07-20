@@ -243,7 +243,7 @@ public class ContactsManager extends ContentObserver {
 				c.close();
 			}
 		}
-		
+
 		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
 			String refkey = friend.getRefKey();
 			if (refkey != null) {
@@ -255,9 +255,13 @@ public class ContactsManager extends ContentObserver {
 						break;
 					}
 				}
-				if (!found) {
+				if (!found && hasContactAccess) {
 					// If refkey != null but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
 					LinphoneManager.getLc().removeFriend(friend);
+				} else {
+					LinphoneContact contact = new LinphoneContact();
+					contact.setFriend(friend);
+					contacts.add(contact);
 				}
 			} else {
 				LinphoneContact contact = new LinphoneContact();

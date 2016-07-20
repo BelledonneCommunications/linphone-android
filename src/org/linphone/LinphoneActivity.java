@@ -417,7 +417,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	private void updateAnimationsState() {
-		isAnimationDisabled = getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
+		isAnimationDisabled = !LinphonePreferences.instance().areAnimationsEnabled();
 	}
 
 	public boolean isAnimationDisabled() {
@@ -1253,9 +1253,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			case PERMISSIONS_REQUEST_CONTACTS:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					ContactsManager.getInstance().enableContactsAccess();
-					ContactsManager.getInstance().fetchContacts();
-					fetchedContactsOnce = true;
 				}
+				ContactsManager.getInstance().fetchContacts();
+				fetchedContactsOnce = true;
 				break;
 			case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

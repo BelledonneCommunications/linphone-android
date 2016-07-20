@@ -152,6 +152,16 @@
 		    android:title="@string/pref_call_title">
 
 			<CheckBoxPreference
+				android:title="@string/pref_device_ringtone"
+			    android:key="@string/pref_device_ringtone_key"
+				android:persistent="false"/>
+
+			<ListPreference
+			    android:title="@string/pref_media_encryption"
+				android:key="@string/pref_media_encryption_key"
+				android:persistent="false"/>
+
+			<CheckBoxPreference
 				android:title="@string/pref_sipinfo_dtmf"
 			    android:key="@string/pref_sipinfo_dtmf_key"
 				android:persistent="false"/>
@@ -159,6 +169,11 @@
 			<CheckBoxPreference
 				android:title="@string/pref_rfc2833_dtmf"
 			    android:key="@string/pref_rfc2833_dtmf_key"
+				android:persistent="false"/>
+
+			<CheckBoxPreference
+				android:title="@string/pref_auto_answer"
+			    android:key="@string/pref_auto_answer_key"
 				android:persistent="false"/>
 
 			<EditTextPreference
@@ -170,16 +185,16 @@
 	    
 		<PreferenceScreen
 		    android:title="@string/pref_chat_title">
+			 
+			 <ListPreference 
+				android:title="@string/pref_use_lime_encryption"
+				android:key="@string/pref_use_lime_encryption_key"
+				android:persistent="false"/>
 
 			 <EditTextPreference
 				android:title="@string/pref_image_sharing_server_title"
 				android:key="@string/pref_image_sharing_server_key"
 				android:summary="@string/pref_image_sharing_server_desc"
-				android:persistent="false"/>
-			 
-			 <ListPreference 
-				android:title="@string/pref_use_lime_encryption"
-				android:key="@string/pref_use_lime_encryption_key"
 				android:persistent="false"/>
 			
 		</PreferenceScreen>
@@ -230,11 +245,6 @@
 			    android:key="@string/pref_video_port_key"
 			    android:summary="@string/pref_video_port_description"
 				android:layout="@layout/hidden"
-				android:persistent="false"/>
-
-			<ListPreference
-			    android:title="@string/pref_media_encryption"
-				android:key="@string/pref_media_encryption_key"
 				android:persistent="false"/>
 
 			<CheckBoxPreference
