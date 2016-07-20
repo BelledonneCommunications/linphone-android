@@ -429,6 +429,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
+
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction transaction = fm.beginTransaction();
 
@@ -456,7 +457,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			}
 		}
-		
+
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commit();
 		fm.executePendingTransactions();

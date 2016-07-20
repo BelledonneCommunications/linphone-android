@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -43,6 +42,7 @@ import org.linphone.ui.PreferencesListFragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -64,6 +64,10 @@ public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
+	
+	public SettingsFragment() {
+		super(R.xml.preferences);
+	}
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -71,7 +75,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		mPrefs = LinphonePreferences.instance();
 		removePreviousPreferencesFile(); // Required when updating the preferences order
-		addPreferencesFromResource(R.xml.preferences);
 
 		mListener = new LinphoneCoreListenerBase() {
 			@Override
@@ -85,19 +88,19 @@ public class SettingsFragment extends PreferencesListFragment {
 					echoCancellerCalibration.setSummary(R.string.no_echo);
 					echoCancellation.setChecked(false);
 					LinphonePreferences.instance().setEchoCancellation(false);
-					((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
 					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Done) {
 					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
-					((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
 					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Failed) {
 					echoCancellerCalibration.setSummary(R.string.failed);
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
-					((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
 					Log.i("Set audio mode on 'Normal'");
 				}
 			}
@@ -109,6 +112,10 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 	
 	private void removePreviousPreferencesFile() {
+		SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+        editor.clear();
+        editor.commit();
+        
 		File dir = new File(getActivity().getFilesDir().getAbsolutePath() + "shared_prefs");
 		LinphoneUtils.recursiveFileRemoval(dir);
 	}
@@ -175,7 +182,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 
 		if (!Version.isVideoCapable() || !LinphoneManager.getLcIfManagerNotDestroyedOrNull().isVideoSupported()) {
-			uncheckAndHidePreference(R.string.pref_video_enable_key);
+			emptyAndHidePreference(R.string.pref_video_key);
 		} else {
 			if (!AndroidCameraConfiguration.hasFrontCamera()) {
 				uncheckAndHidePreference(R.string.pref_video_use_front_camera_key);
@@ -188,7 +195,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
 			emptyAndHidePreference(R.string.pref_video_key);
-			hidePreference(R.string.pref_video_enable_key);
 		}
 
 		if (getResources().getBoolean(R.bool.disable_every_log)) {
@@ -249,12 +255,18 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
 		if (value != null) {
 			EditTextPreference etPref = (EditTextPreference) findPreference(getString(pref));
-			etPref.setText(value);
-			etPref.setSummary(value);
+			if (etPref != null) {
+				etPref.setText(value);
+				etPref.setSummary(value);
+			}
 		}
 	}
 
 	private void initTunnelSettings() {
+		if (!LinphoneManager.getLc().isTunnelAvailable()) {
+			return;
+		}
+		
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
 		ListPreference tunnelModePref = (ListPreference) findPreference(getString(R.string.pref_tunnel_mode_key));
@@ -580,7 +592,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				synchronized (SettingsFragment.this) {
 					preference.setSummary(R.string.ec_calibrating);
 					
-					int recordAudio = getContext().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getContext().getPackageName());
+					int recordAudio = getActivity().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getActivity().getPackageName());
 					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
 						startEchoCancellerCalibration();
 					} else {
